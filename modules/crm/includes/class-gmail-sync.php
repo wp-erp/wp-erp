@@ -47,7 +47,33 @@ class Gmail_Sync {
     }
 
     private function update_historyid( $id ) {
+        if ( $id < $this->get_historyid() ) {
+            return false;
+        }
+        error_log( 'updating history id to : '.$id );
         return update_option( 'erp_gsync_historyid', $id );
+    }
+
+    private function set_inbound_email( $email ) {
+        return update_option( 'erp_gmail_authenticated_email', $email );
+    }
+
+    private function get_inbound_email() {
+        $email = get_option( 'erp_gmail_authenticated_email' );
+        if ( !empty( $email ) ) {
+            return $email;
+        }
+
+        $profile = $this->update_profile();
+        return $profile->getEmailAddress();
+    }
+
+    public function update_profile() {
+        $profile = $this->gmail->users->getProfile( $this->userid );
+        $this->update_historyid( $profile->getHistoryId() );
+        $this->set_inbound_email( $profile->getEmailAddress() );
+
+        return $profile;
     }
 
     public function sync() {
@@ -64,57 +90,58 @@ class Gmail_Sync {
     }
 
     public function full_sync() {
-
-        $opt_params['maxResults'] = 10;
-        //get all messages
-        $data = $this->gmail->users_messages->listUsersMessages( $this->userid, $opt_params );
-//        $messages = $data->getMessages();
-//        $last = $this->gmail->users_messages->get( 'me', $messages[0]->getId() );
-//        $this->update_historyid( $last->getHistoryId() );
-//        var_dump($last);
-        //set history id
+        $this->update_profile();
+        $this->sync();
     }
 
     public function partial_sync( $historyid ) {
         //get all messages after history id
-        $data = $this->gmail->users_history->listUsersHistory( $this->userid, [ 'startHistoryId' => $historyid ] );
+        try {
+            $data = $this->gmail->users_history->listUsersHistory( $this->userid, [ 'startHistoryId' => $historyid ] );
+        } catch ( \Google_Service_Exception $e ) {
+            error_log( 'Gmail API SYNC error : ' );
+            error_log( $e->getMessage());
+            $this->full_sync();
+            return;
+        }
+
         $histories = $data->getHistory();
+
+        if ( empty( $histories ) ) {
+            //update historyid as no new history is found
+            $this->update_historyid( $data->getHistoryId() );
+            return;
+        }
+
         $added_messages = [];
 
-        if ( !empty( $histories ) ) {
-            foreach ( $histories as $history ) {
-                $item = $history->getMessagesAdded();
-                if ( !isset( $item[0] ) ) {
-                    continue;
-                }
-                /**
-                 * @var \Google_Service_Gmail_Message
-                 */
-                $message = $item[0]->getMessage();
-                $labels = $message->getLabelIds();
-
-                //skip DRAFT and SENT messages
-                if ( in_array( 'DRAFT', $labels ) || in_array( 'SENT', $labels ) ) {
-                    continue;
-                }
-                $added_messages[] = $message->getId();
+        foreach ( $histories as $history ) {
+            $item = $history->getMessagesAdded();
+            if ( !isset( $item[0] ) ) {
+                continue;
             }
+            /**
+             * @var \Google_Service_Gmail_Message
+             */
+            $message = $item[0]->getMessage();
+            $labels = $message->getLabelIds();
+
+            //skip DRAFT and SENT messages
+            if ( in_array( 'DRAFT', $labels ) || in_array( 'SENT', $labels ) ) {
+                continue;
+            }
+            $added_messages[] = $message->getId();
         }
 
         $emails = [];
-        if ( !empty( $added_messages ) ) {
-            $emails = $this->get_messages( $added_messages );
+        if ( empty( $added_messages ) ) {
+            $this->update_historyid( $data->getHistoryId() );
+            return true;
         }
-//        var_dump($emails);
+        $emails = $this->get_messages( $added_messages );
         $this->process_emails( $emails );
 
-//        $last = $this->gmail->users_messages->get('me','165b5a87601708c1' );
-//        error_log( print_r($last, 1) );
-//        var_dump($last);
-//        $parts = $last->getPayload()->getParts();
-//        $l = count( $parts ) - 1;
-//        $body = $parts[$l]->getBody()->getData();
-//        var_dump($parts[$l], $last->getPayload()->getBody()->getData());
+        return true;
     }
 
     public function format_email( $message ) {
@@ -125,10 +152,6 @@ class Gmail_Sync {
 
         $headers = $message->getPayload()->getHeaders();
         $headers = array_reduce( $headers, [ $this, 'format_header' ] );
-
-        if ( !isset( $headers['References'] ) ) {
-            return false;
-        }
 
         $body = $this->get_message_body( $message );
 
@@ -174,7 +197,8 @@ class Gmail_Sync {
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $_SERVER['HTTP_HOST'];
         foreach ( $emails as $email ) {
 
-            if ( !$email ) {
+            if ( !isset( $email['headers']['References'] ) ) {
+                $this->update_historyid( $email['history_id'] );
                 continue;
             }
 
@@ -201,6 +225,7 @@ class Gmail_Sync {
 
                 $type = ( $message_id_parts[3] == 'r2' ) ? 'owner_to_contact' : 'contact_to_owner';
                 $email['type'] = $type;
+                //update history id
                 $this->update_historyid( $email['history_id'] );
                 do_action( 'erp_crm_contact_inbound_email', $email, $customer_feed_data );
             }
