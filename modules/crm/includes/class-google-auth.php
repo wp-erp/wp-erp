@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\CRM;
 
 class Google_Auth {
@@ -14,7 +15,7 @@ class Google_Auth {
         //get options and set
         //init client with options
         $this->init_client();
-        add_action( 'admin_init', [$this, 'handle_google_auth'] );
+        add_action( 'admin_init', [ $this, 'handle_google_auth' ] );
     }
 
     /**
@@ -26,72 +27,74 @@ class Google_Auth {
     public static function init() {
         static $instance = false;
 
-        if ( ! $instance ) {
+        if ( !$instance ) {
             $instance = new self();
         }
 
         return $instance;
     }
 
-    private function init_client(){
+    private function init_client() {
         $client = new \Google_Client( array(
-//            'client_id'     => $this->options['client_id'],
-            'client_id'     => '585473699682-sdlfqsnovjvgk5lgl73jbprfot463ogh.apps.googleusercontent.com',
-//            'client_secret' => $this->options['client_secret'],
-            'client_secret' =>'08x6TdwuajMc095yJ1eSWIfa',
-            'redirect_uris' => array(
-                $this->get_redirect_url(),
-            ),
+                //            'client_id'     => $this->options['client_id'],
+                'client_id'     => '585473699682-sdlfqsnovjvgk5lgl73jbprfot463ogh.apps.googleusercontent.com',
+                //            'client_secret' => $this->options['client_secret'],
+                'client_secret' => '08x6TdwuajMc095yJ1eSWIfa',
+                'redirect_uris' => array(
+                    $this->get_redirect_url(),
+                ),
         ) );
 
-        $client->setAccessType("offline");        // offline access
-        $client->setIncludeGrantedScopes(true);   // incremental auth
-        $client->addScope(\Google_Service_Gmail::GMAIL_SEND);
-        $client->addScope(\Google_Service_Gmail::GMAIL_MODIFY);
-        $client->addScope(\Google_Service_Gmail::GMAIL_SETTINGS_BASIC);
-        $client->addScope(\Google_Service_Gmail::GMAIL_READONLY);
-        $client->setRedirectUri($this->get_redirect_url());
+        $client->setAccessType( "offline" );        // offline access
+        $client->setIncludeGrantedScopes( true );   // incremental auth
+        $client->addScope( \Google_Service_Gmail::GMAIL_SEND );
+        $client->addScope( \Google_Service_Gmail::GMAIL_MODIFY );
+        $client->addScope( \Google_Service_Gmail::GMAIL_SETTINGS_BASIC );
+        $client->addScope( \Google_Service_Gmail::GMAIL_READONLY );
+        $client->setRedirectUri( $this->get_redirect_url() );
 
         $token = get_option( 'erp_google_access_token' );
 
         if ( !empty( $token ) ) {
-            $client->setAccessToken($token);
+            $client->setAccessToken( $token );
         }
 
         $this->client = $client;
 
     }
 
-    public function get_client(){
-        if ( ! $this->client instanceof \Google_Client ){
+    public function get_client() {
+        if ( !$this->client instanceof \Google_Client ) {
             $this->init_client();
         }
         return $this->client;
     }
 
-    public function set_access_token( $code ){
+    public function set_access_token( $code ) {
         $this->client->authenticate( $code );
         $access_token = $this->client->getAccessToken();
         update_option( 'erp_google_access_token', $access_token );
     }
 
-    public function get_redirect_url(){
+    public function get_redirect_url() {
         return add_query_arg( 'erp-auth', 'google', admin_url( 'options-general.php' ) );
     }
 
-    public function is_active(){
+    public function is_active() {
 
-        //check if client id secret are all available and set as acitve
+        //Todo check if client id secret are all available and set as acitve
         return true;
     }
 
-    public function handle_google_auth(){
-        if ( !isset( $_GET['erp-auth'] ) || ! isset($_GET['code']) ) {
+    public function handle_google_auth() {
+        if ( !isset( $_GET['erp-auth'] ) || !isset( $_GET['code'] ) ) {
             return;
         }
         $this->set_access_token( $_GET['code'] );
 
-        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-email' ], admin_url('admin.php') );
+        //Todo Set Profile and update history id
+
+        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-email' ], admin_url( 'admin.php' ) );
         wp_redirect( $settings_url );
     }
 
