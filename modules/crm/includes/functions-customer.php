@@ -3288,6 +3288,15 @@ function erp_crm_check_new_inbound_emails() {
     }
 }
 
+function erp_crm_poll_gmail() {
+    if ( !wperp()->google_auth->is_active() ){
+        return;
+    }
+
+    wperp()->google_sync->sync();
+
+}
+
 /**
  * Get the contact sources
  *
