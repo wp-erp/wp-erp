@@ -8,13 +8,16 @@ use WeDevs\ERP\Framework\ERP_Settings_Page;
 class ERP_Email_Settings extends ERP_Settings_Page {
 
     function __construct() {
-        $this->id       = 'erp-email';
-        $this->label    = __( 'Emails', 'erp' );
+        $this->id = 'erp-email';
+        $this->label = __( 'Emails', 'erp' );
         $this->sections = $this->get_sections();
 
         add_action( 'erp_admin_field_notification_emails', [ $this, 'notification_emails' ] );
         add_action( 'erp_admin_field_smtp_test_connection', [ $this, 'smtp_test_connection' ] );
         add_action( 'erp_admin_field_imap_test_connection', [ $this, 'imap_test_connection' ] );
+        add_action( 'erp_admin_field_gmail_api_settings', [ $this, 'gmail_api_settings' ] );
+        add_action( 'erp_admin_field_gmail_redirect_url', [ $this, 'render_gmail_redirect_url' ] );
+        add_action( 'erp_admin_field_gmail_api_connected', [ $this, 'render_gmail_api_connected' ] );
         add_action( 'erp_admin_field_imap_status', [ $this, 'imap_status' ] );
 
         add_action( 'erp_update_option', [ $this, 'cron_schedule' ] );
@@ -28,9 +31,10 @@ class ERP_Email_Settings extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = [
-            'general' => __( 'General', 'erp' ),
-            'smtp'    => __( 'SMTP', 'erp' ),
-            'imap'    => __( 'IMAP/POP3', 'erp' ),
+            'general'   => __( 'General', 'erp' ),
+            'smtp'      => __( 'SMTP', 'erp' ),
+            'imap'      => __( 'IMAP/POP3', 'erp' ),
+            'gmail_api' => __( 'Gmail Connect', 'erp' )
         ];
 
         return apply_filters( 'erp_settings_email_sections', $sections );
@@ -55,7 +59,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'type'    => 'text',
             'default' => get_bloginfo( 'name' ),
             'tooltip' => true,
-            'desc' => __( 'The senders name appears on the outgoing emails', 'erp' )
+            'desc'    => __( 'The senders name appears on the outgoing emails', 'erp' )
         ];
 
         $fields['general'][] = [
@@ -128,7 +132,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'                => 'mail_server',
             'type'              => 'text',
             'custom_attributes' => [
-                'placeholder'   => 'smtp.gmail.com'
+                'placeholder' => 'smtp.gmail.com'
             ],
             'desc'              => __( 'SMTP host address.', 'erp' ),
         ];
@@ -145,7 +149,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'      => 'authentication',
             'type'    => 'select',
             'desc'    => __( 'Authentication type.', 'erp' ),
-            'options' => [ '' => __( 'None', 'erp'), 'ssl' => __( 'SSL', 'erp' ), 'tls' => __( 'TLS', 'erp') ],
+            'options' => [ '' => __( 'None', 'erp' ), 'ssl' => __( 'SSL', 'erp' ), 'tls' => __( 'TLS', 'erp' ) ],
         ];
 
         $fields['smtp'][] = [
@@ -153,7 +157,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'                => 'username',
             'type'              => 'text',
             'custom_attributes' => [
-                'placeholder'   => 'email@example.com'
+                'placeholder' => 'email@example.com'
             ],
             'desc'              => __( 'Your email id.', 'erp' ),
         ];
@@ -186,11 +190,111 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         $fields['imap'] = $this->get_imap_settings_fields();
         // End IMAP settings
 
+        $fields['gmail_api'] = $this->get_gmail_api_settings_fields();
+        $fields['gmail_api'][] = [
+            'type' => 'sectionend',
+            'id'   => 'script_styling_options'
+        ];
+
         $fields = apply_filters( 'erp_settings_email_section_fields', $fields, $section );
 
         $section = $section === false ? $fields['general'] : $fields[$section];
 
         return $section;
+    }
+
+    function get_gmail_api_settings_fields() {
+        $fields[] = [
+            'title' => __( 'Gmail / G suite Authentication', 'erp' ),
+            'type'  => 'title',
+            'desc'  => __( 'Email notification settings for ERP. Customize the look and feel of outgoing emails.', 'erp' )
+        ];
+
+        if ( wperp()->google_auth->is_connected() ) {
+            $fields[] = [
+                'type' => 'gmail_api_connected',
+            ];
+
+            return $fields;
+        }
+
+        $fields[] = [
+            'title' => __( 'Client ID', 'erp' ),
+            'id'    => 'client_id',
+            'type'  => 'text',
+            'desc'  => __( 'Your APP Client ID', 'erp' )
+        ];
+
+        $fields[] = [
+            'title' => __( 'Client Secret', 'erp' ),
+            'id'    => 'client_secret',
+            'type'  => 'text',
+            'desc'  => __( 'Your APP Client Secret', 'erp' )
+        ];
+
+        $fields[] = [
+            'type' => 'gmail_redirect_url',
+        ];
+
+        if ( wperp()->google_auth->has_credentials() ) {
+            $fields[] = [
+                'type' => 'gmail_api_settings',
+            ];
+
+            return $fields;
+        }
+
+
+        return $fields;
+    }
+
+    function render_gmail_redirect_url() {
+        $url = wperp()->google_auth->get_redirect_url();
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <label for="redirect_url"><?php _e( 'Redirect URL to use', 'erp' ); ?></label>
+            </th>
+            <td class="forminp forminp-text">
+                <input name="redirect_url" id="redirect_url" type="text" disabled value="<?php echo $url ?>"
+                       class="regular-text">
+                <p class="description"><?php _e( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ) ?></p>
+            </td>
+        </tr>
+
+        <?php
+    }
+
+    function render_gmail_api_connected() {
+        $connected_email = wperp()->google_auth->is_connected();
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <?php _e( 'Connected', 'erp' ); ?>
+            </th>
+            <td class="forminp forminp-text">
+                <p><b><?php echo $connected_email ?></b></p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+            </th>
+            <td class="forminp forminp-text">
+                <a style="background: #dc3232; color:#fff" class="button-secondary" href="#"> Disconnect </a>
+            </td>
+        </tr>
+        <?php
+    }
+
+    function gmail_api_settings() {
+        $url = wperp()->google_auth->get_client()->createAuthUrl();
+        ?>
+        <tr valign="top">
+            <td class="forminp forminp-text">
+                <a target="_blank" class="button-primary" href="<?php echo $url ?>">Click to Authorize your gmail account </a>
+            </td>
+        </tr>
+        <?php
     }
 
     function notification_emails() {
@@ -200,60 +304,60 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             <td class="erp-settings-table-wrapper" colspan="2">
                 <table class="erp-settings-table widefat" cellspacing="0">
                     <thead>
-                        <tr>
-                            <?php
-                                $columns = apply_filters( 'erp_email_setting_columns', array(
-                                    'name'        => __( 'Email', 'erp' ),
-                                    'description' => __( 'Description', 'erp' ),
-                                    'actions'     => ''
-                                ) );
-
-                                foreach ( $columns as $key => $column ) {
-                                    echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
-                                }
-                            ?>
-                        </tr>
-                    </thead>
-                    <tbody>
+                    <tr>
                         <?php
-                        foreach ( $email_templates as $email_key => $email ) {
-                            echo '<tr>';
+                        $columns = apply_filters( 'erp_email_setting_columns', array(
+                            'name'        => __( 'Email', 'erp' ),
+                            'description' => __( 'Description', 'erp' ),
+                            'actions'     => ''
+                        ) );
 
-                            foreach ( $columns as $key => $column ) {
-                                switch ( $key ) {
-                                    case 'name' :
-                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <a href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . strtolower( $email_key ) ) . '">' . $email->get_title() . '</a>
-                                        </td>';
-                                        break;
-
-                                    case 'status':
-                                    case 'module':
-                                    case 'recipient':
-                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-
-                                        </td>';
-                                        break;
-
-                                    case 'description':
-                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <span class="help">' . $email->get_description() . '</span>
-                                        </td>';
-                                        break;
-
-                                    case 'actions' :
-                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
-                                            <a class="button alignright" href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . strtolower( $email_key ) ) . '">' . __( 'Configure', 'erp' ) . '</a>
-                                        </td>';
-                                        break;
-
-                                    default :
-                                        do_action( 'erp_email_setting_column_' . $key, $email );
-                                    break;
-                                }
-                            }
+                        foreach ( $columns as $key => $column ) {
+                            echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
                         }
                         ?>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach ( $email_templates as $email_key => $email ) {
+                        echo '<tr>';
+
+                        foreach ( $columns as $key => $column ) {
+                            switch ( $key ) {
+                                case 'name' :
+                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
+                                            <a href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . strtolower( $email_key ) ) . '">' . $email->get_title() . '</a>
+                                        </td>';
+                                    break;
+
+                                case 'status':
+                                case 'module':
+                                case 'recipient':
+                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
+
+                                        </td>';
+                                    break;
+
+                                case 'description':
+                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
+                                            <span class="help">' . $email->get_description() . '</span>
+                                        </td>';
+                                    break;
+
+                                case 'actions' :
+                                    echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
+                                            <a class="button alignright" href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=general&sub_section=' . strtolower( $email_key ) ) . '">' . __( 'Configure', 'erp' ) . '</a>
+                                        </td>';
+                                    break;
+
+                                default :
+                                    do_action( 'erp_email_setting_column_' . $key, $email );
+                                    break;
+                            }
+                        }
+                    }
+                    ?>
                     </tbody>
                 </table>
             </td>
@@ -273,9 +377,11 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                 &nbsp;
             </th>
             <td class="forminp forminp-text">
-                <input type="email" id="smtp_test_email_address" class="regular-text" value="<?php echo get_option( 'admin_email' ); ?>" /><br>
+                <input type="email" id="smtp_test_email_address" class="regular-text"
+                       value="<?php echo get_option( 'admin_email' ); ?>"/><br>
                 <p class="description"><?php _e( 'An email address to test the connection.', 'erp' ); ?></p>
-                <a id="smtp-test-connection" class="button-secondary"><?php esc_attr_e( 'Send Test Email', 'erp' ); ?></a>
+                <a id="smtp-test-connection"
+                   class="button-secondary"><?php esc_attr_e( 'Send Test Email', 'erp' ); ?></a>
                 <span class="erp-loader" style="display: none;"></span>
                 <p class="description"><?php _e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
             </td>
@@ -295,7 +401,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                 &nbsp;
             </th>
             <td class="forminp forminp-text">
-                <a id="imap-test-connection" class="button-secondary"><?php esc_attr_e( 'Test Connection', 'erp' ); ?></a>
+                <a id="imap-test-connection"
+                   class="button-secondary"><?php esc_attr_e( 'Test Connection', 'erp' ); ?></a>
                 <span class="erp-loader" style="display: none;"></span>
                 <p class="description"><?php _e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
             </td>
@@ -309,15 +416,16 @@ class ERP_Email_Settings extends ERP_Settings_Page {
      * @return void
      */
     public function imap_status() {
-        $options     = get_option( 'erp_settings_erp-email_imap', [] );
-        $imap_status = (boolean) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+        $options = get_option( 'erp_settings_erp-email_imap', [] );
+        $imap_status = (boolean)isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
         ?>
         <tr valign="top">
             <th scope="row" class="titledesc">
                 <?php _e( 'Status', 'erp' ); ?>
             </th>
             <td class="forminp forminp-text">
-                <span class="dashicons dashicons-<?php echo ( $imap_status ) ? 'yes green' : 'no red' ?>"></span><?php echo ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ); ?>
+                <span
+                    class="dashicons dashicons-<?php echo ( $imap_status ) ? 'yes green' : 'no red' ?>"></span><?php echo ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ); ?>
             </td>
         </tr>
         <?php
@@ -329,7 +437,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
      * @return array
      */
     protected function get_imap_settings_fields() {
-        if ( ! extension_loaded( 'imap' ) || ! function_exists( 'imap_open' ) ) {
+        if ( !extension_loaded( 'imap' ) || !function_exists( 'imap_open' ) ) {
             $fields[] = [
                 'title' => __( 'IMAP/POP3 Options', 'erp' ),
                 'type'  => 'title',
@@ -364,7 +472,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         $schedules = wp_get_schedules();
 
         $cron_schedules = [];
-        foreach( $schedules as $key => $value ) {
+        foreach ( $schedules as $key => $value ) {
             $cron_schedules[$key] = $value['display'];
         }
 
@@ -382,7 +490,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'                => 'mail_server',
             'type'              => 'text',
             'custom_attributes' => [
-                'placeholder'   => 'imap.gmail.com'
+                'placeholder' => 'imap.gmail.com'
             ],
             'desc'              => __( 'IMAP/POP3 host address.', 'erp' ),
         ];
@@ -393,7 +501,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'type'              => 'text',
             'desc'              => __( 'Your email id.', 'erp' ),
             'custom_attributes' => [
-                'placeholder'   => 'email@example.com'
+                'placeholder' => 'email@example.com'
             ]
         ];
 
@@ -409,8 +517,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'      => 'protocol',
             'type'    => 'select',
             'desc'    => __( 'Protocol type.', 'erp' ),
-            'options' => [ 'imap' => __( 'IMAP', 'erp' ), 'pop3' => __( 'POP3', 'erp') ],
-            'default' =>  'imap',
+            'options' => [ 'imap' => __( 'IMAP', 'erp' ), 'pop3' => __( 'POP3', 'erp' ) ],
+            'default' => 'imap',
         ];
 
         $fields[] = [
@@ -424,8 +532,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'title'   => __( 'Authentication', 'erp' ),
             'id'      => 'authentication',
             'type'    => 'select',
-            'options' => [ 'ssl' => __( 'SSL', 'erp' ), 'tls' => __( 'TLS', 'erp'), 'notls' => __( 'None', 'erp') ],
-            'default' =>  'ssl',
+            'options' => [ 'ssl' => __( 'SSL', 'erp' ), 'tls' => __( 'TLS', 'erp' ), 'notls' => __( 'None', 'erp' ) ],
+            'default' => 'ssl',
             'desc'    => __( 'Authentication type.', 'erp' ),
         ];
 
@@ -453,11 +561,11 @@ class ERP_Email_Settings extends ERP_Settings_Page {
      * @return void
      */
     public function cron_schedule( $value ) {
-        if ( ! isset( $_GET['section'] ) || ( $_GET['section'] != 'imap' ) ) {
+        if ( !isset( $_GET['section'] ) || ( $_GET['section'] != 'imap' ) ) {
             return;
         }
 
-        if ( ! isset( $value['id'] ) || ( $value['id'] != 'schedule' ) ) {
+        if ( !isset( $value['id'] ) || ( $value['id'] != 'schedule' ) ) {
             return;
         }
 
@@ -470,7 +578,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
      * Output the settings.
      */
     public function output( $section = false ) {
-        if ( ! isset( $_GET['sub_section'] ) ) {
+        if ( !isset( $_GET['sub_section'] ) ) {
             parent::output( $section );
 
             return;
@@ -494,9 +602,9 @@ class ERP_Email_Settings extends ERP_Settings_Page {
     }
 
     function save( $section = false ) {
-        if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
+        if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
 
-            if ( ! isset( $_GET['sub_section'] ) ) {
+            if ( !isset( $_GET['sub_section'] ) ) {
                 parent::save( $section );
 
                 return;
@@ -512,19 +620,19 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                 foreach ( $email_templates as $email_key => $email ) {
                     if ( strtolower( $email_key ) == $current_section ) {
 
-                        $settings       = $email->get_form_fields();
+                        $settings = $email->get_form_fields();
                         $update_options = array();
 
-                        if ( $settings) {
-                            foreach ($settings as $field) {
-                                if ( ! isset( $field['id'] ) || ! isset( $_POST[ $field['id'] ] ) ) {
+                        if ( $settings ) {
+                            foreach ( $settings as $field ) {
+                                if ( !isset( $field['id'] ) || !isset( $_POST[$field['id']] ) ) {
                                     continue;
                                 }
 
                                 $option_value = $this->parse_option_value( $field );
 
-                                if ( ! is_null( $option_value ) ) {
-                                    $update_options[ $field['id'] ] = $option_value;
+                                if ( !is_null( $option_value ) ) {
+                                    $update_options[$field['id']] = $option_value;
                                 }
                             }
                         }
