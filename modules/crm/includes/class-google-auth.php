@@ -35,14 +35,17 @@ class Google_Auth {
     }
 
     private function init_client() {
+        $creds = $this->has_credentials();
+        if ( empty($creds) ) {
+            return false;
+        }
+
         $client = new \Google_Client( array(
-                //            'client_id'     => $this->options['client_id'],
-                'client_id'     => '585473699682-sdlfqsnovjvgk5lgl73jbprfot463ogh.apps.googleusercontent.com',
-                //            'client_secret' => $this->options['client_secret'],
-                'client_secret' => '08x6TdwuajMc095yJ1eSWIfa',
-                'redirect_uris' => array(
-                    $this->get_redirect_url(),
-                ),
+            'client_id'     => $creds['client_id'],
+            'client_secret' => $creds['client_secret'],
+            'redirect_uris' => array(
+                $this->get_redirect_url(),
+            ),
         ) );
 
         $client->setAccessType( "offline" );        // offline access
@@ -81,9 +84,34 @@ class Google_Auth {
     }
 
     public function is_active() {
+        if ( $this->has_credentials() && $this->is_connected() ){
+            return true;
+        }
+        return false;
+    }
 
-        //Todo check if client id secret are all available and set as acitve
-        return true;
+    public function has_credentials() {
+        $options = get_option( 'erp_settings_erp-email_gmail_api', [] );
+
+        if ( !isset( $options['client_id'] ) || empty( $options['client_id'] ) ) {
+            return false;
+        }
+
+        if ( !isset( $options['client_secret'] ) || empty( $options['client_secret'] ) ) {
+            return false;
+        }
+
+        return $options;
+    }
+
+    public function is_connected() {
+        $email = get_option( 'erp_gmail_authenticated_email', '' );
+
+        if ( !empty( $email ) ) {
+            return $email;
+        }
+
+        return false;
     }
 
     public function handle_google_auth() {
@@ -92,7 +120,7 @@ class Google_Auth {
         }
         $this->set_access_token( $_GET['code'] );
 
-        //Todo Set Profile and update history id
+        wperp()->google_sync->update_profile();
 
         $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-email' ], admin_url( 'admin.php' ) );
         wp_redirect( $settings_url );

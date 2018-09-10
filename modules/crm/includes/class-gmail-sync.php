@@ -15,14 +15,10 @@ class Gmail_Sync {
     private $client;
 
     private $userid = 'me';
-    private $inbound_email;
 
     public function __construct() {
         $this->client = wperp()->google_auth;
         $this->gmail = new \Google_Service_Gmail( $this->client->get_client() );
-
-        //Todo fetch from saved profile
-        $this->inbound_email = 'rafsun.od@gmail.com';
     }
 
     /**
@@ -59,7 +55,7 @@ class Gmail_Sync {
     }
 
     private function get_inbound_email() {
-        $email = get_option( 'erp_gmail_authenticated_email' );
+        $email = get_option( 'erp_gmail_authenticated_email', '' );
         if ( !empty( $email ) ) {
             return $email;
         }
@@ -216,10 +212,10 @@ class Gmail_Sync {
                 // Save & sent the email
                 switch ( $message_id_parts[3] ) {
                     case 'r1':
-                        $customer_feed_data = erp_crm_save_email_activity( $email, $this->inbound_email );
+                        $customer_feed_data = erp_crm_save_email_activity( $email, $this->get_inbound_email() );
                         break;
                     case 'r2':
-                        $customer_feed_data = erp_crm_save_contact_owner_email_activity( $email, $this->inbound_email );
+                        $customer_feed_data = erp_crm_save_contact_owner_email_activity( $email, $this->get_inbound_email() );
                         break;
                 }
 
