@@ -8,11 +8,8 @@ class Google_Auth {
      * @var \Google_Client
      */
     private $client;
-    private $options;
 
     public function __construct() {
-        //check if options are saved
-        //get options and set
         //init client with options
         $this->init_client();
         add_action( 'admin_init', [ $this, 'handle_google_auth' ] );
@@ -89,10 +86,16 @@ class Google_Auth {
     }
 
     public function is_active() {
-        if ( $this->has_credentials() && $this->is_connected() ){
-            return true;
+        if ( !$this->has_credentials() || !$this->is_connected() ) {
+            return false;
         }
-        return false;
+
+        $token = get_option( 'erp_google_access_token', [] );
+        if ( empty( $token ) ) {
+            return false;
+        }
+
+        return true;
     }
 
     public function has_credentials() {
@@ -131,7 +134,7 @@ class Google_Auth {
         wp_redirect( $settings_url );
     }
 
-    public function disconnect_account(){
+    public function disconnect_account() {
         if ( !isset( $_GET['erp-auth-dc'] ) ) {
             return;
         }
