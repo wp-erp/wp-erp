@@ -16,6 +16,7 @@ class Google_Auth {
         //init client with options
         $this->init_client();
         add_action( 'admin_init', [ $this, 'handle_google_auth' ] );
+        add_action( 'admin_init', [ $this, 'disconnect_account' ] );
     }
 
     /**
@@ -36,7 +37,7 @@ class Google_Auth {
 
     private function init_client() {
         $creds = $this->has_credentials();
-        if ( empty($creds) ) {
+        if ( empty( $creds['client_id'] ) || empty( $creds['client_secret'] ) ) {
             return false;
         }
 
@@ -83,6 +84,10 @@ class Google_Auth {
         return add_query_arg( 'erp-auth', 'google', admin_url( 'options-general.php' ) );
     }
 
+    public function get_disconnect_url() {
+        return add_query_arg( 'erp-auth-dc', 'google', admin_url( 'options-general.php' ) );
+    }
+
     public function is_active() {
         if ( $this->has_credentials() && $this->is_connected() ){
             return true;
@@ -122,7 +127,23 @@ class Google_Auth {
 
         wperp()->google_sync->update_profile();
 
-        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-email' ], admin_url( 'admin.php' ) );
+        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-email', 'section' => 'gmail_api' ], admin_url( 'admin.php' ) );
+        wp_redirect( $settings_url );
+    }
+
+    public function disconnect_account(){
+        if ( !isset( $_GET['erp-auth-dc'] ) ) {
+            return;
+        }
+
+        //reset access token
+        update_option( 'erp_google_access_token', [] );
+        //reset email
+        update_option( 'erp_gmail_authenticated_email', '' );
+        //reset history id
+        update_option( 'erp_gsync_historyid', '' );
+
+        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-email', 'section' => 'gmail_api' ], admin_url( 'admin.php' ) );
         wp_redirect( $settings_url );
     }
 

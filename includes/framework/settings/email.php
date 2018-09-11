@@ -207,7 +207,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         $fields[] = [
             'title' => __( 'Gmail / G suite Authentication', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( 'Email notification settings for ERP. Customize the look and feel of outgoing emails.', 'erp' )
+            'desc'  => __( 'Create a Google App and authorize your account to Send and Recieve emails using Gmail', 'erp' )
         ];
 
         if ( wperp()->google_auth->is_connected() ) {
@@ -267,6 +267,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
     function render_gmail_api_connected() {
         $connected_email = wperp()->google_auth->is_connected();
+        $url = wperp()->google_auth->get_disconnect_url();
         ?>
         <tr valign="top">
             <th scope="row" class="titledesc">
@@ -280,7 +281,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             <th scope="row" class="titledesc">
             </th>
             <td class="forminp forminp-text">
-                <a style="background: #dc3232; color:#fff" class="button-secondary" href="#"> Disconnect </a>
+                <a style="background: #dc3232; color:#fff" class="button-secondary" href="<?php echo $url ?>"> <?php _e( 'Disconnect','erp') ?> </a>
             </td>
         </tr>
         <?php
