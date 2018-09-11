@@ -18,6 +18,9 @@ class Gmail_Sync {
 
     public function __construct() {
         $this->client = wperp()->google_auth;
+        if( !$this->client->get_client() ){
+            return;
+        }
         $this->gmail = new \Google_Service_Gmail( $this->client->get_client() );
     }
 
