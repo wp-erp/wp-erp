@@ -725,6 +725,10 @@ function erp_crm_get_feed_activity( $postdata ) {
             $value['contact']['types'] = [];
         }
 
+        if ( isset( $value['extra']['attachments'] ) ) {
+            $value['extra']['attachments'] = erp_crm_process_attachment_data( $value['extra']['attachments'] );
+        }
+
         unset( $value['extra']['invite_contact'] );
         $value['message']               = erp_crm_format_activity_feed_message( $value['message'], $value );
         $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
@@ -746,7 +750,7 @@ function erp_crm_get_feed_activity( $postdata ) {
  *
  * @return array
  */
-function erp_crm_save_customer_feed_data( $data ) {
+function  erp_crm_save_customer_feed_data( $data ) {
 
     if ( isset( $data['id'] ) && ! empty( $data['id'] ) ) {
         $saved_activity    = WeDevs\ERP\CRM\Models\Activity::find( $data['id'] )->update( $data );
@@ -793,6 +797,10 @@ function erp_crm_save_customer_feed_data( $data ) {
     $activity['created_by']['avatar']  = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date']          = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
     $activity['created_timeline_date'] = date( 'Y-m-01', strtotime( $activity['created_at'] ) );
+
+    if ( isset( $activity['extra']['attachments'] ) ) {
+        $activity['extra']['attachments'] = erp_crm_process_attachment_data( $activity['extra']['attachments'] );
+    }
 
     return $activity;
 }
@@ -848,7 +856,28 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
     $data['contact']['types'] = wp_list_pluck( $data['contact']['types'], 'name' );
     $data['message']          = stripslashes( $data['message'] );
 
+    if ( isset( $data['extra']['attachments'] ) ) {
+        $data['extra']['attachments'] = erp_crm_process_attachment_data( $data['extra']['attachments'] );
+    }
+
     return $data;
+}
+
+/**
+ * Process attachment data to generate URL
+ *
+ * @param $attachments
+ *
+ * @return mixed
+ */
+function erp_crm_process_attachment_data( $attachments ) {
+    $subdir      = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
+    $upload_dir  = wp_upload_dir();
+    foreach ( $attachments as $key => $item ) {
+        $attachments[$key]['url'] = $upload_dir['baseurl'] . '/' . $subdir . '/' . $item['slug'];
+    }
+
+    return $attachments;
 }
 
 /**
