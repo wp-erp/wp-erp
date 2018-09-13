@@ -1064,12 +1064,16 @@ class Ajax_Handler {
             case 'email':
                 $message = wp_unslash( $postdata['message'] );
 
+                $extra_data = [
+                    'attachments' => $attachments
+                ];
                 $save_data = [
                     'user_id'       => $postdata['user_id'],
                     'created_by'    => $postdata['created_by'],
                     'message'       => $message,
                     'type'          => $postdata['type'],
-                    'email_subject' => $postdata['email_subject']
+                    'email_subject' => $postdata['email_subject'],
+                    'extra'         => base64_encode( json_encode( $extra_data ) )
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
@@ -1114,12 +1118,14 @@ class Ajax_Handler {
 
                 add_filter( 'erp_mail_from_name', 'erp_crm_get_email_from_name' );
 
+                $mail_attachments = wp_list_pluck( $attachments, 'path' );
+
                 if ( wperp()->google_auth->is_active() ){
                     //send using gmail api
-                    erp_mail_send_via_gmail( $contact->email, $postdata['email_subject'], $email_body, $headers, $attachments, $custom_headers  );
+                    erp_mail_send_via_gmail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers  );
                 } else {
                     // Send email at contact
-                    erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, $attachments, $custom_headers );
+                    erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers );
                 }
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
@@ -1568,21 +1574,33 @@ class Ajax_Handler {
 
         $files          =   ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : array();
         $wp_upload_dir  =   wp_upload_dir();
-        $path           =   $wp_upload_dir['path'] . '/';
-        $message        =   array();
+        $subdir         =   apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
+        $path           =   $wp_upload_dir['basedir'] . '/' . $subdir . '/';
         $attatchments   =   array();
         $file_names     =   array();
 
+        //Create CRM attachments directory
+        if ( !file_exists( $path ) ) {
+            wp_mkdir_p($path);
+        }
+
         foreach ( $files['name'] as $key => $file ) {
             $extension    = pathinfo( $file, PATHINFO_EXTENSION );
-            $new_filename = uniqid()  . '.' . $extension;
+            $new_filename = $file;
+
+            if ( file_exists( $path.$new_filename ) ) {
+                $new_filename = uniqid()  . '.' . $extension;
+            }
 
             if ( $files['error'][ $key ] == 0 ) {
                 if ( move_uploaded_file( $files['tmp_name'][ $key ], $path.$new_filename ) ) {
-                    $wp_upload_dir  = wp_upload_dir();
                     $file_name      = $path.$new_filename;
-                    $attatchments[] = $wp_upload_dir['path'] . '/' . basename( $file_name );
-                    $file_names[]   = $files['name'][ $key ];
+                    $attatchments[] = [
+                        'name' => $file,
+                        'path' => $path . basename( $file_name ),
+                        'slug' => $new_filename,
+                    ];
+                    $file_names[]   = $file;
                 }
             }
         }

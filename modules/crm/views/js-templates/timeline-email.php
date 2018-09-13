@@ -17,6 +17,12 @@
     <div class="timeline-body" @click="toggleFooter">
         <div class="timeline-email-subject">{{i18n.emailSubject}} : {{feed.email_subject}}</div>
         <div class="timeline-email-body">{{{feed.message}}}</div>
+        <div class="timeline-email-attachments" v-if="feed.extra.attachments">
+            <?php _e( 'Attachments : ', 'erp' ) ?>
+            <ul>
+                <li v-for="file in feed.extra.attachments"><a target="_blank" href="{{{file.url}}}">{{{file.name}}}</a></li>
+            </ul>
+        </div>
     </div>
 
     <div class="timeline-footer" v-if="(feed.extra.replied == 1 ) && showFooter && !isActivityPage()">
