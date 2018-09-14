@@ -1122,16 +1122,20 @@ class Ajax_Handler {
 
                 if ( wperp()->google_auth->is_active() ){
                     //send using gmail api
-                    erp_mail_send_via_gmail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers  );
+                    $sent = erp_mail_send_via_gmail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers  );
                 } else {
                     // Send email at contact
-                    erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers );
+                    $sent = erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, $mail_attachments, $custom_headers );
                 }
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 
+                if ( !$sent ) {
+                    $this->send_error( __( 'Can not send email, Please try later', 'erp' ) );
+                }
+
                 if ( ! $data ) {
-                    $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
+                    $this->send_error( __( 'Something went wrong, Please try later', 'erp' ) );
                 }
 
                 $this->send_success( $data );
