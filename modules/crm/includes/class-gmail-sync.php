@@ -150,17 +150,81 @@ class Gmail_Sync {
         }
 
         $headers = $message->getPayload()->getHeaders();
-        $headers = array_reduce( $headers, [ $this, 'format_header' ] );
+        $parts   = $message->getPayload()->getParts();
+        $attachments = [];
 
+        $headers = array_reduce( $headers, [ $this, 'format_header' ] );
         $body = $this->get_message_body( $message );
 
+        foreach ( $parts as $key => $value ) {
+            if ( !isset( $value['body']['attachmentId'] ) ) {
+                continue;
+            }
+            $data = '';
+            try {
+                $att = $this->gmail->users_messages_attachments->get( $this->userid, $message->getId(), $value['body']['attachmentId'] );
+                $data = $att->getData();
+            }
+            catch ( \Exception $e ) {
+                error_log( 'Failed to fetch attachment : ', $e->getMessage() );
+                continue;
+            };
+            $data = [ 'id'   => $value['body']['attachmentId'],
+                      'type' => $value->getMimeType(),
+                      'name' => $value->getfilename(),
+                      'data' => $this->base64url_decode( $data )
+            ];
+
+            array_push( $attachments, $data );
+        }
+
         return [
-            'id'         => $message->getId(),
-            'history_id' => $message->getHistoryId(),
-            'headers'    => $headers,
-            'body'       => $this->base64url_decode( $body ),
-            'subject'    => $headers['Subject']
+            'id'          => $message->getId(),
+            'history_id'  => $message->getHistoryId(),
+            'headers'     => $headers,
+            'body'        => $this->base64url_decode( $body ),
+            'subject'     => $headers['Subject'],
+            'attachments' => $attachments
         ];
+    }
+
+    public function save_attachments( $attachments ) {
+        if ( empty( $attachments ) ) {
+            return $attachments;
+        }
+
+        $subdir      = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
+        $upload_dir  = wp_upload_dir();
+        $dir         = $upload_dir['basedir'].'/'.$subdir.'/';
+
+        //Create CRM attachments directory
+        if ( !file_exists( $dir ) ) {
+            wp_mkdir_p($dir);
+        }
+
+        foreach ( $attachments as $key => $item ) {
+            $name = $item['name'];
+            $file = wp_check_filetype( $item['name'] );
+
+            if ( file_exists( $dir.$name ) ) {
+                $name = uniqid().'.'.$file['ext'];
+            }
+
+            $saved = file_put_contents( $dir.$name, $item['data'] );
+
+            if ( $saved ) {
+                $attachments[$key]['slug'] = $name;
+                $attachments[$key]['path'] = $dir.$name;
+                //remove image data
+                unset( $attachments[$key]['data'] );
+                unset( $attachments[$key]['id'] );
+            } else {
+                unset( $attachments[$key] );
+            }
+        }
+
+        return $attachments;
+
     }
 
     public function format_header( $headers, $item ) {
@@ -178,6 +242,7 @@ class Gmail_Sync {
 
         //fetch messages
         $messages = $batch->execute();
+        $this->gmail->getClient()->setUseBatch( false );
         $emails = [];
         if ( !empty( $messages ) ) {
             foreach ( $messages as $message ) {
@@ -212,6 +277,7 @@ class Gmail_Sync {
                 $email['cid'] = $message_id_parts[1];
                 $email['sid'] = $message_id_parts[2];
 
+                $email['attachments'] = $this->save_attachments( $email['attachments'] );
                 // Save & sent the email
                 switch ( $message_id_parts[3] ) {
                     case 'r1':
