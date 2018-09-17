@@ -53,6 +53,7 @@ class Google_Auth {
         $client->addScope( \Google_Service_Gmail::GMAIL_SETTINGS_BASIC );
         $client->addScope( \Google_Service_Gmail::GMAIL_READONLY );
         $client->setRedirectUri( $this->get_redirect_url() );
+        $client->setApprovalPrompt('force');
 
         $token = get_option( 'erp_google_access_token' );
 
@@ -72,8 +73,8 @@ class Google_Auth {
     }
 
     public function set_access_token( $code ) {
-        $this->client->authenticate( $code );
-        $access_token = $this->client->getAccessToken();
+        $access_token = $this->client->fetchAccessTokenWithAuthCode( $code );
+//        $access_token = $this->client->getAccessToken();
         update_option( 'erp_google_access_token', $access_token );
     }
 
