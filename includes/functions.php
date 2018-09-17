@@ -2195,7 +2195,7 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
 
     $phpmailer->preSend();
 
-    $message = new \Google_Service_Gmail_Message();
+    $email = new \Google_Service_Gmail_Message();
 
     $base64 = str_replace(
         array( '+', '/', '=' ),
@@ -2203,13 +2203,20 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
         base64_encode( $phpmailer->getSentMIMEMessage() )
     ); // url safe.
 
-    $message->setRaw( $base64 );
+    $email->setRaw( $base64 );
 
     $service = new \Google_Service_Gmail( wperp()->google_auth->get_client() );
     try {
-        $response = $service->users_messages->send( 'me', $message );
+        $response = $service->users_messages->send( 'me', $email );
+        error_log('Sending email to : '. $to);
     } catch ( Google_Service_Exception $exception ) {
+        error_log( 'Failed sending email to : ------------------------ ' );
+        error_log(print_r( $to,1 ) );
+        error_log(print_r( $subject,1 ) );
+        error_log(print_r( $headers,1 ) );
         error_log( print_r( $exception->getMessage(), 1));
+        error_log(print_r(debug_backtrace(),1));
+        error_log( '-------------------------------' );
         return false;
     }
 
