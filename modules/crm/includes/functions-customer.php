@@ -2363,6 +2363,11 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
  * @return array erp_crm_save_customer_feed_data
  */
 function erp_crm_save_email_activity( $email, $inbound_email_address ) {
+    $extra_data = [ 'replied' => 1 ];
+
+    if ( isset( $email['attachments'] ) ) {
+        $extra_data['attachments'] = $email['attachments'];
+    }
 
     $save_data = [
         'user_id'       => $email['cid'],
@@ -2370,7 +2375,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         'message'       => $email['body'],
         'type'          => 'email',
         'email_subject' => $email['subject'],
-        'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
+        'extra'         => base64_encode( json_encode( $extra_data ) ),
     ];
 
     $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
@@ -2401,7 +2406,20 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         $reply_to = $inbound_email_address;
         $headers  .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
-        erp_mail( $to_email, $email['subject'], $email['body'], $headers, [], $custom_headers );
+        $mail_attachments = [];
+
+        if ( isset( $email['attachments'] ) && !empty( $email['attachments'] ) ) {
+            $mail_attachments = wp_list_pluck( $email['attachments'], 'path' );
+        }
+
+        if ( wperp()->google_auth->is_active() ){
+            //send using gmail api
+            $sent = erp_mail_send_via_gmail( $to_email, $email['subject'], $email['body'], $headers, $mail_attachments, $custom_headers  );
+        } else {
+            // Send email at contact
+            $sent = erp_mail( $to_email, $email['subject'], $email['body'], $headers, $mail_attachments, $custom_headers );
+        }
+
     }
 
     // Update email counter
@@ -2419,13 +2437,20 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
  * @return array customer_feed_data
  */
 function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_address ) {
+
+    $extra_data = [ 'replied' => 1 ];
+
+    if ( isset( $email['attachments'] ) ) {
+        $extra_data['attachments'] = $email['attachments'];
+    }
+
     $save_data = [
         'user_id'       => $email['cid'],
         'created_by'    => $email['sid'],
         'message'       => $email['body'],
         'type'          => 'email',
         'email_subject' => $email['subject'],
-        'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
+        'extra'         => base64_encode( json_encode( $extra_data ) ),
     ];
 
     $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
@@ -2436,8 +2461,6 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
 
     $headers = "";
     $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
-
-    $erp_is_imap_active = erp_is_imap_active();
 
     $message_id = md5( uniqid( time() ) ) . '.' . $save_data['user_id'] . '.' . $save_data['created_by'] . '.r1@' . $_SERVER['HTTP_HOST'];
 
@@ -2450,8 +2473,22 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
     $reply_to = $inbound_email_address;
     $headers  .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
-    // Send email a contact
-    erp_mail( $contact->email, $email['subject'], $email['body'], $headers, [], $custom_headers );
+    $owner      = $contact->get_contact_owner();
+    $owner_info = get_userdata($owner);
+
+    $mail_attachments = [];
+
+    if ( isset( $email['attachments'] ) && !empty( $email['attachments'] ) ) {
+        $mail_attachments = wp_list_pluck( $email['attachments'], 'path' );
+    }
+
+    if ( wperp()->google_auth->is_active() ){
+        //send using gmail api
+        $sent = erp_mail_send_via_gmail( $owner_info->user_email, $email['subject'], $email['body'], $headers, $mail_attachments, $custom_headers  );
+    } else {
+        // Send email at contact
+        $sent =  erp_mail( $owner_info->user_email, $email['subject'], $email['body'], $headers, $mail_attachments, $custom_headers );
+    }
 
     // Update email counter
     update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
