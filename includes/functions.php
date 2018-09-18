@@ -2215,7 +2215,7 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
         error_log(print_r( $subject,1 ) );
         error_log(print_r( $headers,1 ) );
         error_log( print_r( $exception->getMessage(), 1));
-        error_log(print_r(debug_backtrace(),1));
+//        error_log(print_r(debug_backtrace(),1));
         error_log( '-------------------------------' );
         return false;
     }

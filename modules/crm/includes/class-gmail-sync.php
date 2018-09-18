@@ -160,7 +160,7 @@ class Gmail_Sync {
             if ( !isset( $value['body']['attachmentId'] ) ) {
                 continue;
             }
-            $data = '';
+
             try {
                 $att = $this->gmail->users_messages_attachments->get( $this->userid, $message->getId(), $value['body']['attachmentId'] );
                 $data = $att->getData();
@@ -311,13 +311,26 @@ class Gmail_Sync {
      * @return string body
      */
     private function get_message_body( \Google_Service_Gmail_Message $message ) {
+
+        if ( $message->getPayload()->getBody()->getData() ) {
+            return $message->getPayload()->getBody()->getData();
+        }
+
         $parts = $message->getPayload()->getParts();
 
         if ( !empty( $parts ) ) {
-            return array_last( $parts )->getBody()->getData();
-        }
+            foreach ( $parts as $part ) {
 
-        return $message->getPayload()->getBody()->getData();
+                if ( !empty( $part['parts'] ) ) {
+                    return array_last( $part['parts'] )->getBody()->getData();
+                }
+
+                if ( $part['mimeType'] != 'text/html' )
+                    continue;
+
+                return $part->getBody()->getData();
+            }
+        }
     }
 
 }
