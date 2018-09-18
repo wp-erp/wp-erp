@@ -151,4 +151,9 @@ class Google_Auth {
         wp_redirect( $settings_url );
     }
 
+    public function get_settings_url() {
+        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-email', 'section' => 'gmail_api' ], admin_url( 'admin.php' ) );
+        return $settings_url;
+    }
+
 }

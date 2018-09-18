@@ -3,8 +3,15 @@ global $current_user;
 $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
 $save_replies = erp_crm_get_save_replies();
+$block = !erp_crm_sync_is_active() ? 'crm-blocked' : '';
+
 ?>
-<div id="email">
+<div id="email" class="<?php echo $block; ?>">
+
+    <?php if( !erp_crm_sync_is_active() ) : ?>
+        <a class="button button-primary" style="z-index: 2;position: relative;top: 150px;left: 43%;" href="<?php echo wperp()->google_auth->get_settings_url(); ?>"><?php _e( 'Configure Settings', 'erp' ); ?></a>
+    <?php endif; ?>
+
     <p class="email-templates">
         <select name="select_templates" id="erp-crm-activity-insert-templates" v-model="emailTemplates" v-selecttwo="emailTemplates" class="select2" v-on:change="insertSaveReplies()" style="width: 100%" data-placeholder="Select a templates...">
             <option value=""><?php _e( 'Select a templates', 'erp' ); ?></option>
