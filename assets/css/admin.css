@@ -795,6 +795,17 @@
   padding-top: 10px;
   border-top: 1px solid #eee;
 }
+.erp-single-customer .erp-customer-feeds .crm-blocked:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #32373cc7;
+  z-index: 1;
+}
+.erp-single-customer .erp-customer-feeds #email {
+  position: relative;
+}
 .erp-single-customer .erp-customer-feeds #email p label {
   margin-left: 8px;
 }

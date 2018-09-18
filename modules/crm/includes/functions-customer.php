@@ -3852,3 +3852,22 @@ function erp_crm_add_tag_taxonomy(){
         'show_ui'   => false,
     ) );
 }
+
+/**
+ * Check if Inbound Email sync is configured
+ *
+ * @since 1.14.0
+ *
+ * @return bool
+ */
+function erp_crm_sync_is_active() {
+    if ( !wperp()->google_auth->is_active() ) {
+        return true;
+    }
+
+    if ( erp_is_imap_active() ) {
+        return true;
+    }
+
+    return false;
+}
