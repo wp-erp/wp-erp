@@ -131,7 +131,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             return 'filter_by_year';
         }
 
-        if ( isset( $_REQUEST['s'] ) ) {
+        if ( ! empty( $_REQUEST['s'] ) ) {
             return 'search_request';
         }
 
