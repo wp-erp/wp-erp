@@ -289,7 +289,14 @@ class CRM_Settings extends ERP_Settings_Page {
         return $fields;
     }
 
-    public function get_provider_settings() {
+    /**
+     * Get all fields for current Sub Section
+     *
+     * @since 1.3.14
+     *
+     * @return array fields
+     */
+    public function get_sub_section_fields() {
 
         switch ( $_GET['sub_section'] ) {
             case 'gmail' :
@@ -300,6 +307,13 @@ class CRM_Settings extends ERP_Settings_Page {
         }
     }
 
+    /**
+     * Get all fields for GMAIL API sub section
+     *
+     * @since 1.3.14
+     *
+     * @return array
+     */
     function get_gmail_api_settings_fields() {
         $fields[] = [
             'title' => __( 'Gmail / G suite Authentication', 'erp' ),
@@ -676,7 +690,9 @@ class CRM_Settings extends ERP_Settings_Page {
     }
 
     /**
-     * Output the settings.
+     * Override Output of settings fields for sub sections.
+     *
+     * @since 1.3.14
      */
     public function output( $section = false ) {
         if ( !isset( $_GET['sub_section'] ) ) {
@@ -686,12 +702,19 @@ class CRM_Settings extends ERP_Settings_Page {
         $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
 
         if ( $current_section ) {
-            $this->render_sub_section( $this->get_provider_settings() );
+            $this->render_sub_section( $this->get_sub_section_fields() );
         } else {
             parent::output();
         }
     }
 
+    /**
+     * Render fields for sub sections
+     *
+     * @since 1.3.14
+     *
+     * @param $fields
+     */
     function render_sub_section( $fields ) {
         ?>
         <table class="form-table">
@@ -700,6 +723,13 @@ class CRM_Settings extends ERP_Settings_Page {
         <?php
     }
 
+    /**
+     * Override parent save to save sub section fields
+     *
+     * @since 1.3.14
+     *
+     * @param bool $section
+     */
     function save( $section = false ) {
         if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
 
@@ -712,7 +742,7 @@ class CRM_Settings extends ERP_Settings_Page {
             // saving individual email settings
             if ( $current_section ) {
 
-                $settings = $this->get_provider_settings();
+                $settings = $this->get_sub_section_fields();
                 if ( $settings ) {
                     foreach ( $settings as $field ) {
                         if ( !isset( $field['id'] ) || !isset( $_POST[$field['id']] ) ) {
