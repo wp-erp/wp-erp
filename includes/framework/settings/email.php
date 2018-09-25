@@ -417,7 +417,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
      * @return void
      */
     public function imap_status() {
-        $options = get_option( 'erp_settings_erp-email_imap', [] );
+        $options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
         $imap_status = (boolean)isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
         ?>
         <tr valign="top">

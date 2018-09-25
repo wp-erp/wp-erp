@@ -2318,7 +2318,7 @@ function erp_email_settings_javascript() {
  * @return boolean
  */
 function erp_is_imap_active() {
-    $options = get_option( 'erp_settings_erp-email_imap', [] );
+    $options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
 
     $imap_status = (boolean) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
     $enable_imap = ( isset( $options['enable_imap'] ) && $options['enable_imap'] == 'yes' ) ? true : false;
