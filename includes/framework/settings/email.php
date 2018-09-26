@@ -14,13 +14,6 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
         add_action( 'erp_admin_field_notification_emails', [ $this, 'notification_emails' ] );
         add_action( 'erp_admin_field_smtp_test_connection', [ $this, 'smtp_test_connection' ] );
-        add_action( 'erp_admin_field_imap_test_connection', [ $this, 'imap_test_connection' ] );
-        add_action( 'erp_admin_field_gmail_api_settings', [ $this, 'gmail_api_settings' ] );
-        add_action( 'erp_admin_field_gmail_redirect_url', [ $this, 'render_gmail_redirect_url' ] );
-        add_action( 'erp_admin_field_gmail_api_connected', [ $this, 'render_gmail_api_connected' ] );
-        add_action( 'erp_admin_field_imap_status', [ $this, 'imap_status' ] );
-
-        add_action( 'erp_update_option', [ $this, 'cron_schedule' ] );
         add_action( 'admin_footer', 'erp_email_settings_javascript' );
     }
 
@@ -32,9 +25,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
     public function get_sections() {
         $sections = [
             'general'   => __( 'General', 'erp' ),
-            'smtp'      => __( 'SMTP', 'erp' ),
-            'imap'      => __( 'IMAP/POP3', 'erp' ),
-            'gmail_api' => __( 'Gmail Connect', 'erp' )
+            'smtp'      => __( 'SMTP', 'erp' )
         ];
 
         return apply_filters( 'erp_settings_email_sections', $sections );
@@ -187,115 +178,20 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
         // End SMTP settings
 
-        $fields['imap'] = $this->get_imap_settings_fields();
+//        $fields['imap'] = $this->get_imap_settings_fields();
         // End IMAP settings
 
-        $fields['gmail_api'] = $this->get_gmail_api_settings_fields();
-        $fields['gmail_api'][] = [
-            'type' => 'sectionend',
-            'id'   => 'script_styling_options'
-        ];
+//        $fields['gmail_api'] = $this->get_gmail_api_settings_fields();
+//        $fields['gmail_api'][] = [
+//            'type' => 'sectionend',
+//            'id'   => 'script_styling_options'
+//        ];
 
         $fields = apply_filters( 'erp_settings_email_section_fields', $fields, $section );
 
         $section = $section === false ? $fields['general'] : $fields[$section];
 
         return $section;
-    }
-
-    function get_gmail_api_settings_fields() {
-        $fields[] = [
-            'title' => __( 'Gmail / G suite Authentication', 'erp' ),
-            'type'  => 'title',
-            'desc'  => __( 'Create a Google App and authorize your account to Send and Recieve emails using Gmail', 'erp' )
-        ];
-
-        if ( wperp()->google_auth->is_connected() ) {
-            $fields[] = [
-                'type' => 'gmail_api_connected',
-            ];
-
-            return $fields;
-        }
-
-        $fields[] = [
-            'title' => __( 'Client ID', 'erp' ),
-            'id'    => 'client_id',
-            'type'  => 'text',
-            'desc'  => __( 'Your APP Client ID', 'erp' )
-        ];
-
-        $fields[] = [
-            'title' => __( 'Client Secret', 'erp' ),
-            'id'    => 'client_secret',
-            'type'  => 'text',
-            'desc'  => __( 'Your APP Client Secret', 'erp' )
-        ];
-
-        $fields[] = [
-            'type' => 'gmail_redirect_url',
-        ];
-
-        if ( wperp()->google_auth->has_credentials() ) {
-            $fields[] = [
-                'type' => 'gmail_api_settings',
-            ];
-
-            return $fields;
-        }
-
-
-        return $fields;
-    }
-
-    function render_gmail_redirect_url() {
-        $url = wperp()->google_auth->get_redirect_url();
-        ?>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-                <label for="redirect_url"><?php _e( 'Redirect URL to use', 'erp' ); ?></label>
-            </th>
-            <td class="forminp forminp-text">
-                <input name="redirect_url" id="redirect_url" type="text" disabled value="<?php echo $url ?>"
-                       class="regular-text">
-                <p class="description"><?php _e( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ) ?></p>
-            </td>
-        </tr>
-
-        <?php
-    }
-
-    function render_gmail_api_connected() {
-        $connected_email = wperp()->google_auth->is_connected();
-        $url = wperp()->google_auth->get_disconnect_url();
-        ?>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-                <?php _e( 'Connected', 'erp' ); ?>
-            </th>
-            <td class="forminp forminp-text">
-                <p><b><?php echo $connected_email ?></b></p>
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-            </th>
-            <td class="forminp forminp-text">
-                <a style="background: #dc3232; color:#fff" class="button-secondary" href="<?php echo $url ?>"> <?php _e( 'Disconnect','erp') ?> </a>
-            </td>
-        </tr>
-        <?php
-    }
-
-    function gmail_api_settings() {
-        $url = wperp()->google_auth->get_client()->createAuthUrl();
-        ?>
-        <tr valign="top">
-            <td class="forminp forminp-text">
-                <a target="_blank" class="button-primary" href="<?php echo $url ?>">Click to Authorize your gmail account </a>
-            </td>
-        </tr>
-        <?php
     }
 
     function notification_emails() {
@@ -390,47 +286,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         <?php
     }
 
-    /**
-     * Display imap test connection button.
-     *
-     * @return void
-     */
-    public function imap_test_connection() {
-        ?>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-                &nbsp;
-            </th>
-            <td class="forminp forminp-text">
-                <a id="imap-test-connection"
-                   class="button-secondary"><?php esc_attr_e( 'Test Connection', 'erp' ); ?></a>
-                <span class="erp-loader" style="display: none;"></span>
-                <p class="description"><?php _e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
-            </td>
-        </tr>
-        <?php
-    }
 
-    /**
-     * Imap connection status.
-     *
-     * @return void
-     */
-    public function imap_status() {
-        $options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
-        $imap_status = (boolean)isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
-        ?>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-                <?php _e( 'Status', 'erp' ); ?>
-            </th>
-            <td class="forminp forminp-text">
-                <span
-                    class="dashicons dashicons-<?php echo ( $imap_status ) ? 'yes green' : 'no red' ?>"></span><?php echo ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ); ?>
-            </td>
-        </tr>
-        <?php
-    }
 
     /**
      * Get IMAP Settings Fields.
@@ -554,25 +410,6 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
 
         return $fields;
-    }
-
-    /**
-     * Set cron schedule event to check new inbound emails
-     *
-     * @return void
-     */
-    public function cron_schedule( $value ) {
-        if ( !isset( $_GET['section'] ) || ( $_GET['section'] != 'imap' ) ) {
-            return;
-        }
-
-        if ( !isset( $value['id'] ) || ( $value['id'] != 'schedule' ) ) {
-            return;
-        }
-
-        $recurrence = isset( $_POST['schedule'] ) ? $_POST['schedule'] : 'hourly';
-        wp_clear_scheduled_hook( 'erp_crm_inbound_email_scheduled_events' );
-        wp_schedule_event( time(), $recurrence, 'erp_crm_inbound_email_scheduled_events' );
     }
 
     /**

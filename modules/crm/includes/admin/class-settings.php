@@ -18,6 +18,17 @@ class CRM_Settings extends ERP_Settings_Page {
 
         add_action( 'erp_admin_field_listing_save_templates', [ $this, 'listing_save_templates' ] );
         add_action( 'erp_admin_field_render_email_providers', [ $this, 'render_email_providers' ] );
+        add_action( 'erp_settings_crm_updated_sub_section', [$this, 'toggle_providers'], 10, 2 );
+
+        add_action( 'erp_admin_field_imap_status', [ $this, 'imap_status' ] );
+        add_action( 'erp_admin_field_imap_test_connection', [ $this, 'imap_test_connection' ] );
+
+        add_action( 'erp_admin_field_gmail_api_settings', [ $this, 'gmail_api_settings' ] );
+        add_action( 'erp_admin_field_gmail_redirect_url', [ $this, 'render_gmail_redirect_url' ] );
+        add_action( 'erp_admin_field_gmail_api_connected', [ $this, 'render_gmail_api_connected' ] );
+
+        add_action( 'erp_update_option', [ $this, 'cron_schedule' ] );
+
     }
 
     public function get_option_id() {
@@ -324,14 +335,6 @@ class CRM_Settings extends ERP_Settings_Page {
         if ( wperp()->google_auth->is_connected() ) {
 
             $fields[] = [
-                'title'   => __( 'Enable Sync', 'erp' ),
-                'id'      => 'enable_gmail',
-                'type'    => 'radio',
-                'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
-                'default' => 'yes'
-            ];
-
-            $fields[] = [
                 'type' => 'gmail_api_connected',
             ];
 
@@ -488,6 +491,98 @@ class CRM_Settings extends ERP_Settings_Page {
         ];
 
         return $fields;
+    }
+
+    /**
+     * Display imap test connection button.
+     *
+     * @return void
+     */
+    public function imap_test_connection() {
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                &nbsp;
+            </th>
+            <td class="forminp forminp-text">
+                <a id="imap-test-connection"
+                   class="button-secondary"><?php esc_attr_e( 'Test Connection', 'erp' ); ?></a>
+                <span class="erp-loader" style="display: none;"></span>
+                <p class="description"><?php _e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
+            </td>
+        </tr>
+        <?php
+    }
+
+    /**
+     * Imap connection status.
+     *
+     * @return void
+     */
+    public function imap_status() {
+        $options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+        $imap_status = (boolean)isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <?php _e( 'Status', 'erp' ); ?>
+            </th>
+            <td class="forminp forminp-text">
+                <span
+                    class="dashicons dashicons-<?php echo ( $imap_status ) ? 'yes green' : 'no red' ?>"></span><?php echo ( $imap_status ) ? __( 'Connected', 'erp' ) : __( 'Not Connected', 'erp' ); ?>
+            </td>
+        </tr>
+        <?php
+    }
+
+    function gmail_api_settings() {
+        $url = wperp()->google_auth->get_client()->createAuthUrl();
+        ?>
+        <tr valign="top">
+            <td class="forminp forminp-text">
+                <a target="_blank" class="button-primary" href="<?php echo $url ?>">Click to Authorize your gmail account </a>
+            </td>
+        </tr>
+        <?php
+    }
+
+    function render_gmail_redirect_url() {
+        $url = wperp()->google_auth->get_redirect_url();
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <label for="redirect_url"><?php _e( 'Redirect URL to use', 'erp' ); ?></label>
+            </th>
+            <td class="forminp forminp-text">
+                <input name="redirect_url" id="redirect_url" type="text" disabled value="<?php echo $url ?>"
+                       class="regular-text">
+                <p class="description"><?php _e( 'Copy and Use this url when oAuth consent asks for Authorized Redirect URL', 'erp' ) ?></p>
+            </td>
+        </tr>
+
+        <?php
+    }
+
+    function render_gmail_api_connected() {
+        $connected_email = wperp()->google_auth->is_connected();
+        $url = wperp()->google_auth->get_disconnect_url();
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <?php _e( 'Connected', 'erp' ); ?>
+            </th>
+            <td class="forminp forminp-text">
+                <p><b><?php echo $connected_email ?></b></p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+            </th>
+            <td class="forminp forminp-text">
+                <a style="background: #dc3232; color:#fff" class="button-secondary" href="<?php echo $url ?>"> <?php _e( 'Disconnect','erp') ?> </a>
+            </td>
+        </tr>
+        <?php
     }
 
     public function render_email_providers(){
@@ -690,6 +785,33 @@ class CRM_Settings extends ERP_Settings_Page {
     }
 
     /**
+     * Disable other provider if one is enabled
+     *
+     * @param $section
+     *
+     * @param $options
+     */
+    public function toggle_providers( $section, $options ) {
+        switch ( $section ) {
+            case 'gmail' :
+                if ( wperp()->google_auth->is_active() ) {
+                    $option = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+                    $option['enable_imap'] = 'no';
+                    update_option( 'erp_settings_erp-crm_email_connect_imap', $option );
+                }
+                break;
+
+            case 'imap' :
+                if ( isset( $options['enable_imap'] ) && $options['enable_imap'] == 'yes' ) {
+                    wperp()->google_auth->clear_account_data();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
      * Override Output of settings fields for sub sections.
      *
      * @since 1.3.14
@@ -743,6 +865,7 @@ class CRM_Settings extends ERP_Settings_Page {
             if ( $current_section ) {
 
                 $settings = $this->get_sub_section_fields();
+                $update_options = get_option(  $this->get_option_id(), [] );
                 if ( $settings ) {
                     foreach ( $settings as $field ) {
                         if ( !isset( $field['id'] ) || !isset( $_POST[$field['id']] ) ) {
@@ -756,9 +879,30 @@ class CRM_Settings extends ERP_Settings_Page {
                     }
                 }
                 update_option( $this->get_option_id(), $update_options );
+
+                do_action('erp_settings_crm_updated_sub_section', $current_section, $update_options );
             } else {
                 parent::save();
             }
         }
+    }
+
+    /**
+     * Set cron schedule event to check new inbound emails
+     *
+     * @return void
+     */
+    public function cron_schedule( $value ) {
+        if ( !isset( $_GET['section'] ) || ( $_GET['section'] != 'email_connect' ) ) {
+            return;
+        }
+
+        if ( !isset( $value['id'] ) || ( $value['id'] != 'schedule' ) ) {
+            return;
+        }
+
+        $recurrence = isset( $_POST['schedule'] ) ? $_POST['schedule'] : 'hourly';
+        wp_clear_scheduled_hook( 'erp_crm_inbound_email_scheduled_events' );
+        wp_schedule_event( time(), $recurrence, 'erp_crm_inbound_email_scheduled_events' );
     }
 }
