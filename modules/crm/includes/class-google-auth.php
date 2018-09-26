@@ -100,8 +100,7 @@ class Google_Auth {
     }
 
     public function has_credentials() {
-        $options = get_option( 'erp_settings_erp-email_gmail_api', [] );
-
+        $options = get_option( 'erp_settings_erp-crm_email_connect_gmail', [] );
         if ( !isset( $options['client_id'] ) || empty( $options['client_id'] ) ) {
             return false;
         }
@@ -131,28 +130,34 @@ class Google_Auth {
 
         wperp()->google_sync->update_profile();
 
-        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-email', 'section' => 'gmail_api' ], admin_url( 'admin.php' ) );
-        wp_redirect( $settings_url );
+        //disable other providers, disabel imap
+        $option = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
+        $option['enable_imap'] = 'no';
+        update_option( 'erp_settings_erp-crm_email_connect_imap', $option );
+
+        wp_redirect( $this->get_settings_url() );
     }
 
     public function disconnect_account() {
         if ( !isset( $_GET['erp-auth-dc'] ) ) {
             return;
         }
+        $this->clear_account_data();
 
+        wp_redirect( $this->get_settings_url() );
+    }
+
+    public function clear_account_data() {
         //reset access token
         update_option( 'erp_google_access_token', [] );
         //reset email
         update_option( 'erp_gmail_authenticated_email', '' );
         //reset history id
         update_option( 'erp_gsync_historyid', '' );
-
-        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-email', 'section' => 'gmail_api' ], admin_url( 'admin.php' ) );
-        wp_redirect( $settings_url );
     }
 
     public function get_settings_url() {
-        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-email', 'section' => 'gmail_api' ], admin_url( 'admin.php' ) );
+        $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', 'section' => 'email_connect', 'sub_section' => 'gmail' ], admin_url( 'admin.php' ) );
         return $settings_url;
     }
 
