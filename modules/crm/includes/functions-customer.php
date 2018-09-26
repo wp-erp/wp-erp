@@ -3861,7 +3861,7 @@ function erp_crm_add_tag_taxonomy(){
  * @return bool
  */
 function erp_crm_sync_is_active() {
-    if ( !wperp()->google_auth->is_active() ) {
+    if ( wperp()->google_auth->is_active() ) {
         return true;
     }
 
