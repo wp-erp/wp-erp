@@ -809,7 +809,17 @@
             padding-top:10px;
             border-top:1px solid #eee;
         }
+        .crm-blocked:before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #32373cc7;
+            z-index: 1;
+        }
+
         #email {
+            position: relative;
             p {
                 label {
                     margin-left: 8px;
@@ -1346,6 +1356,13 @@
                 padding: 0px 0px 10px;
                 border-bottom: 1px solid #eee;
                 margin-bottom: 10px;
+                font-style: italic;
+            }
+
+            .timeline > li > .timeline-item > .timeline-body .timeline-email-attachments {
+                padding: 0px 0px 10px;
+                border-top: 1px solid #eee;
+                margin: 20px 0px;
                 font-style: italic;
             }
 

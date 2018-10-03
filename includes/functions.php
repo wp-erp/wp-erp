@@ -2009,6 +2009,220 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
     return $is_mail_sent;
 }
 
+function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
+
+    global $phpmailer;
+
+    // (Re)create it, if it's gone missing
+    if ( ! ( $phpmailer instanceof PHPMailer ) ) {
+        require_once ABSPATH . WPINC . '/class-phpmailer.php';
+        require_once ABSPATH . WPINC . '/class-smtp.php';
+        $phpmailer = new PHPMailer( true );
+    }
+
+    // Headers
+    $cc = $bcc = $reply_to = array();
+
+    if ( empty( $headers ) ) {
+        $headers = array();
+    } else {
+        if ( !is_array( $headers ) ) {
+            // Explode the headers out, so this function can take both
+            // string headers and an array of headers.
+            $tempheaders = explode( "\n", str_replace( "\r\n", "\n", $headers ) );
+        } else {
+            $tempheaders = $headers;
+        }
+        $headers = array();
+
+        // If it's actually got contents
+        if ( !empty( $tempheaders ) ) {
+            // Iterate through the raw headers
+            foreach ( (array) $tempheaders as $header ) {
+                if ( strpos($header, ':') === false ) {
+                    if ( false !== stripos( $header, 'boundary=' ) ) {
+                        $parts = preg_split('/boundary=/i', trim( $header ) );
+                        $boundary = trim( str_replace( array( "'", '"' ), '', $parts[1] ) );
+                    }
+                    continue;
+                }
+                // Explode them out
+                list( $name, $content ) = explode( ':', trim( $header ), 2 );
+
+                // Cleanup crew
+                $name    = trim( $name    );
+                $content = trim( $content );
+
+                switch ( strtolower( $name ) ) {
+                    // Mainly for legacy -- process a From: header if it's there
+                    case 'from':
+                        $bracket_pos = strpos( $content, '<' );
+                        if ( $bracket_pos !== false ) {
+                            // Text before the bracketed email is the "From" name.
+                            if ( $bracket_pos > 0 ) {
+                                $from_name = substr( $content, 0, $bracket_pos - 1 );
+                                $from_name = str_replace( '"', '', $from_name );
+                                $from_name = trim( $from_name );
+                            }
+
+                            $from_email = substr( $content, $bracket_pos + 1 );
+                            $from_email = str_replace( '>', '', $from_email );
+                            $from_email = trim( $from_email );
+
+                            // Avoid setting an empty $from_email.
+                        } elseif ( '' !== trim( $content ) ) {
+                            $from_email = trim( $content );
+                        }
+                        break;
+                    case 'content-type':
+                        if ( strpos( $content, ';' ) !== false ) {
+                            list( $type, $charset_content ) = explode( ';', $content );
+                            $content_type = trim( $type );
+                            if ( false !== stripos( $charset_content, 'charset=' ) ) {
+                                $charset = trim( str_replace( array( 'charset=', '"' ), '', $charset_content ) );
+                            } elseif ( false !== stripos( $charset_content, 'boundary=' ) ) {
+                                $boundary = trim( str_replace( array( 'BOUNDARY=', 'boundary=', '"' ), '', $charset_content ) );
+                                $charset = '';
+                            }
+
+                            // Avoid setting an empty $content_type.
+                        } elseif ( '' !== trim( $content ) ) {
+                            $content_type = trim( $content );
+                        }
+                        break;
+                    case 'cc':
+                        $cc = array_merge( (array) $cc, explode( ',', $content ) );
+                        break;
+                    case 'bcc':
+                        $bcc = array_merge( (array) $bcc, explode( ',', $content ) );
+                        break;
+                    case 'reply-to':
+                        $reply_to = array_merge( (array) $reply_to, explode( ',', $content ) );
+                        break;
+                    default:
+                        // Add it to our grand headers array
+                        $headers[trim( $name )] = trim( $content );
+                        break;
+                }
+            }
+        }
+    }
+
+    $phpmailer->clearAllRecipients();
+    $phpmailer->clearAttachments();
+    $phpmailer->clearCustomHeaders();
+    $phpmailer->clearReplyTos();
+
+    $erp_email_settings      = get_option( 'erp_settings_erp-email_general', [] );
+
+    $from_email = isset( $erp_email_settings['from_email'] ) ? $erp_email_settings['from_email'] : get_option( 'admin_email' );
+    $from_name  = isset( $erp_email_settings['from_name'] ) ? $erp_email_settings['from_name'] : get_bloginfo( 'name' );;
+
+    $content_type = 'text/html';
+
+    $phpmailer->From        = apply_filters( 'erp_mail_from', $from_email );
+    $phpmailer->FromName    = apply_filters( 'erp_mail_from_name', $from_name );
+    $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
+
+    // Set whether it's plaintext, depending on $content_type
+    if ( 'text/html' == $content_type )
+        $phpmailer->isHTML( true );
+
+    //Return-Path
+    $phpmailer->Sender = apply_filters( 'erp_mail_return_path', $phpmailer->From );
+
+    if ( ! empty( $custom_headers ) ) {
+        foreach ( $custom_headers as $key => $value ) {
+            $phpmailer->addCustomHeader( $key, $value );
+        }
+    }
+
+    // Set mail's subject and body
+    $phpmailer->Subject = $subject;
+    $phpmailer->Body    = $message;
+
+    // Set destination addresses, using appropriate methods for handling addresses
+    $address_headers = compact( 'to', 'cc', 'bcc', 'reply_to' );
+
+    foreach ( $address_headers as $address_header => $addresses ) {
+        if ( empty( $addresses ) ) {
+            continue;
+        }
+
+        foreach ( (array) $addresses as $address ) {
+            try {
+                // Break $recipient into name and address parts if in the format "Foo <bar@baz.com>"
+                $recipient_name = '';
+
+                if ( preg_match( '/(.*)<(.+)>/', $address, $matches ) ) {
+                    if ( count( $matches ) == 3 ) {
+                        $recipient_name = $matches[1];
+                        $address        = $matches[2];
+                    }
+                }
+
+                switch ( $address_header ) {
+                    case 'to':
+                        $phpmailer->addAddress( $address, $recipient_name );
+                        break;
+                    case 'cc':
+                        $phpmailer->addCc( $address, $recipient_name );
+                        break;
+                    case 'bcc':
+                        $phpmailer->addBcc( $address, $recipient_name );
+                        break;
+                    case 'reply_to':
+                        $phpmailer->addReplyTo( $address, $recipient_name );
+                        break;
+                }
+            } catch ( phpmailerException $e ) {
+                continue;
+            }
+        }
+    }
+
+    //add attachments
+    if ( !empty( $attachments ) ) {
+        foreach ( $attachments as $attachment ) {
+            try {
+                $phpmailer->addAttachment( $attachment );
+            }
+            catch ( phpmailerException $e ) {
+                continue;
+            }
+        }
+    }
+
+    $phpmailer->preSend();
+
+    $email = new \Google_Service_Gmail_Message();
+
+    $base64 = str_replace(
+        array( '+', '/', '=' ),
+        array( '-', '_', '' ),
+        base64_encode( $phpmailer->getSentMIMEMessage() )
+    ); // url safe.
+
+    $email->setRaw( $base64 );
+
+    $service = new \Google_Service_Gmail( wperp()->google_auth->get_client() );
+    try {
+        $response = $service->users_messages->send( 'me', $email );
+        error_log('Sending email to : '. $to);
+    } catch ( Google_Service_Exception $exception ) {
+        error_log( 'Failed sending email to : ------------------------ ' );
+        error_log(print_r( $to,1 ) );
+        error_log(print_r( $subject,1 ) );
+        error_log(print_r( $headers,1 ) );
+        error_log( print_r( $exception->getMessage(), 1));
+//        error_log(print_r(debug_backtrace(),1));
+        error_log( '-------------------------------' );
+        return false;
+    }
+
+    return true;
+}
+
 /**
  * Email JavaScript enqueue.
  *
@@ -2104,7 +2318,7 @@ function erp_email_settings_javascript() {
  * @return boolean
  */
 function erp_is_imap_active() {
-    $options = get_option( 'erp_settings_erp-email_imap', [] );
+    $options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
 
     $imap_status = (boolean) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
     $enable_imap = ( isset( $options['enable_imap'] ) && $options['enable_imap'] == 'yes' ) ? true : false;
