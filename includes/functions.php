@@ -2113,15 +2113,13 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
     $phpmailer->clearCustomHeaders();
     $phpmailer->clearReplyTos();
 
-    $erp_email_settings      = get_option( 'erp_settings_erp-email_general', [] );
-
-    $from_email = isset( $erp_email_settings['from_email'] ) ? $erp_email_settings['from_email'] : get_option( 'admin_email' );
-    $from_name  = isset( $erp_email_settings['from_name'] ) ? $erp_email_settings['from_name'] : get_bloginfo( 'name' );;
+    $from_email = get_option( 'erp_gmail_authenticated_email', true );
+    $from_name  = erp_crm_get_email_from_name();
 
     $content_type = 'text/html';
 
-    $phpmailer->From        = apply_filters( 'erp_mail_from', $from_email );
-    $phpmailer->FromName    = apply_filters( 'erp_mail_from_name', $from_name );
+    $phpmailer->From        = $from_email;
+    $phpmailer->FromName    = $from_name;
     $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
 
     // Set whether it's plaintext, depending on $content_type
@@ -2140,9 +2138,9 @@ function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attac
     // Set mail's subject and body
     $phpmailer->Subject = $subject;
     $phpmailer->Body    = $message;
-
     // Set destination addresses, using appropriate methods for handling addresses
     $address_headers = compact( 'to', 'cc', 'bcc', 'reply_to' );
+    $address_headers['reply_to'] = [ $from_name. ' <'.$from_email.'>' ];
 
     foreach ( $address_headers as $address_header => $addresses ) {
         if ( empty( $addresses ) ) {
