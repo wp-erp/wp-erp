@@ -4,12 +4,12 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
 $save_replies = erp_crm_get_save_replies();
 $block = !erp_crm_sync_is_active() ? 'crm-blocked' : '';
-
+$settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', 'section' => 'email_connect' ], admin_url( 'admin.php' ) );
 ?>
 <div id="email" class="<?php echo $block; ?>">
 
     <?php if( !erp_crm_sync_is_active() ) : ?>
-        <a class="button button-primary" style="z-index: 2;position: relative;top: 150px;left: 43%;" href="<?php echo wperp()->google_auth->get_settings_url(); ?>"><?php _e( 'Configure Settings', 'erp' ); ?></a>
+        <a class="button button-primary" style="z-index: 2;position: relative;top: 150px;left: 43%;" href="<?php echo $settings_url; ?>"><?php _e( 'Configure Settings', 'erp' ); ?></a>
     <?php endif; ?>
 
     <p class="email-templates">
