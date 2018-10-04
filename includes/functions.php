@@ -2670,3 +2670,77 @@ function erp_add_submenu( $component, $parent, $args ) {
         return $menu;
     } );
 }
+
+/**
+ * Render A menu for given component
+ *
+ * @since 1.3.14
+ *
+ * @param string $component slug of Component to render
+ *
+ * @return bool
+ */
+function erp_render_menu( $component ) {
+    $menu = erp_menu();
+
+    if ( !isset( $menu[$component] ) ) {
+        return false;
+    }
+    //check current tab
+    $tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'dashboard';
+
+    echo "<div class='erp-nav-container'>";
+    echo erp_build_menu( $menu[$component], $tab );
+    echo "</div>";
+}
+
+/**
+ * Build html for ERP menu
+ *
+ * @since 1.3.14
+ *
+ * @param $items
+ *
+ * @param $active
+ *
+ * @param bool $dropdown
+ *
+ * @return string
+ */
+function erp_build_menu( $items, $active, $dropdown = false ) {
+
+
+    //check capability
+    $items = array_filter( $items, function( $item ) {
+        if ( !isset( $item['capability'] ) ) {
+            return false;
+        }
+        return current_user_can( $item['capability'] );
+    } );
+
+    //sort items for position
+    uasort( $items, function ( $a, $b ) {
+        return $a['position'] > $b['position'];
+    } );
+
+    $html = '<ul class="erp-nav">';
+    if ( $dropdown ) {
+        $html = '<ul class="erp-nav-dropdown">';
+    }
+    foreach ( $items as $item ) {
+
+        $link = add_query_arg( [ 'page' => 'erp-crm', 'tab' => $item['slug'] ], admin_url( 'admin.php' ) );
+        $class = $active == $item['slug'] ? 'active ' : '';
+        $submenu =  '';
+        if ( isset( $item['submenu'] ) ) {
+            $class.= "dropdown-menu";
+            $submenu = erp_build_menu( $item['submenu'], $active, true );
+        }
+
+        $html .= sprintf( '<li class="%s"><a href="%s">%s</a>%s</li>', $class, $link, __( $item['title'], 'erp' ), $submenu );
+    }
+
+    $html .= '</ul>';
+
+    return $html;
+}
