@@ -2615,3 +2615,58 @@ function erp_let_to_num( $size ) {
 
     return $ret;
 }
+
+/**
+ * Get ERP Menu array
+ *
+ * @since 1.3.14
+ *
+ * @return array $menu
+ */
+function erp_menu() {
+    $menu = [];
+    return apply_filters( 'erp_menu', $menu );
+}
+
+/**
+ * Add a menu item into ERP Menu
+ *
+ * @since 1.3.14
+ *
+ * @param String $component Name of Component to add menu
+ *
+ * @param array $args
+ *
+ * @return void
+ */
+function erp_add_menu( $component, $args ) {
+    add_filter('erp_menu', function($menu) use( $component, $args ) {
+        $menu[ $component ][$args['slug']] = $args;
+
+        return $menu;
+    });
+}
+
+/**
+ * Adds a submenu under a Menu item
+ *
+ * @since 1.3.14
+ *
+ * @param string $component Name of Component to add menu
+ *
+ * @param string $parent Slug of Parent menu item
+ *
+ * @param array $args
+ *
+ * @return void
+ */
+function erp_add_submenu( $component, $parent, $args ) {
+    add_filter( 'erp_menu', function ( $menu ) use ( $component, $parent, $args ) {
+        if ( !isset( $menu[$component][$parent] ) ) {
+            return $menu;
+        }
+        $menu[$component][$parent]['submenu'][$args['slug']] = $args;
+
+        return $menu;
+    } );
+}
