@@ -27,22 +27,86 @@ class Admin_Menu {
 
         $capabilities = erp_crm_get_manager_role();
 
-        add_menu_page( __( 'CRM', 'erp' ), 'CRM', 'erp_crm_manage_dashboard', 'erp-sales', [ $this, 'dashboard_page' ], 'dashicons-chart-bar', null );
+       // add_menu_page( __( 'CRM', 'erp' ), 'CRM', 'erp_crm_manage_dashboard', 'erp-sales', [ $this, 'dashboard_page' ], 'dashicons-chart-bar', null );
+        add_submenu_page( 'erp', __( 'CRM', 'erp' ), 'CRM', 'erp_crm_manage_dashboard', 'erp-crm', [ $this, 'router' ]);
 
-        $overview = add_submenu_page( 'erp-sales', __( 'Overview', 'erp' ), __( 'Overview', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales', [ $this, 'dashboard_page' ] );
-        add_submenu_page( 'erp-sales', __( 'Contacts', 'erp' ), __( 'Contacts', 'erp' ), 'erp_crm_list_contact', 'erp-sales-customers', [ $this, 'contact_page' ] );
-        add_submenu_page( 'erp-sales', __( 'Companies', 'erp' ), __( 'Companies', 'erp' ), 'erp_crm_list_contact', 'erp-sales-companies', [ $this, 'company_page' ] );
-        add_submenu_page( 'erp-sales', __( 'Activities', 'erp' ), __( 'Activities', 'erp' ), 'erp_crm_manage_activites', 'erp-sales-activities', [ $this, 'activity_page' ] );
-        $schedule = add_submenu_page( 'erp-sales', __( 'Schedules', 'erp' ), __( 'Schedules', 'erp' ), 'erp_crm_manage_schedules', 'erp-sales-schedules', [ $this, 'schedules_page' ] );
-        add_submenu_page( 'erp-sales', __( 'Contact Groups', 'erp' ), __( 'Contact Groups', 'erp' ), 'erp_crm_manage_groups', 'erp-sales-contact-groups', [ $this, 'contact_group_page' ] );
-        add_submenu_page( 'erp-sales', __( 'Reports', 'erp' ), __( 'Reports', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales-reports', array( $this, 'page_reports' ) );
+        erp_add_menu( 'crm', [
+            'title'      => __( 'Overview', 'erp' ),
+            'capability' => 'erp_crm_manage_dashboard',
+            'slug'       => 'dashboard',
+            'callback'   => [ $this, 'dashboard_page' ],
+            'position'   => 1
+        ] );
 
-        //Help page
-        add_submenu_page( 'erp-sales', __( 'Help', 'erp' ), __( '<span style="color:#f18500">Help</span>', 'erp' ), 'erp_crm_manage_dashboard', 'erp-crm-help', array( $this, 'help_page' ) );
+        erp_add_menu( 'crm', [
+            'title'      => __( 'Contacts', 'erp' ),
+            'capability' => 'erp_crm_list_contact',
+            'slug'       => 'contacts',
+            'callback'   => [ $this, 'contact_page' ],
+            'position'   => 5
+        ] );
 
+        erp_add_menu( 'crm', [
+            'title'      => __( 'Companies', 'erp' ),
+            'capability' => 'erp_crm_list_contact',
+            'slug'       => 'companies',
+            'callback'   => [ $this, 'company_page' ],
+            'position'   => 5
+        ] );
 
-        add_action( 'admin_print_styles-' . $overview, array( $this, 'crm_calendar_script' ) );
-        add_action( 'admin_print_styles-' . $schedule, array( $this, 'crm_calendar_script' ) );
+        erp_add_menu( 'crm', [
+            'title'      => __( 'Activities', 'erp' ),
+            'capability' => 'erp_crm_manage_activites',
+            'slug'       => 'activities',
+            'callback'   => [ $this, 'activity_page' ],
+            'position'   => 5
+        ] );
+
+        erp_add_menu( 'crm', [
+            'title'      => __( 'Schedules', 'erp' ),
+            'capability' => 'erp_crm_manage_schedules',
+            'slug'       => 'schedules',
+            'callback'   => [ $this, 'schedules_page' ],
+            'position'   => 5
+        ] );
+
+        erp_add_menu( 'crm', [
+            'title'      => __( 'Contact Groups', 'erp' ),
+            'capability' => 'erp_crm_manage_groups',
+            'slug'       => 'contact-groups',
+            'callback'   => [ $this, 'contact_group_page' ],
+            'position'   => 5
+        ] );
+
+        erp_add_menu( 'crm', [
+            'title'      => __( 'Reports', 'erp' ),
+            'capability' => 'erp_crm_manage_dashboard',
+            'slug'       => 'reports',
+            'callback'   => [ $this, 'page_reports' ],
+            'position'   => 5
+        ] );
+
+        erp_add_menu( 'crm', [
+            'title'      =>  __( 'Help', 'erp' ),
+            'capability' => 'erp_crm_manage_dashboard',
+            'slug'       => 'help',
+            'callback'   => [ $this, 'help_page' ],
+            'position'   => 5
+        ] );
+
+//        $overview = add_submenu_page( 'erp-sales', __( 'Overview', 'erp' ), __( 'Overview', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales', [ $this, 'dashboard_page' ] );
+//        add_submenu_page( 'erp-sales', __( 'Contacts', 'erp' ), __( 'Contacts', 'erp' ), 'erp_crm_list_contact', 'erp-sales-customers', [ $this, 'contact_page' ] );
+//        add_submenu_page( 'erp-sales', __( 'Companies', 'erp' ), __( 'Companies', 'erp' ), 'erp_crm_list_contact', 'erp-sales-companies', [ $this, 'company_page' ] );
+//        add_submenu_page( 'erp-sales', __( 'Activities', 'erp' ), __( 'Activities', 'erp' ), 'erp_crm_manage_activites', 'erp-sales-activities', [ $this, 'activity_page' ] );
+//        $schedule = add_submenu_page( 'erp-crm', __( 'Schedules', 'erp' ), __( 'Schedules', 'erp' ), 'erp_crm_manage_schedules', 'erp-sales-schedules', [ $this, 'schedules_page' ] );
+//        add_submenu_page( 'erp-sales', __( 'Contact Groups', 'erp' ), __( 'Contact Groups', 'erp' ), 'erp_crm_manage_groups', 'erp-sales-contact-groups', [ $this, 'contact_group_page' ] );
+//        add_submenu_page( 'erp-sales', __( 'Reports', 'erp' ), __( 'Reports', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales-reports', array( $this, 'page_reports' ) );
+//
+//        //Help page
+//        add_submenu_page( 'erp-sales', __( 'Help', 'erp' ), __( '<span style="color:#f18500">Help</span>', 'erp' ), 'erp_crm_manage_dashboard', 'erp-crm-help', array( $this, 'help_page' ) );
+//
+//        add_action( 'admin_print_styles-' . $overview, array( $this, 'crm_calendar_script' ) );
+//        add_action( 'admin_print_styles-' . $schedule, array( $this, 'crm_calendar_script' ) );
 
     }
 
@@ -60,6 +124,25 @@ class Admin_Menu {
     }
 
     /**
+     * Route to approriate template according to current menu
+     *
+     * @since 1.3.14
+     *
+     * @return void
+     */
+    public function router() {
+        $component = 'crm';
+        $menu = erp_menu();
+        $menu = $menu[$component];
+
+        $tab = ( isset( $_GET['tab'] ) && isset( $menu[$_GET['tab']] ) ) ? $_GET['tab'] : 'dashboard';
+
+        erp_render_menu( $component );
+        $callback = $menu[$tab]['callback'];
+        call_user_func( $callback );
+    }
+
+    /**
      * Handles the dashboard page
      *
      * @since 1.0
@@ -68,6 +151,7 @@ class Admin_Menu {
      */
     public function dashboard_page() {
         include WPERP_CRM_VIEWS . '/dashboard.php';
+        $this->crm_calendar_script();
     }
 
     /**
@@ -80,7 +164,6 @@ class Admin_Menu {
     public function contact_page() {
         $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
-
         switch ( $action ) {
 
             case 'view':
@@ -190,6 +273,7 @@ class Admin_Menu {
      */
     public function schedules_page() {
         include WPERP_CRM_VIEWS . '/schedules.php';
+        $this->crm_calendar_script();
     }
 
     /**
