@@ -135,7 +135,7 @@ class Admin_Menu {
         $menu = erp_menu();
         $menu = $menu[$component];
 
-        $tab = ( isset( $_GET['tab'] ) && isset( $menu[$_GET['tab']] ) ) ? $_GET['tab'] : 'dashboard';
+        $tab = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
 
         erp_render_menu( $component );
         $callback = $menu[$tab]['callback'];
