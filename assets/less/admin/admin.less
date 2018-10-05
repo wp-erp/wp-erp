@@ -1720,3 +1720,71 @@ code, kbd {
 .billing-address {
     margin-top: 10px;
 }
+
+
+div.erp-nav-container {
+    background-color : #fff;
+    margin-left : -20px;
+    padding-left : 20px;
+    margin-top: -13px;
+
+    .erp-nav {
+        display:flex;
+    }
+
+    .erp-nav-dropdown {
+        display: none;
+        position: absolute;
+        top: 46px;
+        left: 0;
+        background: white;
+        z-index: 1;
+    }
+
+    li {
+        padding: 0 10px;
+        margin: 0;
+        position: relative;
+
+        &.dropdown-menu {
+            &:hover {
+                .erp-nav-dropdown {
+                    display: block;
+                }
+            }
+            &:after {
+                content: '>';
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                color: inherit;
+            }
+        }
+
+        &.active {
+            > a {
+                border-bottom-color: #0090C9;
+                color : #0090C9;
+                font-weight: 600;
+            }
+        }
+
+        &:hover {
+            > a {
+                color : #0090C9;
+            }
+        }
+
+        a {
+            position: relative;
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 45px;
+            display: block;
+            border-bottom: 2px solid transparent;
+            color : #000000;
+            padding: 0px 10px;
+        }
+    }
+}
