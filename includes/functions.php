@@ -2690,7 +2690,7 @@ function erp_render_menu( $component ) {
     $tab = isset( $_GET['section'] ) ? $_GET['section'] : 'dashboard';
 
     echo "<div class='erp-nav-container'>";
-    echo erp_build_menu( $menu[$component], $tab );
+    echo erp_build_menu( $menu[$component], $tab, $component );
     echo "</div>";
 }
 
@@ -2703,11 +2703,13 @@ function erp_render_menu( $component ) {
  *
  * @param $active
  *
+ * @param $component main component slug
+ *                        
  * @param bool $dropdown
  *
  * @return string
  */
-function erp_build_menu( $items, $active, $dropdown = false ) {
+function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 
 
     //check capability
@@ -2729,12 +2731,12 @@ function erp_build_menu( $items, $active, $dropdown = false ) {
     }
     foreach ( $items as $item ) {
 
-        $link = add_query_arg( [ 'page' => 'erp-crm', 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
+        $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
         $class = $active == $item['slug'] ? 'active ' : '';
         $submenu =  '';
         if ( isset( $item['submenu'] ) ) {
             $class.= "dropdown-menu";
-            $submenu = erp_build_menu( $item['submenu'], $active, true );
+            $submenu = erp_build_menu( $item['submenu'], $active, $component, true );
         }
 
         $html .= sprintf( '<li class="%s"><a href="%s">%s</a>%s</li>', $class, $link, __( $item['title'], 'erp' ), $submenu );
