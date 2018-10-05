@@ -117,6 +117,9 @@ class Customer_Relationship {
     private function init_actions() {
         $this->action( 'admin_enqueue_scripts', 'admin_scripts' );
         $this->action( 'admin_footer', 'load_js_template', 10 );
+
+        $this->action( 'admin_enqueue_scripts', 'load_settings_scripts' );
+        $this->action( 'admin_footer', 'load_settings_js_templates', 10 );
     }
 
     /**
@@ -294,11 +297,6 @@ class Customer_Relationship {
 
         }
 
-        if ( 'erp-settings_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
-            wp_enqueue_script( 'erp-trix-editor' );
-            wp_enqueue_style( 'erp-trix-editor' );
-        }
-
         wp_localize_script( 'erp-vue-table', 'wpVueTable', [
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
             'nonce'   => wp_create_nonce( 'wp-erp-vue-table' )
@@ -320,8 +318,7 @@ class Customer_Relationship {
      * @return void
      */
     public function load_js_template() {
-        global $current_screen;
-        $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $current_screen->base );
+
         $section = !empty( $_GET['section'] ) ? $_GET['section'] : 'dashboard' ;
         switch ( $section ) {
 
@@ -418,4 +415,32 @@ class Customer_Relationship {
         wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
         wp_enqueue_script( 'post' );
     }
+
+    /**
+     * Load scritps for settings page
+     *
+     * @param $hook
+     */
+    function load_settings_scripts( $hook ) {
+        $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ), 'crm', $hook );
+
+        if ( 'erp-settings_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
+            wp_enqueue_script( 'erp-trix-editor' );
+            wp_enqueue_style( 'erp-trix-editor' );
+        }
+
+    }
+
+    /**
+     * Load template for settings page
+     */
+    function load_settings_js_templates() {
+        global $current_screen;
+        $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ), 'crm', $current_screen->base );
+
+        if ( 'erp-settings_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
+            erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-save-replies.php', 'erp-crm-new-save-replies' );
+        }
+    }
+
 }
