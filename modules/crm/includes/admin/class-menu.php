@@ -135,10 +135,16 @@ class Admin_Menu {
         $menu = erp_menu();
         $menu = $menu[$component];
 
-        $tab = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
+        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
+        $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? $_GET['sub-section'] : false;
+
+        $callback = $menu[$section]['callback'];
+        if ( $sub ) {
+            $callback = $menu[$section]['submenu'][$sub]['callback'];
+        }
 
         erp_render_menu( $component );
-        $callback = $menu[$tab]['callback'];
+
         call_user_func( $callback );
     }
 
