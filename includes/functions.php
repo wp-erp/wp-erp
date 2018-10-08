@@ -2752,3 +2752,22 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 
     return $html;
 }
+
+/**
+ * Check if the current page is contact or company listing
+ *
+ * @since 1.3.14
+ *
+ * @return bool
+ */
+function erp_is_contacts_page() {
+    if ( empty( $_GET['page'] ) || $_GET['page'] != 'erp-crm' ) {
+        return false;
+    }
+
+    if ( empty( $_GET['section'] ) || $_GET['section'] != 'contacts' || $_GET['section'] != 'companies' ) {
+        return false;
+    }
+
+    return true;
+}

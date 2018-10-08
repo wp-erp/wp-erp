@@ -68,7 +68,7 @@ class Form_Handler {
      * @return void
      */
     public function handle_canonical_url() {
-        if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'erp-sales-customers' || $_GET['page'] == 'erp-sales-companies' ) ) {
+        if ( erp_is_contacts_page() ) {
             ?>
                 <script>
                     window.history.replaceState = false;
