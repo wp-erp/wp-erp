@@ -9,7 +9,8 @@
         <div class="list-table-inner erp-crm-subscriber-contact-list-table-inner">
 
             <form method="get">
-                <input type="hidden" name="page" value="erp-sales-contact-groups">
+                <input type="hidden" name="page" value="erp-crm">
+                <input type="hidden" name="section" value="contact-groups">
                 <input type="hidden" name="groupaction" value="view-subscriber">
                 <?php
                 $customer_table = new \WeDevs\ERP\CRM\Tag_Contacts_List_Table();

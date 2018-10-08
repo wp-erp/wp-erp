@@ -22,7 +22,7 @@ class Form_Handler {
         add_action( 'erp_hr_after_employee_permission_set', [ $this, 'crm_permission_set' ], 10, 2 );
 
         $crm = sanitize_title( __( 'CRM', 'erp' ) );
-        add_action( "load-{$crm}_page_erp-sales-contact-groups", [ $this, 'contact_groups_bulk_action' ] );
+        add_action( "admin_init", [ $this, 'contact_groups_bulk_action' ] );
     }
 
     /**
@@ -90,7 +90,7 @@ class Form_Handler {
             return;
         }
 
-        if ( $_GET['page'] != 'erp-sales-contact-groups' ) {
+        if ( empty( $_GET['section'] ) ||  $_GET['section'] != 'contact-groups' ) {
             return;
         }
 

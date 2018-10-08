@@ -5,14 +5,15 @@
             <a href="#" id="erp-new-contact-group" class="erp-new-contact-group add-new-h2" title="<?php _e( 'Add New Contact Group ', 'erp' ); ?>"><?php _e( 'Add New Contact Group', 'erp' ); ?></a>
         <?php endif ?>
 
-        <a href="<?php echo add_query_arg( [ 'page'=>'erp-sales-contact-groups', 'groupaction' => 'view-subscriber' ], admin_url('admin.php') ); ?>" class="add-new-h2" title="<?php _e( 'View all subscriber contact', 'erp' ); ?>"><?php _e( 'View all subscriber', 'erp' ); ?></a>
+        <a href="<?php echo add_query_arg( [ 'page'=>'erp-crm', 'section' => 'contact-groups', 'groupaction' => 'view-subscriber' ], admin_url('admin.php') ); ?>" class="add-new-h2" title="<?php _e( 'View all subscriber contact', 'erp' ); ?>"><?php _e( 'View all subscriber', 'erp' ); ?></a>
     </h2>
 
     <div class="list-table-wrap erp-crm-contact-group-list-table-wrap">
         <div class="list-table-inner erp-crm-contact-group-list-table-inner">
 
             <form method="get">
-                <input type="hidden" name="page" value="erp-sales-contact-groups">
+                <input type="hidden" name="page" value="erp-crm">
+                <input type="hidden" name="section" value="contact-groups">
                 <?php
                 $customer_table = new \WeDevs\ERP\CRM\Contact_Group_List_Table();
                 $customer_table->prepare_items();
