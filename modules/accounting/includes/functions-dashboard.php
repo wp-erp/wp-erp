@@ -325,7 +325,7 @@ function erp_ac_dashboard_income_expense() {
         $.plot($("#income-expense-chart"), chartData, {
             xaxis: {
                 min: (new Date(prev_year, 11, 20)).getTime(),
-                max: (new Date(current_year, 12, 01)).getTime(),
+                max: (new Date(current_year, 12, 1)).getTime(),
                 mode: "time",
                 timeformat: "%b",
                 tickSize: [1, "month"],
