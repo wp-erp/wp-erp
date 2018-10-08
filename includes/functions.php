@@ -2665,6 +2665,7 @@ function erp_add_submenu( $component, $parent, $args ) {
         if ( !isset( $menu[$component][$parent] ) ) {
             return $menu;
         }
+        $args['parent'] = $parent;
         $menu[$component][$parent]['submenu'][$args['slug']] = $args;
 
         return $menu;
@@ -2704,7 +2705,7 @@ function erp_render_menu( $component ) {
  * @param $active
  *
  * @param $component main component slug
- *                        
+ *
  * @param bool $dropdown
  *
  * @return string
@@ -2732,6 +2733,11 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
     foreach ( $items as $item ) {
 
         $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
+
+        if ( $dropdown ) {
+            $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['parent'], 'sub-section' => $item['slug'] ], admin_url( 'admin.php' ) );
+        }
+
         $class = $active == $item['slug'] ? 'active ' : '';
         $submenu =  '';
         if ( isset( $item['submenu'] ) ) {
