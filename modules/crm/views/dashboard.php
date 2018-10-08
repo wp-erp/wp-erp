@@ -70,7 +70,7 @@
                                             }
                                             ?>
                                             <li>
-                                                <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-companies', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
+                                                <a href="<?php echo add_query_arg( [ 'page' => 'erp-crm', 'section' => 'companies', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
                                                     <i class="fa fa-square" aria-hidden="true"></i>&nbsp;
                                                     <?php
                                                         $singular = $company_value['label'];
@@ -90,7 +90,7 @@
                             </div>
                         </div>
                         <div class="erp-info-box-footer">
-                            <a href="<?php echo admin_url( 'admin.php?page=erp-sales-companies' ); ?>"><?php _e( 'View all Companies', 'erp' ); ?></a>
+                            <a href="<?php echo add_query_arg( ['page' => 'erp-crm', 'section' => 'companies'], admin_url('admin.php') ); ?>"><?php _e( 'View all Companies', 'erp' ); ?></a>
                         </div>
                     </div>
                 </div>
