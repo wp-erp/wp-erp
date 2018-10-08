@@ -147,11 +147,11 @@ class Contact extends \WeDevs\ERP\People {
         if ( $this->id ) {
 
             if ( in_array( 'contact', $this->types ) ) {
-                return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $this->id );
+                return add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts', 'action' => 'view' , 'id' => $this->id ], admin_url('admin.php') );
             }
 
             if ( in_array( 'company', $this->types ) ) {
-                return admin_url( 'admin.php?page=erp-sales-companies&action=view&id=' . $this->id );
+                return add_query_arg( ['page' => 'erp-crm', 'section' => 'companies', 'action' => 'view' , 'id' => $this->id ], admin_url('admin.php') );
             }
         }
     }
