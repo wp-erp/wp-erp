@@ -235,9 +235,9 @@ function erp_ac_get_sales_url( $content = false ) {
     }
 
     if ( $content ) {
-        $url = sprintf( '<a href="%s">%s</a>', $_SERVER['REQUEST_URI'], $content );
+        $url = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'erp-accounting', 'section'=> 'sales' ), admin_url('admin.php') ), $content );
     } else {
-        $url = $_SERVER['REQUEST_URI'];
+        $url = add_query_arg( array( 'page' => 'erp-accounting', 'section'=> 'sales' ), admin_url('admin.php') );
     }
 
     return apply_filters( 'erp_ac_get_sales_url', $url, $content );
