@@ -161,7 +161,7 @@
                 foreach ( $user_filtered as $user_id ) {
 
                     $employee     = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
-                    $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
+                    $employee_url = '<a href="' . admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
                     $date_format  = get_option( 'date_format' );
             ?>
                     <tr>

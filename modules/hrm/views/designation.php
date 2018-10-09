@@ -14,7 +14,8 @@
         <div class="list-table-inner">
 
             <form method="get">
-                <input type="hidden" name="page" value="erp-hr-designation">
+                <input type="hidden" name="page" value="erp-hr">
+                <input type="hidden" name="section" value="designation">
                 <?php
                 $designation = new \WeDevs\ERP\HRM\Designation_List_Table();
                 $designation->prepare_items();
