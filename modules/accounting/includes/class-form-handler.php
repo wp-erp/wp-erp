@@ -23,12 +23,11 @@ class Form_Handler {
         add_action( 'erp_action_ac-new-sales-payment', array( $this, 'transaction_form' ) );
         add_action( 'erp_action_ac-new-journal-entry', array( $this, 'journal_entry' ) );
 
-        $accounting = sanitize_title( __( 'Accounting', 'erp' ) );
-        add_action( "load-{$accounting}_page_erp-accounting-customers", array( $this, 'customer_bulk_action' ) );
-        add_action( "load-{$accounting}_page_erp-accounting-vendors", array( $this, 'vendor_bulk_action' ) );
-        add_action( "load-{$accounting}_page_erp-accounting-sales", array( $this, 'sales_bulk_action' ) );
-        add_action( "load-{$accounting}_page_erp-accounting-expense", array( $this, 'expense_bulk_action' ) );
-        add_action( 'load-{$accounting}_page_erp-accounting-journal', array( $this, 'journal_bulk_action' ) );
+        add_action( "admin_init", array( $this, 'customer_bulk_action' ) );
+        add_action( "admin_init", array( $this, 'vendor_bulk_action' ) );
+        add_action( "admin_init", array( $this, 'sales_bulk_action' ) );
+        add_action( "admin_init", array( $this, 'expense_bulk_action' ) );
+        add_action( "admin_init", array( $this, 'journal_bulk_action' ) );
 
         add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set' ), 10, 2 );
     }
@@ -292,6 +291,7 @@ class Form_Handler {
      * @since 0.1
      *
      * @param  integer $page_id
+     * @param  integer $section_id
      * @param  integer $bulk_action
      *
      * @return boolean
