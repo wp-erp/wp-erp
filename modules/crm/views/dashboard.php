@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <div class="erp-info-box-footer">
-                            <a href="<?php echo admin_url( 'admin.php?page=erp-crm' ); ?>"><?php _e( 'View all Contacts', 'erp' ); ?></a>
+                            <a href="<?php echo admin_url( 'admin.php?page=erp-crm&section=contacts' ); ?>"><?php _e( 'View all Contacts', 'erp' ); ?></a>
                         </div>
                     </div>
                 </div>
