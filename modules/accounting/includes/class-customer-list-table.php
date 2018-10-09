@@ -18,8 +18,11 @@ class Customer_List_Table extends \WP_List_Table {
     protected $type = null;
     protected $user_balance = null;
 
+    protected $page; protected $section;
+
     function __construct() {
-        $this->slug = 'erp-accounting';
+        $this->page = 'erp-accounting';
+        $this->section = 'customers';
         $this->type = 'customer';
 
         parent::__construct( array(
@@ -106,7 +109,7 @@ class Customer_List_Table extends \WP_List_Table {
         $created_by        = isset( $item->created_by ) ? intval( $item->created_by ) : 0;
 
         if ( erp_ac_current_user_can_edit_customer( $created_by ) ) {
-            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
+            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->page . '&section=' . $this->section . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         }
 
         $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=erp-accounting&section=sales&action=new&type=invoice&customer=true&id=' . $item->id ), $item->id, __( 'Create Invoice', 'erp' ), __( 'Create Invoice', 'erp' ) );
