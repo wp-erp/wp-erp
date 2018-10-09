@@ -111,9 +111,9 @@ function erp_ac_new_customer( $postdata ) {
     $type        = isset( $postdata['type'] ) ? sanitize_text_field( $postdata['type'] ) : 'customer';
 
     if ( $type == 'customer' ) {
-        $page_url    = admin_url( 'admin.php?page=erp-accounting-customers' );
+        $page_url    = admin_url( 'admin.php?page=erp-accounting&section=customers' );
     } else {
-        $page_url    = admin_url( 'admin.php?page=erp-accounting-vendors' );
+        $page_url    = admin_url( 'admin.php?page=erp-accounting&section=vendors' );
 
         if ( $field_id ) {
             $people = \WeDevs\ERP\Framework\Models\People::where( 'company', $company )

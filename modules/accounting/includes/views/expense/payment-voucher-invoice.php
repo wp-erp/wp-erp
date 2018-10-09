@@ -14,7 +14,7 @@
         $total_due = 0;
         foreach ( $transactions as $key => $result  ) {
 
-        $invoice_url = admin_url('admin.php?page=erp-accounting-sales&action=view&id=' . $result['id'] );
+        $invoice_url = admin_url('admin.php?page=erp-accounting&section=sales&action=view&id=' . $result['id'] );
         ?>
         <tr>
             <td class="col-ac">

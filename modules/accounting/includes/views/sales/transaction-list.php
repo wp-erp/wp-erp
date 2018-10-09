@@ -12,9 +12,9 @@
                 foreach ($form_types as $key => $form) {
                     do_action( 'erp_ac_invoice_transaction_action', $key, $form );
                     if ( 'payment' == $key && ( erp_ac_create_sales_payment() || erp_ac_publish_sales_payment() ) ) {
-                        printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
+                        printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting&section=sales&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
                     } elseif ( 'invoice' == $key && ( erp_ac_create_sales_invoice() || erp_ac_publish_sales_invoice() ) ) {
-                        printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
+                        printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting&section=sales&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
                     } else {
                         do_action( 'erp_ac_invoice_transaction_after_action', $key, $form );
                     }
@@ -32,7 +32,7 @@
     ?>
 
     <form method="get" class="erp-accounting-tbl-form">
-        <input type="hidden" name="page" value="erp-accounting-sales">
+        <input type="hidden" name="page" value="erp-accounting">
 
         <?php
         $list_table = new WeDevs\ERP\Accounting\Sales_Transaction_List_Table();

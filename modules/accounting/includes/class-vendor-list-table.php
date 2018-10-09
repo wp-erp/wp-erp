@@ -11,7 +11,7 @@ if ( ! class_exists ( 'WP_List_Table' ) ) {
  */
 class Vendor_List_Table extends Customer_List_Table {
 
-    protected $expense_slug;
+    protected $expense_slug; protected $page; protected $section;
 
     function __construct() {
 
@@ -21,9 +21,10 @@ class Vendor_List_Table extends Customer_List_Table {
             'ajax'     => false
         ) );
 
-        $this->slug = 'erp-accounting-vendors';
+        $this->page = 'erp-accounting';
+        $this->section = 'vendors';
         $this->type = 'vendor';
-        $this->expense_slug = 'erp-accounting-expense';
+        $this->expense_slug = 'expense';
     }
 
     /**
@@ -101,16 +102,16 @@ class Vendor_List_Table extends Customer_List_Table {
 
         $actions            = array();
         if ( erp_ac_current_user_can_edit_vendor( $item->created_by ) ) {
-            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
+            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->page . '&section=' . $this->section . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         }
 
         if ( erp_ac_create_expenses_voucher() || erp_ac_publish_expenses_voucher() ) {
 
-            $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=payment_voucher&vendor_id=' . $item->id ), $item->id, __( 'Create Voucher', 'erp' ), __( 'Payment Voucher', 'erp' ) );
+            $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->page . '&section=' . $this->expense_slug . '&action=new&type=payment_voucher&vendor_id=' . $item->id ), $item->id, __( 'Create Voucher', 'erp' ), __( 'Payment Voucher', 'erp' ) );
         }
 
         if ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) {
-            $actions['expense'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=vendor_credit&vendor_id=' . $item->id ), $item->id, __( 'Create Credit', 'erp' ), __( 'Vendor Credit', 'erp' ) );
+            $actions['expense'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->page . '&section=' . $this->expense_slug . '&action=new&type=vendor_credit&vendor_id=' . $item->id ), $item->id, __( 'Create Credit', 'erp' ), __( 'Vendor Credit', 'erp' ) );
         }
 
         if ( erp_ac_current_user_can_delete_vendor( $item->created_by ) ) {
@@ -125,7 +126,7 @@ class Vendor_List_Table extends Customer_List_Table {
            return sprintf( '<strong>%1$s</strong> %2$s', $item->company, $this->row_actions( $actions ) );
         }
 
-        return sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->company, $this->row_actions( $actions ) );
+        return sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->page . '&section=' . $this->section . '&action=view&id=' . $item->id ), $item->company, $this->row_actions( $actions ) );
     }
 
     /**
@@ -136,7 +137,7 @@ class Vendor_List_Table extends Customer_List_Table {
     public function get_views() {
 
         $status_links   = array();
-        $base_link      = admin_url( 'admin.php?page=erp-accounting-vendors' );
+        $base_link      = admin_url( 'admin.php?page=erp-accounting&section=vendors' );
 
         $status_links['all']   = sprintf( '<a href="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'all' ), $base_link ), __( 'All', 'erp' ), $this->customer_get_status_count( 'vendor' ) );
         $status_links['trash'] = sprintf( '<a href="%s" >%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), $this->count_trashed_customers() );

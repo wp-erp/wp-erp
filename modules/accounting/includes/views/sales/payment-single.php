@@ -2,7 +2,7 @@
 $company = new \WeDevs\ERP\Company();
 $user    = new \WeDevs\ERP\People( intval( $transaction->user_id ) );
 $status  = $transaction->status == 'draft' ? false : true;
-$url     = admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&transaction_id=' . $transaction->id );
+$url     = admin_url( 'admin.php?page=erp-accounting&section=sales&action=new&type=invoice&transaction_id=' . $transaction->id );
 $taxinfo = erp_ac_get_tax_info();
 
 $current_user  = wp_get_current_user();
