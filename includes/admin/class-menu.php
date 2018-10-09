@@ -49,6 +49,13 @@ class Admin_Menu {
         add_submenu_page( 'erp-company', __( 'Modules', 'erp' ), __( 'Modules', 'erp' ), 'manage_options', 'erp-modules', array( $this, 'module' ) );
         add_submenu_page( 'erp-company', __( 'Add-Ons', 'erp' ), __( 'Add-Ons', 'erp' ), 'manage_options', 'erp-addons', array( $this, 'addon_page' ) );
 
+
+        erp_add_menu( 'settings', array(
+            'title'     =>  __( 'Settings', 'erp' ),
+            'slug'      =>  'erp-settings',
+            'capability'    =>  'manage_options',
+        ) );
+
     }
 
     /**
