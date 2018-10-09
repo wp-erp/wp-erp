@@ -56,7 +56,7 @@ class Form_Handler {
         }
         $designation = isset( $_POST['designation'] ) ? $_POST['designation'] : '';
         $department  = isset( $_POST['department'] ) ? $_POST['department'] : '';
-        $url         = admin_url( "admin.php?page=erp-leave-calendar&designation=$designation&department=$department" );
+        $url         = admin_url( "admin.php?page=erp-hr&section=leave&sub-section=leave-calendar&designation=$designation&department=$department" );
         wp_redirect( $url );
         exit();
     }
@@ -516,7 +516,7 @@ class Form_Handler {
         $errors    = array();
         $employees = array();
         $cur_year  = (int) date( 'Y' );
-        $page_url  = admin_url( 'admin.php?page=erp-leave-assign&tab=assignment' );
+        $page_url  = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave_entitilements' );
 
         $is_single       = ! isset( $_POST['assignment_to'] );
         $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : '-1';
@@ -632,9 +632,9 @@ class Form_Handler {
         ) );
 
         if ( ! is_wp_error( $insert ) ) {
-            $redirect_to = admin_url( 'admin.php?page=erp-leave&view=new&msg=submitted' );
+            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&msg=submitted' );
         } else {
-            $redirect_to = admin_url( 'admin.php?page=erp-leave&view=new&msg=error' );
+            $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&msg=error' );
         }
 
         wp_redirect( $redirect_to );
@@ -812,7 +812,7 @@ class Form_Handler {
 
             wp_redirect( $redirect );
         }
-        
+
         if ( isset( $_REQUEST['filter_leave_report'] ) ) {
 
             if ( ! $this->verify_current_page_screen( 'erp-hr-reporting', 'epr-rep-leaves' ) ) {

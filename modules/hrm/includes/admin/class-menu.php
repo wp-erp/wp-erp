@@ -12,9 +12,6 @@ class Admin_Menu {
      */
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-
-        // add_action( 'admin_print_styles-' . $overview, array( $this, 'hr_calendar_script' ) );
-        // add_action( 'admin_print_styles-' . $calendar, array( $this, 'hr_calendar_script' ) );
     }
 
     /**
@@ -23,41 +20,8 @@ class Admin_Menu {
      * @return void
      */
     public function admin_menu() {
-
-        /** HR Management **/
-         add_menu_page( __( 'Human Resource', 'erp' ), 'HR Management', 'erp_list_employee', 'erp-hr', array( $this, 'dashboard_page' ), 'dashicons-groups', null );
-
-        $overview = add_submenu_page( 'erp-hr', __( 'Overview', 'erp' ), __( 'Overview', 'erp' ), 'erp_list_employee', 'erp-hr', array( $this, 'dashboard_page' ) );
-
-        // error_log( print_r( $overview,true ) );
-        // add_submenu_page( 'erp-hr', __( 'Employees', 'erp' ), __( 'Employees', 'erp' ), 'erp_list_employee', 'erp-hr-employee', array( $this, 'employee_page' ) );
-
-        // if ( current_user_can( 'employee' ) ) {
-        //     add_submenu_page( 'erp-hr', __( 'My Profile', 'erp' ), __( 'My Profile', 'erp' ), 'erp_list_employee', 'erp-hr-my-profile', array( $this, 'employee_my_profile_page' ) );
-        // }
-
-        // add_submenu_page( 'erp-hr', __( 'Departments', 'erp' ), __( 'Departments', 'erp' ), 'erp_manage_department', 'erp-hr-depts', array( $this, 'department_page' ) );
-        // add_submenu_page( 'erp-hr', __( 'Designations', 'erp' ), __( 'Designations', 'erp' ), 'erp_manage_designation', 'erp-hr-designation', array( $this, 'designation_page' ) );
-        add_submenu_page( 'erp-hr', __( 'Announcement', 'erp' ), __( 'Announcement', 'erp' ), 'erp_manage_announcement', 'edit.php?post_type=erp_hr_announcement' );
-        // add_submenu_page( 'erp-hr', __( 'Reporting', 'erp' ), __( 'Reporting', 'erp' ), 'erp_hr_manager', 'erp-hr-reporting', array( $this, 'reporting_page' ) );
-
-        // //Help page
-        // add_submenu_page( 'erp-hr', __( 'Help', 'erp' ), __( '<span style="color:#f18500">Help</span>', 'erp' ), 'erp_hr_manager', 'erp-hr-help', array( $this, 'help_page' ) );
-
-        // /** Leave Management **/
-        add_menu_page( __( 'Leave Management', 'erp' ), 'Leave', 'erp_leave_manage', 'erp-leave', array( $this, 'empty_page' ), 'dashicons-arrow-right-alt', null );
-
-        $leave_request = add_submenu_page( 'erp-leave', __( 'Requests', 'erp' ), __( 'Requests', 'erp' ), 'erp_leave_manage', 'erp-leave', array( $this, 'leave_requests' ) );
-        add_submenu_page( 'erp-leave', __( 'Leave Entitlements', 'erp' ), __( 'Leave Entitlements', 'erp' ), 'erp_leave_manage', 'erp-leave-assign', array( $this, 'leave_entitilements' ) );
-        add_submenu_page( 'erp-leave', __( 'Holidays', 'erp' ), __( 'Holidays', 'erp' ), 'erp_leave_manage', 'erp-holiday-assign', array( $this, 'holiday_page' ) );
-        add_submenu_page( 'erp-leave', __( 'Policies', 'erp' ), __( 'Policies', 'erp' ), 'erp_leave_manage', 'erp-leave-policies', array( $this, 'leave_policy_page' ) );
-        $calendar = add_submenu_page( 'erp-leave', __( 'Calendar', 'erp' ), __( 'Calendar', 'erp' ), 'erp_leave_manage', 'erp-leave-calendar', array( $this, 'leave_calendar_page' ) );
-        add_submenu_page( 'erp-leave', __( 'Leave Calendar', 'erp' ), __( 'Leave Calendar', 'erp' ), 'manage_options', 'erp-leave-calendar', array( $this, 'empty_page' ) );
-
-
-
-        add_submenu_page( 'erp', __( 'HRM', 'erp' ), 'HRM', 'erp_list_employee', 'erp-hrm', [ $this, 'router' ] );
-        $overview = erp_add_menu( 'hrm', array(
+        $dashboard = add_submenu_page( 'erp', __( 'HR', 'erp' ), 'HR', 'erp_list_employee', 'erp-hr', [ $this, 'router' ] );
+        erp_add_menu( 'hr', array(
             'title'         =>  __( 'Overview', 'erp' ),
             'capability'    =>  'erp_list_employee',
             'slug'          =>  'dashboard',
@@ -65,18 +29,16 @@ class Admin_Menu {
             'position'      =>  1,
         ) );
 
-        // error_log( print_r( $overview,true ) );
-
-        erp_add_menu( 'hrm', array(
+        erp_add_menu( 'hr', array(
             'title'         =>  __( 'Employees', 'erp' ),
             'capability'    =>  'erp_list_employee',
-            'slug'          =>  'employees',
+            'slug'          =>  'employee',
             'callback'      =>  [ $this, 'employee_page' ],
             'position'      =>  5,
         ) );
 
         if ( current_user_can( 'employee' ) ) {
-            erp_add_menu( 'hrm', array(
+            erp_add_menu( 'hr', array(
                 'title'         =>  __( 'My Profile', 'erp' ),
                 'capability'    =>  'erp_list_employee',
                 'slug'          =>  'my-profile',
@@ -85,7 +47,7 @@ class Admin_Menu {
             ) );
         }
 
-        erp_add_menu( 'hrm', array(
+        erp_add_menu( 'hr', array(
             'title'         =>  __( 'Departments', 'erp' ),
             'capability'    =>  'erp_manage_department',
             'slug'          =>  'department',
@@ -93,7 +55,7 @@ class Admin_Menu {
             'position'      =>  5,
         ) );
 
-        erp_add_menu( 'hrm', array(
+        erp_add_menu( 'hr', array(
             'title'         =>  __( 'Designations', 'erp' ),
             'capability'    =>  'erp_manage_designation',
             'slug'          =>  'designation',
@@ -101,7 +63,7 @@ class Admin_Menu {
             'position'      =>  5,
         ) );
 
-        erp_add_menu( 'hrm', array(
+        erp_add_menu( 'hr', array(
             'title'         =>  __( 'Announcement', 'erp' ),
             'capability'    =>  'erp_manage_announcement',
             'slug'          =>  'announcement',
@@ -109,7 +71,7 @@ class Admin_Menu {
             'position'      =>  5,
         ) );
 
-        erp_add_menu( 'hrm', array(
+        erp_add_menu( 'hr', array(
             'title'         =>  __( 'Reporting', 'erp' ),
             'capability'    =>  'erp_hr_manager',
             'slug'          =>  'report',
@@ -117,7 +79,7 @@ class Admin_Menu {
             'position'      =>  5,
         ) );
 
-        erp_add_menu( 'hrm', array(
+        erp_add_menu( 'hr', array(
             'title'         =>  __( 'Help', 'erp' ),
             'capability'    =>  'erp_hr_manager',
             'slug'          =>  'help',
@@ -125,7 +87,7 @@ class Admin_Menu {
             'position'      =>  99,
         ) );
 
-        erp_add_menu( 'hrm', array(
+        erp_add_menu( 'hr', array(
             'title'         =>  __( 'Leave Management', 'erp' ),
             'capability'    =>  'erp_leave_manage',
             'slug'          =>  'leave',
@@ -133,7 +95,7 @@ class Admin_Menu {
             'position'      =>  5,
         ) );
 
-        erp_add_submenu( 'hrm', 'leave', array(
+        erp_add_submenu( 'hr', 'leave', array(
             'title'         =>  __( 'Requests', 'erp' ),
             'capability'    =>  'erp_leave_manage',
             'slug'          =>  'leave-requests',
@@ -141,7 +103,7 @@ class Admin_Menu {
             'position'      =>  5,
         ) );
 
-        erp_add_submenu( 'hrm', 'leave', array(
+        erp_add_submenu( 'hr', 'leave', array(
             'title'         =>  __( 'Leave Entitlements', 'erp' ),
             'capability'    =>  'erp_leave_manage',
             'slug'          =>  'leave-entitlements',
@@ -149,7 +111,7 @@ class Admin_Menu {
             'position'      =>  5,
         ) );
 
-        erp_add_submenu( 'hrm', 'leave', array(
+        erp_add_submenu( 'hr', 'leave', array(
             'title'         =>  __( 'Holidays', 'erp' ),
             'capability'    =>  'erp_leave_manage',
             'slug'          =>  'holidays',
@@ -157,7 +119,7 @@ class Admin_Menu {
             'position'      =>  5,
         ) );
 
-        erp_add_submenu( 'hrm', 'leave', array(
+        erp_add_submenu( 'hr', 'leave', array(
             'title'         =>  __( 'Policies', 'erp' ),
             'capability'    =>  'erp_leave_manage',
             'slug'          =>  'policies',
@@ -165,8 +127,15 @@ class Admin_Menu {
             'position'      =>  5,
         ) );
 
+        erp_add_submenu( 'hr', 'leave', array(
+            'title'         =>  __( 'Calendar', 'erp' ),
+            'capability'    =>  'erp_leave_manage',
+            'slug'          =>  'leave-calendar',
+            'callback'      =>  [ $this, 'leave_calendar_page' ],
+            'position'      =>  5,
+        ) );
 
-        // add_action( 'admin_print_styles-erp-hrm', array( $this, 'hr_calendar_script' ) );
+        add_action( 'admin_print_styles-'.$dashboard, array( $this, 'hr_calendar_script' ) );
         // add_action( 'admin_print_styles-' . $calendar, array( $this, 'hr_calendar_script' ) );
     }
 
@@ -178,7 +147,7 @@ class Admin_Menu {
      * @return void
      */
     public function router() {
-        $component = 'hrm';
+        $component = 'hr';
         $menu = erp_menu();
         $menu = $menu[$component];
 
