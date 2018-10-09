@@ -41,7 +41,7 @@ class Form_Handler {
      * @return  void
      */
     function journal_bulk_action() {
-        if ( ! $this->verify_current_page_screen( 'erp-accounting-journal', 'bulk-journals' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-accounting', 'journal', 'bulk-journals' ) ) {
             return;
         }
 
@@ -86,7 +86,7 @@ class Form_Handler {
     }
 
     function expense_bulk_action() {
-        if ( ! $this->verify_current_page_screen( 'erp-accounting-expense', 'bulk-expenses' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-accounting', 'expense', 'bulk-expenses' ) ) {
             return;
         }
 
@@ -123,7 +123,7 @@ class Form_Handler {
      */
     function sales_bulk_action() {
 
-        if ( ! $this->verify_current_page_screen( 'erp-accounting-sales', 'bulk-sales' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-accounting', 'sales', 'bulk-sales' ) ) {
             return;
         }
 
@@ -186,7 +186,7 @@ class Form_Handler {
      */
     function customer_bulk_action() {
 
-        if ( ! $this->verify_current_page_screen( 'erp-accounting-customers', 'bulk-customers' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-accounting', 'customers' , 'bulk-customers' ) ) {
             return;
         }
 
@@ -234,7 +234,7 @@ class Form_Handler {
      */
     function vendor_bulk_action() {
 
-        if ( ! $this->verify_current_page_screen( 'erp-accounting-vendors', 'bulk-customers' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-accounting', 'vendors', 'bulk-customers' ) ) {
             return;
         }
 
@@ -296,13 +296,13 @@ class Form_Handler {
      *
      * @return boolean
      */
-    public function verify_current_page_screen( $page_id, $bulk_action ) {
+    public function verify_current_page_screen( $page_id, $section_id, $bulk_action ) {
 
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
             return false;
         }
 
-        if ( $_GET['page'] != $page_id ) {
+        if ( $_GET['page'] != $page_id && $_GET['section'] != $section_id ) {
             return false;
         }
 
@@ -341,9 +341,9 @@ class Form_Handler {
         }
 
         if ( $_POST['type'] == 'customer' ) {
-            $page_url = admin_url( 'admin.php?page=erp-accounting-customers' );
+            $page_url = admin_url( 'admin.php?page=erp-accounting&section=customers' );
         } else {
-            $page_url = admin_url( 'admin.php?page=erp-accounting-vendors' );
+            $page_url = admin_url( 'admin.php?page=erp-accounting&section=vendors' );
         }
 
         if ( is_wp_error( $insert_id ) ) {
@@ -376,7 +376,7 @@ class Form_Handler {
 
         $message  = 'new';
         $errors   = array();
-        $page_url = admin_url( 'admin.php?page=erp-accounting-charts' );
+        $page_url = admin_url( 'admin.php?page=erp-accounting&section=charts' );
         $field_id = isset( $_POST['field_id'] ) ? intval( $_POST['field_id'] ) : 0;
 
         $name            = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
@@ -719,7 +719,7 @@ class Form_Handler {
 
         erp_ac_new_journal( $args, $items );
 
-        $location = admin_url( 'admin.php?page=erp-accounting-journal&msg=success' );
+        $location = admin_url( 'admin.php?page=erp-accounting&section=journal&msg=success' );
         wp_redirect( $location );
     }
 }

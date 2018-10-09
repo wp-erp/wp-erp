@@ -10,6 +10,7 @@ if ( ! class_exists ( 'WP_List_Table' ) ) {
  */
 class Transaction_List_Table extends \WP_List_Table {
 
+
     protected $type = '';
     protected $slug = '';
 
@@ -20,6 +21,7 @@ class Transaction_List_Table extends \WP_List_Table {
             'ajax'     => false
         ) );
 
+        $this->slug = ( isset( $_GET['page'] ) && isset( $_GET['section'] ) ) ? $_GET['page'] . '&section=' . $_GET['section'] : '';
     }
 
     function get_table_classes() {
@@ -78,7 +80,7 @@ class Transaction_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_columns() {
-        $section = isset( $_GET['section'] ) ? $_GET['section'] : false;
+        $section = isset( $_GET['filter'] ) ? $_GET['filter'] : false;
         $columns = array(
             //'cb'         => '<input type="checkbox" />',
             'issue_date' => __( 'Date', 'erp' ),
@@ -166,7 +168,7 @@ class Transaction_List_Table extends \WP_List_Table {
         }
 
         if ( $item->status == 'awaiting_payment' || $item->status == 'partial' ) {
-            $url = $this->slug == 'erp-accounting-expense' ? erp_ac_get_vendor_credit_payment_url( $item->id ) : erp_ac_get_slaes_payment_url( $item->id );
+            $url = $this->slug == 'erp-accounting&section=expense' ? erp_ac_get_vendor_credit_payment_url( $item->id ) : erp_ac_get_slaes_payment_url( $item->id );
             $actions['paid'] = sprintf( '<a href="%1$s">%2$s</a>', $url, __( 'Receive Payment', 'erp' ) );
         }
 
@@ -202,7 +204,7 @@ class Transaction_List_Table extends \WP_List_Table {
      * @return void
      */
     public function bulk_actions( $which = '' ) {
-        $section = isset( $_GET['section'] ) ? $_GET['section'] : false;
+        $section = isset( $_GET['filter'] ) ? $_GET['filter'] : false;
         $type    = [];
 
         if ( 'top' == $which && $this->items ) {
@@ -259,7 +261,7 @@ class Transaction_List_Table extends \WP_List_Table {
     public function get_views() {
         $counts       = $this->get_section();
         $status_links = array();
-        $section      = isset( $_REQUEST['section'] ) ? $_REQUEST['section'] : 'all';
+        $section      = isset( $_REQUEST['filter'] ) ? $_REQUEST['filter'] : 'all';
 
         foreach ( $counts as $key => $value ) {
             $key   = str_replace( '_', '-', $key );
@@ -467,7 +469,7 @@ class Transaction_List_Table extends \WP_List_Table {
      */
     function prepare_items() {
         $columns               = $this->get_columns();
-        $hidden                = array( );
+        $hidden                = array();
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
@@ -517,12 +519,12 @@ class Transaction_List_Table extends \WP_List_Table {
             $args['created_by'] = get_current_user_id();
         }
 
-        if ( isset( $_REQUEST['section'] ) ) {
-            $args['status']  = str_replace('-', '_', $_REQUEST['section'] );
-        }
-
         if ( 'expense' == $args['type'] && ! erp_ac_view_other_expenses() ) {
             $args['created_by'] = get_current_user_id();
+        }
+
+        if ( isset( $_REQUEST['filter'] ) ) {
+            $args['status']  = str_replace('-', '_', $_REQUEST['filter'] );
         }
 
         if ( 'journal' == $args['type'] && ! erp_ac_view_other_journals() ) {

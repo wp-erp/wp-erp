@@ -5,7 +5,7 @@ $payments            = \WeDevs\ERP\Accounting\Model\Payment::where('child', '=',
 $partials_id         = wp_list_pluck( $payments, 'transaction_id' );
 $partial_transaction = \WeDevs\ERP\Accounting\Model\Transaction::whereIn( 'id', $partials_id )->get()->toArray();
 
-$url                 = admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&transaction_id=' . $transaction->id );
+$url                 = admin_url( 'admin.php?page=erp-accounting&section=sales&action=new&type=invoice&transaction_id=' . $transaction->id );
 $more_details_url    = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
 $taxinfo             = erp_ac_get_tax_info();
 

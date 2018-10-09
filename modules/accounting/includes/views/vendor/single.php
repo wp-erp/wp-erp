@@ -1,8 +1,9 @@
 <div class="wrap erp-accounting">
 <?php 
-$page = isset( $_GET['page'] ) && $_GET['page'] == 'erp-accounting-vendors' ? $_GET['page'] : '';
+$page       = isset( $_GET['page'] ) && $_GET['page'] == 'erp-accounting' ? $_GET['page'] : '';
+$section    = isset( $_GET['section'] ) && $_GET['section'] == 'vendors' ? $_GET['section'] : '';
 $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
-$edit_url = admin_url( 'admin.php?page=' . $page . '&action=edit&id=' . $customer_id ); 
+$edit_url = admin_url( 'admin.php?page=' . $page . '&section=' . $section . '&action=edit&id=' . $customer_id );
 
 ?>
     <h2><?php echo $vendor->get_full_name(); ?> <a href="<?php echo $edit_url; ?>" class="add-new-h2"><?php _e( 'Edit', 'erp-accounting' ); ?></a></h2>

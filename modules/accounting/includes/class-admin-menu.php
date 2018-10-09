@@ -162,8 +162,8 @@ class Admin_Menu {
      * @return void
      */
     public function sales_chart_script() {
-        $this->chart_script();
         $this->common_scripts();
+        $this->chart_script();
         wp_localize_script( 'wp-erp-ac-js', 'erp_ac_tax', [ 'rate' => erp_ac_get_tax_info() ] );
     }
 
@@ -175,8 +175,8 @@ class Admin_Menu {
      * @return void
      */
     public function expense_chart_script() {
-        $this->chart_script();
         $this->common_scripts();
+        $this->chart_script();
         wp_localize_script( 'wp-erp-ac-js', 'erp_ac_tax', [ 'rate' => erp_ac_get_tax_info() ] );
     }
 

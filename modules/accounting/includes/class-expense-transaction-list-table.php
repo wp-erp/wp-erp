@@ -20,7 +20,7 @@ class Expense_Transaction_List_Table extends Transaction_List_Table {
         ]);
 
         $this->type = 'expense';
-        $this->slug = 'erp-accounting-expense';
+        $this->slug = 'erp-accounting&section=expense';
     }
 
     /**

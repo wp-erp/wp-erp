@@ -2,7 +2,7 @@
 $company          = new \WeDevs\ERP\Company();
 $user             = new \WeDevs\ERP\People( intval( $transaction->user_id ) );
 $status           = $transaction->status == 'draft' ? false : true;
-$url              = admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=payment_voucher&transaction_id=' . $transaction->id );
+$url              = admin_url( 'admin.php?page=erp-accounting&section=expense&action=new&type=payment_voucher&transaction_id=' . $transaction->id );
 $more_details_url = erp_ac_get_expense_voucher_url( $transaction->id );
 $taxinfo          = erp_ac_get_tax_info();
 ?>
