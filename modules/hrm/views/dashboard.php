@@ -34,7 +34,7 @@
                         if ( is_admin() ) {
                             ?>
                             <div class="badge-footer wp-ui-highlight">
-                                <a href="<?php echo admin_url( 'admin.php?page=erp-hr-depts' ); ?>"><?php _e( 'View Departments', 'erp' ); ?></a>
+                                <a href="<?php echo admin_url( 'admin.php?page=erp-hr&section=department' ); ?>"><?php _e( 'View Departments', 'erp' ); ?></a>
                             </div>
                             <?php
                         }
@@ -51,7 +51,7 @@
                         if ( is_admin() ) {
                             ?>
                             <div class="badge-footer wp-ui-highlight">
-                                <a href="<?php echo admin_url( 'admin.php?page=erp-hr-designation' ); ?>"><?php _e( 'View Designation', 'erp' ); ?></a>
+                                <a href="<?php echo admin_url( 'admin.php?page=erp-hr&section=designation' ); ?>"><?php _e( 'View Designation', 'erp' ); ?></a>
                             </div>
                             <?php
                         }

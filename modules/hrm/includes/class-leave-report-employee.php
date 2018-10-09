@@ -130,7 +130,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
             return $summary['spent'] . '/' . $summary['days'];
         } elseif ( $column_name == 'name' ) {
             $user = get_user_by( 'ID', $item );
-            $url  = admin_url( "admin.php?page=erp-hr-employee&amp;action=view&amp;id={$item}" );
+            $url  = admin_url( "admin.php?page=erp-hr&section=employee&amp;action=view&amp;id={$item}" );
             $name = $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name;
 
             return "<a href='{$url}'><strong>{$name}</strong></a>";

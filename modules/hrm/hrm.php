@@ -142,14 +142,16 @@ class Human_Resource {
      * @return void
      */
     public function admin_scripts( $hook ) {
-        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ), 'hr-management', $hook );
+        if ( 'wp-erp_page_erp-hr' !== $hook ) {
+            return;
+        }
 
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
         wp_enqueue_media();
         wp_enqueue_script( 'erp-tiptip' );
 
-        if ( 'hr-management_page_erp-hr-employee' == $hook ) {
+        if ( isset( $_GET['section'] ) && $_GET['section'] == 'employee' ) {
             wp_enqueue_style( 'erp-sweetalert' );
             wp_enqueue_script( 'erp-sweetalert' );
         }
@@ -204,18 +206,34 @@ class Human_Resource {
             'employee_created'       => __( 'Employee successfully created', 'erp' ),
             'create_employee_text'   => __( 'Click to create employee', 'erp' ),
             'empty_entitlement_text' => sprintf( '<span>%s <a href="%s" title="%s">%s</a></span>', __( 'Please create entitlement first', 'erp' ), add_query_arg( [
-                'page' => 'erp-leave-assign',
-                'tab'  => 'assignment'
+                'page'          => 'erp-hr',
+                'section'       => 'leave',
+                'sub-section'   => 'assignment'
             ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
         ) );
 
-        // if its an employee page
-        if ( 'hr-management_page_erp-hr-employee' == $hook ) {
-            wp_enqueue_script( 'post' );
 
-            $employee                          = new Employee();
-            $localize_script['employee_empty'] = $employee->to_array();
+        $section    =   isset( $_GET['section'] ) ? $_GET['section'] :'dashboard';
+
+        switch ( $section ) {
+            case 'employee':
+                wp_enqueue_script( 'post' );
+                $employee                          = new Employee();
+                $localize_script['employee_empty'] = $employee->to_array();
+            break;
+            case 'report':
+                wp_enqueue_script( 'erp-flotchart' );
+                wp_enqueue_script( 'erp-flotchart-time' );
+                wp_enqueue_script( 'erp-flotchart-pie' );
+                wp_enqueue_script( 'erp-flotchart-orerbars' );
+                wp_enqueue_script( 'erp-flotchart-axislables' );
+                wp_enqueue_script( 'erp-flotchart-valuelabel' );
+                wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
+            break;
+
         }
+
+        // if its an employee page
 
         wp_localize_script( 'wp-erp-hr', 'wpErpHr', $localize_script );
 
@@ -223,16 +241,6 @@ class Human_Resource {
         wp_enqueue_style( 'erp-select2' );
         wp_enqueue_style( 'erp-tiptip' );
         wp_enqueue_style( 'erp-style' );
-
-        if ( 'hr-management_page_erp-hr-reporting' == $hook ) {
-            wp_enqueue_script( 'erp-flotchart' );
-            wp_enqueue_script( 'erp-flotchart-time' );
-            wp_enqueue_script( 'erp-flotchart-pie' );
-            wp_enqueue_script( 'erp-flotchart-orerbars' );
-            wp_enqueue_script( 'erp-flotchart-axislables' );
-            wp_enqueue_script( 'erp-flotchart-valuelabel' );
-            wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
-        }
     }
 
     /**
@@ -242,28 +250,27 @@ class Human_Resource {
      */
     public function admin_js_templates() {
         global $current_screen;
-
         // main HR menu
         $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ), 'hr-management', $current_screen->base );
+        if ( 'wp-erp_page_erp-hr' === $hook ) {
+            erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-leave-request.php', 'erp-new-leave-req' );
+            erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-days.php', 'erp-leave-days' );
+        }
 
-        switch ( $hook ) {
-            case 'toplevel_page_erp-hr':
-                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-leave-request.php', 'erp-new-leave-req' );
-                erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-days.php', 'erp-leave-days' );
-                break;
-
-            case 'hr-management_page_erp-hr-depts':
+        $section    =   isset( $_GET['section'] ) ? $_GET['section'] : 'dashboard';
+        switch ( $section ) {
+            case 'department':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-dept.php', 'erp-dept-row' );
                 break;
 
-            case 'hr-management_page_erp-hr-designation':
+            case 'designation':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-desig.php', 'erp-desig-row' );
                 break;
 
-            case 'hr-management_page_erp-hr-employee':
-            case 'hr-management_page_erp-hr-my-profile':
+            case 'employee':
+            case 'my-profile':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-employee.php', 'erp-new-employee' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-employee.php', 'erp-employee-row' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-status.php', 'erp-employment-status' );
@@ -282,18 +289,18 @@ class Human_Resource {
         }
 
         // leave menu
-        $hook = str_replace( sanitize_title( __( 'Leave', 'erp' ) ), 'leave', $current_screen->base );
-
-        switch ( $hook ) {
-            case 'leave_page_erp-leave-policies':
+        // $hook = str_replace( sanitize_title( __( 'Leave', 'erp' ) ), 'leave', $current_screen->base );
+        $sub_section    =   isset( $_GET['sub-section'] ) ? $_GET['sub-section'] : '';
+        switch ( $sub_section ) {
+            case 'policies':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-policy.php', 'erp-leave-policy' );
                 break;
 
-            case 'leave_page_erp-holiday-assign':
+            case 'holidays':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/holiday.php', 'erp-hr-holiday-js-tmp' );
                 break;
 
-            case 'toplevel_page_erp-leave':
+            case 'leave-requests':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-reject.php', 'erp-hr-leave-reject-js-tmp' );
                 break;
 
