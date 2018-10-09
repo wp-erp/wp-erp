@@ -10,9 +10,9 @@
                 foreach ( $form_types as $key => $form ) {
                     do_action( 'erp_ac_sales_transaction_action', $key, $form );
                     if ( 'payment_voucher' == $key && ( erp_ac_create_expenses_voucher() || erp_ac_publish_expenses_voucher() ) ) {
-                        printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
+                        printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting&section=expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
                     } elseif ( 'vendor_credit' == $key && ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) ) {
-                        printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
+                        printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting&section=expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
                     } else {
                         do_action( 'erp_ac_sales_transaction_after_action', $key, $form );
                     }
@@ -29,7 +29,8 @@
     ?>
 
     <form method="get" class="erp-ac-list-table-form">
-        <input type="hidden" name="page" value="erp-accounting-expense">
+        <input type="hidden" name="page" value="erp-accounting">
+        <input type="hidden" name="section" value="expense">
 
         <?php
         $list_table = new WeDevs\ERP\Accounting\Expense_Transaction_List_Table();

@@ -1,6 +1,6 @@
 <div class="wrap erp-ac-customer-list-table-wrap">
     <?php if ( erp_ac_create_customer() ) { ?>
-        <h2><?php _e( 'Customers', 'erp' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-customers&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a></h2>
+        <h2><?php _e( 'Customers', 'erp' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-accounting&section=customers&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a></h2>
     <?php } ?>
 
     <?php
