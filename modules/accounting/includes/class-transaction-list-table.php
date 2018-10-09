@@ -128,7 +128,9 @@ class Transaction_List_Table extends \WP_List_Table {
     }
 
     public function column_user_id( $item ) {
-        $url               = admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id );
+        $page    = isset( $_GET['page'] ) ? $_GET['page'] : '';
+        $section = isset( $_GET['section'] ) ? $_GET['section'] : '';
+        $url               = admin_url( 'admin.php?page=' . $page . '&section=' . $section . '&action=view&id=' . $item->id );
         $user_display_name = '';
         $actions           = array();
         if ( ! $item->user_id ) {
