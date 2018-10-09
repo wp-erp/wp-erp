@@ -16,7 +16,8 @@
         <div class="list-table-inner erp-hr-employees-wrap-inner">
 
             <form method="get">
-                <input type="hidden" name="page" value="erp-hr-employee">
+                <input type="hidden" name="page" value="erp-hr">
+                <input type="hidden" name="section" value="employee">
                 <?php
                 $employee_table = new \WeDevs\ERP\HRM\Employee_List_Table();
                 $employee_table->prepare_items();

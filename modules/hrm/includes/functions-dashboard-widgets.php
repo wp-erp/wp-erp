@@ -304,7 +304,8 @@ function erp_hr_dashboard_widget_leave_calendar() {
  */
 function erp_hr_employee_list_url() {
     $args = [
-        'page' => 'erp-hr-employee'
+        'page' => 'erp-hr',
+        'section'   =>  'employee',
     ];
 
     $url = add_query_arg( $args, admin_url( 'admin.php' ) );
