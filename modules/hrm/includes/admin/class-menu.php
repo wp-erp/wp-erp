@@ -72,9 +72,57 @@ class Admin_Menu {
         ) );
 
         erp_add_menu( 'hr', array(
-            'title'         =>  __( 'Reporting', 'erp' ),
+            'title'         =>  __( 'Reports', 'erp' ),
             'capability'    =>  'erp_hr_manager',
             'slug'          =>  'report',
+            'callback'      =>  [ $this, 'reporting_page' ],
+            'position'      =>  5,
+        ) );
+
+        erp_add_submenu( 'hr', 'report', array(
+            'title'         =>  __( 'Age Profile', 'erp' ),
+            'capability'    =>  'erp_hr_manager',
+            'slug'          =>  'report&type=age-profile',
+            'callback'      =>  [ $this, 'reporting_page' ],
+            'position'      =>  5,
+        ) );
+
+        erp_add_submenu( 'hr', 'report', array(
+            'title'         =>  __( 'Salary History', 'erp' ),
+            'capability'    =>  'erp_hr_manager',
+            'slug'          =>  'report&type=salary-history',
+            'callback'      =>  [ $this, 'reporting_page' ],
+            'position'      =>  5,
+        ) );
+
+        erp_add_submenu( 'hr', 'report', array(
+            'title'         =>  __( 'Gender Profile', 'erp' ),
+            'capability'    =>  'erp_hr_manager',
+            'slug'          =>  'report&type=gender-profile',
+            'callback'      =>  [ $this, 'reporting_page' ],
+            'position'      =>  5,
+        ) );
+
+        erp_add_submenu( 'hr', 'report', array(
+            'title'         =>  __( 'Years of Service', 'erp' ),
+            'capability'    =>  'erp_hr_manager',
+            'slug'          =>  'report&type=years-of-service',
+            'callback'      =>  [ $this, 'reporting_page' ],
+            'position'      =>  5,
+        ) );
+
+        erp_add_submenu( 'hr', 'report', array(
+            'title'         =>  __( 'Head Count', 'erp' ),
+            'capability'    =>  'erp_hr_manager',
+            'slug'          =>  'report&type=headcount',
+            'callback'      =>  [ $this, 'reporting_page' ],
+            'position'      =>  5,
+        ) );
+
+        erp_add_submenu( 'hr', 'report', array(
+            'title'         =>  __( 'Leave Reports', 'erp' ),
+            'capability'    =>  'erp_hr_manager',
+            'slug'          =>  'report&type=leaves',
             'callback'      =>  [ $this, 'reporting_page' ],
             'position'      =>  5,
         ) );
