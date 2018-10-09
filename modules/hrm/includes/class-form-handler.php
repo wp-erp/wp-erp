@@ -87,6 +87,7 @@ class Form_Handler {
     public function handle_leave_bulk_actions(){
         if ( empty( $_GET['sub-section'] ) ) {
             $this->leave_request_bulk_action();
+            return;
         }
 
         switch ( $_GET['sub-section'] ) {
