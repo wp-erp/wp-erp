@@ -2734,11 +2734,12 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 
         $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
 
+        $class = $active == $item['slug'] ? 'active ' : '';
         if ( $dropdown ) {
-            $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['parent'], 'sub-section' => $item['slug'] ], admin_url( 'admin.php' ) );
+            $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['parent'], 'sub-section' => $item['slug'] ], admin_url( 'admin.php' ) );
+            $class .= ( !empty( $_GET['sub-section'] ) && $_GET['sub-section'] == $item['slug'] ) ? 'active ' : '';
         }
 
-        $class = $active == $item['slug'] ? 'active ' : '';
         $submenu =  '';
         if ( isset( $item['submenu'] ) ) {
             $class.= "dropdown-menu";
