@@ -28,32 +28,106 @@ class Admin_Menu {
         $bank           = 'erp_ac_view_bank_accounts';
         $journal        = 'erp_ac_view_journal';
         $reports        = 'erp_ac_view_reports';
+//
+//        add_menu_page( __( 'Accounting', 'erp' ), 'Accounting', $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
+//
+//        $dashboard      = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'erp' ), __( 'Dashboard', 'erp' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ) );
+//        $customer       = add_submenu_page( 'erp-accounting', __( 'Customers', 'erp' ), __( 'Customers', 'erp' ), $customer, 'erp-accounting-customers', array( $this, 'page_customers' ) );
+//        $vendor         = add_submenu_page( 'erp-accounting', __( 'Vendors', 'erp' ), __( 'Vendors', 'erp' ), $vendor, 'erp-accounting-vendors', array( $this, 'page_vendors' ) );
+//        $sale           = add_submenu_page( 'erp-accounting', __( 'Sales', 'erp' ), __( 'Sales', 'erp' ), $sale, 'erp-accounting-sales', array( $this, 'page_sales' ) );
+//        $expense        = add_submenu_page( 'erp-accounting', __( 'Expenses', 'erp' ), __( 'Expenses', 'erp' ), $expense, 'erp-accounting-expense', array( $this, 'page_expenses' ) );
+//        $account_charts = add_submenu_page( 'erp-accounting', __( 'Chart of Accounts', 'erp' ), __( 'Chart of Accounts', 'erp' ), $account_charts, 'erp-accounting-charts', array( $this, 'page_chart_of_accounting' ) );
+//        $bank           = add_submenu_page( 'erp-accounting', __( 'Bank Accounts', 'erp' ), __( 'Bank Accounts', 'erp' ), $bank, 'erp-accounting-bank', array( $this, 'page_bank' ) );
+//        $journal        = add_submenu_page( 'erp-accounting', __( 'Journal Entry', 'erp' ), __( 'Journal Entry', 'erp' ), $journal, 'erp-accounting-journal', array( $this, 'page_journal_entry' ) );
+//        $reports        = add_submenu_page( 'erp-accounting', __( 'Reports', 'erp' ), __( 'Reports', 'erp' ), $reports, 'erp-accounting-reports', array( $this, 'page_reports' ) );
+//
+//        //Help page
+//        add_submenu_page( 'erp-accounting', __( 'Help', 'erp' ), __( '<span style="color:#f18500">Help</span>', 'erp' ), 'erp_ac_view_dashboard', 'erp-ac-help', array( $this, 'help_page' ) );
 
-        add_menu_page( __( 'Accounting', 'erp' ), 'Accounting', $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
+        add_submenu_page( 'erp', __( 'Accounting', 'erp' ), 'Accounting', 'erp_ac_view_dashboard', 'erp-accounting', [ $this, 'router' ]);
 
-        $dashboard      = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'erp' ), __( 'Dashboard', 'erp' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ) );
-        $customer       = add_submenu_page( 'erp-accounting', __( 'Customers', 'erp' ), __( 'Customers', 'erp' ), $customer, 'erp-accounting-customers', array( $this, 'page_customers' ) );
-        $vendor         = add_submenu_page( 'erp-accounting', __( 'Vendors', 'erp' ), __( 'Vendors', 'erp' ), $vendor, 'erp-accounting-vendors', array( $this, 'page_vendors' ) );
-        $sale           = add_submenu_page( 'erp-accounting', __( 'Sales', 'erp' ), __( 'Sales', 'erp' ), $sale, 'erp-accounting-sales', array( $this, 'page_sales' ) );
-        $expense        = add_submenu_page( 'erp-accounting', __( 'Expenses', 'erp' ), __( 'Expenses', 'erp' ), $expense, 'erp-accounting-expense', array( $this, 'page_expenses' ) );
-        $account_charts = add_submenu_page( 'erp-accounting', __( 'Chart of Accounts', 'erp' ), __( 'Chart of Accounts', 'erp' ), $account_charts, 'erp-accounting-charts', array( $this, 'page_chart_of_accounting' ) );
-        $bank           = add_submenu_page( 'erp-accounting', __( 'Bank Accounts', 'erp' ), __( 'Bank Accounts', 'erp' ), $bank, 'erp-accounting-bank', array( $this, 'page_bank' ) );
-        $journal        = add_submenu_page( 'erp-accounting', __( 'Journal Entry', 'erp' ), __( 'Journal Entry', 'erp' ), $journal, 'erp-accounting-journal', array( $this, 'page_journal_entry' ) );
-        $reports        = add_submenu_page( 'erp-accounting', __( 'Reports', 'erp' ), __( 'Reports', 'erp' ), $reports, 'erp-accounting-reports', array( $this, 'page_reports' ) );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Dashboard', 'erp' ),
+            'capability' => $dashboard,
+            'slug'       => 'dashboard',
+            'callback'   => [ $this, 'dashboard_page' ],
+            'position'   => 1
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Customers', 'erp' ),
+            'capability' => $customer,
+            'slug'       => 'customers',
+            'callback'   => [ $this, 'page_customers' ],
+            'position'   => 5
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Vendors', 'erp' ),
+            'capability' => $vendor,
+            'slug'       => 'vendors',
+            'callback'   => [ $this, 'page_vendors' ],
+            'position'   => 5
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Sales', 'erp' ),
+            'capability' => $sale,
+            'slug'       => 'sales',
+            'callback'   => [ $this, 'page_sales' ],
+            'position'   => 5
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Expenses', 'erp' ),
+            'capability' => $expense,
+            'slug'       => 'expense',
+            'callback'   => [ $this, 'page_expenses' ],
+            'position'   => 5
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Chart of Accounts', 'erp' ),
+            'capability' => $account_charts,
+            'slug'       => 'charts',
+            'callback'   => [ $this, 'page_chart_of_accounting' ],
+            'position'   => 5
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Bank Accounts', 'erp' ),
+            'capability' => $bank,
+            'slug'       => 'bank',
+            'callback'   => [ $this, 'page_bank' ],
+            'position'   => 5
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      =>  __( 'Journal Entry', 'erp' ),
+            'capability' => $journal,
+            'slug'       => 'journal',
+            'callback'   => [ $this, 'page_journal_entry' ],
+            'position'   => 5
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      =>  __( 'Reports', 'erp' ),
+            'capability' => $reports,
+            'slug'       => 'reports',
+            'callback'   => [ $this, 'page_reports' ],
+            'position'   => 5
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      =>  __( '<span style="color:#f18500">Help</span>', 'erp' ),
+            'capability' => $dashboard,
+            'slug'       => 'erp-ac-help',
+            'callback'   => [ $this, 'help_page' ],
+            'position'   => 5
+        ] );
 
-        //Help page
-        add_submenu_page( 'erp-accounting', __( 'Help', 'erp' ), __( '<span style="color:#f18500">Help</span>', 'erp' ), 'erp_ac_view_dashboard', 'erp-ac-help', array( $this, 'help_page' ) );
 
-        add_action( 'admin_print_styles-' . $dashboard, array( $this, 'dashboard_script' ) );
-        add_action( 'admin_print_styles-' . $customer, array( $this, 'sales_chart_script' ) );
-        add_action( 'admin_print_styles-' . $vendor, array( $this, 'sales_chart_script' ) );
-        add_action( 'admin_print_styles-' . $bank, array( $this, 'bank_script' ) );
-        add_action( 'admin_print_styles-' . $sale, array( $this, 'sales_chart_script' ) );
-        add_action( 'admin_print_styles-' . $expense, array( $this, 'expense_chart_script' ) );
-        add_action( 'admin_print_styles-' . $journal, array( $this, 'journal_script' ) );
-        add_action( 'admin_print_styles-' . $account_charts, array( $this, 'chart_account_script' ) );
-        add_action( 'admin_print_styles-' . $reports, array( $this, 'reports_script' ) );
-        add_action( 'admin_print_styles-' . 'erp-settings_page_erp-settings', array( $this, 'accounting_settings_script' ) );
+//        add_action( 'admin_print_styles-' . $dashboard, array( $this, 'dashboard_script' ) );
+//        add_action( 'admin_print_styles-' . $customer, array( $this, 'sales_chart_script' ) );
+//        add_action( 'admin_print_styles-' . $vendor, array( $this, 'sales_chart_script' ) );
+//        add_action( 'admin_print_styles-' . $bank, array( $this, 'bank_script' ) );
+//        add_action( 'admin_print_styles-' . $sale, array( $this, 'sales_chart_script' ) );
+//        add_action( 'admin_print_styles-' . $expense, array( $this, 'expense_chart_script' ) );
+//        add_action( 'admin_print_styles-' . $journal, array( $this, 'journal_script' ) );
+//        add_action( 'admin_print_styles-' . $account_charts, array( $this, 'chart_account_script' ) );
+//        add_action( 'admin_print_styles-' . $reports, array( $this, 'reports_script' ) );
+//        add_action( 'admin_print_styles-' . 'erp-settings_page_erp-settings', array( $this, 'accounting_settings_script' ) );
     }
 
     /**
@@ -88,8 +162,8 @@ class Admin_Menu {
      * @return void
      */
     public function sales_chart_script() {
-        $this->chart_script();
         $this->common_scripts();
+        $this->chart_script();
         wp_localize_script( 'wp-erp-ac-js', 'erp_ac_tax', [ 'rate' => erp_ac_get_tax_info() ] );
     }
 
@@ -101,8 +175,8 @@ class Admin_Menu {
      * @return void
      */
     public function expense_chart_script() {
-        $this->chart_script();
         $this->common_scripts();
+        $this->chart_script();
         wp_localize_script( 'wp-erp-ac-js', 'erp_ac_tax', [ 'rate' => erp_ac_get_tax_info() ] );
     }
 
@@ -224,6 +298,28 @@ class Admin_Menu {
     }
 
     /**
+     * Route to approriate template according to current menu
+     *
+     * @since 1.3.14
+     *
+     * @return void
+     */
+    public function router() {
+        $component = 'accounting';
+        $menu = erp_menu();
+        $menu = $menu[$component];
+        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
+        $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? $_GET['sub-section'] : false;
+        $callback = $menu[$section]['callback'];
+        if ( $sub ) {
+            $callback = $menu[$section]['submenu'][$sub]['callback'];
+        }
+        erp_render_menu( $component );
+        call_user_func( $callback );
+    }
+
+
+    /**
      * Callback for dashboard view page
      *
      * @since 1.0
@@ -231,10 +327,12 @@ class Admin_Menu {
      * @return void
      */
     public function dashboard_page() {
+        $this->dashboard_script();
+
         include dirname( __FILE__ ) . '/views/dashboard.php';
     }
 
-   /**
+    /**
      * Render page sales view page
      *
      * @since 1.0
@@ -242,6 +340,8 @@ class Admin_Menu {
      * @return void
      */
     public function page_sales() {
+        $this->sales_chart_script();
+
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $type     = isset( $_GET['type'] ) ? $_GET['type'] : 'pv';
         $id       = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
@@ -253,7 +353,7 @@ class Admin_Menu {
                 if ( $type == 'invoice' && ( erp_ac_create_sales_invoice() || erp_ac_publish_sales_invoice() ) ) {
                     $template = dirname( __FILE__ ) . '/views/sales/invoice-new.php';
                 } else if ( $type == 'payment' && ( erp_ac_create_sales_payment() || erp_ac_publish_sales_payment() ) ) {
-                   $template = dirname( __FILE__ ) . '/views/sales/payment-new.php';
+                    $template = dirname( __FILE__ ) . '/views/sales/payment-new.php';
                 }else {
                     $template = apply_filters( 'erp_ac_invoice_transaction_template', $template );
                 }
@@ -291,6 +391,8 @@ class Admin_Menu {
      * @return void
      */
     public function page_expenses() {
+        $this->expense_chart_script();
+
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $type     = isset( $_GET['type'] ) ? $_GET['type'] : 'pv';
         $id       = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
@@ -346,6 +448,8 @@ class Admin_Menu {
      * @return void
      */
     public function page_chart_of_accounting() {
+        $this->chart_account_script();
+
         $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         $template = '';
@@ -391,6 +495,8 @@ class Admin_Menu {
      * @return void
      */
     public function page_bank() {
+        $this->bank_script();
+
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : '';
         $id       = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
@@ -417,6 +523,8 @@ class Admin_Menu {
      * @return void
      */
     public function page_reports() {
+        $this->reports_script();
+
         $type   = isset( $_GET['type'] ) ? $_GET['type'] : '';
         $pagenum          = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
         $limit            = 20;
@@ -475,6 +583,8 @@ class Admin_Menu {
      * @return void
      */
     public function page_journal_entry() {
+        $this->reports_script();
+
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : '';
         $id       = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         $template = '';
@@ -519,6 +629,8 @@ class Admin_Menu {
      * @return void
      */
     public function page_customers() {
+        $this->sales_chart_script();
+
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $id       = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         $template = '';
@@ -562,6 +674,8 @@ class Admin_Menu {
      * @return void
      */
     public function page_vendors() {
+        $this->sales_chart_script();
+
         $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         $template = '';
@@ -598,10 +712,10 @@ class Admin_Menu {
     }
 
     /**
-     * Show CRM Help Page
+     * Show Accounting Help Page
      * @since 1.0.0
      */
-    public function help_page(){
+    public function help_page() {
         include WPERP_ACCOUNTING_PATH . '/includes/views/help.php';
     }
 }

@@ -1,7 +1,7 @@
 <div class="wrap erp-ac-users-wrap">
     <h2>
         <?php _e( 'Edit Customer', 'erp' ); ?>
-        <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-customers&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a>
+        <a href="<?php echo admin_url( 'admin.php?page=erp-accounting&section=customers&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a>
     </h2>
 
     <?php $item = erp_ac_get_customer( $id ); ?>

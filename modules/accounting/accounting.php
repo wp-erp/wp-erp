@@ -204,7 +204,10 @@ class Accounting {
     public function admin_js_templates() {
         global $current_screen;
 
-        $hook = str_replace( sanitize_title( __( 'Accounting', 'erp' ) ) , 'accounting', $current_screen->base );
+        $hook = str_replace( 'wp-erp' , 'accounting', $current_screen->base );
+        if ( isset( $_GET['section'] ) ) {
+            $hook .= '-' . $_GET['section'];
+        }
 
         if ( $hook == 'accounting_page_erp-accounting-expense' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );

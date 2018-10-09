@@ -2,7 +2,8 @@
 $currency_symbole = erp_ac_get_currency_symbol();
 ?>
 <form method="get">
-    <input type="hidden" name="page" value="erp-accounting-customers">
+    <input type="hidden" name="page" value="erp-accounting">
+    <input type="hidden" name="section" value="customers">
     <input type="hidden" name="id" value="<?php echo $customer->id; ?>">
 
     <?php

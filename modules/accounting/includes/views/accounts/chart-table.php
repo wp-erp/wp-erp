@@ -17,7 +17,7 @@
 
             if ( $charts ) {
 
-                $chart_details = admin_url( 'admin.php?page=erp-accounting-charts&action=view&id=' );
+                $chart_details = admin_url( 'admin.php?page=erp-accounting&section=charts&action=view&id=' );
 
                 foreach( $charts as $chart ) {
                     ?>
