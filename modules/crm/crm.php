@@ -288,6 +288,7 @@ class Customer_Relationship {
 
             case 'reports' :
                 if ( isset( $_GET['type'] ) && $_GET['type'] === 'growth-report' ) {
+                    wp_enqueue_script( 'erp-momentjs' );
                     wp_enqueue_script( 'erp-crm-chart', WPERP_CRM_ASSETS . "/js/chart$suffix.min.js", array(), date( 'Ymd' ), true );
                     wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", array(), date( 'Ymd' ), true );
                 }

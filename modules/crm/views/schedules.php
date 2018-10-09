@@ -8,8 +8,8 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
 
     <?php if ( current_user_can( erp_crm_get_manager_role() ) ): ?>
         <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
-            <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'My Schedules', 'erp' ); ?></a>
-            <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'All Schedules', 'erp' ); ?></a>
+            <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-crm', 'section' => 'schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'My Schedules', 'erp' ); ?></a>
+            <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-crm', 'section' => 'schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'All Schedules', 'erp' ); ?></a>
         </h2>
     <?php endif; ?>
 

@@ -107,7 +107,7 @@ class Contact_Group_List_Table extends \WP_List_Table {
 
         $actions             = array();
         $delete_url          = '';
-        $view_subscriber_url = add_query_arg( [ 'page'=>'erp-sales-contact-groups', 'groupaction' => 'view-subscriber', 'filter_contact_group' => $contact_group->id ], admin_url( 'admin.php' ) );
+        $view_subscriber_url = add_query_arg( [ 'page'=>'erp-crm', 'section'=> 'contact-groups', 'groupaction' => 'view-subscriber', 'filter_contact_group' => $contact_group->id ], admin_url( 'admin.php' ) );
 
         if ( current_user_can( 'erp_crm_edit_groups' ) ) {
             $actions['edit'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Edit this Contact Group', 'erp' ), __( 'Edit', 'erp' ) );

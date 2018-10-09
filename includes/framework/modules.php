@@ -118,9 +118,9 @@ class Modules {
      */
     public function module_switch_redirect( $url, $new_mode ) {
         if ( 'crm' == $new_mode ) {
-            return admin_url( 'admin.php?page=erp-sales' );
+            return admin_url( 'admin.php?page=erp-crm' );
         } elseif ( 'hrm' == $new_mode ) {
-            return admin_url( 'admin.php?page=erp-hr' );
+            return admin_url( 'admin.php?page=erp-hrm' );
         }
 
         return $url;
