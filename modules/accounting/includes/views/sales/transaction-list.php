@@ -33,6 +33,7 @@
 
     <form method="get" class="erp-accounting-tbl-form">
         <input type="hidden" name="page" value="erp-accounting">
+        <input type="hidden" name="section" value="sales">
 
         <?php
         $list_table = new WeDevs\ERP\Accounting\Sales_Transaction_List_Table();

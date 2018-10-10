@@ -86,6 +86,30 @@ class Admin_Menu {
             'position'   => 5
         ] );
 
+        erp_add_submenu( 'crm','reports', [
+            'title'      => __( 'Activity Report', 'erp' ),
+            'capability' => 'erp_crm_manage_dashboard',
+            'slug'       => 'reports&type=activity-report',
+            'callback'   => [ $this, 'page_reports' ],
+            'position'   => 5
+        ] );
+
+        erp_add_submenu( 'crm','reports', [
+            'title'      => __( 'Customer Report', 'erp' ),
+            'capability' => 'erp_crm_manage_dashboard',
+            'slug'       => 'reports&type=customer-report',
+            'callback'   => [ $this, 'page_reports' ],
+            'position'   => 5
+        ] );
+
+        erp_add_submenu( 'crm','reports', [
+            'title'      => __( 'Growth Report', 'erp' ),
+            'capability' => 'erp_crm_manage_dashboard',
+            'slug'       => 'reports&type=growth-report',
+            'callback'   => [ $this, 'page_reports' ],
+            'position'   => 5
+        ] );
+
         erp_add_menu( 'crm', [
             'title'      =>  __( 'Help', 'erp' ),
             'capability' => 'erp_crm_manage_dashboard',
@@ -145,7 +169,10 @@ class Admin_Menu {
 
         erp_render_menu( $component );
 
-        call_user_func( $callback );
+        if ( is_callable( $callback ) ) {
+            call_user_func( $callback );
+        }
+
     }
 
     /**
