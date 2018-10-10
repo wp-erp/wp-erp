@@ -46,7 +46,7 @@ class Expense_Transaction_List_Table extends Transaction_List_Table {
             'all'   => [
                 'label' => __( 'All', 'erp' ),
                 'count' => array_sum( $counts),
-                'url'   => erp_ac_get_section_sales_url()
+                'url'   => erp_ac_get_section_expense_url()
             ],
 
             'draft' => [
