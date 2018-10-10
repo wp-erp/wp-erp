@@ -144,7 +144,7 @@ class Customer_Relationship {
     public function admin_scripts( $hook ) {
 //        $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $hook );
 
-        if ( 'wp-erp_page_erp-crm' != $hook ) {
+        if ( 'wp-erp_page_erp-crm' != $hook && 'wp-erp_page_erp-settings' !== $hook ) {
             return;
         }
 
@@ -319,7 +319,9 @@ class Customer_Relationship {
      * @return void
      */
     public function load_js_template() {
-
+        global $current_screen;
+        $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $current_screen->base );
+            error_log( print_r( $hook,true ) );
         $section = !empty( $_GET['section'] ) ? $_GET['section'] : 'dashboard' ;
         switch ( $section ) {
 
@@ -377,15 +379,15 @@ class Customer_Relationship {
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-add-schedules.php', 'erp-crm-customer-schedules');
                 break;
 
-            case 'erp-settings_page_erp-settings':
-                if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
-                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-save-replies.php', 'erp-crm-new-save-replies' );
-                }
-                break;
-
             default:
                 # code...
                 break;
+        }
+
+        if ( 'wp-erp_page_erp-settings' == $hook ) {
+            if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
+                erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-save-replies.php', 'erp-crm-new-save-replies' );
+            }
         }
     }
 
@@ -425,7 +427,7 @@ class Customer_Relationship {
     function load_settings_scripts( $hook ) {
         $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ), 'crm', $hook );
 
-        if ( 'erp-settings_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
+        if ( 'wp-erp_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
             wp_enqueue_script( 'erp-trix-editor' );
             wp_enqueue_style( 'erp-trix-editor' );
         }
@@ -439,7 +441,7 @@ class Customer_Relationship {
         global $current_screen;
         $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ), 'crm', $current_screen->base );
 
-        if ( 'erp-settings_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
+        if ( 'wp-erp_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
             erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-save-replies.php', 'erp-crm-new-save-replies' );
         }
     }
