@@ -374,3 +374,25 @@ function erp_ac_get_vendor_credit_edit_url( $id ) {
     $url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
     return apply_filters( 'erp_ac_get_vendor_credit_edit_url', $url );
 }
+
+/**
+ * Get url for section expense menu
+ *
+ * @param string $slug
+ *
+ * @since 1.3.14
+ *
+ * @return string
+ */
+function erp_ac_get_section_expense_url( $slug = false ) {
+    $url = erp_ac_get_expense_url();
+
+    if ( $slug && $slug != 'all' ) {
+        $slug = str_replace( '_', '-', $slug );
+        $url  = add_query_arg( array( 'filter' => $slug ), $url );
+    } else {
+        $url = remove_query_arg( array( 'filter' ), $url );
+    }
+
+    return apply_filters( 'erp_ac_get_section_sales_url', $url, $slug );
+}
