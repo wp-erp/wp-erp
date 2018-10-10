@@ -27,20 +27,85 @@ class Form_Handler {
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'admin_init', array( $this, 'handle_employee_status_update' ) );
         add_action( 'admin_init', array( $this, 'handle_leave_calendar_filter' ) );
+        add_action( "load-wp-erp_page_erp-hr", array( $this, 'handle_actions' ) );
 
-        $hr_management = sanitize_title( __( 'HR Management', 'erp' ) );
-        add_action( "load-{$hr_management}_page_erp-hr-employee", array( $this, 'employee_bulk_action' ) );
-        add_action( "load-{$hr_management}_page_erp-hr-designation", array( $this, 'designation_bulk_action' ) );
-        add_action( "load-{$hr_management}_page_erp-hr-depts", array( $this, 'department_bulk_action' ) );
-        add_action( "load-{$hr_management}_page_erp-hr-reporting", array( $this, 'reporting_bulk_action' ) );
+//        $hr_management = sanitize_title( __( 'HR Management', 'erp' ) );
 
-        $leave = sanitize_title( __( 'Leave', 'erp' ) );
-        add_action( 'load-toplevel_page_erp-leave', array( $this, 'leave_request_bulk_action' ) );
-        add_action( "load-{$leave}_page_erp-leave-assign", array( $this, 'entitlement_bulk_action' ) );
-        add_action( "load-{$leave}_page_erp-holiday-assign", array( $this, 'holiday_action' ) );
-        add_action( "load-{$leave}_page_erp-leave-policies", array( $this, 'leave_policies' ) );
-        add_action( "load-leaves_page_erp-hr-reporting", array( $this, 'reporting_leaves_bulk_action' ) );
+//        add_action( "load-{$hr_management}_page_erp-hr-employee", array( $this, 'employee_bulk_action' ) );
+//        add_action( "load-{$hr_management}_page_erp-hr-designation", array( $this, 'designation_bulk_action' ) );
+//        add_action( "load-{$hr_management}_page_erp-hr-depts", array( $this, 'department_bulk_action' ) );
+//        add_action( "load-{$hr_management}_page_erp-hr-reporting", array( $this, 'reporting_bulk_action' ) );
 
+//        $leave = sanitize_title( __( 'Leave', 'erp' ) );
+//        add_action( 'load-toplevel_page_erp-leave', array( $this, 'leave_request_bulk_action' ) );
+//        add_action( "load-{$leave}_page_erp-leave-assign", array( $this, 'entitlement_bulk_action' ) );
+//        add_action( "load-{$leave}_page_erp-holiday-assign", array( $this, 'holiday_action' ) );
+//        add_action( "load-{$leave}_page_erp-leave-policies", array( $this, 'leave_policies' ) );
+//        add_action( "load-leaves_page_erp-hr-reporting", array( $this, 'reporting_leaves_bulk_action' ) );
+
+    }
+
+    /**
+     * Handle bulk action
+     *
+     * @since 1.3.14
+     *
+     */
+    public function handle_actions() {
+        $section = !empty( $_GET['section'] ) ? $_GET['section'] : false;
+
+        if ( !$section ) {
+            return;
+        }
+
+        switch ( $section ) {
+            case 'employee' :
+                $this->employee_bulk_action();
+                break;
+            case 'department' :
+                $this->department_bulk_action();
+                break;
+            case 'designation' :
+                $this->designation_bulk_action();
+                break;
+            case 'report' :
+                $this->reporting_bulk_action();
+                break;
+            case 'leave' :
+                $this->handle_leave_bulk_actions();
+                break;
+
+            default :
+        }
+    }
+
+    /**
+     * Handle bulk actions for leave section
+     *
+     * @since 1.3.14
+     */
+    public function handle_leave_bulk_actions(){
+        if ( empty( $_GET['sub-section'] ) ) {
+            $this->leave_request_bulk_action();
+            return;
+        }
+
+        switch ( $_GET['sub-section'] ) {
+            case 'leave-requests' :
+                $this->leave_request_bulk_action();
+                break;
+            case 'leave-entitlements' :
+                $this->entitlement_bulk_action();
+                break;
+            case 'holidays' :
+                $this->holiday_action();
+                break;
+            case 'policies' :
+                $this->leave_policies();
+                break;
+            default :
+
+        }
     }
 
     /**
@@ -97,7 +162,7 @@ class Form_Handler {
      */
     public function leave_policies() {
         // Check nonce validaion
-        if ( ! $this->verify_current_page_screen( 'erp-leave-policies', 'bulk-leave_policies' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-leave_policies' ) ) {
             return;
         }
 
@@ -124,7 +189,7 @@ class Form_Handler {
      * @return void
      */
     public function entitlement_bulk_action() {
-        if ( ! $this->verify_current_page_screen( 'erp-leave-assign', 'bulk-entitlements' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-entitlements' ) ) {
             return;
         }
 
@@ -172,7 +237,7 @@ class Form_Handler {
      */
     public function leave_request_bulk_action() {
         // Check nonce validaion
-        if ( ! $this->verify_current_page_screen( 'erp-leave', 'bulk-leaves' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-leaves' ) ) {
             return;
         }
 
@@ -273,7 +338,7 @@ class Form_Handler {
      */
     public function employee_bulk_action() {
         // Nonce validation
-        if ( ! $this->verify_current_page_screen( 'erp-hr-employee', 'bulk-employees' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-employees' ) ) {
             return;
         }
 
@@ -340,7 +405,7 @@ class Form_Handler {
      * @return void [redirection]
      */
     public function designation_bulk_action() {
-        if ( ! $this->verify_current_page_screen( 'erp-hr-designation', 'bulk-designations' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-designations' ) ) {
             return;
         }
 
@@ -388,7 +453,7 @@ class Form_Handler {
      */
     public function department_bulk_action() {
         // Check nonce validation
-        if ( ! $this->verify_current_page_screen( 'erp-hr-depts', 'bulk-departments' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-departments' ) ) {
             return;
         }
 
@@ -440,7 +505,7 @@ class Form_Handler {
      */
     public function holiday_action() {
         // Check nonce validation
-        if ( ! $this->verify_current_page_screen( 'erp-holiday-assign', 'bulk-holiday' ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-hr', 'bulk-holiday' ) ) {
             return;
         }
 
@@ -800,7 +865,7 @@ class Form_Handler {
 
         if ( isset( $_REQUEST['filter_headcount'] ) ) {
 
-            if ( ! $this->verify_current_page_screen( 'erp-hr-reporting', 'epr-rep-headcount' ) ) {
+            if ( ! $this->verify_current_page_screen( 'erp-hr', 'epr-rep-headcount' ) ) {
                 return;
             }
 
