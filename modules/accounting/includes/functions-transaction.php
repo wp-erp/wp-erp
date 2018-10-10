@@ -793,10 +793,10 @@ function erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_journal,
 }
 
 function erp_ac_journal_update( $item, $item_entry_type, $args, $trans_id ) {
+    $journal_id     =   ! empty( $item['journal_id'] ) ? intval( $item['journal_id'] ) : '';
+    if ( $journal_id ) {
 
-    if ( intval( $item['journal_id'] ) ) {
-
-        $line_item_update = WeDevs\ERP\Accounting\Model\Journal::where( 'id', '=', $item['journal_id'] )
+        $line_item_update = WeDevs\ERP\Accounting\Model\Journal::where( 'id', '=', $journal_id )
             ->update([
                 'ledger_id'      => $item['account_id'],
                 'type'           => 'line_item',
