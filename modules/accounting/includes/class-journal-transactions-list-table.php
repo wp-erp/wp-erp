@@ -256,10 +256,6 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
             $args['ref'] = $_REQUEST['ref'];
         }
 
-        if ( isset( $_REQUEST['section'] ) ) {
-            $args['status']  = str_replace('-', '_', $_REQUEST['section'] );
-        }
-
         if ( $ledger_id ) {
             $this->ledger_id = true;
             $this->items = erp_ac_get_ledger_transactions( $args, $ledger_id );
