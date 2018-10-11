@@ -302,7 +302,7 @@ class Form_Handler {
             return false;
         }
 
-        if ( isset( $_GET['page'] ) && $_GET['page'] != $page_id && $_GET['section'] != $section_id ) {
+        if ( isset( $_GET['page'] ) && isset( $_GET['section'] ) && $_GET['page'] != $page_id && $_GET['section'] != $section_id ) {
             return false;
         }
 
