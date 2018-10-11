@@ -8,6 +8,7 @@ if ( !( isset( $_GET['page'] ) && isset( $_GET['section'] ) && 'erp-accounting' 
     return;
 }
 
+$hook = str_replace( sanitize_title( __( 'Accounting', 'erp' ) ) , 'accounting', $screen->base );
 $hook = str_replace( 'wp-erp' , 'accounting', $screen->base );
 $hook_suffix = isset( $_GET['section'] ) ? $_GET['section'] : 'dashboard';
 $hook .= '-' . $hook_suffix;

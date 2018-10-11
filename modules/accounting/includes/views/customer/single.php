@@ -1,7 +1,7 @@
 <div class="wrap erp-accounting">
 <?php
 $page = isset( $_GET['page'] ) && $_GET['page'] == 'erp-accounting' ? $_GET['page'] : '';
-$section = isset( $_GET['section'] ) && $_GET['section'] == 'customer' ? $_GET['section'] : '';
+$section = isset( $_GET['section'] ) && $_GET['section'] == 'customers' ? $_GET['section'] : '';
 $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $edit_url = admin_url( 'admin.php?page=' . $page . '&section=' . $section . '&action=edit&id=' . $customer_id );
 ?>
