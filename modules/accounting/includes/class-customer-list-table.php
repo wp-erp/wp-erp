@@ -21,15 +21,15 @@ class Customer_List_Table extends \WP_List_Table {
     protected $page; protected $section;
 
     function __construct() {
-        $this->page = 'erp-accounting';
-        $this->section = 'customers';
-        $this->type = 'customer';
-
         parent::__construct( array(
             'singular' => 'customer',
             'plural'   => 'customers',
             'ajax'     => false
         ) );
+
+        $this->page = 'erp-accounting';
+        $this->section = 'customers';
+        $this->type = 'customer';
     }
 
     function get_table_classes() {
@@ -123,7 +123,7 @@ class Customer_List_Table extends \WP_List_Table {
         }
 
         if ( erp_ac_current_user_can_view_single_customer() ) {
-           return get_avatar( $item->email, 32 ) . sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
+           return get_avatar( $item->email, 32 ) . sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->page . '&section=' . $this->section . '&action=view&id=' . $item->id ), $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
         }
 
         return get_avatar( $item->email, 32 ) . sprintf( '<strong>%1$s</strong> %2$s', $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
