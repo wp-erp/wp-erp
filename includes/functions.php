@@ -2691,6 +2691,7 @@ function erp_render_menu( $component ) {
     $tab = isset( $_GET['section'] ) ? $_GET['section'] : 'dashboard';
 
     echo "<div class='erp-nav-container'>";
+    echo erp_render_menu_header( $component );
     echo erp_build_menu( $menu[$component], $tab, $component );
     echo "</div>";
 }
@@ -2726,7 +2727,8 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
         return $a['position'] > $b['position'];
     } );
 
-    $html = '<ul class="erp-nav">';
+    $html = '<ul class="erp-nav -primary">';
+
     if ( $dropdown ) {
         $html = '<ul class="erp-nav-dropdown">';
     }
@@ -2771,4 +2773,54 @@ function erp_is_contacts_page() {
     }
 
     return true;
+}
+
+/**
+ * Get ERP Menu array
+ *
+ * @since 1.3.14
+ *
+ * @return array $menu
+ */
+function erp_get_menu_headers() {
+    $menu = [];
+    return apply_filters( 'erp_menu_headers', $menu );
+}
+
+/**
+ * Add Header part of Component
+ *
+ * @param $component
+ * @param $title
+ * @param string $icon
+ */
+function erp_add_menu_header( $component, $title, $icon = "" ) {
+    add_filter('erp_menu_headers', function($menu) use( $component, $title, $icon ) {
+        $menu[ $component ] = [ 'title' => $title, 'icon' => $icon ];
+        return $menu;
+    });
+}
+
+/**
+ * Render header part of erp menu
+ *
+ * @param $component
+ *
+ * @return string
+ */
+function erp_render_menu_header( $component ) {
+    $headers = erp_get_menu_headers();
+    if ( empty( $headers[$component] ) ) {
+       return "";
+    }
+
+    $html = sprintf( '<div class="erp-page-header">
+                        <div class="module-icon">
+                            %s
+                        </div>
+                        <h2>%s</h2>
+                    </div>',
+        $headers[$component]['icon'], $headers[$component]['title'] );
+
+    return $html;
 }
