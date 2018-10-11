@@ -11,6 +11,19 @@ class Admin_Menu {
      */
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'admin_menu' ), 10 );
+        add_action( 'admin_enqueue_scripts', array( $this, 'load_common_script' ) );
+    }
+
+    /**
+     * Load common scripts in settings page
+     */
+    public function load_common_script() {
+        global $current_screen;
+
+        if ( $current_screen->base == 'wp-erp_page_erp-settings' && isset( $_GET['tab'] ) && $_GET['tab'] == 'accounting' ) {
+            $this->common_scripts();
+        }
+
     }
 
     /**
