@@ -10,6 +10,10 @@
 function erp_ac_get_all_transaction( $args = array() ) {
     global $wpdb;
 
+    if ( isset( $args['type'] ) && $args['type'] == 'sales' && isset( $args['status'] ) && $args['status'] == 'all'  ) {
+        unset( $args['status'] );
+    }
+
     $defaults = array(
         'type'       => 'expense',
         'number'     => 20,
