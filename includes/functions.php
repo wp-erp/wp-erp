@@ -2742,7 +2742,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 
         $submenu =  '';
         if ( isset( $item['submenu'] ) ) {
-            $class.= "dropdown-menu";
+            $class.= "dropdown-nav";
             $submenu = erp_build_menu( $item['submenu'], $active, $component, true );
         }
 

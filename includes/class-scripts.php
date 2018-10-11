@@ -169,6 +169,8 @@ class Scripts {
             )
         ) );
 
+        wp_enqueue_script( 'erp-menu', WPERP_ASSETS . "/js/erp-menu.js", array(), date( 'Ymd' ), true );
+
         // load country/state JSON on new company page
         if ( 'toplevel_page_erp-company' == $hook || isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'new', 'edit' ) ) ) {
             wp_enqueue_script( 'post' );
@@ -182,6 +184,8 @@ class Scripts {
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
+
+
     }
 
     /**
