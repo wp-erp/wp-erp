@@ -3657,10 +3657,12 @@ div.erp-nav-container .erp-page-header {
   float: left;
   display: flex;
   align-items: center;
-  margin-right: 20px;
 }
 div.erp-nav-container .erp-page-header .module-icon {
   margin-top: 8px;
+}
+div.erp-nav-container .erp-page-header .module-icon svg {
+  height: 15px;
 }
 div.erp-nav-container .erp-page-header h2 {
   font-size: 20px;
