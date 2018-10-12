@@ -2745,7 +2745,8 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
         $submenu =  '';
         if ( isset( $item['submenu'] ) ) {
             $class.= "dropdown-nav";
-            $submenu = erp_build_menu( $item['submenu'], $active, $component, true );
+            $submenu = '<i class="dashicons dashicons-arrow-down-alt2"></i>';
+            $submenu .= erp_build_menu( $item['submenu'], $active, $component, true );
         }
 
         $html .= sprintf( '<li class="%s"><a href="%s">%s</a>%s</li>', $class, $link, __( $item['title'], 'erp' ), $submenu );
