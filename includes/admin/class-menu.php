@@ -19,6 +19,72 @@ class Admin_Menu {
         $this->action( 'admin_menu', 'admin_settings', 99 );
         $this->action( 'admin_menu', 'hide_admin_menus', 100 );
         $this->action( 'wp_before_admin_bar_render', 'hide_admin_bar_links', 100 );
+        add_action( 'admin_bar_menu', array( $this, 'add_admin_bar_menu' ), 100 );
+    }
+
+    function add_admin_bar_menu(){
+        global $wp_admin_bar, $wpdb;
+
+        /* Check that the admin bar is showing and user has permission... */
+        if ( !current_user_can( 'edit_themes' ) || !is_admin_bar_showing() ) {
+            return;
+        }
+
+        $menu = erp_menu();
+
+        /* Add the main siteadmin menu item */
+        $wp_admin_bar->add_menu(
+            array(
+                'parent' => false,
+                'id'        => 'wp-erp',
+                'title'     => "WP ERP ",
+                'meta'      => array(
+                    'html'    => '<div class="wp-erp-admin-menu"></div>'
+                )
+            )
+        );
+
+        $wp_admin_bar->add_menu(
+            array(
+                'parent' => 'wp-erp',
+                'id'        => 'wp-erp-child',
+                'title'     => " ",
+                'meta'      => array(
+                    'html'    => '<div class="wp-erp-admin-bar-menu" style="width: 500px; height: 400px;">
+                                    <div>
+                                        <h3>HR</h3>
+                                        <ul>
+                                            <li>A</li>
+                                            <li>A</li>
+                                            <li>A</li>
+                                            <li>A</li>
+                                            <li>A</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h3>CRM</h3>
+                                        <ul>
+                                            <li>A</li>
+                                            <li>A</li>
+                                            <li>A</li>
+                                            <li>A</li>
+                                            <li>A</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h3>Accounting</h3>
+                                        <ul>
+                                            <li>A</li>
+                                            <li>A</li>
+                                            <li>A</li>
+                                            <li>A</li>
+                                            <li>A</li>
+                                        </ul>
+                                    </div>
+                                </div>',
+                )
+            )
+        );
     }
 
     /**
