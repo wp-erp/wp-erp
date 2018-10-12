@@ -1723,17 +1723,19 @@ code, kbd {
 
 @border-color: #E5E5E5;
 @wperp-theme-color: #1A9ED4;
+
 div.erp-nav-container {
     background-color : #fff;
     margin-left : -20px;
     padding-left : 20px;
     border: 1px solid @border-color;
     color: #000;
+
     ul {
-        list-style: none;
-        margin: 0;
         padding: 0;
+        margin: 0;
     }
+
     .erp-page-header {
         float: left;
         display: flex;
@@ -1753,40 +1755,50 @@ div.erp-nav-container {
             padding: 9px;
         }
     }
+
     .erp-nav {
         > li {
             display: inline-block;
+            margin: 0 10px;
+            border-bottom: 2px solid transparent;
+
             a {
                 line-height: 45px;
             }
             &.active {
-                > a {
-                    border-bottom-color: #1A9ED4;
-                }
+                border-bottom-color: @wperp-theme-color;
             }
         }
     }
+
     li {
-        padding: 0 15px;
-        margin: 0;
+        padding: 0 5px;
         position: relative;
+
         &.dropdown-nav {
+            padding-right: 20px;
+
+            &:hover,
+            &.active {
+                i {
+                    color: @wperp-theme-color;
+                }
+            }
+
             &:hover {
                 .erp-nav-dropdown {
                     display: block;
                 }
             }
-            &:before {
-                //content: '';
-                //position: absolute;
-                //right: 0;
-                //top: 50%;
-                //border: solid @wperp-theme-color;
-                //border-width: 0 1px 1px 0;
-                //display: inline-block;
-                //padding: 3px;
-                //transform: rotate(45deg);
-                //color: inherit;
+
+            i {
+                position: absolute;
+                right: -5px;
+                top: 50%;
+                color: inherit;
+                font-size: 13px;
+                line-height: 1.5em;
+                transform: translateY(-50%);
             }
         }
         &.active {
@@ -1806,15 +1818,20 @@ div.erp-nav-container {
             line-height: 1.5em;
             font-weight: 400;
             display: block;
-            border-bottom: 2px solid transparent;
             color : #000000;
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
         }
     }
+
     .erp-nav-dropdown {
         display: none;
         position: absolute;
         top: 100%;
-        left: 14px;
+        left: 0;
         background: #FFFFFF;
         z-index: 1;
         font-size: 12px;
@@ -1823,12 +1840,15 @@ div.erp-nav-container {
         box-shadow: 0 4px 10px 0 rgba(0,0,0,0.09);
         transition: all .2s;
         padding: 9px 10px;
+        margin-top: 2px;
         min-width: 160px;
+
         li {
-            padding: 3px 10px;
+            padding: 3px 7px;
+            margin: 0;
         }
         a {
-            line-height: 1.5em;
+            line-height: 1.5em !important;
         }
     }
 }
@@ -1905,5 +1925,34 @@ div.erp-nav-container {
     100% {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+
+// admin bar menu
+#wp-admin-bar-wp-erp-child .ab-empty-item{
+    display: none !important;
+}
+.wp-erp-admin-bar-menu {
+    min-width: 522px;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 10px !important;
+
+    > div {
+        font-size: 13px;
+
+        h3 a {
+            font-weight: 700 !important;
+            color: #fff !important;
+        }
+        
+        li {
+            a {
+                color: #B7BCC1;
+            }
+        }
+
     }
 }
