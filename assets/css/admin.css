@@ -3647,6 +3647,7 @@ div.erp-nav-container {
   padding-left: 20px;
   border: 1px solid #E5E5E5;
   color: #000;
+  position: relative;
 }
 div.erp-nav-container ul {
   padding: 0;
@@ -3746,40 +3747,42 @@ div.erp-nav-container .erp-nav-dropdown li {
 div.erp-nav-container .erp-nav-dropdown a {
   line-height: 1.5em !important;
 }
-.erp-nav-container {
-  position: relative;
-}
-.erp-nav-container:not(.--jsfied) {
+div.erp-nav-container:not(.--jsfied) {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
-.erp-nav-container .--hidden {
+div.erp-nav-container .--hidden {
   display: none !important;
 }
-.erp-nav-container button {
+div.erp-nav-container button {
   width: 100%;
   height: 100%;
   display: block;
   font-size: 1em;
   line-height: 1.2;
-  color: #fff;
-  background-color: #1A9ED4;
+  background-color: transparent;
+  border: none;
+  color: #1A9ED4;
+  cursor: pointer;
 }
-.erp-nav-container .-primary {
+div.erp-nav-container button:focus {
+  outline: none;
+}
+div.erp-nav-container .-primary {
   display: flex;
 }
-.erp-nav-container .-primary > li > a,
-.erp-nav-container .-primary > li > button {
+div.erp-nav-container .-primary > li > a,
+div.erp-nav-container .-primary > li > button {
   white-space: nowrap;
 }
-.erp-nav-container .-primary .-more > button span {
+div.erp-nav-container .-primary .-more > button span {
   display: inline-block;
   transition: transform 0.2s;
 }
-.erp-nav-container.--show-secondary .-primary .-more > button span {
+div.erp-nav-container.--show-secondary .-primary .-more > button span {
   transform: rotate(180deg);
 }
-.erp-nav-container .-secondary {
+div.erp-nav-container .-secondary {
   max-width: 100%;
   display: none;
   position: absolute;
@@ -3792,10 +3795,29 @@ div.erp-nav-container .erp-nav-dropdown a {
   border: 1px solid #DDDDDD;
   border-radius: 3px;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.09);
-  padding: 9px 10px;
   min-width: 160px;
 }
-.erp-nav-container.--show-secondary .-secondary {
+div.erp-nav-container .-secondary > li {
+  padding: 3px 15px;
+}
+div.erp-nav-container .-secondary > li.--hidden + li {
+  padding-top: 10px;
+}
+div.erp-nav-container .-secondary > li:last-child {
+  padding-bottom: 8px;
+}
+div.erp-nav-container .-secondary > li.dropdown-nav {
+  margin-right: 10px;
+}
+div.erp-nav-container .-secondary > li a {
+  line-height: 1.5em !important;
+}
+div.erp-nav-container .-secondary .erp-nav-dropdown {
+  top: 0;
+  right: 100%;
+  left: auto;
+}
+div.erp-nav-container.--show-secondary .-secondary {
   display: block;
 }
 @keyframes nav-secondary {
