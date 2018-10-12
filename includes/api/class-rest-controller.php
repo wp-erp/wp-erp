@@ -254,8 +254,12 @@ abstract class REST_Controller {
      */
     protected function prepare_links( $item ) {
         $links = [
-            'self'       => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ),
-            'collection' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
+            'self' => [
+                'href' => rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ),
+            ],
+            'collection' => [
+                'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
+            ]
         ];
 
         return $links;
@@ -327,9 +331,13 @@ abstract class REST_Controller {
             'display_name'  => $user->display_name,
             'avatar'        => get_avatar_url( $user->ID ),
             '_links'        => [
-                'self'       => rest_url( sprintf( '/%s/%s/%d', $this->namespace, 'users', $user->ID ) ),
-                'collection' => rest_url( sprintf( '/%s/%s', $this->namespace, 'users' ) ),
-            ]
+                'self' => [
+                    'href' => rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $user->ID ) ),
+                ],
+                'collection' => [
+                    'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
+                ]
+            ],
         ];
 
         return $data;
