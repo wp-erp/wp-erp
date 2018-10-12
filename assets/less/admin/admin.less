@@ -1730,6 +1730,7 @@ div.erp-nav-container {
     padding-left : 20px;
     border: 1px solid @border-color;
     color: #000;
+    position: relative;
 
     ul {
         padding: 0;
@@ -1851,11 +1852,8 @@ div.erp-nav-container {
             line-height: 1.5em !important;
         }
     }
-}
 
-// tabs
-.erp-nav-container {
-    position: relative;
+
     &:not(.--jsfied) {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -1870,8 +1868,14 @@ div.erp-nav-container {
         display: block;
         font-size: 1em;
         line-height: 1.2;
-        color: #fff;
-        background-color: @wperp-theme-color;
+        background-color: transparent;
+        border: none;
+        color: @wperp-theme-color;
+        cursor: pointer;
+
+        &:focus {
+            outline: none;
+        }
     }
     // primary
     .-primary {
@@ -1909,8 +1913,29 @@ div.erp-nav-container {
         border: 1px solid #DDDDDD;
         border-radius: 3px;
         box-shadow: 0 4px 10px 0 rgba(0,0,0,0.09);
-        padding: 9px 10px;
         min-width: 160px;
+
+        > li {
+            padding: 3px 15px;
+
+            &.--hidden + li {
+                padding-top: 10px;
+            }
+
+            &:last-child {
+                padding-bottom: 8px;
+            }
+
+            a {
+                line-height: 1.5em !important;
+            }
+        }
+
+        .erp-nav-dropdown {
+            top: 0;
+            right: 100%;
+            left: auto;
+        }
     }
     &.--show-secondary .-secondary {
         display: block;
