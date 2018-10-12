@@ -50,35 +50,52 @@ class Admin_Menu {
                 'id'        => 'wp-erp-child',
                 'title'     => " ",
                 'meta'      => array(
-                    'html'    => '<div class="wp-erp-admin-bar-menu" style="width: 500px; height: 400px;">
+                    'html'    => '<div class="wp-erp-admin-bar-menu">
                                     <div>
-                                        <h3>HR</h3>
+                                        <h3><a href="#">HR</a></h3>
                                         <ul>
-                                            <li>A</li>
-                                            <li>A</li>
-                                            <li>A</li>
-                                            <li>A</li>
-                                            <li>A</li>
+                                            <li><a href="#">Dashboard</a></li>
+                                            <li><a href="#">Employees</a></li>
+                                            <li><a href="#">Departments</a></li>
+                                            <li><a href="#">Designations</a></li>
+                                            <li><a href="#">Announcement</a></li>
+                                            <li><a href="#">Reporting</a></li>
+                                            <li><a href="#">Attendance</a></li>
                                         </ul>
                                     </div>
                                     <div>
-                                        <h3>CRM</h3>
+                                        <h3><a href="#">CRM</a></h3>
                                         <ul>
-                                            <li>A</li>
-                                            <li>A</li>
-                                            <li>A</li>
-                                            <li>A</li>
-                                            <li>A</li>
+                                            <li><a href="#">Dashboard</a></li>
+                                            <li><a href="#">Contacts</a></li>
+                                            <li><a href="#">Companies</a></li>
+                                            <li><a href="#">Activities</a></li>
+                                            <li><a href="#">Schedules</a></li>
+                                            <li><a href="#">Contact Group</a></li>
                                         </ul>
                                     </div>
                                     <div>
-                                        <h3>Accounting</h3>
+                                        <h3><a href="#">Accounting</a></h3>
                                         <ul>
-                                            <li>A</li>
-                                            <li>A</li>
-                                            <li>A</li>
-                                            <li>A</li>
-                                            <li>A</li>
+                                            <li><a href="#">Dashboard</a></li>
+                                            <li><a href="#">Customers</a></li>
+                                            <li><a href="#">Vendors</a></li>
+                                            <li><a href="#">Sales</a></li>
+                                            <li><a href="#">Expense</a></li>
+                                            <li><a href="#">Chart of Accounts</a></li>
+                                            <li><a href="#">Bank Accounts</a></li>
+                                            <li><a href="#">Reports</a></li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h3><a href="#">Project Manager</a></h3>
+                                        <ul>
+                                            <li><a href="#">Projects</a></li>
+                                            <li><a href="#">Add-Ons</a></li>
+                                            <li><a href="#">My Tasks</a></li>
+                                            <li><a href="#">Calendar</a></li>
+                                            <li><a href="#">Reports</a></li>
+                                            <li><a href="#">Progress</a></li>
                                         </ul>
                                     </div>
                                 </div>',
