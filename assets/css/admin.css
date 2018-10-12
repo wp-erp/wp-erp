@@ -3806,6 +3806,9 @@ div.erp-nav-container .-secondary > li.--hidden + li {
 div.erp-nav-container .-secondary > li:last-child {
   padding-bottom: 8px;
 }
+div.erp-nav-container .-secondary > li.dropdown-nav {
+  margin-right: 10px;
+}
 div.erp-nav-container .-secondary > li a {
   line-height: 1.5em !important;
 }
