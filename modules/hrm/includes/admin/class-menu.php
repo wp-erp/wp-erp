@@ -12,6 +12,8 @@ class Admin_Menu {
      */
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+        add_action( 'admin_print_footer_scripts', array( $this, 'highlight_menu' ) );
+        add_filter( 'parent_file', array( $this, 'highlight_submenu' ), 100 );
     }
 
     /**
@@ -459,8 +461,46 @@ class Admin_Menu {
 
     }
 
+    /**
+     * Render announcement page
+     */
     public function announcement_page() {
+        wp_redirect( admin_url( 'edit.php?post_type=erp_hr_announcement' ) );
+    }
+
+    /**
+     * Highlight Menu for announcement
+     */
+    public function highlight_menu(){
+        $screen = get_current_screen();
+        if ( $screen->id != 'edit-erp_hr_announcement' ) {
+            return;
+        }
+
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready( function($) {
+                $('li.toplevel_page_erp').removeClass('wp-not-current-submenu').addClass('wp-has-current-submenu wp-menu-open');
+                $('li.toplevel_page_erp a:first').removeClass('wp-not-current-submenu').addClass('wp-has-current-submenu wp-menu-open');
+            });
+        </script>
+        <?php
 
     }
 
+    /**
+     * Highlight sunbmenu for announcement
+     *
+     * @param $parent_file
+     *
+     * @return string
+     */
+    public function highlight_submenu( $parent_file ) {
+        global $parent_file, $submenu_file, $post_type;
+        if ( 'erp_hr_announcement' == $post_type ) {
+            $parent_file = 'admin.php?page=erp';
+            $submenu_file = 'erp-hr';
+        }
+        return $parent_file;
+    }
 }

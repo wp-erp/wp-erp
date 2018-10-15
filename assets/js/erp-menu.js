@@ -2,7 +2,13 @@ jQuery( function ( $ ) {
     var erp_menu_resizer  = {
         init : function () {
             container = document.querySelector('.erp-nav-container');
+
+            if ( container == null ) {
+                return;
+            }
             primary = container.querySelector('.-primary');
+
+
             primaryItems = container.querySelectorAll('.-primary > li:not(.-more)');
             container.classList.add('--jsfied');
 
