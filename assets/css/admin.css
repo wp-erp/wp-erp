@@ -3673,7 +3673,8 @@ div.erp-nav-container .erp-page-header h2 {
 }
 div.erp-nav-container .erp-nav > li {
   display: inline-block;
-  margin: 0 10px;
+  margin: 0;
+  padding: 0 15px;
   border-bottom: 2px solid transparent;
 }
 div.erp-nav-container .erp-nav > li a {
@@ -3698,7 +3699,7 @@ div.erp-nav-container li.dropdown-nav:hover .erp-nav-dropdown {
 }
 div.erp-nav-container li.dropdown-nav i {
   position: absolute;
-  right: -5px;
+  right: -2px;
   top: 50%;
   color: inherit;
   font-size: 13px;
@@ -3728,7 +3729,7 @@ div.erp-nav-container .erp-nav-dropdown {
   display: none;
   position: absolute;
   top: 100%;
-  left: 0;
+  left: 15px;
   background: #FFFFFF;
   z-index: 1;
   font-size: 12px;
