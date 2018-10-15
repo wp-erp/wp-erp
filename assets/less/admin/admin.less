@@ -1760,7 +1760,8 @@ div.erp-nav-container {
     .erp-nav {
         > li {
             display: inline-block;
-            margin: 0 10px;
+            margin: 0;
+            padding: 0 15px;
             border-bottom: 2px solid transparent;
 
             a {
@@ -1794,7 +1795,7 @@ div.erp-nav-container {
 
             i {
                 position: absolute;
-                right: -5px;
+                right: -2px;
                 top: 50%;
                 color: inherit;
                 font-size: 13px;
@@ -1832,7 +1833,7 @@ div.erp-nav-container {
         display: none;
         position: absolute;
         top: 100%;
-        left: 0;
+        left: 15px;
         background: #FFFFFF;
         z-index: 1;
         font-size: 12px;
@@ -1961,18 +1962,21 @@ div.erp-nav-container {
 
 
 // admin bar menu
+#wp-admin-bar-wp-erp {
+    cursor: pointer;
+}
+
 #wp-admin-bar-wp-erp-child .ab-empty-item{
     display: none !important;
 }
 .wp-erp-admin-bar-menu {
     min-width: 522px;
-    display: grid;
-    grid-gap: 5px;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
     padding: 10px !important;
 
     > div {
         font-size: 13px;
+        width: 33.3333% !important;
 
         h3 a {
             font-weight: 700 !important;
@@ -1982,6 +1986,24 @@ div.erp-nav-container {
         li {
             a {
                 color: #B7BCC1;
+            }
+        }
+
+        .dropdown-nav {
+            i {
+                display: none;
+            }
+
+            .erp-nav-dropdown {
+                margin-left: 10px !important;
+                background-color: #3D4247 !important;
+                border-radius: 3px !important;
+                padding: 3px 3px 10px 3px !important;
+
+                a {
+                    height: 25px !important;
+                    font-size: 12px !important;
+                }
             }
         }
 
