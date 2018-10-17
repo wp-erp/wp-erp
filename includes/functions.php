@@ -2742,6 +2742,10 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
             $class .= ( !empty( $_GET['sub-section'] ) && $_GET['sub-section'] == $item['slug'] ) ? 'active ' : '';
         }
 
+        if ( !empty( $item['direct_link'] ) ) {
+            $link = $item['direct_link'];
+        }
+
         $submenu =  '';
         if ( isset( $item['submenu'] ) ) {
             $class.= "dropdown-nav";
