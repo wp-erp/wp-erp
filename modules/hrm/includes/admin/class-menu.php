@@ -48,7 +48,7 @@ class Admin_Menu {
                 'capability'    =>  'erp_list_employee',
                 'slug'          =>  'my-profile',
                 'callback'      =>  [ $this, 'employee_my_profile_page' ],
-                'position'      =>  5,
+                'position'      =>  3,
             ) );
         }
 
@@ -57,7 +57,7 @@ class Admin_Menu {
             'capability'    =>  'erp_manage_department',
             'slug'          =>  'department',
             'callback'      =>  [ $this, 'department_page' ],
-            'position'      =>  5,
+            'position'      =>  10,
         ) );
 
         erp_add_menu( 'hr', array(
@@ -65,7 +65,7 @@ class Admin_Menu {
             'capability'    =>  'erp_manage_designation',
             'slug'          =>  'designation',
             'callback'      =>  [ $this, 'designation_page' ],
-            'position'      =>  5,
+            'position'      =>  15,
         ) );
 
         erp_add_menu( 'hr', array(
@@ -73,7 +73,7 @@ class Admin_Menu {
             'capability'    =>  'erp_manage_announcement',
             'slug'          =>  'announcement',
             'callback'      =>  [ $this, 'announcement_page' ],
-            'position'      =>  5,
+            'position'      =>  20,
         ) );
 
         erp_add_menu( 'hr', array(
@@ -81,7 +81,7 @@ class Admin_Menu {
             'capability'    =>  'erp_hr_manager',
             'slug'          =>  'report',
             'callback'      =>  [ $this, 'reporting_page' ],
-            'position'      =>  5,
+            'position'      =>  25,
         ) );
 
         erp_add_submenu( 'hr', 'report', array(
@@ -145,7 +145,7 @@ class Admin_Menu {
             'capability'    =>  'erp_leave_manage',
             'slug'          =>  'leave',
             'callback'      =>  [ $this, 'leave_requests' ],
-            'position'      =>  5,
+            'position'      =>  30,
         ) );
 
         erp_add_submenu( 'hr', 'leave', array(

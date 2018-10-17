@@ -53,7 +53,7 @@ class Admin_Menu {
             'capability' => 'erp_crm_list_contact',
             'slug'       => 'companies',
             'callback'   => [ $this, 'company_page' ],
-            'position'   => 5
+            'position'   => 10
         ] );
 
         erp_add_menu( 'crm', [
@@ -61,7 +61,7 @@ class Admin_Menu {
             'capability' => 'erp_crm_manage_activites',
             'slug'       => 'activities',
             'callback'   => [ $this, 'activity_page' ],
-            'position'   => 5
+            'position'   => 15
         ] );
 
         erp_add_menu( 'crm', [
@@ -69,7 +69,7 @@ class Admin_Menu {
             'capability' => 'erp_crm_manage_schedules',
             'slug'       => 'schedules',
             'callback'   => [ $this, 'schedules_page' ],
-            'position'   => 5
+            'position'   => 20
         ] );
 
         erp_add_menu( 'crm', [
@@ -77,7 +77,7 @@ class Admin_Menu {
             'capability' => 'erp_crm_manage_groups',
             'slug'       => 'contact-groups',
             'callback'   => [ $this, 'contact_group_page' ],
-            'position'   => 5
+            'position'   => 25
         ] );
 
         erp_add_menu( 'crm', [
@@ -85,7 +85,7 @@ class Admin_Menu {
             'capability' => 'erp_crm_manage_dashboard',
             'slug'       => 'reports',
             'callback'   => [ $this, 'page_reports' ],
-            'position'   => 5
+            'position'   => 30
         ] );
 
         erp_add_submenu( 'crm','reports', [
@@ -117,7 +117,7 @@ class Admin_Menu {
             'capability' => 'erp_crm_manage_dashboard',
             'slug'       => 'help',
             'callback'   => [ $this, 'help_page' ],
-            'position'   => 5
+            'position'   => 99
         ] );
 
 //        $overview = add_submenu_page( 'erp-sales', __( 'Overview', 'erp' ), __( 'Overview', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales', [ $this, 'dashboard_page' ] );
