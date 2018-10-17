@@ -19,7 +19,8 @@ class Admin_Page {
     public function init_actions() {
         $this->action( 'init', 'includes' );
         $this->action( 'admin_init', 'admin_redirects' );
-        add_action( 'admin_footer', 'erp_include_popup_markup' );
+        $this->action( 'admin_footer', 'erp_include_popup_markup' );
+        $this->action( 'erp_overview_widgets_right', 'erp_overview_widget_feed_callback' );
 
         //$this->action( 'admin_notices', 'promotional_offer' );
     }
@@ -75,6 +76,33 @@ class Admin_Page {
             wp_safe_redirect( admin_url( 'index.php?page=erp-welcome' ) );
             exit;
         }
+    }
+
+    /**
+     * RSS feed widget
+     * 
+     * @since 1.4.0
+     * 
+     * @return void
+     */
+    public function erp_overview_widget_feed_callback() {
+        erp_admin_dash_metabox( __( '<i class="fa fa-rss"></i> WPERP News Updates', 'erp' ), array($this, 'erp_overview_widget_feed') );
+    }
+
+    /**
+     * Feed widget
+     *
+     * @return void
+     */
+    public function erp_overview_widget_feed() {
+        $content = file_get_contents('https://wperp.com/feed/');
+        $data = new \SimpleXmlElement($content);
+
+        echo '<ul class="rss-feed">';
+        foreach( $data->channel->item as $entry ) {
+            echo "<li><a href='$entry->link' title='$entry->title'>" . $entry->title . "</a></li>";
+        }
+        echo '</ul>';
     }
 
     /**
@@ -216,6 +244,7 @@ class Admin_Page {
             </script>
         <?php
     }
+    public function erp_include_popup_markup() {}
 }
 
 new Admin_Page();

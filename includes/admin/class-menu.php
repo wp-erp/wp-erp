@@ -224,10 +224,8 @@ class Admin_Menu {
     /**
      * Render Overview page
      */
-    function overview_page(){
-        ?>
-        <h1>WP ERP Overview</h1>
-        <?php
+    function overview_page() {
+        include_once dirname( __FILE__ ) . '/views/erp-overview.php';
     }
 
     /**

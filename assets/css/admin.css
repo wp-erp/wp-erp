@@ -21,6 +21,16 @@
   box-shadow: 0 1px 0 #ba281e !important;
   text-shadow: 0 -1px 1px #ba281e, 1px 0 1px #ba281e, 0 1px 1px #ba281e, -1px 0 1px #ba281e !important;
 }
+.rss-feed li {
+  line-height: 1.5em;
+  margin-bottom: 12px;
+}
+.erp-overview.hrm-dashboard .badge-container .badge-wrap {
+  margin-right: 17px !important;
+}
+.erp-overview.hrm-dashboard .badge-container .badge-wrap.badge-aqua {
+  margin-right: 0 !important;
+}
 .crm-dashboard .badge-container {
   margin-bottom: 40px;
 }
@@ -3336,6 +3346,7 @@ trix-editor ul {
   justify-content: space-between;
   margin-left: -12px;
   margin-right: -12px;
+  margin-bottom: 40px;
 }
 .erp-info-box .erp-info-box-item {
   padding-left: 12px;

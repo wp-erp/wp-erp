@@ -923,8 +923,6 @@ function erp_file_log( $message, $type = '' ) {
     } else {
         $message = sprintf( "[%s] %s\n", date( 'd.m.Y h:i:s' ), $message );
     }
-
-    error_log( $message, 3, dirname( WPERP_FILE ) . '/debug.log' );
 }
 
 /**
