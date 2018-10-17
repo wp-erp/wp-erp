@@ -72,7 +72,8 @@ class Admin_Menu {
             'title'         =>  __( 'Announcement', 'erp' ),
             'capability'    =>  'erp_manage_announcement',
             'slug'          =>  'announcement',
-            'callback'      =>  [ $this, 'announcement_page' ],
+            'direct_link'   => admin_url( 'edit.php?post_type=erp_hr_announcement' ),
+            'callback'      =>  '',
             'position'      =>  20,
         ) );
 
@@ -450,22 +451,6 @@ class Admin_Menu {
      */
     public function help_page(){
         include WPERP_HRM_VIEWS . '/help.php';
-    }
-
-    /**
-     * An empty page for testing purposes
-     *
-     * @return void
-     */
-    public function empty_page() {
-
-    }
-
-    /**
-     * Render announcement page
-     */
-    public function announcement_page() {
-        wp_redirect( admin_url( 'edit.php?post_type=erp_hr_announcement' ) );
     }
 
     /**

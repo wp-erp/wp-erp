@@ -321,7 +321,6 @@ class Customer_Relationship {
     public function load_js_template() {
         global $current_screen;
         $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $current_screen->base );
-            error_log( print_r( $hook,true ) );
         $section = !empty( $_GET['section'] ) ? $_GET['section'] : 'dashboard' ;
         switch ( $section ) {
 
