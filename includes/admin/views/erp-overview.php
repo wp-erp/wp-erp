@@ -1,34 +1,50 @@
-<div class="wrap erp hrm-dashboard erp-overview">
+<div class="wrap erp-overview">
 
-    <h2><?php _e( 'WP ERP Overview', 'erp' ); ?></h2>
+    <h2 class="erp-page-title"><?php _e( 'WP ERP Overview', 'erp' ); ?></h2>
 
-    <div class="erp-single-container">
+    <div class="erp-grid-container">
 
-        <div class="erp-area-left">
-
+        <div class="col-3">
             <?php
-            
-            if ( erp_is_module_active( 'hrm' ) ) {
-                include WPERP_HRM_VIEWS . '/dashboard-badge.php';
-            }
-
-            if ( erp_is_module_active( 'crm' ) ) {
-                include WPERP_CRM_VIEWS . '/dashboard-badge.php';
-            }
-
-            if ( erp_is_module_active('accounting') ) {
-                erp_admin_dash_metabox( __( 'Cash & Bank Balance', 'erp' ), 'erp_ac_dashboard_banks', 'bank-balance' );
-                erp_admin_dash_metabox( __( 'Revenues', 'erp' ), 'erp_ac_dashboard_net_income', 'bank-balance' );
-            }
-
+                if ( erp_is_module_active( 'hrm' ) ) {
+                    include WPERP_HRM_VIEWS . '/dashboard-badge.php';
+                }
             ?>
 
-        </div><!-- .erp-area-left -->
+            <div class="erp-badge-box">
+                <h2><?php _e( 'RSS feed', 'erp' ); ?></h2>
 
-        <div class="erp-area-right">
+                <?php $xml = erp_web_feed(); ?>
+                <ul class="erp-rss-feed">
+                    <?php foreach( $xml->channel->item as $entry ) : ?>
+                    <li><a href="<?php echo $entry->link; ?>" title="<?php echo $entry->title ?>"><?php echo $entry->title; ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
 
-            <?php do_action( 'erp_overview_widgets_right' ); ?>
+                <div class="erp-newsletter">
+                    <h3><?php _e( 'Stay up-to-date', 'erp' ); ?></h3>
+                    <p>
+                        <?php _e( 'Don\'t miss any updates of our new templates and extensions and all the astonishing offers we bring for you.', 'erp' ); ?>
+                    </p>
+                    <div class="erp-form-wrap">
+                        <input type="email" class="email-subscribe" placeholder="Your Email Address">
+                        <button class="button email-subscribe-btn"><?php _e( 'Subscribe', 'erp' ); ?></button>
+                    </div>
+                    <div class="erp-thank-you"><?php _e( 'Thank you for subscribing!', 'erp' ); ?></div>
+                </div>
+            </div><!-- .badge-box -->
 
+        </div>
+        <div class="col-3">
+            <?php
+                if ( erp_is_module_active( 'crm' ) ) {
+                    include WPERP_CRM_VIEWS . '/dashboard-badge.php';
+                }
+
+                if ( erp_is_module_active('accounting') ) {
+                    include WPERP_ACCOUNTING_VIEWS . '/dashboard-badge.php';
+                }
+            ?>
         </div>
 
     </div>
