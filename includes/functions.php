@@ -2827,3 +2827,20 @@ function erp_render_menu_header( $component ) {
 
     return $html;
 }
+
+/**
+ * RSS feed
+ *
+ * @return void
+ */
+function erp_web_feed() {
+    $url="https://wperp.com/feed/";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    $data = curl_exec($ch);
+    curl_close($ch);
+
+    return simplexml_load_string($data);
+}
