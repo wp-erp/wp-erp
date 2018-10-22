@@ -19,8 +19,7 @@ class Admin_Page {
     public function init_actions() {
         $this->action( 'init', 'includes' );
         $this->action( 'admin_init', 'admin_redirects' );
-        $this->action( 'admin_footer', 'erp_include_popup_markup' );
-
+        add_action( 'admin_footer', 'erp_include_popup_markup' );
         //$this->action( 'admin_notices', 'promotional_offer' );
     }
 
@@ -216,7 +215,6 @@ class Admin_Page {
             </script>
         <?php
     }
-    public function erp_include_popup_markup() {}
 }
 
 new Admin_Page();
