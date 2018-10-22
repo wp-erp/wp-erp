@@ -772,7 +772,7 @@ class Form_Handler {
         }
 
         // redirect the user back
-        $redirect_to = remove_query_arg( array( 'status' ), admin_url( 'admin.php?page=erp-leave' ) );
+        $redirect_to = remove_query_arg( array( 'status' ), admin_url( 'admin.php?page=erp-hr&section=leave' ) );
         $redirect_to = add_query_arg( array( 'status' => $status ), $redirect_to );
 
         wp_redirect( $redirect_to );
