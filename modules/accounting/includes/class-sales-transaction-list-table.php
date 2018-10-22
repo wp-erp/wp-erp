@@ -20,7 +20,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
         ]);
 
         $this->type = 'sales';
-        $this->slug = 'erp-accounting';
+        $this->slug = 'erp-accounting&section=sales';
     }
 
     /**
