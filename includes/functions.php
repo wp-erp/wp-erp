@@ -2617,7 +2617,7 @@ function erp_let_to_num( $size ) {
 /**
  * Get ERP Menu array
  *
- * @since 1.3.14
+ * @since 1.4.0
  *
  * @return array $menu
  */
@@ -2629,7 +2629,7 @@ function erp_menu() {
 /**
  * Add a menu item into ERP Menu
  *
- * @since 1.3.14
+ * @since 1.4.0
  *
  * @param String $component Name of Component to add menu
  *
@@ -2648,7 +2648,7 @@ function erp_add_menu( $component, $args ) {
 /**
  * Adds a submenu under a Menu item
  *
- * @since 1.3.14
+ * @since 1.4.0
  *
  * @param string $component Name of Component to add menu
  *
@@ -2673,7 +2673,7 @@ function erp_add_submenu( $component, $parent, $args ) {
 /**
  * Render A menu for given component
  *
- * @since 1.3.14
+ * @since 1.4.0
  *
  * @param string $component slug of Component to render
  *
@@ -2697,7 +2697,7 @@ function erp_render_menu( $component ) {
 /**
  * Build html for ERP menu
  *
- * @since 1.3.14
+ * @since 1.4.0
  *
  * @param $items
  *
@@ -2762,7 +2762,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
 /**
  * Check if the current page is contact or company listing
  *
- * @since 1.3.14
+ * @since 1.4.0
  *
  * @return bool
  */
@@ -2781,7 +2781,7 @@ function erp_is_contacts_page() {
 /**
  * Get ERP Menu array
  *
- * @since 1.3.14
+ * @since 1.4.0
  *
  * @return array $menu
  */
@@ -2843,4 +2843,62 @@ function erp_web_feed() {
     curl_close($ch);
 
     return simplexml_load_string($data);
+}
+
+
+/**
+ * Build Mega for html for ERP Mega menu
+ *
+ * @since 1.4.0
+ *
+ * @param $items
+ *
+ * @param $active
+ *
+ * @param $component main component slug
+ *
+ * @param bool $dropdown
+ *
+ * @return string
+ */
+function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
+
+    //check capability
+    $items = array_filter( $items, function( $item ) {
+        if ( !isset( $item['capability'] ) ) {
+            return false;
+        }
+        return current_user_can( $item['capability'] );
+    } );
+
+    //sort items for position
+    uasort( $items, function ( $a, $b ) {
+        return $a['position'] > $b['position'];
+    } );
+
+    $html = '<ul class="erp-nav -primary">';
+
+    if ( $dropdown ) {
+        $html = '<ul class="erp-nav-dropdown">';
+    }
+    foreach ( $items as $item ) {
+
+        $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
+
+        $class = $active == $item['slug'] ? 'active ' : '';
+        if ( $dropdown ) {
+            $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['parent'], 'sub-section' => $item['slug'] ], admin_url( 'admin.php' ) );
+            $class .= ( !empty( $_GET['sub-section'] ) && $_GET['sub-section'] == $item['slug'] ) ? 'active ' : '';
+        }
+
+        if ( !empty( $item['direct_link'] ) ) {
+            $link = $item['direct_link'];
+        }
+
+        $html .= sprintf( '<li class="%s"><a href="%s">%s</a></li>', $class, $link, __( $item['title'], 'erp' ) );
+    }
+
+    $html .= '</ul>';
+
+    return $html;
 }

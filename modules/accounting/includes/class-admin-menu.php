@@ -79,56 +79,56 @@ class Admin_Menu {
             'capability' => $vendor,
             'slug'       => 'vendors',
             'callback'   => [ $this, 'page_vendors' ],
-            'position'   => 5
+            'position'   => 10
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Sales', 'erp' ),
             'capability' => $sale,
             'slug'       => 'sales',
             'callback'   => [ $this, 'page_sales' ],
-            'position'   => 5
+            'position'   => 15
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Expenses', 'erp' ),
             'capability' => $expense,
             'slug'       => 'expense',
             'callback'   => [ $this, 'page_expenses' ],
-            'position'   => 5
+            'position'   => 20
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Chart of Accounts', 'erp' ),
             'capability' => $account_charts,
             'slug'       => 'charts',
             'callback'   => [ $this, 'page_chart_of_accounting' ],
-            'position'   => 5
+            'position'   => 25
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Bank Accounts', 'erp' ),
             'capability' => $bank,
             'slug'       => 'bank',
             'callback'   => [ $this, 'page_bank' ],
-            'position'   => 5
+            'position'   => 30
         ] );
         erp_add_menu( 'accounting', [
             'title'      =>  __( 'Journal Entry', 'erp' ),
             'capability' => $journal,
             'slug'       => 'journal',
             'callback'   => [ $this, 'page_journal_entry' ],
-            'position'   => 5
+            'position'   => 35
         ] );
         erp_add_menu( 'accounting', [
             'title'      =>  __( 'Reports', 'erp' ),
             'capability' => $reports,
             'slug'       => 'reports',
             'callback'   => [ $this, 'page_reports' ],
-            'position'   => 5
+            'position'   => 90
         ] );
         erp_add_menu( 'accounting', [
             'title'      =>  __( '<span style="color:#f18500">Help</span>', 'erp' ),
             'capability' => $dashboard,
             'slug'       => 'erp-ac-help',
             'callback'   => [ $this, 'help_page' ],
-            'position'   => 5
+            'position'   => 99
         ] );
 
 
