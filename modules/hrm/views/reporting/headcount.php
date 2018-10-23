@@ -51,7 +51,9 @@
     ?>
     <div class="hr-headcount">
         <form method="get">
-            <input type="hidden" name="page" value="erp-hr-reporting">
+            <input type="hidden" name="page" value="erp-hr">
+            <input type="hidden" name="section" value="report">
+            <input type="hidden" name="sub-section" value="report">
             <input type="hidden" name="type" value="headcount">
             <select name="year">
             <?php
