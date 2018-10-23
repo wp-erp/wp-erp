@@ -54,7 +54,7 @@ class Admin_Menu {
             }
             $html.= '<div>';
             $html.= sprintf( "<h3><a href='%s'>%s</a></h3>", admin_url( 'admin.php?page=erp-'.$component ), $header[$component]['title'] );
-            $html.= erp_build_menu( $items, '', $component );
+            $html.= erp_build_mega_menu( $items, '', $component );
             $html.= '</div>';
         }
         $html .= '</div>';
