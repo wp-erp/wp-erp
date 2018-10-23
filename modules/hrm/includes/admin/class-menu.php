@@ -458,7 +458,7 @@ class Admin_Menu {
      */
     public function highlight_menu(){
         $screen = get_current_screen();
-        if ( $screen->id != 'edit-erp_hr_announcement' ) {
+        if ( $screen->id != 'edit-erp_hr_announcement' && $screen->id != 'edit-erp_hr_questionnaire' ) {
             return;
         }
 
@@ -482,7 +482,7 @@ class Admin_Menu {
      */
     public function highlight_submenu( $parent_file ) {
         global $parent_file, $submenu_file, $post_type;
-        if ( 'erp_hr_announcement' == $post_type ) {
+        if ( 'erp_hr_announcement' == $post_type || 'erp_hr_questionnaire' == $post_type ) {
             $parent_file = 'admin.php?page=erp';
             $submenu_file = 'erp-hr';
         }
