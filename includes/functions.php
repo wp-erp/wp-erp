@@ -1294,8 +1294,7 @@ function erp_get_import_export_fields() {
 function erp_import_export_javascript() {
     global $current_screen;
     $hook = str_replace( sanitize_title( __( 'ERP Settings', 'erp' ) ), 'erp-settings', $current_screen->base );
-
-    if ( 'erp-settings_page_erp-tools' !== $hook ) {
+    if ( 'wp-erp_page_erp-tools' !== $current_screen->base ) {
         return;
     }
 
@@ -1427,7 +1426,7 @@ function erp_import_export_javascript() {
 
             $('form#export_form #type').on('change', function (e) {
                 e.preventDefault();
-
+                console.log("Hello World !");
                 $("#export_form #selecctall").prop('checked', false);
                 var type = $(this).val();
                 fields = erp_fields[type] ? erp_fields[type].fields : [];
