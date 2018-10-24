@@ -117,6 +117,7 @@ module.exports = function(grunt) {
                     '!.git/**',
                     '!Gruntfile.js',
                     '!package.json',
+                    '!package-lock.json',
                     '!composer.json',
                     '!composer.lock',
                     '!debug.log',
@@ -132,10 +133,13 @@ module.exports = function(grunt) {
                     '!tests/**',
                     '!README.md',
                     '!CONTRIBUTING.md',
-                    '!**/*~'
+                    '!**/*~',
+                    '!vendor/google/apiclient-services/src/Google/Service/**',
+                    'vendor/google/apiclient-services/src/Google/Service/Gmail.php',
+                    'vendor/google/apiclient-services/src/Google/Service/Gmail/**'
                 ],
                 dest: 'build/'
-            }
+            },
         },
 
         //Compress build directory into <name>.zip and <name>-<version>.zip
