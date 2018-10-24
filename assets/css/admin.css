@@ -31,7 +31,11 @@
   margin-bottom: 10px !important;
 }
 .erp-overview h2 {
+  margin-top: 13px;
   font-weight: bold !important;
+}
+.erp-overview h3 {
+  margin-top: 25px;
 }
 .erp-overview a {
   text-decoration: none;
