@@ -377,14 +377,14 @@
 
             .erp-form-wrap {
                 display: flex;
-    
+
                 input {
                     margin: 0 -1px 0 0;
                     width: 100%;
                     border-top-left-radius: 3px;
                     border-bottom-left-radius: 3px;
                 }
-    
+
                 button {
                     box-shadow: none;
                     background: #009DDA;
@@ -2000,11 +2000,12 @@ div.erp-nav-container {
         > li {
             display: inline-block;
             margin: 0;
-            padding: 0 15px;
+            //padding: 0 15px;
             border-bottom: 2px solid transparent;
 
             a {
                 line-height: 45px;
+                padding: 0 5px;
             }
             &.active {
                 border-bottom-color: @wperp-theme-color;
@@ -2072,9 +2073,9 @@ div.erp-nav-container {
         display: none;
         position: absolute;
         top: 100%;
-        left: 15px;
+        left: 0px;
         background: #FFFFFF;
-        z-index: 1;
+        z-index: 99;
         font-size: 12px;
         border: 1px solid #DDDDDD;
         border-radius: 3px;
@@ -2085,8 +2086,11 @@ div.erp-nav-container {
         min-width: 160px;
 
         li {
-            padding: 3px 7px;
+            //padding: 3px 7px;
             margin: 0;
+            a{
+                padding: 5px 3px;
+            }
         }
         a {
             line-height: 1.5em !important;
@@ -2221,7 +2225,7 @@ div.erp-nav-container {
             font-weight: 700 !important;
             color: #fff !important;
         }
-        
+
         li {
             a {
                 color: #B7BCC1;

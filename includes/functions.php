@@ -1426,7 +1426,6 @@ function erp_import_export_javascript() {
 
             $('form#export_form #type').on('change', function (e) {
                 e.preventDefault();
-                console.log("Hello World !");
                 $("#export_form #selecctall").prop('checked', false);
                 var type = $(this).val();
                 fields = erp_fields[type] ? erp_fields[type].fields : [];
