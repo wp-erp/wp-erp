@@ -3872,11 +3872,11 @@ div.erp-nav-container .erp-page-header h2 {
 div.erp-nav-container .erp-nav > li {
   display: inline-block;
   margin: 0;
-  padding: 0 15px;
   border-bottom: 2px solid transparent;
 }
 div.erp-nav-container .erp-nav > li a {
   line-height: 45px;
+  padding: 0 5px;
 }
 div.erp-nav-container .erp-nav > li.active {
   border-bottom-color: #1A9ED4;
@@ -3927,9 +3927,9 @@ div.erp-nav-container .erp-nav-dropdown {
   display: none;
   position: absolute;
   top: 100%;
-  left: 15px;
+  left: 0px;
   background: #FFFFFF;
-  z-index: 1;
+  z-index: 99;
   font-size: 12px;
   border: 1px solid #DDDDDD;
   border-radius: 3px;
@@ -3940,8 +3940,10 @@ div.erp-nav-container .erp-nav-dropdown {
   min-width: 160px;
 }
 div.erp-nav-container .erp-nav-dropdown li {
-  padding: 3px 7px;
   margin: 0;
+}
+div.erp-nav-container .erp-nav-dropdown li a {
+  padding: 5px 3px;
 }
 div.erp-nav-container .erp-nav-dropdown a {
   line-height: 1.5em !important;
