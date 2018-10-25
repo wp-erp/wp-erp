@@ -33,6 +33,9 @@
         }
 
         $tabs['misc'] = __( 'Misc.', 'erp' );
+        $tabs['status'] =   __( 'Status', 'erp' );
+        $tabs['log']    =   __( 'Audit Log', 'erp' );
+
         $tabs = apply_filters( 'erp_tools_tabs', $tabs );
     ?>
 
@@ -56,6 +59,13 @@
 
             case 'misc':
                 include __DIR__ . '/tools/misc.php';
+                break;
+            case 'status':
+                new \WeDevs\ERP\Status();
+                break;
+
+            case 'log':
+                include_once dirname( __FILE__ ) . '/log.php';
                 break;
 
             case 'general':

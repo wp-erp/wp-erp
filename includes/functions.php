@@ -923,8 +923,6 @@ function erp_file_log( $message, $type = '' ) {
     } else {
         $message = sprintf( "[%s] %s\n", date( 'd.m.Y h:i:s' ), $message );
     }
-
-    error_log( $message, 3, dirname( WPERP_FILE ) . '/debug.log' );
 }
 
 /**
@@ -1296,8 +1294,7 @@ function erp_get_import_export_fields() {
 function erp_import_export_javascript() {
     global $current_screen;
     $hook = str_replace( sanitize_title( __( 'ERP Settings', 'erp' ) ), 'erp-settings', $current_screen->base );
-
-    if ( 'erp-settings_page_erp-tools' !== $hook ) {
+    if ( 'wp-erp_page_erp-tools' !== $current_screen->base ) {
         return;
     }
 
@@ -1429,7 +1426,6 @@ function erp_import_export_javascript() {
 
             $('form#export_form #type').on('change', function (e) {
                 e.preventDefault();
-
                 $("#export_form #selecctall").prop('checked', false);
                 var type = $(this).val();
                 fields = erp_fields[type] ? erp_fields[type].fields : [];
@@ -2826,4 +2822,293 @@ function erp_let_to_num( $size ) {
     }
 
     return $ret;
+}
+
+/**
+ * Get ERP Menu array
+ *
+ * @since 1.4.0
+ *
+ * @return array $menu
+ */
+function erp_menu() {
+    $menu = [];
+    return apply_filters( 'erp_menu', $menu );
+}
+
+/**
+ * Add a menu item into ERP Menu
+ *
+ * @since 1.4.0
+ *
+ * @param String $component Name of Component to add menu
+ *
+ * @param array $args
+ *
+ * @return void
+ */
+function erp_add_menu( $component, $args ) {
+    add_filter('erp_menu', function($menu) use( $component, $args ) {
+        $menu[ $component ][$args['slug']] = $args;
+
+        return $menu;
+    });
+}
+
+/**
+ * Adds a submenu under a Menu item
+ *
+ * @since 1.4.0
+ *
+ * @param string $component Name of Component to add menu
+ *
+ * @param string $parent Slug of Parent menu item
+ *
+ * @param array $args
+ *
+ * @return void
+ */
+function erp_add_submenu( $component, $parent, $args ) {
+    add_filter( 'erp_menu', function ( $menu ) use ( $component, $parent, $args ) {
+        if ( !isset( $menu[$component][$parent] ) ) {
+            return $menu;
+        }
+        $args['parent'] = $parent;
+        $menu[$component][$parent]['submenu'][$args['slug']] = $args;
+
+        return $menu;
+    } );
+}
+
+/**
+ * Render A menu for given component
+ *
+ * @since 1.4.0
+ *
+ * @param string $component slug of Component to render
+ *
+ * @return bool
+ */
+function erp_render_menu( $component ) {
+    $menu = erp_menu();
+
+    if ( !isset( $menu[$component] ) ) {
+        return false;
+    }
+    //check current tab
+    $tab = isset( $_GET['section'] ) ? $_GET['section'] : 'dashboard';
+
+    echo "<div class='erp-nav-container'>";
+    echo erp_render_menu_header( $component );
+    echo erp_build_menu( $menu[$component], $tab, $component );
+    echo "</div>";
+}
+
+/**
+ * Build html for ERP menu
+ *
+ * @since 1.4.0
+ *
+ * @param $items
+ *
+ * @param $active
+ *
+ * @param $component main component slug
+ *
+ * @param bool $dropdown
+ *
+ * @return string
+ */
+function erp_build_menu( $items, $active, $component, $dropdown = false ) {
+
+
+    //check capability
+    $items = array_filter( $items, function( $item ) {
+        if ( !isset( $item['capability'] ) ) {
+            return false;
+        }
+        return current_user_can( $item['capability'] );
+    } );
+
+    //sort items for position
+    uasort( $items, function ( $a, $b ) {
+        return $a['position'] > $b['position'];
+    } );
+
+    $html = '<ul class="erp-nav -primary">';
+
+    if ( $dropdown ) {
+        $html = '<ul class="erp-nav-dropdown">';
+    }
+    foreach ( $items as $item ) {
+
+        $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
+
+        $class = $active == $item['slug'] ? 'active ' : '';
+        if ( $dropdown ) {
+            $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['parent'], 'sub-section' => $item['slug'] ], admin_url( 'admin.php' ) );
+            $class .= ( !empty( $_GET['sub-section'] ) && $_GET['sub-section'] == $item['slug'] ) ? 'active ' : '';
+        }
+
+        if ( !empty( $item['direct_link'] ) ) {
+            $link = $item['direct_link'];
+        }
+
+        $submenu =  '';
+        if ( isset( $item['submenu'] ) ) {
+            $class.= "dropdown-nav";
+            $submenu = '<i class="dashicons dashicons-arrow-down-alt2"></i>';
+            $submenu .= erp_build_menu( $item['submenu'], $active, $component, true );
+        }
+
+        $html .= sprintf( '<li class="%s"><a href="%s">%s</a>%s</li>', $class, $link, __( $item['title'], 'erp' ), $submenu );
+    }
+
+    $html .= '</ul>';
+
+    return $html;
+}
+
+/**
+ * Check if the current page is contact or company listing
+ *
+ * @since 1.4.0
+ *
+ * @return bool
+ */
+function erp_is_contacts_page() {
+    if ( empty( $_GET['page'] ) || $_GET['page'] != 'erp-crm' ) {
+        return false;
+    }
+
+    if ( empty( $_GET['section'] ) || $_GET['section'] != 'contacts' || $_GET['section'] != 'companies' ) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Get ERP Menu array
+ *
+ * @since 1.4.0
+ *
+ * @return array $menu
+ */
+function erp_get_menu_headers() {
+    $menu = [];
+    return apply_filters( 'erp_menu_headers', $menu );
+}
+
+/**
+ * Add Header part of Component
+ *
+ * @param $component
+ * @param $title
+ * @param string $icon
+ */
+function erp_add_menu_header( $component, $title, $icon = "" ) {
+    add_filter('erp_menu_headers', function($menu) use( $component, $title, $icon ) {
+        $menu[ $component ] = [ 'title' => $title, 'icon' => $icon ];
+        return $menu;
+    });
+}
+
+/**
+ * Render header part of erp menu
+ *
+ * @param $component
+ *
+ * @return string
+ */
+function erp_render_menu_header( $component ) {
+    $headers = erp_get_menu_headers();
+    if ( empty( $headers[$component] ) ) {
+       return "";
+    }
+
+    $html = sprintf( '<div class="erp-page-header">
+                        <div class="module-icon">
+                            %s
+                        </div>
+                        <h2>%s</h2>
+                    </div>',
+        $headers[$component]['icon'], $headers[$component]['title'] );
+
+    return $html;
+}
+
+/**
+ * RSS feed
+ *
+ * @return void
+ */
+function erp_web_feed() {
+    $url="https://wperp.com/feed/";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    $data = curl_exec($ch);
+    curl_close($ch);
+
+    return simplexml_load_string($data);
+}
+
+
+/**
+ * Build Mega for html for ERP Mega menu
+ *
+ * @since 1.4.0
+ *
+ * @param $items
+ *
+ * @param $active
+ *
+ * @param $component main component slug
+ *
+ * @param bool $dropdown
+ *
+ * @return string
+ */
+function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
+
+    //check capability
+    $items = array_filter( $items, function( $item ) {
+        if ( !isset( $item['capability'] ) ) {
+            return false;
+        }
+        return current_user_can( $item['capability'] );
+    } );
+
+    //sort items for position
+    uasort( $items, function ( $a, $b ) {
+        return $a['position'] > $b['position'];
+    } );
+
+    $html = '<ul class="erp-nav -primary">';
+
+    if ( $dropdown ) {
+        $html = '<ul class="erp-nav-dropdown">';
+    }
+    foreach ( $items as $item ) {
+
+        $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
+
+        $class = $active == $item['slug'] ? 'active ' : '';
+        if ( $dropdown ) {
+            $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['parent'], 'sub-section' => $item['slug'] ], admin_url( 'admin.php' ) );
+            $class .= ( !empty( $_GET['sub-section'] ) && $_GET['sub-section'] == $item['slug'] ) ? 'active ' : '';
+        }
+
+        if ( !empty( $item['direct_link'] ) ) {
+            $link = $item['direct_link'];
+        }
+
+        $html .= sprintf( '<li class="%s"><a href="%s">%s</a></li>', $class, $link, __( $item['title'], 'erp' ) );
+    }
+
+    $html .= '</ul>';
+
+    return $html;
 }

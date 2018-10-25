@@ -20,7 +20,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
         ]);
 
         $this->type = 'sales';
-        $this->slug = 'erp-accounting-sales';
+        $this->slug = 'erp-accounting&section=sales';
     }
 
     /**
@@ -29,7 +29,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
      * @return array
      */
     function get_columns() {
-        $section = isset( $_GET['section'] ) ? $_GET['section'] : false;
+        $filter = isset( $_GET['filter'] ) ? $_GET['filter'] : false;
         $columns = array(
            // 'cb'         => '<input type="checkbox" />',
             'issue_date' => __( 'Date', 'erp' ),
@@ -42,7 +42,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
             'status'     => __( 'Status', 'erp' ),
         );
 
-        if ( $section == 'awaiting-approval' || $section == 'draft' || $section == 'awaiting-payment' || $section == 'closed' || $section == 'void' || $section == 'paid' || $section == 'partial' ) {
+        if ( $filter == 'awaiting-approval' || $filter == 'draft' || $filter == 'awaiting-payment' || $filter == 'closed' || $filter == 'void' || $filter == 'paid' || $filter == 'partial' ) {
             $action = [ 'cb' => '<input type="checkbox" />'];
             $columns = array_merge( $action, $columns );
         }
@@ -115,43 +115,43 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
      * @return void
      */
     public function bulk_actions( $which = '' ) {
-        $section = isset( $_GET['section'] ) ? $_GET['section'] : false;
+        $filter = isset( $_GET['filter'] ) ? $_GET['filter'] : false;
         $type    = [];
 
         if ( 'top' == $which && $this->items ) {
-            if ( $section == 'draft' ) {
+            if ( $filter == 'draft' ) {
                 $type = [
                     'awaiting_approval'  => __( 'Approve', 'erp' ),
                     'delete' => __( 'Delete', 'erp' )
                 ];
-            } else if ( $section == 'awaiting-payment' ) {
+            } else if ( $filter == 'awaiting-payment' ) {
                 $type = [
                     'void'  => __( 'Void', 'erp' ),
                 ];
-            } else if ( $section == 'closed' ) {
+            } else if ( $filter == 'closed' ) {
                 $type = [
                     'void'  => __( 'Void', 'erp' ),
                 ];
-            } else if ( $section == 'void' ) {
+            } else if ( $filter == 'void' ) {
                 $type = [
                     'delete'  => __( 'Delete', 'erp' ),
                 ];
-            } else if ( $section == 'awaiting-approval' ) {
+            } else if ( $filter == 'awaiting-approval' ) {
                 $type = [
                     'awaiting_payment'  => __( 'Payment', 'erp' ),
                     'void'  => __( 'Void', 'erp' ),
                 ];
-            } else if ( $section == 'paid' ) {
+            } else if ( $filter == 'paid' ) {
                 $type = [
                     'void'  => __( 'Void', 'erp' ),
                 ];
-            } else if ( $section == 'partial' ) {
+            } else if ( $filter == 'partial' ) {
                 $type = [
                     'void'  => __( 'Void', 'erp' ),
                 ];
             }
 
-            if ( $section ) {
+            if ( $filter ) {
                 erp_html_form_input([
                     'name'    => 'action',
                     'type'    => 'select',
@@ -173,7 +173,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
      */
     public function extra_tablenav( $which ) {
         if ( 'top' == $which ) {
-            echo '<div class="alignleft mishu actions">';
+            echo '<div class="alignleft actions">';
 
             $type = [];
 
@@ -255,9 +255,9 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
             ]);
 
             erp_html_form_input([
-                'name'    => 'section',
+                'name'    => 'filter',
                 'type'    => 'select',
-                'value'   => isset( $_REQUEST['section'] ) && !empty( $_REQUEST['section'] ) ? $_REQUEST['section'] : '',
+                'value'   => isset( $_REQUEST['filter'] ) && !empty( $_REQUEST['filter'] ) ? $_REQUEST['filter'] : '',
                 'options' => $statuses
             ]);
 
@@ -268,7 +268,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
     }
 
     /**
-     * Get section for sales table list
+     * Get filter for sales table list
      *
      * @since  1.1.6
      *
@@ -277,7 +277,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
     public function get_section() {
         $counts = $this->get_counts();
 
-        $section = [
+        $filter = [
             'all'   => [
                 'label' => __( 'All', 'erp' ),
                 'count' => array_sum( $counts),
@@ -326,7 +326,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
             ]
         ];
 
-        return $section;
+        return $filter;
     }
 
     /**
@@ -337,11 +337,11 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
     public function get_views() {
         $counts       = $this->get_section();
         $status_links = array();
-        $section      = isset( $_REQUEST['section'] ) ? $_REQUEST['section'] : 'all';
+        $filter       = isset( $_REQUEST['filter'] ) ? $_REQUEST['filter'] : 'all';
 
         foreach ( $counts as $key => $value ) {
             $key   = str_replace( '_', '-', $key );
-            $class = ( $key == $section ) ? 'current' : 'status-' . $key;
+            $class = ( $key == $filter ) ? 'current' : 'status-' . $key;
             $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', $value['url'], $class, $value['label'], $value['count'] );
         }
 

@@ -166,11 +166,11 @@ function erp_crm_get_details_url( $id, $type ) {
     if ( $id ) {
 
         if ( in_array( 'contact', $type ) ) {
-            return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $id );
+            return add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts', 'action' => 'view' , 'id' => $id ], admin_url('admin.php') );
         }
 
         if ( in_array( 'company', $type ) ) {
-            return admin_url( 'admin.php?page=erp-sales-companies&action=view&id=' . $id );
+            return add_query_arg( ['page' => 'erp-crm', 'section' => 'companies', 'action' => 'view' , 'id' => $id ], admin_url('admin.php') );
         }
     }
 
@@ -444,7 +444,7 @@ function erp_crm_company_get_customers( $postdata ) {
  * @return string admin url
  */
 function erp_crm_get_customer_details_url( $id ) {
-    return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $id );
+    return add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts', 'action' => 'view' , 'id' => $id ], admin_url('admin.php') );
 }
 
 /**

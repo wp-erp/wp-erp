@@ -178,7 +178,8 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
         <input type="hidden" name="type" value="expense">
         <input type="hidden" name="status" value="paid">
         <input type="hidden" name="form_type" value="payment_voucher">
-        <input type="hidden" name="page" value="erp-accounting-expense">
+        <input type="hidden" name="page" value="erp-accounting">
+        <input type="hidden" name="section" value="expense">
         <input type="hidden" name="erp-action" value="ac-new-payment-voucher">
         <?php
             erp_html_form_input( array(

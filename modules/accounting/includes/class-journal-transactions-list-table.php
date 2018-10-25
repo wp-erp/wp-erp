@@ -17,7 +17,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
     function __construct() {
 
         $this->type = 'journal';
-        $this->slug = ! empty( $_GET['page'] ) && ( $_GET['page'] == 'erp-accounting-journal' ) ? 'erp-accounting-journal' : 'erp-accounting-charts';
+        $this->slug = ! empty( $_GET['page'] ) && ! empty( $_GET['section'] ) && ( $_GET['page'] == 'erp-accounting' ) && ( $_GET['section'] == 'journal' ) ? 'erp-accounting&section=journal' : 'erp-accounting&section=charts';
 
         parent::__construct();
 
@@ -87,13 +87,13 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
             return $item->issue_date;
         }
 
-        if ( $this->slug == 'erp-accounting-charts' ) {
+        if ( $this->slug == 'erp-accounting&section=charts' ) {
             return sprintf( '<a data-transaction_id="%d" class="erp-ac-transaction-report" href="#">%s</a>', $item->id, erp_format_date( $item->issue_date ) );
         }
 
         $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&journal_id=' . $item->id );
 
-        if ( $this->slug == 'erp-accounting-journal' ) {
+        if ( $this->slug == 'erp-accounting&section=journal' ) {
             $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
         } else {
             $actions = [];
@@ -254,10 +254,6 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
 
         if ( isset( $_REQUEST['ref'] ) && ! empty( $_REQUEST['ref'] ) ) {
             $args['ref'] = $_REQUEST['ref'];
-        }
-
-        if ( isset( $_REQUEST['section'] ) ) {
-            $args['status']  = str_replace('-', '_', $_REQUEST['section'] );
         }
 
         if ( $ledger_id ) {

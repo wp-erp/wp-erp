@@ -3,14 +3,15 @@
     if ( erp_ac_create_journal() ) {
         ?>
         <h2><?php _e( 'Journals', 'erp' ); ?>
-            <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-journal&action=new' ); ?>" class="add-new-h2"><?php _e( 'New Entry', 'erp' ); ?></a>
+            <a href="<?php echo admin_url( 'admin.php?page=erp-accounting&section=journal&action=new' ); ?>" class="add-new-h2"><?php _e( 'New Entry', 'erp' ); ?></a>
         </h2>
         <?php
     }
     ?>
 
     <form method="get" action="" class="erp-ac-list-table-form">
-        <input type="hidden" name="page" value="erp-accounting-journal">
+        <input type="hidden" name="page" value="erp-accounting">
+        <input type="hidden" name="section" value="journal">
 
         <?php
         $list_table = new \WeDevs\ERP\Accounting\Journal_Transactions_List_Table();

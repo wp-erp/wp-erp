@@ -1,7 +1,7 @@
 <?php
 $company          = new \WeDevs\ERP\Company();
 $status           = $transaction->status == 'draft' ? false : true;
-$url              = admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&transaction_id=' . $transaction->id );
+$url              = admin_url( 'admin.php?page=erp-accounting&section=sales&action=new&type=invoice&transaction_id=' . $transaction->id );
 $more_details_url = erp_ac_get_journal_invoice_url( $transaction->id );
 $total_debit = 0;
 $total_credit = 0;

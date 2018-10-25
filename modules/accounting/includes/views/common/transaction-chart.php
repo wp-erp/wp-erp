@@ -4,7 +4,15 @@ $symbol = erp_ac_get_currency_symbol();
 $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
 $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
+if ( !( isset( $_GET['page'] ) && isset( $_GET['section'] ) && 'erp-accounting' === $_GET['page'] ) ) {
+    return;
+}
+
 $hook = str_replace( sanitize_title( __( 'Accounting', 'erp' ) ) , 'accounting', $screen->base );
+$hook = str_replace( 'wp-erp' , 'accounting', $screen->base );
+$hook_suffix = isset( $_GET['section'] ) ? $_GET['section'] : 'dashboard';
+$hook .= '-' . $hook_suffix;
+
 
 if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
     $transactions = erp_ac_get_all_transaction([
@@ -347,6 +355,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
 
 $payment_received = json_encode( $payment_received );
 $payment_status   = json_encode( $payment_status );
+
 
 ?>
 <div class="payment-stat-chart">

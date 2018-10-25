@@ -179,7 +179,7 @@ class Accounting {
      * @return void
      */
     public function init_actions() {
-        add_action( 'admin_footer', array( $this, 'admin_js_templates' ) );
+        add_action( 'admin_footer', array( $this, 'admin_js_templates' ), 10 );
     }
 
     /**
@@ -206,6 +206,16 @@ class Accounting {
 
         $hook = str_replace( sanitize_title( __( 'Accounting', 'erp' ) ) , 'accounting', $current_screen->base );
 
+        if ( 'wp-erp_page_erp-settings' == $current_screen->base && isset( $_GET['tab'] ) && $_GET['tab'] == 'accounting' ) {
+            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/new-tax-form.php', 'erp-ac-new-tax-form-popup' );
+            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/tax-items.php', 'erp-ac-items-details-popup' );
+        }
+
+        if ( 'wp-erp_page_erp-accounting' == $current_screen->base ) {
+            $hook_suffix = isset( $_GET['section'] ) ? $_GET['section'] : 'dashboard';
+            $hook .= '-' . $hook_suffix;
+        }
+
         if ( $hook == 'accounting_page_erp-accounting-expense' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/vendor.php', 'erp-ac-new-vendor-content-pop' );
@@ -219,11 +229,6 @@ class Accounting {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/customer.php', 'erp-ac-new-customer-content-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/send-invoice.php', 'erp-ac-send-email-invoice-pop' );
-        }
-
-        if ( $hook == 'erp-settings_page_erp-settings' && isset( $_GET['section'] ) && $_GET['section'] == 'erp_ac_tax' ) {
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/new-tax-form.php', 'erp-ac-new-tax-form-popup' );
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/tax-items.php', 'erp-ac-items-details-popup' );
         }
 
         if ( $hook == 'accounting_page_erp-accounting-sales' || $hook == 'accounting_page_erp-accounting-expense' ) {

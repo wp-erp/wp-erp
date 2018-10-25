@@ -7,7 +7,8 @@
         <div class="list-table-inner">
 
             <form method="get">
-                <input type="hidden" name="page" value="erp-audit-log">
+                <input type="hidden" name="page" value="erp-tools">
+                <input type="hidden" name="tab" value="log">
                 <?php
                 $audit_log = new \WeDevs\ERP\Admin\Auditlog_List_Table();
                 $audit_log->prepare_items();
