@@ -221,7 +221,7 @@ class Accounting {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/vendor.php', 'erp-ac-new-vendor-content-pop' );
         }
 
-        if ( $hook == 'accounting_page_erp-accounting-bank' ) {
+        if ( 'wp-erp_page_erp-accounting' == $current_screen->id && isset( $_GET['section'] ) && $_GET['section'] == 'bank' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/bank.php', 'erp-ac-transfer-money-pop' );
         }
 
