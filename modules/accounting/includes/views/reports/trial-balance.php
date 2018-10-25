@@ -83,7 +83,7 @@ $credit_total = $clos_inc_exp_balance->credit;
                             $debit_total  += $debit;
                             $credit_total += $credit;
                             $content = sprintf( '&nbsp; &nbsp; &nbsp;%s (%s)', $ledger->name, $ledger->code );
-                            $ledger_individul_url = erp_ac_get_account_url( $ledger->id, $content ); //admin_url( 'admin.php?page=erp-accounting-charts&action=view&id=' . $ledger->id );
+                            $ledger_individul_url = erp_ac_get_account_url( $ledger->id, $content ); //admin_url( 'admin.php?page=erp-accounting&section=charts&action=view&id=' . $ledger->id );
 
                             if ( $debit == 0 && $credit == 0 ) {
                                 continue;

@@ -10,6 +10,10 @@
 function erp_ac_get_all_transaction( $args = array() ) {
     global $wpdb;
 
+    if ( isset( $args['type'] ) && $args['type'] == 'sales' && isset( $args['status'] ) && $args['status'] == 'all'  ) {
+        unset( $args['status'] );
+    }
+
     $defaults = array(
         'type'       => 'expense',
         'number'     => 20,
@@ -155,7 +159,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
 /**
  * Fetch all transaction from database
  *
- * @return array
+ * @return int
  */
 function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
     $status    = isset( $args['status'] ) ? $args['status'] : false;
@@ -220,7 +224,7 @@ function erp_ac_get_transaction( $id = 0, $args = [] ) {
 /**
  * Chck from DB is invoice number unique or not
  *
- * @param  string  $invoice_number
+ * @param  string  $invoice
  * @param  stirng  $form_type
  * @param  boolean $is_update
  * @param  mixed $trns_id

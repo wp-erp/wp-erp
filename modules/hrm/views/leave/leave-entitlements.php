@@ -7,9 +7,9 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
     <h2>
         <?php _e( 'Leave Entitlements', 'erp' ); ?>
         <?php if ( 'assignment' == $active_tab ): ?>
-            <a href="<?php echo admin_url( 'admin.php?page=erp-leave-assign' ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Back to Entitlement list', 'erp' ); ?></a>
+            <a href="<?php echo admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-entitlements' ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Back to Entitlement list', 'erp' ); ?></a>
         <?php else: ?>
-            <a href="<?php echo add_query_arg( array( 'tab' => 'assignment' ), admin_url( 'admin.php?page=erp-leave-assign' ) ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a>
+            <a href="<?php echo add_query_arg( array( 'sub-section' => 'leave-entitlements', 'tab' => 'assignment' ), admin_url( 'admin.php?page=erp-hr&section=leave' ) ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a>
         <?php endif ?>
     </h2>
 
@@ -37,7 +37,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
         $policy_dropdown = erp_hr_leave_get_policies_dropdown_raw();
 
         if ( empty( $policy_dropdown ) ) {
-            $help_text = sprintf( '<a href="?page=erp-leave-policies">%s</a>', __( 'Create A new policy first', 'erp' ) );
+            $help_text = sprintf( '<a href="?page=erp-hr&section=leave&sub-section=policies">%s</a>', __( 'Create A new policy first', 'erp' ) );
         } else {
             $help_text = __( 'Select A Policy', 'erp' );
         }
@@ -144,8 +144,9 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
             <div class="list-table-inner">
 
                 <form method="get">
-                    <input type="hidden" name="page" value="erp-leave-assign">
-                    <input type="hidden" name="tab" value="entitlements">
+                    <input type="hidden" name="page" value="erp-hr">
+                    <input type="hidden" name="section" value="leave">
+                    <input type="hidden" name="sub-section" value="leave-entitlements">
                     <?php
                     $entitlement = new \WeDevs\ERP\HRM\Entitlement_List_Table();
                     $entitlement->prepare_items();

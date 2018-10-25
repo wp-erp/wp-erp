@@ -2,7 +2,7 @@
     <?php
     if ( erp_ac_create_account() ) {
         ?>
-        <h2><?php _e( 'Chart of Accounts', 'erp' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-charts&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a></h2>
+        <h2><?php _e( 'Chart of Accounts', 'erp' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-accounting&section=charts&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a></h2>
         <?php
     }
     ?>

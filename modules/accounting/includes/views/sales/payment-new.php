@@ -200,7 +200,8 @@ if ( $transaction_id ) {
         <input type="hidden" name="status" value="closed">
         <input type="hidden" name="type" value="sales">
         <input type="hidden" name="form_type" value="payment">
-        <input type="hidden" name="page" value="erp-accounting-sales">
+        <input type="hidden" name="page" value="erp-accounting">
+        <input type="hidden" name="section" value="sales">
         <input type="hidden" name="erp-action" value="ac-new-sales-payment">
         <?php
             erp_html_form_input( array(

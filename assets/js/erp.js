@@ -259,7 +259,6 @@ window.wperp = window.wperp || {};
          * @return {void}
          */
         initialize: function() {
-
             $( '#postimagediv').on( 'click', '#set-company-thumbnail', this.setCompanyLogo );
             $( '#postimagediv').on( 'click', 'a.remove-logo', this.removeCompanyLogo );
 
@@ -280,6 +279,9 @@ window.wperp = window.wperp || {};
 
             // PDF plugin notice
             $( 'body' ).on( 'click', '.notice-pdf .notice-dismiss', this.pdfNotice.dismiss );
+
+            // newsletter subscribe
+            $( 'body' ).on( 'click', '.email-subscribe-btn', this.emailSubscribe );
 
             this.initFields();
         },
@@ -558,6 +560,38 @@ window.wperp = window.wperp || {};
                     }
                 });
             }
+        },
+
+        validEmail: function(email) {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        },
+
+        emailSubscribe: function(e) {            
+            e.preventDefault();
+
+            var action = 'https://wedevs.us16.list-manage.com/subscribe/post-json?u=66e606cfe0af264974258f030&id=bc304ef91b&c=?';
+            var subscribeEmail = $('.email-subscribe').val();
+
+            if ( !WeDevs_ERP.validEmail(subscribeEmail) ) {
+                return;
+            }
+
+            $(this).prop('disabled', true);
+
+            $.ajax({
+                url: action,
+                data: {
+                    EMAIL: subscribeEmail
+                },
+                type: 'GET',
+                dataType: 'json',
+                cache: false,
+                contentType: "application/json; charset=utf-8"
+            }).always(function() {
+                $('.newsletter').find('.form-wrap').css('display', 'none');
+                $('.newsletter').find('.thank-you').css('display', 'block');
+            });
         }
     };
 

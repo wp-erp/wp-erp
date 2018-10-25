@@ -14,7 +14,8 @@
         <div class="list-table-inner">
 
             <form method="get">
-                <input type="hidden" name="page" value="erp-hr-depts">
+                <input type="hidden" name="page" value="erp-hr">
+                <input type="hidden" name="section" value="department">
                 <?php
                 $department_table = new \WeDevs\ERP\HRM\Department_List_Table();
                 $department_table->prepare_items();
