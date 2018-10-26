@@ -196,9 +196,9 @@
 
     .erp-badge-box {
         background: #fff;
-        border-radius: 3px;
-        padding: 0 20px 15px 20px;
-        border: 1px solid rgba(221, 221, 221, 0.8);
+        padding: 0 15px;
+        border: 1px solid #e5e5e5;
+        box-shadow: 0 1px 1px rgba(0,0,0,.04);
         margin-bottom: 20px;
 
         &.box-announce {
@@ -222,8 +222,8 @@
         }
 
         h2 {
-            height: 30px;
-            line-height: 2;
+            font-size: 1.2em;
+            line-height: 1.4;
         }
 
         .btn {
@@ -235,6 +235,7 @@
             text-decoration: none;
             padding: 2px 10px;
             font-weight: normal;
+            line-height: 1.3;
 
             &:hover {
                 border-color: #009DDA;
@@ -258,7 +259,7 @@
 
             .erp-count-box {
                 text-align: center;
-                background: #f1f1f1;
+                background: #f9f9f9;
                 margin: 0;
                 min-height: 171px;
                 display: flex;
@@ -370,7 +371,7 @@
 
         .erp-newsletter {
             background: #fafafa;
-            margin: 0 -20px -15px -20px;
+            margin: 0 -15px;
             padding: 1px 20px 20px 20px;
             border-top: 1px solid #eee;
             min-height: 157px;
@@ -2004,8 +2005,9 @@ div.erp-nav-container {
 
             a {
                 line-height: 45px;
-                padding: 0 5px;
+                padding: 0 10px;
             }
+
             &.active {
                 border-bottom-color: @wperp-theme-color;
             }
@@ -2013,11 +2015,17 @@ div.erp-nav-container {
     }
 
     li {
-        padding: 0 5px;
+        padding: 0;
         position: relative;
 
         &.dropdown-nav {
-            padding-right: 20px;
+
+            > a:after {
+                content: "\f347";
+                display: inline-block;
+                font: 400 13px/1 dashicons;
+                padding-left: 5px;
+            }
 
             &:hover,
             &.active {
@@ -2080,17 +2088,19 @@ div.erp-nav-container {
         border-radius: 3px;
         box-shadow: 0 4px 10px 0 rgba(0,0,0,0.09);
         transition: all .2s;
-        padding: 9px 10px;
+        padding: 5px 0;
         margin-top: 2px;
         min-width: 160px;
 
         li {
             //padding: 3px 7px;
             margin: 0;
-            a{
-                padding: 5px 3px;
+
+            a {
+                padding: 5px 10px;
             }
         }
+
         a {
             line-height: 1.5em !important;
         }
@@ -2232,6 +2242,7 @@ div.erp-nav-container {
         }
 
         .dropdown-nav {
+
             i {
                 display: none;
             }

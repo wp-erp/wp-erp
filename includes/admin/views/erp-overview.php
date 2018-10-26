@@ -27,7 +27,7 @@
                         <?php _e( 'Don\'t miss any updates of our new templates and extensions and all the astonishing offers we bring for you.', 'erp' ); ?>
                     </p>
                     <div class="erp-form-wrap">
-                        <input type="email" class="email-subscribe" placeholder="Your Email Address">
+                        <input type="email" class="email-subscribe" value="<?php echo wp_get_current_user()->user_email; ?>">
                         <button class="button email-subscribe-btn"><?php _e( 'Subscribe', 'erp' ); ?></button>
                     </div>
                     <div class="erp-thank-you"><?php _e( 'Thank you for subscribing!', 'erp' ); ?></div>

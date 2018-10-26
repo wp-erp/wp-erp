@@ -5,7 +5,7 @@
 
 <div class="erp-badge-box box-crm">
     <h2><?php _e( 'CRM', 'erp' ); ?>
-        <a href="<?php echo admin_url( 'admin.php?page=erp-crm' ); ?>" class="btn"><?php _e( 'View Now', 'erp' ); ?></a>
+        <a href="<?php echo admin_url( 'admin.php?page=erp-crm' ); ?>" class="btn"><?php _e( 'Visit Dashboard', 'erp' ); ?></a>
     </h2>
 
     <ul class="erp-badge-crm-count">
