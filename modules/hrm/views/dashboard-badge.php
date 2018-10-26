@@ -12,7 +12,7 @@ $announcements = get_posts( [
 ?>
 
 <div class="erp-badge-box box-announce">
-    <h2><?php _e( 'Latest Announcement', 'erp' ); ?> 
+    <h2><?php _e( 'Latest Announcement', 'erp' ); ?>
         <a href="<?php echo admin_url( 'edit.php?post_type=erp_hr_announcement' ); ?>" class="btn"><?php _e( 'View All', 'erp' ); ?></a>
     </h2>
 
@@ -27,7 +27,7 @@ $announcements = get_posts( [
 
 <div class="erp-badge-box box-hr">
     <h2><?php _e( 'HR', 'erp' ); ?>
-        <a href="<?php echo admin_url( 'admin.php?page=erp-hr' ); ?>" class="btn"><?php _e( 'View Now', 'erp' ); ?></a>
+        <a href="<?php echo admin_url( 'admin.php?page=erp-hr' ); ?>" class="btn"><?php _e( 'Visit Dashboard', 'erp' ); ?></a>
     </h2>
 
     <ul class="erp-badge-hr-count">

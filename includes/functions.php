@@ -2945,6 +2945,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
         $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
 
         $class = $active == $item['slug'] ? 'active ' : '';
+
         if ( $dropdown ) {
             $link = add_query_arg( [ 'page' => 'erp-' . $component, 'section' => $item['parent'], 'sub-section' => $item['slug'] ], admin_url( 'admin.php' ) );
             $class .= ( !empty( $_GET['sub-section'] ) && $_GET['sub-section'] == $item['slug'] ) ? 'active ' : '';
@@ -2955,13 +2956,13 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
         }
 
         $submenu =  '';
+
         if ( isset( $item['submenu'] ) ) {
             $class.= "dropdown-nav";
-            $submenu = '<i class="dashicons dashicons-arrow-down-alt2"></i>';
             $submenu .= erp_build_menu( $item['submenu'], $active, $component, true );
         }
 
-        $html .= sprintf( '<li class="%s"><a href="%s">%s</a>%s</li>', $class, $link, __( $item['title'], 'erp' ), $submenu );
+        $html .= sprintf( '<li class="%s"><a href="%s">%s</a>%s</li>', $class, $link, $item['title'], $submenu );
     }
 
     $html .= '</ul>';
