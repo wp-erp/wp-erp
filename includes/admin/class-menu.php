@@ -29,7 +29,7 @@ class Admin_Menu {
         global $wp_admin_bar, $wpdb;
 
         /* Check that the admin bar is showing and user has permission... */
-        if ( !current_user_can( 'edit_themes' ) || !is_admin_bar_showing() ) {
+        if ( !is_admin_bar_showing() ) {
             return;
         }
 
