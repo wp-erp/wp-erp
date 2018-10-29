@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.3.14';
+    public $version = '1.4.0';
 
     /**
      * Minimum PHP version required
@@ -278,6 +278,22 @@ final class WeDevs_ERP {
 
         // initialize integration class
         add_action( 'erp_loaded', array( $this->container['integration'], 'init_integrations' ) );
+
+        // Add plugin action links
+        add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), [ $this, 'plugin_action_links' ] );
+    }
+
+    /**
+     * Add action links
+     *
+     * @param $links
+     *
+     * @return array
+     */
+    public function plugin_action_links( $links ) {
+        $links[] = '<a href="' . admin_url( 'admin.php?page=erp-settings' ) . '">' . __( 'Settings', 'erp-deals' ) . '</a>';
+        $links[] = '<a target="_blank" href="https://wperp.com/documentation/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">' . __( 'Docs', 'erp' ) . '</a>';
+        return $links;
     }
 
     /**
