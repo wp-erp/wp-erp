@@ -13,7 +13,7 @@ jQuery( function ( $ ) {
             container.classList.add('--jsfied');
 
             // insert "more" button and duplicate the list
-            primary.insertAdjacentHTML('beforeend', '<li class="-more"><button type="button" aria-haspopup="true" aria-expanded="false">More <span>&darr;</span></button><ul class="-secondary">' + primary.innerHTML + '</ul></li>');
+            primary.insertAdjacentHTML('beforeend', '<li class="-more"><button type="button" aria-haspopup="true" aria-expanded="false">More <span class="dashicons dashicons-arrow-down-alt2"></span></button><ul class="-secondary">' + primary.innerHTML + '</ul></li>');
             secondary = container.querySelector('.-secondary');
             secondaryItems = [].slice.call(secondary.children);
             allItems = container.querySelectorAll('li');
