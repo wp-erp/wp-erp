@@ -124,7 +124,7 @@ class Admin_Menu {
             'position'   => 90
         ] );
         erp_add_menu( 'accounting', [
-            'title'      =>  __( '<span style="color:#f18500">Help</span>', 'erp' ),
+            'title'      =>  __( '<span class="erp-help">Help</span>', 'erp' ),
             'capability' => $dashboard,
             'slug'       => 'erp-ac-help',
             'callback'   => [ $this, 'help_page' ],

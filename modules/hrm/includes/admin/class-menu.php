@@ -134,7 +134,7 @@ class Admin_Menu {
         ) );
 
         erp_add_menu( 'hr', array(
-            'title'         =>  __( 'Help', 'erp' ),
+            'title'         =>  __( '<span class="erp-help">Help</span>', 'erp' ),
             'capability'    =>  'erp_hr_manager',
             'slug'          =>  'help',
             'callback'      =>  [ $this, 'help_page' ],
