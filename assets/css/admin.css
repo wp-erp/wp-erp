@@ -4092,6 +4092,9 @@ div.erp-nav-container.--show-secondary .-secondary {
   height: 25px !important;
   font-size: 12px !important;
 }
+.erp-help-section.postbox-container {
+  width: 50% !important;
+}
 .erp-help {
   color: #f18500;
 }
