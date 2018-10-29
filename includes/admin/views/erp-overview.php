@@ -1,6 +1,6 @@
 <div class="wrap erp-overview">
 
-    <h2 class="erp-page-title"><?php _e( 'WP ERP Overview', 'erp' ); ?></h2>
+    <h2 class="erp-page-title"><?php _e( 'Overview', 'erp' ); ?></h2>
 
     <div class="erp-grid-container">
 

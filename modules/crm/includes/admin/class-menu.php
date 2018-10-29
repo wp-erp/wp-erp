@@ -85,7 +85,7 @@ class Admin_Menu {
             'capability' => 'erp_crm_manage_dashboard',
             'slug'       => 'reports',
             'callback'   => [ $this, 'page_reports' ],
-            'position'   => 30
+            'position'   => 99
         ] );
 
         erp_add_submenu( 'crm','reports', [
@@ -113,7 +113,7 @@ class Admin_Menu {
         ] );
 
         erp_add_menu( 'crm', [
-            'title'      =>  __( 'Help', 'erp' ),
+            'title'      =>   __( '<span class="erp-help">Help</span>', 'erp' ),
             'capability' => 'erp_crm_manage_dashboard',
             'slug'       => 'help',
             'callback'   => [ $this, 'help_page' ],
