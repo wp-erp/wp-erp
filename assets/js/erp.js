@@ -588,9 +588,9 @@ window.wperp = window.wperp || {};
                 dataType: 'json',
                 cache: false,
                 contentType: "application/json; charset=utf-8"
-            }).always(function() {
-                $('.newsletter').find('.form-wrap').css('display', 'none');
-                $('.newsletter').find('.thank-you').css('display', 'block');
+            }).success(function(res) {
+                $('.erp-newsletter').find('.erp-form-wrap').css('display', 'none');
+                $('.erp-newsletter').find('.erp-thank-you').html(res.msg).css('display', 'block');
             });
         }
     };

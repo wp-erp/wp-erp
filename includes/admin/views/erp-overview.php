@@ -30,7 +30,7 @@
                         <input type="email" class="email-subscribe" value="<?php echo wp_get_current_user()->user_email; ?>">
                         <button class="button email-subscribe-btn"><?php _e( 'Subscribe', 'erp' ); ?></button>
                     </div>
-                    <div class="erp-thank-you"><?php _e( 'Thank you for subscribing!', 'erp' ); ?></div>
+                    <div class="erp-thank-you"></div>
                 </div>
             </div><!-- .badge-box -->
 
