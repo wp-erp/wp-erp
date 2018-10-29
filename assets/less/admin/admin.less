@@ -2151,6 +2151,9 @@ div.erp-nav-container {
             > button span {
                 display: inline-block;
                 transition: transform 0.2s;
+                width: auto;
+                height: auto;
+                font: 400 13px/1 dashicons;
             }
         }
     }
@@ -2166,17 +2169,17 @@ div.erp-nav-container {
         position: absolute;
         top: 100%;
         right: 0;
-        z-index: 1;
+        z-index: 99;
         animation: nav-secondary 0.2s;
         background: #FFFFFF;
         font-size: 12px;
         border: 1px solid #DDDDDD;
         border-radius: 3px;
         box-shadow: 0 4px 10px 0 rgba(0,0,0,0.09);
-        min-width: 160px;
+        min-width: 180px;
 
         > li {
-            padding: 3px 15px;
+            //padding: 3px 15px;
 
             &.--hidden + li {
                 padding-top: 10px;
