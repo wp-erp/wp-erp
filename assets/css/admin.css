@@ -50,6 +50,10 @@
 .erp-overview .erp-badge-box.box-announce {
   padding-bottom: 18px;
 }
+.erp-overview .erp-badge-box.box-announce .erp-no-announce {
+  color: #6195FC;
+  font-weight: bold;
+}
 .erp-overview .erp-badge-box.box-crm {
   padding-bottom: 11px;
 }
@@ -218,6 +222,8 @@
 }
 .erp-overview .erp-badge-box .erp-newsletter .erp-thank-you {
   display: none;
+  color: #00C29D;
+  font-weight: bold;
 }
 .crm-dashboard .badge-container {
   margin-bottom: 40px;
