@@ -9,6 +9,7 @@ $announcements = get_posts( [
     'post_type' => 'erp_hr_announcement',
     'posts_per_page' => 4
 ] );
+
 ?>
 
 <div class="erp-badge-box box-announce">
@@ -16,6 +17,9 @@ $announcements = get_posts( [
         <a href="<?php echo admin_url( 'edit.php?post_type=erp_hr_announcement' ); ?>" class="btn"><?php _e( 'View All', 'erp' ); ?></a>
     </h2>
 
+    <?php if ( ! $announcements ) : ?>
+        <p class="erp-no-announce">No announcement found.</p>
+    <?php else: ?>
     <ul class="erp-badge-announce">
         <?php
         foreach( $announcements as $announcement ) {
@@ -23,6 +27,7 @@ $announcements = get_posts( [
         }
         ?>
     </ul>
+    <?php endif; ?>
 </div>
 
 <div class="erp-badge-box box-hr">
