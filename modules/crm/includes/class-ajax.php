@@ -332,6 +332,8 @@ class Ajax_Handler {
             $this->send_error( __( 'Cotact does not exists.', 'erp' ) );
         }
 
+        $customer = apply_filters( 'erp_crm_ajax_customer_get', $customer );
+
         $this->send_success( $customer->to_array() );
     }
 
