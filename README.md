@@ -48,7 +48,7 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress. View [
 ## Who's behind?
 
 * Project Lead: [Tareq Hasan](https://github.com/tareq1988)
-* Core Developers: [Edi Amin](https://github.com/ediamin), [Sultan Nasir Uddin](https://github.com/sultann)
-* Contributors: [Shawon Chowdhury](https://github.com/shawon786) and [List of Contributors](https://github.com/wp-erp/wp-erp/graphs/contributors)
+* Core Developers: [Edi Amin](https://github.com/ediamin), [Rafsun Chowdhury](https://github.com/rafsuntaskin)
+* Contributors: [List of Contributors](https://github.com/wp-erp/wp-erp/graphs/contributors)
 
 An open-source project by [weDevs](https://wedevs.com/?utm_source=github&utm_medium=credit&utm_term=opensource&utm_content=wperp&utm_campaign=product)
