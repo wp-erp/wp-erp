@@ -2027,6 +2027,12 @@ div.erp-nav-container {
 
         &.dropdown-nav {
 
+            @media screen and (max-width: 768px) {
+                & > a {
+                    pointer-events: none;
+                }
+            }
+
             > a:after {
                 content: "\f347";
                 display: inline-block;

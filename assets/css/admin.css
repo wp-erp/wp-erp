@@ -3908,6 +3908,11 @@ div.erp-nav-container li {
   padding: 0;
   position: relative;
 }
+@media screen and (max-width: 768px) {
+  div.erp-nav-container li.dropdown-nav > a {
+    pointer-events: none;
+  }
+}
 div.erp-nav-container li.dropdown-nav > a:after {
   content: "\f347";
   display: inline-block;
