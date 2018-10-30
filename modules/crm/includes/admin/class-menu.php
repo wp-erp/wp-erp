@@ -109,7 +109,7 @@ class Admin_Menu {
             'capability' => 'erp_crm_manage_dashboard',
             'slug'       => 'reports&type=growth-report',
             'callback'   => [ $this, 'page_reports' ],
-            'position'   => 5
+            'position'   => 10
         ] );
 
         erp_add_menu( 'crm', [
@@ -117,7 +117,7 @@ class Admin_Menu {
             'capability' => 'erp_crm_manage_dashboard',
             'slug'       => 'help',
             'callback'   => [ $this, 'help_page' ],
-            'position'   => 99
+            'position'   => 100
         ] );
 
 //        $overview = add_submenu_page( 'erp-sales', __( 'Overview', 'erp' ), __( 'Overview', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales', [ $this, 'dashboard_page' ] );
