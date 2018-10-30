@@ -117,7 +117,7 @@ return array(
 	'ID' => __( 'Indonesia', 'erp' ),
 	'IR' => __( 'Iran', 'erp' ),
 	'IQ' => __( 'Iraq', 'erp' ),
-	'IE' => __( 'Republic of Ireland', 'erp' ),
+	'IE' => __( 'Ireland', 'erp' ),
 	'IM' => __( 'Isle of Man', 'erp' ),
 	'IL' => __( 'Israel', 'erp' ),
 	'IT' => __( 'Italy', 'erp' ),

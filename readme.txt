@@ -5,7 +5,7 @@ Tags: ERP, CRM, HRM, Accounting, Project Management, business manager, small bus
 Requires at least: 4.4
 Tested up to: 4.9.8
 Requires PHP: 5.6
-Stable tag: 1.3.14
+Stable tag: 1.4.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -241,6 +241,17 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.4.0 -> October 30, 2018 =
+[new] Add ERP main menu in Dashboard sidebar and Admin bar
+[new] HR menu moved under new ERP menu
+[new] CRM menu moved under new ERP menu
+[new] Accounting menu moved under new ERP menu
+[new] Add gmail API for CRM email connectivity
+[fix] Transfer amount from main account. Fixed #708
+[fix] Sales transaction list issue
+[tweak] Replace old urls according to new ERP menu
+[tweak] Change links in rest response according to wp style. Closes #715
 
 = v1.3.14 -> September 03, 2018 =
 [new] New employee login details api added
