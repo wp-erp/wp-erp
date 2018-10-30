@@ -37,9 +37,10 @@ class Admin_Menu {
 
 
         $menu = erp_menu();
+        $hide = [];
         $header = erp_get_menu_headers();
         if ( !current_user_can( 'administrator' ) ) {
-            $hide = [];
+
             if ( !current_user_can( 'erp_hr_manager' ) && !current_user_can( 'erp_recruiter' ) && !current_user_can( 'erp_list_employee' ) ) {
                 unset( $header['hr'] );
                 $hide[] = true;
