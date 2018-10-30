@@ -162,7 +162,7 @@ class Admin_Menu {
             'capability'    =>  'erp_leave_manage',
             'slug'          =>  'leave-entitlements',
             'callback'      =>  [ $this, 'leave_entitilements' ],
-            'position'      =>  5,
+            'position'      =>  10,
         ) );
 
         erp_add_submenu( 'hr', 'leave', array(
@@ -170,7 +170,7 @@ class Admin_Menu {
             'capability'    =>  'erp_leave_manage',
             'slug'          =>  'holidays',
             'callback'      =>  [ $this, 'holiday_page' ],
-            'position'      =>  5,
+            'position'      =>  15,
         ) );
 
         erp_add_submenu( 'hr', 'leave', array(
@@ -178,7 +178,7 @@ class Admin_Menu {
             'capability'    =>  'erp_leave_manage',
             'slug'          =>  'policies',
             'callback'      =>  [ $this, 'leave_policy_page' ],
-            'position'      =>  5,
+            'position'      =>  25,
         ) );
 
         erp_add_submenu( 'hr', 'leave', array(
@@ -186,7 +186,7 @@ class Admin_Menu {
             'capability'    =>  'erp_leave_manage',
             'slug'          =>  'leave-calendar',
             'callback'      =>  [ $this, 'leave_calendar_page' ],
-            'position'      =>  5,
+            'position'      =>  35,
         ) );
 
         add_action( 'admin_print_styles-'.$dashboard, array( $this, 'hr_calendar_script' ) );
