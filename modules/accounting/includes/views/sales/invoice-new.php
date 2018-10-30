@@ -189,7 +189,8 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
         <input type="hidden" name="status" value="awaiting_payment">
         <input type="hidden" name="type" value="sales">
         <input type="hidden" name="form_type" value="invoice">
-        <input type="hidden" name="page" value="erp-accounting-sales">
+        <input type="hidden" name="page" value="erp-accounting">
+        <input type="hidden" name="section" value="sales">
         <input type="hidden" name="erp-action" value="ac-new-invoice">
 
         <?php erp_html_form_input( array(

@@ -76,7 +76,7 @@ function erp_ac_get_status_label( $items, $slug ) {
 
     switch ( $status ) {
         case 'closed':
-            if ( $_GET['page'] === 'erp-accounting-sales' ) {
+            if ( $_GET['page'] === 'erp-accounting' && $_GET['section'] === 'sales') {
                 $label = __( 'Received', 'erp' );
             } else {
                 $label = __( 'Paid', 'erp' );
@@ -91,7 +91,7 @@ function erp_ac_get_status_label( $items, $slug ) {
         case 'awaiting_payment':
             $url   = admin_url( 'admin.php?page=' . $slug . '&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
 
-           if ( $_GET['page'] === 'erp-accounting-sales' ) {
+            if ( $_GET['page'] === 'erp-accounting' && $_GET['section'] === 'sales') {
                 $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting Payment', 'erp' ) );
             } else {
                 $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Payment Pending', 'erp' ) );
@@ -108,7 +108,7 @@ function erp_ac_get_status_label( $items, $slug ) {
             break;
 
         case 'partial':
-            if ( $_GET['page'] === 'erp-accounting-sales' ) {
+            if ( $_GET['page'] === 'erp-accounting' && $_GET['section'] === 'sales') {
                 $label = __( 'Partially Received', 'erp' );
             } else {
                 $label = __( 'Partially Paid', 'erp' );

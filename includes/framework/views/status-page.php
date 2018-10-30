@@ -1,5 +1,5 @@
 <?php
-
+wp_enqueue_script( 'erp-tiptip' );
 $current_tab = ! empty( $_REQUEST['tab'] ) ? sanitize_title( $_REQUEST['tab'] ) : 'status';
 $tabs        = array(
 	'status' => __( 'System status', 'erp' )

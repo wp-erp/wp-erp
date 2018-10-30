@@ -18,15 +18,18 @@ class Customer_List_Table extends \WP_List_Table {
     protected $type = null;
     protected $user_balance = null;
 
-    function __construct() {
-        $this->slug = 'erp-accounting-customers';
-        $this->type = 'customer';
+    protected $page; protected $section;
 
+    function __construct() {
         parent::__construct( array(
             'singular' => 'customer',
             'plural'   => 'customers',
             'ajax'     => false
         ) );
+
+        $this->page = 'erp-accounting';
+        $this->section = 'customers';
+        $this->type = 'customer';
     }
 
     function get_table_classes() {
@@ -106,10 +109,10 @@ class Customer_List_Table extends \WP_List_Table {
         $created_by        = isset( $item->created_by ) ? intval( $item->created_by ) : 0;
 
         if ( erp_ac_current_user_can_edit_customer( $created_by ) ) {
-            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
+            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->page . '&section=' . $this->section . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         }
 
-        $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&customer=true&id=' . $item->id ), $item->id, __( 'Create Invoice', 'erp' ), __( 'Create Invoice', 'erp' ) );
+        $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=erp-accounting&section=sales&action=new&type=invoice&customer=true&id=' . $item->id ), $item->id, __( 'Create Invoice', 'erp' ), __( 'Create Invoice', 'erp' ) );
 
         if ( erp_ac_current_user_can_delete_customer( $created_by ) ) {
             $actions['delete'] = sprintf( '<a href="%s" class="erp-ac-submitdelete" data-id="%d" data-hard=%d title="%s" data-type="%s">%s</a>', '#', $item->id, $data_hard, __( 'Delete this item', 'erp' ), $this->type, $delete_text );
@@ -120,7 +123,7 @@ class Customer_List_Table extends \WP_List_Table {
         }
 
         if ( erp_ac_current_user_can_view_single_customer() ) {
-           return get_avatar( $item->email, 32 ) . sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
+           return get_avatar( $item->email, 32 ) . sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->page . '&section=' . $this->section . '&action=view&id=' . $item->id ), $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
         }
 
         return get_avatar( $item->email, 32 ) . sprintf( '<strong>%1$s</strong> %2$s', $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
@@ -193,7 +196,7 @@ class Customer_List_Table extends \WP_List_Table {
     public function get_views() {
 
         $status_links   = array();
-        $base_link      = admin_url( 'admin.php?page=erp-accounting-customers' );
+        $base_link      = admin_url( 'admin.php?page=erp-accounting&section=customers' );
 
         $status_links['all'] = sprintf( '<a href="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'all' ), $base_link ), __( 'All', 'erp' ), $this->customer_get_status_count('customer') );
         $status_links['trash'] = sprintf( '<a href="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), $this->count_trashed_customers() );
@@ -251,6 +254,7 @@ class Customer_List_Table extends \WP_List_Table {
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $section               = isset( $_GET['section'] ) ? $_GET['section'] : '';
 
         // only ncessary because we have sample data
         $args = array(
@@ -277,8 +281,8 @@ class Customer_List_Table extends \WP_List_Table {
         $users_id = wp_list_pluck( $this->items, 'id' );
         $trans_arg = [
             'user_id'   => [ 'in' => $users_id ],
-            'type'      => $this->slug == 'erp-accounting-vendors' ? 'expense' : 'sales',
-            'form_type' => $this->slug == 'erp-accounting-vendors' ? 'payment_voucher' : 'payment',
+            'type'      => $section == 'vendors' ? 'expense' : 'sales',
+            'form_type' => $section == 'vendors' ? 'payment_voucher' : 'payment',
             'status'    => 'closed'
         ];
 

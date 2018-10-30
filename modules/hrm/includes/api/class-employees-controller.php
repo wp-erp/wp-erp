@@ -1235,7 +1235,7 @@ class Employees_Controller extends REST_Controller {
             'offset' => isset( $request['offset'] ) ? $request['offset'] : 0,
         );
 
-        $id       = (int) $request['id'];
+        $id       = (int) $request['user_id'];
         $employee = new Employee( $id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
@@ -1246,7 +1246,7 @@ class Employees_Controller extends REST_Controller {
         foreach ( $notes as $note ) {
             $user                          = get_user_by( 'id', $note->comment_by );
             $note->comment_by_display_name = $user->display_name;
-            $note->comment_by_avatar_url   = get_avatar_url( $user->comment_by );
+            $note->comment_by_avatar_url   = get_avatar_url( $note->comment_by );
         }
 
         $total    = $employee->get_erp_user()->notes()->count();
@@ -1272,7 +1272,7 @@ class Employees_Controller extends REST_Controller {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
         $note = $employee->add_note( $request['note'], null, true );
-
+        $note->comment_by_avatar_url   = get_avatar_url( $note->comment_by );
         $request->set_param( 'context', 'edit' );
         $response = rest_ensure_response( $note );
         $response->set_status( 201 );
@@ -1291,8 +1291,9 @@ class Employees_Controller extends REST_Controller {
      * @return WP_REST_Response|WP_Error
      */
     public function delete_note( $request ) {
+
         $employee_id = (int) $request['user_id'];
-        $note_id     = (int) $request['id'];
+        $note_id     = (int) $request['note_id'];
         $employee    = new Employee( $employee_id );
 
         if ( ! $employee->is_employee() ) {

@@ -353,7 +353,7 @@ class Employee {
             'location'     => ! empty( $work['location'] ) ? $work['location'] : - 1,
         ] );
 
-        $this->update_employee( array_merge( $data['work'], $data['personal'] ) );
+        $this->update_employee( array_merge( $data['work'], $data['personal'], $data['additional'] ) );
         do_action( 'erp_hr_employee_new', $this->id, $data );
 
         return $this;
@@ -413,6 +413,12 @@ class Employee {
                     $this->changes['personal'][ $key ] = $value;
                 }
             }
+        }
+
+        if ( ! empty( $data['additional'] ) ) {
+            $this->changes['additional'] = $data['additional'];
+        } else {
+            $this->changes['additional'] = [];
         }
 
         if ( empty( $this->changes ) ) {
@@ -596,7 +602,7 @@ class Employee {
      */
     public function get_details_url() {
         if ( $this->user_id ) {
-            return admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $this->user_id );
+            return admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $this->user_id );
         }
     }
 

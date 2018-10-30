@@ -166,11 +166,11 @@ function erp_crm_get_details_url( $id, $type ) {
     if ( $id ) {
 
         if ( in_array( 'contact', $type ) ) {
-            return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $id );
+            return add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts', 'action' => 'view' , 'id' => $id ], admin_url('admin.php') );
         }
 
         if ( in_array( 'company', $type ) ) {
-            return admin_url( 'admin.php?page=erp-sales-companies&action=view&id=' . $id );
+            return add_query_arg( ['page' => 'erp-crm', 'section' => 'companies', 'action' => 'view' , 'id' => $id ], admin_url('admin.php') );
         }
     }
 
@@ -444,7 +444,7 @@ function erp_crm_company_get_customers( $postdata ) {
  * @return string admin url
  */
 function erp_crm_get_customer_details_url( $id ) {
-    return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $id );
+    return add_query_arg( ['page' => 'erp-crm', 'section' => 'contacts', 'action' => 'view' , 'id' => $id ], admin_url('admin.php') );
 }
 
 /**
@@ -725,6 +725,10 @@ function erp_crm_get_feed_activity( $postdata ) {
             $value['contact']['types'] = [];
         }
 
+        if ( isset( $value['extra']['attachments'] ) ) {
+            $value['extra']['attachments'] = erp_crm_process_attachment_data( $value['extra']['attachments'] );
+        }
+
         unset( $value['extra']['invite_contact'] );
         $value['message']               = erp_crm_format_activity_feed_message( $value['message'], $value );
         $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
@@ -746,7 +750,7 @@ function erp_crm_get_feed_activity( $postdata ) {
  *
  * @return array
  */
-function erp_crm_save_customer_feed_data( $data ) {
+function  erp_crm_save_customer_feed_data( $data ) {
 
     if ( isset( $data['id'] ) && ! empty( $data['id'] ) ) {
         $saved_activity    = WeDevs\ERP\CRM\Models\Activity::find( $data['id'] )->update( $data );
@@ -793,6 +797,10 @@ function erp_crm_save_customer_feed_data( $data ) {
     $activity['created_by']['avatar']  = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date']          = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
     $activity['created_timeline_date'] = date( 'Y-m-01', strtotime( $activity['created_at'] ) );
+
+    if ( isset( $activity['extra']['attachments'] ) ) {
+        $activity['extra']['attachments'] = erp_crm_process_attachment_data( $activity['extra']['attachments'] );
+    }
 
     return $activity;
 }
@@ -848,7 +856,28 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
     $data['contact']['types'] = wp_list_pluck( $data['contact']['types'], 'name' );
     $data['message']          = stripslashes( $data['message'] );
 
+    if ( isset( $data['extra']['attachments'] ) ) {
+        $data['extra']['attachments'] = erp_crm_process_attachment_data( $data['extra']['attachments'] );
+    }
+
     return $data;
+}
+
+/**
+ * Process attachment data to generate URL
+ *
+ * @param $attachments
+ *
+ * @return mixed
+ */
+function erp_crm_process_attachment_data( $attachments ) {
+    $subdir      = apply_filters( 'crm_attachmet_directory', 'crm-attachments' );
+    $upload_dir  = wp_upload_dir();
+    foreach ( $attachments as $key => $item ) {
+        $attachments[$key]['url'] = $upload_dir['baseurl'] . '/' . $subdir . '/' . $item['slug'];
+    }
+
+    return $attachments;
 }
 
 /**
@@ -2334,6 +2363,11 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
  * @return array erp_crm_save_customer_feed_data
  */
 function erp_crm_save_email_activity( $email, $inbound_email_address ) {
+    $extra_data = [ 'replied' => 1 ];
+
+    if ( isset( $email['attachments'] ) ) {
+        $extra_data['attachments'] = $email['attachments'];
+    }
 
     $save_data = [
         'user_id'       => $email['cid'],
@@ -2341,7 +2375,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         'message'       => $email['body'],
         'type'          => 'email',
         'email_subject' => $email['subject'],
-        'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
+        'extra'         => base64_encode( json_encode( $extra_data ) ),
     ];
 
     $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
@@ -2372,7 +2406,20 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         $reply_to = $inbound_email_address;
         $headers  .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
-        erp_mail( $to_email, $email['subject'], $email['body'], $headers, [], $custom_headers );
+        $mail_attachments = [];
+
+        if ( isset( $email['attachments'] ) && !empty( $email['attachments'] ) ) {
+            $mail_attachments = wp_list_pluck( $email['attachments'], 'path' );
+        }
+
+        if ( wperp()->google_auth->is_active() ){
+            //send using gmail api
+            $sent = erp_mail_send_via_gmail( $to_email, $email['subject'], $email['body'], $headers, $mail_attachments, $custom_headers  );
+        } else {
+            // Send email at contact
+            $sent = erp_mail( $to_email, $email['subject'], $email['body'], $headers, $mail_attachments, $custom_headers );
+        }
+
     }
 
     // Update email counter
@@ -2390,13 +2437,20 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
  * @return array customer_feed_data
  */
 function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_address ) {
+
+    $extra_data = [ 'replied' => 1 ];
+
+    if ( isset( $email['attachments'] ) ) {
+        $extra_data['attachments'] = $email['attachments'];
+    }
+
     $save_data = [
         'user_id'       => $email['cid'],
         'created_by'    => $email['sid'],
         'message'       => $email['body'],
         'type'          => 'email',
         'email_subject' => $email['subject'],
-        'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
+        'extra'         => base64_encode( json_encode( $extra_data ) ),
     ];
 
     $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
@@ -2407,8 +2461,6 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
 
     $headers = "";
     $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
-
-    $erp_is_imap_active = erp_is_imap_active();
 
     $message_id = md5( uniqid( time() ) ) . '.' . $save_data['user_id'] . '.' . $save_data['created_by'] . '.r1@' . $_SERVER['HTTP_HOST'];
 
@@ -2421,8 +2473,22 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
     $reply_to = $inbound_email_address;
     $headers  .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
-    // Send email a contact
-    erp_mail( $contact->email, $email['subject'], $email['body'], $headers, [], $custom_headers );
+    $owner      = $contact->get_contact_owner();
+    $owner_info = get_userdata($owner);
+
+    $mail_attachments = [];
+
+    if ( isset( $email['attachments'] ) && !empty( $email['attachments'] ) ) {
+        $mail_attachments = wp_list_pluck( $email['attachments'], 'path' );
+    }
+
+    if ( wperp()->google_auth->is_active() ){
+        //send using gmail api
+        $sent = erp_mail_send_via_gmail( $owner_info->user_email, $email['subject'], $email['body'], $headers, $mail_attachments, $custom_headers  );
+    } else {
+        // Send email at contact
+        $sent =  erp_mail( $owner_info->user_email, $email['subject'], $email['body'], $headers, $mail_attachments, $custom_headers );
+    }
 
     // Update email counter
     update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
@@ -3219,7 +3285,7 @@ function erp_crm_check_new_inbound_emails() {
         return;
     }
 
-    $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
+    $imap_options = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
 
     $mail_server    = $imap_options['mail_server'];
     $username       = $imap_options['username'];
@@ -3286,6 +3352,15 @@ function erp_crm_check_new_inbound_emails() {
     } catch ( \Exception $e ) {
         // $e->getMessage();
     }
+}
+
+function erp_crm_poll_gmail() {
+    if ( !wperp()->google_auth->is_active() ){
+        return;
+    }
+
+    wperp()->google_sync->sync();
+
 }
 
 /**
@@ -3776,4 +3851,23 @@ function erp_crm_add_tag_taxonomy(){
         'plural'   => __( 'Tags', 'erp' ),
         'show_ui'   => false,
     ) );
+}
+
+/**
+ * Check if Inbound Email sync is configured
+ *
+ * @since 1.14.0
+ *
+ * @return bool
+ */
+function erp_crm_sync_is_active() {
+    if ( wperp()->google_auth->is_active() ) {
+        return true;
+    }
+
+    if ( erp_is_imap_active() ) {
+        return true;
+    }
+
+    return false;
 }

@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.3.14
+ * Version: 1.4.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.3.14';
+    public $version = '1.4.0';
 
     /**
      * Minimum PHP version required
@@ -164,7 +164,7 @@ final class WeDevs_ERP {
      * @return bool
      */
     public function is_supported_php() {
-        if ( version_compare( PHP_VERSION, $this->min_php, '<=' ) ) {
+        if ( version_compare( PHP_VERSION, $this->min_php, '<' ) ) {
             return false;
         }
 
@@ -257,6 +257,8 @@ final class WeDevs_ERP {
         $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer']     = \WeDevs\ERP\Emailer::init();
         $this->container['integration'] = \WeDevs\ERP\Integration::init();
+        $this->container['google_auth'] = \WeDevs\ERP\CRM\Google_Auth::init();
+        $this->container['google_sync'] = \WeDevs\ERP\CRM\Gmail_Sync::init();
     }
 
     /**
@@ -276,6 +278,22 @@ final class WeDevs_ERP {
 
         // initialize integration class
         add_action( 'erp_loaded', array( $this->container['integration'], 'init_integrations' ) );
+
+        // Add plugin action links
+        add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), [ $this, 'plugin_action_links' ] );
+    }
+
+    /**
+     * Add action links
+     *
+     * @param $links
+     *
+     * @return array
+     */
+    public function plugin_action_links( $links ) {
+        $links[] = '<a href="' . admin_url( 'admin.php?page=erp-settings' ) . '">' . __( 'Settings', 'erp-deals' ) . '</a>';
+        $links[] = '<a target="_blank" href="https://wperp.com/documentation/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">' . __( 'Docs', 'erp' ) . '</a>';
+        return $links;
     }
 
     /**

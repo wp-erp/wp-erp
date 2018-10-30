@@ -71,7 +71,7 @@
 
     .erp-detail {
         padding: 6px 10px 10px;
-        min-height: 110px;
+        min-height: 125px;
     }
 
     .erp-detail h3.title {
