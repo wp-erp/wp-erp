@@ -79,7 +79,7 @@ class Designation_List_Table extends \WP_List_Table {
 
         $actions           = array();
         $delete_url        = '';
-        $link_to_employee  = add_query_arg( array( 'page'=>'erp-hr-employee', 'filter_designation' => $designation->id ), admin_url( 'admin.php' ) );
+        $link_to_employee  = add_query_arg( array( 'page'=>'erp-hr', 'section' => 'employee', 'filter_designation' => $designation->id ), admin_url( 'admin.php' ) );
         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $designation->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $designation->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
@@ -131,7 +131,7 @@ class Designation_List_Table extends \WP_List_Table {
      */
     public function get_views_() {
         $status_links   = array();
-        $base_link      = admin_url( 'admin.php?page=erp-leave' );
+        $base_link      = admin_url( 'admin.php?page=erp-hr&section=leave' );
 
         foreach ($this->counts as $key => $value) {
             $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;

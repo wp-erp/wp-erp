@@ -436,7 +436,7 @@ function erp_ac_get_bank_journals() {
  * @return void
  */
 function erp_ac_chart_print_table( $title, $charts = [] ) {
-    $edit_url = admin_url( 'admin.php?page=erp-accounting-charts&action=edit&id=' );
+    $edit_url = admin_url( 'admin.php?page=erp-accounting&section=charts&action=edit&id=' );
 
     include dirname( __FILE__ ) . '/views/accounts/chart-table.php';
 }

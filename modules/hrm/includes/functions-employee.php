@@ -722,9 +722,10 @@ function erp_hr_url_single_employee( $employee_id, $tab = null ) {
     $user = wp_get_current_user();
 
     if ( in_array( 'employee', (array) $user->roles ) ) {
-        $url = admin_url( 'admin.php?page=erp-hr-my-profile&action=view&id=' . $employee_id . $tab );
+        add_query_arg( [ 'page' => 'erp-hrm', 'section' => 'employee', 'id' => $employee_id.$tab ], admin_url( 'admin.php' ) );
+        $url = admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $employee_id . $tab );
     } else {
-        $url = admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee_id . $tab );
+        $url = admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $employee_id . $tab );
     }
 
     return apply_filters( 'erp_hr_url_single_employee', $url, $employee_id );
@@ -968,7 +969,7 @@ function erp_hr_get_employee_name( $user_id ) {
  *
  */
 function erp_hr_get_details_url( $user_id ) {
-    return admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $user_id );
+    return admin_url( 'admin.php?page=erp-hr&section=employee&action=view&id=' . $user_id );
 }
 
 /**

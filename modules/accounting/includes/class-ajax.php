@@ -716,8 +716,7 @@ class Ajax_Handler {
         $amount = floatval( $_POST['amount'] );
 
         $debit_credit  = erp_ac_bank_credit_total_amount( $from );
-        $ledger_amount = abs( $debit_credit['debit'] - $debit_credit['credit'] );
-
+        $ledger_amount = abs( $debit_credit['debit']->first() - $debit_credit['credit']->first() );
         if ( $ledger_amount < $amount ) {
             $this->send_error( __( 'No enough money from your transfer account', 'wp-account' ) );
         }
@@ -726,7 +725,7 @@ class Ajax_Handler {
             'type'            => 'transfer',
             'form_type'       => 'bank',
             'status'          => 'closed',
-            'account_id'      => $from,
+            'account_id'      => $to,
             'user_id'         => get_current_user_id(),
             'billing_address' => '',
             'ref'             => '',
@@ -741,7 +740,7 @@ class Ajax_Handler {
         );
 
         $items[] = array(
-            'account_id'  => $to,
+            'account_id'  => $from,
             'type'        => 'line_item',
             'line_total'  => $amount,
             'description' => '',

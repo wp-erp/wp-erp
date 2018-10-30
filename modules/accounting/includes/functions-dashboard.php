@@ -66,7 +66,7 @@ function erp_ac_dashboard_banks() {
     <ul>
         <?php foreach ( $bank_journals as $id => $journal ) {
             $total = $total + $journal['total_journal'];
-            $bank_url = erp_ac_get_account_url( $journal['id'], $journal['name'] ); //admin_url( 'admin.php?page=erp-accounting-charts&action=view&id=' . $journal['id'] );
+            $bank_url = erp_ac_get_account_url( $journal['id'], $journal['name'] ); //admin_url( 'admin.php?page=erp-accounting&section=charts&action=view&id=' . $journal['id'] );
             $total_journal = erp_ac_get_account_url( $journal['id'], erp_ac_get_price( $journal['total_journal'] ) );
             ?>
             <li>
@@ -325,7 +325,7 @@ function erp_ac_dashboard_income_expense() {
         $.plot($("#income-expense-chart"), chartData, {
             xaxis: {
                 min: (new Date(prev_year, 11, 20)).getTime(),
-                max: (new Date(current_year, 12, 01)).getTime(),
+                max: (new Date(current_year, 12, 1)).getTime(),
                 mode: "time",
                 timeformat: "%b",
                 tickSize: [1, "month"],

@@ -35,7 +35,7 @@ class Logger {
 //new account has been created
     function new_account( $insert_id, $fields ) {
 
-        $url     = admin_url( 'admin.php?page=erp-accounting-charts&action=view&id=' . $insert_id );
+        $url     = admin_url( 'admin.php?page=erp-accounting&section=charts&action=view&id=' . $insert_id );
         $message = sprintf( '%1$s <a href="%2$s">%3$s</a> %4$s', __( 'New account', 'erp' ), $url, $fields['name'], __( 'has been created', 'erp' ) );
 
         erp_log()->add([
@@ -53,7 +53,7 @@ class Logger {
     function update_account( $insert_id, $fields, $bank_details ) {
         if ( ! $insert_id ) return;
 
-        $url     = admin_url( 'admin.php?page=erp-accounting-charts&action=view&id=' . $insert_id );
+        $url     = admin_url( 'admin.php?page=erp-accounting&section=charts&action=view&id=' . $insert_id );
         $message = sprintf( '%1$s <a href="%2$s">%3$s</a> %4$s', __( 'New account', 'erp' ), $url, $fields['name'], __( 'has been created', 'erp' ) );
 
         $bank            = erp_ac_get_chart($insert_id)->toArray();
@@ -101,7 +101,7 @@ class Logger {
     }
 
     function new_journal( $transaction_id, $args, $post ) {
-        $url = admin_url( 'admin.php?page=erp-accounting-journal&action=view&id=' . $transaction_id );
+        $url = admin_url( 'admin.php?page=erp-accounting&section=journal&action=view&id=' . $transaction_id );
         $message = sprintf( '%1$s <a href="%2$s">%3$s</a> %4$s %5$s',
             __( 'Created', 'erp' ),
             $url,
@@ -132,10 +132,10 @@ class Logger {
             $name   = isset( $people->display_name ) ? $people->display_name : $people->first_name . ' ' . $people->last_name;
         }
 
-        $page           = $args['type'] == 'sales' ? 'erp-accounting-customers' : 'erp-accounting-vendors';
-        $component_page = $args['type'] == 'sales' ? 'erp-accounting-sales' : 'erp-accounting-expense';
-        $user_url       = admin_url( 'admin.php?page=' . $page . '&action=view&id=' . $args['user_id'] );
-        $component_url  = admin_url( 'admin.php?page=' . $component_page . '&action=view&id=' . $transaction_id );
+        $section        = $args['type'] == 'sales' ? 'customers' : 'vendors';
+        $component      = $args['type'] == 'sales' ? 'sales' : 'expense';
+        $user_url       = admin_url( 'admin.php?page=erp-accounting' . '&section=' . $section . '&action=view&id=' . $args['user_id'] );
+        $component_url  = admin_url( 'admin.php?page=erp-accounting' . '&section=' . $component . '&action=view&id=' . $transaction_id );
 
         if ( $args['form_type'] == 'payment_voucher' ) {
             $form_type = __( 'payment voucher', 'erp' );
@@ -181,8 +181,8 @@ class Logger {
      */
     public function new_customer( $customer_id, $fields ) {
 
-        $page      = $fields['type'] == 'vendor' ? 'erp-accounting-vendors' : 'erp-accounting-customers';
-        $url       = sprintf( '<a href="%1$s"><strong>%2$s</strong></a>', admin_url( 'admin.php?page='. $page .'&action=view&id=' . $customer_id ), $fields['first_name'] . ' ' . $fields['last_name'] );
+        $section   = $fields['type'] == 'vendor' ? 'vendors' : 'customers';
+        $url       = sprintf( '<a href="%1$s"><strong>%2$s</strong></a>', admin_url( 'admin.php?page=erp-accounting'. '&section=' . $section .'&action=view&id=' . $customer_id ), $fields['first_name'] . ' ' . $fields['last_name'] );
         $component = $fields['type'] == 'vendor' ? __( 'vendor', 'erp' ) : __( 'customer', 'erp' );
 
         erp_log()->add([
@@ -208,7 +208,7 @@ class Logger {
      * @return void
      */
     public function update_customer( $fields ) {
-        $page        = $fields['type'] == 'vendor' ? 'erp-accounting-vendors' : 'erp-accounting-customers';
+        $section     = $fields['type'] == 'vendor' ? 'vendors' : 'customers';
         $customer_id = isset( $fields['id'] ) ? intval( $fields['id'] ) : 0;
         $customer    = (array) erp_get_people( $customer_id );
         $component   = $fields['type'] == 'vendor' ? __( 'vendor', 'erp' ) : __( 'customer', 'erp' );
@@ -227,7 +227,7 @@ class Logger {
 
         $changes = $this->get_array_diff( $fields, $customer );
 
-        $url = sprintf( '<a href="%1$s"><strong>%2$s</strong></a>', admin_url( 'admin.php?page='. $page .'&action=view&id=' . $fields['id'] ), $fields['first_name'] . ' ' . $fields['last_name'] );
+        $url = sprintf( '<a href="%1$s"><strong>%2$s</strong></a>', admin_url( 'admin.php?page=erp-accounting' . '&section=' . $section . '&action=view&id=' . $fields['id'] ), $fields['first_name'] . ' ' . $fields['last_name'] );
 
         erp_log()->add([
             'component'     => 'Accounting',

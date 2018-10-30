@@ -25,7 +25,7 @@
                     <h2 class="hndle"><span><?php echo esc_html( $report['title'] ); ?></span></h2>
                     <div class="inside">
                         <p><?php echo esc_html( $report['description'] ); ?></p>
-                        <p><a class="button button-primary" href="admin.php?page=erp-hr-reporting&type=<?php echo esc_attr( $key ); ?>"><?php _e( 'View Report', 'erp' ); ?></a></p>
+                        <p><a class="button button-primary" href="admin.php?page=erp-hr&section=report&type=<?php echo esc_attr( $key ); ?>"><?php _e( 'View Report', 'erp' ); ?></a></p>
                     </div>
                 </div><!-- .postbox -->
             <?php
@@ -45,7 +45,7 @@
                     <h2 class="hndle"><span><?php echo esc_html( $report['title'] ); ?></span></h2>
                     <div class="inside">
                         <p><?php echo esc_html( $report['description'] ); ?></p>
-                        <p><a class="button button-primary" href="admin.php?page=erp-hr-reporting&type=<?php echo $key; ?>"><?php _e( 'View Report', 'erp' ); ?></a></p>
+                        <p><a class="button button-primary" href="admin.php?page=erp-hr&section=report&type=<?php echo $key; ?>"><?php _e( 'View Report', 'erp' ); ?></a></p>
                     </div>
                 </div><!-- .postbox -->
             <?php

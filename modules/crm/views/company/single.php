@@ -5,7 +5,7 @@ $contact_tags = wp_list_pluck($contact_tags, 'name');
 <div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp">
 
     <h2><?php _e( 'Company #', 'erp' ); echo $customer->id; ?>
-        <a href="<?php echo add_query_arg( ['page' => 'erp-sales-companies'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Company list', 'erp' ); ?></a>
+        <a href="<?php echo add_query_arg( ['page' => 'erp-crm', 'section' => 'companies' ], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Company list', 'erp' ); ?></a>
 
         <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ): ?>
             <span class="edit">
