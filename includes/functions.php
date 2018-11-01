@@ -2990,6 +2990,35 @@ function erp_is_contacts_page() {
 }
 
 /**
+ * Check if the current page is valid for given args
+ *
+ * @since 1.4.1
+ *
+ * @param string $page
+ * @param string $section
+ * @param string $subsection
+ *
+ * @return bool
+ */
+function erp_is_current_page( $page, $section, $subsection = '' ) {
+    if ( empty( $_GET['page'] ) || $_GET['page'] != $page ) {
+        return false;
+    }
+
+    if ( empty( $_GET['section'] ) || $_GET['section'] != $section ) {
+        return false;
+    }
+
+    if ( !empty( $subsection ) ) {
+        if ( empty( $_GET['sub-section'] ) || $_GET['sub-section'] != $subsection ) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
  * Get ERP Menu array
  *
  * @since 1.4.0

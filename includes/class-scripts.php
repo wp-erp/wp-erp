@@ -172,7 +172,7 @@ class Scripts {
         wp_enqueue_script( 'erp-menu', WPERP_ASSETS . "/js/erp-menu.js", array(), date( 'Ymd' ), true );
 
         // load country/state JSON on new company page
-        if ( 'wp-erp_page_erp-company' == $hook || isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'new', 'edit' ) ) ) {
+        if ( erp_is_contacts_page() ) {
             wp_enqueue_script( 'post' );
             wp_enqueue_media();
 
@@ -180,7 +180,7 @@ class Scripts {
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
 
-        if ( 'hr-management_page_erp-hr-employee' == $hook ) {
+        if ( erp_is_current_page( 'erp-hr', 'employee' ) || erp_is_current_page( 'erp-hr', 'my-profile' ) ) {
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
