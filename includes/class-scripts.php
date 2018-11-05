@@ -29,7 +29,7 @@ class Scripts {
      */
     public function __construct() {
         $this->suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-        $this->version = '20150314';
+        $this->version = WPERP_VERSION;
 
         $this->action( 'admin_enqueue_scripts', 'scripts_handler' );
     }
