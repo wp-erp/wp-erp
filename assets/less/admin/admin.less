@@ -2105,6 +2105,10 @@ div.erp-nav-container {
         margin-top: 2px;
         min-width: 160px;
 
+        li a:empty {
+            display: none;
+        }
+
         li {
             //padding: 3px 7px;
             margin: 0;
@@ -2204,12 +2208,14 @@ div.erp-nav-container {
             }
         }
 
-
-
         .erp-nav-dropdown {
             top: 0;
             right: 100%;
             left: auto;
+
+            li a:empty {
+                display: none;
+            }
         }
     }
     &.--show-secondary .-secondary {
@@ -2285,4 +2291,9 @@ div.erp-nav-container {
 
 .erp-help{
     color:#f18500;
+}
+
+
+#adminmenu .wp-submenu li a:empty {
+    display: none !important;
 }
