@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.4.0\n"
+"Project-Id-Version: WP ERP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2018-10-30 07:01:38+00:00\n"
+"POT-Creation-Date: 2018-11-06 05:38:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7466,7 +7466,7 @@ msgstr ""
 #: modules/crm/views/company/single.php:74
 #: modules/crm/views/js-templates/new-contact-group.php:5
 #: modules/crm/views/js-templates/new-save-replies.php:5
-#: modules/hrm/includes/class-employee.php:1186
+#: modules/hrm/includes/class-employee.php:1187
 #: modules/hrm/views/employee/tab-general.php:197
 #: modules/hrm/views/js-templates/dependents.php:5
 #: modules/hrm/views/reporting/headcount.php:153
@@ -11361,8 +11361,14 @@ msgstr ""
 
 #: modules/crm/includes/admin/class-settings.php:332
 msgid ""
-"Create a Google App and authorize your account to Send and Recieve emails "
-"using Gmail"
+"<a target=\"_blank\" "
+"href=\"https://console.developers.google.com/flows/enableapi?apiid=gmail&"
+"pli=1\">Create a Google App</a> and authorize your account to Send and "
+"Recieve emails using Gmail. Follow instructions from this <a "
+"target=\"_blank\" "
+"href=\"https://wperp.com/docs/crm/tutorials/how-to-configure-gmail-api-"
+"connection-in-the-crm-settings/?utm_source=Free+Plugin&utm_medium=CTA&utm_"
+"content=Backend&utm_campaign=Docs\">Documentation</a> to get started"
 msgstr ""
 
 #: modules/crm/includes/admin/class-settings.php:350
@@ -14134,146 +14140,146 @@ msgstr ""
 msgid "Joined"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:246
+#: modules/hrm/includes/class-employee.php:247
 msgid "Employee with the employee id %s already exist. Please use different one."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:266
+#: modules/hrm/includes/class-employee.php:267
 msgid "Please provide the first name."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:269
+#: modules/hrm/includes/class-employee.php:270
 msgid "Please provide the last name."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:272
+#: modules/hrm/includes/class-employee.php:273
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1112
+#: modules/hrm/includes/class-employee.php:1113
 #: modules/hrm/views/employee/tab-general.php:140
 #: modules/hrm/views/js-templates/education-form.php:5
 msgid "School Name"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1113
+#: modules/hrm/includes/class-employee.php:1114
 #: modules/hrm/views/employee/tab-general.php:141
 #: modules/hrm/views/js-templates/education-form.php:15
 msgid "Degree"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1114
+#: modules/hrm/includes/class-employee.php:1115
 msgid "Field"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1115
+#: modules/hrm/includes/class-employee.php:1116
 msgid "Completion date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1134
+#: modules/hrm/includes/class-employee.php:1135
 msgid "Could not create education."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1187
+#: modules/hrm/includes/class-employee.php:1188
 msgid "Relation"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1198
-#: modules/hrm/includes/class-employee.php:1278
-#: modules/hrm/includes/class-employee.php:1617
-#: modules/hrm/includes/class-employee.php:1641
+#: modules/hrm/includes/class-employee.php:1199
+#: modules/hrm/includes/class-employee.php:1279
+#: modules/hrm/includes/class-employee.php:1618
+#: modules/hrm/includes/class-employee.php:1642
 msgid "Invalid date format"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1214
+#: modules/hrm/includes/class-employee.php:1215
 msgid "Could not create dependent."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1266
+#: modules/hrm/includes/class-employee.php:1267
 msgid "Missing Company Name"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1269
+#: modules/hrm/includes/class-employee.php:1270
 msgid "Missing Job Title"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1272
+#: modules/hrm/includes/class-employee.php:1273
 msgid "Missing From Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1275
+#: modules/hrm/includes/class-employee.php:1276
 msgid "Missing To Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1287
+#: modules/hrm/includes/class-employee.php:1288
 msgid "Could not create work experience."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1382
+#: modules/hrm/includes/class-employee.php:1383
 msgid "This job history does not exist or does not belongs to the supplied user"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1412
+#: modules/hrm/includes/class-employee.php:1413
 msgid "Invalid Employment Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1459
+#: modules/hrm/includes/class-employee.php:1460
 msgid "Invalid Pay Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1462
+#: modules/hrm/includes/class-employee.php:1463
 msgid "Invalid Pay Rate"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1465
+#: modules/hrm/includes/class-employee.php:1466
 msgid "Invalid Reason Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1609
+#: modules/hrm/includes/class-employee.php:1610
 msgid "Invalid Performance Type received"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1613
-#: modules/hrm/includes/class-employee.php:1637
+#: modules/hrm/includes/class-employee.php:1614
+#: modules/hrm/includes/class-employee.php:1638
 msgid "Missing Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1623
+#: modules/hrm/includes/class-employee.php:1624
 msgid "Invalid reporting to used."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1630
+#: modules/hrm/includes/class-employee.php:1631
 msgid "Invalid reviewer user."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1646
+#: modules/hrm/includes/class-employee.php:1647
 msgid "Invalid supervisor user."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1663
-#: modules/hrm/includes/class-employee.php:1727
+#: modules/hrm/includes/class-employee.php:1664
+#: modules/hrm/includes/class-employee.php:1728
 msgid "This note does not exist or does not belongs to the supplied user"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1984
+#: modules/hrm/includes/class-employee.php:1985
 #: modules/hrm/includes/functions-dashboard-widgets.php:222
 #: modules/hrm/includes/functions-leave.php:1189
 msgid "Pending"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2118
+#: modules/hrm/includes/class-employee.php:2119
 #: modules/hrm/views/employee/tab-general.php:245
 #: modules/hrm/views/js-templates/employee-terminate.php:16
 msgid "Termination Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2120
+#: modules/hrm/includes/class-employee.php:2121
 #: modules/hrm/views/employee/tab-general.php:246
 #: modules/hrm/views/js-templates/employee-terminate.php:29
 msgid "Termination Reason"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2122
+#: modules/hrm/includes/class-employee.php:2123
 #: modules/hrm/views/employee/tab-general.php:247
 msgid "Eligible for Hire"
 msgstr ""

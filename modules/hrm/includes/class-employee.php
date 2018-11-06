@@ -85,7 +85,8 @@ class Employee {
             'country'         => '',
             'state'           => '',
             'postal_code'     => '',
-        )
+        ),
+        'additional' => array()
     );
     /**
      * @var array
