@@ -329,7 +329,7 @@ class CRM_Settings extends ERP_Settings_Page {
         $fields[] = [
             'title' => __( 'Gmail / G suite Authentication', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( 'Create a Google App and authorize your account to Send and Recieve emails using Gmail', 'erp' )
+            'desc'  => __( '<a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=gmail&pli=1">Create a Google App</a> and authorize your account to Send and Recieve emails using Gmail. Follow instructions from this <a target="_blank" href="https://wperp.com/docs/crm/tutorials/how-to-configure-gmail-api-connection-in-the-crm-settings/?utm_source=Free+Plugin&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs">Documentation</a> to get started', 'erp' )
         ];
 
         if ( wperp()->google_auth->is_connected() ) {

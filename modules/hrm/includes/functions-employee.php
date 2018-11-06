@@ -1002,3 +1002,37 @@ function erp_is_employee_exist( $email, $user_id ) {
     $sql    = "select user.ID from {$wpdb->prefix}erp_hr_employees as employee inner join {$wpdb->prefix}users as user on user.ID=employee.user_id where user.user_email='{$user_email}' AND user.ID !='{$user_id}'";
     return $wpdb->get_col( $sql );
 }
+
+add_filter( 'user_has_cap', 'erp_revoke_terminated_employee_access', 10, 4 );
+
+/**
+ * Disable terminated users from accessing ERP
+ *
+ * @since 1.4.1
+ *
+ * @param array $capabilities
+ * @param array $caps
+ * @param array $args
+ * @param WP_User $user
+ *
+ * @return array $capabilities
+ */
+function erp_revoke_terminated_employee_access( $capabilities, $caps, $args, $user ) {
+
+    if ( !in_array( 'erp_list_employee', $caps ) && !in_array( 'upload_files', $caps ) ) {
+        return $capabilities;
+    }
+
+    //check if user is employee
+    if ( !in_array( erp_hr_get_employee_role(), $user->roles ) ) {
+        return $capabilities;
+    }
+
+    $employee = new WeDevs\ERP\HRM\Employee( $user );
+    if ( 'terminated' === $employee->get_status() ) {
+        $capabilities['erp_list_employee'] = false;
+        $capabilities['upload_files']      = false;
+    }
+
+    return $capabilities;
+}

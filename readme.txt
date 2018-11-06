@@ -5,7 +5,7 @@ Tags: ERP, CRM, HRM, Accounting, Project Management, business manager, small bus
 Requires at least: 4.4
 Tested up to: 4.9.8
 Requires PHP: 5.6
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -241,6 +241,13 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.4.1 -> November 06, 2018 =
+[new] Revoke access to ERP for terminated employees
+[fix] Problem with rejecting leave requests #721
+[fix] Fixed state not showing while editing contact #722
+[fix] Employee create or update not saving employee name
+[tweak] Added script versioning to avoid unwanted cache of scripts
 
 = v1.4.0 -> October 30, 2018 =
 [new] Add ERP main menu in Dashboard sidebar and Admin bar

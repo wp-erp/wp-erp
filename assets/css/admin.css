@@ -3970,6 +3970,9 @@ div.erp-nav-container .erp-nav-dropdown {
   margin-top: 2px;
   min-width: 160px;
 }
+div.erp-nav-container .erp-nav-dropdown li a:empty {
+  display: none;
+}
 div.erp-nav-container .erp-nav-dropdown li {
   margin: 0;
 }
@@ -4049,6 +4052,9 @@ div.erp-nav-container .-secondary .erp-nav-dropdown {
   right: 100%;
   left: auto;
 }
+div.erp-nav-container .-secondary .erp-nav-dropdown li a:empty {
+  display: none;
+}
 div.erp-nav-container.--show-secondary .-secondary {
   display: block;
 }
@@ -4102,4 +4108,7 @@ div.erp-nav-container.--show-secondary .-secondary {
 }
 .erp-help {
   color: #f18500;
+}
+#adminmenu .wp-submenu li a:empty {
+  display: none !important;
 }
