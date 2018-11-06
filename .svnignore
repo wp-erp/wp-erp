@@ -10,3 +10,4 @@ vendor/composer/autoload_static.php
 .gitignore
 .github
 package-lock.json
+.svnignore
