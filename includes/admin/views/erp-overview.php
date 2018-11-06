@@ -12,12 +12,12 @@
             ?>
 
             <div class="erp-badge-box">
-                <h2><?php _e( 'RSS feed', 'erp' ); ?></h2>
+                <h2><?php _e( 'Latest ERP Blogs', 'erp' ); ?></h2>
 
                 <?php $xml = erp_web_feed(); ?>
                 <ul class="erp-rss-feed">
                     <?php foreach( $xml->channel->item as $entry ) : ?>
-                    <li><a href="<?php echo $entry->link; ?>" title="<?php echo $entry->title ?>"><?php echo $entry->title; ?></a></li>
+                    <li><a target="_blank" href="<?php echo $entry->link.'?utm_source=ERP+Dashboard&utm_medium=CTA&utm_content=Backend&utm_campaign=Docs'; ?>" title="<?php echo $entry->title ?>"><?php echo $entry->title; ?></a></li>
                     <?php endforeach; ?>
                 </ul>
 
