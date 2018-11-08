@@ -216,7 +216,7 @@ class Accounting {
             $hook .= '-' . $hook_suffix;
         }
 
-        if ( $hook == 'accounting_page_erp-accounting-expense' ) {
+        if ( $hook == 'wp-erp_page_erp-accounting-expense' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/vendor.php', 'erp-ac-new-vendor-content-pop' );
         }
@@ -225,13 +225,13 @@ class Accounting {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/bank.php', 'erp-ac-transfer-money-pop' );
         }
 
-        if ( $hook == 'accounting_page_erp-accounting-sales' ) {
+        if ( $hook == 'wp-erp_page_erp-accounting-sales' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/customer.php', 'erp-ac-new-customer-content-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/send-invoice.php', 'erp-ac-send-email-invoice-pop' );
         }
 
-        if ( $hook == 'accounting_page_erp-accounting-sales' || $hook == 'accounting_page_erp-accounting-expense' ) {
+        if ( $hook == 'wp-erp_page_erp-accounting-sales' || $hook == 'wp-erp_page_erp-accounting-expense' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/trash.php', 'erp-ac-trash-form-popup' );
         }
     }
