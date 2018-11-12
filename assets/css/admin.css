@@ -2630,9 +2630,18 @@ table.erp-settings-table tr:nth-child(odd) td {
 }
 .erp .erp-single-container .erp-area-left {
   width: 72%;
-  min-width: 463px;
+  min-width: 375px;
   float: left;
   margin-right: 10px;
+}
+
+@media ( min-width: 320px ) and ( max-width: 640px ) {
+  .erp .erp-single-container .erp-area-left {
+    float: none;
+    min-width: 360px;
+    width: 100%;
+    margin: 5px;
+  }
 }
 .erp .erp-single-container .erp-area-left.full-width {
   width: 100%;
@@ -2694,6 +2703,12 @@ table.erp-settings-table tr:nth-child(odd) td {
 .erp .erp-single-container .erp-area-right {
   float: right;
   width: 25%;
+}
+@media ( min-width: 320px ) and ( max-width: 640px ) {
+  .erp .erp-single-container .erp-area-right {
+    float: none;
+    width: 100%;
+  }
 }
 .erp .postbox h3.hndle {
   font-size: 14px;
