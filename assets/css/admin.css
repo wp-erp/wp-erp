@@ -2672,6 +2672,12 @@ table.erp-settings-table tr:nth-child(odd) td {
   width: 128px;
   position: relative;
 }
+@media ( min-width: 320px ) and ( max-width: 640px ) {
+  .erp .erp-single-container .erp-area-left .erp-profile-top .erp-avatar {
+    float: none;
+    margin-bottom: 10px;
+  }
+}
 .erp .erp-single-container .erp-area-left .erp-profile-top .erp-avatar .inactive {
   background: url('../images/inactive.png') no-repeat;
   background-position: 50%;
@@ -2708,6 +2714,9 @@ table.erp-settings-table tr:nth-child(odd) td {
   .erp .erp-single-container .erp-area-right {
     float: none;
     width: 100%;
+  }
+  .erp .erp-single-container .erp-area-right .edit .button {
+    padding: 6px 10px;
   }
 }
 .erp .postbox h3.hndle {
