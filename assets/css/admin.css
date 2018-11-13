@@ -2630,18 +2630,9 @@ table.erp-settings-table tr:nth-child(odd) td {
 }
 .erp .erp-single-container .erp-area-left {
   width: 72%;
-  min-width: 375px;
+  min-width: 463px;
   float: left;
   margin-right: 10px;
-}
-
-@media ( min-width: 320px ) and ( max-width: 640px ) {
-  .erp .erp-single-container .erp-area-left {
-    float: none;
-    min-width: 360px;
-    width: 100%;
-    margin: 5px;
-  }
 }
 .erp .erp-single-container .erp-area-left.full-width {
   width: 100%;
@@ -2671,12 +2662,6 @@ table.erp-settings-table tr:nth-child(odd) td {
   float: left;
   width: 128px;
   position: relative;
-}
-@media ( min-width: 320px ) and ( max-width: 640px ) {
-  .erp .erp-single-container .erp-area-left .erp-profile-top .erp-avatar {
-    float: none;
-    margin-bottom: 10px;
-  }
 }
 .erp .erp-single-container .erp-area-left .erp-profile-top .erp-avatar .inactive {
   background: url('../images/inactive.png') no-repeat;
@@ -2709,15 +2694,6 @@ table.erp-settings-table tr:nth-child(odd) td {
 .erp .erp-single-container .erp-area-right {
   float: right;
   width: 25%;
-}
-@media ( min-width: 320px ) and ( max-width: 640px ) {
-  .erp .erp-single-container .erp-area-right {
-    float: none;
-    width: 100%;
-  }
-  .erp .erp-single-container .erp-area-right .edit .button {
-    padding: 6px 10px;
-  }
 }
 .erp .postbox h3.hndle {
   font-size: 14px;
@@ -4049,7 +4025,7 @@ div.erp-nav-container .-secondary {
   display: none;
   position: absolute;
   top: 100%;
-  right: 0;
+  left: 0;
   z-index: 99;
   animation: nav-secondary 0.2s;
   background: #FFFFFF;
@@ -4057,7 +4033,7 @@ div.erp-nav-container .-secondary {
   border: 1px solid #DDDDDD;
   border-radius: 3px;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.09);
-  min-width: 180px;
+  min-width: 140px;
 }
 div.erp-nav-container .-secondary > li.--hidden + li {
   padding-top: 10px;
@@ -4135,4 +4111,25 @@ div.erp-nav-container.--show-secondary .-secondary {
 }
 #adminmenu .wp-submenu li a:empty {
   display: none !important;
+}
+.erp-report-chart {
+  min-width: 330px;
+  height: 400px;
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (max-width: 640px) {
+  .erp .erp-single-container .erp-area-left {
+    float: none;
+    min-width: 360px;
+    width: 100%;
+    margin: 5px;
+  }
+  .erp .erp-single-container .erp-area-left .erp-profile-top .erp-avatar {
+    float: none;
+    margin-bottom: 10px;
+  }
+  .erp .erp-single-container .erp-area-right {
+    float: none;
+    width: 100%;
+  }
 }
