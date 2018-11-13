@@ -72,7 +72,7 @@
         <?php
         echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Ratio By Department', 'erp' ), function() {
            ?>
-            <div id="emp-gender-ratio-by-department" style="width:800px;height:400px;"></div>
+            <div id="emp-gender-ratio-by-department" class="erp-report-chart"></div>
            <?php
           } );
         ?>
