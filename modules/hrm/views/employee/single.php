@@ -24,8 +24,7 @@
                 <div class="erp-profile-top">
                     <div class="erp-avatar">
                         <?php echo $employee->get_avatar( 150 ); ?>
-
-                        <?php if ( $employee->get_status('view') == 'Terminated' ): ?>
+                        <?php if ( $employee->get_status('view') !== 'Active' ): ?>
                             <span class="inactive"></span>
                         <?php endif ?>
                     </div>
