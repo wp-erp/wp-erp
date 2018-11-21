@@ -7,12 +7,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get all taxes
  *
- * @param $data
- *
  * @return mixed
  */
 
-function erp_acct_get_all_taxes( $data ) {
+function erp_acct_get_all_taxes() {
     global $wpdb;
 
     $row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_tax", ARRAY_A );
@@ -31,7 +29,7 @@ function erp_acct_get_all_taxes( $data ) {
 function erp_acct_get_tax( $tax_no ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_tax WHERE voucher_no = {$tax_no}", ARRAY_A );
+    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_tax_items WHERE tax_id = {$tax_no} GROUP BY tax_id", ARRAY_A );
 
     return $row;
 }
@@ -43,57 +41,29 @@ function erp_acct_get_tax( $tax_no ) {
  * @return int
  */
 function erp_acct_insert_tax( $data ) {
-    global $wpdb; $tax_data = [];
+    global $wpdb;
 
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-        'type'            => $data['type'],
-    ) );
-
-    $voucher_no = $wpdb->insert_id ;
-
-    $tax_data = erp_acct_get_formatted_tax_data( $data, $voucher_no );
+    $tax_data = erp_acct_get_formatted_tax_data( $data );
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_tax', array(
-        'voucher_no'      => $tax_data['voucher_no'],
-        'people_id'       => $tax_data['people_id'],
-        'trn_date'        => $tax_data['trn_date'],
-        'due_date'        => $tax_data['due_date'],
-        'created_at'      => $tax_data['created_at'],
-        'billing_address' => $tax_data['billing_address'],
-        'discount'        => $tax_data['discount'],
-        'tax'             => $tax_data['tax'],
-        'amount'          => $tax_data['total'],
-        'type'            => $tax_data['type'],
-        'attachments'     => $tax_data['attachments']
+        'name'            => $tax_data['name'],
+        'tax_number'      => $tax_data['tax_number'],
     ) );
 
-    if ( $tax_data['type'] != 'tax' ) {
-        return $voucher_no;
-    }
+    $tax_id = $wpdb->insert_id;
 
-    $items = $data['line_items'];
+    $items = $data['components'];
 
     foreach( $items as $key => $item ) {
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_details', array(
-            'trn_no'     => $voucher_no,
-            'product_id' => $item['product_id'],
-            'qty'        => $item['qty'],
-            'unit_price' => $item['unit_price'],
-            'discount'   => $item['discount'],
-            'tax'        => $item['tax'],
-            'item_total' => $item['item_total'],
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_items', array(
+            'tax_id'         => $tax_id,
+            'component_name' => $item['component_name'],
+            'agency_name'    => $item['agency_name'],
+            'tax_percent'    => $item['tax_percent']
         ) );
     }
 
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_account_details', array(
-        'tax_no' => $voucher_no,
-        'trn_no'     => $voucher_no,
-        'particulars'=> '',
-        'debit'      => $tax_data['amount'],
-        'credit'     => 0
-    ) );
-
-    return $voucher_no;
+    return $tax_id;
 
 }
 
@@ -104,63 +74,29 @@ function erp_acct_insert_tax( $data ) {
  * @return int
  */
 function erp_acct_update_tax( $data, $id ) {
-    global $wpdb; $tax_data = [];
+    global $wpdb;
 
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-        'type'            => $data['type'],
-    ) );
-
-    $voucher_no = $wpdb->insert_id ;
-
-    $tax_data = erp_acct_get_formatted_tax_data( $data, $voucher_no );
+    $tax_data = erp_acct_get_formatted_tax_data( $data );
 
     $wpdb->update( $wpdb->prefix . 'erp_acct_tax', array(
-        'voucher_no'      => $tax_data['voucher_no'],
-        'people_id'       => $tax_data['people_id'],
-        'trn_date'        => $tax_data['trn_date'],
-        'due_date'        => $tax_data['due_date'],
-        'created_at'      => $tax_data['created_at'],
-        'billing_address' => $tax_data['billing_address'],
-        'amount'          => $tax_data['amount'],
-        'discount'        => $tax_data['discount'],
-        'tax'             => $tax_data['tax'],
-        'attachments'     => $tax_data['attachments'],
-        'type'            => $tax_data['type']
+        'name'            => $tax_data['name'],
     ), array(
-
+        'tax_number'      => $tax_data['tax_number']
     ) );
 
-    if ( $tax_data['type'] != 'tax' ) {
-        return $voucher_no;
-    }
-
-    $items = $data['line_items'];
+    $items = $data['components'];
 
     foreach( $items as $key => $item ) {
-        $wpdb->update( $wpdb->prefix . 'erp_acct_tax_details', array(
-            'trn_no'     => $voucher_no,
-            'product_id' => $item['product_id'],
-            'qty'        => $item['qty'],
-            'unit_price' => $item['unit_price'],
-            'discount'   => $item['discount'],
-            'tax'        => $item['tax'],
-            'item_total' => $item['item_total'],
+        $wpdb->update( $wpdb->prefix . 'erp_acct_tax_items', array(
+            'component_name' => $item['component_name'],
+            'agency_name'    => $item['agency_name'],
+            'tax_percent'    => $item['tax_percent']
         ), array(
-
+            'tax_id'         => $id
         ) );
     }
 
-    $wpdb->update( $wpdb->prefix . 'erp_acct_tax_account_details', array(
-        'tax_no' => $voucher_no,
-        'trn_no'     => $voucher_no,
-        'particulars'=> '',
-        'debit'      => $tax_data['amount'],
-        'credit'     => 0
-    ), array(
-
-    ) );
-
-    return $voucher_no;
+    return $id;
 
 }
 
@@ -171,23 +107,14 @@ function erp_acct_update_tax( $data, $id ) {
  * @param $voucher_no
  * @return mixed
  */
-function erp_acct_get_formatted_tax_data( $data, $voucher_no ) {
+function erp_acct_get_formatted_tax_data( $data ) {
 
-    $tax_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
-    $tax_data['people_id'] = isset( $data['customer_id'] ) ? $data['customer_id'] : 1;
-
-    $user_info = get_userdata($tax_data['people_id'] );
-
-    $tax_data['customer_name'] = $user_info->first_name . ' ' . $user_info->last_name;
-    $tax_data['trn_date']   = isset( $data['date'] ) ? $data['date'] : date("Y-m-d" );
-    $tax_data['due_date']   = isset( $data['due_date'] ) ? $data['due_date'] : date("Y-m-d" );
-    $tax_data['created_at'] = date("Y-m-d" );
-    $tax_data['billing_address'] = isset( $data['billing_address'] ) ? maybe_serialize( $data['billing_address'] ) : '';
-    $tax_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
-    $tax_data['discount'] = isset( $data['discount'] ) ? $data['discount'] : 0;
-    $tax_data['tax'] = isset( $data['tax'] ) ? $data['tax'] : 0;
-    $tax_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $tax_data['type'] = isset( $data['type'] ) ? $data['type'] : '';
+    $tax_data['name'] = isset( $data['name'] ) ? $data['name'] : 1;
+    $tax_data['tax_number'] = isset( $data['customer_id'] ) ? $data['customer_id'] : 1;
+    $tax_data['tax_id'] = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $tax_data['component_name']   = isset( $data['component_name'] ) ? $data['component_name'] : '';
+    $tax_data['agency_name']   = isset( $data['agency_name'] ) ? $data['agency_name'] : '';
+    $tax_data['components']   = isset( $data['components'] ) ? $data['components'] : '';
 
     return $tax_data;
 }
@@ -203,31 +130,9 @@ function erp_acct_get_formatted_tax_data( $data, $voucher_no ) {
 function erp_acct_delete_tax( $tax_no ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax', array( 'tax' => $tax_no ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax', array( 'tax_number' => $tax_no ) );
 }
 
-/**
- * Void an tax
- *
- * @param $tax_no
- *
- * @return void
- */
-
-function erp_acct_void_tax( $tax_no ) {
-    global $wpdb;
-
-    if ( !$tax_no ) {
-        return;
-    }
-
-    $wpdb->update($wpdb->prefix . 'erp_acct_tax',
-        array(
-            'status' => 'void',
-        ),
-        array( 'voucher_no' => $tax_no )
-    );
-}
 
 
 

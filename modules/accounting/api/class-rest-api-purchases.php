@@ -34,7 +34,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'get_purchases' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_purchase' );
+                    return current_user_can( 'erp_ac_view_expense' );
                 },
             ],
             [
@@ -42,7 +42,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'create_purchase' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_purchase' );
+                    return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -56,7 +56,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
+                    return current_user_can( 'erp_ac_view_expense' );
                 },
             ],
             [
@@ -64,14 +64,14 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'update_purchase' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_purchase' );
+                    return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_purchase' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_purchase' );
+                    return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -83,7 +83,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'void_purchase' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_purchase' );
+                    return current_user_can( 'erp_ac_publish_expenses_voucher' );
                 },
             ],
         ] );
