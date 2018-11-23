@@ -357,7 +357,7 @@ function erp_hr_get_todays_birthday() {
 
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
                                                                ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), \Carbon\Carbon::today()->format( 'm d' ) )
-                                                               ->where( 'termination_date', '0000-00-00' )
+                                                               ->where( 'status', 'active' )
                                                                ->get()
                                                                ->toArray() );
 }
@@ -377,7 +377,7 @@ function erp_hr_get_next_seven_days_birthday() {
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( array( 'user_id', 'date_of_birth' ) )
                                                                ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '>', \Carbon\Carbon::today()->format( 'm d' ) )
                                                                ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '<=', \Carbon\Carbon::tomorrow()->addWeek()->format( 'm d' ) )
-                                                               ->where( 'termination_date', '0000-00-00' )
+                                                               ->where( 'status', 'active' )
                                                                ->get()
                                                                ->toArray() );
 }
