@@ -254,7 +254,7 @@ function erp_acct_change_invoice_status( $invoice_no ) {
         return;
     }
 
-    $wpdb->update($wpdb->prefix . 'erp_acct_invoice',
+    $wpdb->update($wpdb->prefix . 'erp_acct_invoices',
         array(
             'status' => 'paid',
         ),
