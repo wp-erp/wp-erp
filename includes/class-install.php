@@ -1030,6 +1030,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_categories` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `name` varchar(255) DEFAULT NULL,
+              `parent` int(11) NOT NULL,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,
@@ -1068,7 +1069,9 @@ Company'
               `name` varchar(255) DEFAULT NULL,
               `product_type_id` int(11) DEFAULT NULL,
               `category_id` int(11) DEFAULT NULL,
-              `sales_price` decimal(10,0) DEFAULT NULL,
+              `vendor` int(11) DEFAULT NULL,
+              `cost_price` decimal(10,0) DEFAULT NULL,
+              `sale_price` decimal(10,0) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,

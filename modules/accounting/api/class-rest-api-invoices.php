@@ -143,8 +143,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function create_invoice( $request ) {
-
-        $request->set_param( 'context', 'edit' );
         $invoice_data = $this->prepare_item_for_database( $request );
 
         $item_total = []; $item_subtotal = []; $item_tax_total = []; $item_discount_total = []; $formatted_items = [];
@@ -166,10 +164,15 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $invoice_data['amount'] = array_sum( $item_total );
         $invoice_data['attachments'] = maybe_serialize( $request['attachments'] );
 
-        $id = erp_acct_insert_invoice( $invoice_data );
+        $invoice_id = erp_acct_insert_invoice( $invoice_data );
 
-        $response = rest_ensure_response( $invoice_data );
-        $response = $this->format_collection_response( $response, $request, count( $items ) );
+        if ( $invoice_id ) {
+            $formatted_items = erp_acct_get_invoice_response( $invoice_id );
+        }
+
+        $invoice_response = $this->prepare_item_for_response( $formatted_items, $request );
+
+        $response = rest_ensure_response( $invoice_response );
 
         return $response;
     }
@@ -208,10 +211,15 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $invoice_data['amount'] = array_sum( $item_total );
         $invoice_data['attachments'] = maybe_serialize( $request['attachments'] );
 
-        $id = erp_acct_update_invoice( $invoice_data, $id );
+        $invoice_id = erp_acct_update_invoice( $invoice_data, $id );
 
-        $response = rest_ensure_response( $invoice_data );
-        $response = $this->format_collection_response( $response, $request, count( $items ) );
+        if ( $invoice_id ) {
+            $formatted_items = erp_acct_get_invoice_response( $invoice_id );
+        }
+
+        $invoice_response = $this->prepare_item_for_response( $formatted_items, $request );
+
+        $response = rest_ensure_response( $invoice_response );
 
         return $response;
     }
@@ -320,13 +328,15 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
+     * @param object|array $item
      * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+
         $data = [
             'id'              => (int) $item->id,
             'voucher_no'      => (int) $item->voucher_no,
@@ -335,11 +345,11 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             'due_date'        => $item->due_date,
             'billing_address' => $item->billing_address,
             'line_items'      => $item->line_items,
-            'subtotal'        => (int) $item->subtotal,
-            'total'           => (int) $item->total,
-            'discount'        => (int) $item->discount,
-            'tax'             => (int) $item->tax,
-            'type'            => $item->type,
+            'subtotal'        => $item->subtotal,
+            'total'           => $item->total,
+            'discount'        => $item->discount,
+            'tax'             => $item->tax,
+            'tax_percent'     => $item->tax_percent,
             'status'          => $item->status,
         ];
 
