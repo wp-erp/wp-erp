@@ -97,8 +97,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_payments( $request ) {
-        global $wpdb;
-
         $payment_data = erp_acct_get_payments();
 
         $response = rest_ensure_response( $payment_data );
@@ -115,8 +113,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_payment( $request ) {
-        global $wpdb;
-
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
