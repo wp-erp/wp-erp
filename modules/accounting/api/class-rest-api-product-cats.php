@@ -18,7 +18,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
      *
      * @var string
      */
-    protected $rest_base = 'accounting/v1/inv_product_cat';
+    protected $rest_base = 'accounting/v1/product-cats';
 
     /**
      * Register the routes for the objects of the controller.
@@ -81,16 +81,12 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
      * @return WP_Error|WP_REST_Response
      */
     public function get_all_inventory_product_cats( $request ) {
-        $result = array();
-        $product_cat_args = array( 'hide_empty' => false, 'order_by' => 'name', 'order' => 'ASC' );
 
-        $product_cats = get_terms('product_category', $product_cat_args );
-        foreach( $product_cats as $product_cat ){
-            $result['term_id'][] = $product_cat->term_id;
-            $result['name'][] = $product_cat->name;
-        }
-        $response = rest_ensure_response( $result );
-        return $response;
+        $product_cats = erp_acct_get_all_product_cats();
+	    $response = rest_ensure_response( $product_cats );
+	    $response = $this->format_collection_response( $response, $request, count( $product_cats ) );
+
+	    return $response;
     }
 
     /**
@@ -101,14 +97,13 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
      * @return WP_Error|WP_REST_Request
      */
     public function create_inventory_product_cat( $request ) {
-        $term = wp_insert_term( $request['name'], 'product_category', array( 'name' =>$request['name'], 'slug' => $request['slug'] ) );
+	    $item = $this->prepare_item_for_database( $request );
 
-        $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( (object) $term, $request );
+        $term = erp_acct_insert_product_cat( $item );
+
+        $response = $this->prepare_item_for_response( (object) $item, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $term['term_id'] ) ) );
-
         return $response;
     }
 
@@ -121,11 +116,12 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
      */
     public function get_inventory_product_cat( $request ) {
         $id       = (int) $request['id'];
-        $term     = get_term( $id );
 
-        if ( empty( $id ) || empty( $term->term_id ) ) {
-            return new WP_Error( 'rest_inventory_product_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_inventory_product_cat_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
+
+        $term = erp_acct_get_product_cat( $id );
 
         $item     = $this->prepare_item_for_response( (object) $term, $request );
         $response = rest_ensure_response( $item );
@@ -142,16 +138,16 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
      */
     public function update_inventory_product_cat( $request ) {
         $id       = (int) $request['id'];
-        $term = wp_update_term( $id, 'product_category', array(
-            'name' => $request['name'],
-            'slug' => $request['slug']
-        ));
 
-        if ( empty( $id ) || !isset( $term['term_id'] ) ) {
-            return new WP_Error( 'rest_inventory_product_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+	    $item = $this->prepare_item_for_database( $request );
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_inventory_product_cat_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item     = $this->prepare_item_for_response( (object) $term, $request );
+        $term = erp_acct_update_product_cat( $item, $id );
+
+        $item     = $this->prepare_item_for_response( (object) $item, $request );
         $response = rest_ensure_response( $item );
 
         return $response;
@@ -167,7 +163,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
     public function delete_inventory_product_cat( $request ) {
         $term_id = (int) $request['id'];
 
-        wp_delete_term( $term_id, 'product_category' );
+        erp_acct_delete_product_cat( $term_id );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -186,12 +182,8 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
             $prepared_item['name'] = $request['name'];
         }
 
-        if ( isset( $request['slug'] ) ) {
+        if ( isset( $request['parent'] ) ) {
             $prepared_item['slug'] = $request['slug'];
-        }
-
-        if ( isset( $request['id'] ) ) {
-            $prepared_item['term_id'] = absint( $request['term_id'] );
         }
 
 
@@ -208,9 +200,11 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+	    $item = (object) $item;
+
         $data = [
-            'term_id'           => $item->term_id,
-            'term_taxonomy_id'  => $item->term_taxonomy_id,
+            'name'           => $item->term_id,
+            'parent'  => $item->term_taxonomy_id,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -249,9 +243,9 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
                     ],
                     'required'    => true,
                 ],
-                'slug'            => [
-                    'description' => __( 'Slug for the resource.' ),
-                    'type'        => 'string',
+                'parent'            => [
+                    'description' => __( 'Parent for the resource.' ),
+                    'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
