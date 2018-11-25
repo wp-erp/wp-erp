@@ -228,14 +228,11 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['customer_id'] ) ) {
             $prepared_item['customer_id'] = $request['customer_id'];
         }
-        if ( isset( $request['ref'] ) ) {
-            $prepared_item['ref'] = $request['ref'];
-        }
+	    if ( isset( $request['invoice_no'] ) ) {
+		    $prepared_item['invoice_no'] = $request['invoice_no'];
+	    }
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] = absint( $request['trn_date'] );
-        }
-        if ( isset( $request['due_date'] ) ) {
-            $prepared_item['due_date'] = absint( $request['due_date'] );
         }
         if ( isset( $request['amount'] ) ) {
             $prepared_item['amount'] = $request['amount'];
@@ -243,11 +240,8 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
         }
-        if ( isset( $request['deposit'] ) ) {
-            $prepared_item['deposit'] = $request['deposit'];
-        }
-        if ( isset( $request['memo'] ) ) {
-            $prepared_item['memo'] = $request['memo'];
+        if ( isset( $request['particulars'] ) ) {
+            $prepared_item['particulars'] = $request['particulars'];
         }
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = $request['attachments'];

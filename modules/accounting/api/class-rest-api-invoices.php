@@ -303,8 +303,8 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['tax'] ) ) {
             $prepared_item['tax'] = $request['tax'];
         }
-        if ( isset( $request['type'] ) ) {
-            $prepared_item['type'] = $request['type'];
+        if ( isset( $request['tax_percent'] ) ) {
+            $prepared_item['tax_percent'] = $request['tax_percent'];
         }
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];
@@ -317,9 +317,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['transaction_by'] ) ) {
             $prepared_item['transaction_by'] = $request['transaction_by'];
-        }
-        if ( isset( $request['type'] ) ) {
-            $prepared_item['type'] = $request['type'];
         }
 
         return $prepared_item;
