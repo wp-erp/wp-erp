@@ -18,7 +18,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @var string
      */
-    protected $rest_base = 'accounting/v1/inv_products';
+    protected $rest_base = 'accounting/v1/products';
 
     /**
      * Register the routes for the objects of the controller.
@@ -82,29 +82,10 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_inventory_products( $request ) {
-        $args = [
-            'posts_per_page' => $request['per_page'],
-            'offset'         => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-        ];
+	    $product_data = erp_acct_get_all_products();
 
-        $args['post_type'] = 'erp_inv_product';
-
-        $items = get_posts( $args );
-
-        $count_items = wp_count_posts( $args['post_type'] );
-        $total_items = (int) $count_items->publish;
-
-        $formatted_items = [];
-        foreach ( $items as $item ) {
-            $item->id         = $item->ID;
-            $data             = $this->prepare_item_for_response( $item, $request );
-            $formatted_items[] = $this->prepare_response_for_collection( $data );
-        }
-
-        $response = rest_ensure_response( $formatted_items );
-        $response = $this->format_collection_response( $response, $request, $total_items );
-
-        return $response;
+	    $response = rest_ensure_response( $product_data );
+	    $response = $this->format_collection_response( $response, $request, count( $product_data ) );
     }
 
     /**
@@ -116,10 +97,9 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_inventory_product( $request ) {
         $id       = (int) $request['id'];
-        $item     = get_post( $id );
-        $item->id = $item->ID;
+        $item     = erp_acct_get_product( $id );
 
-        if ( empty( $id ) || empty( $item->id ) ) {
+        if ( empty( $id ) ) {
             return new WP_Error( 'rest_inventory_product_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
@@ -137,23 +117,12 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_inventory_product( $request ) {
-        $metas = [];
         $item = $this->prepare_item_for_database( $request );
 
-        $id   = wp_insert_post( $item );
+        $id   = erp_acct_insert_product( $item );
 
-        $inv_product     = get_post( $id );
-        $inv_product->id = $inv_product->ID;
-
-        if ( isset( $inv_product->id ) ) {
-            $this->update_product_metas( $inv_product->id, $request );
-        }
-
-        $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $inv_product, $request );
+        $response = $this->prepare_item_for_response( $item, $request );
         $response = rest_ensure_response( $response );
-        $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
     }
@@ -167,56 +136,21 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function update_inventory_product( $request ) {
         $id = (int) $request['id'];
-        $inv_product = get_post( $id );
 
-        if ( empty( $id ) || empty( $inv_product->ID ) ) {
-            return new WP_Error( 'rest_inventory_product_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
-        }
+	    if ( empty( $id ) ) {
+		    return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+	    }
 
-        $item = $this->prepare_item_for_database( $request );
+	    $item = $this->prepare_item_for_database( $request );
 
-        if ( is_wp_error( $item ) ) {
-            return $item;
-        }
+	    $id   = erp_acct_update_product( $item, $id );
 
-        $post_id = wp_update_post( wp_slash( (array) $item ), true );
+	    $response = $this->prepare_item_for_response( $item, $request );
+	    $response = rest_ensure_response( $response );
 
-        $this->update_product_metas( $post_id, $request );
-
-        $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $inv_product, $request );
-        $response = rest_ensure_response( $response );
-        $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
-
-        return $response;
+	    return $response;
     }
 
-    public function update_product_metas( $post_id, $request ) {
-        if ( !empty( $request['_cost_price'] ) ) {
-            update_post_meta( $post_id, '_cost_price', $request['_cost_price'] );
-        }
-
-        if ( !empty( $request['_sale_price'] ) ) {
-            update_post_meta( $post_id, '_sale_price', $request['_sale_price'] );
-        }
-
-        if ( !empty( $request['_sku'] ) ) {
-            update_post_meta( $post_id, '_sku', $request['_sku'] );
-        }
-
-        if ( !empty( $request['_sales_account'] ) ) {
-            update_post_meta( $post_id, '_sales_account', $request['_sales_account'] );
-        }
-
-        if ( !empty( $request['_purchase_account'] ) ) {
-            update_post_meta( $post_id, '_purchase_account', $request['_purchase_account'] );
-        }
-
-        if ( !empty( $request['_inventory_asset_account'] ) ) {
-            update_post_meta( $post_id, '_inventory_asset_account', $request['_inventory_asset_account'] );
-        }
-    }
 
     /**
      * Delete an inventory product
@@ -228,7 +162,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function delete_inventory_product( $request ) {
         $id = (int) $request['id'];
 
-        wp_delete_post( $id );
+	    erp_acct_delete_product( $id );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -244,24 +178,29 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $prepared_item = [];
 
         // required arguments.
-        if ( isset( $request['title'] ) ) {
-            $prepared_item['post_title'] = $request['title'];
+        if ( isset( $request['name'] ) ) {
+            $prepared_item['name'] = $request['name'];
         }
 
-        if ( isset( $request['body'] ) ) {
-            $prepared_item['post_content'] = $request['body'];
+        if ( isset( $request['product_type_id'] ) ) {
+            $prepared_item['product_type_id'] = $request['product_type_id'];
         }
 
-        // optional arguments.
-        if ( isset( $request['id'] ) ) {
-            $prepared_item['ID'] = absint( $request['id'] );
+        if ( isset( $request['category_id'] ) ) {
+            $prepared_item['category_id'] = $request['category_id'];
         }
 
-        if ( isset( $request['status'] ) ) {
-            $prepared_item['post_status'] = $request['status'];
+        if ( isset( $request['vendor'] ) ) {
+            $prepared_item['vendor'] = $request['vendor'];
         }
 
-        $prepared_item['post_type'] = 'erp_inv_product';
+	    if ( isset( $request['cost_price'] ) ) {
+		    $prepared_item['cost_price'] = $request['cost_price'];
+	    }
+
+	    if ( isset( $request['sale_price'] ) ) {
+		    $prepared_item['sale_price'] = $request['sale_price'];
+	    }
 
         return $prepared_item;
     }
@@ -269,23 +208,22 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
+     * @param array|object $item
      * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        $post_date   = new \DateTime( $item->post_date );
-        $post_author = get_user_by('id', $item->post_author);
+	    $item = (object) $item;
 
         $data = [
-            'id'     => (int) $item->id,
-            'title'  => $item->post_title,
-            'body'   => $item->post_content,
-            'status' => $item->post_status,
-            'date'   => $post_date->format('Y-m-d'),
-            'author' => $post_author->user_login
+            'name'  => $item->name,
+            'product_type_id'   => $item->product_type_id,
+            'category_id' => $item->category_id,
+            'vendor'   => $item->vendor,
+            'cost_price' => $item->cost_price,
+            'sale_price'   => $item->sale_price
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -315,7 +253,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'title'           => [
+                'name'           => [
                     'description' => __( 'Title for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -324,54 +262,39 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'body'            => [
-                    'description' => __( 'Body for the resource.' ),
-                    'type'        => 'string',
+                'vendor'           => [
+	                'description' => __( 'Vendor for the resource.' ),
+	                'type'        => 'string',
+	                'context'     => [ 'edit' ],
+	                'arg_options' => [
+		                'sanitize_callback' => 'sanitize_text_field',
+	                ],
+	                'required'    => true,
+                ],
+                'product_type_id' => [
+                    'description' => __( 'product type id for the resource.' ),
+                    'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'status'          => [
-                    'description' => __( 'Status for the resource.' ),
-                    'type'        => 'string',
+                'category_id'   => [
+                    'description' => __( 'Category id for the resource.' ),
+                    'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                '_sku'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'readonly'    => true,
+                'cost_price'              => [
+	                'description' => __( 'Cost price for the resource.' ),
+	                'type'        => 'integer',
+	                'context'     => [ 'embed', 'view', 'edit' ],
+	                'readonly'    => true,
                 ],
-                '_sale_price'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'readonly'    => true,
-                ],
-                '_cost_price'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'readonly'    => true,
-                ],
-                '_sales_account'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'readonly'    => true,
-                ],
-                '_purchase_account'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'readonly'    => true,
-                ],
-                '_inventory_asset_account'              => [
-                    'description' => __( 'Unique identifier for the resource.' ),
+                'sale_price'              => [
+                    'description' => __( 'Sale price for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
