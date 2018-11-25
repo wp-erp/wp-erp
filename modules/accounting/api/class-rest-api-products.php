@@ -86,6 +86,8 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
 
 	    $response = rest_ensure_response( $product_data );
 	    $response = $this->format_collection_response( $response, $request, count( $product_data ) );
+
+	    return $response;
     }
 
     /**

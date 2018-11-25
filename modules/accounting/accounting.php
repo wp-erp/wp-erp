@@ -155,6 +155,7 @@ final class Accounting {
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/common.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/taxes.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/products.php';
+	    require_once ERP_ACCOUNTING_INCLUDES . '/functions/product_cats.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/ledger-accounts.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/invoices.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/payments.php';
