@@ -1,5 +1,5 @@
 <template>
-    <div id="erp-accounting-app">
+    <div id="erp-accounting">
 
         <router-view />
     </div>

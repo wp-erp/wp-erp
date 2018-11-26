@@ -7,7 +7,7 @@ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-    el: '#erp-accounting-app',
+    el: '#erp-accounting',
     router,
     render: h => h(App)
 });
