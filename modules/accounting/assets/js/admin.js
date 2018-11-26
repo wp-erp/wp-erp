@@ -1074,7 +1074,7 @@ _vue2.default.config.productionTip = false;
 
 /* eslint-disable no-new */
 new _vue2.default({
-    el: '#erp-accounting-app',
+    el: '#erp-accounting',
     router: _router2.default,
     render: function render(h) {
         return h(_App2.default);
@@ -1156,12 +1156,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { id: "erp-accounting-app" } },
-    [_c("router-view")],
-    1
-  )
+  return _c("div", { attrs: { id: "erp-accounting" } }, [_c("router-view")], 1)
 }
 var staticRenderFns = []
 render._withStripped = true

@@ -68,6 +68,6 @@ class Admin {
      * @return void
      */
     public function plugin_page() {
-        echo '<div class="wrap"><div id="erp-accounting-app"></div></div>';
+        echo '<div class="wrap"><div id="erp-accounting"></div></div>';
     }
 }
