@@ -11,7 +11,7 @@ Vue.use(Router)
 export default new Router({
     routes: [
         {
-            path: '/erp-accounting',
+            path: '/',
             name: 'Dashboard',
             component: Dashboard
         },
