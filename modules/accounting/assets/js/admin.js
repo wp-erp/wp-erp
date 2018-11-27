@@ -1064,10 +1064,6 @@ var _router = __webpack_require__(37);
 
 var _router2 = _interopRequireDefault(_router);
 
-var _adminMenuFix = __webpack_require__(62);
-
-var _adminMenuFix2 = _interopRequireDefault(_adminMenuFix);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue2.default.config.productionTip = false;
@@ -1080,9 +1076,6 @@ new _vue2.default({
         return h(_App2.default);
     }
 });
-
-// fix the admin menu for the slug "vue-app"
-(0, _adminMenuFix2.default)('accounting');
 
 /***/ }),
 /* 34 */
@@ -1214,7 +1207,7 @@ _vue2.default.use(_vueRouter2.default);
 
 exports.default = new _vueRouter2.default({
     routes: [{
-        path: '/erp-accounting',
+        path: '/',
         name: 'Dashboard',
         component: _Dashboard2.default
     }, {
@@ -3020,51 +3013,6 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-3f2c203a", esExports)
   }
 }
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-/**
- * As we are using hash based navigation, hack fix
- * to highlight the current selected menu
- *
- * Requires jQuery
- */
-function menuFix(slug) {
-    var $ = jQuery;
-
-    var menuRoot = $('#toplevel_page_' + slug);
-    var currentUrl = window.location.href;
-    var currentPath = currentUrl.substr(currentUrl.indexOf('admin.php'));
-
-    menuRoot.on('click', 'a', function () {
-        var self = $(this);
-
-        $('ul.wp-submenu li', menuRoot).removeClass('current');
-
-        if (self.hasClass('wp-has-submenu')) {
-            $('li.wp-first-item', menuRoot).addClass('current');
-        } else {
-            self.parents('li').addClass('current');
-        }
-    });
-
-    $('ul.wp-submenu a', menuRoot).each(function (index, el) {
-        if ($(el).attr('href') === currentPath) {
-            $(el).parent().addClass('current');
-            return;
-        }
-    });
-}
-
-exports.default = menuFix;
 
 /***/ })
 ],[33]);

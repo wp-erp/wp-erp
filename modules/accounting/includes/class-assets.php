@@ -48,12 +48,17 @@ class Assets {
             wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
         }
 
-        wp_localize_script( 'accounting-admin', 'acc_var', array(
+        $component = 'accounting';
+        $menu = erp_menu();
+        $menus = $menu[$component];
+
+        wp_localize_script( 'accounting-admin', 'erp_acct_var', array(
             'user_id'       => $u_id,
             'site_url'      => $site_url,
             'rest_nonce'    => $rest_nonce,
             'logout_url'    => $logout_url,
             'acc_aaset_url' => $acc_aaset_url,
+            'erp_acct_menus'=> $menus,
         ) );
     }
 

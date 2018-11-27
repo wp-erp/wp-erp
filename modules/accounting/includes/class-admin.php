@@ -8,39 +8,102 @@ class Admin {
 
     public function __construct() {
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
+        add_action( 'admin_init', [ $this, 'init_hooks' ], 5 );
     }
 
     /**
-     * Register our menu page
+     * Register the admin menu
      *
      * @return void
      */
     public function admin_menu() {
-        global $submenu;
+        $dashboard      = 'erp_ac_view_dashboard';
+        $customer       = 'erp_ac_view_customer';
+        $vendor         = 'erp_ac_view_vendor';
+        $sale           = 'erp_ac_view_sale';
+        $expense        = 'erp_ac_view_expense';
+        $account_charts = 'erp_ac_view_account_lists';
+        $bank           = 'erp_ac_view_bank_accounts';
+        $journal        = 'erp_ac_view_journal';
+        $reports        = 'erp_ac_view_reports';
 
-        $capability = 'manage_options';
-        $slug       = 'accounting';
+        $slug           = 'erp-accounting';
 
-        $hook = add_menu_page( __( 'Accounting', 'erp' ), __( 'Accounting', 'erp' ), $capability, $slug, [ $this, 'plugin_page' ], 'dashicons-text' );
+        add_submenu_page( 'erp', __( 'Accounting', 'erp' ), 'Accounting', 'erp_hr_manager', $slug , [
+            $this,
+            'plugin_page'
+        ] );
 
-        if ( current_user_can( $capability ) ) {
-            $submenu[ $slug ][] = array( __( 'Dashboard', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting' );
-            $submenu[ $slug ][] = array( __( 'Customers', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-customers' );
-            $submenu[ $slug ][] = array( __( 'Vendors', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-vendors' );
-            $submenu[ $slug ][] = array( __( 'Employees', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-employees' );
-            $submenu[ $slug ][] = array( __( 'Sales', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-sales' );
-            $submenu[ $slug ][] = array( __( 'Bills', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-bills' );
-            $submenu[ $slug ][] = array( __( 'Purchases', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-purchases' );
-            $submenu[ $slug ][] = array( __( 'Taxes', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-tax' );
-            $submenu[ $slug ][] = array( __( 'Products', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-products' );
-            $submenu[ $slug ][] = array( __( 'Product Categories', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-product-cats' );
-            $submenu[ $slug ][] = array( __( 'Journals', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-journals' );
-            $submenu[ $slug ][] = array( __( 'Chart of Accounts', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-charts' );
-            $submenu[ $slug ][] = array( __( 'Reports', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-reports' );
-            $submenu[ $slug ][] = array( __( 'Help', 'erp' ), $capability, 'admin.php?page=' . $slug . '#/erp-accounting-help' );
-        }
-
-        add_action( 'load-' . $hook, [ $this, 'init_hooks'] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Dashboard', 'erp' ),
+            'capability' => $dashboard,
+            'slug'       => 'dashboard',
+            'callback'   => [ $this, 'dashboard_page' ],
+            'position'   => 1
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Customers', 'erp' ),
+            'capability' => $customer,
+            'slug'       => 'customers',
+            'callback'   => [ $this, 'page_customers' ],
+            'position'   => 5
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Vendors', 'erp' ),
+            'capability' => $vendor,
+            'slug'       => 'vendors',
+            'callback'   => [ $this, 'page_vendors' ],
+            'position'   => 10
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Sales', 'erp' ),
+            'capability' => $sale,
+            'slug'       => 'sales',
+            'callback'   => [ $this, 'page_sales' ],
+            'position'   => 15
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Expenses', 'erp' ),
+            'capability' => $expense,
+            'slug'       => 'expense',
+            'callback'   => [ $this, 'page_expenses' ],
+            'position'   => 20
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Chart of Accounts', 'erp' ),
+            'capability' => $account_charts,
+            'slug'       => 'charts',
+            'callback'   => [ $this, 'page_chart_of_accounting' ],
+            'position'   => 25
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Bank Accounts', 'erp' ),
+            'capability' => $bank,
+            'slug'       => 'bank',
+            'callback'   => [ $this, 'page_bank' ],
+            'position'   => 30
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      =>  __( 'Journal Entry', 'erp' ),
+            'capability' => $journal,
+            'slug'       => 'journal',
+            'callback'   => [ $this, 'page_journal_entry' ],
+            'position'   => 35
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      =>  __( 'Reports', 'erp' ),
+            'capability' => $reports,
+            'slug'       => 'reports',
+            'callback'   => [ $this, 'page_reports' ],
+            'position'   => 90
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      =>  __( '<span class="erp-help">Help</span>', 'erp' ),
+            'capability' => $dashboard,
+            'slug'       => 'erp-ac-help',
+            'callback'   => [ $this, 'help_page' ],
+            'position'   => 99
+        ] );
     }
 
     /**

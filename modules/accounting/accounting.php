@@ -189,10 +189,7 @@ final class Accounting {
      */
     public function init_hooks() {
 
-        add_action( 'init', array( $this, 'init_classes' ) );
-
-        // Localize our plugin
-        add_action( 'init', array( $this, 'localization_setup' ) );
+        add_action( 'init', [ $this, 'init_classes' ] );
 
     }
 
@@ -211,14 +208,6 @@ final class Accounting {
         $this->container['assets'] = new \WeDevs\ERP\Accounting\INCLUDES\Assets();
     }
 
-    /**
-     * Initialize plugin for localization
-     *
-     * @uses load_plugin_textdomain()
-     */
-    public function localization_setup() {
-        load_plugin_textdomain( 'erp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-    }
 
     /**
      * What type of request is this?
