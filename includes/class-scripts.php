@@ -149,6 +149,7 @@ class Scripts {
         wp_enqueue_script( 'erp-select2' );
         wp_enqueue_script( 'erp-popup' );
         wp_enqueue_script( 'erp-script' );
+        wp_enqueue_media();
 
         wp_localize_script( 'erp-script', 'wpErp', array(
             'nonce'           => wp_create_nonce( 'erp-nonce' ),
@@ -174,7 +175,6 @@ class Scripts {
         // load country/state JSON on new company page
         if ( erp_is_contacts_page() ) {
             wp_enqueue_script( 'post' );
-            wp_enqueue_media();
 
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
