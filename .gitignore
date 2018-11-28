@@ -10,3 +10,4 @@ debug.log
 .netbeans.xml
 plugin-deploy.sh
 package-lock.json
+/modules/accounting/config.json
