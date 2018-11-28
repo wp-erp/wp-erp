@@ -180,7 +180,7 @@ class Scripts {
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
 
-        if ( erp_is_current_page( 'erp-hr', 'employee' ) || erp_is_current_page( 'erp-hr', 'my-profile' ) ) {
+        if ( erp_is_current_page( 'erp-hr', 'employee' ) || erp_is_current_page( 'erp-hr', 'my-profile' ) || ( isset( $_GET['page'] ) && 'erp-company' === $_GET['page'] ) ) {
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
