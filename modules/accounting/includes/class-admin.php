@@ -98,12 +98,24 @@ class Admin {
             'position'   => 90
         ] );
         erp_add_menu( 'accounting', [
-            'title'      =>  __( '<span class="erp-help">Help</span>', 'erp' ),
+            'title'      =>  __( 'Help', 'erp' ),
             'capability' => $dashboard,
             'slug'       => 'erp-ac-help',
             'callback'   => [ $this, 'help_page' ],
             'position'   => 99
         ] );
+        erp_add_menu( 'accounting', [
+            'title'      =>  __( 'Inventory', 'erp' ),
+            'capability' => 'erp_ac_view_sale',
+            'slug'       => 'erp_inv_product',
+            'position'   => 38,
+        ] );
+        erp_add_submenu( 'accounting', 'erp_inv_product', array(
+            'title'         =>  __( 'Product Categories', 'erp' ),
+            'capability'    =>  'erp_ac_view_sale',
+            'slug'          =>  'erp_inv_product_category',
+            'position'      =>  1,
+        ) );
     }
 
     /**

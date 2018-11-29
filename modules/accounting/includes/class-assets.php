@@ -48,9 +48,15 @@ class Assets {
             wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
         }
 
-        $component = 'accounting';
-        $menu = erp_menu();
-        $menus = $menu[$component];
+        $menus = '';
+
+        if ( is_admin() ) {
+            $component = 'accounting';
+            $menu = erp_menu();
+            $menus = $menu[$component];
+        }
+
+        error_log( print_r( json_encode( $menus ), true ) );
 
         wp_localize_script( 'accounting-admin', 'erp_acct_var', array(
             'user_id'       => $u_id,

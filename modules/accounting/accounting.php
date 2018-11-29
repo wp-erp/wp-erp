@@ -1,18 +1,4 @@
 <?php
-/*
-Plugin Name: WP ERP Accounting
-Plugin URI: https://wperp.com/
-Description: WP ERP Accounting Plugin
-Version: 2.0
-Author: weDevs
-Author URI: https://wperp.com/
-License: GPL2
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: erp
-Domain Path: /languages
-*/
-
-
 
 namespace WeDevs\ERP\Accounting;
 
