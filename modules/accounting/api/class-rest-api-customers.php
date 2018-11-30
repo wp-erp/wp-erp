@@ -322,6 +322,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             'website'     => $item->website,
             'notes'       => $item->notes,
             'other'       => $item->other,
+            'company'     => $item->company,
             'billing'     => [
                 'first_name'    => $item->first_name,
                 'last_name'     => $item->last_name,
