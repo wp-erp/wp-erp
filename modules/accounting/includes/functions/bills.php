@@ -50,8 +50,6 @@ function erp_acct_insert_bill( $data, $bill_id ) {
 
     $bill_data = erp_acct_get_formatted_bill_data( $data, $voucher_no );
 
-    error_log( print_r( $bill_data, true ) );
-
     $wpdb->insert( $wpdb->prefix . 'erp_acct_bill', array(
         'voucher_no'      => $bill_data['voucher_no'],
         'vendor_id'       => $bill_data['people_id'],

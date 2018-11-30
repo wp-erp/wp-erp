@@ -56,8 +56,6 @@ class Assets {
             $menus = $menu[$component];
         }
 
-        error_log( print_r( json_encode( $menus ), true ) );
-
         wp_localize_script( 'accounting-admin', 'erp_acct_var', array(
             'user_id'       => $u_id,
             'site_url'      => $site_url,
