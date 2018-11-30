@@ -27,7 +27,7 @@ class REST_API {
             '\WeDevs\ERP\Accounting\API\Purchases_Controller',
             '\WeDevs\ERP\Accounting\API\Pay_Purchases_Controller',
             '\WeDevs\ERP\Accounting\API\Taxes_Controller',
-            '\WeDevs\ERP\Accounting\API\Transfer_Controller',
+            '\WeDevs\ERP\Accounting\API\Bank_Accounts_Controller',
         ] );
 
         return $controllers;
@@ -47,6 +47,6 @@ class REST_API {
         require_once ERP_ACCOUNTING_API . '/class-rest-api-purchases.php';
         require_once ERP_ACCOUNTING_API . '/class-rest-api-pay_purchases.php';
         require_once ERP_ACCOUNTING_API . '/class-rest-api-taxes.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-transfer.php';
+        require_once ERP_ACCOUNTING_API . '/class-rest-api-transfer-bank.php';
     }
 }

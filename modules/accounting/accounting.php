@@ -149,7 +149,7 @@ final class Accounting {
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/pay_bills.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/purchases.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/pay_purchases.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/transfer.php';
+        require_once ERP_ACCOUNTING_INCLUDES . '/functions/bank.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/charts.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/reports.php';
     }

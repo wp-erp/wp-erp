@@ -873,6 +873,7 @@ Company'
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `name` varchar(255) DEFAULT NULL,
               `parent_id` varchar(255) DEFAULT NULL,
+              `system` tinyint(1) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,
@@ -915,13 +916,24 @@ Company'
               `category_id` int(11) DEFAULT NULL,
               `name` varchar(255) DEFAULT NULL,
               `code` int(11) DEFAULT NULL,
-              `system` int(11) DEFAULT NULL,
+              `system` tinyint(1) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,
               `updated_by` varchar(50) DEFAULT NULL,
               PRIMARY KEY (`id`),
               UNIQUE KEY `chart_id` (`chart_id`)
+            ) $collate;",
+
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_cash_at_banks` (
+              `id` int(11) NOT NULL AUTO_INCREMENT,
+              `ledger_id` int(11) DEFAULT NULL,
+              `created_at` date DEFAULT NULL,
+              `created_by` varchar(50) DEFAULT NULL,
+              `updated_at` date DEFAULT NULL,
+              `updated_by` varchar(50) DEFAULT NULL,
+              PRIMARY KEY (`id`)
             ) $collate;",
 
 
