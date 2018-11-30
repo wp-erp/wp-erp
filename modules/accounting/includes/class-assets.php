@@ -21,6 +21,10 @@ class Assets {
      * @return void
      */
     public function register() {
+        $screen = get_current_screen();
+        if ( $screen->base != 'wp-erp_page_erp-accounting' ){
+            return;
+        }
         $this->register_scripts( $this->get_scripts() );
         $this->register_styles( $this->get_styles() );
     }
