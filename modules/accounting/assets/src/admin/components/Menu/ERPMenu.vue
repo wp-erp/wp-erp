@@ -3,13 +3,13 @@
         <div class="erp-page-header">
             <div class="module-icon">
             </div>
-            <h2>Accounting</h2>
+            <h2>{{ module_name }}</h2>
         </div>
-        <ul class="erp-nav -primary" >
+        <ul :class="primaryNav" >
             <template v-for="(menu, index) in menuItems">
                 <li v-if="menu.hasOwnProperty('submenu')" class="dropdown-nav" >
                      <a href="#">{{menu.title}}</a>
-                    <ul class="erp-nav-dropdown">
+                    <ul :class="dropDownClass">
                         <li v-for="item in menu.submenu">
                             <a href="#">{{item.title}}</a>
                         </li>
@@ -24,6 +24,8 @@
 </template>
 
 <script>
+    import { sprintf, _n, __ } from '@wordpress/i18n';
+
     export default {
         name: 'ERPMenu',
 
@@ -32,7 +34,11 @@
         },
         data() {
             return {
-                menuItems: erp_acct_var.erp_acct_menus
+                menuItems: erp_acct_var.erp_acct_menus,
+                dropDownClass: "erp-nav-dropdown",
+                primaryNav: "erp-nav -primary",
+                module_name: __( 'Accounting', 'erp' )
+
             }
         },
         created: function(){
@@ -48,7 +54,7 @@
                 if ( container == null ) {
                     return;
                 }
-                primary = container.querySelector('.-primary');
+                const primary = container.querySelector('.-primary');
 
 
                 primaryItems = container.querySelectorAll('.-primary > li:not(.-more)');
@@ -56,7 +62,7 @@
 
                 // insert "more" button and duplicate the list
                 primary.insertAdjacentHTML('beforeend', '<li class="-more"><button type="button" aria-haspopup="true" aria-expanded="false">More <span class="dashicons dashicons-arrow-down-alt2"></span></button><ul class="-secondary">' + primary.innerHTML + '</ul></li>');
-                secondary = container.querySelector('.-secondary');
+                const secondary = container.querySelector('.-secondary');
                 secondaryItems = [].slice.call(secondary.children);
                 allItems = container.querySelectorAll('li');
                 moreLi = primary.querySelector('.-more');
