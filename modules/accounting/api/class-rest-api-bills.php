@@ -139,24 +139,12 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function create_bill( $request ) {
-        $request->set_param( 'context', 'edit' );
         $bill_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['bill_details'];
+        $bill_id = erp_acct_insert_bill( $bill_data );
 
-        foreach ( $items as $key => $item ) {
-            $total = 0; $due = 0;
-
-            $bill_id[$key] = $item['voucher_no'];
-            $total += $item['line_total'];
-
-            $bill_data['amount'] = $total;
-
-            erp_acct_insert_bill( $bill_data, $bill_id[$key] );
-        }
-
-        $response = rest_ensure_response( $bill_data );
-        $response = $this->format_collection_response( $response, $request, count( $items ) );
+        $response = rest_ensure_response( $bill_id );
+        $response = $this->format_collection_response( $response, $request, 1 );
 
         return $response;
     }
@@ -177,18 +165,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $bill_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['bill_details'];
-
-        foreach ( $items as $key => $item ) {
-            $total = 0; $due = 0;
-
-            $invoice_id[$key] = $item['invoice_id'];
-            $total += $item['line_total'];
-
-            $bill_data['amount'] = $total;
-
-            erp_acct_update_bill( $bill_data, $invoice_id[$key] );
-        }
+        erp_acct_update_bill( $bill_data, $id );
 
         $response = rest_ensure_response( $bill_data );
         $response = $this->format_collection_response( $response, $request, count( $items ) );
