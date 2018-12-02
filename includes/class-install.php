@@ -1104,7 +1104,7 @@ Company'
               `trn_date` date DEFAULT NULL,
               `due_date` date DEFAULT NULL,
               `amount` decimal(10,0) DEFAULT NULL,
-              `supplier_name` int(11) DEFAULT NULL,
+              `vendor_name` varchar(255) DEFAULT NULL,
               `ref` varchar(255) DEFAULT NULL,
               `status` varchar(255) DEFAULT NULL,
               `attachments` varchar(255) DEFAULT NULL,
