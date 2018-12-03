@@ -142,17 +142,8 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $items = $request['line_items'];
 
-        foreach ( $items as $key => $item ) {
-            $total = 0;
-
-            $purchase_id[$key] = $item['purchase_id'];
-            $total += $item['line_total'];
-
-            $purchase_data['amount'] = $total;
-
-            erp_acct_insert_purchase( $purchase_data, $purchase_id[$key] );
-        }
-
+        $purchase_id = erp_acct_insert_purchase( $purchase_data );
+        
         $response = rest_ensure_response( $purchase_data );
         $response = $this->format_collection_response( $response, $request, count( $items ) );
 
@@ -243,8 +234,14 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $prepared_item = [];
 
+        if ( isset( $request['voucher_no'] ) ) {
+            $prepared_item['voucher_no'] = $request['voucher_no'];
+        }
         if ( isset( $request['vendor_id'] ) ) {
             $prepared_item['vendor_id'] = $request['vendor_id'];
+        }
+        if ( isset( $request['vendor_name'] ) ) {
+            $prepared_item['vendor_name'] = $request['vendor_name'];
         }
         if ( isset( $request['ref'] ) ) {
             $prepared_item['ref'] = $request['ref'];
@@ -258,17 +255,20 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['amount'] ) ) {
             $prepared_item['amount'] = $request['amount'];
         }
-        if ( isset( $request['memo'] ) ) {
-            $prepared_item['memo'] = $request['memo'];
+        if ( isset( $request['remarks'] ) ) {
+            $prepared_item['remarks'] = $request['remarks'];
         }
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = $request['attachments'];
         }
-        if ( isset( $request['trn_by'] ) ) {
-            $prepared_item['trn_by'] = $request['trn_by'];
-        }
         if ( isset( $request['type'] ) ) {
             $prepared_item['type'] = $request['type'];
+        }
+        if ( isset( $request['status'] ) ) {
+            $prepared_item['status'] = $request['status'];
+        }
+        if ( isset( $request['line_items'] ) ) {
+            $prepared_item['line_items'] = $request['line_items'];
         }
 
         return $prepared_item;
@@ -288,14 +288,13 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'id'              => (int) $item->id,
             'voucher_no'      => (int) $item->voucher_no,
             'vendor_id'       => (int) $item->vendor_id,
+            'vendor_name'     => $item->vendor_name,
             'date'            => $item->trn_date,
             'due_date'        => $item->due_date,
             'billing_address' => $item->billing_address,
             'line_items'      => $item->line_items,
             'subtotal'        => (int) $item->subtotal,
             'total'           => (int) $item->total,
-            'discount'        => (int) $item->discount,
-            'tax'             => (int) $item->tax,
             'type'            => $item->type,
             'status'          => $item->status,
         ];
@@ -343,6 +342,14 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                     'required'    => true,
+                ],
+                'vendor_name'   => [
+                    'description' => __( 'Customer id for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
                 ],
                 'trn_date'       => [
                     'description' => __( 'Date for the resource.' ),

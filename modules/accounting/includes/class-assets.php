@@ -59,11 +59,22 @@ class Assets {
 
         if ( is_admin() ) {
             $component = 'accounting';
-            $menu = erp_menu();
+            $menu  = erp_menu();
             $menus = $menu[$component];
-        }
 
-        error_log( print_r( json_encode( $menus ), true ) );
+            //check items for capabilities
+            $items = array_filter( $menus, function( $item ) {
+                if ( !isset( $item['capability'] ) ) {
+                    return false;
+                }
+                return current_user_can( $item['capability'] );
+            } );
+
+            //sort items for position
+            uasort( $menus, function ( $a, $b ) {
+                return $a['position'] > $b['position'];
+            } );
+        }
 
         wp_localize_script( 'accounting-admin', 'erp_acct_var', array(
             'user_id'       => $u_id,

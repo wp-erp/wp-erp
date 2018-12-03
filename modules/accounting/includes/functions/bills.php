@@ -36,46 +36,80 @@ function erp_acct_get_bill( $bill_no ) {
  * Insert a bill
  *
  * @param $data
- * @param $bill_id
  * @return mixed
  */
-function erp_acct_insert_bill( $data, $bill_id ) {
-    global $wpdb; $bill_data = [];
+function erp_acct_insert_bill( $data ) {
+    global $wpdb;
 
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-        'type'            => $data['type'],
-    ) );
+    $created_by = get_current_user_id();
 
-    $voucher_no = $wpdb->insert_id ;
+    try {
+        $wpdb->query( 'START TRANSACTION' );
 
-    $bill_data = erp_acct_get_formatted_bill_data( $data, $voucher_no );
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
+            'type'       => 'bill',
+            'created_at' => $data['created_at'],
+            'created_by' => $created_by,
+            'updated_at' => $data['updated_at'],
+            'updated_by' => $data['updated_by'],
+        ) );
 
-    error_log( print_r( $bill_data, true ) );
+        $voucher_no = $wpdb->insert_id;
 
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_bill', array(
-        'voucher_no'      => $bill_data['voucher_no'],
-        'vendor_id'       => $bill_data['people_id'],
-        'vendor_name'     => $bill_data['vendor_name'],
-        'address'         => $bill_data['billing_address'],
-        'trn_date'        => $bill_data['trn_date'],
-        'due_date'        => $bill_data['due_date'],
-        'amount'          => $bill_data['total'],
-        'attachments'     => $bill_data['attachments'],
-        'ref'             => $bill_data['ref'],
-        'remarks'         => $bill_data['remarks'],
-        'created_at'      => $bill_data['created_at'],
-        'created_by'      => $bill_data['created_by'],
-    ) );
+        $bill_data = erp_acct_get_formatted_bill_data( $data, $voucher_no );
 
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_bills', array(
+            'voucher_no'      => $bill_data['voucher_no'],
+            'vendor_id'       => $bill_data['people_id'],
+            'vendor_name'     => $bill_data['vendor_name'],
+            'address'         => $bill_data['billing_address'],
+            'trn_date'        => $bill_data['trn_date'],
+            'due_date'        => $bill_data['due_date'],
+            'amount'          => $bill_data['total'],
+            'attachments'     => $bill_data['attachments'],
+            'ref'             => $bill_data['ref'],
+            'remarks'         => $bill_data['remarks'],
+            'created_at'      => $bill_data['created_at'],
+            'created_by'      => $bill_data['created_by'],
+            'updated_at'      => $bill_data['updated_at'],
+            'updated_by'      => $bill_data['updated_by'],
+        ) );
 
+        $items = $bill_data['bill_details'];
 
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
-        'bill_no'    => $voucher_no,
-        'trn_no'     => $voucher_no,
-        'particulars'=> '',
-        'debit'      => 0,
-        'credit'     => $bill_data['amount']
-    ) );
+        foreach ( $items as $key => $item ) {
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', array(
+                'trn_no'      => $voucher_no,
+                'ledger_id'   => $item['ledger_id'],
+                'particulars' => $item['remarks'],
+                'amount'      => $item['amount'],
+                'created_at'  => $bill_data['created_at'],
+                'created_by'  => $bill_data['created_by'],
+                'updated_at'  => $bill_data['updated_at'],
+                'updated_by'  => $bill_data['updated_by'],
+            ) );
+
+            erp_acct_insert_bill_data_into_ledger( $bill_data, $item );
+        }
+
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
+            'bill_no'    => $voucher_no,
+            'trn_no'     => $voucher_no,
+            'particulars'=> '',
+            'debit'      => 0,
+            'credit'     => $bill_data['amount'],
+            'created_at'  => $bill_data['created_at'],
+            'created_by'  => $bill_data['created_by'],
+            'updated_at'  => $bill_data['updated_at'],
+            'updated_by'  => $bill_data['updated_by'],
+        ) );
+
+        $wpdb->query( 'COMMIT' );
+
+    } catch (Exception $e) {
+        $wpdb->query( 'ROLLBACK' );
+        return new WP_error( 'bill-exception', $e->getMessage() );
+    }
 
     return $voucher_no;
 
@@ -86,37 +120,71 @@ function erp_acct_insert_bill( $data, $bill_id ) {
  *
  * @param $data
  * @param $bill_id
- * @param $due
+ *
  * @return mixed
  */
 function erp_acct_update_bill( $data, $bill_id ) {
-
     global $wpdb;
-    $bill_data = erp_acct_get_formatted_bill_data( $data, $bill_id );
 
-    $wpdb->update( $wpdb->prefix . 'erp_acct_bills', array(
-        'vendor_id'       => $bill_data['people_id'],
-        'vendor_name'     => $bill_data['vendor_name'],
-        'trn_date'        => $bill_data['trn_date'],
-        'due_date'        => $bill_data['due_date'],
-        'created_at'      => $bill_data['created_at'],
-        'address'         => $bill_data['billing_address'],
-        'amount'          => $bill_data['total'],
-        'type'            => $bill_data['type'],
-        'attachments'     => $bill_data['attachments']
+    try {
+        $wpdb->query( 'START TRANSACTION' );
+
+        $bill_data = erp_acct_get_formatted_bill_data( $data, $bill_id );
+
+        $wpdb->update( $wpdb->prefix . 'erp_acct_bills', array(
+            'vendor_id'       => $bill_data['people_id'],
+            'vendor_name'     => $bill_data['vendor_name'],
+            'trn_date'        => $bill_data['trn_date'],
+            'due_date'        => $bill_data['due_date'],
+            'address'         => $bill_data['billing_address'],
+            'amount'          => $bill_data['total'],
+            'type'            => $bill_data['type'],
+            'attachments'     => $bill_data['attachments'],
+            'created_at'      => $bill_data['created_at'],
+            'created_by'      => $bill_data['created_by'],
+            'updated_at'      => $bill_data['updated_at'],
+            'updated_by'      => $bill_data['updated_by'],
         ), array(
-        'voucher_no'      => $bill_id
-    ) );
+            'voucher_no'      => $bill_id
+        ) );
 
+        $items = $bill_data['bill_details'];
 
-    $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
-        'bill_no'    => $bill_id,
-        'particulars'=> '',
-        'debit'      => 0,
-        'credit'     => $bill_data['amount']
-    ), array(
-        'trn_no'     => $bill_id
-    ) );
+        foreach ( $items as $key => $item ) {
+            $wpdb->update( $wpdb->prefix . 'erp_acct_bill_details', array(
+                'ledger_id'   => $item['ledger_id'],
+                'particulars' => $item['remarks'],
+                'amount'      => $item['amount'],
+                'created_at'  => $bill_data['created_at'],
+                'created_by'  => $bill_data['created_by'],
+                'updated_at'  => $bill_data['updated_at'],
+                'updated_by'  => $bill_data['updated_by'],
+            ), array(
+                'trn_no'  => $bill_id
+            ));
+
+            erp_acct_update_bill_data_into_ledger( $bill_data, $bill_id, $item );
+        }
+
+        $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
+            'bill_no'    => $bill_id,
+            'particulars'=> '',
+            'debit'      => 0,
+            'credit'     => $bill_data['amount'],
+            'created_at'  => $bill_data['created_at'],
+            'created_by'  => $bill_data['created_by'],
+            'updated_at'  => $bill_data['updated_at'],
+            'updated_by'  => $bill_data['updated_by'],
+        ), array(
+            'trn_no'     => $bill_id
+        ) );
+
+        $wpdb->query( 'COMMIT' );
+
+    } catch (Exception $e) {
+        $wpdb->query( 'ROLLBACK' );
+        return new WP_error( 'bill-exception', $e->getMessage() );
+    }
 
     return $bill_id;
 
@@ -131,6 +199,10 @@ function erp_acct_update_bill( $data, $bill_id ) {
 function erp_acct_delete_bill( $id ) {
     global $wpdb;
 
+    if ( !$id ) {
+        return;
+    }
+
     $wpdb->delete( $wpdb->prefix . 'erp_acct_bill', array( 'voucher_no' => $id ) );
 }
 
@@ -141,7 +213,18 @@ function erp_acct_delete_bill( $id ) {
  * @return void
  */
 function erp_acct_void_bill( $id ) {
+    global $wpdb;
 
+    if ( !$id ) {
+        return;
+    }
+
+    $wpdb->update($wpdb->prefix . 'erp_acct_bills',
+        array(
+            'status' => 'void',
+        ),
+        array( 'voucher_no' => $id )
+    );
 }
 
 /**
@@ -165,7 +248,67 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['ref'] = isset( $data['ref'] ) ? $data['ref'] : '';
     $bill_data['remarks'] = isset( $data['remarks'] ) ? $data['remarks'] : '';
     $bill_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
-    $bill_data['created_by'] = isset( $bill_data['created_by'] ) ? $bill_data['created_by'] : '';
+    $bill_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
+    $bill_data['created_at'] = date("Y-m-d" );
+    $bill_data['created_by'] = isset( $data['created_by'] ) ? $data['created_by'] : '';
+    $bill_data['updated_at'] = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
+    $bill_data['updated_by'] = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
 
     return $bill_data;
+}
+
+/**
+ * Insert bill/s data into ledger
+ *
+ * @param array $bill_data
+ * @param array $item_data
+ *
+ * @return mixed
+ */
+function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
+    global $wpdb;
+
+    // Insert amount in ledger_details
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
+        'ledger_id'   => $item_data['ledger_id'],
+        'trn_no'      => $bill_data['trn_no'],
+        'particulars' => $bill_data['remarks'],
+        'debit'       => $item_data['amount'],
+        'credit'      => 0,
+        'trn_date'    => $bill_data['trn_date'],
+        'created_at'  => $bill_data['created_at'],
+        'created_by'  => $bill_data['created_by'],
+        'updated_at'  => $bill_data['updated_at'],
+        'updated_by'  => $bill_data['updated_by'],
+    ) );
+
+}
+
+/**
+ * Update bill/s data into ledger
+ *
+ * @param array $bill_data
+ * * @param array $bill_no
+ * @param array $item_data
+ *
+ * @return mixed
+ */
+function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data ) {
+    global $wpdb;
+
+    // Update amount in ledger_details
+    $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
+        'ledger_id'   => $item_data['ledger_id'],
+        'particulars' => $bill_data['remarks'],
+        'debit'       => $item_data['amount'],
+        'credit'      => 0,
+        'trn_date'    => $bill_data['trn_date'],
+        'created_at'  => $bill_data['created_at'],
+        'created_by'  => $bill_data['created_by'],
+        'updated_at'  => $bill_data['updated_at'],
+        'updated_by'  => $bill_data['updated_by'],
+    ), array(
+        'trn_no' => $bill_no,
+    ) );
+
 }
