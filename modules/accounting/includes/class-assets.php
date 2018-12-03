@@ -82,6 +82,7 @@ class Assets {
             'rest_nonce'    => $rest_nonce,
             'logout_url'    => $logout_url,
             'acc_aaset_url' => $acc_aaset_url,
+            'erp_assets'    => WPERP_ASSETS,
             'erp_acct_menus'=> $menus,
         ) );
     }

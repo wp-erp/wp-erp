@@ -4,16 +4,16 @@
             <span>Customers</span>
             <a href="#" id="erp-customer-new" @click="showModal = true">+ Add New Customer</a>
         </h2>
-        <ListTable
+        <list-table
             tableClass="wp-ListTable widefat fixed customer-list"
             action-column="actions"
             :columns="columns"
-            :rows="rows"
+            :rows="row_data"
             :bulk-actions="bulkActions"
-            :total-items="4"
-            :total-pages="2"
-            :per-page="2"
-            :current-page="1"
+            :total-items="paginationData.totalItems"
+            :total-pages="paginationData.totalPages"
+            :per-page="paginationData.perPage"
+            :current-page="paginationData.currentPage"
             :actions="[
                 { key: 'edit', label: 'Edit' },
                 { key: 'trash', label: 'Delete' }
@@ -21,14 +21,14 @@
             <template slot="title" slot-scope="data">
                 <strong><a href="#">{{ data.row.title }}</a></strong>
             </template>
-        </ListTable>
+        </list-table>
 
     </div>
 </template>
 
 <script>
-    import ListTable from '../ListTable/ListTable.vue'
-
+    import ListTable from '../list-table/ListTable.vue'
+    import HTTP from '../../http.js'
     export default {
         name: 'Customers',
         components: {
@@ -40,6 +40,7 @@
                     {
                         key: 'trash',
                         label: 'Move to Trash',
+                        img: erp_acct_var.erp_assets + '/images/trash.png'
                     }
                 ],
                 columns: {
@@ -50,31 +51,53 @@
                     'expense': { label: 'Expense' },
                     'actions': { label: 'Actions' }
                 },
-                rows: [
-                    {
-                        id: 1,
-                        customer: 'John Smith',
-                        company: 'Com 1',
-                        email: 'asd@gmail.com',
-                        phone: '+32834239',
-                        expense: '20000'
-                    },
-                    {
-                        id: 2,
-                        customer: 'John Doe',
-                        company: 'Com 2',
-                        email: 'fgh@gmail.com',
-                        phone: '+235235234',
-                        expense: '324234'
-                    }
-                ]
+                rows: [],
+                paginationData: {
+                    totalItems: 0,
+                    totalPages: 0,
+                    perPage: 10,
+                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+                },
             };
         },
         created() {
             this.$on('modal-close', function() {
                 this.showModal = false;
             });
+
+            this.fetchItems();
+
+        },
+
+        computed: {
+            row_data(){
+                let items = this.rows;
+                items.map( item => {
+                    item.customer = item.first_name + ' ' + item.last_name;
+                    item.expense = '55555';
+                } );
+                return items;
+            }
+        },
+
+        methods: {
+            fetchItems(){
+                this.rows = [];
+                HTTP.get('customers')
+                    .then( (response) => {
+                        this.rows = response.data;
+                        this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                        this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                    .then( () => {
+                        //ready
+                    } );
+            }
         }
+
     };
 </script>
 <style lang="less">
