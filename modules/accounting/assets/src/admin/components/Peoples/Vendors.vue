@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import ListTable from '../ListTable/ListTable.vue'
+    import ListTable from '../list-table/ListTable.vue'
 
     export default {
         name: 'Vendors',
