@@ -278,6 +278,7 @@ if (false) {(function () {
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'ERPMenu',
@@ -287,7 +288,8 @@ if (false) {(function () {
       menuItems: erp_acct_var.erp_acct_menus,
       dropDownClass: "erp-nav-dropdown",
       primaryNav: "erp-nav -primary",
-      module_name: Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["__"])('Accounting', 'erp')
+      module_name: Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["__"])('Accounting', 'erp'),
+      svgData: "M221.9,0H17.1C6.8,0,0,6.8,0,17.1V324.3c0,10.2,6.8,17.1,17.1,17.1H221.9c10.2,0,17.1-6.8,17.1-17.1V17.1C238.9,6.8,232.1,0,221.9,0ZM68.3,307.2H34.1V273.1H68.2v34.1Zm0-68.3H34.1V204.8H68.2v34.1Zm0-68.2H34.1V136.6H68.2v34.1Zm68.2,136.5H102.4V273.1h34.1Zm0-68.3H102.4V204.8h34.1Zm0-68.2H102.4V136.6h34.1Zm68.3,136.5H170.7V273.1h34.1v34.1Zm0-68.3H170.7V204.8h34.1v34.1Zm0-68.2H170.7V136.6h34.1v34.1Zm0-68.3H34.1V34.1H204.8v68.3Zm0,0"
     };
   },
   created: function created() {
@@ -1595,7 +1597,25 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "erp-nav-container" }, [
     _c("div", { staticClass: "erp-page-header" }, [
-      _c("div", { staticClass: "module-icon" }),
+      _c("div", { staticClass: "module-icon" }, [
+        _c(
+          "svg",
+          {
+            attrs: {
+              id: "Group_235",
+              "data-name": "Group 235",
+              xmlns: "http://www.w3.org/2000/svg",
+              viewBox: "0 0 239 341.4"
+            }
+          },
+          [
+            _c("path", {
+              staticClass: "cls-1",
+              attrs: { id: "Path_281", "data-name": "Path 281", d: _vm.svgData }
+            })
+          ]
+        )
+      ]),
       _vm._v(" "),
       _c("h2", [_vm._v(_vm._s(_vm.module_name))])
     ]),
