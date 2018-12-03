@@ -224,7 +224,6 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['customer_name'] = $user_info->first_name . ' ' . $user_info->last_name;
     $invoice_data['trn_date']   = isset( $data['date'] ) ? $data['date'] : date("Y-m-d" );
     $invoice_data['due_date']   = isset( $data['due_date'] ) ? $data['due_date'] : date("Y-m-d" );
-    $invoice_data['created_at'] = date("Y-m-d" );
     $invoice_data['billing_address'] = isset( $data['billing_address'] ) ? maybe_serialize( $data['billing_address'] ) : '';
     $invoice_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
     $invoice_data['discount'] = isset( $data['discount'] ) ? $data['discount'] : 0;
@@ -233,6 +232,7 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['tax'] = isset( $data['tax'] ) ? $data['tax'] : 0;
     $invoice_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $invoice_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
+    $invoice_data['created_at'] = date("Y-m-d" );
     $invoice_data['created_by'] = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $invoice_data['updated_at'] = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
     $invoice_data['updated_by'] = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
@@ -250,6 +250,10 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
 
 function erp_acct_delete_invoice( $invoice_no ) {
     global $wpdb;
+
+    if ( !$invoice_no ) {
+        return;
+    }
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_invoices', array( 'voucher_no' => $invoice_no ) );
 }
@@ -292,7 +296,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => 305, // @TODO change later
         'trn_no'      => $invoice_data['voucher_no'],
-        'particulars' => $invoice_data['remarks'],
+        'remarks' => $invoice_data['remarks'],
         'debit'       => 0,
         'credit'      => $invoice_data['amount'],
         'trn_date'    => $invoice_data['trn_date'],
@@ -306,7 +310,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => 306, // @TODO change later
         'trn_no'      => $invoice_data['voucher_no'],
-        'particulars' => $invoice_data['remarks'],
+        'remarks' => $invoice_data['remarks'],
         'debit'       => 0,
         'credit'      => $invoice_data['tax'],
         'trn_date'    => $invoice_data['trn_date'],
@@ -320,7 +324,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => 307, // @TODO change later
         'trn_no'      => $invoice_data['voucher_no'],
-        'particulars' => $invoice_data['remarks'],
+        'remarks' => $invoice_data['remarks'],
         'debit'       => $invoice_data['tax'],
         'credit'      => 0,
         'trn_date'    => $invoice_data['trn_date'],
@@ -345,7 +349,7 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => 305, // @TODO change later
-        'particulars' => $invoice_data['remarks'],
+        'remarks'     => $invoice_data['remarks'],
         'debit'       => 0,
         'credit'      => $invoice_data['amount'],
         'trn_date'    => $invoice_data['trn_date'],
@@ -361,7 +365,7 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => 306, // @TODO change later
         'trn_no'      => $invoice_data['voucher_no'],
-        'particulars' => $invoice_data['remarks'],
+        'remarks'     => $invoice_data['remarks'],
         'debit'       => 0,
         'credit'      => $invoice_data['tax'],
         'trn_date'    => $invoice_data['trn_date'],
@@ -377,7 +381,7 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => 307, // @TODO change later
         'trn_no'      => $invoice_data['voucher_no'],
-        'particulars' => $invoice_data['remarks'],
+        'remarks'     => $invoice_data['remarks'],
         'debit'       => $invoice_data['tax'],
         'credit'      => 0,
         'trn_date'    => $invoice_data['trn_date'],

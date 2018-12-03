@@ -162,7 +162,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $invoice_data['discount'] = array_sum( $item_tax_total );
         $invoice_data['tax'] = array_sum( $item_discount_total );
         $invoice_data['amount'] = array_sum( $item_total );
-        $invoice_data['attachments'] = maybe_serialize( $request['attachments'] );
 
         $invoice_id = erp_acct_insert_invoice( $invoice_data );
 
