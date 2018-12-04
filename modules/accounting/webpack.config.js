@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const package = require('./package.json');
+const pkg = require('./package.json');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
@@ -13,7 +13,7 @@ var appName = 'accounting';
 var entryPoint = {
     frontend: './assets/src/frontend/main.js',
     admin: './assets/src/admin/main.js',
-    vendor: Object.keys(package.dependencies),
+    vendor: Object.keys(pkg.dependencies),
     style: './assets/less/style.less',
 };
 
