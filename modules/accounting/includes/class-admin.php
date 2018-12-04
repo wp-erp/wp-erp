@@ -38,57 +38,64 @@ class Admin {
             'title'      => __( 'Dashboard', 'erp' ),
             'capability' => $dashboard,
             'slug'       => 'dashboard',
-            'callback'   => [ $this, 'dashboard_page' ],
+            'callback'   => [],
             'position'   => 1
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Customers', 'erp' ),
             'capability' => $customer,
             'slug'       => 'customers',
-            'callback'   => [ $this, 'page_customers' ],
+            'callback'   => [],
             'position'   => 5
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Vendors', 'erp' ),
             'capability' => $vendor,
             'slug'       => 'vendors',
-            'callback'   => [ $this, 'page_vendors' ],
+            'callback'   => [],
             'position'   => 10
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Employees', 'erp' ),
+            'capability' => $vendor,
+            'slug'       => 'employees',
+            'callback'   => [],
+            'position'   => 15
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Sales', 'erp' ),
             'capability' => $sale,
             'slug'       => 'sales',
-            'callback'   => [ $this, 'page_sales' ],
-            'position'   => 15
+            'callback'   => [],
+            'position'   => 20
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Expenses', 'erp' ),
             'capability' => $expense,
             'slug'       => 'expense',
-            'callback'   => [ $this, 'page_expenses' ],
-            'position'   => 20
+            'callback'   => [],
+            'position'   => 25
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Chart of Accounts', 'erp' ),
             'capability' => $account_charts,
             'slug'       => 'charts',
-            'callback'   => [ $this, 'page_chart_of_accounting' ],
-            'position'   => 25
+            'callback'   => [],
+            'position'   => 30
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Bank Accounts', 'erp' ),
             'capability' => $bank,
             'slug'       => 'bank',
-            'callback'   => [ $this, 'page_bank' ],
-            'position'   => 30
+            'callback'   => [],
+            'position'   => 35
         ] );
         erp_add_menu( 'accounting', [
-            'title'      =>  __( 'Journal Entry', 'erp' ),
+            'title'      =>  __( 'Journal Entries', 'erp' ),
             'capability' => $journal,
             'slug'       => 'journal',
-            'callback'   => [ $this, 'page_journal_entry' ],
-            'position'   => 35
+            'callback'   => [],
+            'position'   => 40
         ] );
         erp_add_menu( 'accounting', [
             'title'      =>  __( 'Reports', 'erp' ),
@@ -102,19 +109,25 @@ class Admin {
             'capability' => $dashboard,
             'slug'       => 'erp-ac-help',
             'callback'   => [ $this, 'help_page' ],
-            'position'   => 99
+            'position'   => 200
         ] );
         erp_add_menu( 'accounting', [
             'title'      =>  __( 'Inventory', 'erp' ),
             'capability' => 'erp_ac_view_sale',
-            'slug'       => 'erp_inv_product',
-            'position'   => 38,
+            'slug'       => 'erp_inventory',
+            'position'   => 45,
         ] );
-        erp_add_submenu( 'accounting', 'erp_inv_product', array(
+        erp_add_submenu( 'accounting', 'erp_inventory', array(
+            'title'         =>  __( 'Products', 'erp' ),
+            'capability'    =>  'erp_ac_view_sale',
+            'slug'          =>  'erp_inv_product',
+            'position'      =>  5,
+        ) );
+        erp_add_submenu( 'accounting', 'erp_inventory', array(
             'title'         =>  __( 'Product Categories', 'erp' ),
             'capability'    =>  'erp_ac_view_sale',
             'slug'          =>  'erp_inv_product_category',
-            'position'      =>  1,
+            'position'      =>  10,
         ) );
     }
 
