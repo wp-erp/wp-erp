@@ -24,7 +24,9 @@
     "dev-build": "cross-env WEBPACK_ENV=development webpack",
     "build": "cross-env WEBPACK_ENV=production webpack",
     "makepot": "wpvuei18n makepot",
-    "wpmakepot": "wp i18n make-pot . --merge=languages/accounting.pot --skip-js"
+    "wpmakepot": "wp i18n make-pot . --merge=languages/accounting.pot --skip-js",
+    "lint": "eslint --ext .js,.vue .",
+    "lint-fix": "npm run lint -- --fix"
   },
   "dependencies": {
     "@wordpress/i18n": "^3.1.0",
@@ -69,6 +71,8 @@
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^5.2.0",
     "css-loader": "^0.28.8",
+    "eslint": "^5.9.0",
+    "eslint-plugin-vue": "^5.0.0-beta.6",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
     "friendly-errors-webpack-plugin": "^1.6.1",
