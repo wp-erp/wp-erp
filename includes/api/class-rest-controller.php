@@ -256,6 +256,8 @@ abstract class REST_Controller {
      * @return array Links for the given user.
      */
     protected function prepare_links( $item, $namespace = '', $rest_base = '' ) {
+        $item = (array) $item;
+        
         $links = [
             'self' => [
                 'href' => rest_url( sprintf( '%s/%s/%d', $namespace, $rest_base, $item['id'] ) ),
