@@ -236,11 +236,12 @@ abstract class REST_Controller {
      *
      * @param   object $response
      * @param   object $item
+     * @param   array $additional_fields
      *
      * @return  object
      */
-    protected function add_links( $response, $item ) {
-        $response->data['_links'] = $this->prepare_links( $item );
+    protected function add_links( $response, $item, $additional_fields = array() ) {
+        $response->data['_links'] = $this->prepare_links( $item, $additional_fields['namespace'], $additional_fields['rest_base'] );
 
         return $response;
     }
@@ -249,16 +250,18 @@ abstract class REST_Controller {
      * Prepare links for the request.
      *
      * @param  object $item
+     * @param  string $namespace
+     * @param  string $rest_base
      *
      * @return array Links for the given user.
      */
-    protected function prepare_links( $item ) {
+    protected function prepare_links( $item, $namespace = '', $rest_base = '' ) {
         $links = [
             'self' => [
-                'href' => rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ),
+                'href' => rest_url( sprintf( '%s/%s/%d', $namespace, $rest_base, $item['id'] ) ),
             ],
             'collection' => [
-                'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
+                'href' => rest_url( sprintf( '%s/%s', $namespace, $rest_base ) ),
             ]
         ];
 
