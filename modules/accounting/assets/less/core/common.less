@@ -1,0 +1,149 @@
+
+body {
+    background: #F5F5F5;
+}
+
+[class*='flaticon'] {
+    &:before {
+        margin-left: 0;
+        font-size: inherit;
+        color: inherit;
+    }
+}
+
+.screen-reader-text {
+    border: 0;
+    clip: rect(1px,1px,1px,1px);
+    -webkit-clip-path: inset(50%);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    word-wrap: normal!important;
+}
+
+.text-right {
+    text-align: right;
+}
+.text-left {
+    text-align: left;
+}
+.text-justify {
+    text-align: justify;
+}
+.text-center {
+    text-align: center;
+}
+
+// layout
+.wperp-has-border-top {
+    border-top: 1px solid #E5E5E5;
+    padding-top: 20px;
+}
+
+.separator {
+    margin: 20px 0;
+
+    &-top {
+        margin-top: 20px;
+    }
+    &-bottom {
+        margin-bottom: 20px;
+    }
+}
+
+.flaticon-trash {
+    color: #E9485E !important;
+}
+
+
+// Header Section
+.content-header-section {
+    .wperp-row {
+        margin-left: 0;
+        margin-right: 0;
+
+
+        .wperp-col {
+            display: flex;
+            .content-header__title {
+                margin-bottom: 0;
+            }
+            .wperp-btn {
+                display: inline-table;
+            }
+            @media (max-width: @screen-xs-max) {
+                display: flex;
+                width: 100%;
+
+                &:not(:last-child) {
+                    margin-bottom: 20px;
+                }
+            }
+        }
+    }
+
+    .content-header__title {
+        margin-right: 20px;
+        display: inline-block;
+        font-size: 29px;
+        font-weight: normal;
+    }
+
+    .crm-contact-search {
+        @media (max-width: @screen-xs) {
+            display: block;
+
+            & > div {
+                width: 100% !important;
+                margin: 0 0 10px;
+            }
+        }
+
+        .input-icon {
+            width: 180px;
+            margin-right: 12px;
+        }
+    }
+}
+
+.subsubsub-all {
+    &:before {
+        content: "\f10c";
+        font-family: 'Flaticon';
+    }
+}
+
+
+.import-export-box {
+    border: 1px solid @border-color;
+    display: inline-block;
+    .rounded(3px);
+
+    a {
+        padding: 3.5px 7px;
+        display: inline-block;
+        font-size: 14px;
+        color: #B8C1C1;
+        .transition(all .2s);
+
+        &:last-child {
+            border-left: 1px solid @border-color;
+        }
+
+        &:hover {
+            color: @theme-color;
+        }
+
+        i {
+            font-size: inherit;
+
+            &.flaticon-download {
+                font-size: 16px;
+            }
+        }
+    }
+}

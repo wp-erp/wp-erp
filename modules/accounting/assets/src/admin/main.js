@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VueSweetalert2 from 'vue-sweetalert2';
 import App from './App.vue'
 import router from './router'
 
