@@ -1,0 +1,64 @@
+/*
+ * Component: Panel;
+ */
+@panel-padding: 25px;
+@panel-border-radius: 3px;
+@panel-border-color: #E2E2E2;
+@panel-margin-bottom: 25px;
+@panel-bg: #fff;
+@panel-header-bg: @panel-bg;
+@panel-body-bg: @panel-bg;
+@panel-footer-bg: @panel-header-bg;
+
+.wperp-panel-group {
+	margin-bottom: @panel-margin-bottom;
+}
+.wperp-panel {
+	margin-bottom: @panel-margin-bottom;
+	border-radius: @panel-border-radius;
+	background: @panel-body-bg;
+	padding-bottom: @panel-padding;
+	border: 1px solid @panel-border-color;
+	.wperp-table {
+		margin-bottom: 0;
+		tbody {
+			// @include box-shadow(none);
+		}
+	}
+	&.wperp-panel-orders {
+		.wperp-table{
+			th, td {
+				&:first-child{
+					padding-left: 0 !important;
+				}
+				&:last-child{
+					padding-right: 0 !important;
+				}
+			}
+		}
+	}
+	+ .wperp-panel {
+		margin-top: 5px;
+	}
+	.wperp-panel-heading {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 0;
+		border-radius: 3px 3px 0 0;
+		// color: @color-dark;
+		padding: @panel-padding;
+	}
+	.wperp-panel-body {
+		padding: 25px 30px;
+		&.wperp-no-padding {
+			padding: 0;
+		}
+	}
+	.wperp-panel-footer {
+		border-top: 0;
+		border-radius: 0 0 3px 3px;
+	}
+}
+
+

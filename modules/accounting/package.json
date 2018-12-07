@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "vue": "^2.5.17",
+    "vue-multiselect": "^2.1.3",
     "vue-router": "^3.0.1",
     "vue-wp-list-table": "^1.1.0"
   },
