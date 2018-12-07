@@ -4,9 +4,9 @@ const pkg = require('./package.json');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
-const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' );
+// const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' );
 
-const config = require( './config.json' );
+// const config = require( './config.json' );
 
 // Naming and path settings
 var appName = 'accounting';
@@ -29,7 +29,7 @@ function isProduction() {
 
 // extract css into its own file
 const extractCss = new ExtractTextPlugin({
-    filename: "../css/[name].css",
+    filename: '../css/[name].css',
 });
 
 plugins.push( extractCss );
@@ -40,16 +40,16 @@ plugins.push(new webpack.optimize.CommonsChunkPlugin({
     minChunks: ({ resource }) => /node_modules/.test(resource),
 }));
 
-plugins.push(new BrowserSyncPlugin( {
-    proxy: {
-        target: config.proxyURL
-    },
-    files: [
-        '**/*.php'
-    ],
-    cors: true,
-    reloadDelay: 0
-} ));
+// plugins.push(new BrowserSyncPlugin( {
+//     proxy: {
+//         target: config.proxyURL
+//     },
+//     files: [
+//         '**/*.php'
+//     ],
+//     cors: true,
+//     reloadDelay: 0
+// } ));
 
 // Generate a 'manifest' chunk to be inlined in the HTML template
 // plugins.push(new webpack.optimize.CommonsChunkPlugin('manifest'));
@@ -126,9 +126,9 @@ module.exports = {
                 test: /\.less$/,
                 use: extractCss.extract({
                     use: [{
-                        loader: "css-loader"
+                        loader: 'css-loader'
                     }, {
-                        loader: "less-loader"
+                        loader: 'less-loader'
                     }]
                 })
             },
