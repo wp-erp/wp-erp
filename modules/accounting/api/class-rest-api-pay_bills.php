@@ -141,17 +141,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_pay_bill( $request ) {
         $pay_bill_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['bill_details'];
-
-        foreach ( $items as $key => $item ) {
-            $total = 0;
-            $pay_bill_id[$key] = $item['id'];
-            $total += $item['line_total'];
-
-            $pay_bill_data['amount'] = $total;
-
-            erp_acct_insert_pay_bill( $pay_bill_data, $pay_bill_id[$key] );
-        }
+        $pay_bill_id = erp_acct_insert_pay_bill( $pay_bill_data );
 
         $response = rest_ensure_response( $pay_bill_data );
         $response = $this->format_collection_response( $response, $request, 1 );
@@ -175,21 +165,10 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $pay_bill_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['bill_details'];
-
-        foreach ( $items as $key => $item ) {
-            $total = 0; $due = 0;
-
-            $pay_bill_id[$key] = $item['voucher_no'];
-            $total += $item['line_total'];
-
-            $pay_bill_data['amount'] = $total;
-
-            erp_acct_update_pay_bill( $pay_bill_data, $pay_bill_id[$key] );
-        }
+        erp_acct_update_pay_bill( $pay_bill_data, $id );
 
         $response = rest_ensure_response( $pay_bill_data );
-        $response = $this->format_collection_response( $response, $request, count( $items ) );
+        $response = $this->format_collection_response( $response, $request, 1 );
 
         return $response;
     }
@@ -243,8 +222,8 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $prepared_item = [];
 
-        if ( isset( $request['customer_id'] ) ) {
-            $prepared_item['customer_id'] = $request['customer_id'];
+        if ( isset( $request['vendor_id'] ) ) {
+            $prepared_item['vendor_id'] = $request['vendor_id'];
         }
         if ( isset( $request['ref'] ) ) {
             $prepared_item['ref'] = $request['ref'];
@@ -255,11 +234,14 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['due_date'] ) ) {
             $prepared_item['due_date'] = absint( $request['due_date'] );
         }
+        if ( isset( $request['bill_details'] ) ) {
+            $prepared_item['bill_details'] = $request['bill_details'];
+        }
         if ( isset( $request['amount'] ) ) {
             $prepared_item['amount'] = $request['amount'];
         }
-        if ( isset( $request['memo'] ) ) {
-            $prepared_item['memo'] = $request['memo'];
+        if ( isset( $request['remarks'] ) ) {
+            $prepared_item['remarks'] = $request['remarks'];
         }
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = $request['attachments'];
@@ -326,14 +308,6 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'trn_by'  => [
-                    'description' => __( 'Voucher no. for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
                 'vendor_id'   => [
                     'description' => __( 'Customer id for the resource.' ),
                     'type'        => 'integer',
@@ -351,6 +325,14 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                     'required'    => true,
+                ],
+                'trn_by'  => [
+                    'description' => __( 'Voucher no. for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
                 ],
                 'bill_details' => [
                     'description' => __( 'List of line items data.', 'erp' ),

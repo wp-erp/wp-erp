@@ -18,22 +18,17 @@ export default new Router({
             component: Dashboard
         },
         {
-            path: '/erp-accounting-charts',
-            name: 'ChartOfAccounts',
-            component: ChartOfAccounts
-        },
-        {
-            path: '/erp-accounting-customers',
+            path: '/customers',
             name: 'Customers',
             component: Customers
         },
         {
-            path: '/erp-accounting-vendors',
+            path: '/vendors',
             name: 'Vendors',
             component: Vendors
         },
         {
-            path: '/erp-accounting-employees',
+            path: '/employees',
             name: 'Employees',
             component: Employees
         },
