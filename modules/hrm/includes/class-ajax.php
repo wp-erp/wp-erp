@@ -1494,11 +1494,7 @@ class Ajax_Handler {
         }
 
         $leave_count   = $days['total'];
-        if ( $days['total'] > 1 ) {
-            $days['total'] = sprintf( '%d %s', $days['total'], 'Tage' );
-        } else {
-            $days['total'] = sprintf( '%d %s', $days['total'], 'Tag' );
-        }
+        $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'erp' ) );
 
         $this->send_success( array( 'print' => $days, 'leave_count' => $leave_count ) );
     }
