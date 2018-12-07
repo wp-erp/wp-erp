@@ -1,0 +1,254 @@
+.@{theme-prefix}-form {
+
+    &.form--inline {
+        display: inline-flex;
+        //flex-flow: row wrap;
+        align-items: center;
+
+        @media (max-width: @screen-xs) {
+            display: block;
+        }
+    }
+
+}
+.@{theme-prefix}-label {
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+
+.@{theme-prefix}-input {
+    display: block;
+    width: 100%;
+    height: @input-height;
+    padding: @input-padding-y @input-padding-x;
+    font-size: @font-size-base;
+    line-height: @input-line-height;
+    color: @input-color;
+    background-color: @input-bg;
+    background-clip: padding-box;
+    border: @input-border-width solid @input-border-color;
+    border-radius: @input-border-radius;
+
+    &::placeholder {
+        color: @input-placeholder-color;
+        // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
+        opacity: 1;
+    }
+
+    // Disabled and read-only inputs
+    &:disabled,
+    &[readonly] {
+        background-color: @input-disabled-bg;
+        // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655.
+        opacity: 1;
+    }
+}
+
+
+.input-icon {
+    position: relative;
+
+    i {
+        font-size: inherit;
+        position: absolute;
+        right: 0;
+        width: 2rem;
+        height: 100%;
+        color: @icon-color;
+
+        &:before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            .translate(-50%, -50%);
+        }
+    }
+}
+
+
+/*
+ * Component: form;
+ */
+
+// import custom checkbox styles
+
+@field-border-color: @border-color;
+@field-border-radius: 3px;
+@field-padding: 10px 15px;
+@field-group-margin: 25px; 
+@form-padding: 15px;
+@field-width: 50px;
+
+.@{theme-prefix}-form-group {
+    margin-bottom: @field-group-margin;
+}
+label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #333e48;
+}
+.@{theme-prefix}-required-sign {
+    color: #E9485E;
+}
+.@{theme-prefix}-custom-select {
+    position: relative;
+    border: 1px solid @border-color;
+    border-radius: 3px;
+    select {
+        border: 0;
+        -webkit-appearance: value;
+        -moz-appearance:    value;
+        appearance:         value;
+        option {
+            color: red;
+        }
+    }
+    i {
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        background: #fff;
+        width: 20px;
+        pointer-events: none;
+        z-index: 2;
+        &:before {
+            color: inherit;
+            font-size: 10px;
+        }
+    }
+}
+
+/* change select2 styles */
+
+.select2-container .select2-selection--single {
+    min-height: 41px;
+    border-color: @border-color;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: 15px;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 39px;
+    color: #5c5c6f;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 37px;
+}
+.select2-dropdown,
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    border-color: @border-color;
+    color: inherit;
+}
+.select2-search--dropdown {
+    padding: 10px;
+}
+.select2-results__option {
+    padding: 5px 10px;
+}
+.select2-container {
+    max-width: 100%;
+}
+
+/*.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    margin: -3.5px -10px;
+    li {
+        
+        .select2-selection__choice__remove {
+            float: right;
+            margin-left: 5px;
+        }
+    }
+}*/
+
+/*.select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+    color: #ccc6c8;
+        background: #f7f6f6;
+        border: 2px solid @field-border-color;
+}*/
+/*
+.select2-container--default .select2-selection--multiple,
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-radius: @field-border-radius;
+    border: 1px solid @field-border-color;
+    padding: 8px 15px;
+    input {
+        margin-top: 0;
+    }
+}
+.select2-container .select2-search--inline .select2-search__field {
+    margin-top: 0;
+}*/
+
+
+/* Hide HTML5 Up and Down arrows. */
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    text-align: center;
+  
+}
+ 
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.@{theme-prefix}-form-field, input {
+    width: 100%;
+    border-radius: @field-border-radius;
+    border: 1px solid @field-border-color;
+    padding: @field-padding;
+    /*color: #d6d7e4;*/
+    &:focus {
+        outline: 0;
+        border-color: #208DF8;
+    }
+}
+input {
+    width: auto;
+    color: #5c5c6f;
+}
+select.@{theme-prefix}-form-field {
+    height: 43px;
+    color: #bdc3c7;
+    background: transparent;
+}
+.@{theme-prefix}-has-addon {
+    position: relative;
+    .@{theme-prefix}-field-addon {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        position: relative;
+        .@{theme-prefix}-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            // color: @color-dokan;
+            height: 100%;
+            width: @field-width;
+            background: #f5f5f7;
+            border: 1px solid #ecf1f5;
+            border-right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: @field-border-radius 0 0 @field-border-radius;
+        }
+        .@{theme-prefix}-form-field {
+            margin-left: @field-width;
+            max-width: calc(100% - 50px);
+            border-radius: 0 @field-border-radius @field-border-radius 0;
+            border-left-color: #ecf1f5;
+            &:focus {
+                border-left-color: #208DF8;
+            }
+        }
+    }
+}
+
+
+

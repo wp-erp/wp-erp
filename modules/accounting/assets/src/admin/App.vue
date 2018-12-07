@@ -6,6 +6,10 @@
 </template>
 
 <script>
+import '../../css/plugins/select2.min.css';
+// import '../../font/flaticon.css'
+import '../../css/master.css'
+
 export default {
     name: 'Accounting',
 }
