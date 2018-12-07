@@ -1713,7 +1713,7 @@ if (false) {(function () {
     getCustomers: function getCustomers(query) {
       var _this2 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('accounting/v1/customers', {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/customers', {
         params: {
           search: query
         }

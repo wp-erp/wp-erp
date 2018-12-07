@@ -39,7 +39,7 @@
 
         methods: {
             getCustomers(query) {
-                HTTP.get('accounting/v1/customers', {
+                HTTP.get('/customers', {
                     params: {
                         search: query
                     }
