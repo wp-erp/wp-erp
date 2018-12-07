@@ -21,6 +21,13 @@ class Assets {
      * @return void
      */
     public function register() {
+        if ( is_admin() ) {
+            $screen = get_current_screen();
+            if ( $screen->base != 'wp-erp_page_erp-accounting' ) {
+                return;
+            }
+        }
+
         $this->register_scripts( $this->get_scripts() );
         $this->register_styles( $this->get_styles() );
     }
@@ -48,9 +55,26 @@ class Assets {
             wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
         }
 
-        $component = 'accounting';
-        $menu = erp_menu();
-        $menus = $menu[$component];
+        $menus = '';
+
+        if ( is_admin() ) {
+            $component = 'accounting';
+            $menu  = erp_menu();
+            $menus = $menu[$component];
+
+            //check items for capabilities
+            $items = array_filter( $menus, function( $item ) {
+                if ( !isset( $item['capability'] ) ) {
+                    return false;
+                }
+                return current_user_can( $item['capability'] );
+            } );
+
+            //sort items for position
+            uasort( $menus, function ( $a, $b ) {
+                return $a['position'] > $b['position'];
+            } );
+        }
 
         wp_localize_script( 'accounting-admin', 'erp_acct_var', array(
             'user_id'       => $u_id,
@@ -58,6 +82,7 @@ class Assets {
             'rest_nonce'    => $rest_nonce,
             'logout_url'    => $logout_url,
             'acc_aaset_url' => $acc_aaset_url,
+            'erp_assets'    => WPERP_ASSETS,
             'erp_acct_menus'=> $menus,
         ) );
     }

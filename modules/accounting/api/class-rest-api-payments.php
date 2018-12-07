@@ -32,7 +32,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_payments' ],
-                'args'                => $this->get_collection_params(),
+                'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
                 },
@@ -40,7 +40,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_payment' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_sales_payment' );
                 },
@@ -52,9 +52,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_payment' ],
-                'args'                => [
-                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-                ],
+                'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
@@ -62,7 +60,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_payment' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_sales_payment' );
                 },
@@ -81,7 +79,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'void_payment' ],
-                'args'                => $this->get_collection_params(),
+                'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_sales_payment' );
                 },
@@ -138,7 +136,9 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $payment_data = $this->prepare_item_for_database( $request );
         $total_items = is_array( $payment_data['line_items'] ) ? count( $payment_data['line_items'] ) : 1;
 
-        erp_acct_insert_payment( $payment_data );
+        $payment_id = erp_acct_insert_payment( $payment_data );
+
+        $payment_data['id'] = $payment_id;
 
         $response = rest_ensure_response( $payment_data );
         $response = $this->format_collection_response( $response, $request, $total_items );
@@ -221,6 +221,9 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $prepared_item = [];
 
+        if ( isset( $request['id'] ) ) {
+            $prepared_item['id'] = $request['id'];
+        }
         if ( isset( $request['customer_id'] ) ) {
             $prepared_item['customer_id'] = $request['customer_id'];
         }
@@ -374,46 +377,26 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'product_id'       => [
-                            'description' => __( 'Product id.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'product_type'      => [
-                            'description' => __( 'Product type.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'qty'   => [
-                            'description' => __( 'Product quantity.', 'erp' ),
+                        'invoice_id'       => [
+                            'description' => __( 'Invoice id.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'unit_price'   => [
-                            'description' => __( 'Unit price.', 'erp' ),
+                        'amount'      => [
+                            'description' => __( 'Invoice amount.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'discount'    => [
-                            'description' => __( 'Discount.', 'erp' ),
+                        'due'   => [
+                            'description' => __( 'Invoice due.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'tax'       => [
-                            'description' => __( 'Tax.' ),
-                            'type'        => 'integer',
-                            'context'     => [ 'edit' ],
-                        ],
-                        'tax_percent'    => [
-                            'description' => __( 'Tax percent.', 'erp' ),
+                        'line_total'    => [
+                            'description' => __( 'Total.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
-                        ],
-                        'item_total'       => [
-                            'description' => __( 'Item total.' ),
-                            'type'        => 'integer',
-                            'context'     => [ 'edit' ],
-                        ],
+                        ]
                     ],
                 ],
                 'type'       => [

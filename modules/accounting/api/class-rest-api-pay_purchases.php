@@ -141,21 +141,10 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_pay_purchase( $request ) {
         $pay_purchase_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['purchase_details'];
-
-        foreach ( $items as $key => $item ) {
-            $total = 0;
-
-            $pay_purchase_id[$key] = $item['id'];
-            $total += $item['line_total'];
-
-            $pay_purchase_data['amount'] = $total;
-
-            erp_acct_insert_pay_purchase( $pay_purchase_data, $pay_purchase_id[$key] );
-        }
+        $pay_purchase_id = erp_acct_insert_pay_purchase( $pay_purchase_data );
 
         $response = rest_ensure_response( $pay_purchase_data );
-        $response = $this->format_collection_response( $response, $request, count( $items ) );
+        $response = $this->format_collection_response( $response, $request, 1 );
 
         return $response;
     }
@@ -177,21 +166,10 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $pay_purchase_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['line_items'];
-
-        foreach ( $items as $key => $item ) {
-            $total = 0; $due = 0;
-
-            $pay_purchase_id[$key] = $item['pay_purchase_id'];
-            $total += $item['line_total'];
-
-            $pay_purchase_data['amount'] = $total;
-
-            erp_acct_update_pay_purchase( $pay_purchase_data, $pay_purchase_id[$key] );
-        }
+        $pay_purchase_id = erp_acct_update_pay_purchase( $pay_purchase_data, $id );
 
         $response = rest_ensure_response( $pay_purchase_data );
-        $response = $this->format_collection_response( $response, $request, count( $items ) );
+        $response = $this->format_collection_response( $response, $request, 1 );
 
         return $response;
     }
@@ -255,7 +233,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['trn_date'] = absint( $request['trn_date'] );
         }
         if ( isset( $request['purchase_details'] ) ) {
-            $prepared_item['purchase_details'] = absint( $request['purchase_details'] );
+            $prepared_item['purchase_details'] = $request['purchase_details'];
         }
         if ( isset( $request['amount'] ) ) {
             $prepared_item['amount'] = $request['amount'];
