@@ -258,6 +258,21 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
+     * Get a collection of transactions
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_transactions( $request ) {
+        $id = (int) $request['id'];
+
+        $transactions = erp_acct_get_people_transactions( $id );
+        
+        return new WP_REST_Response( $transactions, 200 );
+    }
+
+    /**
      * Prepare a single item for create or update
      *
      * @param WP_REST_Request $request Request object.
