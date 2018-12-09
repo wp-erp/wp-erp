@@ -137,6 +137,7 @@ final class Accounting {
      *
      */
     public function include_functions() {
+        require_once ERP_ACCOUNTING_INCLUDES . '/functions/people.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/capabilities.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/common.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/functions/taxes.php';

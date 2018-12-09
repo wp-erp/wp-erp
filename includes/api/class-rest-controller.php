@@ -241,7 +241,7 @@ abstract class REST_Controller {
      * @return  object
      */
     protected function add_links( $response, $item, $additional_fields = array() ) {
-        $response->data['_links'] = $this->prepare_links( $item, $additional_fields['namespace'], $additional_fields['rest_base'] );
+        $response->data['_links'] = $this->prepare_links( $item, $additional_fields );
 
         return $response;
     }
@@ -255,8 +255,18 @@ abstract class REST_Controller {
      *
      * @return array Links for the given user.
      */
-    protected function prepare_links( $item, $namespace = '', $rest_base = '' ) {
+    protected function prepare_links( $item, $additional_fields = array() ) {
         $item = (array) $item;
+
+        $namespace = $additional_fields['namespace'];  $rest_base = $additional_fields['rest_base'];
+
+        if ( empty( $item['id'] ) && isset( $additional_fields['id'] ) ) {
+            $item['id'] = $additional_fields['id'];
+        }
+
+        if ( empty( $item['id'] ) && empty( $additional_fields['id'] ) ) {
+            $item['id'] = '';
+        }
         
         $links = [
             'self' => [
