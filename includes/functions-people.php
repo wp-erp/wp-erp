@@ -431,7 +431,7 @@ function erp_get_people_by( $field, $value ) {
  * @since 1.2.7  Assign first name as company name for accounting customer search
  * @since 1.3.13 Pass $people_type in create and update people hooks
  *
- * @param array $argserp_insert_people
+ * @param array $args erp_insert_people
  *
  * @return mixed integer on success, false otherwise
  */
