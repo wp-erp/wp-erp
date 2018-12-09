@@ -81,3 +81,17 @@ function erp_acct_add_employee_as_people( $data ) {
 
     return $people_id;
 }
+
+/**
+ * Get transactions of a people
+ *
+ * @return mixed
+ */
+
+function erp_acct_get_people_transactions( $people_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_people_trn WHERE people_id = {$people_id}", ARRAY_A );
+
+    return $row;
+}

@@ -80,6 +80,17 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_transactions' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_view_list' );
+                },
+            ],
+        ] );
+
     }
 
     /**
@@ -241,6 +252,21 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response = rest_ensure_response( true );
 
         return new WP_REST_Response( $response, 204 );
+    }
+
+    /**
+     * Get a collection of transactions
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_transactions( $request ) {
+        $id = (int) $request['id'];
+
+        $transactions = erp_acct_get_people_transactions( $id );
+
+        return new WP_REST_Response( $transactions, 200 );
     }
 
     /**

@@ -268,14 +268,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_transactions( $request ) {
         $id = (int) $request['id'];
 
-        $args = [
-            'number' => $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => 'expense',
-            'user_id' => $id,
-        ];
-
-        $transactions = erp_ac_get_all_transaction( $args );
+        $transactions = erp_acct_get_people_transactions( $id );
 
         return new WP_REST_Response( $transactions, 200 );
     }
