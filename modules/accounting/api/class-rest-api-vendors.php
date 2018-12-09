@@ -105,10 +105,14 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $items       = erp_get_peoples( $args );
         $total_items = erp_get_peoples( [ 'type' => 'vendor', 'count' => true ] );
+        $total_items = is_array( $total_items ) ? count( $total_items ) : $total_items;
 
-        $formatted_items = [];
+        $formatted_items = []; $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
         foreach ( $items as $item ) {
-            $additional_fields = [];
 
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
@@ -127,6 +131,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, $total_items );
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -141,8 +146,9 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_vendor( $request ) {
         $id   = (int) $request['id'];
         $item = erp_get_people( $id );
+        $item = (array) $item;
 
-        if ( empty( $id ) || empty( $item->id ) ) {
+        if ( empty( $id ) || empty( $item['id'] ) ) {
             return new WP_Error( 'rest_vendor_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
@@ -158,8 +164,12 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             }
         }
 
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
         $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -181,13 +191,15 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $id   = erp_insert_people( $item );
 
-        $vendor = erp_get_people( $id );
+        $vendor = (array) erp_get_people( $id );
+        $vendor['id'] = $id;
 
-        $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $vendor, $request );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $response = $this->prepare_item_for_response( $vendor, $request, $additional_fields );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
     }
@@ -209,13 +221,18 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
 
-        erp_insert_people( $item );
+        $id   = erp_insert_people( $item );
+
+        $vendor = (array) erp_get_people( $id );
+        $vendor['id'] = $id;
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
 
         $vendor = erp_get_people( $id );
-        $response = $this->prepare_item_for_response( $vendor, $request );
+        $response = $this->prepare_item_for_response( $vendor, $request, $additional_fields );
         $response = rest_ensure_response( $response );
-        $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -339,13 +356,15 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
+     * @param array | object $item
      * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+
         $data = [
             'id'          => (int) $item->id,
             'first_name'  => $item->first_name,
@@ -375,7 +394,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
 
-        $response = $this->add_links( $response, $item );
+        $response = $this->add_links( $response, $item, $additional_fields );
 
         return $response;
     }
