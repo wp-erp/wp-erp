@@ -34,19 +34,8 @@ class REST_API {
     }
 
     public function include_controllers() {
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-customers.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-vendors.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-employees.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-products.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-product-cats.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-ledgers-accounts.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-invoices.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-payments.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-bills.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-pay_bills.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-purchases.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-pay_purchases.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-taxes.php';
-        require_once ERP_ACCOUNTING_API . '/class-rest-api-transfer-bank.php';
+        foreach ( glob( ERP_ACCOUNTING_API . '/*.php' ) as $filename ) {
+            include_once $filename;
+        }
     }
 }
