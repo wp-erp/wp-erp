@@ -6,7 +6,7 @@ import Customers from 'admin/components/Peoples/Customers.vue'
 import Vendors from 'admin/components/Peoples/Vendors.vue'
 import Employees from 'admin/components/Peoples/Employees.vue'
 
-import InvoiceCreate from 'admin/components/Invoice/InvoiceCreate.vue'
+import InvoiceCreate from 'admin/components/invoice/InvoiceCreate.vue'
 
 Vue.use(Router)
 
