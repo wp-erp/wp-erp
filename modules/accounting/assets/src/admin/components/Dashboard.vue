@@ -1,9 +1,5 @@
 <template>
     <div class="home">
-        <span>
-
-            <ERPMenu></ERPMenu>
-        </span>
         <div class="erp accounting-dashboard">
             <h2><span>{{ msg }}</span></h2>
             <div class="erp-acc-dashboard-1">
@@ -82,15 +78,13 @@
 
 <script>
     import MetaBox from './WP/MetaBox.vue'
-    import ERPMenu from './Menu/ERPMenu.vue'
 
     export default {
 
         name: 'Dashboard',
 
         components: {
-            MetaBox,
-            ERPMenu
+            MetaBox
         },
 
         data () {

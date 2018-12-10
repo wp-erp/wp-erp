@@ -5,6 +5,7 @@ import ChartOfAccounts from 'admin/components/ChartOfAccounts.vue'
 import Customers from 'admin/components/Peoples/Customers.vue'
 import Vendors from 'admin/components/Peoples/Vendors.vue'
 import Employees from 'admin/components/Peoples/Employees.vue'
+import DummyComponent from 'admin/components/DummyComponent.vue'
 
 import InvoiceCreate from 'admin/components/invoice/InvoiceCreate.vue'
 
@@ -31,6 +32,31 @@ export default new Router({
             path: '/employees',
             name: 'Employees',
             component: Employees
+        },
+        {
+            path: '/sales',
+            name: 'Sales',
+            component: DummyComponent
+        },
+        {
+            path: '/expense',
+            name: 'Expenses',
+            component: DummyComponent
+        },
+        {
+            path: '/charts',
+            name: 'Chart Of Accounts',
+            component: ChartOfAccounts
+        },
+        {
+            path: '/bank',
+            name: 'Bank Accounts',
+            component: DummyComponent
+        },
+        {
+            path: '/journal',
+            name: 'Journal Entries',
+            component: DummyComponent
         },
         {
             path: '/invoices/new',
