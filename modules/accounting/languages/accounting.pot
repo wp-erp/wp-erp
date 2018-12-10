@@ -3,6 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "X-Generator: babel-plugin-makepot\n"
 
-#: assets/src/admin/components/Menu/ERPMenu.vue:46
+#: assets/src/admin/components/Menu/ERPMenu.vue:47
 msgid "Accounting"
 msgstr ""
