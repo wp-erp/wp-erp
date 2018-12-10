@@ -123,7 +123,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $item = erp_acct_get_invoice( $id );
-        $item['id'] = $id;
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;

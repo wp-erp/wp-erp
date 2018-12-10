@@ -96,9 +96,12 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_payments( $request ) {
         $payment_data = erp_acct_get_payments();
+        $payment_count = erp_acct_get_payment_count();
 
         $response = rest_ensure_response( $payment_data );
-        $response = $this->format_collection_response( $response, $request, count( $payment_data ) );
+        $response = $this->format_collection_response( $response, $request, $payment_count );
+
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -117,10 +120,14 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $payment_data = erp_acct_get_payment( $id );
+        $item = erp_acct_get_payment( $id );
 
-        $response = rest_ensure_response( $payment_data );
-        $response = $this->format_collection_response( $response, $request, 1 );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -133,15 +140,19 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function create_payment( $request ) {
+        $additional_fields = [];
         $payment_data = $this->prepare_item_for_database( $request );
-        $total_items = is_array( $payment_data['line_items'] ) ? count( $payment_data['line_items'] ) : 1;
 
         $payment_id = erp_acct_insert_payment( $payment_data );
 
         $payment_data['id'] = $payment_id;
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $payment_data = $this->prepare_item_for_response( $payment_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $payment_data );
-        $response = $this->format_collection_response( $response, $request, $total_items );
+        $response->set_status( 201 );
 
         return $response;
     }
@@ -161,12 +172,17 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $payment_data = $this->prepare_item_for_database( $request );
-        $total_items = is_array( $payment_data['line_items'] ) ? count( $payment_data['line_items'] ) : 1;
 
-        erp_acct_update_payment( $payment_data, $id );
+        $payment_id = erp_acct_update_payment( $payment_data, $id );
 
-        $response = rest_ensure_response( $payment_data );
-        $response = $this->format_collection_response( $response, $request, $total_items );
+        $payment_data['id'] = $payment_id; $additional_fields = [];
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $invoice_response = $this->prepare_item_for_response( $payment_data, $request, $additional_fields );
+
+        $response = rest_ensure_response( $invoice_response );
+        $response->set_status( 200 );
 
         return $response;
 
@@ -231,10 +247,13 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 		    $prepared_item['invoice_no'] = $request['invoice_no'];
 	    }
         if ( isset( $request['trn_date'] ) ) {
-            $prepared_item['trn_date'] = absint( $request['trn_date'] );
+            $prepared_item['trn_date'] = $request['trn_date'] ;
         }
-        if ( isset( $request['amount'] ) ) {
-            $prepared_item['amount'] = $request['amount'];
+        if ( isset( $request['due_date'] ) ) {
+            $prepared_item['due_date'] = $request['due_date'];
+        }
+        if ( isset( $request['billing_address'] ) ) {
+            $prepared_item['billing_address'] = $request['billing_address'];
         }
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
@@ -248,6 +267,12 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['trn_by'] ) ) {
             $prepared_item['trn_by'] = $request['trn_by'];
         }
+        if ( isset( $request['type'] ) ) {
+            $prepared_item['type'] = $request['type'];
+        }
+        if ( isset( $request['status'] ) ) {
+            $prepared_item['status'] = $request['status'];
+        }
 
         return $prepared_item;
     }
@@ -255,25 +280,22 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
+     * @param array|object $item
      * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+        
         $data = [
             'id'              => (int) $item->id,
-            'voucher_no'      => (int) $item->voucher_no,
             'customer_id'     => (int) $item->customer_id,
             'date'            => $item->trn_date,
             'due_date'        => $item->due_date,
             'billing_address' => $item->billing_address,
             'line_items'      => $item->line_items,
-            'subtotal'        => (int) $item->subtotal,
-            'total'           => (int) $item->total,
-            'discount'        => (int) $item->discount,
-            'tax'             => (int) $item->tax,
             'type'            => $item->type,
             'status'          => $item->status,
         ];
@@ -283,7 +305,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
 
-        $response = $this->add_links( $response, $item );
+        $response = $this->add_links( $response, $item, $additional_fields );
 
         return $response;
     }
@@ -313,8 +335,8 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'customer_id'   => [
-                    'description' => __( 'Customer id for the resource.' ),
+                'vendor_id'   => [
+                    'description' => __( 'Vendor id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
