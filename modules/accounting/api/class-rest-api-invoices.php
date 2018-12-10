@@ -96,15 +96,23 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_invoices( $request ) {
-        global $wpdb;
+        $formatted_items = []; $additional_fields = [];
+        $invoice_data  = erp_acct_get_all_invoices();
+        $invoice_count = erp_acct_get_invoice_count();
 
-        $additional_fields = [];
-        $invoice_data = erp_acct_get_all_invoices();
-        $invoice_count = $wpdb->get_row( "SELECT COUNT(*) FROM " . $wpdb->prefix . "erp_acct_invoice" );
+        $items  = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
 
-        $item  = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
-        $response = rest_ensure_response( $invoice_data );
+        foreach ( $items as $item ) {
+            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, $invoice_count );
+
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -118,16 +126,21 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_invoice( $request ) {
-        global $wpdb;
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $invoice_data = erp_acct_get_invoice( $id );
+        $item = erp_acct_get_invoice( $id );
+        $item['id'] = $id;
 
-        $response = rest_ensure_response( $invoice_data );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -167,9 +180,10 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $invoice_data['id'] = $invoice_id;
 
-        $invoice_response = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
+        $invoice_data = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
 
-        $response = rest_ensure_response( $invoice_response );
+        $response = rest_ensure_response( $invoice_data );
+        $response->set_status( 201 );
 
         return $response;
     }
@@ -217,6 +231,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $invoice_response = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $invoice_response );
+        $response->set_status( 200 );
 
         return $response;
     }
