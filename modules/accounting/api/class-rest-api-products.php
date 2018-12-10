@@ -246,6 +246,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
 	    $item = (object) $item;
 
         $data = [
+            'id'              => $item->id,
             'name'            => $item->name,
             'product_type_id' => $item->product_type_id,
             'category_id'     => $item->category_id,
