@@ -14,6 +14,7 @@
             :total-pages="paginationData.totalPages"
             :per-page="paginationData.perPage"
             :current-page="paginationData.currentPage"
+            @pagination="goToPage"
             :actions="actions"
             @action:click="onActionClick"
             @bulk:click="onBulkAction">
@@ -92,18 +93,23 @@
         methods: {
             fetchItems(){
                 this.rows = [];
-                HTTP.get('customers')
-                    .then( (response) => {
-                        this.rows = response.data;
-                        this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                        this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                    .then( () => {
-                        //ready
-                    } );
+                HTTP.get('customers', {
+                    params: {
+                        per_page: this.paginationData.perPage,
+                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+                    }
+                })
+                .then( (response) => {
+                    this.rows = response.data;
+                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+                .then( () => {
+                    //ready
+                } );
             },
 
             onActionClick(action, row, index) {
@@ -116,7 +122,7 @@
                             });
                         }
                         break;
-                        
+
                     case 'edit':
                         //TODO
                         break;
@@ -147,7 +153,11 @@
             goToPage(page) {
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
-                this.$router.push({name: 'ShiftPaginate', params: { page: page }, query: queries});
+                this.$router.push({
+                    name: 'Customers',
+                    params: { page: page },
+                    query: queries
+                });
 
                 this.fetchItems();
             }
