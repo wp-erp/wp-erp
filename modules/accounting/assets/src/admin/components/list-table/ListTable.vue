@@ -170,7 +170,7 @@
 /* eslint-disable */
 
 import BulkActionsTpl from './BulkActionsTpl.vue';
-import Dropdown from '../dropdown/Dropdown.vue';
+import Dropdown from 'admin/components/base/Dropdown.vue'
 
 export default {
 
