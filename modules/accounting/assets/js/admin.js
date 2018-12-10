@@ -499,6 +499,7 @@ module.exports = __webpack_require__.p + "/Users/rafsun/LocalSites/wpuf/app/publ
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -571,7 +572,12 @@ module.exports = __webpack_require__.p + "/Users/rafsun/LocalSites/wpuf/app/publ
       var _this = this;
 
       this.rows = [];
-      __WEBPACK_IMPORTED_MODULE_1__http_js__["a" /* default */].get('customers').then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_1__http_js__["a" /* default */].get('customers', {
+        params: {
+          per_page: this.paginationData.perPage,
+          page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+        }
+      }).then(function (response) {
         _this.rows = response.data;
         _this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
         _this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
@@ -622,7 +628,7 @@ module.exports = __webpack_require__.p + "/Users/rafsun/LocalSites/wpuf/app/publ
       var queries = Object.assign({}, this.$route.query);
       this.paginationData.currentPage = page;
       this.$router.push({
-        name: 'ShiftPaginate',
+        name: 'Customers',
         params: {
           page: page
         },
@@ -4333,6 +4339,7 @@ var render = function() {
           actions: _vm.actions
         },
         on: {
+          pagination: _vm.goToPage,
           "action:click": _vm.onActionClick,
           "bulk:click": _vm.onBulkAction
         },
