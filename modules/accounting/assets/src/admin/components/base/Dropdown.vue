@@ -133,21 +133,27 @@ export default {
 </script>
 
 <style lang="less">
-.dropdown-menu {
+#erp-accounting {
+  .dropdown-menu {
     position: absolute;
     background: #fff;
     color: black;
     border-radius: 3px;
-    box-shadow: 0 0 2px rgba(0,0,0,0.5);
-    padding: 10px;
+    padding: 0;
     text-align: center;
     opacity: 0;
     z-index: 2;
     left: -9999px;
+    transition: none !important;
+    
+    &:after {
+        border-bottom-color: #f9f9f9;
+    }
 
     &.show {
       left: 0;
       opacity: 1;
+      visibility: visible;
     }
 
     ul {
@@ -162,13 +168,13 @@ export default {
         margin: 5px;
         border-color: #fff;
     }
-}
+  }
 
-.dropdown-menu[x-placement^="top"] {
+  .dropdown-menu[x-placement^="top"] {
     margin-bottom: 5px;
-}
+  }
 
-.dropdown-menu[x-placement^="top"] .tooltip-arrow {
+  .dropdown-menu[x-placement^="top"] .tooltip-arrow {
     border-width: 5px 5px 0 5px;
     border-left-color: transparent;
     border-right-color: transparent;
@@ -177,13 +183,13 @@ export default {
     left: calc(50% - 5px);
     margin-top: 0;
     margin-bottom: 0;
-}
+  }
 
-.dropdown-menu[x-placement^="bottom"] {
+  .dropdown-menu[x-placement^="bottom"] {
     margin-top: 5px;
-}
+  }
 
-.dropdown-menu[x-placement^="bottom"] .popper__arrow {
+  .dropdown-menu[x-placement^="bottom"] .popper__arrow {
     border-width: 0 5px 5px 5px;
     border-left-color: transparent;
     border-right-color: transparent;
@@ -192,13 +198,13 @@ export default {
     left: calc(50% - 5px);
     margin-top: 0;
     margin-bottom: 0;
-}
+  }
 
-.dropdown-menu[x-placement^="right"] {
+  .dropdown-menu[x-placement^="right"] {
     margin-left: 5px;
-}
+  }
 
-.dropdown-menu[x-placement^="right"] .popper__arrow {
+  .dropdown-menu[x-placement^="right"] .popper__arrow {
     border-width: 5px 5px 5px 0;
     border-left-color: transparent;
     border-top-color: transparent;
@@ -207,13 +213,13 @@ export default {
     top: calc(50% - 5px);
     margin-left: 0;
     margin-right: 0;
-}
+  }
 
-.dropdown-menu[x-placement^="left"] {
+  .dropdown-menu[x-placement^="left"] {
     margin-right: 5px;
-}
+  }
 
-.dropdown-menu[x-placement^="left"] .popper__arrow {
+  .dropdown-menu[x-placement^="left"] .popper__arrow {
     border-width: 5px 0 5px 5px;
     border-top-color: transparent;
     border-right-color: transparent;
@@ -222,5 +228,6 @@ export default {
     top: calc(50% - 5px);
     margin-left: 0;
     margin-right: 0;
+  }
 }
 </style>

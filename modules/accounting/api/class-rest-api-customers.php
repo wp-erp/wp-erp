@@ -313,6 +313,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+
         $data = [
             'id'          => (int) $item->id,
             'first_name'  => $item->first_name,

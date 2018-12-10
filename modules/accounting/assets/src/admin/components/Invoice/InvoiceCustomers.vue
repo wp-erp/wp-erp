@@ -1,8 +1,8 @@
 <template>
     <div class="wperp-col-sm-4">
-        <div class="wperp-form-group with-multiselect">
+        <div class="wperp-form-group invoice-customers with-multiselect">
             <label for="customer">Customer<span class="wperp-required-sign">*</span></label>
-            <multi-select v-model="selected" :options="options" />
+            <multi-select v-model="selected" @change="selectedChange" :options="options" />
 
             <a href="#" class="add-new-customer"><i class="flaticon-add-plus-button"></i>Add new</a>
         </div>
@@ -44,20 +44,26 @@
                         search: query
                     }
                 }).then((response) => {
-                    response.data.forEach(item => {
-                        this.options.push({
-                            id: item.id,
-                            name: item.first_name + ' ' + item.last_name
-                        });
-                    });
+                    console.log(response.data);
+                    
+                    // response.data.forEach(item => {
+                    //     this.options.push({
+                    //         id: item.id,
+                    //         name: item.first_name + ' ' + item.last_name
+                    //     });
+                    // });
                 });
+            },
+
+            selectedChange() {
+                alert(this.selected);
             }
         }
     }
 </script>
 
 <style lang="less">
-    .with-multiselect {
+    .invoice-customers.with-multiselect {
         .multiselect__input,
         .multiselect__single {
             min-height: 30px;
@@ -65,8 +71,16 @@
             margin-bottom: 0;
         }
 
+        .multiselect__tags {
+            padding: 8px 0;
+        }
+
         .multiselect__placeholder {
-            margin: 4px 0 0 4px !important;
+            margin: 4px 0 0 7px !important;
+        }
+
+        .multiselect__select {
+            height: 41px;
         }
     }
 </style>

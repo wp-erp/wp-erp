@@ -20,13 +20,13 @@
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label for="trans_date">Transaction Date<span class="wperp-required-sign">*</span></label>
-                                <input type="date" class="wperp-form-field datepicker" name="trans_date" id="trans_date" placeholder="16-05-2018">
+                                <datepicker v-model="trans_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label for="due_date">Due Date<span class="wperp-required-sign">*</span></label>
-                                <input type="date" class="wperp-form-field datepicker" name="due_date" id="due_date" placeholder="16-05-2018">
+                                <datepicker v-model="due_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-xs-12">
@@ -323,17 +323,26 @@
 </template>
 
 <script>
-import InvoiceCustomers from './InvoiceCustomers.vue'
+import InvoiceCustomers from 'admin/components/invoice/InvoiceCustomers.vue'
+import Datepicker from 'admin/components/base/Datepicker.vue';
 
 export default {
     name: 'InvoiceCreate',
 
     components: {
-        InvoiceCustomers
+        InvoiceCustomers,
+        Datepicker
+    },
+
+    data() {
+        return {
+            trans_date: '',
+            due_date: '',
+        }
     }
 }
 </script>
 
-<style scoped>
+<style lang="less">
 
 </style>
