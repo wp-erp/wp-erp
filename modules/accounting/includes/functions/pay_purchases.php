@@ -101,6 +101,8 @@ function erp_acct_insert_pay_purchase( $data ) {
             'updated_by'  => $pay_purchase_data['updated_by'],
         ) );
 
+        erp_acct_insert_people_trn_data( $pay_purchase_data, $pay_purchase_data['vendor_id'], 'debit' );
+
         $wpdb->query( 'COMMIT' );
 
     } catch (Exception $e) {

@@ -89,6 +89,8 @@ function erp_acct_insert_payment( $data ) {
 	        erp_acct_insert_payment_line_items( $payment_data, $invoice_no[$key], $voucher_no );
 	    }
 
+        erp_acct_insert_people_trn_data( $payment_data, $payment_data['customer_id'], 'credit' );
+
 		erp_acct_change_invoice_status( $voucher_no );
 
 		$wpdb->query( 'COMMIT' );
