@@ -2775,13 +2775,12 @@ if (false) {
 
 __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["default"]);
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["default"]({
-  routes: [// {
-  //     path: '/',
-  //     name: 'Dashboard',
-  //     component: Dashboard
-  // },
-  {
+  routes: [{
     path: '/',
+    name: 'Dashboard',
+    component: __WEBPACK_IMPORTED_MODULE_2_admin_components_Dashboard_vue__["a" /* default */]
+  }, {
+    path: '/customers',
     name: 'Customers',
     component: __WEBPACK_IMPORTED_MODULE_4_admin_components_Peoples_Customers_vue__["a" /* default */]
   }, {
@@ -2825,7 +2824,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dashboard_vue__ = __webpack_require__(21);
-/* unused harmony reexport namespace */
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_45a0d6f4_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(96);
 var disposed = false
 function injectStyle (ssrContext) {
@@ -2872,7 +2871,7 @@ if (false) {(function () {
   })
 })()}
 
-/* unused harmony default export */ var _unused_webpack_default_export = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
