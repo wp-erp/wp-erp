@@ -81,30 +81,25 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
      * @return WP_Error|WP_REST_Response
      */
     public function get_all_inventory_product_cats( $request ) {
+        $formatted_items = []; $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
 
         $product_cats = erp_acct_get_all_product_cats();
-	    $response = rest_ensure_response( $product_cats );
-	    $response = $this->format_collection_response( $response, $request, count( $product_cats ) );
+
+        $total_items = is_array( $product_cats ) ? count( $product_cats ) : 1;
+
+        foreach ( $product_cats as $item ) {
+            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+	    $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
+        $response->set_status( 200 );
 
 	    return $response;
-    }
-
-    /**
-     * Create an inventory product
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Request
-     */
-    public function create_inventory_product_cat( $request ) {
-	    $item = $this->prepare_item_for_database( $request );
-
-        $term = erp_acct_insert_product_cat( $item );
-
-        $response = $this->prepare_item_for_response( (object) $item, $request );
-        $response = rest_ensure_response( $response );
-        $response->set_status( 201 );
-        return $response;
     }
 
     /**
@@ -121,10 +116,37 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
             return new WP_Error( 'rest_inventory_product_cat_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $term = erp_acct_get_product_cat( $id );
+        $item = erp_acct_get_product_cat( $id );
 
-        $item     = $this->prepare_item_for_response( (object) $term, $request );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Create an inventory product
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function create_inventory_product_cat( $request ) {
+        $item = $this->prepare_item_for_database( $request );
+
+        $id = erp_acct_insert_product_cat( $item );
+        $item['id'] = $id;
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $response = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $response = rest_ensure_response( $response );
+        $response->set_status( 201 );
 
         return $response;
     }
@@ -145,10 +167,15 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
             return new WP_Error( 'rest_inventory_product_cat_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $term = erp_acct_update_product_cat( $item, $id );
+        $id = erp_acct_update_product_cat( $item, $id );
+        $item['id'] = $id;
 
-        $item     = $this->prepare_item_for_response( (object) $item, $request );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $item );
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -183,7 +210,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
         }
 
         if ( isset( $request['parent'] ) ) {
-            $prepared_item['slug'] = $request['slug'];
+            $prepared_item['parent'] = $request['parent'];
         }
 
 
@@ -193,7 +220,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
+     * @param array|object $item
      * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
@@ -203,8 +230,9 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
 	    $item = (object) $item;
 
         $data = [
-            'name'           => $item->term_id,
-            'parent'  => $item->term_taxonomy_id,
+            'id'     => $item->id,
+            'name'   => $item->name,
+            'parent' => $item->parent,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -212,7 +240,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
 
-        $response = $this->add_links( $response, $item );
+        $response = $this->add_links( $response, $item, $additional_fields );
 
         return $response;
     }

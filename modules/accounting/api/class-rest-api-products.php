@@ -82,10 +82,22 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_inventory_products( $request ) {
-	    $product_data = erp_acct_get_all_products();
+        $formatted_items = []; $additional_fields = [];
 
-	    $response = rest_ensure_response( $product_data );
-	    $response = $this->format_collection_response( $response, $request, count( $product_data ) );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+	    $product_data = erp_acct_get_all_products();
+	    $total_items = is_array( $product_data ) ? count( $product_data ) : 1;
+
+	    foreach ( $product_data as $item ) {
+            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+	    $response = rest_ensure_response( $formatted_items );
+	    $response = $this->format_collection_response( $response, $request, $total_items );
+        $response->set_status( 200 );
 
 	    return $response;
     }
@@ -105,8 +117,12 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_inventory_product_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item     = $this->prepare_item_for_response( $item, $request );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -122,9 +138,14 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = $this->prepare_item_for_database( $request );
 
         $id   = erp_acct_insert_product( $item );
+        $item['id'] = $id;
 
-        $response = $this->prepare_item_for_response( $item, $request );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $response = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $response );
+        $response->set_status( 201 );
 
         return $response;
     }
@@ -146,9 +167,14 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
 	    $item = $this->prepare_item_for_database( $request );
 
 	    $id   = erp_acct_update_product( $item, $id );
+        $item['id'] = $id;
 
-	    $response = $this->prepare_item_for_response( $item, $request );
-	    $response = rest_ensure_response( $response );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $response = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $response = rest_ensure_response( $response );
+        $response->set_status( 200 );
 
 	    return $response;
     }
@@ -220,12 +246,13 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
 	    $item = (object) $item;
 
         $data = [
-            'name'  => $item->name,
-            'product_type_id'   => $item->product_type_id,
-            'category_id' => $item->category_id,
-            'vendor'   => $item->vendor,
-            'cost_price' => $item->cost_price,
-            'sale_price'   => $item->sale_price
+            'id'              => $item->id,
+            'name'            => $item->name,
+            'product_type_id' => $item->product_type_id,
+            'category_id'     => $item->category_id,
+            'vendor'          => $item->vendor,
+            'cost_price'      => $item->cost_price,
+            'sale_price'      => $item->sale_price
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -233,7 +260,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
 
-        $response = $this->add_links( $response, $item );
+        $response = $this->add_links( $response, $item, $additional_fields );
 
         return $response;
     }
