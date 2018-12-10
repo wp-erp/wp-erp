@@ -45,7 +45,6 @@ class Assets {
         $site_url = site_url();
         $rest_nonce = wp_create_nonce( "wp_rest" );
         $logout_url = esc_url( wp_logout_url() );
-        $acc_aaset_url = '';
 
         foreach ( $scripts as $handle => $script ) {
             $deps      = isset( $script['deps'] ) ? $script['deps'] : false;
@@ -81,7 +80,7 @@ class Assets {
             'site_url'      => $site_url,
             'rest_nonce'    => $rest_nonce,
             'logout_url'    => $logout_url,
-            'acc_aaset_url' => $acc_aaset_url,
+            'acc_aaset_url' => ERP_ACCOUNTING_ASSETS,
             'erp_assets'    => WPERP_ASSETS,
             'erp_acct_menus'=> $menus,
         ) );
