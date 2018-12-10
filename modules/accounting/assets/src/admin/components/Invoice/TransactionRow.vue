@@ -1,21 +1,17 @@
 <template>
     <tr>
-        <th scope="row" class="col--check">
-            <select name="pen-holder" id="pen-holder" class="wperp-form-field wperp-is-select2">
-                <option value="0">Select</option>
-                <option value="1">Pen Holder</option>
-                <option value="2">Pen Holder</option>
-            </select>
+        <th scope="row" class="col--check with-multiselect prodcut-select">
+            <multi-select v-model="rowFields.selectedProduct" :options="products" />
         </th>
         <td class="col--qty column-primary">
-            <input type="number" name="qty" id="qty" class="wperp-form-field" value="1">
+            <input type="number" v-model="rowFields.qty" @keyup="calculateAmount" class="wperp-form-field">
         </td>
         <td class="col--uni_price" data-colname="Unit Price">
-            <input type="text" name="unit-price" id="unit-price" class="wperp-form-field" value="5000">
+            <input type="text" v-model="rowFields.unitPrice" @keyup="calculateAmount" class="wperp-form-field">
         </td>
         <td class="col--discount" data-colname="Discount">
             <div class="wperp-has-addon">
-                <input type="text" name="discount" id="discount" class="wperp-form-field" value="1">
+                <input type="text" v-model="rowFields.discount" @keyup="calculateAmount" class="wperp-form-field">
                 <span class="wperp-addon">%</span>
             </div>
         </td>
@@ -33,7 +29,7 @@
             <input type="text" name="tax-amount" id="tax-amount" class="wperp-form-field" value="$240.00">
         </td>
         <td class="col--amount" data-colname="Amount">
-            <input type="text" name="amount" id="amount" class="wperp-form-field" value="$24022">
+            <input type="text" v-model="rowFields.totalAmount" readonly class="wperp-form-field">
         </td>
         <td class="col--actions delete-row" data-colname="Action">
             <span class="wperp-btn"><i class="flaticon-trash"></i></span>
@@ -42,15 +38,93 @@
 </template>
 
 <script>
+    import HTTP from 'admin/http'
+    import MultiSelect from 'admin/components/Select/MultiSelect.vue'
+
     export default {
         name: 'TransactionRow',
 
-        components: {
+        props: {
+            products: {
+                type: Array,
+                default: () => []
+            }
+        },
 
+        components: {
+            MultiSelect
+        },
+
+        data() {
+            return {
+                rowFields: {
+                    selectedProduct: [],
+                    qty: 1,
+                    unitPrice: 0,
+                    discount: 0,
+                    totalAmount: 0
+                }
+            }
+        },
+
+        watch: {
+            'rowFields.selectedProduct'() {
+                this.getSalePrice();
+            }
+        },
+
+        methods: {
+            calculateAmount() {
+                let field = this.rowFields;
+                let amount = parseFloat(field.qty) * parseFloat(field.unitPrice);
+                let discount = parseFloat(field.discount);
+
+                if ( isNaN(amount) ) {
+                    this.rowFields.totalAmount = 0;
+                    return;
+                }
+
+                if ( discount ) {
+                    amount = (amount * parseFloat(field.discount)) / 100;
+                    console.log(amount);
+                    
+                }
+
+                field.totalAmount = amount;
+            },
+
+            getSalePrice() {
+                let product_id = this.rowFields.selectedProduct.id;
+
+                if ( ! product_id ) return;
+
+                HTTP.get(`/products/${product_id}`).then((response) => {
+                    this.unitPrice = response.data.sale_price;
+                });
+            }
         }
     }
 </script>
 
 <style lang="less">
+    .with-multiselect {
+        &.prodcut-select {
+            .multiselect__tags {
+                min-height: 43px;
+                padding: 3px 30px 0 8px;
+            }
 
+            .multiselect__placeholder {
+                margin: 8px 0;
+            }
+
+            .multiselect__select {
+                height: 41px;
+            }
+
+            .multiselect__single {
+                line-height: 37px;
+            }
+        }
+    }
 </style>

@@ -62,7 +62,7 @@
                         </tr>
                     </thead>
                     <tbody id="test">
-                        <transaction-row></transaction-row>
+                        <transaction-row :products="products"></transaction-row>
                         <tr>
                             <th scope="row" class="col--check">
                                 <select name="pen-holder" id="pen-holder" class="wperp-form-field wperp-is-select2">
@@ -107,7 +107,7 @@
                             <td colspan="6" class="text-right">
                                 <span>Total Amount = </span>
                             </td>
-                            <td><input type="text" class="" value="123456" readonly ></td>
+                            <td><input type="text" class="" value="123456" readonly /></td>
                             <td></td>
                         </tr>
                         <tr class="add-new-line">
@@ -347,6 +347,12 @@ export default {
                 due_date: '',
                 billing_address: ''
             },
+
+            products: [],
+            transactions: [
+                {}
+            ],
+
             acct_var: erp_acct_var
         }
     },
@@ -357,7 +363,22 @@ export default {
         }
     },
 
+    created() {
+        this.getProducts();
+    },
+
     methods: {
+        getProducts() {
+            HTTP.get('/products').then((response) => {
+                response.data.forEach(element => {
+                    this.products.push({
+                        id: element.id,
+                        name: element.name
+                    });
+                });
+            });
+        },
+
         getCustomerAddress() {
             let customer_id = this.basic_fields.customer.id;
 
