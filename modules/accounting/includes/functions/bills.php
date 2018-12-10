@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_bills() {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_bill", ARRAY_A );
+    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_bills", ARRAY_A );
 
     return $rows;
 }
@@ -27,7 +27,7 @@ function erp_acct_get_bills() {
 function erp_acct_get_bill( $bill_no ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_bill WHERE voucher_no = {$bill_no}", ARRAY_A );
+    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_bills WHERE voucher_no = {$bill_no}", ARRAY_A );
 
     return $row;
 }
@@ -42,6 +42,8 @@ function erp_acct_insert_bill( $data ) {
     global $wpdb;
 
     $created_by = get_current_user_id();
+    $data['created_at'] = date("Y-m-d H:i:s");
+    $data['created_by'] = $created_by;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -49,9 +51,9 @@ function erp_acct_insert_bill( $data ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'bill',
             'created_at' => $data['created_at'],
-            'created_by' => $created_by,
-            'updated_at' => $data['updated_at'],
-            'updated_by' => $data['updated_by'],
+            'created_by' => $data['created_by'],
+            'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
+            'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : ''
         ) );
 
         $voucher_no = $wpdb->insert_id;
@@ -125,6 +127,10 @@ function erp_acct_insert_bill( $data ) {
  */
 function erp_acct_update_bill( $data, $bill_id ) {
     global $wpdb;
+
+    $updated_by = get_current_user_id();
+    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_by'] = $updated_by;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -236,6 +242,8 @@ function erp_acct_void_bill( $id ) {
  * @return mixed
  */
 function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
+    $bill_data = [];
+
     $bill_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
     $bill_data['vendor_id'] = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
     $bill_data['vendor_name'] = isset( $data['vendor_name'] ) ? $data['vendor_name'] : '';
@@ -311,4 +319,17 @@ function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data
         'trn_no' => $bill_no,
     ) );
 
+}
+
+/**
+ * Get Bill count
+ *
+ * @return int
+ */
+function erp_acct_get_bill_count() {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_bills" );
+
+    return $row->count;
 }

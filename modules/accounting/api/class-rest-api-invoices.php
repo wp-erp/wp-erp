@@ -96,20 +96,14 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_invoices( $request ) {
-        $formatted_items = []; $additional_fields = [];
+        $additional_fields = [];
         $invoice_data  = erp_acct_get_all_invoices();
         $invoice_count = erp_acct_get_invoice_count();
 
-        $items  = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        foreach ( $items as $item ) {
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
-            $formatted_items[] = $this->prepare_response_for_collection( $data );
-        }
-
-        $response = rest_ensure_response( $formatted_items );
+        $response = rest_ensure_response( $invoice_data );
         $response = $this->format_collection_response( $response, $request, $invoice_count );
 
         $response->set_status( 200 );
@@ -164,7 +158,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             $item_tax_total[$key] = $item_subtotal[$key] * ($item['tax_percent'] / 100);
             $item_discount_total[$key] = $item['discount'] * $item['qty'];
             $item_total[$key] = $item_subtotal[$key] + $item_tax_total[$key] - $item_discount_total[$key];
-
         }
 
         $invoice_data['billing_address'] = maybe_serialize( $request['billing_address'] );
