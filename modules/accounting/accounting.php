@@ -137,21 +137,9 @@ final class Accounting {
      *
      */
     public function include_functions() {
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/capabilities.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/common.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/taxes.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/products.php';
-	    require_once ERP_ACCOUNTING_INCLUDES . '/functions/product_cats.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/ledger-accounts.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/invoices.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/payments.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/bills.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/pay_bills.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/purchases.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/pay_purchases.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/bank.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/charts.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/functions/reports.php';
+        foreach ( glob( ERP_ACCOUNTING_INCLUDES . '/functions/*.php' ) as $filename ) {
+            include_once $filename;
+        }
     }
 
     /**
