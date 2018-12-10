@@ -95,12 +95,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_bills( $request ) {
-        $additional_fields = [];
         $bill_data  = erp_acct_get_bills();
         $bill_count = erp_acct_get_bill_count();
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
 
         $response = rest_ensure_response( $bill_data );
         $response = $this->format_collection_response( $response, $request, $bill_count );
