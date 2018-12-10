@@ -4,31 +4,36 @@
             <span>Vendors</span>
             <a href="#" id="erp-vendor-new" @click="showModal = true">+ Add New Vendor</a>
         </h2>
-        <ListTable
+        <list-table
             tableClass="wp-ListTable widefat fixed vendor-list"
             action-column="actions"
             :columns="columns"
-            :rows="rows"
+            :rows="row_data"
             :bulk-actions="bulkActions"
-            :total-items="4"
-            :total-pages="2"
-            :per-page="2"
-            :current-page="1"
-            :actions="[
-                { key: 'edit', label: 'Edit' },
-                { key: 'trash', label: 'Delete' }
-            ]">
+            :total-items="paginationData.totalItems"
+            :total-pages="paginationData.totalPages"
+            :per-page="paginationData.perPage"
+            :current-page="paginationData.currentPage"
+            @pagination="goToPage"
+            :actions="actions"
+            @action:click="onActionClick"
+            @bulk:click="onBulkAction">
             <template slot="title" slot-scope="data">
                 <strong><a href="#">{{ data.row.title }}</a></strong>
             </template>
-        </ListTable>
+            <template slot="vendor" slot-scope="data">
+                <!--TODO update with router link-->
+                <strong><a :href="data.row.id">{{data.row.vendor}}</a></strong>
+            </template>
+
+        </list-table>
 
     </div>
 </template>
 
 <script>
     import ListTable from '../list-table/ListTable.vue'
-
+    import HTTP from '../../http.js'
     export default {
         name: 'Vendors',
         components: {
@@ -40,6 +45,7 @@
                     {
                         key: 'trash',
                         label: 'Move to Trash',
+                        img: erp_acct_var.erp_assets + '/images/trash.png'
                     }
                 ],
                 columns: {
@@ -50,23 +56,16 @@
                     'expense': { label: 'Expense' },
                     'actions': { label: 'Actions' }
                 },
-                rows: [
-                    {
-                        id: 1,
-                        vendor: 'John Smith',
-                        company: 'Com 1',
-                        email: 'asd@gmail.com',
-                        phone: '+32834239',
-                        expense: '20000'
-                    },
-                    {
-                        id: 2,
-                        vendor: 'John Doe',
-                        company: 'Com 2',
-                        email: 'fgh@gmail.com',
-                        phone: '+235235234',
-                        expense: '324234'
-                    }
+                rows: [],
+                paginationData: {
+                    totalItems: 0,
+                    totalPages: 0,
+                    perPage: 10,
+                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+                },
+                actions : [
+                    { key: 'edit', label: 'Edit' },
+                    { key: 'trash', label: 'Delete' }
                 ]
             };
         },
@@ -74,7 +73,95 @@
             this.$on('modal-close', function() {
                 this.showModal = false;
             });
+
+            this.fetchItems();
+        },
+
+        computed: {
+            row_data(){
+                let items = this.rows;
+                items.map( item => {
+                    item.vendor = item.first_name + ' ' + item.last_name;
+                    //TODO remove after api update for expense
+                    // item.expense = '55555';
+                } );
+                return items;
+            }
+        },
+
+        methods: {
+            fetchItems() {
+                this.rows = [];
+                HTTP.get('vendors', {
+                    params: {
+                        per_page: this.paginationData.perPage,
+                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+                    }
+                })
+                    .then((response) => {
+                        this.rows = response.data;
+                        this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                        this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                    .then(() => {
+                        //ready
+                    });
+            },
+
+            onActionClick(action, row, index) {
+
+                switch ( action ) {
+                    case 'trash':
+                        if ( confirm('Are you sure to delete?') ) {
+                            HTTP.delete('vendors/' + row.id).then( response => {
+                                this.$delete(this.rows, index);
+                            });
+                        }
+                        break;
+
+                    case 'edit':
+                        //TODO
+                        break;
+
+                    default :
+
+
+                }
+            },
+
+            onBulkAction(action, items) {
+                if ( 'trash' === action ) {
+                    if ( confirm('Are you sure to delete?') ) {
+                        HTTP.delete('vendors/delete/' + items.join(',')).then(response => {
+                            let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
+
+                            if ( toggleCheckbox.checked ) {
+                                // simulate click event to remove checked state
+                                toggleCheckbox.click();
+                            }
+
+                            this.fetchItems();
+                        });
+                    }
+                }
+            },
+
+            goToPage(page) {
+                let queries = Object.assign({}, this.$route.query);
+                this.paginationData.currentPage = page;
+                this.$router.push({
+                    name: 'Vendors',
+                    params: { page: page },
+                    query: queries
+                });
+
+                this.fetchItems();
+            }
         }
+
     };
 </script>
 <style lang="less">
