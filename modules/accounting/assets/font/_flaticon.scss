@@ -3,7 +3,7 @@
     Creation date: 05/12/2018 09:12
     */
 
-    @font-face {
+@font-face {
   font-family: "Flaticon";
   src: url("./Flaticon.eot");
   src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
@@ -21,8 +21,8 @@
   }
 }
 
-    .fi:before{
-        display: inline-block;
+.fi:before{
+  display: inline-block;
   font-family: "Flaticon";
   font-style: normal;
   font-weight: normal;

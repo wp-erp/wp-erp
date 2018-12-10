@@ -62,6 +62,7 @@
                         </tr>
                     </thead>
                     <tbody id="test">
+                        <transaction-row :products="products"></transaction-row>
                         <tr>
                             <th scope="row" class="col--check">
                                 <select name="pen-holder" id="pen-holder" class="wperp-form-field wperp-is-select2">
@@ -106,7 +107,7 @@
                             <td colspan="6" class="text-right">
                                 <span>Total Amount = </span>
                             </td>
-                            <td><input type="text" class="" value="123456" readonly ></td>
+                            <td><input type="text" class="" value="123456" readonly /></td>
                             <td></td>
                         </tr>
                         <tr class="add-new-line">
@@ -166,7 +167,7 @@
                             <div class="wperp-invoice-panel">
                                 <div class="invoice-header">
                                     <div class="invoice-logo">
-                                        <img src="assets/images/dummy-logo.png" alt="logo name">
+                                        <img :src="acct_var.acc_aaset_url + '/images/dummy-logo.png'" alt="logo name">
                                     </div>
                                     <div class="invoice-address">
                                         <address>
@@ -291,21 +292,21 @@
                             <div class="invoice-attachments d-print-none">
                                 <h4>Attachments</h4>
                                 <a class="attachment-item" href="#">
-                                    <img src="assets/images/img-thumb.png" alt="image name">
+                                    <img :src="acct_var.acc_aaset_url + '/images/img-thumb.png'" alt="image name">
                                     <div class="attachment-meta">
                                         <span>File name with extension</span><br>
                                         <span class="text-muted">file size</span>
                                     </div>
                                 </a>
                                 <a class="attachment-item" href="#">
-                                    <img src="assets/images/doc-thumb.png" alt="image name">
+                                    <img :src="acct_var.acc_aaset_url + '/images/doc-thumb.png'" alt="image name">
                                     <div class="attachment-meta">
                                         <span>File name with extension</span><br>
                                         <span class="text-muted">file size</span>
                                     </div>
                                 </a>
                                 <a class="attachment-item" href="#">
-                                    <img src="assets/images/pdf-thumb.png" alt="image name">
+                                    <img :src="acct_var.acc_aaset_url + '/images/pdf-thumb.png'" alt="image name">
                                     <div class="attachment-meta">
                                         <span>File name with extension</span><br>
                                         <span class="text-muted">file size</span>
@@ -324,16 +325,18 @@
 
 <script>
 import HTTP from 'admin/http'
-import InvoiceCustomers from 'admin/components/invoice/InvoiceCustomers.vue'
 import Datepicker from 'admin/components/base/Datepicker.vue';
+import TransactionRow from 'admin/components/invoice/TransactionRow.vue';
+import InvoiceCustomers from 'admin/components/invoice/InvoiceCustomers.vue'
 
 export default {
     name: 'InvoiceCreate',
 
     components: {
-        InvoiceCustomers,
+        HTTP,
         Datepicker,
-        HTTP
+        TransactionRow,
+        InvoiceCustomers
     },
 
     data() {
@@ -343,7 +346,14 @@ export default {
                 trans_date: '',
                 due_date: '',
                 billing_address: ''
-            }
+            },
+
+            products: [],
+            transactions: [
+                {}
+            ],
+
+            acct_var: erp_acct_var
         }
     },
 
@@ -353,7 +363,22 @@ export default {
         }
     },
 
+    created() {
+        this.getProducts();
+    },
+
     methods: {
+        getProducts() {
+            HTTP.get('/products').then((response) => {
+                response.data.forEach(element => {
+                    this.products.push({
+                        id: element.id,
+                        name: element.name
+                    });
+                });
+            });
+        },
+
         getCustomerAddress() {
             let customer_id = this.basic_fields.customer.id;
 

@@ -135,7 +135,17 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [ 'style-loader', 'css-loader' ]
-            }
+            },
+            {
+                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]',
+                        outputPath: path.resolve(path.join(__dirname, 'assetss/font/'))
+                    }
+                }]
+            },
         ]
     },
 }
