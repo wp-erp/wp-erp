@@ -2,7 +2,7 @@
     <div class="wperp-col-sm-4">
         <div class="wperp-form-group invoice-customers with-multiselect">
             <label for="customer">Customer<span class="wperp-required-sign">*</span></label>
-            <multi-select v-model="selected" @change="selectedChange" :options="options" />
+            <multi-select v-model="selected" :options="options" />
 
             <a href="#" class="add-new-customer"><i class="flaticon-add-plus-button"></i>Add new</a>
         </div>
@@ -37,27 +37,28 @@
             } );
         },
 
+        watch: {
+            selected() {
+                this.$emit('input', this.selected);
+            }
+        },
+
         methods: {
             getCustomers(query) {
                 HTTP.get('/customers', {
                     params: {
                         search: query
                     }
-                }).then((response) => {
-                    console.log(response.data);
-                    
-                    // response.data.forEach(item => {
-                    //     this.options.push({
-                    //         id: item.id,
-                    //         name: item.first_name + ' ' + item.last_name
-                    //     });
-                    // });
+                }).then((response) => {                    
+                    response.data.forEach(item => {
+                        this.options.push({
+                            id: item.id,
+                            name: item.first_name + ' ' + item.last_name
+                        });
+                    });
                 });
             },
 
-            selectedChange() {
-                alert(this.selected);
-            }
         }
     }
 </script>

@@ -15,23 +15,23 @@
             <div class="wperp-panel-body">
                 <form action="#" class="wperp-form" method="post">
                     <div class="wperp-row">
-                        <invoice-customers></invoice-customers>
+                        <invoice-customers v-model="basic_fields.customer"></invoice-customers>
 
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label for="trans_date">Transaction Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="trans_date"></datepicker>
+                                <datepicker v-model="basic_fields.trans_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label for="due_date">Due Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="due_date"></datepicker>
+                                <datepicker v-model="basic_fields.due_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-xs-12">
                             <label for="billing_address">Billing Address</label>
-                            <textarea name="billing_address" id="billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
+                            <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                     </div>
                 </form>
@@ -323,6 +323,7 @@
 </template>
 
 <script>
+import HTTP from 'admin/http'
 import InvoiceCustomers from 'admin/components/invoice/InvoiceCustomers.vue'
 import Datepicker from 'admin/components/base/Datepicker.vue';
 
@@ -331,15 +332,41 @@ export default {
 
     components: {
         InvoiceCustomers,
-        Datepicker
+        Datepicker,
+        HTTP
     },
 
     data() {
         return {
-            trans_date: '',
-            due_date: '',
+            basic_fields: {
+                customer: '',
+                trans_date: '',
+                due_date: '',
+                billing_address: ''
+            }
+        }
+    },
+
+    watch: {
+        'basic_fields.customer'() {            
+            this.getCustomerAddress();
+        }
+    },
+
+    methods: {
+        getCustomerAddress() {
+            let customer_id = this.basic_fields.customer.id;
+
+            HTTP.get(`/customers/${customer_id}`).then((response) => {
+                // add more info
+                this.basic_fields.billing_address = `
+                    Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
+                    City: ${response.data.billing.city},
+                `.trim();
+            });
         }
     }
+
 }
 </script>
 
