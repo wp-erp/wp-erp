@@ -96,12 +96,8 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_invoices( $request ) {
-        $additional_fields = [];
         $invoice_data  = erp_acct_get_all_invoices();
         $invoice_count = erp_acct_get_invoice_count();
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
 
         $response = rest_ensure_response( $invoice_data );
         $response = $this->format_collection_response( $response, $request, $invoice_count );
