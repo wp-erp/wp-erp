@@ -77,6 +77,20 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'bulk_delete_customers' ],
+                'args'                => [
+                    'ids'   => [ 'required' => true ]
+                ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_delete_customer' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -258,6 +272,27 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
+     * Bulk Delete customers
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function bulk_delete_customers( $request ) {
+        $ids = (string) $request['ids'];
+
+        $data = [
+            'id'   => explode(',' ,$ids),
+            'hard' => false,
+            'type' => 'customer'
+        ];
+
+        erp_delete_people( $data );
+
+        return new WP_REST_Response( true, 204 );
+    }
+
+    /**
      * Get a collection of transactions
      *
      * @param WP_REST_Request $request
@@ -268,7 +303,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         $transactions = erp_acct_get_people_transactions( $id );
-        
+
         return new WP_REST_Response( $transactions, 200 );
     }
 
