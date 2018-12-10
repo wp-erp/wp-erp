@@ -102,6 +102,8 @@ function erp_acct_insert_pay_bill( $data ) {
             'updated_by'  => $pay_bill_data['updated_by'],
         ) );
 
+        erp_acct_insert_people_trn_data( $pay_bill_data, $pay_bill_data['people_id'], 'debit' );
+
         $wpdb->query( 'COMMIT' );
 
     } catch (Exception $e) {

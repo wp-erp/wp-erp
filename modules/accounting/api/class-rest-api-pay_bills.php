@@ -222,8 +222,8 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $prepared_item = [];
 
-        if ( isset( $request['vendor_id'] ) ) {
-            $prepared_item['vendor_id'] = $request['vendor_id'];
+        if ( isset( $request['people_id'] ) ) {
+            $prepared_item['people_id'] = $request['people_id'];
         }
         if ( isset( $request['ref'] ) ) {
             $prepared_item['ref'] = $request['ref'];
@@ -308,8 +308,8 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'vendor_id'   => [
-                    'description' => __( 'Customer id for the resource.' ),
+                'people_id'   => [
+                    'description' => __( 'People id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

@@ -95,3 +95,32 @@ function erp_acct_get_people_transactions( $people_id ) {
 
     return $row;
 }
+
+/**
+ * Insert transaction data of a people
+ *
+ * @param $trn_data
+ * @param $people_id
+ * @param $voucher_type
+ *
+ * @return mixed
+ */
+
+function erp_acct_insert_people_trn_data( $trn_data, $people_id, $voucher_type ) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_trn', array(
+        'people_id'    => $people_id,
+        'voucher_no'   => $trn_data['voucher_no'],
+        'amount'       => $trn_data['amount'],
+        'trn_date'     => $trn_data['trn_date'],
+        'trn_by'       => $trn_data['trn_by'],
+        'particulars'  => $trn_data['particulars'],
+        'voucher_type' => $voucher_type,
+        'created_at'   => $trn_data['created_at'],
+        'created_by'   => $trn_data['created_by'],
+        'updated_at'   => $trn_data['updated_at'],
+        'updated_by'   => $trn_data['updated_by'],
+    ) );
+
+}
