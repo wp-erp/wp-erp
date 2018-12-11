@@ -80,6 +80,20 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'bulk_delete_employees' ],
+                'args'                => [
+                    'ids'   => [ 'required' => true ]
+                ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_delete_employee' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -125,7 +139,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         foreach ( $items as $item ) {
             $additional_fields['id'] = $item->user_id;
-            
+
             $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
@@ -251,6 +265,22 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         erp_employee_delete( $id );
         $response = rest_ensure_response( true );
 
+        return new WP_REST_Response( $response, 204 );
+    }
+
+    /**
+     * Bulk Delete employees
+     *
+     * @param $request
+     *
+     * @return WP_REST_Response
+     */
+    public function bulk_delete_employees( $request ) {
+        $ids = (string) $request['ids'];
+
+        erp_employee_delete( explode(',' ,$ids) );
+
+        $response = rest_ensure_response( true );
         return new WP_REST_Response( $response, 204 );
     }
 
