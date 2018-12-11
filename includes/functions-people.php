@@ -630,6 +630,12 @@ function erp_insert_people( $args = array(), $return_object = false ) {
     //unset created_by from meta
     unset( $meta_fields['created_by'] );
     if ( ! empty( $meta_fields ) ) {
+        $people_metada = array_keys( erp_people_get_meta( $people->id) );
+        foreach ( $people_metada as $single_data ) {
+            if ( ! array_key_exists( $single_data , $meta_fields ) ) {
+                erp_people_delete_meta( $people->id, $single_data );
+            }
+        }
         foreach ( $meta_fields as $key => $value ) {
             erp_people_update_meta( $people->id, $key, $value );
         }
