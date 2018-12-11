@@ -4,8 +4,7 @@ pluginWebpack([0],[
 /* 2 */,
 /* 3 */,
 /* 4 */,
-/* 5 */,
-/* 6 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20,6 +19,7 @@ pluginWebpack([0],[
 }));
 
 /***/ }),
+/* 6 */,
 /* 7 */,
 /* 8 */,
 /* 9 */
@@ -466,7 +466,7 @@ module.exports = __webpack_require__.p + "/Users/rafsun/LocalSites/wpuf/app/publ
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__list_table_ListTable_vue__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_js__ = __webpack_require__(5);
 //
 //
 //
@@ -1292,7 +1292,7 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__list_table_ListTable_vue__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_js__ = __webpack_require__(5);
 //
 //
 //
@@ -1470,6 +1470,10 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__list_table_ListTable_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_js__ = __webpack_require__(5);
+//
+//
+//
 //
 //
 //
@@ -1499,8 +1503,9 @@ if (false) {(function () {
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["a"] = ({
-  name: 'Employees',
+  name: 'employees',
   components: {
     ListTable: __WEBPACK_IMPORTED_MODULE_0__list_table_ListTable_vue__["a" /* default */]
   },
@@ -1508,14 +1513,15 @@ if (false) {(function () {
     return {
       bulkActions: [{
         key: 'trash',
-        label: 'Move to Trash'
+        label: 'Move to Trash',
+        img: erp_acct_var.erp_assets + '/images/trash.png'
       }],
       columns: {
         'employee': {
-          label: 'Employee Name'
+          label: 'Name'
         },
-        'company': {
-          label: 'Company'
+        'designation': {
+          label: 'Designation'
         },
         'email': {
           label: 'Email'
@@ -1523,27 +1529,23 @@ if (false) {(function () {
         'phone': {
           label: 'Phone'
         },
-        'expense': {
-          label: 'Expense'
-        },
         'actions': {
           label: 'Actions'
         }
       },
-      rows: [{
-        id: 1,
-        employee: 'John Smith',
-        company: 'Com 1',
-        email: 'asd@gmail.com',
-        phone: '+32834239',
-        expense: '20000'
+      rows: [],
+      paginationData: {
+        totalItems: 0,
+        totalPages: 0,
+        perPage: 10,
+        currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+      },
+      actions: [{
+        key: 'edit',
+        label: 'Edit'
       }, {
-        id: 2,
-        employee: 'John Doe',
-        company: 'Com 2',
-        email: 'fgh@gmail.com',
-        phone: '+235235234',
-        expense: '324234'
+        key: 'trash',
+        label: 'Delete'
       }]
     };
   },
@@ -1551,6 +1553,89 @@ if (false) {(function () {
     this.$on('modal-close', function () {
       this.showModal = false;
     });
+    this.fetchItems();
+  },
+  computed: {
+    row_data: function row_data() {
+      var items = this.rows;
+      items.map(function (item) {
+        item.employee = item.full_name;
+        item.email = item.user_email;
+        item.designation = item.designation.title;
+      });
+      return items;
+    }
+  },
+  methods: {
+    fetchItems: function fetchItems() {
+      var _this = this;
+
+      this.rows = [];
+      __WEBPACK_IMPORTED_MODULE_1__http_js__["a" /* default */].get('employees', {
+        params: {
+          per_page: this.paginationData.perPage,
+          page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+          include: 'designation'
+        }
+      }).then(function (response) {
+        _this.rows = response.data;
+        _this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+        _this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+      }).catch(function (error) {
+        console.log(error);
+      }).then(function () {//ready
+      });
+    },
+    onActionClick: function onActionClick(action, row, index) {
+      var _this2 = this;
+
+      switch (action) {
+        case 'trash':
+          if (confirm('Are you sure to delete?')) {
+            __WEBPACK_IMPORTED_MODULE_1__http_js__["a" /* default */].delete('employees/' + row.id).then(function (response) {
+              _this2.$delete(_this2.rows, index);
+            });
+          }
+
+          break;
+
+        case 'edit':
+          //TODO
+          break;
+
+        default:
+      }
+    },
+    onBulkAction: function onBulkAction(action, items) {
+      var _this3 = this;
+
+      if ('trash' === action) {
+        if (confirm('Are you sure to delete?')) {
+          __WEBPACK_IMPORTED_MODULE_1__http_js__["a" /* default */].delete('employees/delete/' + items.join(',')).then(function (response) {
+            var toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
+
+            if (toggleCheckbox.checked) {
+              // simulate click event to remove checked state
+              toggleCheckbox.click();
+            }
+
+            _this3.fetchItems();
+          });
+        }
+      }
+    },
+    goToPage: function goToPage(page) {
+      var queries = Object.assign({}, this.$route.query);
+      this.paginationData.currentPage = page;
+      this.$router.push({
+        name: 'Employees',
+        params: {
+          page: page
+        },
+        query: queries
+      });
+      this.fetchItems();
+    }
   }
 });
 
@@ -1576,7 +1661,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(138);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_invoice_TransactionRow_vue__ = __webpack_require__(143);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_invoice_InvoiceCustomers_vue__ = __webpack_require__(151);
@@ -2031,7 +2116,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Select_MultiSelect_vue__ = __webpack_require__(43);
 //
 //
@@ -2290,7 +2375,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Select_MultiSelect_vue__ = __webpack_require__(43);
 //
 //
@@ -2372,7 +2457,7 @@ if (false) {(function () {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__App_vue__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__router__ = __webpack_require__(90);
@@ -2849,7 +2934,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_Dashboard_vue__ = __webpack_require__(91);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_ChartOfAccounts_vue__ = __webpack_require__(97);
@@ -4724,38 +4809,25 @@ var render = function() {
     "div",
     { staticClass: "app-employees" },
     [
-      _c("h2", { staticClass: "add-new-employee" }, [
-        _c("span", [_vm._v("Employees")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            attrs: { href: "#", id: "erp-employee-new" },
-            on: {
-              click: function($event) {
-                _vm.showModal = true
-              }
-            }
-          },
-          [_vm._v("+ Add New Employee")]
-        )
-      ]),
+      _vm._m(0),
       _vm._v(" "),
-      _c("ListTable", {
+      _c("list-table", {
         attrs: {
           tableClass: "wp-ListTable widefat fixed employee-list",
           "action-column": "actions",
           columns: _vm.columns,
-          rows: _vm.rows,
+          rows: _vm.row_data,
           "bulk-actions": _vm.bulkActions,
-          "total-items": 4,
-          "total-pages": 2,
-          "per-page": 2,
-          "current-page": 1,
-          actions: [
-            { key: "edit", label: "Edit" },
-            { key: "trash", label: "Delete" }
-          ]
+          "total-items": _vm.paginationData.totalItems,
+          "total-pages": _vm.paginationData.totalPages,
+          "per-page": _vm.paginationData.perPage,
+          "current-page": _vm.paginationData.currentPage,
+          actions: _vm.actions
+        },
+        on: {
+          pagination: _vm.goToPage,
+          "action:click": _vm.onActionClick,
+          "bulk:click": _vm.onBulkAction
         },
         scopedSlots: _vm._u([
           {
@@ -4769,6 +4841,18 @@ var render = function() {
                 ])
               ]
             }
+          },
+          {
+            key: "employee",
+            fn: function(data) {
+              return [
+                _c("strong", [
+                  _c("a", { attrs: { href: data.row.user_url } }, [
+                    _vm._v(_vm._s(data.row.employee))
+                  ])
+                ])
+              ]
+            }
           }
         ])
       })
@@ -4776,7 +4860,16 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h2", { staticClass: "add-new-employee" }, [
+      _c("span", [_vm._v("Employees")])
+    ])
+  }
+]
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
