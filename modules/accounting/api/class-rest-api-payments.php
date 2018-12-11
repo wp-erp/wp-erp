@@ -179,9 +179,10 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $invoice_response = $this->prepare_item_for_response( $payment_data, $request, $additional_fields );
+        $payment_response = $this->prepare_item_for_response( $payment_data, $request, $additional_fields );
 
-        $response = rest_ensure_response( $invoice_response );
+        $response = rest_ensure_response( $payment_response );
+
         $response->set_status( 200 );
 
         return $response;
@@ -243,9 +244,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['customer_id'] ) ) {
             $prepared_item['customer_id'] = $request['customer_id'];
         }
-	    if ( isset( $request['invoice_no'] ) ) {
-		    $prepared_item['invoice_no'] = $request['invoice_no'];
-	    }
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] = $request['trn_date'] ;
         }
@@ -399,8 +397,8 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'invoice_id'       => [
-                            'description' => __( 'Invoice id.', 'erp' ),
+                        'invoice_no'       => [
+                            'description' => __( 'Invoice no.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
