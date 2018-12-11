@@ -1453,7 +1453,7 @@ if (false) {(function () {
       var queries = Object.assign({}, this.$route.query);
       this.paginationData.currentPage = page;
       this.$router.push({
-        name: 'Vendors',
+        name: 'PaginateVendors',
         params: {
           page: page
         },
@@ -2891,8 +2891,20 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
     }]
   }, {
     path: '/vendors',
-    name: 'Vendors',
-    component: __WEBPACK_IMPORTED_MODULE_5_admin_components_Peoples_Vendors_vue__["a" /* default */]
+    component: {
+      render: function render(c) {
+        return c('router-view');
+      }
+    },
+    children: [{
+      path: '',
+      name: 'Vendors',
+      component: __WEBPACK_IMPORTED_MODULE_5_admin_components_Peoples_Vendors_vue__["a" /* default */]
+    }, {
+      path: 'page/:page',
+      name: 'PaginateVendors',
+      component: __WEBPACK_IMPORTED_MODULE_5_admin_components_Peoples_Vendors_vue__["a" /* default */]
+    }]
   }, {
     path: '/employees',
     name: 'Employees',
