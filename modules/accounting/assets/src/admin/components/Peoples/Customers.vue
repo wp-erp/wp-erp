@@ -154,7 +154,7 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'Customers',
+                    name: 'PaginateCustomers',
                     params: { page: page },
                     query: queries
                 });
