@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_pay_bills() {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_invoice", ARRAY_A );
+    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_pay_bill", ARRAY_A );
 
     return $rows;
 }
@@ -27,7 +27,7 @@ function erp_acct_get_pay_bills() {
 function erp_acct_get_pay_bill( $bill_no ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_invoice WHERE voucher_no = {$bill_no}", ARRAY_A );
+    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_pay_bill WHERE voucher_no = {$bill_no}", ARRAY_A );
 
     return $row;
 }

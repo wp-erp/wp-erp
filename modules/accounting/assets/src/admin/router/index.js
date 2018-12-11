@@ -20,13 +20,35 @@ export default new Router({
         },
         {
             path: '/customers',
-            name: 'Customers',
-            component: Customers
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path : '',
+                    name : 'Customers',
+                    component: Customers,
+                },
+                {
+                    path : 'page/:page',
+                    name : 'PaginateCustomers',
+                    component: Customers,
+                }
+            ]
         },
         {
             path: '/vendors',
-            name: 'Vendors',
-            component: Vendors
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'Vendors',
+                    component: Vendors,
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateVendors',
+                    component: Vendors,
+                },
+            ]
         },
         {
             path: '/employees',

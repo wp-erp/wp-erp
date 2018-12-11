@@ -5,8 +5,7 @@ pluginWebpack([0],[
 /* 3 */,
 /* 4 */,
 /* 5 */,
-/* 6 */,
-/* 7 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21,6 +20,7 @@ pluginWebpack([0],[
 }));
 
 /***/ }),
+/* 7 */,
 /* 8 */,
 /* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -466,7 +466,7 @@ module.exports = __webpack_require__.p + "/Users/rafsun/LocalSites/wpuf/app/publ
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__list_table_ListTable_vue__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_js__ = __webpack_require__(6);
 //
 //
 //
@@ -628,7 +628,7 @@ module.exports = __webpack_require__.p + "/Users/rafsun/LocalSites/wpuf/app/publ
       var queries = Object.assign({}, this.$route.query);
       this.paginationData.currentPage = page;
       this.$router.push({
-        name: 'Customers',
+        name: 'PaginateCustomers',
         params: {
           page: page
         },
@@ -1292,7 +1292,7 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__list_table_ListTable_vue__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_js__ = __webpack_require__(6);
 //
 //
 //
@@ -1453,7 +1453,7 @@ if (false) {(function () {
       var queries = Object.assign({}, this.$route.query);
       this.paginationData.currentPage = page;
       this.$router.push({
-        name: 'Vendors',
+        name: 'PaginateVendors',
         params: {
           page: page
         },
@@ -1576,7 +1576,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(138);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_invoice_TransactionRow_vue__ = __webpack_require__(143);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_invoice_InvoiceCustomers_vue__ = __webpack_require__(151);
@@ -2031,7 +2031,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Select_MultiSelect_vue__ = __webpack_require__(43);
 //
 //
@@ -2290,7 +2290,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Select_MultiSelect_vue__ = __webpack_require__(43);
 //
 //
@@ -2875,12 +2875,36 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
     component: __WEBPACK_IMPORTED_MODULE_2_admin_components_Dashboard_vue__["a" /* default */]
   }, {
     path: '/customers',
-    name: 'Customers',
-    component: __WEBPACK_IMPORTED_MODULE_4_admin_components_Peoples_Customers_vue__["a" /* default */]
+    component: {
+      render: function render(c) {
+        return c('router-view');
+      }
+    },
+    children: [{
+      path: '',
+      name: 'Customers',
+      component: __WEBPACK_IMPORTED_MODULE_4_admin_components_Peoples_Customers_vue__["a" /* default */]
+    }, {
+      path: 'page/:page',
+      name: 'PaginateCustomers',
+      component: __WEBPACK_IMPORTED_MODULE_4_admin_components_Peoples_Customers_vue__["a" /* default */]
+    }]
   }, {
     path: '/vendors',
-    name: 'Vendors',
-    component: __WEBPACK_IMPORTED_MODULE_5_admin_components_Peoples_Vendors_vue__["a" /* default */]
+    component: {
+      render: function render(c) {
+        return c('router-view');
+      }
+    },
+    children: [{
+      path: '',
+      name: 'Vendors',
+      component: __WEBPACK_IMPORTED_MODULE_5_admin_components_Peoples_Vendors_vue__["a" /* default */]
+    }, {
+      path: 'page/:page',
+      name: 'PaginateVendors',
+      component: __WEBPACK_IMPORTED_MODULE_5_admin_components_Peoples_Vendors_vue__["a" /* default */]
+    }]
   }, {
     path: '/employees',
     name: 'Employees',
