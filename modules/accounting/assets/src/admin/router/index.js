@@ -36,8 +36,19 @@ export default new Router({
         },
         {
             path: '/vendors',
-            name: 'Vendors',
-            component: Vendors
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'Vendors',
+                    component: Vendors,
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateVendors',
+                    component: Vendors,
+                },
+            ]
         },
         {
             path: '/employees',
