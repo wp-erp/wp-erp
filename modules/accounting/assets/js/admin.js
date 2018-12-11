@@ -1628,7 +1628,7 @@ if (false) {(function () {
       var queries = Object.assign({}, this.$route.query);
       this.paginationData.currentPage = page;
       this.$router.push({
-        name: 'Employees',
+        name: 'PaginateEmployees',
         params: {
           page: page
         },
@@ -2992,8 +2992,20 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
     }]
   }, {
     path: '/employees',
-    name: 'Employees',
-    component: __WEBPACK_IMPORTED_MODULE_6_admin_components_Peoples_Employees_vue__["a" /* default */]
+    component: {
+      render: function render(c) {
+        return c('router-view');
+      }
+    },
+    children: [{
+      path: '',
+      name: 'Employees',
+      component: __WEBPACK_IMPORTED_MODULE_6_admin_components_Peoples_Employees_vue__["a" /* default */]
+    }, {
+      path: 'page/:page',
+      name: 'PaginateEmployees',
+      component: __WEBPACK_IMPORTED_MODULE_6_admin_components_Peoples_Employees_vue__["a" /* default */]
+    }]
   }, {
     path: '/sales',
     name: 'Sales',
