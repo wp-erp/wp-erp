@@ -143,6 +143,14 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields = [];
         $pay_bill_data = $this->prepare_item_for_database( $request );
 
+        $items = $request['bill_details']; $item_total = [];
+
+        foreach ( $items as $key => $item ) {
+            $item_total[$key] = $item['line_total'];
+        }
+
+        $pay_bill_data['amount'] = array_sum( $item_total );
+
         $pay_bill_id = erp_acct_insert_pay_bill( $pay_bill_data );
 
         $pay_bill_data['id'] = $pay_bill_id;
@@ -173,6 +181,14 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $pay_bill_data = $this->prepare_item_for_database( $request );
+
+        $items = $request['bill_details']; $item_total = [];
+
+        foreach ( $items as $key => $item ) {
+            $item_total[$key] = $item['line_total'];
+        }
+
+        $pay_bill_data['amount'] = array_sum( $item_total );
 
         $pay_bill_id = erp_acct_update_pay_bill( $pay_bill_data, $id );
 
@@ -287,7 +303,8 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'              => (int) $item->id,
             'vendor_id'       => (int) $item->vendor_id,
-            'trn_date'            => $item->trn_date,
+            'trn_date'        => $item->trn_date,
+            'amount'          => $item->amount,
             'billing_address' => (int) $item->billing_address,
             'bill_details'    => $item->bill_details,
             'type'            => $item->type,

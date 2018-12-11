@@ -143,6 +143,14 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields = [];
         $payment_data = $this->prepare_item_for_database( $request );
 
+        $items = $request['line_items']; $item_total = [];
+
+        foreach ( $items as $key => $item ) {
+            $item_total[$key] = $item['line_total'];
+        }
+
+        $payment_data['amount'] = array_sum( $item_total );
+
         $payment_id = erp_acct_insert_payment( $payment_data );
 
         $payment_data['id'] = $payment_id;
@@ -172,6 +180,14 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $payment_data = $this->prepare_item_for_database( $request );
+
+        $items = $request['line_items']; $item_total = [];
+
+        foreach ( $items as $key => $item ) {
+            $item_total[$key] = $item['line_total'];
+        }
+
+        $payment_data['amount'] = array_sum( $item_total );
 
         $payment_id = erp_acct_update_payment( $payment_data, $id );
 
@@ -292,6 +308,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'customer_id'     => (int) $item->customer_id,
             'date'            => $item->trn_date,
             'due_date'        => $item->due_date,
+            'amount'          => $item->amount,
             'billing_address' => $item->billing_address,
             'line_items'      => $item->line_items,
             'type'            => $item->type,
