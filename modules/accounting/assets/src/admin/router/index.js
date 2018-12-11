@@ -52,8 +52,19 @@ export default new Router({
         },
         {
             path: '/employees',
-            name: 'Employees',
-            component: Employees
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'Employees',
+                    component: Employees,
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateEmployees',
+                    component: Employees,
+                },
+            ]
         },
         {
             path: '/sales',
