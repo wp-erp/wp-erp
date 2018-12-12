@@ -5,6 +5,7 @@ import ChartOfAccounts from 'admin/components/ChartOfAccounts.vue'
 import Customers from 'admin/components/Peoples/Customers.vue'
 import Vendors from 'admin/components/Peoples/Vendors.vue'
 import Employees from 'admin/components/Peoples/Employees.vue'
+import CustomerDetails from 'admin/components/Peoples/Customer-details.vue'
 import DummyComponent from 'admin/components/DummyComponent.vue'
 
 import InvoiceCreate from 'admin/components/invoice/InvoiceCreate.vue'
@@ -31,6 +32,11 @@ export default new Router({
                     path : 'page/:page',
                     name : 'PaginateCustomers',
                     component: Customers,
+                },
+                {
+                    path : 'view/:id',
+                    name : 'CustomerDetails',
+                    component: CustomerDetails,
                 }
             ]
         },
