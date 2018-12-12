@@ -143,6 +143,14 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields = [];
         $payment_data = $this->prepare_item_for_database( $request );
 
+        $items = $request['line_items']; $item_total = [];
+
+        foreach ( $items as $key => $item ) {
+            $item_total[$key] = $item['line_total'];
+        }
+
+        $payment_data['amount'] = array_sum( $item_total );
+
         $payment_id = erp_acct_insert_payment( $payment_data );
 
         $payment_data['id'] = $payment_id;
@@ -173,15 +181,24 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $payment_data = $this->prepare_item_for_database( $request );
 
+        $items = $request['line_items']; $item_total = [];
+
+        foreach ( $items as $key => $item ) {
+            $item_total[$key] = $item['line_total'];
+        }
+
+        $payment_data['amount'] = array_sum( $item_total );
+
         $payment_id = erp_acct_update_payment( $payment_data, $id );
 
         $payment_data['id'] = $payment_id; $additional_fields = [];
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $invoice_response = $this->prepare_item_for_response( $payment_data, $request, $additional_fields );
+        $payment_response = $this->prepare_item_for_response( $payment_data, $request, $additional_fields );
 
-        $response = rest_ensure_response( $invoice_response );
+        $response = rest_ensure_response( $payment_response );
+
         $response->set_status( 200 );
 
         return $response;
@@ -243,9 +260,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['customer_id'] ) ) {
             $prepared_item['customer_id'] = $request['customer_id'];
         }
-	    if ( isset( $request['invoice_no'] ) ) {
-		    $prepared_item['invoice_no'] = $request['invoice_no'];
-	    }
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] = $request['trn_date'] ;
         }
@@ -294,6 +308,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'customer_id'     => (int) $item->customer_id,
             'date'            => $item->trn_date,
             'due_date'        => $item->due_date,
+            'amount'          => $item->amount,
             'billing_address' => $item->billing_address,
             'line_items'      => $item->line_items,
             'type'            => $item->type,
@@ -399,8 +414,8 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'invoice_id'       => [
-                            'description' => __( 'Invoice id.', 'erp' ),
+                        'invoice_no'       => [
+                            'description' => __( 'Invoice no.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],

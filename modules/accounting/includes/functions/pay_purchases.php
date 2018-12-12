@@ -44,6 +44,9 @@ function erp_acct_insert_pay_purchase( $data ) {
     global $wpdb;
 
     $created_by = get_current_user_id();
+    $data['created_at'] = date("Y-m-d H:i:s");
+    $data['created_by'] = $created_by;
+    $purchase_no = '';
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -51,12 +54,13 @@ function erp_acct_insert_pay_purchase( $data ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'pay_purchase',
             'created_at' => $data['created_at'],
-            'created_by' => $created_by,
-            'updated_at' => $data['updated_at'],
-            'updated_by' => $data['updated_by'],
+            'created_by' => $data['created_by'],
+            'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
+            'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : ''
         ) );
 
         $voucher_no = $wpdb->insert_id;
+        $purchase_no = $voucher_no;
 
         $pay_purchase_data = erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no );
 
@@ -65,7 +69,7 @@ function erp_acct_insert_pay_purchase( $data ) {
             'trn_date'        => $pay_purchase_data['trn_date'],
             'amount'          => $pay_purchase_data['amount'],
             'trn_by'          => $pay_purchase_data['trn_by'],
-            'remarks'         => $pay_purchase_data['remarks'],
+            'particulars'     => $pay_purchase_data['particulars'],
             'attachments'     => $pay_purchase_data['attachments'],
             'created_at'      => $pay_purchase_data['created_at'],
             'created_by'      => $created_by,
@@ -78,8 +82,8 @@ function erp_acct_insert_pay_purchase( $data ) {
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_pay_purchase_details', array(
                 'voucher_no'  => $voucher_no,
-                'purchase_no' => $item['id'],
-                'amount'      => $item['amount'],
+                'purchase_no' => $purchase_no,
+                'amount'      => $item['line_total'],
                 'created_at'  => $pay_purchase_data['created_at'],
                 'created_by'  => $created_by,
                 'updated_at'  => $pay_purchase_data['updated_at'],
@@ -91,8 +95,8 @@ function erp_acct_insert_pay_purchase( $data ) {
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
             'purchase_no' => $voucher_no,
-            'trn_no'      => $voucher_no,
-            'remarks'     => $pay_purchase_data['remarks'],
+            'trn_no'      => $purchase_no,
+            'particulars' => $pay_purchase_data['particulars'],
             'debit'       => $pay_purchase_data['amount'],
             'credit'      => 0,
             'created_at'  => $pay_purchase_data['created_at'],
@@ -110,7 +114,7 @@ function erp_acct_insert_pay_purchase( $data ) {
         return new WP_error( 'pay-purchase-exception', $e->getMessage() );
     }
 
-    return $voucher_no;
+    return $purchase_no;
 
 }
 
@@ -136,7 +140,7 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
             'trn_date'        => $pay_purchase_data['trn_date'],
             'amount'          => $pay_purchase_data['amount'],
             'trn_by'          => $pay_purchase_data['trn_by'],
-            'remarks'         => $pay_purchase_data['particulars'],
+            'particulars'     => $pay_purchase_data['particulars'],
             'attachments'     => $pay_purchase_data['attachments'],
             'created_at'      => $pay_purchase_data['created_at'],
             'created_by'      => $created_by,
@@ -165,7 +169,7 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
             'trn_no'      => $pay_purchase_id,
-            'remarks'     => $pay_purchase_data['remarks'],
+            'particulars' => $pay_purchase_data['particulars'],
             'debit'       => $pay_purchase_data['amount'],
             'credit'      => 0,
             'created_at'  => $pay_purchase_data['created_at'],
@@ -233,18 +237,19 @@ function erp_acct_void_pay_purchase( $id ) {
  * @return mixed
  */
 function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
-    $pay_purchase_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
-    $pay_purchase_data['order_no'] = isset( $data['order_no'] ) ? $data['order_no'] : 1;
+    $pay_purchase_data['voucher_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $pay_purchase_data['order_no']         = isset( $data['order_no'] ) ? $data['order_no'] : 1;
+    $pay_purchase_data['vendor_id']        = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
     $pay_purchase_data['purchase_details'] = isset( $data['purchase_details'] ) ? $data['purchase_details'] : '';
-    $pay_purchase_data['trn_date']   = isset( $data['date'] ) ? $data['date'] : date("Y-m-d" );
-    $pay_purchase_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
-    $pay_purchase_data['trn_by'] = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
-    $pay_purchase_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $pay_purchase_data['remarks'] = isset( $data['remarks'] ) ? $data['remarks'] : '';
-    $pay_purchase_data['created_at'] = date("Y-m-d" );
-    $pay_purchase_data['created_by'] = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $pay_purchase_data['updated_at'] = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
-    $pay_purchase_data['updated_by'] = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $pay_purchase_data['trn_date']         = isset( $data['date'] ) ? $data['date'] : date( "Y-m-d" );
+    $pay_purchase_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $pay_purchase_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
+    $pay_purchase_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $pay_purchase_data['particulars']      = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $pay_purchase_data['created_at']       = date( "Y-m-d" );
+    $pay_purchase_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
+    $pay_purchase_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
+    $pay_purchase_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
 
     return $pay_purchase_data;
 }
@@ -263,9 +268,9 @@ function erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $ite
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => 605, //change later
-        'trn_no'      => $pay_purchase_data['trn_no'],
-        'remarks' => $pay_purchase_data['remarks'],
-        'debit'       => $item_data['amount'],
+        'trn_no'      => $pay_purchase_data['voucher_no'],
+        'particulars' => $pay_purchase_data['particulars'],
+        'debit'       => $item_data['line_total'],
         'credit'      => 0,
         'trn_date'    => $pay_purchase_data['trn_date'],
         'created_at'  => $pay_purchase_data['created_at'],
@@ -291,8 +296,8 @@ function erp_acct_update_pay_purchase_data_into_ledger( $pay_purchase_data, $pay
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => 605, // change later
-        'remarks'     => $pay_purchase_data['remarks'],
-        'debit'       => $item_data['amount'],
+        'particulars' => $pay_purchase_data['particulars'],
+        'debit'       => $item_data['line_total'],
         'credit'      => 0,
         'trn_date'    => $pay_purchase_data['trn_date'],
         'created_at'  => $pay_purchase_data['created_at'],
@@ -303,4 +308,17 @@ function erp_acct_update_pay_purchase_data_into_ledger( $pay_purchase_data, $pay
         'trn_no' => $pay_purchase_no,
     ) );
 
+}
+
+/**
+ * Get Pay purchases count
+ *
+ * @return int
+ */
+function erp_acct_get_pay_purchase_count() {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_pay_purchase" );
+
+    return $row->count;
 }

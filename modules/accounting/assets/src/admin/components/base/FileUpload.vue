@@ -115,7 +115,7 @@
                 //     .then(x => x.map(img => {
                 //         Object.assign({}, img, { url: `${BASE_URL}/images/${img.id}` })
                 //     })
-                // );
+                // ); 
 
                 // console.log(a);
             },
