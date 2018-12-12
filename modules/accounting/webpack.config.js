@@ -142,7 +142,7 @@ module.exports = {
                     loader: 'file-loader',
                     options: {
                         name: '[name].[ext]',
-                        outputPath: path.resolve(path.join(__dirname, 'assetss/font/'))
+                        outputPath: path.resolve(path.join(__dirname, 'assets/font/'))
                     }
                 }]
             },

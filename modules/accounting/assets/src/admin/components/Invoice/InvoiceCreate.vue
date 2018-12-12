@@ -31,19 +31,13 @@
                         </div>
                         <div class="wperp-col-xs-12">
                             <label for="billing_address">Billing Address</label>
-                            <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
+                            <textarea v-model.trim="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                     </div>
                 </form>
                 
             </div>
         </div>
-
-    <!--  <div class="wperp-panel wperp-panel-primary">
-            <div class="wperp-panel-heading">
-                
-            </div>
-        </div> -->
 
         <div class="wperp-table-responsive">
             <!-- Start .wperp-crm-table -->
@@ -62,66 +56,30 @@
                         </tr>
                     </thead>
                     <tbody id="test">
-                        <transaction-row :products="products"></transaction-row>
-                        <tr>
-                            <th scope="row" class="col--check">
-                                <select name="pen-holder" id="pen-holder" class="wperp-form-field wperp-is-select2">
-                                    <option value="0">Select</option>
-                                    <option value="1">Pen Holder</option>
-                                    <option value="2">Pen Holder</option>
-                                </select>
-                            </th>
-                            <td class="col--qty column-primary">
-                                <input type="number" name="qty" id="qty" class="wperp-form-field" value="1">
-                            </td>
-                            <td class="col--uni_price" data-colname="Unit Price">
-                                <input type="text" name="unit-price" id="unit-price" class="wperp-form-field" value="5000">
-                            </td>
-                            <td class="col--discount" data-colname="Discount">
-                                <div class="wperp-has-addon">
-                                    <input type="text" name="discount" id="discount" class="wperp-form-field" value="1">
-                                    <span class="wperp-addon">%</span>
-                                </div>
-                            </td>
-                            <td class="col--penholder" data-colname="Tax(%)">
-                                <div class="wperp-custom-select">
-                                    <select name="pen-holder" id="pen-holder" class="wperp-form-field">
-                                        <option value="0">Select</option>
-                                        <option value="1">Gov</option>
-                                        <option value="2">Private</option>
-                                    </select>
-                                    <i class="flaticon-arrow-down-sign-to-navigate"></i>
-                                </div>
-                            </td>
-                            <td class="col--tax-amount" data-colname="Tax Amount">
-                                <input type="text" name="tax-amount" id="tax-amount" class="wperp-form-field" value="$240.00">
-                            </td>
-                            <td class="col--amount" data-colname="Amount">
-                                <input type="text" name="amount" id="amount" class="wperp-form-field" value="$24022">
-                            </td>
-                            <td class="col--actions delete-row" data-colname="Action">
-                                <span class="wperp-btn"><i class="flaticon-trash"></i></span>
-                            </td>
-                        </tr>
+                        <transaction-row
+                            :line="line"
+                            :products="products"
+                            :key="index"
+                            v-for="(line, index) in transactionLines"
+                        ></transaction-row>
+
                         <tr class="total-amount-row">
                             <td colspan="6" class="text-right">
                                 <span>Total Amount = </span>
                             </td>
-                            <td><input type="text" class="" value="123456" readonly /></td>
+                            <td><input type="text" v-model="finalTotalAmount" readonly></td>
                             <td></td>
                         </tr>
                         <tr class="add-new-line">
                             <td colspan="9" style="text-align: left;">
-                                <button class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
                             </td>
                         </tr>
                         <tr class="add-attachment-row" >
                             <td colspan="9" style="text-align: left;">
                                 <div class="attachment-container">
                                     <label class="col--attachement">Attachment</label>
-                                    <div class="attachment-placeholder">
-                                        To attach <input type="file" id="attachment" name="attachment" class="display-none"> <label for="attachment">Select files</label> from your computer
-                                    </div>
+                                    <file-upload url="/invoices/attachments"/>
                                 </div>
                             </td>
                         </tr>
@@ -326,6 +284,7 @@
 <script>
 import HTTP from 'admin/http'
 import Datepicker from 'admin/components/base/Datepicker.vue';
+import FileUpload from 'admin/components/base/FileUpload.vue'
 import TransactionRow from 'admin/components/invoice/TransactionRow.vue';
 import InvoiceCustomers from 'admin/components/invoice/InvoiceCustomers.vue'
 
@@ -335,6 +294,7 @@ export default {
     components: {
         HTTP,
         Datepicker,
+        FileUpload,
         TransactionRow,
         InvoiceCustomers
     },
@@ -349,9 +309,8 @@ export default {
             },
 
             products: [],
-            transactions: [
-                {}
-            ],
+            transactionLines: [{}],
+            finalTotalAmount: 0,
 
             acct_var: erp_acct_var
         }
@@ -365,6 +324,15 @@ export default {
 
     created() {
         this.getProducts();
+
+        this.$root.$on('remove-row', index => {            
+            this.$delete(this.transactionLines, index);
+            this.updateFinalAmount();
+        });
+
+        this.$root.$on('total-updated', amount => {
+            this.updateFinalAmount();
+        });
     },
 
     methods: {
@@ -387,8 +355,22 @@ export default {
                 this.basic_fields.billing_address = `
                     Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
                     City: ${response.data.billing.city},
-                `.trim();
+                `;
             });
+        },
+
+        addLine() {
+            this.transactionLines.push({});
+        },
+
+        updateFinalAmount() {
+            let finalAmount = 0;
+
+            this.transactionLines.forEach(element => {
+                finalAmount += element.totalAmount;
+            });
+
+            this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
         }
     }
 
