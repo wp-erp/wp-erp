@@ -45,7 +45,7 @@ class Taxes_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_tax' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
@@ -280,7 +280,7 @@ class Taxes_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'name'  => [
                     'description' => __( 'Voucher no. for the resource.' ),
-                    'type'        => 'integer',
+                    'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
@@ -288,7 +288,7 @@ class Taxes_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'number'   => [
                     'description' => __( 'Customer id for the resource.' ),
-                    'type'        => 'integer',
+                    'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
@@ -297,7 +297,7 @@ class Taxes_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'compound'       => [
                     'description' => __( 'Date for the resource.' ),
-                    'type'        => 'string',
+                    'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',

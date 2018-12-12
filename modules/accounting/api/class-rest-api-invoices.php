@@ -86,6 +86,18 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/attachments', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'upload_attachments' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            //'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
     }
 
     /**
@@ -263,6 +275,27 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         return new WP_REST_Response( true, 204 );
     }
 
+    /**
+     * Upload attachment for invoice
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function upload_attachments( $request ) {
+
+        // error_log(print_r($request['photos'], true));
+
+        foreach ( $request['FILES'] as $file ) {
+            $movefile = wp_handle_upload( $file, [ 'test_form' => false ] );
+            error_log(print_r($movefile, true));
+        }
+
+        $response = rest_ensure_response( true );
+        $response->set_status( 200 );
+
+        return $response;
+    }
 
     /**
      * Prepare a single item for create or update
