@@ -9,6 +9,7 @@ import CustomerDetails from 'admin/components/Peoples/Customer-details.vue'
 import DummyComponent from 'admin/components/DummyComponent.vue'
 
 import InvoiceCreate from 'admin/components/invoice/InvoiceCreate.vue'
+import RecPaymentCreate from 'admin/components/RecPayment/RecPaymentCreate.vue'
 
 Vue.use(Router)
 
@@ -101,6 +102,11 @@ export default new Router({
             path: '/invoices/new',
             name: 'InvoiceCreate',
             component: InvoiceCreate
+        },
+        {
+            path: '/payments/new',
+            name: 'RecPaymentCreate',
+            component: RecPaymentCreate
         },
     ]
 })

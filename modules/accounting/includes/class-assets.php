@@ -45,6 +45,7 @@ class Assets {
         $site_url = site_url();
         $rest_nonce = wp_create_nonce( "wp_rest" );
         $logout_url = esc_url( wp_logout_url() );
+        $acct_url = admin_url( 'admin.php' ) . '?page=erp-accounting#/';
 
         foreach ( $scripts as $handle => $script ) {
             $deps      = isset( $script['deps'] ) ? $script['deps'] : false;
@@ -83,6 +84,7 @@ class Assets {
             'acc_aaset_url' => ERP_ACCOUNTING_ASSETS,
             'erp_assets'    => WPERP_ASSETS,
             'erp_acct_menus'=> $menus,
+            'erp_acct_url'  => $acct_url
         ) );
     }
 
