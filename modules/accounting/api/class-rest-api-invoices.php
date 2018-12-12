@@ -86,6 +86,18 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/attachments', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'upload_attachments' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            //'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
     }
 
     /**
@@ -96,15 +108,13 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_invoices( $request ) {
-        global $wpdb;
+        $invoice_data  = erp_acct_get_all_invoices();
+        $invoice_count = erp_acct_get_invoice_count();
 
-        $additional_fields = [];
-        $invoice_data = erp_acct_get_all_invoices();
-        $invoice_count = $wpdb->get_row( "SELECT COUNT(*) FROM " . $wpdb->prefix . "erp_acct_invoice" );
-
-        $item  = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
         $response = rest_ensure_response( $invoice_data );
         $response = $this->format_collection_response( $response, $request, $invoice_count );
+
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -118,16 +128,20 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_invoice( $request ) {
-        global $wpdb;
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $invoice_data = erp_acct_get_invoice( $id );
+        $item = erp_acct_get_invoice( $id );
 
-        $response = rest_ensure_response( $invoice_data );
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -151,7 +165,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             $item_tax_total[$key] = $item_subtotal[$key] * ($item['tax_percent'] / 100);
             $item_discount_total[$key] = $item['discount'] * $item['qty'];
             $item_total[$key] = $item_subtotal[$key] + $item_tax_total[$key] - $item_discount_total[$key];
-
         }
 
         $invoice_data['billing_address'] = maybe_serialize( $request['billing_address'] );
@@ -167,9 +180,10 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $invoice_data['id'] = $invoice_id;
 
-        $invoice_response = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
+        $invoice_data = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
 
-        $response = rest_ensure_response( $invoice_response );
+        $response = rest_ensure_response( $invoice_data );
+        $response->set_status( 201 );
 
         return $response;
     }
@@ -217,6 +231,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $invoice_response = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $invoice_response );
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -260,6 +275,27 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         return new WP_REST_Response( true, 204 );
     }
 
+    /**
+     * Upload attachment for invoice
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function upload_attachments( $request ) {
+
+        // error_log(print_r($request['photos'], true));
+
+        foreach ( $request['FILES'] as $file ) {
+            $movefile = wp_handle_upload( $file, [ 'test_form' => false ] );
+            error_log(print_r($movefile, true));
+        }
+
+        $response = rest_ensure_response( true );
+        $response->set_status( 200 );
+
+        return $response;
+    }
 
     /**
      * Prepare a single item for create or update

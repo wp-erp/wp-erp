@@ -79,9 +79,7 @@
                             <td colspan="9" style="text-align: left;">
                                 <div class="attachment-container">
                                     <label class="col--attachement">Attachment</label>
-                                    <div class="attachment-placeholder">
-                                        To attach <input type="file" id="attachment" name="attachment" class="display-none"> <label for="attachment">Select files</label> from your computer
-                                    </div>
+                                    <file-upload url="/invoices/attachments"/>
                                 </div>
                             </td>
                         </tr>
@@ -286,6 +284,7 @@
 <script>
 import HTTP from 'admin/http'
 import Datepicker from 'admin/components/base/Datepicker.vue';
+import FileUpload from 'admin/components/base/FileUpload.vue'
 import TransactionRow from 'admin/components/invoice/TransactionRow.vue';
 import InvoiceCustomers from 'admin/components/invoice/InvoiceCustomers.vue'
 
@@ -295,6 +294,7 @@ export default {
     components: {
         HTTP,
         Datepicker,
+        FileUpload,
         TransactionRow,
         InvoiceCustomers
     },

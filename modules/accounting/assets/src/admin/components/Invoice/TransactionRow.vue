@@ -4,7 +4,12 @@
             <multi-select v-model="line.selectedProduct" :options="products" />
         </th>
         <td class="col--qty column-primary">
-            <input type="number" v-model="line.qty" @keyup="calculateAmount" class="wperp-form-field">
+            <input type="number" :class="{'has-err': errors.first('qty')}"
+                v-validate="'required'"
+                v-model="line.qty"
+                @keyup="calculateAmount"
+                name="qty"
+                class="wperp-form-field">
         </td>
         <td class="col--uni_price" data-colname="Unit Price">
             <input type="text" v-model="line.unitPrice" @keyup="calculateAmount" class="wperp-form-field">

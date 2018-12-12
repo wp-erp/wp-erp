@@ -77,6 +77,20 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'bulk_delete_vendors' ],
+                'args'                => [
+                    'ids'   => [ 'required' => true ]
+                ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_delete_vendor' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -249,6 +263,27 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'   => $id,
+            'hard' => false,
+            'type' => 'vendor'
+        ];
+
+        erp_delete_people( $data );
+
+        return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Delete Selected vendors
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function bulk_delete_vendors( $request ) {
+        $ids = (string) $request['ids'];
+
+        $data = [
+            'id'   => explode(',' ,$ids),
             'hard' => false,
             'type' => 'vendor'
         ];

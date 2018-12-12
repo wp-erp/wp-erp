@@ -391,4 +391,17 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
 
 }
 
+/**
+ * Get Invoice count
+ *
+ * @return int
+ */
+function erp_acct_get_invoice_count() {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_invoices" );
+
+    return $row->count;
+}
+
 
