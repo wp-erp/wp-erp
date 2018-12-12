@@ -40,7 +40,7 @@
                         'id' : '',
                         'name': 'Full Name',
                         'email': 'email@mail.com',
-                        'img_url' : '#',
+                        'img_url' : erp_acct_var.acc_aaset_url + '/images/dummy-user.png',
                         'meta': {
                             'phone': '+ 88101230123',
                             'mobile': '+ 999999999',
@@ -71,7 +71,5 @@
 </script>
 
 <style lang="less" scoped>
-    ul.customer-meta{
-        margin: 0;
-    }
+
 </style>
