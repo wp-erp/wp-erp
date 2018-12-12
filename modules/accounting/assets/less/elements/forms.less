@@ -11,10 +11,6 @@
     }
 
 }
-.@{theme-prefix}-label {
-    display: inline-block;
-    margin-bottom: .5rem;
-}
 
 .@{theme-prefix}-input {
     display: block;
@@ -26,7 +22,7 @@
     color: @input-color;
     background-color: @input-bg;
     background-clip: padding-box;
-    border: @input-border-width solid @input-border-color;
+    border: @input-border-width solid @field-border-color;
     border-radius: @input-border-radius;
 
     &::placeholder {
@@ -72,37 +68,76 @@
 
 // import custom checkbox styles
 
-@field-border-color: @border-color;
+@field-border-color: #ECECEC;
 @field-border-radius: 3px;
-@field-padding: 10px 15px;
-@field-group-margin: 25px; 
+@field-padding: 7.5px 15px;
+@field-group-margin: 20px; 
 @form-padding: 15px;
 @field-width: 50px;
+@placeholder-color: #ACACAC;
+
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: @placeholder-color;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: @placeholder-color;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: @placeholder-color;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: @placeholder-color;
+}
+
+// change select box default appearance
+// select {
+//     -webkit-appearance: value;
+//     -moz-appearance:    value;
+//     appearance:         value;
+// }
 
 .@{theme-prefix}-form-group {
     margin-bottom: @field-group-margin;
 }
+.@{theme-prefix}-form-horizontal {
+    .@{theme-prefix}-row {
+        margin-bottom: 17px;
+        label {
+            margin-bottom: 0;
+            margin-top: 8px;
+        }
+    }
+    .@{theme-prefix}-panel-body {
+        .@{theme-prefix}-row:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
 label {
     display: block;
-    font-size: 16px;
-    margin-bottom: 15px;
-    color: #333e48;
+    font-size: 13px;
+    margin-bottom: 10px;
+    color: #000;
+}
+input, select, textarea {
+    font-size: 12px;
+    color: #000;
 }
 .@{theme-prefix}-required-sign {
     color: #E9485E;
 }
+
 .@{theme-prefix}-custom-select {
     position: relative;
-    border: 1px solid @border-color;
+    border: 1px solid @field-border-color;
     border-radius: 3px;
     select {
         border: 0;
-        -webkit-appearance: value;
-        -moz-appearance:    value;
-        appearance:         value;
-        option {
-            color: red;
-        }
+        -webkit-appearance: none;
+        -moz-appearance:    none;
+        appearance:         none;
+        
     }
     i {
         position: absolute;
@@ -117,7 +152,7 @@ label {
         z-index: 2;
         &:before {
             color: inherit;
-            font-size: 10px;
+            font-size: 7px;
         }
     }
 }
@@ -125,22 +160,22 @@ label {
 /* change select2 styles */
 
 .select2-container .select2-selection--single {
-    min-height: 41px;
-    border-color: @border-color;
+    min-height: 35px;
+    border-color: @field-border-color;
 }
 .select2-container .select2-selection--single .select2-selection__rendered {
     padding-left: 15px;
 }
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 39px;
+    line-height: 30px;
     color: #5c5c6f;
 }
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 37px;
+    height: 30px;
 }
 .select2-dropdown,
 .select2-container--default .select2-search--dropdown .select2-search__field {
-    border-color: @border-color;
+    border-color: @field-border-color;
     color: inherit;
 }
 .select2-search--dropdown {
@@ -196,7 +231,7 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-.@{theme-prefix}-form-field, input {
+.@{theme-prefix}-form-field, input:not(.wperp-btn) {
     width: 100%;
     border-radius: @field-border-radius;
     border: 1px solid @field-border-color;
@@ -208,12 +243,13 @@ input[type="number"] {
     }
 }
 input {
-    width: auto;
     color: #5c5c6f;
 }
+input.inline {
+    width: auto;
+}
 select.@{theme-prefix}-form-field {
-    height: 43px;
-    color: #bdc3c7;
+    height: 35px;
     background: transparent;
 }
 .@{theme-prefix}-has-addon {
@@ -247,6 +283,93 @@ select.@{theme-prefix}-form-field {
                 border-left-color: #208DF8;
             }
         }
+    }
+}
+
+.attachment-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    label {
+        font-size: 13px;
+        margin-bottom: 0;
+        &.col--attachement {
+            margin-right: 20px;
+        }
+    }
+    &.attachment-style2 {
+        padding: 20px;
+        margin: 0 -20px;
+        background: #F9F9F9;
+        border-top: 1px solid #F1F1F1;
+        border-bottom: 1px solid #F1F1F1;
+    }
+    .attachment-preview {
+        display: flex;
+        width: auto;
+        max-height: 100px;
+        border: 1px solid #F1F1F1;
+        padding: 10px;
+        border-radius: 3px;
+        position: relative;
+        display: none;
+        background: #fff;
+        &.show {
+            display: block;
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .remove-attachment {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 7px 10px;
+            border-radius: 0 3px 0 3px;
+            background: rgba(0,0,0,0.7);
+            font-size: 10px;
+            cursor: pointer;
+            &:hover {
+                background: #000;
+            }
+        }
+    }
+    .attachment-placeholder {
+        padding: 20px;
+        width: 100%;
+        max-width: 390px;
+        border: 1px solid #F1F1F1;
+        border-radius: 3px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        &.hide {
+            display: none;
+        }
+        label {
+            color: @theme-color;
+            text-decoration: underline;
+            padding: 0 7px;
+            cursor: pointer;
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.wperp-has-datepicker {
+    position: relative;
+    .datepicker-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        z-index: 9;
     }
 }
 

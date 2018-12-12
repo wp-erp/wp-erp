@@ -22,10 +22,10 @@
 @modal-width: 800px;
 @modal-header-bg: #F5F5F5;
 @modal-body-bg: #F5F5F5;
-@modal-border-color: #F5F5F5;
+@modal-border-color: #707070;
 @modal-footer-border-color: @modal-border-color;
-@modal-header-padding: 20px 30px;
-@modal-body-padding: 26px 30px;
+@modal-header-padding: 20px;
+@modal-body-padding: 20px;
 @modal-footer-padding: @modal-header-padding;
 @modal-backdrop-bg: rgba(0,0,0,.4);
 @modal-border-radius: 4px;
@@ -76,6 +76,48 @@
             margin-top: 0px;
         }
     }
+    &.@{theme-prefix}-printable-modal {
+        .@{theme-prefix}-modal-header {
+            border-bottom: 0;
+        }
+        .@{theme-prefix}-modal-body {
+            padding: 0;
+            margin: 0 20px;
+            border-radius: 4px;
+            border: 1px solid #F1F1F1;
+            .@{theme-prefix}-invoice-panel {
+                background: transparent;
+            }
+        }
+        .modal-subtitle {
+            margin-bottom: 15px;
+        }
+        .invoice-table {
+            thead {
+                tr th {
+                    padding-right: 20px;
+                    padding-left: 20px;
+                    &:first-child {
+                        padding-left: 30px;
+                    }
+                    &:last-child {
+                        padding-right: 30px;
+                    }
+                }
+            }
+            tbody tr, tfoot tr {
+                td, th {
+                    padding: 20px;
+                    &:first-child {
+                        padding-left: 30px;
+                    }
+                    &:last-child {
+                        padding-right: 30px;
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Modal header
@@ -88,11 +130,12 @@
     justify-content: space-between;
     align-items: center;
     border-radius: 3px 3px 0 0;
-    font-weight: 600;
+    font-weight: 400;
     color: #000;
     h2, h3, h4, h5 {
         margin: 0;
         font-size: 23px;
+        font-weight: 400;
     }
     .@{theme-prefix}-close {
         color: #cec9cb;
@@ -117,6 +160,7 @@
 .@{theme-prefix}-modal-body {
     position: relative;
     padding: @modal-body-padding;
+    background: #fff;
 }
 
 // Footer (for actions)
@@ -148,6 +192,15 @@
     width: 50px;
     height: 50px;
     overflow: scroll;
+}
+
+.modal-title {
+    margin-bottom: 20px;
+    * {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 400;
+    }
 }
 
 /*

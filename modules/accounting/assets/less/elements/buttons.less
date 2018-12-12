@@ -15,7 +15,7 @@
     vertical-align: middle;
     user-select: none;
     border: @btn-border-width solid transparent;
-    .button-size(@btn-padding-y, @btn-padding-x, 14px, @btn-line-height, @btn-border-radius);
+    .button-size(@btn-padding-y, @btn-padding-x, 12px, @btn-line-height, @btn-border-radius);
     .transition(@btn-transition);
 
     // Share hover and focus styles
@@ -23,10 +23,10 @@
         text-decoration: none;
     }
 
-    [class*="flaticon"] {
-        /*color: #7d8294;*/
-        color: inherit;
-    }
+    // [class*="flaticon"] {
+    //     color: #7d8294;
+    //     color: inherit;
+    // }
 
     &:focus,
     &.focus {
@@ -182,5 +182,20 @@ input[type="reset"],
 input[type="button"] {
     &.btn-block {
         width: 100%;
+    }
+}
+
+/*.buttons-wrapper {
+    .wperp-btn:not(:last-child) {
+        margin-right: 15px;
+    }
+}*/
+
+.buttons-wrapper {
+    .wperp-btn {
+        margin-left: 15px;
+    }
+    .wperp-btn.ml-0 {
+        margin-left: 0 !important;
     }
 }

@@ -9,6 +9,22 @@
     background-color: @table-bg; // Reset for nesting within parents with `background-color`.
     .rounded(3px);
 
+     // justified table
+    &.table-justified {
+        table-layout: fixed;
+        td:last-child,
+        th:last-child {
+            width: 17%;
+            text-align: left;
+        }
+        td:first-child,
+        th:first-child {
+            @media (min-width: 783px){
+                padding-left: 32px;
+            }
+        }
+    }
+
     @media screen and (max-width: 782px) {
         thead .col--check {
             padding: 15px 5px;
@@ -29,6 +45,7 @@
         }
 
         th.column-primary ~ th,
+        td.column-primary ~ td,
         tr:not(.inline-edit-row):not(.no-items) td.column-primary ~ td:not(.col--check) {
             display: none;
             border: none;
@@ -101,6 +118,9 @@
         tr {
             box-shadow: 0 5px 12px 0 rgba(0,100,235,0.06);
             .translateY(-.1px);
+            th {
+                font-weight: 300;
+            }
         }
 
         th,
@@ -184,7 +204,7 @@
     .@{theme-prefix}-toggle-row {
         position: absolute;
         right: 8px;
-        top: 20px;
+        top: 15px;
         display: none;
         padding: 0;
         width: 40px;
@@ -235,87 +255,82 @@
         border-spacing: 0;
         thead {
             tr {
-                background: #208DF8;
+                background: @theme-color;
                 td, th {
                     color: #fff;
                     font-weight: normal;
+                    padding: 15px 10px;
+                    &:first-child {
+                        padding-left: 20px;
+                    }
+                }
+                th.col--actions {
+                    padding-left: 0;
+                    width: 35px;
                 }
             }
         }
-        tbody tr {
-            td {
-                &.delete-row {
-                    width: 20px;
-                    .wperp-btn [class*="flaticon"] {
-                        &:before {
-                            color: #D7DEE2;
-                            font-size: 16px;
-                        }
-                        &:hover:before {
-                            color: @primary-color;
-                        }
+        tbody {
+            tr {
+                &:first-child,
+                &.add-new-line,
+                &.add-attachment-row {
+                    td {
+                        padding-top: 20px; 
+                    }
+                }
+                &:last-child,
+                &.add-new-line,
+                &.add-attachment-row {
+                    td {
+                        padding-bottom: 20px;
+                    }
+                }
+                td {
+                    &.delete-row {
+                        
+                    }
+                    &.col--actions {
+                        padding-right: 20px;
+                    }
+                    &.col--description {
+                        width: 30%;
                     }
                 }
             }
+            
         }
         tbody, tfoot {
             td, th {
                 border: 0;
+                padding: 10px 10px;
+                &:first-child {
+                    padding-left: 20px;
+                }
             }
             tr {
                 box-shadow: none;
             }
         }
         tfoot {
-
-        }
-    }
-}
-.attachment-container {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    label {
-        font-size: 13px;
-        margin-bottom: 0;
-        &.col--attachement {
-            margin-right: 20px;
-        }
-    }
-    .attachment-placeholder {
-        padding: 20px;
-        width: 100%;
-        max-width: 600px;
-        border: 1px solid #ececec;
-        border-radius: 3px;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
-        label {
-            color: #208DF8;
-            text-decoration: underline;
-            padding: 0 7px;
-            cursor: pointer;
-            &:hover {
-                text-decoration: none;
+            td {
+                padding: 20px;
             }
         }
     }
+
 }
 .add-attachment-row {
     background: #F9F9F9;
     td {
-        border-top: 1px solid #e2e2e2 !important;
-        border-bottom: 1px solid #e2e2e2 !important;
+        border-top: 1px solid #F1F1F1 !important;
+        border-bottom: 1px solid #F1F1F1 !important;
     }
 }
 td input[type="text"] {
     width: 100%;
 }
 .col--qty input {
-    height: 43px;
     width: 56px;
     text-align: center;
 }
@@ -345,7 +360,20 @@ td input[type="text"] {
 .col--amount input {
     width: 100% !important;
 }
-.col--actions {}
+.col--actions {
+    a:hover, 
+    a:focus {
+        i:before{
+            color: @theme-color !important;
+        }
+    }
+}
+// delete button 
+.delete-row a:hover {
+    i:before {
+        color: @primary-color !important;
+    }
+}
 
 
 .col--check {}
@@ -394,7 +422,7 @@ td input[type="text"] {
                 top: 7px !important;
             }
             li a i:before {
-                color: #7d8294;
+                /*color: #7d8294;*/
             }
         }
         &.dropdown-opened {
@@ -470,6 +498,14 @@ td input[type="text"] {
         .wperp-table thead th {
             display: none;
         }
+        a {
+            .flaticon-trash:before {
+                color: @primary-color !important;
+            }
+            &:hover {
+                color: @primary-color !important;
+            }
+        }
     }
 }
 
@@ -498,3 +534,14 @@ td input[type="text"] {
         }
     }
 }
+
+
+.@{theme-prefix}-invoice-table {
+    table-layout: fixed;
+    th, td {
+        &:last-child {
+            width: 50px;
+        }
+    }
+}
+

@@ -68,7 +68,7 @@
 
         i {
             font-size: 14px;
-            color: @content-color;
+            color: @icon-color;
             margin-right: 9px;
         }
     }
@@ -194,22 +194,28 @@
         background-color: #fff;
         width: 100%;
         left: 0;
+        top: 100%;
         margin-top: -1px;
         border: 1px solid @border-color;
         .box-shadow(0 4px 10px 0 rgba(0,0,0,0.09));
         border-radius: 0 0 3px 3px;
-        overflow: hidden;
-        display: none;
-        //max-height: 144px;
-        //overflow-y: auto;
+        // overflow: hidden;
         z-index: 9;
         list-style: none;
         min-width: 100%;
         padding: 5px 0;
         font-size: 14px;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-10px);
+        .transition(all .3s ease-in-out);
+        &.dropdown-content-opened {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         li {
-            //padding: 10px;
             a {
                 display: block;
                 padding: 5px 20px;

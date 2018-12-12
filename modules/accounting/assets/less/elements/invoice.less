@@ -11,11 +11,13 @@
 .add-new-customer {
 	color: @theme-color;
 	cursor: pointer;
-	padding-top: 5px;
+	display: inline-block;
+	margin-top: 10px;
 	i {
 		margin-right: 5px;
 		&:before {
-			font-size: 11px;
+			font-size: 7px;
+			color: inherit;
 		}
 	}
 }
@@ -26,7 +28,7 @@
 	font-weight: 300;
 	h3, h4, h5, h6, th, strong {
 		color: #23282D;
-		font-weight: 500;
+		font-weight: 400;
 	}
 	table, ul {
 		margin-bottom: 0;
@@ -36,13 +38,14 @@
 		justify-content: space-between;
 		flex-wrap: wrap;
 		align-items: center;
-		padding: 0 20px;
+		padding: 0 30px;
 		border-bottom: 1px solid #ECF0F1;
 	}
 	.invoice-body {
-		padding: 20px;
+		padding: 20px 30px;
+
 		h4 {
-			text-align: center;
+			// text-align: center;
 			font-size: 18px;
 		}
 		.invoice-info {
@@ -56,7 +59,7 @@
 		border: 0;
 		tbody tr {
 			th, td {
-				border-bottom: 1px solid #ccc;
+				border-bottom: 1px solid #F1F1F1;
 			}
 		}
 		tfoot {
@@ -81,7 +84,8 @@
 	margin: 20px 0;
 	h4 {
 		font-size: 15px;
-		margin-bottom: 15px;
+		margin-bottom: 10px;
+		font-weight: 600;
 	}
 	.attachment-item {
 		padding: 10px 15px;
@@ -93,7 +97,7 @@
 		margin-right: 15px;
 		color: inherit;
 		&:hover {
-			border-color: @info-color;
+			background: #fff;
 		}
 	}
 	.attachment-meta {

@@ -1,32 +1,32 @@
 /*
  * Component: Panel;
  */
-@panel-padding: 25px;
+@panel-padding: 20px;
 @panel-border-radius: 3px;
-@panel-border-color: #E2E2E2;
-@panel-margin-bottom: 25px;
+@panel-border-color: #e2e2e2;
+@panel-margin-bottom: 20px;
 @panel-bg: #fff;
-@panel-header-bg: @panel-bg;
+@panel-header-bg: #F9F9F9;
 @panel-body-bg: @panel-bg;
 @panel-footer-bg: @panel-header-bg;
 
-.wperp-panel-group {
+.@{theme-prefix}-panel-group {
 	margin-bottom: @panel-margin-bottom;
 }
-.wperp-panel {
+.@{theme-prefix}-panel {
 	margin-bottom: @panel-margin-bottom;
 	border-radius: @panel-border-radius;
 	background: @panel-body-bg;
-	padding-bottom: @panel-padding;
+	// padding-bottom: @panel-padding;
 	border: 1px solid @panel-border-color;
-	.wperp-table {
+	.@{theme-prefix}-table {
 		margin-bottom: 0;
 		tbody {
 			// @include box-shadow(none);
 		}
 	}
-	&.wperp-panel-orders {
-		.wperp-table{
+	&.@{theme-prefix}-panel-orders {
+		.@{theme-prefix}-table{
 			th, td {
 				&:first-child{
 					padding-left: 0 !important;
@@ -37,25 +37,41 @@
 			}
 		}
 	}
-	+ .wperp-panel {
+	+ .@{theme-prefix}-panel {
 		margin-top: 5px;
 	}
-	.wperp-panel-heading {
+	.@{theme-prefix}-panel-heading {
+		border-bottom: 1px solid @panel-border-color;
+		border-radius: 3px 3px 0 0;
+		color: #000;
+		padding: 12px 20px;
+		background: @panel-header-bg;
+		font-size: 14px;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		border-bottom: 0;
-		border-radius: 3px 3px 0 0;
-		// color: @color-dark;
-		padding: @panel-padding;
+		.panel-badge {
+			width: 18px;
+			height: 18px;
+			border-radius: 50%;
+			margin-right: 13px;
+			&.panel-badge-primary {
+				background-image: -webkit-linear-gradient(125deg,#6EACFF 10%,#907CFF 100%);
+			}
+			&.panel-badge-info {
+				background-image: -webkit-linear-gradient(125deg,#FF8359 10%,#FFCF08 100%);
+			}
+			&.panel-badge-secondary {
+				background-image: -webkit-linear-gradient(125deg,#08D0FF 10%,#10F8B1 100%);
+			}
+		}
 	}
-	.wperp-panel-body {
-		padding: 25px 30px;
-		&.wperp-no-padding {
+	.@{theme-prefix}-panel-body {
+		padding: @panel-padding;
+		&.@{theme-prefix}-no-padding {
 			padding: 0;
 		}
 	}
-	.wperp-panel-footer {
+	.@{theme-prefix}-panel-footer {
 		border-top: 0;
 		border-radius: 0 0 3px 3px;
 	}
