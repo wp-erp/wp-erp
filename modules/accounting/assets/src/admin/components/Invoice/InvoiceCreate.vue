@@ -421,6 +421,8 @@ export default {
             }).then(() => {
                 this.isWorking = false;
             });
+
+            this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
         }
     }
 
