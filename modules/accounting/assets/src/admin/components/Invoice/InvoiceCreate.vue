@@ -15,8 +15,9 @@
             <div class="wperp-panel-body">
                 <form action="#" class="wperp-form" method="post">
                     <div class="wperp-row">
-                        <invoice-customers v-model="basic_fields.customer"></invoice-customers>
-
+                        <div class="wperp-col-sm-4">
+                            <invoice-customers v-model="basic_fields.customer"></invoice-customers>
+                        </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label for="trans_date">Transaction Date<span class="wperp-required-sign">*</span></label>
