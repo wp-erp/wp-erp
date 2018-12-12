@@ -61,32 +61,14 @@ pluginWebpack([1],{
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 48:
-=======
-/***/ 50:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 55:
->>>>>>> Stashed changes
+/***/ 56:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(4);
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue__ = __webpack_require__(51);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(55);
-=======
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue__ = __webpack_require__(53);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(57);
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue__ = __webpack_require__(58);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(62);
->>>>>>> Stashed changes
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(63);
 
 
 
@@ -103,41 +85,17 @@ new __WEBPACK_IMPORTED_MODULE_0_vue__["default"]({
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 51:
-=======
-/***/ 53:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 58:
->>>>>>> Stashed changes
+/***/ 59:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(12);
 /* unused harmony namespace reexport */
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_152fd186_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_152fd186_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(62);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(52)
-=======
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_152fd186_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(56);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(54)
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_152fd186_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(61);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(59)
->>>>>>> Stashed changes
+  __webpack_require__(60)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -184,30 +142,14 @@ if (false) {(function () {
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 52:
-=======
-/***/ 54:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 59:
->>>>>>> Stashed changes
+/***/ 60:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 54:
-=======
-/***/ 56:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 61:
->>>>>>> Stashed changes
+/***/ 62:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -243,32 +185,14 @@ if (false) {
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 55:
-=======
-/***/ 57:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 62:
->>>>>>> Stashed changes
+/***/ 63:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(8);
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_frontend_components_Home_vue__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_frontend_components_Profile_vue__ = __webpack_require__(59);
-=======
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_frontend_components_Home_vue__ = __webpack_require__(58);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_frontend_components_Profile_vue__ = __webpack_require__(61);
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_frontend_components_Home_vue__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_frontend_components_Profile_vue__ = __webpack_require__(66);
->>>>>>> Stashed changes
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_frontend_components_Home_vue__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_frontend_components_Profile_vue__ = __webpack_require__(67);
 
 
 
@@ -288,41 +212,17 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 56:
-=======
-/***/ 58:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 63:
->>>>>>> Stashed changes
+/***/ 64:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Home_vue__ = __webpack_require__(13);
 /* unused harmony namespace reexport */
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_76253014_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Home_vue__ = __webpack_require__(58);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_76253014_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Home_vue__ = __webpack_require__(66);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(57)
-=======
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_76253014_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Home_vue__ = __webpack_require__(60);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(59)
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_76253014_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Home_vue__ = __webpack_require__(65);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(64)
->>>>>>> Stashed changes
+  __webpack_require__(65)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -369,30 +269,14 @@ if (false) {(function () {
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 57:
-=======
-/***/ 59:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 64:
->>>>>>> Stashed changes
+/***/ 65:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 58:
-=======
-/***/ 60:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 65:
->>>>>>> Stashed changes
+/***/ 66:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -417,41 +301,17 @@ if (false) {
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 59:
-=======
-/***/ 61:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 66:
->>>>>>> Stashed changes
+/***/ 67:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Profile_vue__ = __webpack_require__(14);
 /* unused harmony namespace reexport */
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_35ef42f8_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Profile_vue__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_35ef42f8_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Profile_vue__ = __webpack_require__(69);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(60)
-=======
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_35ef42f8_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Profile_vue__ = __webpack_require__(63);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(62)
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_35ef42f8_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Profile_vue__ = __webpack_require__(68);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(67)
->>>>>>> Stashed changes
+  __webpack_require__(68)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -498,30 +358,14 @@ if (false) {(function () {
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 60:
-=======
-/***/ 62:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 67:
->>>>>>> Stashed changes
+/***/ 68:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-/***/ 61:
-=======
-/***/ 63:
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-/***/ 68:
->>>>>>> Stashed changes
+/***/ 69:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -546,12 +390,4 @@ if (false) {
 
 /***/ })
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-},[48]);
-=======
-},[50]);
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
-=======
-},[55]);
->>>>>>> Stashed changes
+},[56]);
