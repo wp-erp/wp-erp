@@ -1,7 +1,7 @@
 <template>
     <form enctype="multipart/form-data" novalidate>
         <div class="attachment-placeholder"> To attach
-            <input type="file" id="attachment" multiple accept="image/*"
+            <input type="file" id="attachment" multiple accept="image/*,.jpg,.png,.doc,.pdf"
                 :name="uploadFieldName"
                 :disabled="isSaving"
                 @change="filesChange($event)" class="display-none">
@@ -30,7 +30,7 @@
                 uploadedFiles: [],
                 uploadError: null,
                 currentStatus: null,
-                uploadFieldName: 'photos[]'
+                uploadFieldName: 'attachments[]'
             }
         },
 
@@ -65,22 +65,6 @@
                 this.uploadError = null;
             },
 
-            save(formData) {
-                this.currentStatus = STATUS_SAVING;
-
-                this.upload(formData)
-                    .then(x => {
-                        this.uploadedFiles = [].concat(x);
-                        this.currentStatus = STATUS_SUCCESS;
-
-                        this.isUploaded = true;
-                    })
-                    .catch(err => {
-                        this.uploadError = err.response;
-                        this.currentStatus = STATUS_FAILED;
-                    });
-            },
-
             filesChange(event) {
                 const formData = new FormData();
 
@@ -89,16 +73,16 @@
 
                 if ( ! fileList.length ) return;
 
+                this.currentStatus = STATUS_SAVING;
                 this.fileCount = fileList.length;
 
                 // append the files to FormData
-                Array
-                    .from(Array(fileList.length).keys())
-                    .map(x => {
+                Array.from(Array(fileList.length).keys())
+                    .map(x => {                        
                         formData.append(fieldName, fileList[x], fileList[x].name);
-                    });
+                    });             
 
-                this.save(formData);
+                this.upload(formData);
             },
 
             upload(formData) {
@@ -106,20 +90,17 @@
 
                 let url = `${BASE_URL}/wp-json/erp/v1/accounting/v1${this.url}`;
 
-                HTTP.post(url, formData).then( res => {
-                    console.log(res);
+                return HTTP.post(url, formData).then( res => {
+                    res.data.map(img => {
+                        this.uploadedFiles.push(img.url);
+                    })
+
+                    this.$emit('input', this.uploadedFiles);
+
+                    this.currentStatus = STATUS_SUCCESS;
+                    this.isUploaded = true;
                 });
-
-                // let a=  HTTP.post(url, formData)
-                //     .then(x => x.data)
-                //     .then(x => x.map(img => {
-                //         Object.assign({}, img, { url: `${BASE_URL}/images/${img.id}` })
-                //     })
-                // ); 
-
-                // console.log(a);
             },
-
         },
 
         mounted() {
