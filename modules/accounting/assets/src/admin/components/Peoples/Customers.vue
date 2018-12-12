@@ -22,8 +22,11 @@
                 <strong><a href="#">{{ data.row.title }}</a></strong>
             </template>
             <template slot="customer" slot-scope="data">
-                <!--TODO update with router link-->
-                <strong><a :href="data.row.id">{{data.row.customer}}</a></strong>
+                <strong>
+                    <router-link :to="{ name: 'CustomerDetails', params: { id: data.row.id }}">
+                        {{data.row.customer}}
+                    </router-link>
+                </strong>
             </template>
 
         </list-table>
