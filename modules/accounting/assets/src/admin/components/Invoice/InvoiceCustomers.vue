@@ -1,11 +1,9 @@
 <template>
-    <div class="wperp-col-sm-4">
-        <div class="wperp-form-group invoice-customers with-multiselect">
-            <label for="customer">Customer<span class="wperp-required-sign">*</span></label>
-            <multi-select v-model="selected" :options="options" />
+    <div class="wperp-form-group invoice-customers with-multiselect">
+        <label for="customer">Customer<span class="wperp-required-sign">*</span></label>
+        <multi-select v-model="selected" :options="options" />
 
-            <a href="#" class="add-new-customer"><i class="flaticon-add-plus-button"></i>Add new</a>
-        </div>
+        <a href="#" class="add-new-customer"><i class="flaticon-add-plus-button"></i>Add new</a>
     </div>
 </template>
 

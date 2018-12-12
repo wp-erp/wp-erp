@@ -93,7 +93,7 @@ function erp_acct_insert_invoice( $data ) {
                 'unit_price'  => $item['unit_price'],
                 'discount'    => $item['discount'],
                 'tax'         => $item['tax'],
-                'tax_percent' => $item['tax_percent'],
+                'tax_percent' => 0, // remove me please
                 'item_total'  => $item['item_total'],
                 'created_at'  => $invoice_data['created_at'],
                 'created_by'  => $invoice_data['created_by'],
@@ -225,7 +225,8 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
     $invoice_data['people_id'] = isset( $data['customer_id'] ) ? $data['customer_id'] : 1;
 
-    $user_info = get_userdata( $invoice_data['people_id'] );
+    // $user_info = get_userdata( $invoice_data['people_id'] );
+    $user_info = erp_get_people( $invoice_data['people_id'] );
 
     $invoice_data['customer_name'] = $user_info->first_name . ' ' . $user_info->last_name;
     $invoice_data['trn_date']   = isset( $data['date'] ) ? $data['date'] : date("Y-m-d" );
@@ -402,6 +403,37 @@ function erp_acct_get_invoice_count() {
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_invoices" );
 
     return $row->count;
+}
+
+/**
+ * Upload attachments
+ * 
+ * @return array
+ */
+function erp_acct_upload_attachments($files) {
+    if ( ! function_exists( 'wp_handle_upload' ) ) {
+        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+    }
+
+    $attachments = [];
+    $movefiles = [];
+
+    // Formatting request for upload
+    for ( $i = 0; $i < count($files['name']); $i++ ) { 
+        $attachments[] = [
+            'name' => $files['name'][$i],
+            'type' => $files['type'][$i],
+            'tmp_name' => $files['tmp_name'][$i],
+            'error' => $files['error'][$i],
+            'size' => $files['size'][$i]
+        ]; 
+    }
+
+    foreach ( $attachments as $attachment ) {
+        $movefiles[] = wp_handle_upload( $attachment, [ 'test_form' => false ] );
+    }
+
+    return $movefiles;
 }
 
 

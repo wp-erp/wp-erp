@@ -15,8 +15,9 @@
             <div class="wperp-panel-body">
                 <form action="#" class="wperp-form" method="post">
                     <div class="wperp-row">
-                        <invoice-customers v-model="basic_fields.customer"></invoice-customers>
-
+                        <div class="wperp-col-sm-4">
+                            <invoice-customers v-model="basic_fields.customer"></invoice-customers>
+                        </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label for="trans_date">Transaction Date<span class="wperp-required-sign">*</span></label>
@@ -79,13 +80,13 @@
                             <td colspan="9" style="text-align: left;">
                                 <div class="attachment-container">
                                     <label class="col--attachement">Attachment</label>
-                                    <file-upload url="/invoices/attachments"/>
+                                    <file-upload v-model="attachments" url="/invoices/attachments"/>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                     <tfoot>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="4"><button class="wperp-btn btn--default">Cancel</button></td>
                             <td colspan="5" style="text-align: right;">
                                 <div class="wperp-has-dropdown">
@@ -95,6 +96,11 @@
                                     </div>
                                 </div>
                                 <button class="wperp-btn btn--default wperp-dropdown-trigger">Cancel</button>
+                            </td>
+                        </tr> -->
+                        <tr>
+                            <td colspan="9" style="text-align: right;">
+                                <submit-button text="Submit for approval" @click.native="SubmitForApproval" :working="isWorking"></submit-button>
                             </td>
                         </tr>
                     </tfoot>
@@ -283,9 +289,10 @@
 
 <script>
 import HTTP from 'admin/http'
-import Datepicker from 'admin/components/base/Datepicker.vue';
+import Datepicker from 'admin/components/base/Datepicker.vue'
 import FileUpload from 'admin/components/base/FileUpload.vue'
-import TransactionRow from 'admin/components/invoice/TransactionRow.vue';
+import SubmitButton from 'admin/components/base/SubmitButton.vue'
+import TransactionRow from 'admin/components/invoice/TransactionRow.vue'
 import InvoiceCustomers from 'admin/components/invoice/InvoiceCustomers.vue'
 
 export default {
@@ -295,6 +302,7 @@ export default {
         HTTP,
         Datepicker,
         FileUpload,
+        SubmitButton,
         TransactionRow,
         InvoiceCustomers
     },
@@ -309,8 +317,11 @@ export default {
             },
 
             products: [],
+            attachments: [],
             transactionLines: [{}],
             finalTotalAmount: 0,
+
+            isWorking: false,
 
             acct_var: erp_acct_var
         }
@@ -330,7 +341,7 @@ export default {
             this.updateFinalAmount();
         });
 
-        this.$root.$on('total-updated', amount => {
+        this.$root.$on('total-updated', amount => {            
             this.updateFinalAmount();
         });
     },
@@ -367,7 +378,49 @@ export default {
             let finalAmount = 0;
 
             this.transactionLines.forEach(element => {
-                finalAmount += element.totalAmount;
+                finalAmount += parseFloat(element.totalAmount);
+            });            
+
+            this.finalTotalAmount = finalAmount.toFixed(2);
+            
+        },
+
+        formatLineItems() {
+            var lineItems = [];
+
+            this.transactionLines.forEach(line => {
+                lineItems.push({
+                    product_id: line.selectedProduct.id,
+                    product_type: 'service',
+                    qty: line.qty,
+                    unit_price: line.unitPrice,
+                    tax: line.taxAmount,
+                    discount: line.discount,
+                    item_total: line.totalAmount,
+                    tax_percent: 0
+                });
+            });
+
+            return lineItems;
+        },
+
+        SubmitForApproval() {
+            this.isWorking = true;
+
+            HTTP.post('/invoices', {
+                customer_id: this.basic_fields.customer.id,
+                date: this.basic_fields.trans_date,
+                due_date: this.basic_fields.due_date,
+                billing_address: this.basic_fields.billing_address,
+                line_items: this.formatLineItems(),
+                attachments: this.attachments,
+                type: 'invoice',
+                status: 'awaiting_payment',
+                trn_by: 1
+            }).then(res => {
+                console.log(res.data);
+            }).then(() => {
+                this.isWorking = false;
             });
 
             this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
