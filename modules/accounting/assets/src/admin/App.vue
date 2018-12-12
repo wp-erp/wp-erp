@@ -9,7 +9,6 @@
     import ERPMenu from 'admin/components/Menu/ERPMenu.vue'
     import VueSweetalert2 from 'vue-sweetalert2';
 
-    import '../../css/plugins/select2.min.css';
     import '../../font/flaticon.css'
     import '../../css/master.css'
 
@@ -20,5 +19,7 @@
 </script>
 
 <style>
-
+    .has-err {
+        border-color: #f44336 !important;
+    }
 </style>
