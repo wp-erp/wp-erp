@@ -1,11 +1,7 @@
 <template>
     <form enctype="multipart/form-data" novalidate>
         <div class="attachment-placeholder"> To attach
-<<<<<<< HEAD
             <input type="file" id="attachment" multiple accept="image/*,.jpg,.png,.doc,.pdf"
-=======
-            <input type="file" id="attachment" multiple accept="image/*"
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
                 :name="uploadFieldName"
                 :disabled="isSaving"
                 @change="filesChange($event)" class="display-none">
@@ -34,11 +30,7 @@
                 uploadedFiles: [],
                 uploadError: null,
                 currentStatus: null,
-<<<<<<< HEAD
                 uploadFieldName: 'attachments[]'
-=======
-                uploadFieldName: 'photos[]'
->>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb
             }
         },
 

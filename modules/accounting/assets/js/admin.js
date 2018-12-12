@@ -1963,7 +1963,7 @@ if (false) {(function () {
   components: {
     HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     Datepicker: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__["a" /* default */],
-    FileUpload: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_FileUpload_vue__["default"],
+    FileUpload: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_FileUpload_vue__["a" /* default */],
     SubmitButton: __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__["a" /* default */],
     TransactionRow: __WEBPACK_IMPORTED_MODULE_4_admin_components_invoice_TransactionRow_vue__["a" /* default */],
     InvoiceCustomers: __WEBPACK_IMPORTED_MODULE_5_admin_components_invoice_InvoiceCustomers_vue__["a" /* default */]
@@ -2139,9 +2139,101 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 /***/ }),
 /* 41 */,
 /* 42 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed: SyntaxError: /Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/assets/src/admin/components/base/FileUpload.vue: Unexpected token (37:0)\n\n\u001b[0m \u001b[90m 35 | \u001b[39m                uploadError\u001b[33m:\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 36 | \u001b[39m                currentStatus\u001b[33m:\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 37 | \u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m\u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 38 | \u001b[39m                uploadFieldName\u001b[33m:\u001b[39m \u001b[32m'attachments[]'\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 39 | \u001b[39m\u001b[33m===\u001b[39m\u001b[33m===\u001b[39m\u001b[33m=\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 40 | \u001b[39m                uploadFieldName\u001b[33m:\u001b[39m \u001b[32m'photos[]'\u001b[39m\u001b[0m\n    at _class.raise (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:4028:15)\n    at _class.unexpected (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:5359:16)\n    at _class.parseIdentifierName (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:7233:18)\n    at _class.parseIdentifier (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:7207:21)\n    at _class.parseMaybePrivateName (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:6549:19)\n    at _class.parsePropertyName (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:7023:98)\n    at _class.parseObj (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:6918:14)\n    at _class.parseExprAtom (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:6464:21)\n    at _class.parseExprAtom (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:3724:52)\n    at _class.parseExprSubscripts (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:6081:21)\n    at _class.parseMaybeUnary (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:6060:21)\n    at _class.parseExprOps (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:5945:21)\n    at _class.parseMaybeConditional (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:5917:21)\n    at _class.parseMaybeAssign (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:5864:21)\n    at _class.parseExpression (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:5817:21)\n    at _class.parseReturnStatement (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:7836:28)\n    at _class.parseStatementContent (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:7512:21)\n    at _class.parseStatement (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:7478:17)\n    at _class.parseBlockOrModuleBlockBody (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:8046:23)\n    at _class.parseBlockBody (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:8033:10)\n    at _class.parseBlock (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:8022:10)\n    at _class.parseFunctionBody (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:7130:24)\n    at _class.parseFunctionBodyAndFinish (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:7112:10)\n    at _class.parseMethod (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:7054:10)\n    at _class.parseObjectMethod (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:6968:19)\n    at _class.parseObjPropValue (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:7010:21)\n    at _class.parseObj (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:6921:12)\n    at _class.parseExprAtom (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:6464:21)\n    at _class.parseExprAtom (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:3724:52)\n    at _class.parseExprSubscripts (/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/node_modules/@babel/parser/lib/index.js:6081:21)");
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(3);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var STATUS_INITIAL = 0,
+    STATUS_SAVING = 1,
+    STATUS_SUCCESS = 2,
+    STATUS_FAILED = 3;
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'FileUpload',
+  data: function data() {
+    return {
+      fileCount: 0,
+      isUploaded: false,
+      uploadedFiles: [],
+      uploadError: null,
+      currentStatus: null,
+      uploadFieldName: 'attachments[]'
+    };
+  },
+  props: {
+    url: {
+      type: String,
+      required: true
+    }
+  },
+  computed: {
+    isInitial: function isInitial() {
+      return this.currentStatus === STATUS_INITIAL;
+    },
+    isSaving: function isSaving() {
+      return this.currentStatus === STATUS_SAVING;
+    },
+    isSuccess: function isSuccess() {
+      return this.currentStatus === STATUS_SUCCESS;
+    },
+    isFailed: function isFailed() {
+      return this.currentStatus === STATUS_FAILED;
+    }
+  },
+  methods: {
+    reset: function reset() {
+      this.currentStatus = STATUS_INITIAL;
+      this.uploadedFiles = [];
+      this.uploadError = null;
+    },
+    filesChange: function filesChange(event) {
+      var formData = new FormData();
+      var fieldName = event.target.name;
+      var fileList = event.target.files;
+      if (!fileList.length) return;
+      this.currentStatus = STATUS_SAVING;
+      this.fileCount = fileList.length; // append the files to FormData
+
+      Array.from(Array(fileList.length).keys()).map(function (x) {
+        formData.append(fieldName, fileList[x], fileList[x].name);
+      });
+      this.upload(formData);
+    },
+    upload: function upload(formData) {
+      var _this = this;
+
+      var BASE_URL = erp_acct_var.site_url;
+      var url = "".concat(BASE_URL, "/wp-json/erp/v1/accounting/v1").concat(this.url);
+      return __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post(url, formData).then(function (res) {
+        res.data.map(function (img) {
+          _this.uploadedFiles.push(img.url);
+        });
+
+        _this.$emit('input', _this.uploadedFiles);
+
+        _this.currentStatus = STATUS_SUCCESS;
+        _this.isUploaded = true;
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.reset();
+  }
+});
 
 /***/ }),
 /* 43 */
@@ -5164,7 +5256,6 @@ if (false) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FileUpload_vue__ = __webpack_require__(42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FileUpload_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FileUpload_vue__);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7e398fbb_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FileUpload_vue__ = __webpack_require__(144);
 var disposed = false
@@ -5187,7 +5278,7 @@ var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FileUpload_vue__["default"],
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FileUpload_vue__["a" /* default */],
   __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7e398fbb_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FileUpload_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
@@ -5212,7 +5303,7 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
@@ -5235,21 +5326,26 @@ var render = function() {
     { attrs: { enctype: "multipart/form-data", novalidate: "" } },
     [
       _c("div", { staticClass: "attachment-placeholder" }, [
-        _vm._v(" To attach\n<<<<<<< HEAD\n            "),
-        _vm._v("\n=======\n            "),
+        _vm._v(" To attach\n        "),
         _c("input", {
+          staticClass: "display-none",
           attrs: {
             type: "file",
             id: "attachment",
             multiple: "",
-            accept: "image/*"
+            accept: "image/*,.jpg,.png,.doc,.pdf",
+            name: _vm.uploadFieldName,
+            disabled: _vm.isSaving
+          },
+          on: {
+            change: function($event) {
+              _vm.filesChange($event)
+            }
           }
         }),
-        _vm._v(
-          '>>>>>> 99f8ea4d468b7de8da1e797c3107d98bd8378ccb\n                :name="uploadFieldName"\n                :disabled="isSaving"\n                @change="filesChange($event)" class="display-none">\n            '
-        ),
+        _vm._v(" "),
         _c("label", { attrs: { for: "attachment" } }, [_vm._v("Select files")]),
-        _vm._v(" from your computer\n            "),
+        _vm._v(" from your computer\n        "),
         _vm.isSaving
           ? _c("span", { staticClass: "upload-count" }, [
               _vm._v(" (uploading " + _vm._s(_vm.fileCount) + " files...)")
