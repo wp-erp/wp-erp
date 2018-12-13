@@ -219,7 +219,7 @@ if (false) {(function () {
       module_name: Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["__"])("Accounting", "erp"),
       svgData: "M221.9,0H17.1C6.8,0,0,6.8,0,17.1V324.3c0,10.2,6.8,17.1,17.1,17.1H221.9c10.2,0,17.1-6.8,17.1-17.1V17.1C238.9,6.8,232.1,0,221.9,0ZM68.3,307.2H34.1V273.1H68.2v34.1Zm0-68.3H34.1V204.8H68.2v34.1Zm0-68.2H34.1V136.6H68.2v34.1Zm68.2,136.5H102.4V273.1h34.1Zm0-68.3H102.4V204.8h34.1Zm0-68.2H102.4V136.6h34.1Zm68.3,136.5H170.7V273.1h34.1v34.1Zm0-68.3H170.7V204.8h34.1v34.1Zm0-68.2H170.7V136.6h34.1v34.1Zm0-68.3H34.1V34.1H204.8v68.3Zm0,0",
       current_url: erp_acct_var.erp_acct_url,
-      activeClass: "active"
+      activeClass: []
     };
   },
   created: function created() {
@@ -300,8 +300,9 @@ if (false) {(function () {
         moreBtn.setAttribute("aria-expanded", false);
       });
     },
-    changeRoute: function changeRoute(slug) {
-      this.$router.push(slug);
+    menuActions: function menuActions(key) {
+      this.$router.push(key);
+      var current_route = this.$router.currentRoute.fullPath.replace('/', '');
     }
   }
 });
@@ -3640,9 +3641,19 @@ var render = function() {
           return [
             menu.hasOwnProperty("submenu")
               ? _c("li", { key: index, class: _vm.dropdownNav }, [
-                  _c("a", { attrs: { href: _vm.current_url + menu.slug } }, [
-                    _vm._v(_vm._s(menu.title))
-                  ]),
+                  _c(
+                    "a",
+                    {
+                      attrs: { href: _vm.current_url + menu.slug },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.menuActions(index)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(menu.title))]
+                  ),
                   _vm._v(" "),
                   _c(
                     "ul",
@@ -3651,7 +3662,15 @@ var render = function() {
                       return _c("li", { key: index }, [
                         _c(
                           "a",
-                          { attrs: { href: _vm.current_url + item.slug } },
+                          {
+                            attrs: { href: _vm.current_url + item.slug },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                _vm.menuActions(index)
+                              }
+                            }
+                          },
                           [_vm._v(_vm._s(item.title))]
                         )
                       ])
@@ -3660,9 +3679,19 @@ var render = function() {
                   )
                 ])
               : _c("li", { key: index }, [
-                  _c("a", { attrs: { href: _vm.current_url + menu.slug } }, [
-                    _vm._v(_vm._s(menu.title))
-                  ])
+                  _c(
+                    "a",
+                    {
+                      attrs: { href: _vm.current_url + menu.slug },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.menuActions(index)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(menu.title))]
+                  )
                 ])
           ]
         })
@@ -3886,8 +3915,12 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["default"]({
   routes: [{
     path: '/',
-    name: 'Dashboard',
-    component: __WEBPACK_IMPORTED_MODULE_2_admin_components_Dashboard_vue__["a" /* default */]
+    component: __WEBPACK_IMPORTED_MODULE_2_admin_components_Dashboard_vue__["a" /* default */],
+    children: [{
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: __WEBPACK_IMPORTED_MODULE_2_admin_components_Dashboard_vue__["a" /* default */]
+    }]
   }, {
     path: '/customers',
     component: {
