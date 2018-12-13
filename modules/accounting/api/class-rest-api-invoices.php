@@ -86,6 +86,18 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/attachments', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'upload_attachments' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            //'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
     }
 
     /**
@@ -150,7 +162,8 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         foreach ( $items as $key => $item ) {
             $item_subtotal[$key] = $item['qty'] * $item['unit_price'];
-            $item_tax_total[$key] = $item_subtotal[$key] * ($item['tax_percent'] / 100);
+            // $item_tax_total[$key] = $item_subtotal[$key] * ($item['tax_percent'] / 100);
+            $item_tax_total[$key] = 0; // remove me please ...
             $item_discount_total[$key] = $item['discount'] * $item['qty'];
             $item_total[$key] = $item_subtotal[$key] + $item_tax_total[$key] - $item_discount_total[$key];
         }
@@ -159,6 +172,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $invoice_data['subtotal'] = array_sum( $item_subtotal );
         $invoice_data['discount'] = array_sum( $item_tax_total );
         $invoice_data['tax'] = array_sum( $item_discount_total );
+        $invoice_data['tax_percent'] = 0; // remove me please...
         $invoice_data['amount'] = array_sum( $item_total );
         $invoice_data['attachments'] = maybe_serialize( $request['attachments'] );
         $additional_fields['namespace'] = $this->namespace;
@@ -263,6 +277,21 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         return new WP_REST_Response( true, 204 );
     }
 
+    /**
+     * Upload attachment for invoice
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function upload_attachments( $request ) {
+        $movefiles = erp_acct_upload_attachments($_FILES['attachments']);
+
+        $response = rest_ensure_response( $movefiles );
+        $response->set_status( 200 );
+
+        return $response;
+    }
 
     /**
      * Prepare a single item for create or update

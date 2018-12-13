@@ -57,7 +57,7 @@ class Admin {
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Employees', 'erp' ),
-            'capability' => $vendor,
+            'capability' => 'erp_hr_manager',
             'slug'       => 'employees',
             'callback'   => [],
             'position'   => 15
@@ -70,9 +70,16 @@ class Admin {
             'position'   => 20
         ] );
         erp_add_menu( 'accounting', [
-            'title'      => __( 'Expenses', 'erp' ),
+            'title'      => __( 'Bills', 'erp' ),
             'capability' => $expense,
-            'slug'       => 'expense',
+            'slug'       => 'bills',
+            'callback'   => [],
+            'position'   => 25
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      => __( 'Purchases', 'erp' ),
+            'capability' => $expense,
+            'slug'       => 'purchases',
             'callback'   => [],
             'position'   => 25
         ] );
@@ -114,16 +121,16 @@ class Admin {
         erp_add_menu( 'accounting', [
             'title'      =>  __( 'Inventory', 'erp' ),
             'capability' => 'erp_ac_view_sale',
-            'slug'       => 'erp_inventory',
+            'slug'       => 'erp_inv_product',
             'position'   => 45,
         ] );
-        erp_add_submenu( 'accounting', 'erp_inventory', array(
+        erp_add_submenu( 'accounting', 'erp_inv_product', array(
             'title'         =>  __( 'Products', 'erp' ),
             'capability'    =>  'erp_ac_view_sale',
             'slug'          =>  'erp_inv_product',
             'position'      =>  5,
         ) );
-        erp_add_submenu( 'accounting', 'erp_inventory', array(
+        erp_add_submenu( 'accounting', 'erp_inv_product', array(
             'title'         =>  __( 'Product Categories', 'erp' ),
             'capability'    =>  'erp_ac_view_sale',
             'slug'          =>  'erp_inv_product_category',

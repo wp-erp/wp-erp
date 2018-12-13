@@ -5,11 +5,13 @@ import ChartOfAccounts from 'admin/components/ChartOfAccounts.vue'
 import Customers from 'admin/components/Peoples/Customers.vue'
 import Vendors from 'admin/components/Peoples/Vendors.vue'
 import Employees from 'admin/components/Peoples/Employees.vue'
+import CustomerDetails from 'admin/components/Peoples/Customer-details.vue'
 import DummyComponent from 'admin/components/DummyComponent.vue'
 import Products from 'admin/components/Products/Products.vue'
 import ProductCategory from 'admin/components/ProductCategory/ProductCategory.vue'
 
-import InvoiceCreate from 'admin/components/invoice/InvoiceCreate.vue'
+import InvoiceCreate from 'admin/components/Invoice/InvoiceCreate.vue'
+import RecPaymentCreate from 'admin/components/RecPayment/RecPaymentCreate.vue'
 
 Vue.use(Router)
 
@@ -17,8 +19,14 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'Dashboard',
-            component: Dashboard
+            component: Dashboard,
+            children: [
+                {
+                    path : '/dashboard',
+                    name : 'Dashboard',
+                    component: Dashboard,
+                }
+            ]
         },
         {
             path: '/customers',
@@ -33,6 +41,11 @@ export default new Router({
                     path : 'page/:page',
                     name : 'PaginateCustomers',
                     component: Customers,
+                },
+                {
+                    path : 'view/:id',
+                    name : 'CustomerDetails',
+                    component: CustomerDetails,
                 }
             ]
         },
@@ -54,8 +67,19 @@ export default new Router({
         },
         {
             path: '/employees',
-            name: 'Employees',
-            component: Employees
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'Employees',
+                    component: Employees,
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateEmployees',
+                    component: Employees,
+                },
+            ]
         },
         {
             path: '/sales',
@@ -88,6 +112,7 @@ export default new Router({
             component: InvoiceCreate
         },
         {
+
             path: '/erp_inv_product',
             name: 'Products',
             component: Products
@@ -96,6 +121,12 @@ export default new Router({
             path: '/erp_inv_product_category',
             name: 'ProductCategory',
             component: ProductCategory
+        },
+
+        {
+            path: '/payments/new',
+            name: 'RecPaymentCreate',
+            component: RecPaymentCreate
         },
     ]
 })
