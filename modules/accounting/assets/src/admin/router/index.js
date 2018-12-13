@@ -17,8 +17,14 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'Dashboard',
-            component: Dashboard
+            component: Dashboard,
+            children: [
+                {
+                    path : '/dashboard',
+                    name : 'Dashboard',
+                    component: Dashboard,
+                }
+            ]
         },
         {
             path: '/customers',
