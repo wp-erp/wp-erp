@@ -8,7 +8,7 @@ import Employees from 'admin/components/Peoples/Employees.vue'
 import CustomerDetails from 'admin/components/Peoples/Customer-details.vue'
 import DummyComponent from 'admin/components/DummyComponent.vue'
 
-import InvoiceCreate from 'admin/components/invoice/InvoiceCreate.vue'
+import InvoiceCreate from 'admin/components/Invoice/InvoiceCreate.vue'
 import RecPaymentCreate from 'admin/components/RecPayment/RecPaymentCreate.vue'
 
 Vue.use(Router)
