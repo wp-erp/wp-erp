@@ -36,7 +36,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_inventory_product_cat' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_hr_manager' );
                 },
@@ -65,6 +65,20 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_inventory_product_cat' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_hr_manager' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'bulk_delete_cat' ],
+                'args'                => [
+                    'ids'   => [ 'required' => true ]
+                ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_hr_manager' );
                 },
@@ -137,7 +151,6 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
      */
     public function create_inventory_product_cat( $request ) {
         $item = $this->prepare_item_for_database( $request );
-
         $id = erp_acct_insert_product_cat( $item );
         $item['id'] = $id;
 
@@ -166,7 +179,6 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_inventory_product_cat_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
-
         $id = erp_acct_update_product_cat( $item, $id );
         $item['id'] = $id;
 
@@ -191,6 +203,27 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
         $term_id = (int) $request['id'];
 
         erp_acct_delete_product_cat( $term_id );
+
+        return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Bulk delete action
+     *
+     * @param  object $request
+     *
+     * @return object
+     */
+    public function bulk_delete_cat( $request ) {
+        $ids    =   $request['ids'];
+        $ids    =   explode( ',', $ids );
+
+        if ( ! $ids ) {
+            return;
+        }
+        foreach ( $ids as $id ) {
+            erp_acct_delete_product_cat( $id );
+        }
 
         return new WP_REST_Response( true, 204 );
     }
