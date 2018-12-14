@@ -121,15 +121,18 @@
 </template>
 
 <script>
+    import HTTP from 'admin/http.js'
     import Modal from 'admin/components/modal/Modal.vue'
-    import HTTP from '../../http.js'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
+
     export default {
         name: 'ProductModal',
+
         components: {
             Modal,
             MultiSelect
         },
+
         props: {
             product: {
                 type: Object,

@@ -8,11 +8,15 @@
 </template>
 
 <script>
-    import UserBasicInfo from "admin/components/Userinfo/User-basic.vue"
-    import HTTP from "admin/http.js"
+    import HTTP from 'admin/http.js'
+    import UserBasicInfo from 'admin/components/userinfo/UserBasic.vue'
+
     export default {
-        name: "Customer-details",
-        components: {UserBasicInfo},
+        name: 'CustomerDetails',
+
+        components: {
+            UserBasicInfo
+        },
 
         data(){
             return {

@@ -1,11 +1,11 @@
 <template>
-    <div class="app-vendors">
-        <h2 class="add-new-vendor">
-            <span>Vendors</span>
-            <a href="#" id="erp-vendor-new" @click="showModal = true">+ Add New Vendor</a>
+    <div class="app-customers">
+        <h2 class="add-new-customer">
+            <span>Customers</span>
+            <a href="#" id="erp-customer-new" @click="showModal = true">+ Add New Customer</a>
         </h2>
         <list-table
-            tableClass="wp-ListTable widefat fixed vendor-list"
+            tableClass="wp-ListTable widefat fixed customer-list"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -21,9 +21,12 @@
             <template slot="title" slot-scope="data">
                 <strong><a href="#">{{ data.row.title }}</a></strong>
             </template>
-            <template slot="vendor" slot-scope="data">
-                <!--TODO update with router link-->
-                <strong><a :href="data.row.id">{{data.row.vendor}}</a></strong>
+            <template slot="customer" slot-scope="data">
+                <strong>
+                    <router-link :to="{ name: 'CustomerDetails', params: { id: data.row.id }}">
+                        {{data.row.customer}}
+                    </router-link>
+                </strong>
             </template>
 
         </list-table>
@@ -32,13 +35,16 @@
 </template>
 
 <script>
-    import ListTable from '../list-table/ListTable.vue'
-    import HTTP from '../../http.js'
+    import ListTable from 'admin/components/list-table/ListTable.vue'
+    import HTTP from 'admin/http.js'
+
     export default {
-        name: 'Vendors',
+        name: 'Customers',
+
         components: {
             ListTable
         },
+
         data () {
             return {
                 bulkActions: [
@@ -49,8 +55,8 @@
                     }
                 ],
                 columns: {
-                    'vendor': { label: 'Vendor Name' },
-                    'company': { label: 'Vendor Owner' },
+                    'customer': { label: 'Customer Name' },
+                    'company': { label: 'Company' },
                     'email': { label: 'Email' },
                     'phone': { label: 'Phone' },
                     'expense': { label: 'Expense' },
@@ -75,40 +81,41 @@
             });
 
             this.fetchItems();
+
         },
 
         computed: {
             row_data(){
                 let items = this.rows;
                 items.map( item => {
-                    item.vendor = item.first_name + ' ' + item.last_name;
+                    item.customer = item.first_name + ' ' + item.last_name;
                     //TODO remove after api update for expense
-                    // item.expense = '55555';
+                    item.expense = '55555';
                 } );
                 return items;
             }
         },
 
         methods: {
-            fetchItems() {
+            fetchItems(){
                 this.rows = [];
-                HTTP.get('vendors', {
+                HTTP.get('customers', {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
                     }
                 })
-                    .then((response) => {
-                        this.rows = response.data;
-                        this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                        this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                    .then(() => {
-                        //ready
-                    });
+                .then( (response) => {
+                    this.rows = response.data;
+                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+                .then( () => {
+                    //ready
+                } );
             },
 
             onActionClick(action, row, index) {
@@ -116,7 +123,7 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete('vendors/' + row.id).then( response => {
+                            HTTP.delete('customers/' + row.id).then( response => {
                                 this.$delete(this.rows, index);
                             });
                         }
@@ -135,7 +142,7 @@
             onBulkAction(action, items) {
                 if ( 'trash' === action ) {
                     if ( confirm('Are you sure to delete?') ) {
-                        HTTP.delete('vendors/delete/' + items.join(',')).then(response => {
+                        HTTP.delete('customers/delete/' + items.join(',')).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
                             if ( toggleCheckbox.checked ) {
@@ -153,7 +160,7 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateVendors',
+                    name: 'PaginateCustomers',
                     params: { page: page },
                     query: queries
                 });
@@ -165,8 +172,8 @@
     };
 </script>
 <style lang="less">
-    .app-vendors {
-        .add-new-vendor {
+    .app-customers {
+        .add-new-customer {
             align-items: center;
             display: flex;
             span {
@@ -186,7 +193,7 @@
                 width: 135px;
             }
         }
-        .vendor-list {
+        .customer-list {
             border-radius: 3px;
             tbody {
                 background: #FAFAFA;

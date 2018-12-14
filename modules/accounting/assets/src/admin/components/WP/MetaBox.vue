@@ -27,9 +27,14 @@
 <script>
     export default{
         name: 'MetaBox',
+
         props: {
-            title : String,
-            closable: Boolean
+            title: {
+                type: String,
+            },
+            closable: {
+                type: Boolean
+            }
         },
         data () {
             return {

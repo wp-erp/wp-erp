@@ -9,10 +9,10 @@
 
 <script>
     import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/Select/MultiSelect.vue'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
 
     export default {
-        name: 'InvoiceCustomers',
+        name: 'SelectCustomers',
 
         components: {
             MultiSelect

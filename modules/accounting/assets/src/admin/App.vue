@@ -6,7 +6,7 @@
 </template>
 
 <script>
-    import ERPMenu from 'admin/components/Menu/ERPMenu.vue'
+    import ERPMenu from 'admin/components/menu/ERPMenu.vue'
     import VueSweetalert2 from 'vue-sweetalert2';
 
     import '../../font/flaticon.css'

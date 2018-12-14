@@ -17,7 +17,7 @@
                     <div class="wperp-row">
                         <div class="wperp-col-sm-3">
                             <div class="wperp-form-group">
-                                <invoice-customers v-model="basic_fields.customer"></invoice-customers>
+                                <select-customers v-model="basic_fields.customer"></select-customers>
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
@@ -312,11 +312,11 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
-    import Datepicker from 'admin/components/base/Datepicker.vue';
-    import FileUpload from 'admin/components/base/FileUpload.vue';
-    import RecPaymentTrnRow from 'admin/components/RecPayment/RecPaymentTrnRow.vue';
-    import InvoiceCustomers from 'admin/components/invoice/InvoiceCustomers.vue';
+    import HTTP from 'admin/http'
+    import Datepicker from 'admin/components/base/Datepicker.vue'
+    import FileUpload from 'admin/components/base/FileUpload.vue'
+    import RecPaymentTrnRow from 'admin/components/rec-payment/RecPaymentTrnRow.vue'
+    import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
 
     export default {
         name: 'RecPaymentCreate',
@@ -326,7 +326,7 @@
             Datepicker,
             FileUpload,
             RecPaymentTrnRow,
-            InvoiceCustomers
+            SelectCustomers
         },
 
         data() {

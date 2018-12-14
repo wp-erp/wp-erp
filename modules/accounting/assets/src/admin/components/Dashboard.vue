@@ -77,10 +77,9 @@
 </template>
 
 <script>
-    import MetaBox from './WP/MetaBox.vue'
+    import MetaBox from 'admin/components/wp/MetaBox.vue'
 
     export default {
-
         name: 'Dashboard',
 
         components: {
@@ -100,7 +99,6 @@
     }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     .erp-acc-dashboard-1 {
         display: flex;

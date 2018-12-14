@@ -1,11 +1,11 @@
-export default function (fn, delay) {
+export default function(fn, delay) {
   let timeoutID = null;
-  return function () {
-    clearTimeout(timeoutID);
-    const args = arguments;
-    const that = this;
-    timeoutID = setTimeout(() => {
-      fn.apply(that, args);
-    }, delay);
+  return function() {
+      clearTimeout(timeoutID);
+      const args = arguments;
+      const that = this;
+      timeoutID = setTimeout(() => {
+          fn.apply(that, args);
+      }, delay);
   };
 }

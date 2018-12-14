@@ -17,7 +17,7 @@
                 </div>
                 <div class="wperp-col-lg-9 wperp-col-md-8 wperp-col-sm-8 wperp-col-xs-12">
                     <ul class="customer-meta">
-                        <li v-for="(val,key) in user.meta">
+                        <li :key="key" v-for="(val, key) in user.meta">
                             <strong>{{camelCase(key)}}:</strong>
                             <span>{{val}}</span>
                         </li>
@@ -30,7 +30,8 @@
 
 <script>
     export default {
-        name: "User-basic-info",
+        name: 'UserBasicInfo',
+    
         props: {
             userData:{
                 type: Object,

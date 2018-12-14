@@ -58,12 +58,13 @@
 </template>
 
 <script>
-    import HTTP from '../../http.js'
-    import ListTable from '../list-table/ListTable.vue'
+    import HTTP from 'admin/http.js'
+    import ListTable from 'admin/components/list-table/ListTable.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    // import SingleCategory from './SingleCategory.vue'
+
     export default {
         name: 'ProductCategory',
+
         components: {
             ListTable,
             MultiSelect

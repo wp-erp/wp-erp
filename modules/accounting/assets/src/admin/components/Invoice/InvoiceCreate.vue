@@ -7,7 +7,7 @@
                 <div class="wperp-col">
                     <h2 class="content-header__title">New Invoice</h2>
                     <!-- just for showing modal -->
-                    <a href="#" class="wperp-btn btn--primary" @click="showInvoiceModal">
+                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showInvoiceModal">
                         <span>Show Invoice Modal</span>
                     </a>
                 </div>
@@ -20,7 +20,7 @@
                 <form action="#" class="wperp-form" method="post">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
-                            <invoice-customers v-model="basic_fields.customer"></invoice-customers>
+                            <select-customers v-model="basic_fields.customer"></select-customers>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
@@ -125,7 +125,7 @@ import FileUpload from 'admin/components/base/FileUpload.vue'
 import SubmitButton from 'admin/components/base/SubmitButton.vue'
 import InvoiceModal from 'admin/components/invoice/InvoiceModal.vue'
 import TransactionRow from 'admin/components/invoice/TransactionRow.vue'
-import InvoiceCustomers from 'admin/components/invoice/InvoiceCustomers.vue'
+import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
 
 export default {
     name: 'InvoiceCreate',
@@ -137,7 +137,7 @@ export default {
         SubmitButton,
         InvoiceModal,
         TransactionRow,
-        InvoiceCustomers
+        SelectCustomers
     },
 
     data() {

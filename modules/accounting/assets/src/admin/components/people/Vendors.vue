@@ -1,10 +1,11 @@
 <template>
-    <div class="app-employees">
-        <h2 class="add-new-employee">
-            <span>Employees</span>
+    <div class="app-vendors">
+        <h2 class="add-new-vendor">
+            <span>Vendors</span>
+            <a href="#" id="erp-vendor-new" @click="showModal = true">+ Add New Vendor</a>
         </h2>
         <list-table
-            tableClass="wp-ListTable widefat fixed employee-list"
+            tableClass="wp-ListTable widefat fixed vendor-list"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -20,8 +21,9 @@
             <template slot="title" slot-scope="data">
                 <strong><a href="#">{{ data.row.title }}</a></strong>
             </template>
-            <template slot="employee" slot-scope="data">
-                <strong><a :href="data.row.user_url">{{data.row.employee}}</a></strong>
+            <template slot="vendor" slot-scope="data">
+                <!--TODO update with router link-->
+                <strong><a :href="data.row.id">{{data.row.vendor}}</a></strong>
             </template>
 
         </list-table>
@@ -30,13 +32,16 @@
 </template>
 
 <script>
-    import ListTable from '../list-table/ListTable.vue'
-    import HTTP from '../../http.js'
+    import HTTP from 'admin/http.js'
+    import ListTable from 'admin/components/list-table/ListTable.vue'
+
     export default {
-        name: 'employees',
+        name: 'Vendors',
+
         components: {
             ListTable
         },
+
         data () {
             return {
                 bulkActions: [
@@ -47,11 +52,12 @@
                     }
                 ],
                 columns: {
-                    'employee': {label: 'Name'},
-                    'designation': {label: 'Designation'},
-                    'email': {label: 'Email'},
-                    'phone': {label: 'Phone'},
-                    'actions': {label: 'Actions'}
+                    'vendor': { label: 'Vendor Name' },
+                    'company': { label: 'Vendor Owner' },
+                    'email': { label: 'Email' },
+                    'phone': { label: 'Phone' },
+                    'expense': { label: 'Expense' },
+                    'actions': { label: 'Actions' }
                 },
                 rows: [],
                 paginationData: {
@@ -78,25 +84,24 @@
             row_data(){
                 let items = this.rows;
                 items.map( item => {
-                    item.employee = item.full_name;
-                    item.email = item.user_email;
-                    item.designation = item.designation.title;
+                    item.vendor = item.first_name + ' ' + item.last_name;
+                    //TODO remove after api update for expense
+                    // item.expense = '55555';
                 } );
                 return items;
             }
         },
 
         methods: {
-            fetchItems(){
+            fetchItems() {
                 this.rows = [];
-                HTTP.get('employees', {
+                HTTP.get('vendors', {
                     params: {
                         per_page: this.paginationData.perPage,
-                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
-                        include: 'designation'
+                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
                     }
                 })
-                    .then( (response) => {
+                    .then((response) => {
                         this.rows = response.data;
                         this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                         this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
@@ -104,9 +109,9 @@
                     .catch((error) => {
                         console.log(error);
                     })
-                    .then( () => {
+                    .then(() => {
                         //ready
-                    } );
+                    });
             },
 
             onActionClick(action, row, index) {
@@ -114,7 +119,7 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete('employees/' + row.id).then( response => {
+                            HTTP.delete('vendors/' + row.id).then( response => {
                                 this.$delete(this.rows, index);
                             });
                         }
@@ -126,13 +131,14 @@
 
                     default :
 
+
                 }
             },
 
             onBulkAction(action, items) {
                 if ( 'trash' === action ) {
                     if ( confirm('Are you sure to delete?') ) {
-                        HTTP.delete('employees/delete/' + items.join(',')).then(response => {
+                        HTTP.delete('vendors/delete/' + items.join(',')).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
                             if ( toggleCheckbox.checked ) {
@@ -150,7 +156,7 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateEmployees',
+                    name: 'PaginateVendors',
                     params: { page: page },
                     query: queries
                 });
@@ -162,8 +168,8 @@
     };
 </script>
 <style lang="less">
-    .app-employees {
-        .add-new-employee {
+    .app-vendors {
+        .add-new-vendor {
             align-items: center;
             display: flex;
             span {
@@ -183,7 +189,7 @@
                 width: 135px;
             }
         }
-        .employee-list {
+        .vendor-list {
             border-radius: 3px;
             tbody {
                 background: #FAFAFA;

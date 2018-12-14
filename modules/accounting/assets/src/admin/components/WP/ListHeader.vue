@@ -5,7 +5,7 @@
 
         <slot name="listheader-content"></slot>
 
-            implode( " |</li>\n", $views ) . "</li>\n";
+            <!-- implode( " |</li>\n", $views ) . "</li>\n"; -->
         </ul>;
 
 
@@ -16,10 +16,12 @@
 <script>
     export default{
         name: 'ListHeader',
+
         props: {
             title : String,
             closable: Boolean
         },
+
         data () {
             return {
                 closed: false,
