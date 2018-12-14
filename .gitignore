@@ -1,6 +1,7 @@
 config.codekit
 .idea
 .codekit-cache
+# Composer
 /vendor/
 node_modules
 build
@@ -11,3 +12,4 @@ debug.log
 plugin-deploy.sh
 package-lock.json
 /modules/accounting/config.json
+
