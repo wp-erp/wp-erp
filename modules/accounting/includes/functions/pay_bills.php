@@ -113,9 +113,6 @@ function erp_acct_insert_pay_bill( $data ) {
         return new WP_error( 'pay-bill-exception', $e->getMessage() );
     }
 
-    error_log( print_r( $bill_no, true ) );
-    die();
-
     return $bill_no;
 
 }

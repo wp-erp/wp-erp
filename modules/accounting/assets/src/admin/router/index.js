@@ -7,6 +7,8 @@ import Vendors from 'admin/components/Peoples/Vendors.vue'
 import Employees from 'admin/components/Peoples/Employees.vue'
 import CustomerDetails from 'admin/components/Peoples/Customer-details.vue'
 import DummyComponent from 'admin/components/DummyComponent.vue'
+import Products from 'admin/components/Products/Products.vue'
+import ProductCategory from 'admin/components/ProductCategory/ProductCategory.vue'
 
 import InvoiceCreate from 'admin/components/Invoice/InvoiceCreate.vue'
 import RecPaymentCreate from 'admin/components/RecPayment/RecPaymentCreate.vue'
@@ -109,6 +111,18 @@ export default new Router({
             name: 'InvoiceCreate',
             component: InvoiceCreate
         },
+        {
+
+            path: '/erp_inv_product',
+            name: 'Products',
+            component: Products
+        },
+        {
+            path: '/erp_inv_product_category',
+            name: 'ProductCategory',
+            component: ProductCategory
+        },
+
         {
             path: '/payments/new',
             name: 'RecPaymentCreate',
