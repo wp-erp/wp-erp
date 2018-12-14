@@ -1,11 +1,10 @@
 <template>
-    <div class="app-customers">
-        <h2 class="add-new-customer">
-            <span>Customers</span>
-            <a href="#" id="erp-customer-new" @click="showModal = true">+ Add New Customer</a>
+    <div class="app-employees">
+        <h2 class="add-new-employee">
+            <span>Employees</span>
         </h2>
         <list-table
-            tableClass="wp-ListTable widefat fixed customer-list"
+            tableClass="wp-ListTable widefat fixed employee-list"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -21,12 +20,8 @@
             <template slot="title" slot-scope="data">
                 <strong><a href="#">{{ data.row.title }}</a></strong>
             </template>
-            <template slot="customer" slot-scope="data">
-                <strong>
-                    <router-link :to="{ name: 'CustomerDetails', params: { id: data.row.id }}">
-                        {{data.row.customer}}
-                    </router-link>
-                </strong>
+            <template slot="employee" slot-scope="data">
+                <strong><a :href="data.row.user_url">{{data.row.employee}}</a></strong>
             </template>
 
         </list-table>
@@ -35,13 +30,16 @@
 </template>
 
 <script>
-    import ListTable from '../list-table/ListTable.vue'
-    import HTTP from '../../http.js'
+    import HTTP from 'admin/http.js'
+    import ListTable from 'admin/components/list-table/ListTable.vue'
+
     export default {
-        name: 'Customers',
+        name: 'employees',
+
         components: {
             ListTable
         },
+
         data () {
             return {
                 bulkActions: [
@@ -52,12 +50,11 @@
                     }
                 ],
                 columns: {
-                    'customer': { label: 'Customer Name' },
-                    'company': { label: 'Company' },
-                    'email': { label: 'Email' },
-                    'phone': { label: 'Phone' },
-                    'expense': { label: 'Expense' },
-                    'actions': { label: 'Actions' }
+                    'employee': {label: 'Name'},
+                    'designation': {label: 'Designation'},
+                    'email': {label: 'Email'},
+                    'phone': {label: 'Phone'},
+                    'actions': {label: 'Actions'}
                 },
                 rows: [],
                 paginationData: {
@@ -78,16 +75,15 @@
             });
 
             this.fetchItems();
-
         },
 
         computed: {
             row_data(){
                 let items = this.rows;
                 items.map( item => {
-                    item.customer = item.first_name + ' ' + item.last_name;
-                    //TODO remove after api update for expense
-                    item.expense = '55555';
+                    item.employee = item.full_name;
+                    item.email = item.user_email;
+                    item.designation = item.designation.title;
                 } );
                 return items;
             }
@@ -96,23 +92,24 @@
         methods: {
             fetchItems(){
                 this.rows = [];
-                HTTP.get('customers', {
+                HTTP.get('employees', {
                     params: {
                         per_page: this.paginationData.perPage,
-                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+                        include: 'designation'
                     }
                 })
-                .then( (response) => {
-                    this.rows = response.data;
-                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-                .then( () => {
-                    //ready
-                } );
+                    .then( (response) => {
+                        this.rows = response.data;
+                        this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                        this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                    .then( () => {
+                        //ready
+                    } );
             },
 
             onActionClick(action, row, index) {
@@ -120,7 +117,7 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete('customers/' + row.id).then( response => {
+                            HTTP.delete('employees/' + row.id).then( response => {
                                 this.$delete(this.rows, index);
                             });
                         }
@@ -132,14 +129,13 @@
 
                     default :
 
-
                 }
             },
 
             onBulkAction(action, items) {
                 if ( 'trash' === action ) {
                     if ( confirm('Are you sure to delete?') ) {
-                        HTTP.delete('customers/delete/' + items.join(',')).then(response => {
+                        HTTP.delete('employees/delete/' + items.join(',')).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
                             if ( toggleCheckbox.checked ) {
@@ -157,7 +153,7 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateCustomers',
+                    name: 'PaginateEmployees',
                     params: { page: page },
                     query: queries
                 });
@@ -169,8 +165,8 @@
     };
 </script>
 <style lang="less">
-    .app-customers {
-        .add-new-customer {
+    .app-employees {
+        .add-new-employee {
             align-items: center;
             display: flex;
             span {
@@ -190,7 +186,7 @@
                 width: 135px;
             }
         }
-        .customer-list {
+        .employee-list {
             border-radius: 3px;
             tbody {
                 background: #FAFAFA;

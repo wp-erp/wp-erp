@@ -23,20 +23,22 @@
 </template>
 
 <script>
-    import HTTP from '../../http.js'
-    import Menu from '../Menu/ERPMenu.vue'
+    import HTTP from 'admin/http.js'
+    import Menu from 'admin/components/menu/ERPMenu.vue'
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import ProductModal from 'admin/components/Products/ProductModal.vue'
-    import Modal from '../modal/Modal.vue'
+    import Modal from 'admin/components/modal/Modal.vue'
 
     export default {
         name: 'Products',
+
         components: {
             Menu,
             ListTable,
             Modal,
             ProductModal
         },
+
         data() {
             return {
                 products: [],

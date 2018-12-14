@@ -169,7 +169,7 @@
 <script>
 /* eslint-disable */
 
-import BulkActionsTpl from './BulkActionsTpl.vue';
+import BulkActionsTpl from 'admin/components/list-table/BulkActionsTpl.vue'
 import Dropdown from 'admin/components/base/Dropdown.vue'
 
 export default {
