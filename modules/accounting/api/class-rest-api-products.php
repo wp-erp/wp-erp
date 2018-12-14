@@ -36,7 +36,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_inventory_product' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_hr_manager' );
                 },
@@ -58,7 +58,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_inventory_product' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_hr_manager' );
                 },
@@ -71,6 +71,33 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'bulk_delete' ],
+                'args'                => [
+                    'ids'   => [ 'required' => true ]
+                ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_hr_manager' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/types', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_product_types' ],
+                'args'                => [
+                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_hr_manager' );
+                },
+            ],
         ] );
     }
 
@@ -204,22 +231,21 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
-
         // required arguments.
         if ( isset( $request['name'] ) ) {
             $prepared_item['name'] = $request['name'];
         }
 
         if ( isset( $request['product_type_id'] ) ) {
-            $prepared_item['product_type_id'] = $request['product_type_id'];
+            $prepared_item['product_type_id'] = $request['product_type_id']['id'];
         }
 
         if ( isset( $request['category_id'] ) ) {
-            $prepared_item['category_id'] = $request['category_id'];
+            $prepared_item['category_id'] = $request['category_id']['id'];
         }
 
         if ( isset( $request['vendor'] ) ) {
-            $prepared_item['vendor'] = $request['vendor'];
+            $prepared_item['vendor'] = $request['vendor']['id'];
         }
 
 	    if ( isset( $request['cost_price'] ) ) {
@@ -252,7 +278,10 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             'category_id'     => $item->category_id,
             'vendor'          => $item->vendor,
             'cost_price'      => $item->cost_price,
-            'sale_price'      => $item->sale_price
+            'sale_price'      => $item->sale_price,
+            'vendor_name'     => $item->vendor_name,
+            'cat_name'        => $item->cat_name,
+            'type_name'       => $item->type_name,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -332,5 +361,37 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         ];
 
         return $schema;
+    }
+
+    /**
+     * Get product type
+     *
+     * @return object
+     */
+    public function get_product_types() {
+        $types = erp_get_product_type();
+        $response = rest_ensure_response( $types );
+        return $response;
+    }
+
+    /**
+     * Bulk delete action
+     *
+     * @param  object $request
+     *
+     * @return object
+     */
+    public function bulk_delete( $request ) {
+        $ids    =   $request['ids'];
+        $ids    =   explode( ',', $ids );
+
+        if ( ! $ids ) {
+            return;
+        }
+        foreach ( $ids as $id ) {
+            erp_acct_delete_product( $id );
+        }
+
+        return new WP_REST_Response( true, 204 );
     }
 }

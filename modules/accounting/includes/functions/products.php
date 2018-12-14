@@ -13,8 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_all_products() {
 	global $wpdb;
 
-	$row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_products", ARRAY_A );
-
+	$row = $wpdb->get_results(
+								"SELECT product.*,CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+								cat.id AS cat_id, cat.name AS cat_name, type.id AS type_id, type.name AS type_name
+								FROM {$wpdb->prefix}erp_acct_products AS product
+								LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
+								LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
+								LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS type ON product.product_type_id = type.id", ARRAY_A
+							);
 	return $row;
 }
 
@@ -94,7 +100,7 @@ function erp_acct_update_product( $data, $id ) {
 		$wpdb->query( 'START TRANSACTION' );
 		$product_data = erp_acct_get_formatted_product_data( $data );
 
-		$wpdb->insert( $wpdb->prefix . 'erp_acct_products', array(
+		$wpdb->update( $wpdb->prefix . 'erp_acct_products', array(
 			'name'            => $product_data['name'],
 			'product_type_id' => $product_data['product_type_id'],
 			'category_id'     => $product_data['category_id'],
@@ -157,6 +163,12 @@ function erp_acct_delete_product( $product_id ) {
 	$wpdb->delete( $wpdb->prefix . 'erp_acct_products', array( 'id' => $product_id ) );
 
     return $product_id;
+}
+
+function erp_get_product_type() {
+	global $wpdb;
+	$types = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_product_types" );
+	return $types;
 }
 
 

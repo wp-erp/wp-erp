@@ -90,7 +90,7 @@ function erp_acct_update_product_cat( $data, $id ) {
 		$wpdb->query( 'START TRANSACTION' );
 		$product_cat_data = erp_acct_get_formatted_product_cat_data( $data );
 
-		$wpdb->insert( $wpdb->prefix . 'erp_acct_product_categories', array(
+		$wpdb->update( $wpdb->prefix . 'erp_acct_product_categories', array(
 			'name'            => $product_cat_data['name'],
 			'parent'          => $product_cat_data['parent'],
             'created_at'      => $product_cat_data['created_at'],
