@@ -369,13 +369,13 @@ if (false) {(function () {
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/assets/font/Flaticon.eot";
+module.exports = __webpack_require__.p + "/Applications/MAMP/htdocs/wordpress/wp-content/plugins/wp-erp/modules/accounting/assets/font/Flaticon.eot";
 
 /***/ }),
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/assets/font/Flaticon.svg";
+module.exports = __webpack_require__.p + "/Applications/MAMP/htdocs/wordpress/wp-content/plugins/wp-erp/modules/accounting/assets/font/Flaticon.svg";
 
 /***/ }),
 /* 23 */
@@ -4571,13 +4571,13 @@ exports.push([module.i, "\t/*\n  \tFlaticon icon font: Flaticon\n  \tCreation da
 /* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/assets/font/Flaticon.woff";
+module.exports = __webpack_require__.p + "/Applications/MAMP/htdocs/wordpress/wp-content/plugins/wp-erp/modules/accounting/assets/font/Flaticon.woff";
 
 /***/ }),
 /* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "/Users/wedevs/Local Sites/wp-erp-ac/app/public/wp-content/plugins/wp-erp/modules/accounting/assets/font/Flaticon.ttf";
+module.exports = __webpack_require__.p + "/Applications/MAMP/htdocs/wordpress/wp-content/plugins/wp-erp/modules/accounting/assets/font/Flaticon.ttf";
 
 /***/ }),
 /* 100 */
