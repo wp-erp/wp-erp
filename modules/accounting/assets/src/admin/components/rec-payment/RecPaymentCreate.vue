@@ -71,239 +71,40 @@
                             <a href="#"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row" class="col--check">#001</th>
-                        <td class="col--qty column-primary">$500.00</td>
-                        <td class="col--uni_price" data-colname="Unit Price">$240.00</td>
-                        <td class="col--amount" data-colname="Total">
-                            <input type="text" name="amount" class="text-right" value="000000" />
-                        </td>
-                        <td class="delete-row">
-                            <a href="#"><i class="flaticon-trash"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="col--check">#001</th>
-                        <td class="col--qty column-primary">$500.00</td>
-                        <td class="col--uni_price" data-colname="Unit Price">$240.00</td>
-                        <td class="col--amount" data-colname="Total">
-                            <input type="text" name="amount" class="text-right" value="000000" />
-                        </td>
-                        <td class="delete-row">
-                            <a href="#"><i class="flaticon-trash"></i></a>
-                        </td>
-                    </tr>
                     <tr class="total-amount-row">
                         <td class="text-right pr-0" colspan="3">Total Amount</td>
                         <td class="text-right"><input type="text" name="amount" id="amount" class="text-right" value="000000" readonly disabled /></td>
                         <td class="text-right"></td>
                     </tr>
 
+                    <tr class="add-new-line">
+                        <td style="text-align: left;">
+                            <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                        </td>
+                    </tr>
+                    <tr class="wperp-form-group">
+                        <td colspan="9" style="text-align: left;">
+                            <label for="memo">Particulars</label>
+                            <textarea name="memo" id="memo" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                        </td>
+                    </tr>
+                    <tr class="add-attachment-row" >
+                        <td colspan="9" style="text-align: left;">
+                            <div class="attachment-container">
+                                <label class="col--attachement">Attachment</label>
+                                <file-upload v-model="attachments" url="/invoices/attachments"/>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="9" style="text-align: right;">
+                            <submit-button text="Submit for approval" @click.native="SubmitForApproval" :working="isWorking"></submit-button>
+                        </td>
+                    </tr>
+                    </tfoot>
                 </table>
-            </div>
-        </div>
-
-        <!-- memo section -->
-        <div class="wperp-panel wperp-panel-default">
-            <div class="wperp-panel-body">
-                <div class="wperp-form-group">
-                    <label for="memo">Memo</label>
-                    <textarea name="memo" id="memo" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
-                </div>
-                <div class="wperp-form-group">
-                    <div class="attachment-container attachment-style2">
-                        <label class="col--attachement">Attachment</label>
-                        <div class="attachment-preview">
-                            <img src="assets/images/img-thumb.png" alt="attachment image">
-                            <i class="flaticon-close remove-attachment"></i>
-                        </div>
-                        <div class="attachment-placeholder">
-                            To attach <input type="file" id="attachment" name="attachment" class="display-none"> <label class="mt-0" for="attachment">Select files</label> from your computer
-                        </div>
-                    </div>
-                </div>
-                <div class="buttons-wrapper">
-                    <div class="buttons-wrapper text-right">
-                        <button class="wperp-btn btn--primary" type="submit">Pay</button>
-                        <button class="wperp-btn btn--default" type="reset">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="wperp-invoice-modal" class="wperp-modal wperp-invoice-modal wperp-custom-scroll" role="dialog">
-            <div class="wperp-modal-dialog">
-                <div class="wperp-modal-content">
-                    <div class="wperp-modal-header">
-                        <h4>
-                            Invoice
-                        </h4>
-                        <div class="d-print-none">
-                            <a href="#" class="wperp-btn btn--default print-btn">
-                                <i class="flaticon-printer-1"></i>
-                                &nbsp; Print
-                            </a>
-                            <!-- todo: more action has some dropdown and will implement later please consider as planning -->
-                            <a href="#" class="wperp-btn btn--default">
-                                <i class="flaticon-settings-work-tool"></i>
-                                &nbsp; More Action
-                            </a>
-                        </div>
-                    </div>
-                    <div class="wperp-modal-body">
-                        <div class="wperp-invoice-panel">
-                            <div class="invoice-header">
-                                <div class="invoice-logo">
-                                    <img :src="acct_var.acc_aaset_url + '/images/dummy-logo.png'" alt="logo name">
-                                </div>
-                                <div class="invoice-address">
-                                    <address>
-                                        <strong>Amazon Limited</strong><br>
-                                        983 Aiden Roads Suite 062<br>
-                                        Address Line 2<br>
-                                        1483 Theresafort Afyon<br>
-                                        Turkey
-                                    </address>
-                                </div>
-                            </div>
-
-                            <div class="invoice-body">
-                                <h4>Invoice</h4>
-                                <div class="wperp-row">
-                                    <div class="wperp-col-sm-6">
-                                        <h5>Bill to:</h5>
-                                        <div class="persons-info">
-                                            <strong>Md Ashraf Hossain</strong><br>
-                                            983 Aiden Roads Suite 062<br>
-                                            Address Line 2<br>
-                                            1483 Theresafort Afyon<br>
-                                            Turkey
-                                        </div>
-                                    </div>
-                                    <div class="wperp-col-sm-6">
-                                        <table class="invoice-info">
-                                            <tr>
-                                                <th>Invoice No.</th>
-                                                <td>INV-0001</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Invoice Date:</th>
-                                                <td>17-10-2018</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Due Date:</th>
-                                                <td>17-10-2018</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Amount Due:</th>
-                                                <td>17-10-2018</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="wperp-invoice-table">
-                                <table class="wperp-table wperp-form-table invoice-table">
-                                    <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>City</th>
-                                        <th>Unit Price</th>
-                                        <th>Discount</th>
-                                        <th>Tax</th>
-                                        <th>Tax Amount</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <th>Buy Fabrics</th>
-                                        <td>10</td>
-                                        <td>$1500.00</td>
-                                        <td>10%</td>
-                                        <td>0%</td>
-                                        <td>$0.00</td>
-                                        <td>$15,000.00</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Buy Fabrics</th>
-                                        <td>10</td>
-                                        <td>$1500.00</td>
-                                        <td>10%</td>
-                                        <td>0%</td>
-                                        <td>$0.00</td>
-                                        <td>$15,000.00</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Buy Fabrics</th>
-                                        <td>10</td>
-                                        <td>$1500.00</td>
-                                        <td>10%</td>
-                                        <td>0%</td>
-                                        <td>$0.00</td>
-                                        <td>$15,000.00</td>
-                                    </tr><tr>
-                                        <th>Buy Fabrics</th>
-                                        <td>10</td>
-                                        <td>$1500.00</td>
-                                        <td>10%</td>
-                                        <td>0%</td>
-                                        <td>$0.00</td>
-                                        <td>$15,000.00</td>
-                                    </tr><tr>
-                                        <th>Buy Fabrics</th>
-                                        <td>10</td>
-                                        <td>$1500.00</td>
-                                        <td>10%</td>
-                                        <td>0%</td>
-                                        <td>$0.00</td>
-                                        <td>$15,000.00</td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <td colspan="7">
-                                            <ul>
-                                                <li><span>Subtotal:</span> $15,000.00</li>
-                                                <li><span>Total:</span> $15,000.00</li>
-                                                <li><span>Total Related Payments:</span> $15,000.00</li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-
-                        </div>
-                        <div class="invoice-attachments d-print-none">
-                            <h4>Attachments</h4>
-                            <a class="attachment-item" href="#">
-                                <img :src="acct_var.acc_aaset_url + '/images/img-thumb.png'" alt="image name">
-                                <div class="attachment-meta">
-                                    <span>File name with extension</span><br>
-                                    <span class="text-muted">file size</span>
-                                </div>
-                            </a>
-                            <a class="attachment-item" href="#">
-                                <img :src="acct_var.acc_aaset_url + '/images/doc-thumb.png'" alt="image name">
-                                <div class="attachment-meta">
-                                    <span>File name with extension</span><br>
-                                    <span class="text-muted">file size</span>
-                                </div>
-                            </a>
-                            <a class="attachment-item" href="#">
-                                <img :src="acct_var.acc_aaset_url + '/images/pdf-thumb.png'" alt="image name">
-                                <div class="attachment-meta">
-                                    <span>File name with extension</span><br>
-                                    <span class="text-muted">file size</span>
-                                </div>
-                            </a>
-                        </div>
-
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -314,9 +115,11 @@
 <script>
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
+    import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import RecPaymentTrnRow from 'admin/components/rec-payment/RecPaymentTrnRow.vue'
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
+
 
     export default {
         name: 'RecPaymentCreate',
@@ -325,6 +128,7 @@
             HTTP,
             Datepicker,
             FileUpload,
+            SubmitButton,
             RecPaymentTrnRow,
             SelectCustomers
         },
@@ -338,11 +142,12 @@
                     deposit_to: ''
                 },
 
-                products: [],
+                invoices: [],
+                attachments: [],
                 transactionLines: [{}],
                 finalTotalAmount: 0,
-
-                acct_var: erp_acct_var
+                invoiceModal: false,
+                isWorking: false,
             }
         },
 
