@@ -40,7 +40,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_customer' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_customer' );
                 },
@@ -62,7 +62,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_customer' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_edit_customer' );
                 },
@@ -100,6 +100,17 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_view_customer' );
                 },
             ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/country', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_countries' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_customer' );
+                },
+            ]
         ] );
     }
 
@@ -308,6 +319,19 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
+     * Get countries
+     *
+     * @return object
+     */
+    public function get_countries( $request ) {
+        $country    =   \WeDevs\ERP\Countries::instance();
+        $c          =   $country->get_countries();
+        $state      =   $country->get_states();
+        $response   =   array(  'country' => $c, 'state' => $state );
+        $response   =   rest_ensure_response( $response );
+        return $response;
+    }
+    /**
      * Prepare a single item for create or update
      *
      * @param WP_REST_Request $request Request object.
@@ -315,9 +339,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return array $prepared_item
      */
     protected function prepare_item_for_database( $request ) {
-
         $prepared_item = [];
-
         // required arguments.
         if ( isset( $request['first_name'] ) ) {
             $prepared_item['first_name'] = $request['first_name'];
@@ -355,13 +377,22 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['city'] = $request['city'];
         }
         if ( isset( $request['state'] ) ) {
-            $prepared_item['state'] = $request['state'];
+            $prepared_item['state'] = $request['state']['id'];
         }
         if ( isset( $request['postal_code'] ) ) {
             $prepared_item['postal_code'] = $request['postal_code'];
         }
         if ( isset( $request['country'] ) ) {
-            $prepared_item['country'] = $request['country'];
+            $prepared_item['country'] = $request['country']['id'];
+        }
+        if ( isset( $request['company'] ) ) {
+            $prepared_item['company'] = $request['company'];
+        }
+        if ( isset( $request['mobile'] ) ) {
+            $prepared_item['mobile'] = $request['mobile'];
+        }
+        if ( $request['fax'] ) {
+            $prepared_item['fax'] = $request['fax'];
         }
 
         $prepared_item['type'] = 'customer';
@@ -387,6 +418,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             'last_name'   => $item->last_name,
             'email'       => $item->email,
             'phone'       => $item->phone,
+            'mobile'      => $item->mobile,
+            'fax'         => $item->fax,
             'website'     => $item->website,
             'notes'       => $item->notes,
             'other'       => $item->other,
