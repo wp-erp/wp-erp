@@ -29,7 +29,19 @@ function erp_acct_get_all_invoices() {
 function erp_acct_get_invoice( $invoice_no ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_invoices WHERE voucher_no = {$invoice_no}", ARRAY_A );
+    $sql = "SELECT * FROM " . $wpdb->prefix . "erp_acct_invoices WHERE id = {$invoice_no} LIMIT 1";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    $row['billing_address'] = unserialize(unserialize( $row['billing_address'] ));
+    $row['attachments'] = unserialize( $row['attachments'] );
+
+    if ( $row['created_by'] ) {
+        $user_id = (int) $row['created_by'];
+        $created_by = get_userdata( $user_id );
+
+        $row['trn_by']  = $created_by->data;
+    }
 
     return $row;
 }

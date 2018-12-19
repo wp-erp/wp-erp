@@ -154,7 +154,7 @@ export default {
             transactionLines: [{}],
             finalTotalAmount: 0,
 
-            invoiceModal: false,
+            invoiceModal: true,
             isWorking: false,
         }
     },

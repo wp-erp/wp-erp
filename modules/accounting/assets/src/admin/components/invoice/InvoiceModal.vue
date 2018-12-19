@@ -35,17 +35,17 @@
                             </div>
                         </div>
 
-                        <div class="invoice-body">
+                        <div class="invoice-body" v-if="invoice != null">
                             <h4>Invoice</h4>
                             <div class="wperp-row">
                                 <div class="wperp-col-sm-6">
                                     <h5>Bill to:</h5>
                                     <div class="persons-info">
-                                        <strong>Md Ashraf Hossain</strong><br>
-                                        983 Aiden Roads Suite 062<br>
-                                        Address Line 2<br>
-                                        1483 Theresafort Afyon<br>
-                                        Turkey
+                                        <strong>{{ invoice.customer_name }}</strong><br>
+                                        {{ invoice.billing_address.address }} <br>
+                                        {{ invoice.billing_address.state }} <br>
+                                        {{ invoice.billing_address.city }} <br>
+                                        {{ invoice.billing_address.country }}
                                     </div>
                                 </div>
                                 <div class="wperp-col-sm-6">
@@ -56,11 +56,11 @@
                                         </tr>
                                         <tr>
                                             <th>Invoice Date:</th>
-                                            <td>17-10-2018</td>
+                                            <td>{{ invoice.created_at }}</td>
                                         </tr>
                                         <tr>
                                             <th>Due Date:</th>
-                                            <td>17-10-2018</td>
+                                            <td>{{ invoice.due_date }}</td>
                                         </tr>
                                         <tr>
                                             <th>Amount Due:</th>
@@ -176,13 +176,24 @@
 </template>
 
 <script>
+    import HTTP from 'admin/http';
+
     export default {
         name: 'InvoiceModal',
 
         data() {
             return {
+                invoice: [],
                 acct_var: erp_acct_var
             }
+        },
+
+        created() {
+            let invoice_id = 1;
+
+            HTTP.get(`/invoices/${invoice_id}`).then((response) => {
+                this.invoice = response.data;
+            });
         },
 
         methods: {
