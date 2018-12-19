@@ -24,9 +24,9 @@
 
 <script>
 /* eslint func-names: ["error", "never"] */
-import Multiselect from 'vue-multiselect';
-import debounce from './debounce';
-import 'vue-multiselect/dist/vue-multiselect.min.css';
+import Multiselect from 'vue-multiselect'
+import debounce from 'admin/components/select/debounce'
+import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 export default {
   name: 'MultiSelect',

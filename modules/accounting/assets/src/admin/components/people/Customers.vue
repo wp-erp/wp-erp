@@ -37,15 +37,17 @@
 </template>
 
 <script>
-    import ListTable from '../list-table/ListTable.vue'
-    import HTTP from '../../http.js'
+    import ListTable from 'admin/components/list-table/ListTable.vue'
     import CustomerModal from './CustomerModal.vue'
+    import HTTP from 'admin/http.js'
     export default {
         name: 'Customers',
+
         components: {
             ListTable,
             CustomerModal
         },
+
         data () {
             return {
                 customer: null,

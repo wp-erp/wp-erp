@@ -1,17 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import DummyComponent from 'admin/components/DummyComponent.vue'
+
 import Dashboard from 'admin/components/Dashboard.vue'
 import ChartOfAccounts from 'admin/components/ChartOfAccounts.vue'
-import Customers from 'admin/components/Peoples/Customers.vue'
-import Vendors from 'admin/components/Peoples/Vendors.vue'
-import Employees from 'admin/components/Peoples/Employees.vue'
-import CustomerDetails from 'admin/components/Peoples/Customer-details.vue'
-import DummyComponent from 'admin/components/DummyComponent.vue'
-import Products from 'admin/components/Products/Products.vue'
-import ProductCategory from 'admin/components/ProductCategory/ProductCategory.vue'
+import Customers from 'admin/components/people/Customers.vue'
+import Vendors from 'admin/components/people/Vendors.vue'
+import Employees from 'admin/components/people/Employees.vue'
+import CustomerDetails from 'admin/components/people/CustomerDetails.vue'
 
-import InvoiceCreate from 'admin/components/Invoice/InvoiceCreate.vue'
-import RecPaymentCreate from 'admin/components/RecPayment/RecPaymentCreate.vue'
+import Products from 'admin/components/products/Products.vue'
+import ProductCategory from 'admin/components/product-category/ProductCategory.vue'
+
+import InvoiceCreate from 'admin/components/invoice/InvoiceCreate.vue'
+
+import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue'
+
+
+
 
 Vue.use(Router)
 
@@ -93,17 +99,17 @@ export default new Router({
         },
         {
             path: '/charts',
-            name: 'Chart Of Accounts',
+            name: 'ChartOfAccounts',
             component: ChartOfAccounts
         },
         {
             path: '/bank',
-            name: 'Bank Accounts',
+            name: 'BankAccounts',
             component: DummyComponent
         },
         {
             path: '/journal',
-            name: 'Journal Entries',
+            name: 'JournalEntries',
             component: DummyComponent
         },
         {
