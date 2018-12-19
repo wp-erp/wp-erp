@@ -95,11 +95,35 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_bills( $request ) {
-        $bill_data  = erp_acct_get_bills();
-        $bill_count = erp_acct_get_bill_count();
+        $args = [
+            'number' => $request['per_page'],
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+        ];
 
-        $response = rest_ensure_response( $bill_data );
-        $response = $this->format_collection_response( $response, $request, $bill_count );
+        $formatted_items = [];
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $bill_data  = erp_acct_get_bills();
+        $total_items = erp_acct_get_bills( [ 'count' => true ] );
+
+        foreach ( $bill_data as $item ) {
+            if ( isset( $request['include'] ) ) {
+                $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+                if ( in_array( 'created_by', $include_params ) ) {
+                    $item['created_by'] = $this->get_user( $item['created_by'] );
+                }
+            }
+
+            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
 
         $response->set_status( 200 );
 
@@ -123,11 +147,14 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $bill_data =  erp_acct_get_bill( $id );
         $bill_data['id'] = $id;
 
+        $bill_data['created_by'] = $this->get_user( $bill_data['created_by'] );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $item  = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
-        $response = rest_ensure_response( $item );
+        $data = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
+        $formatted_items[] = $this->prepare_response_for_collection( $data );
+        $response = rest_ensure_response( $formatted_items );
 
         $response->set_status( 200 );
 

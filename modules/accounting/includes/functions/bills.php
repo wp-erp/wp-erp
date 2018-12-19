@@ -10,10 +10,34 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_bills() {
+function erp_acct_get_bills( $args = [] ) {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_bills", ARRAY_A );
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    if ( $args['count'] ) {
+        $sql = "SELECT COUNT( id ) as total_number FROM {$wpdb->prefix}erp_acct_bills";
+
+        return $wpdb->get_var($sql);
+    }
+
+    $limit = '';
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+    
+    $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_bills ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    $rows = $wpdb->get_results( $sql, ARRAY_A );
 
     return $rows;
 }
@@ -27,7 +51,50 @@ function erp_acct_get_bills() {
 function erp_acct_get_bill( $bill_no ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_bills WHERE voucher_no = {$bill_no}", ARRAY_A );
+    $sql = "SELECT
+
+    bill.id,
+    bill.voucher_no,
+    bill.vendor_id,
+    bill.vendor_name,
+    bill.address,
+    bill.trn_date,
+    bill.due_date, 
+    bill.amount,
+    bill.ref,
+    bill.particulars,
+    bill.status,
+    bill.attachments,
+    bill.created_at,
+    bill.created_by,
+    bill.updated_at,
+    bill.updated_by,
+    
+    b_detail.amount,
+    
+    ledg.id,
+    ledg.chart_id,
+    ledg.category_id,
+    ledg.name,
+    ledg.code,
+    ledg.system,
+                  
+    ledg_detail.debit,
+    ledg_detail.credit,
+    
+    b_ac_detail.id,
+    b_ac_detail.bill_no
+    
+    FROM {$wpdb->prefix}erp_acct_bills AS bill
+    
+    LEFT JOIN {$wpdb->prefix}erp_acct_bill_details AS b_detail ON bill.voucher_no = b_detail.trn_no
+    LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS b_ac_detail ON bill.voucher_no = b_ac_detail.trn_no
+    LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON bill.voucher_no = ledg_detail.trn_no
+    LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledg ON ledg.id = ledg_detail.ledger_id
+    
+    WHERE bill.voucher_no = {$bill_no}";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
 
     return $row;
 }
