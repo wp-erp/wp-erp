@@ -10,12 +10,35 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_invoices() {
+function erp_acct_get_all_invoices( $args = [] ) {
     global $wpdb;
 
-    $row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_invoices", ARRAY_A );
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
 
-    return $row;
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_invoices ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
+
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**
@@ -29,19 +52,55 @@ function erp_acct_get_all_invoices() {
 function erp_acct_get_invoice( $invoice_no ) {
     global $wpdb;
 
-    $sql = "SELECT * FROM " . $wpdb->prefix . "erp_acct_invoices WHERE id = {$invoice_no} LIMIT 1";
+    $sql = "Select
+
+    invoice.id,
+    invoice.voucher_no,
+    invoice.people_id,
+    invoice.customer_name,
+    invoice.trn_date,
+    invoice.due_date,
+    invoice.billing_address,
+    invoice.amount,
+    invoice.discount,
+    invoice.tax,
+    invoice.estimate,
+    invoice.attachments,
+    invoice.status, 
+    invoice.particulars,
+    invoice.created_at,
+    invoice.created_by,
+    invoice.updated_at, 
+    invoice.updated_by,
+    
+    inv_detail.product_id,
+    inv_detail.qty,
+    inv_detail.unit_price,
+    inv_detail.discount,
+    inv_detail.tax,
+    inv_detail.item_total, 
+    inv_detail.tax_percent,
+    
+    inv_acc_detail.debit,
+    inv_acc_detail.credit,
+    
+    product.name,
+    product.product_type_id,
+    product.category_id,
+    product.vendor,
+    product.cost_price,
+    product.sale_price
+    
+    FROM {$wpdb->prefix}erp_acct_invoices as invoice
+    LEFT JOIN {$wpdb->prefix}erp_acct_invoice_details as inv_detail ON invoice.voucher_no = inv_detail.trn_no
+    LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.invoice_no
+    LEFT JOIN {$wpdb->prefix}erp_acct_products as product ON inv_detail.product_id = product.id
+    WHERE invoice.voucher_no = {$invoice_no} LIMIT 1";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
     $row['billing_address'] = unserialize(unserialize( $row['billing_address'] ));
     $row['attachments'] = unserialize( $row['attachments'] );
-
-    if ( $row['created_by'] ) {
-        $user_id = (int) $row['created_by'];
-        $created_by = get_userdata( $user_id );
-
-        $row['trn_by']  = $created_by->data;
-    }
 
     return $row;
 }

@@ -24,18 +24,20 @@ function erp_acct_get_bills( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    if ( $args['count'] ) {
-        $sql = "SELECT COUNT( id ) as total_number FROM {$wpdb->prefix}erp_acct_bills";
-
-        return $wpdb->get_var($sql);
-    }
 
     $limit = '';
+
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
-    
-    $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_bills ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_bills ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
 
     $rows = $wpdb->get_results( $sql, ARRAY_A );
 

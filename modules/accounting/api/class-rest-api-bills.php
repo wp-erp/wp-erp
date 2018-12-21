@@ -107,7 +107,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $bill_data  = erp_acct_get_bills();
-        $total_items = erp_acct_get_bills( [ 'count' => true ] );
+        $total_items = erp_acct_get_bills( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $bill_data as $item ) {
             if ( isset( $request['include'] ) ) {
