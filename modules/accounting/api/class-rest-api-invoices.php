@@ -108,11 +108,35 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_invoices( $request ) {
-        $invoice_data  = erp_acct_get_all_invoices();
-        $invoice_count = erp_acct_get_invoice_count();
+        $args = [
+            'number' => $request['per_page'],
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+        ];
 
-        $response = rest_ensure_response( $invoice_data );
-        $response = $this->format_collection_response( $response, $request, $invoice_count );
+        $formatted_items = [];
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $invoice_data  = erp_acct_get_all_invoices();
+        $total_items = erp_acct_get_all_invoices( [ 'count' => true, 'number' => -1 ] );
+
+        foreach ( $invoice_data as $item ) {
+            if ( isset( $request['include'] ) ) {
+                $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+                if ( in_array( 'created_by', $include_params ) ) {
+                    $item['created_by'] = $this->get_user( $item['created_by'] );
+                }
+            }
+
+            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
 
         $response->set_status( 200 );
 
