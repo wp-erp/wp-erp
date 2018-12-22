@@ -4,7 +4,6 @@ import DummyComponent from 'admin/components/DummyComponent.vue'
 
 import Dashboard from 'admin/components/Dashboard.vue'
 import ChartOfAccounts from 'admin/components/ChartOfAccounts.vue'
-
 import Customers from 'admin/components/people/Customers.vue'
 import Vendors from 'admin/components/people/Vendors.vue'
 import Employees from 'admin/components/people/Employees.vue'

@@ -1,11 +1,13 @@
+
 <template>
     <div class="app-customers">
         <h2 class="add-new-customer">
             <span>Customers</span>
-            <a href="#" id="erp-customer-new" @click="showModal = true">+ Add New Customer</a>
+            <a href="#" id="erp-customer-new" @click.prevent="showModal = true">+ Add New Customer</a>
         </h2>
+        <customer-modal v-if="showModal" :customer.sync="customer" :countries="countries" :state="states"></customer-modal>
         <list-table
-            tableClass="wp-ListTable widefat fixed customer-list"
+            tableClass="wperp-table table-striped table-dark widefat"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -36,17 +38,19 @@
 
 <script>
     import ListTable from 'admin/components/list-table/ListTable.vue'
+    import CustomerModal from './CustomerModal.vue'
     import HTTP from 'admin/http.js'
-
     export default {
         name: 'Customers',
 
         components: {
-            ListTable
+            ListTable,
+            CustomerModal
         },
 
         data () {
             return {
+                customer: null,
                 bulkActions: [
                     {
                         key: 'trash',
@@ -72,16 +76,20 @@
                 actions : [
                     { key: 'edit', label: 'Edit' },
                     { key: 'trash', label: 'Delete' }
-                ]
+                ],
+                showModal: false,
+                countries: [],
+                states:[],
             };
         },
         created() {
             this.$on('modal-close', function() {
                 this.showModal = false;
+                this.customer = null;
             });
 
             this.fetchItems();
-
+            this.getCountries();
         },
 
         computed: {
@@ -117,7 +125,23 @@
                     //ready
                 } );
             },
-
+            getCountries() {
+                HTTP.get( 'customers/country' ).then( response => {
+                    let country = response.data.country;
+                    let states   = response.data.state;
+                    for ( let x in country ) {
+                        if( states[x] == undefined) {
+                            states[x] = [];
+                        }
+                        this.countries.push( { id: x, name: country[x], state: states[x] });
+                    }
+                    for ( let state in states ) {
+                        for ( let x in states[state] ) {
+                            this.states.push({ id: x, name: states[state][x] });
+                        }
+                    }
+                } );
+            },
             onActionClick(action, row, index) {
 
                 switch ( action ) {
@@ -130,7 +154,8 @@
                         break;
 
                     case 'edit':
-                        //TODO
+                        this.showModal = true;
+                        this.customer = row;
                         break;
 
                     default :
@@ -166,8 +191,9 @@
                 });
 
                 this.fetchItems();
-            }
-        }
+            },
+        },
+
 
     };
 </script>
