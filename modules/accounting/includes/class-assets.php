@@ -81,7 +81,7 @@ class Assets {
             'site_url'      => $site_url,
             'rest_nonce'    => $rest_nonce,
             'logout_url'    => $logout_url,
-            'acc_aaset_url' => ERP_ACCOUNTING_ASSETS,
+            'acct_assets'   => ERP_ACCOUNTING_ASSETS,
             'erp_assets'    => WPERP_ASSETS,
             'erp_acct_menus'=> $menus,
             'erp_acct_url'  => $acct_url

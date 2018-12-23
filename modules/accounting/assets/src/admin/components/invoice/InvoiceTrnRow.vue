@@ -47,7 +47,7 @@
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
 
     export default {
-        name: 'TransactionRow',
+        name: 'InvoiceTrnRow',
 
         props: {
             products: {

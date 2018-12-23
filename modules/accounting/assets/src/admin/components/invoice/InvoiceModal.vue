@@ -22,7 +22,7 @@
                     <div class="wperp-invoice-panel">
                         <div class="invoice-header">
                             <div class="invoice-logo">
-                                <img :src="acct_var.acc_aaset_url + '/images/dummy-logo.png'" alt="logo name">
+                                <img :src="acct_var.acct_assets + '/images/dummy-logo.png'" alt="logo name">
                             </div>
                             <div class="invoice-address">
                                 <address>
@@ -147,21 +147,21 @@
                     <div class="invoice-attachments d-print-none">
                         <h4>Attachments</h4>
                         <a class="attachment-item" href="#">
-                            <img :src="acct_var.acc_aaset_url + '/images/img-thumb.png'" alt="image name">
+                            <img :src="acct_var.acct_assets + '/images/img-thumb.png'" alt="image name">
                             <div class="attachment-meta">
                                 <span>File name with extension</span><br>
                                 <span class="text-muted">file size</span>
                             </div>
                         </a>
                         <a class="attachment-item" href="#">
-                            <img :src="acct_var.acc_aaset_url + '/images/doc-thumb.png'" alt="image name">
+                            <img :src="acct_var.acct_assets + '/images/doc-thumb.png'" alt="image name">
                             <div class="attachment-meta">
                                 <span>File name with extension</span><br>
                                 <span class="text-muted">file size</span>
                             </div>
                         </a>
                         <a class="attachment-item" href="#">
-                            <img :src="acct_var.acc_aaset_url + '/images/pdf-thumb.png'" alt="image name">
+                            <img :src="acct_var.acct_assets + '/images/pdf-thumb.png'" alt="image name">
                             <div class="attachment-meta">
                                 <span>File name with extension</span><br>
                                 <span class="text-muted">file size</span>

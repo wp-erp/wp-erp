@@ -477,34 +477,39 @@ function erp_acct_get_invoice_count() {
 }
 
 /**
- * Upload attachments
- * 
- * @return array
+ * Get invoices with due of a customer
+ *
+ * @return mixed
  */
-function erp_acct_upload_attachments($files) {
-    if ( ! function_exists( 'wp_handle_upload' ) ) {
-        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+
+function erp_acct_get_due_invoices_customer( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
-    $attachments = [];
-    $movefiles = [];
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_invoices WHERE ( people_id={$args['people_id']} ) AND (estimate!=1) AND (status!='paid') ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
-    // Formatting request for upload
-    for ( $i = 0; $i < count($files['name']); $i++ ) { 
-        $attachments[] = [
-            'name' => $files['name'][$i],
-            'type' => $files['type'][$i],
-            'tmp_name' => $files['tmp_name'][$i],
-            'error' => $files['error'][$i],
-            'size' => $files['size'][$i]
-        ]; 
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
     }
 
-    foreach ( $attachments as $attachment ) {
-        $movefiles[] = wp_handle_upload( $attachment, [ 'test_form' => false ] );
-    }
-
-    return $movefiles;
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
-
 
