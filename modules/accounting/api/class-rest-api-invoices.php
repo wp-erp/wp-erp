@@ -86,6 +86,17 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/due' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'due_invoices' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/attachments', [
             [
                 'methods'             => WP_REST_Server::CREATABLE,
@@ -299,6 +310,55 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         erp_acct_void_invoice( $id );
 
         return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Get a collection of invoices with due of a customer
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function due_invoices( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $args = [
+            'number' => $request['per_page'],
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+        ];
+
+        $formatted_items = [];
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $invoice_data  = erp_acct_get_due_invoices_customer( [ 'people_id' => $id ] );
+        $total_items   = count( $invoice_data );
+
+        foreach ( $invoice_data as $item ) {
+            if ( isset( $request['include'] ) ) {
+                $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+                if ( in_array( 'created_by', $include_params ) ) {
+                    $item['created_by'] = $this->get_user( $item['created_by'] );
+                }
+            }
+
+            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
+
+        $response->set_status( 200 );
+
+        return $response;
     }
 
     /**

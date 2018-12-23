@@ -61,12 +61,12 @@
                         </tr>
                     </thead>
                     <tbody id="test">
-                        <transaction-row
+                        <invoice-trn-row
                             :line="line"
                             :products="products"
                             :key="index"
                             v-for="(line, index) in transactionLines"
-                        ></transaction-row>
+                        ></invoice-trn-row>
 
                         <tr class="total-amount-row">
                             <td colspan="6" class="text-right">
@@ -124,7 +124,7 @@ import Datepicker from 'admin/components/base/Datepicker.vue'
 import FileUpload from 'admin/components/base/FileUpload.vue'
 import SubmitButton from 'admin/components/base/SubmitButton.vue'
 import InvoiceModal from 'admin/components/invoice/InvoiceModal.vue'
-import TransactionRow from 'admin/components/invoice/TransactionRow.vue'
+import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue'
 import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
 
 export default {
@@ -136,7 +136,7 @@ export default {
         FileUpload,
         SubmitButton,
         InvoiceModal,
-        TransactionRow,
+        InvoiceTrnRow,
         SelectCustomers
     },
 
@@ -154,7 +154,7 @@ export default {
             transactionLines: [{}],
             finalTotalAmount: 0,
 
-            invoiceModal: true,
+            invoiceModal: false,
             isWorking: false,
         }
     },

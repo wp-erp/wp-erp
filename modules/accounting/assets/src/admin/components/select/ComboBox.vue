@@ -22,15 +22,15 @@
 
 <script>
     export default {
+        name: 'ComboBox',
+
         data() {
-        	name: 'ComboBox',
-        	
             return {
                 selectedOption: {
                   name: '',
                 },
                 showMenu: false,
-                placeholderText: 'Please select an item',
+                placeholderText: '-Select-',
             }
         },
         props: {
