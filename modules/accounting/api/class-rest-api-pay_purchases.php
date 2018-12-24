@@ -95,11 +95,35 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_pay_purchases( $request ) {
-        $pay_purchase_data  = erp_acct_get_pay_purchases();
-        $pay_purchase_count = erp_acct_get_pay_purchase_count();
+        $args = [
+            'number' => $request['per_page'],
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+        ];
 
-        $response = rest_ensure_response( $pay_purchase_data );
-        $response = $this->format_collection_response( $response, $request, $pay_purchase_count );
+        $formatted_items = [];
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $pay_purchase_data  = erp_acct_get_pay_purchases();
+        $total_items = erp_acct_get_pay_purchases( [ 'count' => true, 'number' => -1 ] );
+
+        foreach ( $pay_purchase_data as $item ) {
+            if ( isset( $request['include'] ) ) {
+                $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+                if ( in_array( 'created_by', $include_params ) ) {
+                    $item['created_by'] = $this->get_user( $item['created_by'] );
+                }
+            }
+
+            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
 
         $response->set_status( 200 );
 

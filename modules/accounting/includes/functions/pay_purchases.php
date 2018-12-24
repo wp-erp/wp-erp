@@ -13,9 +13,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_pay_purchases() {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_pay_purchase", ARRAY_A );
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
 
-    return $rows;
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_pay_purchase ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
+
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**

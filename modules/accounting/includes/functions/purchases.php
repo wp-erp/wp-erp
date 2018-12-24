@@ -10,12 +10,35 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_purchases() {
+function erp_acct_get_purchases( $args = [] ) {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_purchase_account_details", ARRAY_A );
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
 
-    return $rows;
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_pay_purchase ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
+
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**
@@ -27,9 +50,49 @@ function erp_acct_get_purchases() {
 function erp_acct_get_purchase( $purchase_no ) {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_purchase_account_details WHERE voucher_no = {$purchase_no}", ARRAY_A );
+    $sql = "SELECT 
 
-    return $rows;
+    purchase.voucher_no,
+    purchase.vendor_id,
+    purchase.trn_date,
+    purchase.due_date,
+    purchase.amount,
+    purchase.vendor_name,
+    purchase.ref,
+    purchase.status,
+    purchase.attachments,
+    purchase.particulars,
+    purchase.created_at,
+    purchase.created_by,
+    purchase.updated_at,
+    purchase.updated_by,
+    
+    purchase_detail.product_id,
+    purchase_detail.qty,
+    purchase_detail.price,
+    purchase_detail.amount,
+    
+    purchase_acc_detail.purchase_no,
+    purchase_acc_detail.particulars,
+    purchase_acc_detail.debit,
+    purchase_acc_detail.credit,
+
+    product.name,
+    product.product_type_id,
+    product.category_id,
+    product.vendor,
+    product.cost_price,
+    product.sale_price
+    
+    FROM {$wpdb->prefix}erp_acct_purchase AS purchase
+    LEFT JOIN {$wpdb->prefix}erp_acct_purchase_details AS purchase_detail ON purchase.voucher_no = purchase_detail.trn_no
+    LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
+    LEFT JOIN {$wpdb->prefix}erp_acct_products AS product ON purchase_detail.product_id = product.id
+    WHERE purchase.voucher_no = {$purchase_no} LIMIT 1";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $row;
 }
 
 /**
