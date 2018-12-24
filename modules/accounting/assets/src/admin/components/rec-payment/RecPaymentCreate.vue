@@ -61,13 +61,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="invoice in invoices">
+                    <tr :key="key" v-for="(invoice,key) in invoices">
                         <td scope="row" class="col--id column-primary">{{invoice.id}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{invoice.due_date}}</td>
                         <td class="col--total" data-colname="Total">{{invoice.total}}</td>
                         <td class="col--due" data-colname="Due">$240.00</td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="text" name="amount" class="text-right"/>
+                            <input type="text" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a href="#"><i class="flaticon-trash"></i></a>
@@ -77,15 +77,14 @@
                     <tr class="total-amount-row">
                         <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
                         <td class="text-right" data-colname="Total Amount">
-                            <input type="text" name="amount" class="text-right" value="000000" readonly disabled/></td>
+                            <input type="text" class="text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
                         <td class="text-right"></td>
                     </tr>
                     </tbody>
                     <tr class="wperp-form-group">
                         <td colspan="9" style="text-align: left;">
-                            <label for="memo">Particulars</label>
-                            <textarea name="memo" id="memo" rows="4" class="wperp-form-field display-flex"
-                                      placeholder="Internal Information"></textarea>
+                            <label>Particulars</label>
+                            <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
                         </td>
                     </tr>
                     <tr class="add-attachment-row">
@@ -99,9 +98,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <combo-box :options="arrayOfOptions"
-                                       :selected="arrayOfOptions[0]"
-                            ></combo-box>
+                            <submit-button text="Receive Payment" @click.native="SubmitForPayment" :working="isWorking"></submit-button>
                         </td>
                     </tr>
                     </tfoot>
@@ -119,7 +116,7 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import RecPaymentModal from 'admin/components/rec-payment/RecPaymentModal.vue'
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
-    import ComboBox from 'admin/components/select/ComboBox.vue'
+    import SubmitButton from 'admin/components/base/SubmitButton.vue'
 
 
     export default {
@@ -130,7 +127,7 @@
             Datepicker,
             FileUpload,
             RecPaymentModal,
-            ComboBox,
+            SubmitButton,
             SelectCustomers
         },
 
@@ -145,45 +142,74 @@
 
                 invoices: [],
                 attachments: [],
+                totalAmounts:[],
                 finalTotalAmount: 0,
                 invoiceModal: false,
-                arrayOfOptions: [ { 'name': 'Submit for Approval' },  { 'name': 'Save and Add New' } ]
+                particulars: '',
+                isWorking: false,
             }
-        },
-
-        created() {
-            this.$root.$on('total-updated', amount => {
-                this.updateFinalAmount();
-            });
         },
 
         methods: {
             getDueInvoices() {
-                let customer_id = this.basic_fields.customer.id;
+                let customerId = this.basic_fields.customer.id,
+                    idx = 0,
+                    finalAmount = 0;
 
-                HTTP.get(`/invoices/due/${customer_id}`).then((response) => {
+                HTTP.get(`/invoices/due/${customerId}`).then((response) => {
                     response.data.forEach(element => {
                         this.invoices.push({
                             id: element.id,
                             voucher_no: element.voucher_no,
                             due_date: element.due_date,
-                            total: element.amount
+                            total: parseFloat(element.amount)
                         });
                     });
-                });
+                }).then(() => {
+                    this.invoices.forEach(element => {
+                        this.totalAmounts[idx++] = parseFloat(element.total);
+                        finalAmount += parseFloat(element.total);
+                    });
 
+                    this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+                });
             },
 
             updateFinalAmount() {
                 let finalAmount = 0;
 
-                this.transactionLines.forEach(element => {
-                    finalAmount += element.totalAmount;
+                this.totalAmounts.forEach(element => {
+                    finalAmount += parseFloat(element);
                 });
 
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+            },
+
+            SubmitForPayment() {
+                HTTP.post('/payments', {
+                    customer_id: this.basic_fields.customer.id,
+                    ref: this.basic_fields.trn_ref,
+                    trn_date: this.basic_fields.trans_date,
+                    due_date: this.basic_fields.due_date,
+                    line_items: this.invoices,
+                    attachments: this.attachments,
+                    type: 'payment',
+                    status: 'paid',
+                    particulars: this.particulars,
+                    trn_by: this.basic_fields.deposit_to,
+                }).then(res => {
+                    console.log(res.data);
+                }).then(() => {
+                    this.isWorking = false;
+                });
+            },
+        },
+
+        watch: {
+            finalTotalAmount( newval ) {
+                this.finalTotalAmount = newval;
             }
-        }
+        },
 
     }
 </script>
