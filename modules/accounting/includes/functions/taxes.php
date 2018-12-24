@@ -10,12 +10,35 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_taxes() {
-    global $wpdb;
-
-    $row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_tax", ARRAY_A );
-
-    return $row;
+function erp_acct_get_all_taxes( $args = [] ) {
+        global $wpdb;
+    
+        $defaults = [
+            'number'     => 20,
+            'offset'     => 0,
+            'orderby'    => 'id',
+            'order'      => 'DESC',
+            'count'      => false,
+            's'          => '',
+        ];
+    
+        $args = wp_parse_args( $args, $defaults );
+    
+        $limit = '';
+    
+        if ( $args['number'] != '-1' ) {
+            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+        }
+    
+        $sql = "SELECT";
+        $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+        $sql .= "FROM {$wpdb->prefix}erp_acct_tax ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    
+        if ( $args['count'] ) {
+            return $wpdb->get_var($sql);
+        }
+    
+        return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**
@@ -29,7 +52,24 @@ function erp_acct_get_all_taxes() {
 function erp_acct_get_tax( $tax_no ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_tax_items WHERE tax_id = {$tax_no} GROUP BY tax_id", ARRAY_A );
+    $sql = "Select
+
+    tax.name,
+    tax.tax_number,
+    tax.created_at,
+    tax.created_by,
+    tax.updated_at,
+    tax.updated_by,
+    
+    tax_item.tax_id,
+    tax_item.component_name,
+    tax_item.agency_name
+    
+    from {$wpdb->prefix}erp_acct_tax AS tax
+    Left JOIN {$wpdb->prefix}erp_acct_tax_items AS tax_item ON tax.id = tax_item.tax_id
+    WHERE tax.id = {$tax_no} LIMIT 1";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
 
     return $row;
 }
