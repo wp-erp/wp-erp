@@ -6,6 +6,12 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Receive Payment</h2>
+
+                    <!-- Print Dialogue -->
+
+                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showPaymentModal">
+                        <span>Print Receive Payment</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -39,6 +45,10 @@
                                 <option value="1">Cash</option>
                                 <option value="2">Bank</option>
                             </select>
+                        </div>
+                        <div class="wperp-col-xs-12">
+                            <label>Billing Address</label>
+                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                     </div>
                 </form>
@@ -106,7 +116,10 @@
             </div>
         </div>
 
-        <!-- End .wperp-crm-table -->
+        <template v-if="paymentModal">
+            <rec-payment-modal :basic_fields="basic_fields" :invoices="invoices" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
+        </template>
+
     </div>
 </template>
 
@@ -137,17 +150,25 @@
                     customer: '',
                     trn_ref: '',
                     payment_date: '',
-                    deposit_to: ''
+                    deposit_to: '',
+                    billing_address: ''
                 },
 
                 invoices: [],
                 attachments: [],
                 totalAmounts:[],
                 finalTotalAmount: 0,
-                invoiceModal: false,
+                paymentModal: false,
                 particulars: '',
                 isWorking: false,
+                acct_assets: erp_acct_var.acct_assets
             }
+        },
+
+        created() {
+            this.$root.$on('payment-modal-close', () => {
+                this.paymentModal = false;
+            });
         },
 
         methods: {
@@ -155,6 +176,11 @@
                 let customerId = this.basic_fields.customer.id,
                     idx = 0,
                     finalAmount = 0;
+
+                // for modal test. remove later
+                if ( undefined === customerId ) {
+                    customerId = 1;
+                }
 
                 HTTP.get(`/invoices/due/${customerId}`).then((response) => {
                     response.data.forEach(element => {
@@ -172,6 +198,17 @@
                     });
 
                     this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+                });
+            },
+
+            getCustomerAddress() {
+                let customer_id = this.basic_fields.customer.id;
+
+                HTTP.get(`/customers/${customer_id}`).then((response) => {
+                    // add more info
+                    this.basic_fields.billing_address =
+                        `Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
+                        City: ${response.data.billing.city}, Country: ${response.data.billing.country}`;
                 });
             },
 
@@ -203,11 +240,20 @@
                     this.isWorking = false;
                 });
             },
+
+            showPaymentModal() {
+                this.getDueInvoices();
+                this.paymentModal = true;
+            }
         },
 
         watch: {
             finalTotalAmount( newval ) {
                 this.finalTotalAmount = newval;
+            },
+
+            'basic_fields.customer'() {
+                this.getCustomerAddress();
             }
         },
 
