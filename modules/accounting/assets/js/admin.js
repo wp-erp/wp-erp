@@ -4248,6 +4248,19 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4270,27 +4283,41 @@ if (false) {(function () {
         customer: '',
         trn_ref: '',
         payment_date: '',
-        deposit_to: ''
+        deposit_to: '',
+        billing_address: ''
       },
       invoices: [],
       attachments: [],
       totalAmounts: [],
       finalTotalAmount: 0,
-      invoiceModal: false,
+      paymentModal: false,
       particulars: '',
-      isWorking: false
+      isWorking: false,
+      acct_assets: erp_acct_var.acct_assets
     };
+  },
+  created: function created() {
+    var _this = this;
+
+    this.$root.$on('payment-modal-close', function () {
+      _this.paymentModal = false;
+    });
   },
   methods: {
     getDueInvoices: function getDueInvoices() {
-      var _this = this;
+      var _this2 = this;
 
       var customerId = this.basic_fields.customer.id,
           idx = 0,
-          finalAmount = 0;
+          finalAmount = 0; // for modal test. remove later
+
+      if (undefined === customerId) {
+        customerId = 1;
+      }
+
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/invoices/due/".concat(customerId)).then(function (response) {
         response.data.forEach(function (element) {
-          _this.invoices.push({
+          _this2.invoices.push({
             id: element.id,
             voucher_no: element.voucher_no,
             due_date: element.due_date,
@@ -4298,12 +4325,21 @@ if (false) {(function () {
           });
         });
       }).then(function () {
-        _this.invoices.forEach(function (element) {
-          _this.totalAmounts[idx++] = parseFloat(element.total);
+        _this2.invoices.forEach(function (element) {
+          _this2.totalAmounts[idx++] = parseFloat(element.total);
           finalAmount += parseFloat(element.total);
         });
 
-        _this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+        _this2.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+      });
+    },
+    getCustomerAddress: function getCustomerAddress() {
+      var _this3 = this;
+
+      var customer_id = this.basic_fields.customer.id;
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/customers/".concat(customer_id)).then(function (response) {
+        // add more info
+        _this3.basic_fields.billing_address = "Street: ".concat(response.data.billing.street_1, " ").concat(response.data.billing.street_2, ",\n                    City: ").concat(response.data.billing.city, ", Country: ").concat(response.data.billing.country);
       });
     },
     updateFinalAmount: function updateFinalAmount() {
@@ -4314,7 +4350,7 @@ if (false) {(function () {
       this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
     },
     SubmitForPayment: function SubmitForPayment() {
-      var _this2 = this;
+      var _this4 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/payments', {
         customer_id: this.basic_fields.customer.id,
@@ -4330,13 +4366,20 @@ if (false) {(function () {
       }).then(function (res) {
         console.log(res.data);
       }).then(function () {
-        _this2.isWorking = false;
+        _this4.isWorking = false;
       });
+    },
+    showPaymentModal: function showPaymentModal() {
+      this.getDueInvoices();
+      this.paymentModal = true;
     }
   },
   watch: {
     finalTotalAmount: function finalTotalAmount(newval) {
       this.finalTotalAmount = newval;
+    },
+    'basic_fields.customer': function basic_fieldsCustomer() {
+      this.getCustomerAddress();
     }
   }
 });
@@ -4485,46 +4528,21 @@ if (false) {(function () {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["a"] = ({
-  name: "RecPaymentModal"
+  name: "RecPaymentModal",
+  props: {
+    basic_fields: Object,
+    invoices: Array,
+    attachments: Array,
+    finalTotalAmount: [String, Number],
+    assets_url: String
+  },
+  methods: {
+    inside: function inside() {},
+    outside: function outside() {
+      this.$root.$emit('payment-modal-close');
+    }
+  }
 });
 
 /***/ }),
@@ -10766,85 +10784,131 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "wperp-modal wperp-invoice-modal wperp-custom-scroll",
-      attrs: { id: "wperp-invoice-modal", role: "dialog" }
+      staticClass:
+        "wperp-modal wperp-modal-open wperp-invoice-modal wperp-custom-scroll",
+      attrs: { role: "dialog" }
     },
     [
-      _c("div", { staticClass: "wperp-modal-dialog" }, [
-        _c("div", { staticClass: "wperp-modal-content" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "wperp-modal-body" }, [
-            _c("div", { staticClass: "wperp-invoice-panel" }, [
-              _c("div", { staticClass: "invoice-header" }, [
-                _c("div", { staticClass: "invoice-logo" }, [
-                  _c("img", {
-                    attrs: {
-                      src: _vm.acct_var.acct_assets + "/images/dummy-logo.png",
-                      alt: "logo name"
-                    }
-                  })
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "click-outside",
+              rawName: "v-click-outside",
+              value: _vm.outside,
+              expression: "outside"
+            }
+          ],
+          staticClass: "wperp-modal-dialog",
+          on: { click: _vm.inside }
+        },
+        [
+          _c("div", { staticClass: "wperp-modal-content" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "wperp-modal-body" }, [
+              _c("div", { staticClass: "wperp-invoice-panel" }, [
+                _c("div", { staticClass: "invoice-header" }, [
+                  _c("div", { staticClass: "invoice-logo" }, [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.assets_url + "/images/dummy-logo.png",
+                        alt: "logo name"
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(1)
                 ]),
                 _vm._v(" "),
-                _vm._m(1)
+                _vm._m(2),
+                _vm._v(" "),
+                _c("div", { staticClass: "wperp-invoice-table" }, [
+                  _c(
+                    "table",
+                    {
+                      staticClass: "wperp-table wperp-form-table invoice-table"
+                    },
+                    [
+                      _vm._m(3),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.invoices, function(invoice, key) {
+                          return _c("tr", { key: key }, [
+                            _c("td", [_vm._v(_vm._s(invoice.id))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(invoice.due_date))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(invoice.total))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v("$240.00")]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(invoice.total))])
+                          ])
+                        }),
+                        0
+                      ),
+                      _vm._v(" "),
+                      _vm._m(4)
+                    ]
+                  )
+                ])
               ]),
               _vm._v(" "),
-              _vm._m(2),
-              _vm._v(" "),
-              _vm._m(3)
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "invoice-attachments d-print-none" }, [
-              _c("h4", [_vm._v("Attachments")]),
-              _vm._v(" "),
-              _c(
-                "a",
-                { staticClass: "attachment-item", attrs: { href: "#" } },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: _vm.acct_var.acct_assets + "/images/img-thumb.png",
-                      alt: "image name"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm._m(4)
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                { staticClass: "attachment-item", attrs: { href: "#" } },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: _vm.acct_var.acct_assets + "/images/doc-thumb.png",
-                      alt: "image name"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm._m(5)
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                { staticClass: "attachment-item", attrs: { href: "#" } },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: _vm.acct_var.acct_assets + "/images/pdf-thumb.png",
-                      alt: "image name"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm._m(6)
-                ]
-              )
+              _c("div", { staticClass: "invoice-attachments d-print-none" }, [
+                _c("h4", [_vm._v("Attachments")]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { staticClass: "attachment-item", attrs: { href: "#" } },
+                  [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.assets_url + "/images/img-thumb.png",
+                        alt: "image name"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(5)
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { staticClass: "attachment-item", attrs: { href: "#" } },
+                  [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.assets_url + "/images/doc-thumb.png",
+                        alt: "image name"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(6)
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { staticClass: "attachment-item", attrs: { href: "#" } },
+                  [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.assets_url + "/images/pdf-thumb.png",
+                        alt: "image name"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(7)
+                  ]
+                )
+              ])
             ])
           ])
-        ])
-      ])
+        ]
+      )
     ]
   )
 }
@@ -10854,7 +10918,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "wperp-modal-header" }, [
-      _c("h4", [_vm._v("\n                    Invoice\n                ")]),
+      _c("h4", [_vm._v("\n                    Payment\n                ")]),
       _vm._v(" "),
       _c("div", { staticClass: "d-print-none" }, [
         _c(
@@ -10888,7 +10952,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "invoice-address" }, [
       _c("address", [
-        _c("strong", [_vm._v("Amazon Limited")]),
+        _c("strong", [_vm._v("Google LLC.")]),
         _c("br"),
         _vm._v("\n                                983 Aiden Roads Suite 062"),
         _c("br"),
@@ -10914,7 +10978,7 @@ var staticRenderFns = [
           _c("h5", [_vm._v("Bill to:")]),
           _vm._v(" "),
           _c("div", { staticClass: "persons-info" }, [
-            _c("strong", [_vm._v("Md Ashraf Hossain")]),
+            _c("strong", [_vm._v("A Customer")]),
             _c("br"),
             _vm._v(
               "\n                                    983 Aiden Roads Suite 062"
@@ -10935,19 +10999,13 @@ var staticRenderFns = [
         _c("div", { staticClass: "wperp-col-sm-6" }, [
           _c("table", { staticClass: "invoice-info" }, [
             _c("tr", [
-              _c("th", [_vm._v("Invoice No.")]),
+              _c("th", [_vm._v("Reference No")]),
               _vm._v(" "),
-              _c("td", [_vm._v("INV-0001")])
+              _c("td", [_vm._v("PAYMENT-0001")])
             ]),
             _vm._v(" "),
             _c("tr", [
-              _c("th", [_vm._v("Invoice Date:")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("17-10-2018")])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("Due Date:")]),
+              _c("th", [_vm._v("Payment Date:")]),
               _vm._v(" "),
               _c("td", [_vm._v("17-10-2018")])
             ]),
@@ -10955,7 +11013,13 @@ var staticRenderFns = [
             _c("tr", [
               _c("th", [_vm._v("Amount Due:")]),
               _vm._v(" "),
-              _c("td", [_vm._v("17-10-2018")])
+              _c("td", [_vm._v("2000")])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("Deposit to")]),
+              _vm._v(" "),
+              _c("td", [_vm._v("Bank")])
             ])
           ])
         ])
@@ -10966,133 +11030,42 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wperp-invoice-table" }, [
-      _c(
-        "table",
-        { staticClass: "wperp-table wperp-form-table invoice-table" },
-        [
-          _c("thead", [
-            _c("tr", [
-              _c("th", [_vm._v("Description")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("City")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("Unit Price")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("Discount")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("Tax")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("Tax Amount")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("Amount")])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("tbody", [
-            _c("tr", [
-              _c("th", [_vm._v("Buy Fabrics")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$1500.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("0%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$0.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$15,000.00")])
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Invoice ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Due Date")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Total")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Due")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Amount")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tfoot", [
+      _c("tr", [
+        _c("td", { attrs: { colspan: "7" } }, [
+          _c("ul", [
+            _c("li", [
+              _c("span", [_vm._v("Subtotal:")]),
+              _vm._v(" $15,000.00")
             ]),
             _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("Buy Fabrics")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$1500.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("0%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$0.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$15,000.00")])
-            ]),
+            _c("li", [_c("span", [_vm._v("Total:")]), _vm._v(" $15,000.00")]),
             _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("Buy Fabrics")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$1500.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("0%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$0.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$15,000.00")])
-            ]),
-            _c("tr", [
-              _c("th", [_vm._v("Buy Fabrics")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$1500.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("0%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$0.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$15,000.00")])
-            ]),
-            _c("tr", [
-              _c("th", [_vm._v("Buy Fabrics")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$1500.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("0%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$0.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$15,000.00")])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("tfoot", [
-            _c("tr", [
-              _c("td", { attrs: { colspan: "7" } }, [
-                _c("ul", [
-                  _c("li", [
-                    _c("span", [_vm._v("Subtotal:")]),
-                    _vm._v(" $15,000.00")
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("span", [_vm._v("Total:")]),
-                    _vm._v(" $15,000.00")
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [
-                    _c("span", [_vm._v("Total Related Payments:")]),
-                    _vm._v(" $15,000.00")
-                  ])
-                ])
-              ])
+            _c("li", [
+              _c("span", [_vm._v("Total Related Payments:")]),
+              _vm._v(" $15,000.00")
             ])
           ])
-        ]
-      )
+        ])
+      ])
     ])
   },
   function() {
@@ -11148,60 +11121,191 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wperp-container" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "wperp-panel wperp-panel-default",
-        staticStyle: { "padding-bottom": "0" }
-      },
-      [
-        _c("div", { staticClass: "wperp-panel-body" }, [
-          _c(
-            "form",
-            {
-              staticClass: "wperp-form",
-              attrs: { action: "", method: "post" }
-            },
-            [
-              _c("div", { staticClass: "wperp-row" }, [
-                _c("div", { staticClass: "wperp-col-sm-3" }, [
-                  _c(
-                    "div",
-                    { staticClass: "wperp-form-group" },
-                    [
-                      _c("select-customers", {
-                        on: { input: _vm.getDueInvoices },
-                        model: {
-                          value: _vm.basic_fields.customer,
-                          callback: function($$v) {
-                            _vm.$set(_vm.basic_fields, "customer", $$v)
-                          },
-                          expression: "basic_fields.customer"
+  return _c(
+    "div",
+    { staticClass: "wperp-container" },
+    [
+      _c("div", { staticClass: "content-header-section separator" }, [
+        _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
+          _c("div", { staticClass: "wperp-col" }, [
+            _c("h2", { staticClass: "content-header__title" }, [
+              _vm._v("Receive Payment")
+            ]),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                staticClass: "wperp-btn btn--primary",
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.showPaymentModal($event)
+                  }
+                }
+              },
+              [_c("span", [_vm._v("Print Receive Payment")])]
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "wperp-panel wperp-panel-default",
+          staticStyle: { "padding-bottom": "0" }
+        },
+        [
+          _c("div", { staticClass: "wperp-panel-body" }, [
+            _c(
+              "form",
+              {
+                staticClass: "wperp-form",
+                attrs: { action: "", method: "post" }
+              },
+              [
+                _c("div", { staticClass: "wperp-row" }, [
+                  _c("div", { staticClass: "wperp-col-sm-3" }, [
+                    _c(
+                      "div",
+                      { staticClass: "wperp-form-group" },
+                      [
+                        _c("select-customers", {
+                          on: { input: _vm.getDueInvoices },
+                          model: {
+                            value: _vm.basic_fields.customer,
+                            callback: function($$v) {
+                              _vm.$set(_vm.basic_fields, "customer", $$v)
+                            },
+                            expression: "basic_fields.customer"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-col-sm-3" }, [
+                    _c("div", { staticClass: "wperp-form-group" }, [
+                      _vm._m(0),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.basic_fields.trn_ref,
+                            expression: "basic_fields.trn_ref"
+                          }
+                        ],
+                        attrs: { type: "text" },
+                        domProps: { value: _vm.basic_fields.trn_ref },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.basic_fields,
+                              "trn_ref",
+                              $event.target.value
+                            )
+                          }
                         }
                       })
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-col-sm-3" }, [
-                  _c("div", { staticClass: "wperp-form-group" }, [
-                    _vm._m(1),
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-col-sm-3" }, [
+                    _c(
+                      "div",
+                      { staticClass: "wperp-form-group" },
+                      [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _c("datepicker", {
+                          model: {
+                            value: _vm.basic_fields.payment_date,
+                            callback: function($$v) {
+                              _vm.$set(_vm.basic_fields, "payment_date", $$v)
+                            },
+                            expression: "basic_fields.payment_date"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-col-sm-3" }, [
+                    _c("label", [_vm._v("Deposit to")]),
                     _vm._v(" "),
-                    _c("input", {
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.basic_fields.deposit_to,
+                            expression: "basic_fields.deposit_to"
+                          }
+                        ],
+                        staticClass: "wperp-form-field",
+                        attrs: { name: "deposit-to" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.basic_fields,
+                              "deposit_to",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { value: "0" } }, [
+                          _vm._v("-Select-")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "1" } }, [
+                          _vm._v("Cash")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "2" } }, [
+                          _vm._v("Bank")
+                        ])
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-col-xs-12" }, [
+                    _c("label", [_vm._v("Billing Address")]),
+                    _vm._v(" "),
+                    _c("textarea", {
                       directives: [
                         {
                           name: "model",
-                          rawName: "v-model",
-                          value: _vm.basic_fields.trn_ref,
-                          expression: "basic_fields.trn_ref"
+                          rawName: "v-model.trim",
+                          value: _vm.basic_fields.billing_address,
+                          expression: "basic_fields.billing_address",
+                          modifiers: { trim: true }
                         }
                       ],
-                      attrs: { type: "text" },
-                      domProps: { value: _vm.basic_fields.trn_ref },
+                      staticClass: "wperp-form-field",
+                      attrs: { rows: "3", placeholder: "Type here" },
+                      domProps: { value: _vm.basic_fields.billing_address },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
@@ -11209,141 +11313,124 @@ var render = function() {
                           }
                           _vm.$set(
                             _vm.basic_fields,
-                            "trn_ref",
-                            $event.target.value
+                            "billing_address",
+                            $event.target.value.trim()
                           )
+                        },
+                        blur: function($event) {
+                          _vm.$forceUpdate()
                         }
                       }
                     })
                   ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-col-sm-3" }, [
-                  _c(
-                    "div",
-                    { staticClass: "wperp-form-group" },
-                    [
-                      _vm._m(2),
-                      _vm._v(" "),
-                      _c("datepicker", {
-                        model: {
-                          value: _vm.basic_fields.payment_date,
-                          callback: function($$v) {
-                            _vm.$set(_vm.basic_fields, "payment_date", $$v)
-                          },
-                          expression: "basic_fields.payment_date"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-col-sm-3" }, [
-                  _c("label", [_vm._v("Deposit to")]),
-                  _vm._v(" "),
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.basic_fields.deposit_to,
-                          expression: "basic_fields.deposit_to"
-                        }
-                      ],
-                      staticClass: "wperp-form-field",
-                      attrs: { name: "deposit-to" },
-                      on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.basic_fields,
-                            "deposit_to",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
-                      }
-                    },
-                    [
-                      _c("option", { attrs: { value: "0" } }, [
-                        _vm._v("-Select-")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "1" } }, [_vm._v("Cash")]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "2" } }, [_vm._v("Bank")])
-                    ]
-                  )
                 ])
-              ])
-            ]
-          )
-        ])
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "wperp-table-responsive" }, [
-      _c("div", { staticClass: "table-container" }, [
-        _c("table", { staticClass: "wperp-table wperp-form-table" }, [
-          _vm._m(3),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            [
-              _vm._l(_vm.invoices, function(invoice, key) {
-                return _c("tr", { key: key }, [
+              ]
+            )
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "wperp-table-responsive" }, [
+        _c("div", { staticClass: "table-container" }, [
+          _c("table", { staticClass: "wperp-table wperp-form-table" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              [
+                _vm._l(_vm.invoices, function(invoice, key) {
+                  return _c("tr", { key: key }, [
+                    _c(
+                      "td",
+                      {
+                        staticClass: "col--id column-primary",
+                        attrs: { scope: "row" }
+                      },
+                      [_vm._v(_vm._s(invoice.id))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        staticClass: "col--due-date",
+                        attrs: { "data-colname": "Due Date" }
+                      },
+                      [_vm._v(_vm._s(invoice.due_date))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        staticClass: "col--total",
+                        attrs: { "data-colname": "Total" }
+                      },
+                      [_vm._v(_vm._s(invoice.total))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        staticClass: "col--due",
+                        attrs: { "data-colname": "Due" }
+                      },
+                      [_vm._v("$240.00")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        staticClass: "col--amount",
+                        attrs: { "data-colname": "Amount" }
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.totalAmounts[key],
+                              expression: "totalAmounts[key]"
+                            }
+                          ],
+                          staticClass: "text-right",
+                          attrs: { type: "text", name: "amount" },
+                          domProps: { value: _vm.totalAmounts[key] },
+                          on: {
+                            keyup: _vm.updateFinalAmount,
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.totalAmounts,
+                                key,
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm._m(3, true)
+                  ])
+                }),
+                _vm._v(" "),
+                _c("tr", { staticClass: "total-amount-row" }, [
                   _c(
                     "td",
                     {
-                      staticClass: "col--id column-primary",
-                      attrs: { scope: "row" }
+                      staticClass: "text-right pr-0 hide-sm",
+                      attrs: { colspan: "4" }
                     },
-                    [_vm._v(_vm._s(invoice.id))]
+                    [_vm._v("Total Amount")]
                   ),
                   _vm._v(" "),
                   _c(
                     "td",
                     {
-                      staticClass: "col--due-date",
-                      attrs: { "data-colname": "Due Date" }
-                    },
-                    [_vm._v(_vm._s(invoice.due_date))]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      staticClass: "col--total",
-                      attrs: { "data-colname": "Total" }
-                    },
-                    [_vm._v(_vm._s(invoice.total))]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      staticClass: "col--due",
-                      attrs: { "data-colname": "Due" }
-                    },
-                    [_vm._v("$240.00")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      staticClass: "col--amount",
-                      attrs: { "data-colname": "Amount" }
+                      staticClass: "text-right",
+                      attrs: { "data-colname": "Total Amount" }
                     },
                     [
                       _c("input", {
@@ -11351,192 +11438,151 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.totalAmounts[key],
-                            expression: "totalAmounts[key]"
+                            value: _vm.finalTotalAmount,
+                            expression: "finalTotalAmount"
                           }
                         ],
                         staticClass: "text-right",
-                        attrs: { type: "text", name: "amount" },
-                        domProps: { value: _vm.totalAmounts[key] },
+                        attrs: {
+                          type: "text",
+                          name: "finalamount",
+                          readonly: "",
+                          disabled: ""
+                        },
+                        domProps: { value: _vm.finalTotalAmount },
                         on: {
-                          keyup: _vm.updateFinalAmount,
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.$set(_vm.totalAmounts, key, $event.target.value)
+                            _vm.finalTotalAmount = $event.target.value
                           }
                         }
                       })
                     ]
                   ),
                   _vm._v(" "),
-                  _vm._m(4, true)
+                  _c("td", { staticClass: "text-right" })
                 ])
-              }),
-              _vm._v(" "),
-              _c("tr", { staticClass: "total-amount-row" }, [
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _c("tr", { staticClass: "wperp-form-group" }, [
+              _c(
+                "td",
+                {
+                  staticStyle: { "text-align": "left" },
+                  attrs: { colspan: "9" }
+                },
+                [
+                  _c("label", [_vm._v("Particulars")]),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.particulars,
+                        expression: "particulars"
+                      }
+                    ],
+                    staticClass: "wperp-form-field display-flex",
+                    attrs: { rows: "4", placeholder: "Internal Information" },
+                    domProps: { value: _vm.particulars },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.particulars = $event.target.value
+                      }
+                    }
+                  })
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("tr", { staticClass: "add-attachment-row" }, [
+              _c(
+                "td",
+                {
+                  staticStyle: { "text-align": "left" },
+                  attrs: { colspan: "9" }
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "attachment-container" },
+                    [
+                      _c("label", { staticClass: "col--attachement" }, [
+                        _vm._v("Attachment")
+                      ]),
+                      _vm._v(" "),
+                      _c("file-upload", {
+                        attrs: { url: "/invoices/attachments" },
+                        model: {
+                          value: _vm.attachments,
+                          callback: function($$v) {
+                            _vm.attachments = $$v
+                          },
+                          expression: "attachments"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("tfoot", [
+              _c("tr", [
                 _c(
                   "td",
                   {
-                    staticClass: "text-right pr-0 hide-sm",
-                    attrs: { colspan: "4" }
-                  },
-                  [_vm._v("Total Amount")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    staticClass: "text-right",
-                    attrs: { "data-colname": "Total Amount" }
+                    staticStyle: { "text-align": "right" },
+                    attrs: { colspan: "9" }
                   },
                   [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.finalTotalAmount,
-                          expression: "finalTotalAmount"
-                        }
-                      ],
-                      staticClass: "text-right",
+                    _c("submit-button", {
                       attrs: {
-                        type: "text",
-                        name: "finalamount",
-                        readonly: "",
-                        disabled: ""
+                        text: "Receive Payment",
+                        working: _vm.isWorking
                       },
-                      domProps: { value: _vm.finalTotalAmount },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.finalTotalAmount = $event.target.value
+                      nativeOn: {
+                        click: function($event) {
+                          return _vm.SubmitForPayment($event)
                         }
-                      }
-                    })
-                  ]
-                ),
-                _vm._v(" "),
-                _c("td", { staticClass: "text-right" })
-              ])
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c("tr", { staticClass: "wperp-form-group" }, [
-            _c(
-              "td",
-              {
-                staticStyle: { "text-align": "left" },
-                attrs: { colspan: "9" }
-              },
-              [
-                _c("label", [_vm._v("Particulars")]),
-                _vm._v(" "),
-                _c("textarea", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.particulars,
-                      expression: "particulars"
-                    }
-                  ],
-                  staticClass: "wperp-form-field display-flex",
-                  attrs: { rows: "4", placeholder: "Internal Information" },
-                  domProps: { value: _vm.particulars },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.particulars = $event.target.value
-                    }
-                  }
-                })
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("tr", { staticClass: "add-attachment-row" }, [
-            _c(
-              "td",
-              {
-                staticStyle: { "text-align": "left" },
-                attrs: { colspan: "9" }
-              },
-              [
-                _c(
-                  "div",
-                  { staticClass: "attachment-container" },
-                  [
-                    _c("label", { staticClass: "col--attachement" }, [
-                      _vm._v("Attachment")
-                    ]),
-                    _vm._v(" "),
-                    _c("file-upload", {
-                      attrs: { url: "/invoices/attachments" },
-                      model: {
-                        value: _vm.attachments,
-                        callback: function($$v) {
-                          _vm.attachments = $$v
-                        },
-                        expression: "attachments"
                       }
                     })
                   ],
                   1
                 )
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("tfoot", [
-            _c("tr", [
-              _c(
-                "td",
-                {
-                  staticStyle: { "text-align": "right" },
-                  attrs: { colspan: "9" }
-                },
-                [
-                  _c("submit-button", {
-                    attrs: { text: "Receive Payment", working: _vm.isWorking },
-                    nativeOn: {
-                      click: function($event) {
-                        return _vm.SubmitForPayment($event)
-                      }
-                    }
-                  })
-                ],
-                1
-              )
+              ])
             ])
           ])
         ])
-      ])
-    ])
-  ])
+      ]),
+      _vm._v(" "),
+      _vm.paymentModal
+        ? [
+            _c("rec-payment-modal", {
+              attrs: {
+                basic_fields: _vm.basic_fields,
+                invoices: _vm.invoices,
+                attachments: _vm.attachments,
+                finalTotalAmount: _vm.finalTotalAmount,
+                assets_url: _vm.acct_assets
+              }
+            })
+          ]
+        : _vm._e()
+    ],
+    2
+  )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "content-header-section separator" }, [
-      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
-        _c("div", { staticClass: "wperp-col" }, [
-          _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v("Receive Payment")
-          ])
-        ])
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
