@@ -3,9 +3,9 @@
     <div class="app-customers">
         <h2 class="add-new-customer">
             <span>Customers</span>
-            <a href="#" id="erp-customer-new" @click.prevent="showModal = true">+ Add New Customer</a>
+            <a href="" id="erp-customer-new" @click.prevent="showModal = true">+ Add New Customer</a>
         </h2>
-        <customer-modal v-if="showModal" :customer.sync="customer" :countries="countries" :state="states"></customer-modal>
+        <people-modal v-if="showModal" :customer.sync="customer" :countries="countries" :state="states"></people-modal>
         <list-table
             tableClass="wperp-table table-striped table-dark widefat"
             action-column="actions"
@@ -38,14 +38,14 @@
 
 <script>
     import ListTable from 'admin/components/list-table/ListTable.vue'
-    import CustomerModal from './CustomerModal.vue'
+    import PeopleModal from './PeopleModal.vue'
     import HTTP from 'admin/http.js'
     export default {
         name: 'Customers',
 
         components: {
             ListTable,
-            CustomerModal
+            PeopleModal
         },
 
         data () {

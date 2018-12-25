@@ -4,10 +4,7 @@ import DummyComponent from 'admin/components/DummyComponent.vue'
 
 import Dashboard from 'admin/components/Dashboard.vue'
 import ChartOfAccounts from 'admin/components/ChartOfAccounts.vue'
-import Customers from 'admin/components/people/Customers.vue'
-import Vendors from 'admin/components/people/Vendors.vue'
 import Employees from 'admin/components/people/Employees.vue'
-import CustomerDetails from 'admin/components/people/CustomerDetails.vue'
 
 import Products from 'admin/components/products/Products.vue'
 import ProductCategory from 'admin/components/product-category/ProductCategory.vue'
@@ -15,6 +12,8 @@ import ProductCategory from 'admin/components/product-category/ProductCategory.v
 import InvoiceCreate from 'admin/components/invoice/InvoiceCreate.vue'
 
 import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue'
+import People from 'admin/components/people/People.vue'
+import PeopleDetails from 'admin/components/people/PeopleDetails.vue'
 
 
 
@@ -41,17 +40,17 @@ export default new Router({
                 {
                     path : '',
                     name : 'Customers',
-                    component: Customers,
+                    component: People,
                 },
                 {
                     path : 'page/:page',
                     name : 'PaginateCustomers',
-                    component: Customers,
+                    component: People,
                 },
                 {
                     path : 'view/:id',
                     name : 'CustomerDetails',
-                    component: CustomerDetails,
+                    component: PeopleDetails,
                 }
             ]
         },
@@ -62,12 +61,17 @@ export default new Router({
                 {
                     path: '',
                     name: 'Vendors',
-                    component: Vendors,
+                    component: People,
+                },
+                {
+                    path : 'view/:id',
+                    name : 'VendorDetails',
+                    component: PeopleDetails,
                 },
                 {
                     path: 'page/:page',
                     name: 'PaginateVendors',
-                    component: Vendors,
+                    component: People,
                 },
             ]
         },

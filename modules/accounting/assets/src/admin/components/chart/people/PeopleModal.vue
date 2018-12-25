@@ -5,7 +5,8 @@
                 <div class="wperp-modal-content">
                     <!-- modal body title -->
                     <div class="wperp-modal-header">
-                        <h3>Add Customer</h3>
+                        <h3 v-if="!people">Add new {{ title }}</h3>
+                        <h3 v-else>Update {{ title }}</h3>
                         <!-- <span class="modal-close">
                             <i class="flaticon-close" @click="$parent.$emit('modal-close')"></i></span> -->
                     </div>
@@ -16,19 +17,19 @@
                             <div class="wperp-row wperp-gutter-20">
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="first_name">First Name <span class="required-sign">*</span></label>
-                                    <input type="text" v-model="customerFields.first_name" id="first_name" class="wperp-form-field" placeholder="First Name">
+                                    <input type="text" v-model="peopleFields.first_name" id="first_name" class="wperp-form-field" placeholder="First Name">
                                 </div>
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="last_name">Last Name <span class="required-sign">*</span></label>
-                                    <input type="text" v-model="customerFields.last_name" id="last_name" class="wperp-form-field" placeholder="Last Name">
+                                    <input type="text" v-model="peopleFields.last_name" id="last_name" class="wperp-form-field" placeholder="Last Name">
                                 </div>
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="email">Email</label>
-                                    <input type="email" v-model="customerFields.email" id="email" class="wperp-form-field" placeholder="you@domain.com">
+                                    <input type="email" v-model="peopleFields.email" id="email" class="wperp-form-field" placeholder="you@domain.com">
                                 </div>
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="mobile">Mobile</label>
-                                    <input type="tel" v-model="customerFields.mobile" id="mobile" class="wperp-form-field">
+                                    <input type="tel" v-model="peopleFields.mobile" id="mobile" class="wperp-form-field">
                                 </div>
                             </div>
 
@@ -37,57 +38,57 @@
                                 <div class="wperp-row wperp-gutter-20">
                                     <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                         <label for="company">Company</label>
-                                        <input type="text" v-model="customerFields.company" id="company" class="wperp-form-field" placeholder="ABC Corporation">
+                                        <input type="text" v-model="peopleFields.company" id="company" class="wperp-form-field" placeholder="ABC Corporation">
                                     </div>
                                     <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                         <label for="phone">Phone</label>
-                                        <input type="tel" v-model="customerFields.phone" id="phone" class="wperp-form-field" placeholder="(123) 456-789">
+                                        <input type="tel" v-model="peopleFields.phone" id="phone" class="wperp-form-field" placeholder="(123) 456-789">
                                     </div>
                                     <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                         <label for="website">Website</label>
-                                        <input type="tel" v-model="customerFields.website" id="website" class="wperp-form-field" placeholder="www.domain.com">
+                                        <input type="tel" v-model="peopleFields.website" id="website" class="wperp-form-field" placeholder="www.domain.com">
                                     </div>
                                     <div class="wperp-col-xs-12 wperp-form-group">
                                         <label for="note">Note</label>
-                                        <textarea v-model="customerFields.notes" id="note" cols="30" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
+                                        <textarea v-model="peopleFields.notes" id="note" cols="30" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                                     </div>
                                     <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                         <label for="fax">Fax</label>
-                                        <input type="text" v-model="customerFields.fax" id="fax" class="wperp-form-field" placeholder="Type here">
+                                        <input type="text" v-model="peopleFields.fax" id="fax" class="wperp-form-field" placeholder="Type here">
                                     </div>
                                     <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                         <label for="street1">Street 1</label>
-                                        <input type="text" v-model="customerFields.street_1" id="street1" class="wperp-form-field" placeholder="Street 1">
+                                        <input type="text" v-model="peopleFields.street_1" id="street1" class="wperp-form-field" placeholder="Street 1">
                                     </div>
                                     <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                         <label for="street2">Street 2</label>
-                                        <input type="text" v-model="customerFields.street_2" id="street2" class="wperp-form-field" placeholder="Street 2">
+                                        <input type="text" v-model="peopleFields.street_2" id="street2" class="wperp-form-field" placeholder="Street 2">
                                     </div>
                                     <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                         <label for="city">City</label>
-                                        <input type="text" v-model="customerFields.city" id="city" class="wperp-form-field" placeholder="City/Town">
+                                        <input type="text" v-model="peopleFields.city" id="city" class="wperp-form-field" placeholder="City/Town">
                                     </div>
                                     <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                         <label for="country">Country</label>
                                         <div class="with-multiselect">
                                             <multi-select
-                                            v-model="customerFields.country"
+                                            v-model="peopleFields.country"
                                             :options="countries"
-                                            :multiple="false" @input="getState( customerFields.country )" />
+                                            :multiple="false" @input="getState( peopleFields.country )" />
                                         </div>
                                     </div>
                                     <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                         <label for="state">Province/State</label>
                                         <div class="with-multiselect">
                                             <multi-select
-                                            v-model="customerFields.state"
+                                            v-model="peopleFields.state"
                                             :options="states"
                                             :multiple="false" />
                                         </div>
                                     </div>
                                     <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                         <label for="post_code">Post Code</label>
-                                        <input type="text" v-model="customerFields.postal_code" id="post_code" class="wperp-form-field" placeholder="Post Code">
+                                        <input type="text" v-model="peopleFields.postal_code" id="post_code" class="wperp-form-field" placeholder="Post Code">
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +106,7 @@
                         <div class="wperp-modal-footer pt-0">
                             <!-- buttons -->
                             <div class="buttons-wrapper text-right">
-                                <button v-if="!customer" class="wperp-btn btn--primary" type="submit" @click.prevent="saveCustomer">Add New</button>
+                                <button v-if="!people" class="wperp-btn btn--primary" type="submit" @click.prevent="saveCustomer">Add New</button>
                                 <button v-else class="wperp-btn btn--primary" type="submit" @click.prevent="saveCustomer">Update</button>
                                 <button class="wperp-btn btn--default modal-close" @click="$parent.$emit('modal-close')" type="reset">Cancel</button>
                             </div>
@@ -126,7 +127,7 @@
             MultiSelect,
         },
         props: {
-            customer: {
+            people: {
                 type: Object,
                 default: {}
             },
@@ -137,11 +138,14 @@
             state: {
                 type: Array,
                 default: [],
+            },
+            title: {
+                required: true
             }
         },
         data() {
             return {
-                customerFields: {
+                peopleFields: {
                     id: null,
                     first_name: '',
                     last_name: '',
@@ -162,18 +166,19 @@
                 states: [],
                 showMore: false,
                 customers:[],
+                url: '',
             }
         },
         methods: {
             saveCustomer() {
-                if ( !this.customer ) {
-                    var url = 'customers';
+                if ( !this.people ) {
+                    var url = this.url;
                     var type = 'post';
                 } else {
-                    var url = 'customers/' + this.customerFields.id;
+                    var url = this.url + '/' + this.peopleFields.id;
                     var type = 'put';
                 }
-                HTTP[type]( url, this.customerFields ).then( response => {
+                HTTP[type]( url, this.peopleFields ).then( response => {
                     this.$parent.fetchItems();
                     this.$parent.showModal = false;
                     this.resetForm();
@@ -190,7 +195,7 @@
             getState( country ) {
                 let states = this.state;
                 this.states = [];
-                this.customerFields.state = '';
+                this.peopleFields.state = '';
                 for ( let state in country.state ) {
                     this.states.push({ id: state, name: country.state[state] });
                 }
@@ -199,7 +204,7 @@
             isEmailExist() {
                 var customer;
                 customer = this.customers.filter( item => {
-                    return this.customerFields.email = item.email;
+                    return this.peopleFields.email = item.email;
                 } );
                 if ( customer.length ) {
                    return true;
@@ -214,24 +219,24 @@
             },
 
             setInputField() {
-                if ( this.customer) {
-                    let customer = this.customer;
-                    this.customerFields.id = customer.id;
-                    this.customerFields.first_name = customer.first_name;
-                    this.customerFields.last_name = customer.last_name;
-                    this.customerFields.email = customer.email;
-                    this.customerFields.mobile = customer.mobile;
-                    this.customerFields.company = customer.company;
-                    this.customerFields.phone = customer.phone;
-                    this.customerFields.website = customer.website;
-                    this.customerFields.notes = customer.notes;
-                    this.customerFields.fax = customer.fax;
-                    this.customerFields.street_1 = customer.billing.street_1;
-                    this.customerFields.street_2 = customer.billing.street_2;
-                    this.customerFields.city = customer.billing.city;
-                    this.customerFields.country = this.selectedCountry( customer.billing.country );
-                    this.customerFields.state = this.selectedState(customer.billing.state );
-                    this.customerFields.postal_code = customer.billing.postal_code;
+                if ( this.people) {
+                    let people = this.people;
+                    this.peopleFields.id = people.id;
+                    this.peopleFields.first_name = people.first_name;
+                    this.peopleFields.last_name = people.last_name;
+                    this.peopleFields.email = people.email;
+                    this.peopleFields.mobile = people.mobile;
+                    this.peopleFields.company = people.company;
+                    this.peopleFields.phone = people.phone;
+                    this.peopleFields.website = people.website;
+                    this.peopleFields.notes = people.notes;
+                    this.peopleFields.fax = people.fax;
+                    this.peopleFields.street_1 = people.billing.street_1;
+                    this.peopleFields.street_2 = people.billing.street_2;
+                    this.peopleFields.city = people.billing.city;
+                    this.peopleFields.country = this.selectedCountry( people.billing.country );
+                    this.peopleFields.state = this.selectedState(people.billing.state );
+                    this.peopleFields.postal_code = people.billing.postal_code;
                 }
             },
 
@@ -244,24 +249,25 @@
             },
 
             resetForm() {
-                this.customerFields.first_name = '';
-                this.customerFields.last_name = '';
-                this.customerFields.email = '';
-                this.customerFields.mobile = '';
-                this.customerFields.company = '';
-                this.customerFields.phone = '';
-                this.customerFields.website = '';
-                this.customerFields.note = '';
-                this.customerFields.fax = '';
-                this.customerFields.street1 = '';
-                this.customerFields.street2 = '';
-                this.customerFields.city = '';
-                this.customerFields.country = '';
-                this.customerFields.state = '';
-                this.customerFields.post_code = '';
+                this.peopleFields.first_name = '';
+                this.peopleFields.last_name = '';
+                this.peopleFields.email = '';
+                this.peopleFields.mobile = '';
+                this.peopleFields.company = '';
+                this.peopleFields.phone = '';
+                this.peopleFields.website = '';
+                this.peopleFields.note = '';
+                this.peopleFields.fax = '';
+                this.peopleFields.street1 = '';
+                this.peopleFields.street2 = '';
+                this.peopleFields.city = '';
+                this.peopleFields.country = '';
+                this.peopleFields.state = '';
+                this.peopleFields.post_code = '';
             }
         },
         created() {
+            this.url = this.$route.name.toLowerCase();
             this.selectedCountry();
             this.setInputField();
             this.getCustomers();
