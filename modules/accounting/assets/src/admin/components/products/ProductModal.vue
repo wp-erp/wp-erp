@@ -6,15 +6,15 @@
                     <div class="wperp-modal-dialog">
                         <div class="wperp-modal-content">
                             <div class="wperp-modal-body">
-                                <ul class="errors" v-if="errors.length">
-                                    <li v-for="(error, index) in errors" :key="index">* {{ error }}</li>
+                                <ul class="errors" v-if="productErros.length">
+                                    <li v-for="(error, index) in productErros" :key="index">* {{ error }}</li>
                                 </ul>
                                 <!-- modal body title -->
                                 <!-- add new product form -->
                                 <form action="" method="post" class="add-product-form wperp-form-horizontal">
                                     <!-- product name field -->
                                     <div class="wperp-form-group">
-                                        <input type="text" class="wperp-form-field" placeholder="Enter Product Name Here" v-model="fields.name">
+                                        <input type="text" class="wperp-form-field" placeholder="Enter Product Name Here" v-model="productFields.name">
                                     </div>
 
                                     <!-- product/service details panel -->
@@ -31,7 +31,7 @@
                                                 <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                     <div class="with-multiselect">
                                                         <multi-select
-                                                        v-model="fields.type"
+                                                        v-model="productFields.type"
                                                         :options="productType"
                                                         :multiple="false" />
                                                         <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
@@ -45,7 +45,7 @@
                                                 <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                     <div class="with-multiselect">
                                                         <multi-select
-                                                        v-model="fields.categories"
+                                                        v-model="productFields.categories"
                                                         :options="categories"
                                                         :multiple="false" />
                                                         <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
@@ -67,7 +67,7 @@
                                                     <label for="cost-price">Cost Price</label>
                                                 </div>
                                                 <div class="wperp-col-sm-9 wperp-col-xs-12">
-                                                    <input type="text" name="cost-price" id="cost-price" value="0" class="dk-form-field" v-model="fields.costPrice">
+                                                    <input type="text" name="cost-price" id="cost-price" value="0" class="dk-form-field" v-model="productFields.costPrice">
                                                 </div>
                                             </div>
                                             <div class="wperp-row">
@@ -75,7 +75,7 @@
                                                     <label for="sale-price">Sale Price</label>
                                                 </div>
                                                 <div class="wperp-col-sm-9 wperp-col-xs-12">
-                                                    <input type="text" name="sale-price" id="sale-price" value="0" class="dk-form-field" v-model="fields.salePrice">
+                                                    <input type="text" name="sale-price" id="sale-price" value="0" class="dk-form-field" v-model="productFields.salePrice">
                                                 </div>
                                             </div>
                                         </div>
@@ -95,7 +95,7 @@
                                                 <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                     <div class="with-multiselect">
                                                         <multi-select
-                                                        v-model="fields.vendor"
+                                                        v-model="productFields.vendor"
                                                         :options="vendors"
                                                         :multiple="false" />
                                                         <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
@@ -141,8 +141,8 @@
         },
         data() {
             return {
-                errors: [],
-                fields: {
+                productErros: [],
+                productFields: {
                     id: null,
                     name: '',
                     type: 0,
@@ -159,13 +159,13 @@
         created() {
             if ( this.product ) {
                 let product = this.product;
-                this.fields.name = product.name;
-                this.fields.id   = product.id;
-                this.fields.type = { id: product.product_type_id, name: product.type_name };
-                this.fields.categories = { id: product.category_id, name: product.cat_name };
-                this.fields.vendor = { id: product.vendor, name: product.vendor_name };
-                this.fields.salePrice = product.sale_price;
-                this.fields.costPrice = product.cost_price;
+                this.productFields.name = product.name;
+                this.productFields.id   = product.id;
+                this.productFields.type = { id: product.product_type_id, name: product.type_name };
+                this.productFields.categories = { id: product.category_id, name: product.cat_name };
+                this.productFields.vendor = { id: product.vendor, name: product.vendor_name };
+                this.productFields.salePrice = product.sale_price;
+                this.productFields.costPrice = product.cost_price;
             }
             this.loaded();
         },
@@ -179,15 +179,15 @@
                     var url  = 'products';
                 } else {
                     var type = 'put';
-                    var url  = 'products/' + this.fields.id;
+                    var url  = 'products/' + this.productFields.id;
                 }
                 var data = {
-                    name: this.fields.name,
-                    product_type_id: this.fields.type,
-                    category_id: this.fields.categories,
-                    vendor: this.fields.vendor,
-                    cost_price: this.fields.costPrice,
-                    sale_price: this.fields.salePrice,
+                    name: this.productFields.name,
+                    product_type_id: this.productFields.type,
+                    category_id: this.productFields.categories,
+                    vendor: this.productFields.vendor,
+                    cost_price: this.productFields.costPrice,
+                    sale_price: this.productFields.salePrice,
                 }
                 HTTP[type](url, data).then( response => {
                     this.$parent.$emit('close');
@@ -222,39 +222,39 @@
                 } )
             },
             resetForm() {
-                this.fields.id = null;
-                this.fields.name = '';
-                this.fields.type = [];
-                this.fields.categories = [];
-                this.fields.vendor = [];
-                this.fields.costPrice = '';
-                this.fields.salePrice;
+                this.productFields.id = null;
+                this.productFields.name = '';
+                this.productFields.type = [];
+                this.productFields.categories = [];
+                this.productFields.vendor = [];
+                this.productFields.costPrice = '';
+                this.productFields.salePrice;
             },
             checkForm() {
-                this.errors = [];
+                this.productErros = [];
 
-                if ( this.fields.name && this.fields.type && this.fields.vendor && this.fields.costPrice && this.fields.salePrice ) {
+                if ( this.productFields.name && this.productFields.type && this.productFields.vendor && this.productFields.costPrice && this.productFields.salePrice ) {
                     return true;
                 }
 
-                if ( ! this.fields.name ) {
-                    this.errors.push( 'Product name is required' );
+                if ( ! this.productFields.name ) {
+                    this.productErros.push( 'Product name is required' );
                 }
 
-                if ( ! this.fields.type ) {
-                    this.errors.push( 'Product type is required' );
+                if ( ! this.productFields.type ) {
+                    this.productErros.push( 'Product type is required' );
                 }
 
-                if ( ! this.fields.costPrice ) {
-                    this.errors.push( 'Product cost price is required' );
+                if ( ! this.productFields.costPrice ) {
+                    this.productErros.push( 'Product cost price is required' );
                 }
 
-                if ( ! this.fields.salePrice ) {
-                    this.errors.push( 'Product sale price is required' );
+                if ( ! this.productFields.salePrice ) {
+                    this.productErros.push( 'Product sale price is required' );
                 }
 
-                if ( ! this.fields.vendor ) {
-                   this.errors.push( 'Vendor is required' );
+                if ( ! this.productFields.vendor ) {
+                   this.productErros.push( 'Vendor is required' );
                 }
                 return false;
             }

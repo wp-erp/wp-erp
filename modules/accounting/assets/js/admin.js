@@ -2280,8 +2280,8 @@ if (false) {(function () {
   },
   data: function data() {
     return {
-      errors: [],
-      fields: {
+      productErros: [],
+      productFields: {
         id: null,
         name: '',
         type: 0,
@@ -2298,22 +2298,22 @@ if (false) {(function () {
   created: function created() {
     if (this.product) {
       var product = this.product;
-      this.fields.name = product.name;
-      this.fields.id = product.id;
-      this.fields.type = {
+      this.productFields.name = product.name;
+      this.productFields.id = product.id;
+      this.productFields.type = {
         id: product.product_type_id,
         name: product.type_name
       };
-      this.fields.categories = {
+      this.productFields.categories = {
         id: product.category_id,
         name: product.cat_name
       };
-      this.fields.vendor = {
+      this.productFields.vendor = {
         id: product.vendor,
         name: product.vendor_name
       };
-      this.fields.salePrice = product.sale_price;
-      this.fields.costPrice = product.cost_price;
+      this.productFields.salePrice = product.sale_price;
+      this.productFields.costPrice = product.cost_price;
     }
 
     this.loaded();
@@ -2331,16 +2331,16 @@ if (false) {(function () {
         var url = 'products';
       } else {
         var type = 'put';
-        var url = 'products/' + this.fields.id;
+        var url = 'products/' + this.productFields.id;
       }
 
       var data = {
-        name: this.fields.name,
-        product_type_id: this.fields.type,
-        category_id: this.fields.categories,
-        vendor: this.fields.vendor,
-        cost_price: this.fields.costPrice,
-        sale_price: this.fields.salePrice
+        name: this.productFields.name,
+        product_type_id: this.productFields.type,
+        category_id: this.productFields.categories,
+        vendor: this.productFields.vendor,
+        cost_price: this.productFields.costPrice,
+        sale_price: this.productFields.salePrice
       };
       __WEBPACK_IMPORTED_MODULE_0_admin_http_js__["a" /* default */][type](url, data).then(function (response) {
         _this.$parent.$emit('close');
@@ -2387,39 +2387,39 @@ if (false) {(function () {
       });
     },
     resetForm: function resetForm() {
-      this.fields.id = null;
-      this.fields.name = '';
-      this.fields.type = [];
-      this.fields.categories = [];
-      this.fields.vendor = [];
-      this.fields.costPrice = '';
-      this.fields.salePrice;
+      this.productFields.id = null;
+      this.productFields.name = '';
+      this.productFields.type = [];
+      this.productFields.categories = [];
+      this.productFields.vendor = [];
+      this.productFields.costPrice = '';
+      this.productFields.salePrice;
     },
     checkForm: function checkForm() {
-      this.errors = [];
+      this.productErros = [];
 
-      if (this.fields.name && this.fields.type && this.fields.vendor && this.fields.costPrice && this.fields.salePrice) {
+      if (this.productFields.name && this.productFields.type && this.productFields.vendor && this.productFields.costPrice && this.productFields.salePrice) {
         return true;
       }
 
-      if (!this.fields.name) {
-        this.errors.push('Product name is required');
+      if (!this.productFields.name) {
+        this.productErros.push('Product name is required');
       }
 
-      if (!this.fields.type) {
-        this.errors.push('Product type is required');
+      if (!this.productFields.type) {
+        this.productErros.push('Product type is required');
       }
 
-      if (!this.fields.costPrice) {
-        this.errors.push('Product cost price is required');
+      if (!this.productFields.costPrice) {
+        this.productErros.push('Product cost price is required');
       }
 
-      if (!this.fields.salePrice) {
-        this.errors.push('Product sale price is required');
+      if (!this.productFields.salePrice) {
+        this.productErros.push('Product sale price is required');
       }
 
-      if (!this.fields.vendor) {
-        this.errors.push('Vendor is required');
+      if (!this.productFields.vendor) {
+        this.productErros.push('Vendor is required');
       }
 
       return false;
@@ -7889,11 +7889,11 @@ var render = function() {
               _c("div", { staticClass: "wperp-modal-dialog" }, [
                 _c("div", { staticClass: "wperp-modal-content" }, [
                   _c("div", { staticClass: "wperp-modal-body" }, [
-                    _vm.errors.length
+                    _vm.productErros.length
                       ? _c(
                           "ul",
                           { staticClass: "errors" },
-                          _vm._l(_vm.errors, function(error, index) {
+                          _vm._l(_vm.productErros, function(error, index) {
                             return _c("li", { key: index }, [
                               _vm._v("* " + _vm._s(error))
                             ])
@@ -7915,8 +7915,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.fields.name,
-                                expression: "fields.name"
+                                value: _vm.productFields.name,
+                                expression: "productFields.name"
                               }
                             ],
                             staticClass: "wperp-form-field",
@@ -7924,14 +7924,14 @@ var render = function() {
                               type: "text",
                               placeholder: "Enter Product Name Here"
                             },
-                            domProps: { value: _vm.fields.name },
+                            domProps: { value: _vm.productFields.name },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
                                 _vm.$set(
-                                  _vm.fields,
+                                  _vm.productFields,
                                   "name",
                                   $event.target.value
                                 )
@@ -7989,11 +7989,15 @@ var render = function() {
                                             multiple: false
                                           },
                                           model: {
-                                            value: _vm.fields.type,
+                                            value: _vm.productFields.type,
                                             callback: function($$v) {
-                                              _vm.$set(_vm.fields, "type", $$v)
+                                              _vm.$set(
+                                                _vm.productFields,
+                                                "type",
+                                                $$v
+                                              )
                                             },
-                                            expression: "fields.type"
+                                            expression: "productFields.type"
                                           }
                                         })
                                       ],
@@ -8036,15 +8040,16 @@ var render = function() {
                                             multiple: false
                                           },
                                           model: {
-                                            value: _vm.fields.categories,
+                                            value: _vm.productFields.categories,
                                             callback: function($$v) {
                                               _vm.$set(
-                                                _vm.fields,
+                                                _vm.productFields,
                                                 "categories",
                                                 $$v
                                               )
                                             },
-                                            expression: "fields.categories"
+                                            expression:
+                                              "productFields.categories"
                                           }
                                         })
                                       ],
@@ -8101,8 +8106,8 @@ var render = function() {
                                         {
                                           name: "model",
                                           rawName: "v-model",
-                                          value: _vm.fields.costPrice,
-                                          expression: "fields.costPrice"
+                                          value: _vm.productFields.costPrice,
+                                          expression: "productFields.costPrice"
                                         }
                                       ],
                                       staticClass: "dk-form-field",
@@ -8112,14 +8117,16 @@ var render = function() {
                                         id: "cost-price",
                                         value: "0"
                                       },
-                                      domProps: { value: _vm.fields.costPrice },
+                                      domProps: {
+                                        value: _vm.productFields.costPrice
+                                      },
                                       on: {
                                         input: function($event) {
                                           if ($event.target.composing) {
                                             return
                                           }
                                           _vm.$set(
-                                            _vm.fields,
+                                            _vm.productFields,
                                             "costPrice",
                                             $event.target.value
                                           )
@@ -8158,8 +8165,8 @@ var render = function() {
                                         {
                                           name: "model",
                                           rawName: "v-model",
-                                          value: _vm.fields.salePrice,
-                                          expression: "fields.salePrice"
+                                          value: _vm.productFields.salePrice,
+                                          expression: "productFields.salePrice"
                                         }
                                       ],
                                       staticClass: "dk-form-field",
@@ -8169,14 +8176,16 @@ var render = function() {
                                         id: "sale-price",
                                         value: "0"
                                       },
-                                      domProps: { value: _vm.fields.salePrice },
+                                      domProps: {
+                                        value: _vm.productFields.salePrice
+                                      },
                                       on: {
                                         input: function($event) {
                                           if ($event.target.composing) {
                                             return
                                           }
                                           _vm.$set(
-                                            _vm.fields,
+                                            _vm.productFields,
                                             "salePrice",
                                             $event.target.value
                                           )
@@ -8237,15 +8246,15 @@ var render = function() {
                                             multiple: false
                                           },
                                           model: {
-                                            value: _vm.fields.vendor,
+                                            value: _vm.productFields.vendor,
                                             callback: function($$v) {
                                               _vm.$set(
-                                                _vm.fields,
+                                                _vm.productFields,
                                                 "vendor",
                                                 $$v
                                               )
                                             },
-                                            expression: "fields.vendor"
+                                            expression: "productFields.vendor"
                                           }
                                         })
                                       ],
