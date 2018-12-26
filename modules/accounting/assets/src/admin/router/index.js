@@ -1,22 +1,17 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import DummyComponent from 'admin/components/DummyComponent.vue'
-
-import Dashboard from 'admin/components/Dashboard.vue'
-import ChartOfAccounts from 'admin/components/ChartOfAccounts.vue'
-import Employees from 'admin/components/people/Employees.vue'
-import People from 'admin/components/people/People.vue'
-import PeopleDetails from 'admin/components/people/PeopleDetails.vue'
-
-import Products from 'admin/components/products/Products.vue'
-import ProductCategory from 'admin/components/product-category/ProductCategory.vue'
-
-import InvoiceCreate from 'admin/components/invoice/InvoiceCreate.vue'
-
-import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue'
-
-
-
+import Vue              from 'vue';
+import Sales            from 'admin/components/sales/Sales.vue';
+import Router           from 'vue-router';
+import People           from 'admin/components/people/People.vue';
+import Expenses         from 'admin/components/expenses/Expenses.vue';
+import Products         from 'admin/components/products/Products.vue';
+import Employees        from 'admin/components/people/Employees.vue';
+import Dashboard        from 'admin/components/Dashboard.vue';
+import PeopleDetails    from 'admin/components/people/PeopleDetails.vue';
+import InvoiceCreate    from 'admin/components/invoice/InvoiceCreate.vue';
+import DummyComponent   from 'admin/components/DummyComponent.vue';
+import ChartOfAccounts  from 'admin/components/ChartOfAccounts.vue';
+import ProductCategory  from 'admin/components/product-category/ProductCategory.vue';
+import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue';
 
 Vue.use(Router)
 
@@ -94,12 +89,12 @@ export default new Router({
         {
             path: '/sales',
             name: 'Sales',
-            component: DummyComponent
+            component: Sales
         },
         {
-            path: '/expense',
+            path: '/expenses',
             name: 'Expenses',
-            component: DummyComponent
+            component: Expenses
         },
         {
             path: '/charts',

@@ -93,6 +93,7 @@ module.exports = {
     resolve: {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
+            'assets': path.resolve('./assets/'),
             '@': path.resolve('./assets/src/'),
             'frontend': path.resolve('./assets/src/frontend/'),
             'admin': path.resolve('./assets/src/admin/'),

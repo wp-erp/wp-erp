@@ -41,11 +41,17 @@ var colors = ['#208DF8', '#E9485E', '#FF9900', '#2DCB67'],
 				return text.join("");
 			},
 		}
-	},
+	};
 	
-	status_chart_ctx = document.getElementById("status_chart").getContext("2d"),
-	status_chart = new Chart(status_chart_ctx, config),
-	status_legend = status_chart.generateLegend(),
-	status_legendHolder = document.getElementById("status_legend");
+	setTimeout(function() {
+		var status_chart_ctx = document.getElementById('status_chart');
 
-	status_legendHolder.innerHTML = status_legend
+		if ( status_chart_ctx !== null ) {
+			status_chart_ctx = status_chart_ctx.getContext("2d"),
+			status_chart = new Chart(status_chart_ctx, config),
+			status_legend = status_chart.generateLegend(),
+			status_legendHolder = document.getElementById("status_legend");
+			status_legendHolder.innerHTML = status_legend
+		}
+	
+	}, 1000);

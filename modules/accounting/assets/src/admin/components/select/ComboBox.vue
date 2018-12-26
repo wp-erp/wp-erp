@@ -11,8 +11,9 @@
         </div>
 
         <ul class="wperp-options" v-if="showMenu">
-            <li v-for="option in options">
-                <a href="javascript:void(0)" @click="updateOption(option)">
+            <li :key="index" v-for="(option, index) in options">
+				<router-link v-if="hasUrl" :to="{name: option.namedRoute}">{{ option.name }}</router-link>
+                <a v-else href="#" @click.prevent="updateOption(option)">
                     {{ option.name }}
                 </a>
             </li>
@@ -34,18 +35,24 @@
             }
         },
         props: {
+            selected: {},
             options: {
                 type: [Array, Object]
             },
-            selected: {},
-            placeholder: [String]
+			placeholder: {
+				type: String
+			},
+			hasUrl: {
+				type: Boolean,
+				default: false,
+			}
         },
 
         mounted() {
-            this.selectedOption = this.selected;
-            if (this.placeholder)
-            {
-                this.placeholderText = this.placeholder;
+            // this.selectedOption.id = this.selected;
+            if (this.placeholder) {
+				this.selectedOption.name = this.placeholder;
+                // this.placeholderText = this.placeholder;
             }
         },
 
@@ -53,7 +60,7 @@
             updateOption(option) {
                 this.selectedOption = option;
                 this.showMenu = false;
-                this.$emit('updateOption', this.selectedOption);
+                this.$root.$emit('comboSelected', this.selectedOption);
             },
 
             toggleMenu() {

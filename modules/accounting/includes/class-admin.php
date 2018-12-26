@@ -70,16 +70,9 @@ class Admin {
             'position'   => 20
         ] );
         erp_add_menu( 'accounting', [
-            'title'      => __( 'Bills', 'erp' ),
+            'title'      => __( 'Expenses', 'erp' ),
             'capability' => $expense,
-            'slug'       => 'bills',
-            'callback'   => [],
-            'position'   => 25
-        ] );
-        erp_add_menu( 'accounting', [
-            'title'      => __( 'Purchases', 'erp' ),
-            'capability' => $expense,
-            'slug'       => 'purchases',
+            'slug'       => 'expenses',
             'callback'   => [],
             'position'   => 25
         ] );

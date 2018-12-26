@@ -40,7 +40,7 @@
                             <div class="wperp-row">
                                 <div class="wperp-col-sm-6">
                                     <h5>Bill to:</h5>
-                                    <div class="persons-info">
+                                    <div class="persons-info" v-if="invoice.billing_address">
                                         <strong>{{ invoice.customer_name }}</strong><br>
                                         {{ invoice.billing_address.address }} <br>
                                         {{ invoice.billing_address.state }} <br>
@@ -192,6 +192,8 @@
             let invoice_id = 1;
 
             HTTP.get(`/invoices/${invoice_id}`).then((response) => {
+                console.log(response.data);
+
                 this.invoice = response.data;
             });
         },
