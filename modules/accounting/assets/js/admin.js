@@ -353,10 +353,6 @@ if (false) {(function () {
         container.classList.remove("--show-secondary");
         moreBtn.setAttribute("aria-expanded", false);
       });
-    },
-    menuActions: function menuActions(key) {
-      this.$router.push(key);
-      var current_route = this.$router.currentRoute.fullPath.replace('/', '');
     }
   }
 });
@@ -4192,19 +4188,9 @@ var render = function() {
           return [
             menu.hasOwnProperty("submenu")
               ? _c("li", { key: index, class: _vm.dropdownNav }, [
-                  _c(
-                    "a",
-                    {
-                      attrs: { href: _vm.current_url + menu.slug },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          _vm.menuActions(index)
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(menu.title))]
-                  ),
+                  _c("a", { attrs: { href: _vm.current_url + menu.slug } }, [
+                    _vm._v(_vm._s(menu.title))
+                  ]),
                   _vm._v(" "),
                   _c(
                     "ul",
@@ -4213,15 +4199,7 @@ var render = function() {
                       return _c("li", { key: index }, [
                         _c(
                           "a",
-                          {
-                            attrs: { href: _vm.current_url + item.slug },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                _vm.menuActions(index)
-                              }
-                            }
-                          },
+                          { attrs: { href: _vm.current_url + item.slug } },
                           [_vm._v(_vm._s(item.title))]
                         )
                       ])
@@ -4230,19 +4208,9 @@ var render = function() {
                   )
                 ])
               : _c("li", { key: index }, [
-                  _c(
-                    "a",
-                    {
-                      attrs: { href: _vm.current_url + menu.slug },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          _vm.menuActions(index)
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(menu.title))]
-                  )
+                  _c("a", { attrs: { href: _vm.current_url + menu.slug } }, [
+                    _vm._v(_vm._s(menu.title))
+                  ])
                 ])
           ]
         })

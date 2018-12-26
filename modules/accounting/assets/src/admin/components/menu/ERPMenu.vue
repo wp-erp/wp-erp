@@ -16,15 +16,15 @@
         <ul :class="primaryNav">
             <template v-for="(menu, index) in menuItems">
                 <li :key="index" v-if="menu.hasOwnProperty('submenu')" :class="dropdownNav">
-                    <a @click.prevent="menuActions(index)" :href="current_url + menu.slug">{{menu.title}}</a>
+                    <a :href="current_url + menu.slug">{{menu.title}}</a>
                     <ul :class="dropDownClass">
                         <li :key="index" v-for="(item, index) in menu.submenu">
-                            <a @click.prevent="menuActions(index)" :href="current_url + item.slug">{{item.title}}</a>
+                            <a :href="current_url + item.slug">{{item.title}}</a>
                         </li>
                     </ul>
                 </li>
                 <li :key="index" v-else>
-                    <a @click.prevent="menuActions(index)" :href="current_url + menu.slug">{{menu.title}}</a>
+                    <a :href="current_url + menu.slug">{{menu.title}}</a>
                 </li>
             </template>
         </ul>
@@ -137,11 +137,6 @@
                     moreBtn.setAttribute("aria-expanded", false);
                 });
             },
-
-            menuActions(key) {
-                this.$router.push(key);
-                let current_route = this.$router.currentRoute.fullPath.replace('/','');
-            }
         }
     };
 </script>
