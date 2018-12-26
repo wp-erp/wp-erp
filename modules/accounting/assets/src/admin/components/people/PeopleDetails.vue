@@ -12,7 +12,7 @@
     import UserBasicInfo from 'admin/components/userinfo/UserBasic.vue'
 
     export default {
-        name: 'CustomerDetails',
+        name: 'PeopleDetails',
 
         components: {
             UserBasicInfo
@@ -26,7 +26,7 @@
                     'id': '',
                     'name': '************',
                     'email': '************',
-                    'img_url': erp_acct_var.acct_assets + '/images/dummy-user.png',
+                    'img_url': erp_acct_var.acct_assets  + '/images/dummy-user.png',
                     'meta': {
                         'company': '**********',
                         'website': '**********',
@@ -34,11 +34,13 @@
                         'mobile': '*************',
                         'address': '*********',
                     }
-                }
+                },
+                url: ''
             }
         },
 
         created(){
+            this.url = this.$route.params.route;
             this.userId = this.$route.params.id;
             this.fetchItem( this.userId );
         },
@@ -49,7 +51,7 @@
 
         methods: {
             fetchItem( id ) {
-                HTTP.get('customers/'+id, {
+                HTTP.get( this.url+'/'+id, {
                     params: {}
                 })
                     .then((response) => {
