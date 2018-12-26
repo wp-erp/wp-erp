@@ -13,3 +13,9 @@ plugin-deploy.sh
 package-lock.json
 /modules/accounting/config.json
 
+# Temporary
+/modules/accounting/assets/js/admin.js
+/modules/accounting/assets/js/frontend.js
+/modules/accounting/assets/js/style.js
+/modules/accounting/assets/css/admin.css
+/modules/accounting/assets/css/admin.css.map
