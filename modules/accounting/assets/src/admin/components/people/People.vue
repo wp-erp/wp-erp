@@ -1,11 +1,12 @@
 <template>
-    <div class="app-vendors">
-        <h2 class="add-new-vendor">
-            <span>Vendors</span>
-            <a href="#" id="erp-vendor-new" @click="showModal = true">+ Add New Vendor</a>
+    <div class="app-customers">
+        <h2 class="add-new-customer">
+            <span>{{ pageTitle }}</span>
+            <a href="" id="erp-customer-new" @click.prevent="showModal = true">+ Add New {{ buttonTitle }}</a>
         </h2>
+        <people-modal v-if="showModal" :people.sync="people" :countries="countries" :state="states" :title="buttonTitle"></people-modal>
         <list-table
-            tableClass="wp-ListTable widefat fixed vendor-list"
+            tableClass="wperp-table table-striped table-dark widefat"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -21,9 +22,12 @@
             <template slot="title" slot-scope="data">
                 <strong><a href="#">{{ data.row.title }}</a></strong>
             </template>
-            <template slot="vendor" slot-scope="data">
-                <!--TODO update with router link-->
-                <strong><a :href="data.row.id">{{data.row.vendor}}</a></strong>
+            <template slot="customer" slot-scope="data">
+                <strong>
+                    <router-link :to="{ name: singleUrl, params: { id: data.row.id, route: url}}">
+                        {{data.row.customer}}
+                    </router-link>
+                </strong>
             </template>
 
         </list-table>
@@ -32,18 +36,20 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js'
     import ListTable from 'admin/components/list-table/ListTable.vue'
-
+    import PeopleModal from './PeopleModal.vue'
+    import HTTP from 'admin/http.js'
     export default {
-        name: 'Vendors',
+        name: 'People',
 
         components: {
-            ListTable
+            ListTable,
+            PeopleModal
         },
 
         data () {
             return {
+                people: null,
                 bulkActions: [
                     {
                         key: 'trash',
@@ -52,8 +58,8 @@
                     }
                 ],
                 columns: {
-                    'vendor': { label: 'Vendor Name' },
-                    'company': { label: 'Vendor Owner' },
+                    'customer': { label: 'Name' },
+                    'company': { label: 'Company' },
                     'email': { label: 'Email' },
                     'phone': { label: 'Phone' },
                     'expense': { label: 'Expense' },
@@ -69,66 +75,96 @@
                 actions : [
                     { key: 'edit', label: 'Edit' },
                     { key: 'trash', label: 'Delete' }
-                ]
+                ],
+                showModal: false,
+                countries: [],
+                states:[],
+                buttonTitle: '',
+                pageTitle: '',
+                url: '',
+                singleUrl: ''
             };
         },
         created() {
             this.$on('modal-close', function() {
                 this.showModal = false;
+                this.people = null;
             });
 
+            this.getCountries();
+            this.buttonTitle    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'customer' : 'vendor';
+            this.pageTitle      =   this.$route.name;
+            this.url            =   this.$route.name.toLowerCase();
+            this.singleUrl      =   ( this.url == 'customers' ) ? 'CustomerDetails' : 'VendorDetails';
             this.fetchItems();
+
         },
 
         computed: {
             row_data(){
                 let items = this.rows;
                 items.map( item => {
-                    item.vendor = item.first_name + ' ' + item.last_name;
+                    item.customer = item.first_name + ' ' + item.last_name;
                     //TODO remove after api update for expense
-                    // item.expense = '55555';
+                    item.expense = '55555';
                 } );
                 return items;
             }
         },
 
         methods: {
-            fetchItems() {
+            fetchItems(){
                 this.rows = [];
-                HTTP.get('vendors', {
+                HTTP.get( this.url , {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
                     }
                 })
-                    .then((response) => {
-                        this.rows = response.data;
-                        this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                        this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                    .then(() => {
-                        //ready
-                    });
+                .then( (response) => {
+                    this.rows = response.data;
+                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+                .then( () => {
+                    //ready
+                } );
             },
-
+            getCountries() {
+                HTTP.get( 'customers/country' ).then( response => {
+                    let country = response.data.country;
+                    let states   = response.data.state;
+                    for ( let x in country ) {
+                        if( states[x] == undefined) {
+                            states[x] = [];
+                        }
+                        this.countries.push( { id: x, name: country[x], state: states[x] });
+                    }
+                    for ( let state in states ) {
+                        for ( let x in states[state] ) {
+                            this.states.push({ id: x, name: states[state][x] });
+                        }
+                    }
+                } );
+            },
             onActionClick(action, row, index) {
 
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete('vendors/' + row.id).then( response => {
+                            HTTP.delete( this.url + '/' + row.id).then( response => {
                                 this.$delete(this.rows, index);
                             });
                         }
                         break;
 
                     case 'edit':
-                        //TODO
+                        this.showModal = true;
+                        this.people = row;
                         break;
-
                     default :
 
 
@@ -138,7 +174,7 @@
             onBulkAction(action, items) {
                 if ( 'trash' === action ) {
                     if ( confirm('Are you sure to delete?') ) {
-                        HTTP.delete('vendors/delete/' + items.join(',')).then(response => {
+                        HTTP.delete( this.url + '/delete/' + items.join(',')).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
                             if ( toggleCheckbox.checked ) {
@@ -156,20 +192,21 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateVendors',
+                    name: 'PaginateCustomers',
                     params: { page: page },
                     query: queries
                 });
 
                 this.fetchItems();
-            }
-        }
+            },
+        },
+
 
     };
 </script>
 <style lang="less">
-    .app-vendors {
-        .add-new-vendor {
+    .app-customers {
+        .add-new-customer {
             align-items: center;
             display: flex;
             span {
@@ -189,7 +226,7 @@
                 width: 135px;
             }
         }
-        .vendor-list {
+        .customer-list {
             border-radius: 3px;
             tbody {
                 background: #FAFAFA;
