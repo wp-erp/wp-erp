@@ -180,11 +180,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $item_tax[$key] = $item['tax'];
             $item_total[$key] = $item['amount'] + $item['tax'];
         }
-        $bill_data['billing_address'] = maybe_serialize( $request['billing_address'] );
-        $bill_data['attachments'] = maybe_serialize( $request['attachments'] );
-        $bill_data['subtotal'] = array_sum( $item_amount );
-        $bill_data['tax'] = array_sum( $item_tax );
-        $bill_data['total'] = array_sum( $item_total );
+        $bill_data['attachments']     = maybe_serialize( $request['attachments'] );
+        $bill_data['total']           = array_sum( $item_total );
 
         $bill_id = erp_acct_insert_bill( $bill_data );
 
@@ -224,12 +221,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $item_amount[$key] = $item['amount'];
             $item_tax[$key] = $item['tax'];
             $item_total[$key] = $item['amount'] + $item['tax'];
-
         }
-        $bill_data['billing_address'] = maybe_serialize( $request['billing_address'] );
         $bill_data['attachments'] = maybe_serialize( $request['attachments'] );
-        $bill_data['subtotal'] = array_sum( $item_amount );
-        $bill_data['tax'] = array_sum( $item_tax );
         $bill_data['total'] = array_sum( $item_total );
 
         $bill_id = erp_acct_update_bill( $bill_data, $id );
@@ -306,9 +299,6 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['due_date'] ) ) {
             $prepared_item['due_date'] = absint( $request['due_date'] );
         }
-        if ( isset( $request['remarks'] ) ) {
-            $prepared_item['remarks'] = $request['remarks'];
-        }
         if ( isset( $request['trn_no'] ) ) {
             $prepared_item['trn_no'] = $request['trn_no'];
         }
@@ -350,6 +340,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'tax'             => (int) $item->tax,
             'ref'             => $item->ref,
             'remarks'         => $item->remarks,
+            'attachments'     => $item->attachments
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -451,43 +442,23 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'product_id'       => [
-                            'description' => __( 'Product id.', 'erp' ),
+                        'ledger_id'       => [
+                            'description' => __( 'Ledger id.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'product_type'      => [
-                            'description' => __( 'Product type.', 'erp' ),
+                        'particulars'      => [
+                            'description' => __( 'Bill Particulars.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'qty'   => [
-                            'description' => __( 'Product quantity.', 'erp' ),
-                            'type'        => 'integer',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'unit_price'   => [
-                            'description' => __( 'Unit price.', 'erp' ),
-                            'type'        => 'integer',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'discount'    => [
-                            'description' => __( 'Discount.', 'erp' ),
-                            'type'        => 'integer',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'tax'       => [
-                            'description' => __( 'Tax.' ),
-                            'type'        => 'integer',
-                            'context'     => [ 'edit' ],
-                        ],
-                        'tax_percent'    => [
-                            'description' => __( 'Tax percent.', 'erp' ),
+                        'amount'   => [
+                            'description' => __( 'Bill Amount', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'item_total'       => [
-                            'description' => __( 'Item total.' ),
+                            'description' => __( 'Line total.' ),
                             'type'        => 'integer',
                             'context'     => [ 'edit' ],
                         ],
