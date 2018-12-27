@@ -152,7 +152,7 @@ function erp_acct_insert_bill( $data ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', array(
                 'trn_no'      => $voucher_no,
                 'ledger_id'   => $item['ledger_id'],
-                'particulars' => $item['remarks'],
+                'particulars' => $item['particulars'],
                 'amount'      => $item['amount'],
                 'created_at'  => $bill_data['created_at'],
                 'created_by'  => $bill_data['created_by'],

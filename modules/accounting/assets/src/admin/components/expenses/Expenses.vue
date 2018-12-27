@@ -145,7 +145,7 @@
                                     </label>
                                 </div>
                             </th>
-                            <td class="col--name column-primary">26-09-18 
+                            <td class="col--name column-primary">26-09-18
                                 <button type="button" class="wperp-toggle-row">
                                     <span class="screen-reader-text">Show more details</span>
                                 </button>
@@ -174,7 +174,6 @@
                                 </div>
                             </td>
                         </tr>
-                        
                     </tbody>
                 </table>
 
@@ -205,16 +204,16 @@ export default {
         return {
             pages: [
                 { namedRoute: 'DummyComponent', name: 'Purchases' },
-                { namedRoute: 'DummyComponent', name: 'Pay purchases' },
-                { namedRoute: 'DummyComponent', name: 'Bills' },
-                { namedRoute: 'DummyComponent', name: 'Pay bills' },
+                { namedRoute: 'DummyComponent', name: 'Pay Purchases' },
+                { namedRoute: 'BillCreate', name: 'Bills' },
+                { namedRoute: 'DummyComponent', name: 'Pay Bills' },
             ],
         };
     },
 
     created() {
         // this.$root.$on('comboSelected', (selected) => {
-        //     console.log(selected); 
+        //     console.log(selected);
         // });
     }
 };

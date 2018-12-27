@@ -12,6 +12,7 @@ import DummyComponent   from 'admin/components/DummyComponent.vue';
 import ChartOfAccounts  from 'admin/components/ChartOfAccounts.vue';
 import ProductCategory  from 'admin/components/product-category/ProductCategory.vue';
 import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue';
+import BillCreate       from 'admin/components/bill/BillCreate.vue';
 
 Vue.use(Router)
 
@@ -127,11 +128,15 @@ export default new Router({
             name: 'ProductCategory',
             component: ProductCategory
         },
-
         {
             path: '/payments/new',
             name: 'RecPaymentCreate',
             component: RecPaymentCreate
         },
+        {
+            path: '/bill/new',
+            name: 'BillCreate',
+            component: BillCreate
+        },
     ]
-})
+});
