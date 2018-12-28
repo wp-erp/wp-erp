@@ -42,14 +42,14 @@ export default {
         return {
             pages: [
                 { namedRoute: 'InvoiceCreate', name: 'Invoice' },
-                { namedRoute: 'payment', name: 'Payment' },
+                { namedRoute: 'RecPaymentCreate', name: 'Payment' },
             ],
         };
     },
 
     created() {
         // this.$root.$on('comboSelected', (selected) => {
-        //     console.log(selected); 
+        //     console.log(selected);
         // });
     },
 
