@@ -44,7 +44,11 @@
 
         methods: {
             pickerSelect(day) {
-                let formattedDate = day.day + '-' + day.month + '-' + day.year; // e.g. 08-10-2018
+                // add leading zero
+                let days = day.day < 10 ? `0${day.day}` : day.day;
+                let month = day.month < 10 ? `0${day.month}` : day.month;
+
+                let formattedDate = day.year + '-' + month + '-' + days; //e.g. 2018-07-24
                 this.selectedDate = formattedDate;
                 this.$refs.datePicker.click();
                 this.$emit('input', this.selectedDate);

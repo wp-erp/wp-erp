@@ -107,7 +107,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $purchase_data  = erp_acct_get_purchases();
+        $purchase_data  = erp_acct_get_purchases( $args );
         $total_items = erp_acct_get_purchases( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $purchase_data as $item ) {

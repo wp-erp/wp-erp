@@ -106,7 +106,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $pay_purchase_data  = erp_acct_get_pay_purchases();
+        $pay_purchase_data  = erp_acct_get_pay_purchases( $args );
         $total_items = erp_acct_get_pay_purchases( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $pay_purchase_data as $item ) {

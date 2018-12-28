@@ -8,7 +8,7 @@
         Dropdown
       </button>
     </slot>
-    <div ref="menu" :class="['dropdown-menu', dropdownClasses, {'show': visible}]" @click.stop="">
+    <div ref="menu" :class="['dropdown-popper', dropdownClasses, {'show': visible}]" @click.stop="">
       <!-- <div class="popper__arrow" x-arrow /> -->
       <slot name="dropdown"/>
     </div>
@@ -134,7 +134,7 @@ export default {
 
 <style lang="less">
 #erp-accounting {
-  .dropdown-menu {
+  .dropdown-popper {
     position: absolute;
     background: #fff;
     color: black;
@@ -170,11 +170,11 @@ export default {
     }
   }
 
-  .dropdown-menu[x-placement^="top"] {
+  .dropdown-popper[x-placement^="top"] {
     margin-bottom: 5px;
   }
 
-  .dropdown-menu[x-placement^="top"] .tooltip-arrow {
+  .dropdown-popper[x-placement^="top"] .tooltip-arrow {
     border-width: 5px 5px 0 5px;
     border-left-color: transparent;
     border-right-color: transparent;
@@ -185,11 +185,11 @@ export default {
     margin-bottom: 0;
   }
 
-  .dropdown-menu[x-placement^="bottom"] {
+  .dropdown-popper[x-placement^="bottom"] {
     margin-top: 5px;
   }
 
-  .dropdown-menu[x-placement^="bottom"] .popper__arrow {
+  .dropdown-popper[x-placement^="bottom"] .popper__arrow {
     border-width: 0 5px 5px 5px;
     border-left-color: transparent;
     border-right-color: transparent;
@@ -200,11 +200,11 @@ export default {
     margin-bottom: 0;
   }
 
-  .dropdown-menu[x-placement^="right"] {
+  .dropdown-popper[x-placement^="right"] {
     margin-left: 5px;
   }
 
-  .dropdown-menu[x-placement^="right"] .popper__arrow {
+  .dropdown-popper[x-placement^="right"] .popper__arrow {
     border-width: 5px 5px 5px 0;
     border-left-color: transparent;
     border-top-color: transparent;
@@ -215,11 +215,11 @@ export default {
     margin-right: 0;
   }
 
-  .dropdown-menu[x-placement^="left"] {
+  .dropdown-popper[x-placement^="left"] {
     margin-right: 5px;
   }
 
-  .dropdown-menu[x-placement^="left"] .popper__arrow {
+  .dropdown-popper[x-placement^="left"] .popper__arrow {
     border-width: 5px 0 5px 5px;
     border-top-color: transparent;
     border-right-color: transparent;

@@ -106,7 +106,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $pay_bill_data  = erp_acct_get_pay_bills();
+        $pay_bill_data  = erp_acct_get_pay_bills( $args );
         $total_items = erp_acct_get_pay_bills( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $pay_bill_data as $item ) {

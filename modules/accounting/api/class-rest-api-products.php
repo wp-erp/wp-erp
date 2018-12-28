@@ -114,7 +114,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-	    $product_data = erp_acct_get_all_products();
+	    $product_data = erp_acct_get_all_products( $args );
 	    $total_items = is_array( $product_data ) ? count( $product_data ) : 1;
 
 	    foreach ( $product_data as $item ) {
