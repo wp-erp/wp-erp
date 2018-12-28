@@ -24,15 +24,27 @@ function erp_acct_get_all_invoices( $args = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
+    $where = '';
     $limit = '';
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= "WHERE invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
 
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
     $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
-    $sql .= "FROM {$wpdb->prefix}erp_acct_invoices ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        $sql .= " COUNT( DISTINCT invoice.id ) as total_number";
+    } else {
+        $sql .= " invoice.*, SUM(ledger_detail.debit) - SUM(ledger_detail.credit) as due";
+    }
+
+    $sql .= " FROM {$wpdb->prefix}erp_acct_invoices AS invoice LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail"; 
+    $sql .= " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.{$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         return $wpdb->get_var($sql);

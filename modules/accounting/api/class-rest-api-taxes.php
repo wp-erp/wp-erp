@@ -98,7 +98,7 @@ class Taxes_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $tax_data  = erp_acct_get_all_taxes();
+        $tax_data  = erp_acct_get_all_taxes( $args );
         $total_items = erp_acct_get_all_taxes( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $tax_data as $item ) {

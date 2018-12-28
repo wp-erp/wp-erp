@@ -121,7 +121,9 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_invoices( $request ) {
         $args = [
             'number' => $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'] 
         ];
 
         $formatted_items = [];
@@ -130,7 +132,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $invoice_data  = erp_acct_get_all_invoices();
+        $invoice_data  = erp_acct_get_all_invoices( $args );
         $total_items = erp_acct_get_all_invoices( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $invoice_data as $item ) {
