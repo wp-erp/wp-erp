@@ -71,13 +71,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr :key="key" v-for="(invoice,key) in invoices">
-                        <td scope="row" class="col--id column-primary">{{invoice.id}}</td>
-                        <td class="col--particulars"><textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
-                        <td class="col--total" data-colname="Total">{{invoice.total}}</td>
-                        <td class="col--due" data-colname="Total">$240.00</td>
+                    <tr :key="key" v-for="(line,key) in transactionLines">
+                        <td scope="row" class="col--id column-primary">{{key+1}}</td>
+                        <td class="col--account"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
+                        <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="text" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
+                            <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
+                        </td>
+                        <td class="col--total" style="text-align: center" data-colname="Total">
+                            <input type="text" :value="line.amount" readonly disabled/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a href="#"><i class="flaticon-trash"></i></a>
@@ -95,19 +97,25 @@
                             <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
                         </td>
                     </tr>
+                    <tr class="wperp-form-group">
+                        <td colspan="9" style="text-align: left;">
+                            <label>Particulars</label>
+                            <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                        </td>
+                    </tr>
                     </tbody>
                     <tr class="add-attachment-row">
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
                                 <label class="col--attachement">Attachment</label>
-                                <file-upload v-model="attachments" url="/invoices/attachments"/>
+                                <file-upload v-model="attachments" url="/ledgers/attachments"/>
                             </div>
                         </td>
                     </tr>
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Bill" @click.native="SubmitForBill" :working="isWorking"></submit-button>
+                            <submit-button text="Add New Bill" @click.native="SubmitForBill" :working="isWorking"></submit-button>
                         </td>
                     </tr>
                     </tfoot>
@@ -116,7 +124,7 @@
         </div>
 
         <template v-if="billModal">
-            <bill-modal :basic_fields="basic_fields" :invoices="invoices" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
+            <bill-modal :basic_fields="basic_fields" :ledgers="ledgers" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
         </template>
 
     </div>
@@ -125,6 +133,7 @@
 <script>
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import BillModal from 'admin/components/bill/BillModal.vue'
     import SelectPeople from 'admin/components/people/SelectPeople.vue'
@@ -137,6 +146,7 @@
         components: {
             HTTP,
             Datepicker,
+            MultiSelect,
             FileUpload,
             BillModal,
             SubmitButton,
@@ -154,6 +164,7 @@
                 },
 
                 transactionLines: [{}],
+                selected:[],
                 ledgers: [],
                 attachments: [],
                 totalAmounts:[],
@@ -173,10 +184,6 @@
                 this.updateFinalAmount();
             });
 
-            this.$root.$on('total-updated', amount => {
-                this.updateFinalAmount();
-            });
-
             this.$root.$on('bill-modal-close', () => {
                 this.billModal = false;
             });
@@ -184,14 +191,10 @@
 
         methods: {
             getLedgers() {
-                HTTP.get('/products').then((response) => {
-                    response.data.forEach(element => {
-                        this.products.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
-                });
+                this.ledgers = [
+                    { id: 305, name: "Ledger 1" },
+                    { id: 306, name: "Ledger 2" },
+                ]
             },
 
             getCustomerAddress() {
@@ -208,8 +211,8 @@
             updateFinalAmount() {
                 let finalAmount = 0;
 
-                this.totalAmounts.forEach(element => {
-                    finalAmount += parseFloat(element);
+                this.transactionLines.forEach(element => {
+                    finalAmount += parseFloat(element.amount);
                 });
 
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
@@ -219,36 +222,18 @@
                 this.transactionLines.push({});
             },
 
-            formatLineItems() {
-                var lineItems = [];
-
-                this.transactionLines.forEach(line => {
-                    lineItems.push({
-                        product_id: line.selectedProduct.id,
-                        product_type: 'service',
-                        qty: line.qty,
-                        unit_price: line.unitPrice,
-                        tax: line.taxAmount,
-                        discount: line.discount,
-                        item_total: line.totalAmount,
-                        tax_percent: 0
-                    });
-                });
-
-                return lineItems;
-            },
 
             SubmitForBill() {
                 HTTP.post('/bills', {
-                    customer_id: this.basic_fields.customer.id,
+                    vendor_id: this.basic_fields.customer.id,
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trans_date,
                     due_date: this.basic_fields.due_date,
-                    line_items: this.invoices,
+                    bill_details: this.transactionLines,
                     attachments: this.attachments,
                     type: 'bill',
                     status: 'awaiting_approval',
-                    particulars: this.particulars,
+                    remarks: this.particulars,
                     trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
                     console.log(res.data);
@@ -258,7 +243,6 @@
             },
 
             showBillModal() {
-                this.getDueInvoices();
                 this.billModal = true;
             }
         },
