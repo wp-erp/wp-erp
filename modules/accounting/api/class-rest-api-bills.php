@@ -177,11 +177,10 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         foreach ( $items as $key => $item ) {
             $item_amount[$key] = $item['amount'];
-            $item_tax[$key] = $item['tax'];
-            $item_total[$key] = $item['amount'] + $item['tax'];
+            $item_total[$key] = $item['amount'];
         }
         $bill_data['attachments']     = maybe_serialize( $request['attachments'] );
-        $bill_data['total']           = array_sum( $item_total );
+        $bill_data['amount']          = array_sum( $item_total );
 
         $bill_id = erp_acct_insert_bill( $bill_data );
 
@@ -219,11 +218,10 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         foreach ( $items as $key => $item ) {
             $item_amount[$key] = $item['amount'];
-            $item_tax[$key] = $item['tax'];
-            $item_total[$key] = $item['amount'] + $item['tax'];
+            $item_total[$key] = $item['amount'];
         }
         $bill_data['attachments'] = maybe_serialize( $request['attachments'] );
-        $bill_data['total'] = array_sum( $item_total );
+        $bill_data['amount']      = array_sum( $item_total );
 
         $bill_id = erp_acct_update_bill( $bill_data, $id );
 
@@ -310,6 +308,9 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['bill_details'] ) ) {
             $prepared_item['bill_details'] = $request['bill_details'];
+        }
+        if ( isset( $request['remarks'] ) ) {
+            $prepared_item['remarks'] = $request['remarks'];
         }
 
         return $prepared_item;

@@ -131,15 +131,15 @@ function erp_acct_insert_bill( $data ) {
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bills', array(
             'voucher_no'      => $bill_data['voucher_no'],
-            'vendor_id'       => $bill_data['people_id'],
+            'vendor_id'       => $bill_data['vendor_id'],
             'vendor_name'     => $bill_data['vendor_name'],
             'address'         => $bill_data['billing_address'],
             'trn_date'        => $bill_data['trn_date'],
             'due_date'        => $bill_data['due_date'],
-            'amount'          => $bill_data['total'],
+            'amount'          => $bill_data['amount'],
             'attachments'     => $bill_data['attachments'],
             'ref'             => $bill_data['ref'],
-            'remarks'         => $bill_data['remarks'],
+            'particulars'     => $bill_data['remarks'],
             'created_at'      => $bill_data['created_at'],
             'created_by'      => $bill_data['created_by'],
             'updated_at'      => $bill_data['updated_at'],
@@ -152,7 +152,7 @@ function erp_acct_insert_bill( $data ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', array(
                 'trn_no'      => $voucher_no,
                 'ledger_id'   => $item['ledger_id'],
-                'particulars' => $item['particulars'],
+                'particulars' => $item['description'],
                 'amount'      => $item['amount'],
                 'created_at'  => $bill_data['created_at'],
                 'created_by'  => $bill_data['created_by'],
@@ -168,7 +168,7 @@ function erp_acct_insert_bill( $data ) {
             'trn_no'     => $voucher_no,
             'particulars'=> '',
             'debit'      => 0,
-            'credit'     => $bill_data['amount'],
+            'credit'     => $bill_data['total'],
             'created_at'  => $bill_data['created_at'],
             'created_by'  => $bill_data['created_by'],
             'updated_at'  => $bill_data['updated_at'],
@@ -207,7 +207,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
         $bill_data = erp_acct_get_formatted_bill_data( $data, $bill_id );
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_bills', array(
-            'vendor_id'       => $bill_data['people_id'],
+            'vendor_id'       => $bill_data['vendor_id'],
             'vendor_name'     => $bill_data['vendor_name'],
             'trn_date'        => $bill_data['trn_date'],
             'due_date'        => $bill_data['due_date'],
@@ -316,6 +316,7 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
     $bill_data['vendor_id'] = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
     $bill_data['vendor_name'] = isset( $data['vendor_name'] ) ? $data['vendor_name'] : '';
+    $bill_data['billing_address'] = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
     $bill_data['trn_date']   = isset( $data['date'] ) ? $data['date'] : date("Y-m-d" );
     $bill_data['due_date']   = isset( $data['due_date'] ) ? $data['due_date'] : date("Y-m-d" );
     $bill_data['created_at'] = date("Y-m-d" );
