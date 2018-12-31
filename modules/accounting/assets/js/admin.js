@@ -13610,8 +13610,8 @@ if (false) {(function () {
   created: function created() {
     var _this = this;
 
-    this.$root.$on('pay_bill-modal-close', function () {
-      _this.pay_billModal = false;
+    this.$root.$on('pay-bill-modal-close', function () {
+      _this.pay_bill_modal = false;
     });
   },
   methods: {
@@ -13838,12 +13838,11 @@ if (false) {(function () {
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "PayBillModal",
   props: {
     basic_fields: Object,
-    invoices: Array,
+    pay_bills: Array,
     attachments: Array,
     finalTotalAmount: [String, Number],
     assets_url: String
@@ -23814,17 +23813,17 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "tbody",
-                        _vm._l(_vm.invoices, function(invoice, key) {
+                        _vm._l(_vm.pay_bills, function(pay_bill, key) {
                           return _c("tr", { key: key }, [
-                            _c("td", [_vm._v(_vm._s(invoice.id))]),
+                            _c("td", [_vm._v(_vm._s(key + 1))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(invoice.due_date))]),
+                            _c("td", [_vm._v(_vm._s(pay_bill.due_date))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(invoice.total))]),
+                            _c("td", [_vm._v(_vm._s(pay_bill.total))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v("$240.00")]),
+                            _c("td", [_vm._v(_vm._s(pay_bill.total))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(invoice.total))])
+                            _c("td", [_vm._v(_vm._s(pay_bill.total))])
                           ])
                         }),
                         0
@@ -24011,7 +24010,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Invoice ID")]),
+        _c("th", [_vm._v("Bill ID")]),
         _vm._v(" "),
         _c("th", [_vm._v("Due Date")]),
         _vm._v(" "),
@@ -24036,12 +24035,7 @@ var staticRenderFns = [
               _vm._v(" $15,000.00")
             ]),
             _vm._v(" "),
-            _c("li", [_c("span", [_vm._v("Total:")]), _vm._v(" $15,000.00")]),
-            _vm._v(" "),
-            _c("li", [
-              _c("span", [_vm._v("Total Related Payments:")]),
-              _vm._v(" $15,000.00")
-            ])
+            _c("li", [_c("span", [_vm._v("Total:")]), _vm._v(" $15,000.00")])
           ])
         ])
       ])
@@ -24546,7 +24540,7 @@ var render = function() {
             _c("pay-bill-modal", {
               attrs: {
                 basic_fields: _vm.basic_fields,
-                bills: _vm.bills,
+                pay_bills: _vm.pay_bills,
                 attachments: _vm.attachments,
                 finalTotalAmount: _vm.finalTotalAmount,
                 assets_url: _vm.acct_assets
