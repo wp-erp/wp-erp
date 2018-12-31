@@ -127,7 +127,7 @@ function erp_acct_insert_purchase( $data ) {
         $purchase_data = erp_acct_get_formatted_purchase_data( $data, $voucher_no );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase', array(
-            'voucher_no'      => $purchase_data['voucher_no'],
+            'voucher_no'      => $voucher_no,
             'vendor_id'       => $purchase_data['vendor_id'],
             'vendor_name'     => $purchase_data['vendor_name'],
             'trn_date'        => $purchase_data['trn_date'],
@@ -159,7 +159,7 @@ function erp_acct_insert_purchase( $data ) {
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
-            'purchase_no'   => $voucher_no,
+            'purchase_no'   => $purchase_no,
             'trn_no'        => $voucher_no,
             'particulars'   => $purchase_data['particulars'],
             'debit'         => 0,

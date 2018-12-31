@@ -75,7 +75,7 @@
                             <table class="wperp-table wperp-form-table invoice-table">
                                 <thead>
                                 <tr>
-                                    <th>Invoice ID</th>
+                                    <th>Bill ID</th>
                                     <th>Due Date</th>
                                     <th>Total</th>
                                     <th>Due</th>
@@ -83,12 +83,12 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr :key="key" v-for="(invoice,key) in invoices">
-                                    <td>{{invoice.id}}</td>
-                                    <td>{{invoice.due_date}}</td>
-                                    <td>{{invoice.total}}</td>
-                                    <td>$240.00</td>
-                                    <td>{{invoice.total}}</td>
+                                <tr :key="key" v-for="(pay_bill,key) in pay_bills">
+                                    <td>{{key+1}}</td>
+                                    <td>{{pay_bill.due_date}}</td>
+                                    <td>{{pay_bill.total}}</td>
+                                    <td>{{pay_bill.total}}</td>
+                                    <td>{{pay_bill.total}}</td>
                                 </tr>
                                 </tbody>
                                 <tfoot>
@@ -97,7 +97,6 @@
                                         <ul>
                                             <li><span>Subtotal:</span> $15,000.00</li>
                                             <li><span>Total:</span> $15,000.00</li>
-                                            <li><span>Total Related Payments:</span> $15,000.00</li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -143,7 +142,7 @@
 
         props: {
             basic_fields: Object,
-            invoices: Array,
+            pay_bills: Array,
             attachments: Array,
             finalTotalAmount: [ String, Number ],
             assets_url: String

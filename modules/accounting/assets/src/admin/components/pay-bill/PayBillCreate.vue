@@ -117,7 +117,7 @@
         </div>
 
         <template v-if="pay_bill_modal">
-            <pay-bill-modal :basic_fields="basic_fields" :bills="bills" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
+            <pay-bill-modal :basic_fields="basic_fields" :pay_bills="pay_bills" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
         </template>
 
     </div>
@@ -166,8 +166,8 @@
         },
 
         created() {
-            this.$root.$on('pay_bill-modal-close', () => {
-                this.pay_billModal = false;
+            this.$root.$on('pay-bill-modal-close', () => {
+                this.pay_bill_modal = false;
             });
         },
 
