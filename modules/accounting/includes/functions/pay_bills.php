@@ -50,7 +50,7 @@ function erp_acct_get_pay_bills( $args = [] ) {
 function erp_acct_get_pay_bill( $bill_no ) {
     global $wpdb;
 
-    $sq = "SELECT
+    $sql = "SELECT
 
     pay_bill.id,
     pay_bill.voucher_no,
@@ -193,7 +193,7 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
         $wpdb->update( $wpdb->prefix . 'erp_acct_pay_bill', array(
             'bill_no'         => $pay_bill_data['bill_no'],
             'trn_date'        => $pay_bill_data['trn_date'],
-            'amount'          => $pay_bill_data['total'],
+            'amount'          => $pay_bill_data['amount'],
             'type'            => $pay_bill_data['type'],
             'particulars'     => $pay_bill_data['particulars'],
             'attachments'     => $pay_bill_data['attachments'],
