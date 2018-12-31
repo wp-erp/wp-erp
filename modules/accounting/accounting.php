@@ -277,7 +277,16 @@ class Accounting {
      * @return void
      */
     public function pdf_notice_message( $type ) {
-        $actual_link = esc_url( (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
+	$isSecure = false;
+	/*when using ISAPI with IIS, the value of $_SERVER['HTTPS'] will be off, if the request was not made through the HTTPS protocol*/
+	if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+    		$isSecure = true;
+	/*In he standard conditions [$_SERVER['HTTPS'] == 'on'] do not work on servers behind a load balancer (reverse proxy)*/
+	/*Load balancer may communicate with a web server using HTTP even if the request to the sever is HTTPS, so HTTP_X_FORWARDED_PROTO is a de facto standard for this scope*/
+	}elseif ( !empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' ) {
+	    $isSecure = true;
+	}
+        $actual_link = esc_url( ($isSecure ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
         $sign = empty( $_GET ) ? '?' : '&';
 
         echo '<div class="updated notice is-dismissible notice-pdf"><p>';
