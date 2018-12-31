@@ -124,7 +124,7 @@
         </div>
 
         <template v-if="billModal">
-            <bill-modal :basic_fields="basic_fields" :ledgers="ledgers" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
+            <bill-modal :basic_fields="basic_fields" :ledgers="ledgers" :transactionLines="transactionLines" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
         </template>
 
     </div>
@@ -244,6 +244,16 @@
 
             showBillModal() {
                 this.billModal = true;
+
+                //remove later
+                this.transactionLines[0] = {
+                    id: 1,
+                    ledger_id: 305,
+                    voucher_no: 100,
+                    due_date: "01-01-2019",
+                    description: 'desc',
+                    amount: 1000
+                };
             }
         },
 
