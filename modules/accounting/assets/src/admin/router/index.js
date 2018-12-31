@@ -13,6 +13,8 @@ import ChartOfAccounts  from 'admin/components/ChartOfAccounts.vue';
 import ProductCategory  from 'admin/components/product-category/ProductCategory.vue';
 import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue';
 import BillCreate       from 'admin/components/bill/BillCreate.vue';
+import PayBillCreate    from 'admin/components/pay-bill/PayBillCreate.vue';
+
 
 Vue.use(Router)
 
@@ -134,9 +136,14 @@ export default new Router({
             component: RecPaymentCreate
         },
         {
-            path: '/bill/new',
+            path: '/bills/new',
             name: 'BillCreate',
             component: BillCreate
+        },
+        {
+            path: '/pay-bills/new',
+            name: 'PayBillCreate',
+            component: PayBillCreate
         },
     ]
 });

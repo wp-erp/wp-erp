@@ -206,7 +206,7 @@ export default {
                 { namedRoute: 'DummyComponent', name: 'Purchases' },
                 { namedRoute: 'DummyComponent', name: 'Pay Purchases' },
                 { namedRoute: 'BillCreate', name: 'Bills' },
-                { namedRoute: 'DummyComponent', name: 'Pay Bills' },
+                { namedRoute: 'PayBillCreate', name: 'Pay Bills' },
             ],
         };
     },

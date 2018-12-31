@@ -403,3 +403,40 @@ function erp_acct_get_bill_count() {
 
     return $row->count;
 }
+
+/**
+ * Get bills with due of a people
+ *
+ * @return mixed
+ */
+
+function erp_acct_get_due_bills_people( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_bills WHERE ( vendor_id={$args['people_id']} ) AND (status!='paid') ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
+
+    return $wpdb->get_results( $sql, ARRAY_A );
+}
