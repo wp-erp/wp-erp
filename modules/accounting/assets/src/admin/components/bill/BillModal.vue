@@ -83,12 +83,12 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr :key="key" v-for="(invoice,key) in invoices">
-                                    <td>{{invoice.id}}</td>
-                                    <td>{{invoice.due_date}}</td>
-                                    <td>{{invoice.total}}</td>
-                                    <td>$240.00</td>
-                                    <td>{{invoice.total}}</td>
+                                <tr v-for="line in transactionLines">
+                                    <td>{{line.id}}</td>
+                                    <td>{{line.ledger_id}}</td>
+                                    <td>{{line.description}}</td>
+                                    <td>{{line.amount}}</td>
+                                    <td>{{line.amount}}</td>
                                 </tr>
                                 </tbody>
                                 <tfoot>
@@ -97,7 +97,6 @@
                                         <ul>
                                             <li><span>Subtotal:</span> $15,000.00</li>
                                             <li><span>Total:</span> $15,000.00</li>
-                                            <li><span>Total Related Payments:</span> $15,000.00</li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -142,6 +141,7 @@
         name: "BillModal",
 
         props: {
+            transactionLines: Array,
             basic_fields: Object,
             invoices: Array,
             attachments: Array,
@@ -153,7 +153,7 @@
             inside() {},
 
             outside() {
-                this.$root.$emit('payment-modal-close');
+                this.$root.$emit('bill-modal-close');
             }
         },
     }

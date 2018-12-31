@@ -13105,7 +13105,16 @@ if (false) {(function () {
       });
     },
     showBillModal: function showBillModal() {
-      this.billModal = true;
+      this.billModal = true; //remove later
+
+      this.transactionLines[0] = {
+        id: 1,
+        ledger_id: 305,
+        voucher_no: 100,
+        due_date: "01-01-2019",
+        description: 'desc',
+        amount: 1000
+      };
     }
   },
   watch: {
@@ -13261,10 +13270,10 @@ if (false) {(function () {
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "BillModal",
   props: {
+    transactionLines: Array,
     basic_fields: Object,
     invoices: Array,
     attachments: Array,
@@ -13274,7 +13283,7 @@ if (false) {(function () {
   methods: {
     inside: function inside() {},
     outside: function outside() {
-      this.$root.$emit('payment-modal-close');
+      this.$root.$emit('bill-modal-close');
     }
   }
 });
@@ -22690,17 +22699,17 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "tbody",
-                        _vm._l(_vm.invoices, function(invoice, key) {
-                          return _c("tr", { key: key }, [
-                            _c("td", [_vm._v(_vm._s(invoice.id))]),
+                        _vm._l(_vm.transactionLines, function(line) {
+                          return _c("tr", [
+                            _c("td", [_vm._v(_vm._s(line.id))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(invoice.due_date))]),
+                            _c("td", [_vm._v(_vm._s(line.ledger_id))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(invoice.total))]),
+                            _c("td", [_vm._v(_vm._s(line.description))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v("$240.00")]),
+                            _c("td", [_vm._v(_vm._s(line.amount))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(invoice.total))])
+                            _c("td", [_vm._v(_vm._s(line.amount))])
                           ])
                         }),
                         0
@@ -22912,12 +22921,7 @@ var staticRenderFns = [
               _vm._v(" $15,000.00")
             ]),
             _vm._v(" "),
-            _c("li", [_c("span", [_vm._v("Total:")]), _vm._v(" $15,000.00")]),
-            _vm._v(" "),
-            _c("li", [
-              _c("span", [_vm._v("Total Related Payments:")]),
-              _vm._v(" $15,000.00")
-            ])
+            _c("li", [_c("span", [_vm._v("Total:")]), _vm._v(" $15,000.00")])
           ])
         ])
       ])
@@ -23540,6 +23544,7 @@ var render = function() {
               attrs: {
                 basic_fields: _vm.basic_fields,
                 ledgers: _vm.ledgers,
+                transactionLines: _vm.transactionLines,
                 attachments: _vm.attachments,
                 finalTotalAmount: _vm.finalTotalAmount,
                 assets_url: _vm.acct_assets
