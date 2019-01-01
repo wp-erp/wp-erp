@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
-                            <label>Deposit to</label>
+                            <label>Transaction From</label>
                             <select v-model="basic_fields.deposit_to" name="deposit-to" class="wperp-form-field">
                                 <option value="0">-Select-</option>
                                 <option value="1">Cash</option>
@@ -71,11 +71,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr :key="key" v-for="(pay_bill,key) in pay_purchases">
+                    <tr :key="key" v-for="(item,key) in pay_purchases">
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
-                        <td class="col--due-date" data-colname="Due Date">{{pay_bill.due_date}}</td>
-                        <td class="col--total" data-colname="Total">{{pay_bill.total}}</td>
-                        <td class="col--due" data-colname="Due">{{pay_bill.total}}</td>
+                        <td class="col--due-date" data-colname="Due Date">{{item.due_date}}</td>
+                        <td class="col--total" data-colname="Total">{{item.total}}</td>
+                        <td class="col--due" data-colname="Due">{{item.total}}</td>
                         <td class="col--amount" data-colname="Amount">
                             <input type="text" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
@@ -187,7 +187,7 @@
                             id: element.id,
                             voucher_no: element.voucher_no,
                             due_date: element.due_date,
-                            total: parseFloat(element.total)
+                            total: parseFloat(element.amount)
                         });
                     });
                 }).then(() => {
@@ -223,14 +223,19 @@
             },
 
             SubmitForPayment() {
-                HTTP.post('/pay-bills', {
+
+                this.pay_purchases.forEach( (element,index) => {
+                    element['line_total'] = parseFloat( this.totalAmounts[index] );
+                });
+
+                HTTP.post('/pay-purchases', {
                     vendor_id: this.basic_fields.vendor.id,
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trans_date,
                     due_date: this.basic_fields.due_date,
-                    bill_details: this.pay_purchases,
+                    purchase_details: this.pay_purchases,
                     attachments: this.attachments,
-                    type: 'pay_bill',
+                    type: 'pay_purchase',
                     status: 'paid',
                     particulars: this.particulars,
                     trn_by: this.basic_fields.deposit_to,
