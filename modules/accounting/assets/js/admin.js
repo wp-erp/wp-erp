@@ -10621,7 +10621,9 @@ if (false) {(function () {
         attachments: this.attachments,
         type: 'purchase',
         status: 'awaiting_payment',
-        trn_by: 'cash'
+        trn_by: 'cash',
+        ref: ' ',
+        particulars: ''
       }).then(function (res) {
         console.log(res.data);
       }).then(function () {

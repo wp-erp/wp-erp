@@ -150,6 +150,7 @@ function erp_acct_insert_purchase( $data ) {
                 'trn_no'        => $voucher_no,
                 'product_id'    => $item['product_id'],
                 'qty'           => $item['qty'],
+                'price'         => $item['unit_price'],
                 'amount'        => $item['item_total'],
                 'created_at'    => $purchase_data['created_at'],
                 'created_by'    => $created_by,
