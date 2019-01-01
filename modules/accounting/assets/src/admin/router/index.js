@@ -15,6 +15,7 @@ import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue'
 import BillCreate       from 'admin/components/bill/BillCreate.vue';
 import PayBillCreate    from 'admin/components/pay-bill/PayBillCreate.vue';
 import PurchaseCreate   from 'admin/components/purchase/PurchaseCreate.vue';
+import PayPurchaseCreate from 'admin/components/pay-purchase/PayPurchaseCreate.vue';
 
 Vue.use(Router)
 
@@ -149,6 +150,11 @@ export default new Router({
             path: '/purchases/new',
             name: 'PurchaseCreate',
             component: PurchaseCreate
+        },
+        {
+            path: '/pay-purchase/new',
+            name: 'PayPurchaseCreate',
+            component: PayPurchaseCreate
         },
     ]
 })
