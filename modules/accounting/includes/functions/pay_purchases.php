@@ -270,9 +270,9 @@ function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
     $pay_purchase_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $pay_purchase_data['particulars']      = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $pay_purchase_data['created_at']       = date( "Y-m-d" );
-    $pay_purchase_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $pay_purchase_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
-    $pay_purchase_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $pay_purchase_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : get_current_user_id();
+    $pay_purchase_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : date( "Y-m-d" );
+    $pay_purchase_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : get_current_user_id();
 
     return $pay_purchase_data;
 }

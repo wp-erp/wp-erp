@@ -11427,7 +11427,7 @@ if (false) {(function () {
             id: element.id,
             voucher_no: element.voucher_no,
             due_date: element.due_date,
-            total: parseFloat(element.total)
+            total: parseFloat(element.amount)
           });
         });
       }).then(function () {
@@ -11458,14 +11458,17 @@ if (false) {(function () {
     SubmitForPayment: function SubmitForPayment() {
       var _this4 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/pay-bills', {
+      this.pay_purchases.forEach(function (element, index) {
+        element['line_total'] = parseFloat(_this4.totalAmounts[index]);
+      });
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/pay-purchases', {
         vendor_id: this.basic_fields.vendor.id,
         ref: this.basic_fields.trn_ref,
         trn_date: this.basic_fields.trans_date,
         due_date: this.basic_fields.due_date,
-        bill_details: this.pay_purchases,
+        purchase_details: this.pay_purchases,
         attachments: this.attachments,
-        type: 'pay_bill',
+        type: 'pay_purchase',
         status: 'paid',
         particulars: this.particulars,
         trn_by: this.basic_fields.deposit_to
@@ -20299,7 +20302,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "wperp-col-sm-3" }, [
-                    _c("label", [_vm._v("Deposit to")]),
+                    _c("label", [_vm._v("Transaction From")]),
                     _vm._v(" "),
                     _c(
                       "select",
@@ -20398,7 +20401,7 @@ var render = function() {
             _c(
               "tbody",
               [
-                _vm._l(_vm.pay_purchases, function(pay_bill, key) {
+                _vm._l(_vm.pay_purchases, function(item, key) {
                   return _c("tr", { key: key }, [
                     _c(
                       "td",
@@ -20415,7 +20418,7 @@ var render = function() {
                         staticClass: "col--due-date",
                         attrs: { "data-colname": "Due Date" }
                       },
-                      [_vm._v(_vm._s(pay_bill.due_date))]
+                      [_vm._v(_vm._s(item.due_date))]
                     ),
                     _vm._v(" "),
                     _c(
@@ -20424,7 +20427,7 @@ var render = function() {
                         staticClass: "col--total",
                         attrs: { "data-colname": "Total" }
                       },
-                      [_vm._v(_vm._s(pay_bill.total))]
+                      [_vm._v(_vm._s(item.total))]
                     ),
                     _vm._v(" "),
                     _c(
@@ -20433,7 +20436,7 @@ var render = function() {
                         staticClass: "col--due",
                         attrs: { "data-colname": "Due" }
                       },
-                      [_vm._v(_vm._s(pay_bill.total))]
+                      [_vm._v(_vm._s(item.total))]
                     ),
                     _vm._v(" "),
                     _c(
