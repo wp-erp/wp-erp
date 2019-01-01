@@ -8,7 +8,7 @@
                     <h2 class="content-header__title">New Invoice</h2>
                     <!-- just for showing modal -->
                     <a href="#" class="wperp-btn btn--primary" @click.prevent="showInvoiceModal">
-                        <span>Show Invoice Modal</span>
+                        <span>Print</span>
                     </a>
                 </div>
             </div>
@@ -240,7 +240,7 @@ export default {
             return lineItems;
         },
 
-        SubmitForApproval() {
+        SubmitForApproval(event) {
             this.isWorking = true;
 
             HTTP.post('/invoices', {
@@ -252,9 +252,17 @@ export default {
                 attachments: this.attachments,
                 type: 'invoice',
                 status: 'awaiting_payment',
-                trn_by: 1
+                trn_by: 'cash',
+                estimate: 0,
             }).then(res => {
                 console.log(res.data);
+                this.$swal({
+                    position: 'top-end',
+                    type: 'success',
+                    title: 'Invoice Created!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }).then(() => {
                 this.isWorking = false;
             });

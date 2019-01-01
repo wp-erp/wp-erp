@@ -12383,7 +12383,7 @@ if (false) {(function () {
       });
       return lineItems;
     },
-    SubmitForApproval: function SubmitForApproval() {
+    SubmitForApproval: function SubmitForApproval(event) {
       var _this4 = this;
 
       this.isWorking = true;
@@ -12396,9 +12396,18 @@ if (false) {(function () {
         attachments: this.attachments,
         type: 'invoice',
         status: 'awaiting_payment',
-        trn_by: 1
+        trn_by: 'cash',
+        estimate: 0
       }).then(function (res) {
         console.log(res.data);
+
+        _this4.$swal({
+          position: 'top-end',
+          type: 'success',
+          title: 'Invoice Created!',
+          showConfirmButton: false,
+          timer: 1500
+        });
       }).then(function () {
         _this4.isWorking = false;
       });
@@ -13344,6 +13353,14 @@ if (false) {(function () {
         trn_by: this.basic_fields.deposit_to
       }).then(function (res) {
         console.log(res.data);
+
+        _this4.$swal({
+          position: 'top-end',
+          type: 'success',
+          title: 'Payment Created!',
+          showConfirmButton: false,
+          timer: 1500
+        });
       }).then(function () {
         _this4.isWorking = false;
       });
@@ -13765,6 +13782,14 @@ if (false) {(function () {
         trn_by: this.basic_fields.deposit_to
       }).then(function (res) {
         console.log(res.data);
+
+        _this3.$swal({
+          position: 'top-end',
+          type: 'success',
+          title: 'Bill Created!',
+          showConfirmButton: false,
+          timer: 1500
+        });
       }).then(function () {
         _this3.isWorking = false;
       });
@@ -14341,6 +14366,14 @@ if (false) {(function () {
         trn_by: this.basic_fields.deposit_to
       }).then(function (res) {
         console.log(res.data);
+
+        _this4.$swal({
+          position: 'top-end',
+          type: 'success',
+          title: 'Pay-Bill Created!',
+          showConfirmButton: false,
+          timer: 1500
+        });
       }).then(function () {
         _this4.isWorking = false;
       });
@@ -14544,13 +14577,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vee_validate__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__App_vue__ = __webpack_require__(98);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__router__ = __webpack_require__(118);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vue_sweetalert2__ = __webpack_require__(24);
  // import Vuex from 'vuex'
 
 
 
 
+
 __WEBPACK_IMPORTED_MODULE_0_vue__["default"].config.productionTip = false;
-__WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vee_validate__["default"]); // Vue click outside directive
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vee_validate__["default"]);
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_4_vue_sweetalert2__["default"]); // Vue click outside directive
 
 __WEBPACK_IMPORTED_MODULE_0_vue__["default"].directive('click-outside', {
   bind: function bind(el, binding, vnode) {
@@ -19083,7 +19119,7 @@ var render = function() {
                   }
                 }
               },
-              [_c("span", [_vm._v("Show Purchase Modal")])]
+              [_c("span", [_vm._v("Print")])]
             )
           ])
         ])
@@ -22524,7 +22560,7 @@ var render = function() {
                   }
                 }
               },
-              [_c("span", [_vm._v("Show Invoice Modal")])]
+              [_c("span", [_vm._v("Print")])]
             )
           ])
         ])
@@ -23821,7 +23857,7 @@ var render = function() {
                   }
                 }
               },
-              [_c("span", [_vm._v("Print Receive Payment")])]
+              [_c("span", [_vm._v("Print")])]
             )
           ])
         ])
@@ -24881,7 +24917,7 @@ var render = function() {
                   }
                 }
               },
-              [_c("span", [_vm._v("Print Bill")])]
+              [_c("span", [_vm._v("Print")])]
             )
           ])
         ])

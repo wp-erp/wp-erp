@@ -10,7 +10,7 @@
                     <!-- Print Dialogue -->
 
                     <a href="#" class="wperp-btn btn--primary" @click.prevent="showBillModal">
-                        <span>Print Bill</span>
+                        <span>Print</span>
                     </a>
                 </div>
             </div>
@@ -237,6 +237,13 @@
                     trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
                     console.log(res.data);
+                    this.$swal({
+                        position: 'top-end',
+                        type: 'success',
+                        title: 'Bill Created!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 }).then(() => {
                     this.isWorking = false;
                 });
