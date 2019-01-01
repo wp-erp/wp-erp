@@ -20,11 +20,11 @@
                 </div>
                 <div class="wperp-modal-body">
                     <div class="wperp-invoice-panel">
-                        <div class="Purchase-header">
-                            <div class="Purchase-logo">
+                        <div class="invoice-header">
+                            <div class="invoice-logo">
                                 <img :src="acct_var.acct_assets + '/images/dummy-logo.png'" alt="logo name">
                             </div>
-                            <div class="Purchase-address">
+                            <div class="invoice-address">
                                 <address>
                                     <strong>Amazon Limited</strong><br>
                                     983 Aiden Roads Suite 062<br>
@@ -35,7 +35,7 @@
                             </div>
                         </div>
 
-                        <div class="Purchase-body" v-if="Purchase != null">
+                        <div class="invoice-body" v-if="Purchase != null">
                             <h4>Purchase</h4>
                             <div class="wperp-row">
                                 <div class="wperp-col-sm-6">
@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
                                 <div class="wperp-col-sm-6">
-                                    <table class="Purchase-info">
+                                    <table class="invoice-info">
                                         <tr>
                                             <th>Purchase No.</th>
                                             <td>INV-0001</td>
@@ -72,15 +72,12 @@
                         </div>
 
                         <div class="wperp-invoice-table">
-                            <table class="wperp-table wperp-form-table Purchase-table">
+                            <table class="wperp-table wperp-form-table invoice-table">
                                 <thead>
                                 <tr>
-                                    <th>Description</th>
-                                    <th>City</th>
+                                    <th>Item name</th>
+                                    <th>Qty</th>
                                     <th>Unit Price</th>
-                                    <th>Discount</th>
-                                    <th>Tax</th>
-                                    <th>Tax Amount</th>
                                     <th>Amount</th>
                                 </tr>
                                 </thead>
@@ -89,43 +86,28 @@
                                     <th>Buy Fabrics</th>
                                     <td>10</td>
                                     <td>$1500.00</td>
-                                    <td>10%</td>
-                                    <td>0%</td>
-                                    <td>$0.00</td>
                                     <td>$15,000.00</td>
                                 </tr>
                                 <tr>
                                     <th>Buy Fabrics</th>
                                     <td>10</td>
                                     <td>$1500.00</td>
-                                    <td>10%</td>
-                                    <td>0%</td>
-                                    <td>$0.00</td>
                                     <td>$15,000.00</td>
                                 </tr>
                                 <tr>
                                     <th>Buy Fabrics</th>
                                     <td>10</td>
                                     <td>$1500.00</td>
-                                    <td>10%</td>
-                                    <td>0%</td>
-                                    <td>$0.00</td>
                                     <td>$15,000.00</td>
                                 </tr><tr>
                                     <th>Buy Fabrics</th>
                                     <td>10</td>
                                     <td>$1500.00</td>
-                                    <td>10%</td>
-                                    <td>0%</td>
-                                    <td>$0.00</td>
                                     <td>$15,000.00</td>
                                 </tr><tr>
                                     <th>Buy Fabrics</th>
                                     <td>10</td>
                                     <td>$1500.00</td>
-                                    <td>10%</td>
-                                    <td>0%</td>
-                                    <td>$0.00</td>
                                     <td>$15,000.00</td>
                                 </tr>
                                 </tbody>
@@ -133,9 +115,9 @@
                                 <tr>
                                     <td colspan="7">
                                         <ul>
-                                            <li><span>Subtotal:</span> $15,000.00</li>
-                                            <li><span>Total:</span> $15,000.00</li>
-                                            <li><span>Total Related Payments:</span> $15,000.00</li>
+                                            <li><span>Subtotal:</span> $75,000.00</li>
+                                            <li><span>Total:</span> $75,000.00</li>
+                                            <li><span>Total Related Payments:</span> $75,000.00</li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -144,7 +126,7 @@
                         </div>
 
                     </div>
-                    <div class="Purchase-attachments d-print-none">
+                    <div class="invoice-attachments d-print-none">
                         <h4>Attachments</h4>
                         <a class="attachment-item" href="#">
                             <img :src="acct_var.acct_assets + '/images/img-thumb.png'" alt="image name">

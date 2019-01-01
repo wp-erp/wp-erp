@@ -162,7 +162,7 @@
                 this.updateFinalAmount();
             });
 
-            this.$root.$on('Purchase-modal-close', () => {
+            this.$root.$on('purchase-modal-close', () => {
                 this.PurchaseModal = false;
             });
         },
