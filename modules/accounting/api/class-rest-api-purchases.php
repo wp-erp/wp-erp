@@ -388,11 +388,13 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'              => (int) $item->id,
             'vendor_id'       => (int) $item->vendor_id,
+            'voucher_no'      => (int) $item->voucher_no,
             'date'            => $item->trn_date,
             'due_date'        => $item->due_date,
             'line_items'      => $item->line_items,
             'type'            => $item->type,
             'status'          => $item->status,
+            'amount'          => $item->amount,
         ];
 
         $data = array_merge( $data, $additional_fields );
