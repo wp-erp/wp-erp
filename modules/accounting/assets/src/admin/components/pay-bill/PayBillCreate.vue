@@ -236,6 +236,13 @@
                     trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
                     console.log(res.data);
+                    this.$swal({
+                        position: 'top-end',
+                        type: 'success',
+                        title: 'Pay-Bill Created!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 }).then(() => {
                     this.isWorking = false;
                 });

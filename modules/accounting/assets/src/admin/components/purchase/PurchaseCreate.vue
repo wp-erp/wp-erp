@@ -8,7 +8,7 @@
                     <h2 class="content-header__title">New Purchase</h2>
                     <!-- just for showing modal -->
                     <a href="#" class="wperp-btn btn--primary" @click.prevent="showPurchaseModal">
-                        <span>Show Purchase Modal</span>
+                        <span>Print</span>
                     </a>
                 </div>
             </div>
