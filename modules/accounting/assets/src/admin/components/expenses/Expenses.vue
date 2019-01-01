@@ -191,6 +191,7 @@ import 'assets/js/status_chart';
 
 import ComboBox from 'admin/components/select/ComboBox.vue';
 import ExpensesStats from 'admin/components/expenses/ExpensesStats.vue';
+import PurchaseCreate from 'admin/components/purchase/PurchaseCreate.vue';
 
 export default {
     name: 'Expenses',
@@ -203,7 +204,7 @@ export default {
     data() {
         return {
             pages: [
-                { namedRoute: 'DummyComponent', name: 'Purchases' },
+                { namedRoute: 'PurchaseCreate', name: 'Purchases' },
                 { namedRoute: 'DummyComponent', name: 'Pay Purchases' },
                 { namedRoute: 'BillCreate', name: 'Bills' },
                 { namedRoute: 'PayBillCreate', name: 'Pay Bills' },

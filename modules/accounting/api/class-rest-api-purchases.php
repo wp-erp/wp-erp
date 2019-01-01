@@ -97,7 +97,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_purchases( $request ) {
 
         $args = [
-            'number' => $request['per_page'],
+            'number' => !empty( $request['per_page'] ) ? intval( $request['per_page'] ) : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
@@ -235,7 +235,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function delete_purchase( $request ) {
         $id = (int) $request['id'];
-        
+
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_purchase_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
