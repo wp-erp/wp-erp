@@ -10553,7 +10553,7 @@ if (false) {(function () {
     this.$root.$on('total-updated', function (amount) {
       _this.updateFinalAmount();
     });
-    this.$root.$on('Purchase-modal-close', function () {
+    this.$root.$on('purchase-modal-close', function () {
       _this.PurchaseModal = false;
     });
   },
@@ -10761,24 +10761,6 @@ var STATUS_INITIAL = 0,
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -18379,8 +18361,8 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "wperp-modal-body" }, [
               _c("div", { staticClass: "wperp-invoice-panel" }, [
-                _c("div", { staticClass: "Purchase-header" }, [
-                  _c("div", { staticClass: "Purchase-logo" }, [
+                _c("div", { staticClass: "invoice-header" }, [
+                  _c("div", { staticClass: "invoice-logo" }, [
                     _c("img", {
                       attrs: {
                         src:
@@ -18394,7 +18376,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _vm.Purchase != null
-                  ? _c("div", { staticClass: "Purchase-body" }, [
+                  ? _c("div", { staticClass: "invoice-body" }, [
                       _c("h4", [_vm._v("Purchase")]),
                       _vm._v(" "),
                       _c("div", { staticClass: "wperp-row" }, [
@@ -18439,7 +18421,7 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "wperp-col-sm-6" }, [
-                          _c("table", { staticClass: "Purchase-info" }, [
+                          _c("table", { staticClass: "invoice-info" }, [
                             _vm._m(2),
                             _vm._v(" "),
                             _c("tr", [
@@ -18466,7 +18448,7 @@ var render = function() {
                 _vm._m(4)
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "Purchase-attachments d-print-none" }, [
+              _c("div", { staticClass: "invoice-attachments d-print-none" }, [
                 _c("h4", [_vm._v("Attachments")]),
                 _vm._v(" "),
                 _c(
@@ -18559,7 +18541,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "Purchase-address" }, [
+    return _c("div", { staticClass: "invoice-address" }, [
       _c("address", [
         _c("strong", [_vm._v("Amazon Limited")]),
         _c("br"),
@@ -18602,21 +18584,15 @@ var staticRenderFns = [
     return _c("div", { staticClass: "wperp-invoice-table" }, [
       _c(
         "table",
-        { staticClass: "wperp-table wperp-form-table Purchase-table" },
+        { staticClass: "wperp-table wperp-form-table invoice-table" },
         [
           _c("thead", [
             _c("tr", [
-              _c("th", [_vm._v("Description")]),
+              _c("th", [_vm._v("Item name")]),
               _vm._v(" "),
-              _c("th", [_vm._v("City")]),
+              _c("th", [_vm._v("Qty")]),
               _vm._v(" "),
               _c("th", [_vm._v("Unit Price")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("Discount")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("Tax")]),
-              _vm._v(" "),
-              _c("th", [_vm._v("Tax Amount")]),
               _vm._v(" "),
               _c("th", [_vm._v("Amount")])
             ])
@@ -18630,11 +18606,15 @@ var staticRenderFns = [
               _vm._v(" "),
               _c("td", [_vm._v("$1500.00")]),
               _vm._v(" "),
-              _c("td", [_vm._v("10%")]),
+              _c("td", [_vm._v("$15,000.00")])
+            ]),
+            _vm._v(" "),
+            _c("tr", [
+              _c("th", [_vm._v("Buy Fabrics")]),
               _vm._v(" "),
-              _c("td", [_vm._v("0%")]),
+              _c("td", [_vm._v("10")]),
               _vm._v(" "),
-              _c("td", [_vm._v("$0.00")]),
+              _c("td", [_vm._v("$1500.00")]),
               _vm._v(" "),
               _c("td", [_vm._v("$15,000.00")])
             ]),
@@ -18646,28 +18626,6 @@ var staticRenderFns = [
               _vm._v(" "),
               _c("td", [_vm._v("$1500.00")]),
               _vm._v(" "),
-              _c("td", [_vm._v("10%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("0%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$0.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$15,000.00")])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", [_vm._v("Buy Fabrics")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$1500.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("0%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$0.00")]),
-              _vm._v(" "),
               _c("td", [_vm._v("$15,000.00")])
             ]),
             _c("tr", [
@@ -18677,12 +18635,6 @@ var staticRenderFns = [
               _vm._v(" "),
               _c("td", [_vm._v("$1500.00")]),
               _vm._v(" "),
-              _c("td", [_vm._v("10%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("0%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$0.00")]),
-              _vm._v(" "),
               _c("td", [_vm._v("$15,000.00")])
             ]),
             _c("tr", [
@@ -18691,12 +18643,6 @@ var staticRenderFns = [
               _c("td", [_vm._v("10")]),
               _vm._v(" "),
               _c("td", [_vm._v("$1500.00")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("10%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("0%")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("$0.00")]),
               _vm._v(" "),
               _c("td", [_vm._v("$15,000.00")])
             ])
@@ -18708,17 +18654,17 @@ var staticRenderFns = [
                 _c("ul", [
                   _c("li", [
                     _c("span", [_vm._v("Subtotal:")]),
-                    _vm._v(" $15,000.00")
+                    _vm._v(" $75,000.00")
                   ]),
                   _vm._v(" "),
                   _c("li", [
                     _c("span", [_vm._v("Total:")]),
-                    _vm._v(" $15,000.00")
+                    _vm._v(" $75,000.00")
                   ]),
                   _vm._v(" "),
                   _c("li", [
                     _c("span", [_vm._v("Total Related Payments:")]),
-                    _vm._v(" $15,000.00")
+                    _vm._v(" $75,000.00")
                   ])
                 ])
               ])
