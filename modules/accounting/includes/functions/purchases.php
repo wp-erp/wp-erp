@@ -32,7 +32,7 @@ function erp_acct_get_purchases( $args = [] ) {
 
     $sql = "SELECT";
     $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
-    $sql .= "FROM {$wpdb->prefix}erp_acct_pay_purchase ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_purchase ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         return $wpdb->get_var($sql);
