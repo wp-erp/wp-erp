@@ -5,7 +5,7 @@
                 <div class="wperp-modal-header">
                     <h4>{{ type }}</h4>
                     <div class="d-print-none">
-                        <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="window.print()">
+                        <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                             <i class="flaticon-printer-1"></i>
                             &nbsp; Print
                         </a>
@@ -194,6 +194,10 @@
 
             outside() {
                 this.$root.$emit('preview-modal-close');
+            },
+
+            printPopup() {
+                window.print();
             }
         },
 

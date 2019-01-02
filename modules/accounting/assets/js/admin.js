@@ -9636,6 +9636,9 @@ if (false) {(function () {
     inside: function inside() {},
     outside: function outside() {
       this.$root.$emit('sales-modal-close');
+    },
+    printPopup: function printPopup() {
+      window.print();
     }
   }
 });
@@ -13909,6 +13912,9 @@ if (false) {(function () {
     inside: function inside() {},
     outside: function outside() {
       this.$root.$emit('preview-modal-close');
+    },
+    printPopup: function printPopup() {
+      window.print();
     }
   }
 });
@@ -17663,7 +17669,35 @@ var render = function() {
         },
         [
           _c("div", { staticClass: "wperp-modal-content" }, [
-            _vm._m(0),
+            _c("div", { staticClass: "wperp-modal-header" }, [
+              _c("h4", [
+                _vm._v("\n                    Invoice\n                ")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "d-print-none" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "wperp-btn btn--default print-btn",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.printPopup($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "flaticon-printer-1" }),
+                    _vm._v(
+                      "\n                          Print\n                    "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(0)
+              ])
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "wperp-modal-body" }, [
               _c("div", { staticClass: "wperp-invoice-panel" }, [
@@ -17873,34 +17907,14 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wperp-modal-header" }, [
-      _c("h4", [_vm._v("\n                    Invoice\n                ")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "d-print-none" }, [
-        _c(
-          "a",
-          {
-            staticClass: "wperp-btn btn--default print-btn",
-            attrs: { href: "#" }
-          },
-          [
-            _c("i", { staticClass: "flaticon-printer-1" }),
-            _vm._v("\n                          Print\n                    ")
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "a",
-          { staticClass: "wperp-btn btn--default", attrs: { href: "#" } },
-          [
-            _c("i", { staticClass: "flaticon-settings-work-tool" }),
-            _vm._v(
-              "\n                          More Action\n                    "
-            )
-          ]
-        )
-      ])
-    ])
+    return _c(
+      "a",
+      { staticClass: "wperp-btn btn--default", attrs: { href: "#" } },
+      [
+        _c("i", { staticClass: "flaticon-settings-work-tool" }),
+        _vm._v("\n                          More Action\n                    ")
+      ]
+    )
   },
   function() {
     var _vm = this
@@ -24743,7 +24757,7 @@ var render = function() {
                     on: {
                       click: function($event) {
                         $event.preventDefault()
-                        _vm.window.print()
+                        return _vm.printPopup($event)
                       }
                     }
                   },
