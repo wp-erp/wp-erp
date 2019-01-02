@@ -30,6 +30,8 @@
             Calendar
         },
 
+        props: { defaultDate : String },
+
         data() {
             return {
                 pickerAttrs: [{
@@ -38,7 +40,7 @@
                     contentStyle: { color: '#fff' },
                     dates: new Date()
                 }],
-                selectedDate: ''
+                selectedDate: this.defaultDate,
             }
         },
 
