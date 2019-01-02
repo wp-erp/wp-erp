@@ -53,9 +53,13 @@
                                             <th>{{ type }} Date:</th>
                                             <td>{{ new Date().toISOString().slice(0, 10) }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr v-if="'Invoice' == type">
                                             <th>Due Date:</th>
                                             <td>{{ new Date().toISOString().slice(0, 10) }}</td>
+                                        </tr>
+                                         <tr v-else>
+                                            <th>Deposit To:</th>
+                                            <td>{{ '1' == customer.deposit_to ? 'Cash' : 'Bank' }}</td>
                                         </tr>
                                         <tr>
                                             <th>Amount Due:</th>
@@ -67,7 +71,7 @@
                         </div>
 
                         <div class="wperp-invoice-table">
-                            <table class="wperp-table wperp-form-table invoice-table">
+                            <table class="wperp-table wperp-form-table invoice-table" v-if="'Invoice' == type">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
@@ -88,6 +92,35 @@
                                         <td>...</td>
                                         <td>{{ transaction.taxAmount }}</td>
                                         <td>{{ transaction.totalAmount }}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="7">
+                                            <ul>
+                                                <li><span>Subtotal:</span> {{ totalAmount }}</li>
+                                                <li><span>Total:</span> {{ totalAmount }}</li>
+                                                <li><span>Total Related Payments:</span> {{ totalAmount }}</li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <table class="wperp-table wperp-form-table invoice-table" v-else>
+                                <thead>
+                                    <tr>
+                                        <th>Invoice ID</th>
+                                        <th>Voucher No.</th>
+                                        <th>Due Date</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr :key="index" v-for="(transaction, index) in transactions">
+                                        <th>{{ transaction.id }}</th>
+                                        <td>{{ transaction.voucher_no }}</td>
+                                        <td>{{ transaction.due_date }}</td>
+                                        <td>{{ transaction.total }}</td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
@@ -172,7 +205,6 @@
             return {
                 isWorking: false,
                 company: null,
-                invoice: [],
                 acct_var: erp_acct_var
             }
         },

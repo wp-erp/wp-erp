@@ -1,6 +1,13 @@
 <template>
     <div class="wperp-container">
 
+        <print-preview
+            type="Payment"
+            :customer="basic_fields"
+            :totalAmount="finalTotalAmount"
+            :transactions="invoices"
+            v-if="paymentModal" />
+
         <!-- Start .header-section -->
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
@@ -9,8 +16,8 @@
 
                     <!-- Print Dialogue -->
 
-                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showPaymentModal">
-                        <span>Print</span>
+                    <a href="#" class="wperp-btn btn--primary" v-if="showPrintPreview" @click.prevent="showPaymentModal">
+                        <span>Print Preview</span>
                     </a>
                 </div>
             </div>
@@ -116,9 +123,9 @@
             </div>
         </div>
 
-        <template v-if="paymentModal">
+        <!-- <template v-if="paymentModal">
             <rec-payment-modal :basic_fields="basic_fields" :invoices="invoices" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
-        </template>
+        </template> -->
 
     </div>
 </template>
@@ -130,7 +137,7 @@
     import RecPaymentModal from 'admin/components/rec-payment/RecPaymentModal.vue'
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
-
+    import PrintPreview from 'admin/components/base/PrintPreview.vue';
 
     export default {
         name: 'RecPaymentCreate',
@@ -141,6 +148,7 @@
             FileUpload,
             RecPaymentModal,
             SubmitButton,
+            PrintPreview,
             SelectCustomers
         },
 
@@ -161,12 +169,13 @@
                 paymentModal: false,
                 particulars: '',
                 isWorking: false,
-                acct_assets: erp_acct_var.acct_assets
+                acct_assets: erp_acct_var.acct_assets,
+                showPrintPreview: false,
             }
         },
 
         created() {
-            this.$root.$on('payment-modal-close', () => {
+            this.$root.$on('preview-modal-close', () => {
                 this.paymentModal = false;
             });
         },
@@ -260,6 +269,8 @@
             },
 
             'basic_fields.customer'() {
+                this.showPrintPreview = true;
+                this.getDueInvoices();
                 this.getCustomerAddress();
             }
         },
