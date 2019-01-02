@@ -13867,6 +13867,39 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PrintPreview',
@@ -13896,7 +13929,6 @@ if (false) {(function () {
     return {
       isWorking: false,
       company: null,
-      invoice: [],
       acct_var: erp_acct_var
     };
   },
@@ -14173,6 +14205,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_rec_payment_RecPaymentModal_vue__ = __webpack_require__(251);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_people_SelectCustomers_vue__ = __webpack_require__(76);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_SubmitButton_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_PrintPreview_vue__ = __webpack_require__(238);
 //
 //
 //
@@ -14298,6 +14331,14 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -14312,6 +14353,7 @@ if (false) {(function () {
     FileUpload: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_FileUpload_vue__["a" /* default */],
     RecPaymentModal: __WEBPACK_IMPORTED_MODULE_3_admin_components_rec_payment_RecPaymentModal_vue__["a" /* default */],
     SubmitButton: __WEBPACK_IMPORTED_MODULE_5_admin_components_base_SubmitButton_vue__["a" /* default */],
+    PrintPreview: __WEBPACK_IMPORTED_MODULE_6_admin_components_base_PrintPreview_vue__["a" /* default */],
     SelectCustomers: __WEBPACK_IMPORTED_MODULE_4_admin_components_people_SelectCustomers_vue__["a" /* default */]
   },
   data: function data() {
@@ -14330,13 +14372,14 @@ if (false) {(function () {
       paymentModal: false,
       particulars: '',
       isWorking: false,
-      acct_assets: erp_acct_var.acct_assets
+      acct_assets: erp_acct_var.acct_assets,
+      showPrintPreview: false
     };
   },
   created: function created() {
     var _this = this;
 
-    this.$root.$on('payment-modal-close', function () {
+    this.$root.$on('preview-modal-close', function () {
       _this.paymentModal = false;
     });
   },
@@ -14424,6 +14467,8 @@ if (false) {(function () {
       this.finalTotalAmount = newval;
     },
     'basic_fields.customer': function basic_fieldsCustomer() {
+      this.showPrintPreview = true;
+      this.getDueInvoices();
       this.getCustomerAddress();
     }
   }
@@ -24866,15 +24911,29 @@ var render = function() {
                           ])
                         ]),
                         _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [_vm._v("Due Date:")]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _vm._v(
-                              _vm._s(new Date().toISOString().slice(0, 10))
-                            )
-                          ])
-                        ]),
+                        "Invoice" == _vm.type
+                          ? _c("tr", [
+                              _c("th", [_vm._v("Due Date:")]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(
+                                  _vm._s(new Date().toISOString().slice(0, 10))
+                                )
+                              ])
+                            ])
+                          : _c("tr", [
+                              _c("th", [_vm._v("Deposit To:")]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(
+                                  _vm._s(
+                                    "1" == _vm.customer.deposit_to
+                                      ? "Cash"
+                                      : "Bank"
+                                  )
+                                )
+                              ])
+                            ]),
                         _vm._v(" "),
                         _c("tr", [
                           _c("th", [_vm._v("Amount Due:")]),
@@ -24887,62 +24946,137 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "wperp-invoice-table" }, [
-                  _c(
-                    "table",
-                    {
-                      staticClass: "wperp-table wperp-form-table invoice-table"
-                    },
-                    [
-                      _vm._m(1),
-                      _vm._v(" "),
-                      _c(
-                        "tbody",
-                        _vm._l(_vm.transactions, function(transaction, index) {
-                          return _c("tr", { key: index }, [
-                            _c("th", [
-                              _vm._v(_vm._s(transaction.selectedProduct.name))
-                            ]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(transaction.qty))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(transaction.unitPrice))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(transaction.discount))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v("...")]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(transaction.taxAmount))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(transaction.totalAmount))])
-                          ])
-                        }),
-                        0
-                      ),
-                      _vm._v(" "),
-                      _c("tfoot", [
-                        _c("tr", [
-                          _c("td", { attrs: { colspan: "7" } }, [
-                            _c("ul", [
-                              _c("li", [
-                                _c("span", [_vm._v("Subtotal:")]),
-                                _vm._v(" " + _vm._s(_vm.totalAmount))
-                              ]),
-                              _vm._v(" "),
-                              _c("li", [
-                                _c("span", [_vm._v("Total:")]),
-                                _vm._v(" " + _vm._s(_vm.totalAmount))
-                              ]),
-                              _vm._v(" "),
-                              _c("li", [
-                                _c("span", [_vm._v("Total Related Payments:")]),
-                                _vm._v(" " + _vm._s(_vm.totalAmount))
+                  "Invoice" == _vm.type
+                    ? _c(
+                        "table",
+                        {
+                          staticClass:
+                            "wperp-table wperp-form-table invoice-table"
+                        },
+                        [
+                          _vm._m(1),
+                          _vm._v(" "),
+                          _c(
+                            "tbody",
+                            _vm._l(_vm.transactions, function(
+                              transaction,
+                              index
+                            ) {
+                              return _c("tr", { key: index }, [
+                                _c("th", [
+                                  _vm._v(
+                                    _vm._s(transaction.selectedProduct.name)
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(transaction.qty))]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v(_vm._s(transaction.unitPrice))
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v(_vm._s(transaction.discount))
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v("...")]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v(_vm._s(transaction.taxAmount))
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v(_vm._s(transaction.totalAmount))
+                                ])
+                              ])
+                            }),
+                            0
+                          ),
+                          _vm._v(" "),
+                          _c("tfoot", [
+                            _c("tr", [
+                              _c("td", { attrs: { colspan: "7" } }, [
+                                _c("ul", [
+                                  _c("li", [
+                                    _c("span", [_vm._v("Subtotal:")]),
+                                    _vm._v(" " + _vm._s(_vm.totalAmount))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("li", [
+                                    _c("span", [_vm._v("Total:")]),
+                                    _vm._v(" " + _vm._s(_vm.totalAmount))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("li", [
+                                    _c("span", [
+                                      _vm._v("Total Related Payments:")
+                                    ]),
+                                    _vm._v(" " + _vm._s(_vm.totalAmount))
+                                  ])
+                                ])
                               ])
                             ])
                           ])
-                        ])
-                      ])
-                    ]
-                  )
+                        ]
+                      )
+                    : _c(
+                        "table",
+                        {
+                          staticClass:
+                            "wperp-table wperp-form-table invoice-table"
+                        },
+                        [
+                          _vm._m(2),
+                          _vm._v(" "),
+                          _c(
+                            "tbody",
+                            _vm._l(_vm.transactions, function(
+                              transaction,
+                              index
+                            ) {
+                              return _c("tr", { key: index }, [
+                                _c("th", [_vm._v(_vm._s(transaction.id))]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v(_vm._s(transaction.voucher_no))
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v(_vm._s(transaction.due_date))
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(transaction.total))])
+                              ])
+                            }),
+                            0
+                          ),
+                          _vm._v(" "),
+                          _c("tfoot", [
+                            _c("tr", [
+                              _c("td", { attrs: { colspan: "7" } }, [
+                                _c("ul", [
+                                  _c("li", [
+                                    _c("span", [_vm._v("Subtotal:")]),
+                                    _vm._v(" " + _vm._s(_vm.totalAmount))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("li", [
+                                    _c("span", [_vm._v("Total:")]),
+                                    _vm._v(" " + _vm._s(_vm.totalAmount))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("li", [
+                                    _c("span", [
+                                      _vm._v("Total Related Payments:")
+                                    ]),
+                                    _vm._v(" " + _vm._s(_vm.totalAmount))
+                                  ])
+                                ])
+                              ])
+                            ])
+                          ])
+                        ]
+                      )
                 ])
               ])
             ])
@@ -24983,6 +25117,22 @@ var staticRenderFns = [
         _c("th", [_vm._v("Tax")]),
         _vm._v(" "),
         _c("th", [_vm._v("Tax Amount")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Amount")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Invoice ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Voucher No.")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Due Date")]),
         _vm._v(" "),
         _c("th", [_vm._v("Amount")])
       ])
@@ -26320,6 +26470,17 @@ var render = function() {
     "div",
     { staticClass: "wperp-container" },
     [
+      _vm.paymentModal
+        ? _c("print-preview", {
+            attrs: {
+              type: "Payment",
+              customer: _vm.basic_fields,
+              totalAmount: _vm.finalTotalAmount,
+              transactions: _vm.invoices
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
       _c("div", { staticClass: "content-header-section separator" }, [
         _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
           _c("div", { staticClass: "wperp-col" }, [
@@ -26327,20 +26488,22 @@ var render = function() {
               _vm._v("Receive Payment")
             ]),
             _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "wperp-btn btn--primary",
-                attrs: { href: "#" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.showPaymentModal($event)
-                  }
-                }
-              },
-              [_c("span", [_vm._v("Print")])]
-            )
+            _vm.showPrintPreview
+              ? _c(
+                  "a",
+                  {
+                    staticClass: "wperp-btn btn--primary",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.showPaymentModal($event)
+                      }
+                    }
+                  },
+                  [_c("span", [_vm._v("Print Preview")])]
+                )
+              : _vm._e()
           ])
         ])
       ]),
@@ -26758,23 +26921,9 @@ var render = function() {
             ])
           ])
         ])
-      ]),
-      _vm._v(" "),
-      _vm.paymentModal
-        ? [
-            _c("rec-payment-modal", {
-              attrs: {
-                basic_fields: _vm.basic_fields,
-                invoices: _vm.invoices,
-                attachments: _vm.attachments,
-                finalTotalAmount: _vm.finalTotalAmount,
-                assets_url: _vm.acct_assets
-              }
-            })
-          ]
-        : _vm._e()
+      ])
     ],
-    2
+    1
   )
 }
 var staticRenderFns = [
