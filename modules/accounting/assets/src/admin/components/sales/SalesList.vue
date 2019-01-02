@@ -1,6 +1,13 @@
 <template>
 
     <div class="wperp-transactions-section wperp-section">
+        <sales-report
+            v-if="salesReportModal"
+            :id="modalParams.voucher_no"
+            :type="modalParams.type"
+            :totalDue="modalParams.due"
+            :totalAmount="modalParams.amount" />
+
         <!-- Start .wperp-crm-table -->
         <div class="table-container">
             <div class="bulk-action">
@@ -129,9 +136,15 @@
                 :actions="actions"
                 @action:click="onActionClick"
                 @bulk:click="onBulkAction">
-                <!-- <template slot="title" slot-scope="data">
-                    <strong><a href="#">{{ data.row.title }}</a></strong>
-                </template> -->
+                <template slot="trn_date" slot-scope="data">
+                    <strong>
+                        <!-- <router-link :to="{ name: 'user', params: { id:  }}">{{ data.row.trn_date }}</router-link> -->
+
+                        <a href="#" @click.prevent="showSalesReportModal(data.row)">
+                            {{ data.row.trn_date }}
+                        </a>
+                    </strong>
+                </template>
             </list-table>
 
         </div>
@@ -139,18 +152,22 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
+    import HTTP from 'admin/http.js';
+    import ListTable from 'admin/components/list-table/ListTable.vue';
+    import SalesReport from 'admin/components/reports/SalesReport.vue';
 
     export default {
         name: 'SalesList',
 
         components: {
-            ListTable
+            ListTable,
+            SalesReport
         },
 
         data() {
             return {
+                salesReportModal: false,
+                modalParams: null,
                 bulkActions: [
                     {
                         key: 'trash',
@@ -165,7 +182,7 @@
                     'customer_name': {label: 'Customer'},
                     'due_date':      {label: 'Due Date'},
                     'due':           {label: 'Due'},
-                    'amount':         {label: 'Total'},
+                    'amount':        {label: 'Total'},
                     'status':        {label: 'Status'},
                     'actions':       {label: ''},
                     
@@ -187,6 +204,10 @@
         created() {
             this.$root.$on('sales-filter', filters => {
                 this.fetchItems(filters);
+            });
+
+            this.$root.$on('sales-modal-close', () => {
+                this.salesReportModal = false;
             });
 
             this.fetchItems();
@@ -267,12 +288,14 @@
                 });
 
                 this.fetchItems();
+            },
+
+            showSalesReportModal(row) {
+                this.modalParams = row;
+
+                this.salesReportModal = true;
             }
         },
 
     }
 </script>
-
-<style scoped>
-
-</style>

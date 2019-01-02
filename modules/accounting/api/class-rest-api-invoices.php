@@ -171,7 +171,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item = erp_acct_get_invoice( $id );
+        $item['data'] = erp_acct_get_invoice( $id );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;

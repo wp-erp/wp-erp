@@ -259,7 +259,7 @@ export default {
                 this.isWorking = false;
             });
 
-            this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+            // this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
         },
 
         showInvoiceModal() {
