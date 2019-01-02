@@ -243,6 +243,13 @@
                     particulars: ''
                 }).then(res => {
                     console.log(res.data);
+                    this.$swal({
+                        position: 'top-end',
+                        type: 'success',
+                        title: 'Purchase Created!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 }).then(() => {
                     this.isWorking = false;
                     this.$router.go();

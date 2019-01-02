@@ -35,7 +35,7 @@
                         <div class="wperp-col-sm-3">
                             <div class="wperp-form-group">
                                 <label>Payment Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.payment_date"></datepicker>
+                                <datepicker v-model="basic_fields.payment_date" :defaultDate="basic_fields.payment_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
@@ -101,7 +101,7 @@
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
                                 <label class="col--attachement">Attachment</label>
-                                <file-upload v-model="attachments" url="/bills/attachments"/>
+                                <file-upload v-model="attachments" url="/invoices/attachments"/>
                             </div>
                         </td>
                     </tr>
@@ -148,7 +148,7 @@
                 basic_fields: {
                     vendor: '',
                     trn_ref: '',
-                    payment_date: '',
+                    payment_date: erp_acct_var.current_date,
                     deposit_to: '',
                     billing_address: ''
                 },
@@ -171,6 +171,25 @@
         },
 
         methods: {
+            resetData() {
+
+                    this.basic_fields = {
+                        vendor: '',
+                        trn_ref: '',
+                        payment_date: erp_acct_var.current_date,
+                        deposit_to: '',
+                        billing_address: ''
+                    };
+
+                    this.pay_purchases = [];
+                    this.attachments = [];
+                    this.totalAmounts = [];
+                    this.finalTotalAmount = 0;
+                    this.pay_bill_modal = false;
+                    this.particulars = '';
+                    this.isWorking = false;
+            },
+
             getDuePurchases() {
                 let vendorId = this.basic_fields.vendor.id,
                     idx = 0,
@@ -241,8 +260,16 @@
                     trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
                     console.log(res.data);
+                    this.$swal({
+                        position: 'top-end',
+                        type: 'success',
+                        title: 'Pay Purchase Created!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 }).then(() => {
                     this.isWorking = false;
+                    this.resetData();
                 });
             },
 
@@ -253,6 +280,7 @@
 
             remove_item( index ) {
                 this.$delete( this.pay_purchases, index );
+                this.$delete( this.totalAmounts, index );
                 this.updateFinalAmount();
             }
         },
