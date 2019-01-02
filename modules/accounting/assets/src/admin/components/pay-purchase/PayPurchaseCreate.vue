@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Pay Bill</h2>
+                    <h2 class="content-header__title">Pay Purchase</h2>
 
                     <!-- Print Dialogue -->
 
@@ -23,7 +23,7 @@
                     <div class="wperp-row">
                         <div class="wperp-col-sm-3">
                             <div class="wperp-form-group">
-                                <select-people @input="getDueBills" v-model="basic_fields.people"></select-people>
+                                <select-vendors @input="getDuePurchases" v-model="basic_fields.vendor"></select-vendors>
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
-                            <label>Deposit to</label>
+                            <label>Transaction From</label>
                             <select v-model="basic_fields.deposit_to" name="deposit-to" class="wperp-form-field">
                                 <option value="0">-Select-</option>
                                 <option value="1">Cash</option>
@@ -71,11 +71,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr :key="key" v-for="(pay_bill,key) in pay_bills">
+                    <tr :key="key" v-for="(item,key) in pay_purchases">
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
-                        <td class="col--due-date" data-colname="Due Date">{{pay_bill.due_date}}</td>
-                        <td class="col--total" data-colname="Total">{{pay_bill.total}}</td>
-                        <td class="col--due" data-colname="Due">{{pay_bill.total}}</td>
+                        <td class="col--due-date" data-colname="Due Date">{{item.due_date}}</td>
+                        <td class="col--total" data-colname="Total">{{item.total}}</td>
+                        <td class="col--due" data-colname="Due">{{item.total}}</td>
                         <td class="col--amount" data-colname="Amount">
                             <input type="text" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
@@ -108,7 +108,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Pay Bill" @click.native="SubmitForPayment" :working="isWorking"></submit-button>
+                            <submit-button text="Pay Purchase" @click.native="SubmitForPayment" :working="isWorking"></submit-button>
                         </td>
                     </tr>
                     </tfoot>
@@ -117,7 +117,7 @@
         </div>
 
         <template v-if="pay_bill_modal">
-            <pay-bill-modal :basic_fields="basic_fields" :pay_bills="pay_bills" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
+            <pay-bill-modal :basic_fields="basic_fields" :pay_purchases="pay_purchases" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
         </template>
 
     </div>
@@ -129,14 +129,13 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import PayBillModal from 'admin/components/pay-bill/PayBillModal.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import SelectPeople from "admin/components/people/SelectPeople.vue";
-
+    import SelectVendors from "admin/components/purchase/SelectVendors.vue";
 
     export default {
-        name: 'PayBillCreate',
+        name: 'PayPurchaseCreate',
 
         components: {
-            SelectPeople,
+            SelectVendors,
             HTTP,
             Datepicker,
             FileUpload,
@@ -147,14 +146,14 @@
         data() {
             return {
                 basic_fields: {
-                    people: '',
+                    vendor: '',
                     trn_ref: '',
                     payment_date: '',
                     deposit_to: '',
                     billing_address: ''
                 },
 
-                pay_bills: [],
+                pay_purchases: [],
                 attachments: [],
                 totalAmounts:[],
                 finalTotalAmount: 0,
@@ -172,27 +171,27 @@
         },
 
         methods: {
-            getDueBills() {
-                let peopleId = this.basic_fields.people.id,
+            getDuePurchases() {
+                let vendorId = this.basic_fields.vendor.id,
                     idx = 0,
                     finalAmount = 0;
 
                 // for modal test. remove later
-                if ( undefined === peopleId ) {
-                    peopleId = 1;
+                if ( undefined === vendorId ) {
+                    vendorId = 1;
                 }
 
-                HTTP.get(`/bills/due/${peopleId}`).then((response) => {
+                HTTP.get(`/purchases/due/${vendorId}`).then((response) => {
                     response.data.forEach(element => {
-                        this.pay_bills.push({
+                        this.pay_purchases.push({
                             id: element.id,
                             voucher_no: element.voucher_no,
                             due_date: element.due_date,
-                            total: parseFloat(element.total)
+                            total: parseFloat(element.amount)
                         });
                     });
                 }).then(() => {
-                    this.pay_bills.forEach(element => {
+                    this.pay_purchases.forEach(element => {
                         this.totalAmounts[idx++] = parseFloat(element.total);
                         finalAmount += parseFloat(element.total);
                     });
@@ -202,13 +201,14 @@
             },
 
             getCustomerAddress() {
-                let people_id = this.basic_fields.people.id;
+                let vendors_id = this.basic_fields.vendor.id;
 
-                HTTP.get(`/customers/${people_id}`).then((response) => {
+                HTTP.get(`/vendors/${vendors_id}`).then((response) => {
                     // add more info
-                    this.basic_fields.billing_address =
-                        `Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
-                        City: ${response.data.billing.city}, Country: ${response.data.billing.country}`;
+                    this.basic_fields.billing_address =`
+                        Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
+                        City: ${response.data.billing.city}, Country: ${response.data.billing.country}
+                        `;
                 });
             },
 
@@ -223,33 +223,31 @@
             },
 
             SubmitForPayment() {
-                HTTP.post('/pay-bills', {
-                    vendor_id: this.basic_fields.people.id,
+
+                this.pay_purchases.forEach( (element,index) => {
+                    element['line_total'] = parseFloat( this.totalAmounts[index] );
+                });
+
+                HTTP.post('/pay-purchases', {
+                    vendor_id: this.basic_fields.vendor.id,
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trans_date,
                     due_date: this.basic_fields.due_date,
-                    bill_details: this.pay_bills,
+                    purchase_details: this.pay_purchases,
                     attachments: this.attachments,
-                    type: 'pay_bill',
+                    type: 'pay_purchase',
                     status: 'paid',
                     particulars: this.particulars,
                     trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
                     console.log(res.data);
-                    this.$swal({
-                        position: 'top-end',
-                        type: 'success',
-                        title: 'Pay-Bill Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
                 }).then(() => {
                     this.isWorking = false;
                 });
             },
 
             showPaymentModal() {
-                this.getDueBills();
+                this.getDuePurchases();
                 this.pay_bill_modal = true;
             }
         },
@@ -259,7 +257,7 @@
                 this.finalTotalAmount = newval;
             },
 
-            'basic_fields.customer'() {
+            'basic_fields.vendor'() {
                 this.getCustomerAddress();
             }
         },

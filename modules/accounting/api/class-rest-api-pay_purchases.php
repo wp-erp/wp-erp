@@ -181,7 +181,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $pay_bill_data = $this->prepare_item_for_response( $pay_purchase_data, $request, $additional_fields );
+        $pay_purchase_data = $this->prepare_item_for_response( $pay_purchase_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $pay_purchase_data );
 
@@ -295,6 +295,12 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['trn_by'] ) ) {
             $prepared_item['trn_by'] = $request['trn_by'];
+        }
+        if ( isset( $request['particulars'] ) ) {
+            $prepared_item['particulars'] = $request['particulars'];
+        }
+        if ( isset( $request['status'] ) ) {
+            $prepared_item['status'] = $request['status'];
         }
 
         return $prepared_item;

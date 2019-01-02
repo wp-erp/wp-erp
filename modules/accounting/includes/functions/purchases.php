@@ -32,7 +32,7 @@ function erp_acct_get_purchases( $args = [] ) {
 
     $sql = "SELECT";
     $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
-    $sql .= "FROM {$wpdb->prefix}erp_acct_pay_purchase ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_purchase ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         return $wpdb->get_var($sql);
@@ -127,7 +127,7 @@ function erp_acct_insert_purchase( $data ) {
         $purchase_data = erp_acct_get_formatted_purchase_data( $data, $voucher_no );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase', array(
-            'voucher_no'      => $purchase_data['voucher_no'],
+            'voucher_no'      => $voucher_no,
             'vendor_id'       => $purchase_data['vendor_id'],
             'vendor_name'     => $purchase_data['vendor_name'],
             'trn_date'        => $purchase_data['trn_date'],
@@ -150,6 +150,7 @@ function erp_acct_insert_purchase( $data ) {
                 'trn_no'        => $voucher_no,
                 'product_id'    => $item['product_id'],
                 'qty'           => $item['qty'],
+                'price'         => $item['unit_price'],
                 'amount'        => $item['item_total'],
                 'created_at'    => $purchase_data['created_at'],
                 'created_by'    => $created_by,
@@ -159,7 +160,7 @@ function erp_acct_insert_purchase( $data ) {
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
-            'purchase_no'   => $voucher_no,
+            'purchase_no'   => $purchase_no,
             'trn_no'        => $voucher_no,
             'particulars'   => $purchase_data['particulars'],
             'debit'         => 0,
@@ -396,4 +397,42 @@ function erp_acct_get_purchase_count() {
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_purchase" );
 
     return $row->count;
+}
+
+
+/**
+ * Get due purchases by vendor
+ *
+ * @return mixed
+ */
+
+function erp_acct_get_due_purchases_by_vendor( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_purchase WHERE ( vendor_id={$args['vendor_id']} ) AND (status!='paid') ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
+
+    return $wpdb->get_results( $sql, ARRAY_A );
 }

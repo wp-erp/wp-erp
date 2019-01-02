@@ -85,6 +85,17 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/due' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'due_purchases' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_expenses_voucher' );
+                },
+            ],
+        ] );
     }
 
     /**
@@ -97,7 +108,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_purchases( $request ) {
 
         $args = [
-            'number' => $request['per_page'],
+            'number' => !empty( $request['per_page'] ) ? intval( $request['per_page'] ) : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
@@ -111,6 +122,56 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $total_items = erp_acct_get_purchases( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $purchase_data as $item ) {
+            if ( isset( $request['include'] ) ) {
+                $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+                if ( in_array( 'created_by', $include_params ) ) {
+                    $item['created_by'] = $this->get_user( $item['created_by'] );
+                }
+            }
+
+            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+
+    /**
+     * Get a collection of purchases with due of a vendor
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function due_purchases( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $args = [];
+
+        $args['number'] = !empty( $request['per_page'] ) ? $request['per_page'] : 20;
+        $args['offset'] = ( $args['number'] * ( intval($request['page']) - 1 ) );
+        $args['vendor_id'] = $id;
+        $formatted_items = [];
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $bill_data = erp_acct_get_due_purchases_by_vendor( $args );
+        $total_items = count( $bill_data );
+
+        foreach ( $bill_data as $item ) {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
@@ -235,7 +296,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function delete_purchase( $request ) {
         $id = (int) $request['id'];
-        
+
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_purchase_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
@@ -327,11 +388,13 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'              => (int) $item->id,
             'vendor_id'       => (int) $item->vendor_id,
+            'voucher_no'      => (int) $item->voucher_no,
             'date'            => $item->trn_date,
             'due_date'        => $item->due_date,
             'line_items'      => $item->line_items,
             'type'            => $item->type,
             'status'          => $item->status,
+            'amount'          => $item->amount,
         ];
 
         $data = array_merge( $data, $additional_fields );
