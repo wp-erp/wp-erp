@@ -4,7 +4,7 @@
             <multi-select v-model="line.selectedProduct" :options="products" />
         </th>
         <td class="col--qty column-primary">
-            <input type="number" :class="{'has-err': errors.first('qty')}"
+            <input min="0" type="number" :class="{'has-err': errors.first('qty')}"
                    v-validate="'required'"
                    v-model="line.qty"
                    @keyup="calculateAmount"
@@ -12,10 +12,10 @@
                    class="wperp-form-field">
         </td>
         <td class="col--uni_price" data-colname="Unit Price">
-            <input type="text" v-model="line.unitPrice" @keyup="calculateAmount" class="wperp-form-field">
+            <input min="0" type="number" v-model="line.unitPrice" @keyup="calculateAmount" class="wperp-form-field">
         </td>
         <td class="col--amount" data-colname="Amount">
-            <input type="text" v-model="line.totalAmount" class="wperp-form-field" readonly>
+            <input type="number" v-model="line.totalAmount" class="wperp-form-field" readonly>
         </td>
         <td class="col--actions delete-row" data-colname="Action">
             <span class="wperp-btn" @click="removeRow"><i class="flaticon-trash"></i></span>
@@ -28,7 +28,7 @@
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
 
     export default {
-        name: 'TransactionRow',
+        name: 'PurchaseRow',
 
         props: {
             products: {
@@ -43,8 +43,6 @@
                         qty: 0,
                         selectedProduct: [],
                         unitPrice: 0,
-                        discount: 0,
-                        taxAmount: 0,
                         totalAmount: 0
                     };
                 }
@@ -57,7 +55,9 @@
 
         watch: {
             'line.selectedProduct'() {
-                this.getSalePrice();
+                this.line.qty = 1;
+                this.line.unitPrice = this.line.selectedProduct.unitPrice;
+                this.calculateAmount();
             }
         },
 
@@ -66,8 +66,6 @@
                 let field = this.line;
 
                 let amount = parseFloat(field.qty) * parseFloat(field.unitPrice);
-                let discount = parseFloat(field.discount);
-                let taxAmount = parseFloat(field.taxAmount);
 
                 field.totalAmount = amount;
 
@@ -76,29 +74,10 @@
                     return;
                 }
 
-                if ( discount ) {
-                    discount = (amount * discount) / 100;
-                    amount = amount - discount;
-                }
-
-                if ( taxAmount ) {
-                    amount = amount - taxAmount;
-                }
-
                 field.totalAmount = amount.toFixed(2);
 
                 this.$root.$emit('total-updated', field.totalAmount);
                 this.$forceUpdate();
-            },
-
-            getSalePrice() {
-                let product_id = this.line.selectedProduct.id;
-
-                if ( ! product_id ) return;
-
-                HTTP.get(`/products/${product_id}`).then((response) => {
-                    this.unitPrice = response.data.sale_price;
-                });
             },
 
             removeRow() {

@@ -25,13 +25,13 @@
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label for="trans_date">Transaction Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.trans_date"></datepicker>
+                                <datepicker v-model="basic_fields.trans_date" :defaultDate="basic_fields.trans_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label for="due_date">Due Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.due_date"></datepicker>
+                                <datepicker v-model="basic_fields.due_date" :defaultDate="basic_fields.trans_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-xs-12">
@@ -58,12 +58,12 @@
                     </tr>
                     </thead>
                     <tbody id="test">
-                    <transaction-row
+                    <purchase-row
                         :line="line"
                         :products="products"
                         :key="index"
                         v-for="(line, index) in transactionLines"
-                    ></transaction-row>
+                    ></purchase-row>
 
                     <tr class="total-amount-row">
                         <td colspan="3" class="text-right">
@@ -81,7 +81,7 @@
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
                                 <label class="col--attachement">Attachment</label>
-                                <file-upload v-model="attachments" url="/Purchases/attachments"/>
+                                <file-upload v-model="attachments" url="/invoices/attachments"/>
                             </div>
                         </td>
                     </tr>
@@ -109,7 +109,7 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import PurchaseModal from 'admin/components/purchase/PurchaseModal.vue'
-    import TransactionRow from 'admin/components/purchase/TransactionRow.vue'
+    import PurchaseRow from 'admin/components/purchase/PurchaseRow.vue'
     import SelectVendors from 'admin/components/purchase/SelectVendors.vue'
 
     export default {
@@ -121,7 +121,7 @@
             FileUpload,
             SubmitButton,
             PurchaseModal,
-            TransactionRow,
+            PurchaseRow,
             SelectVendors
         },
 
@@ -129,8 +129,8 @@
             return {
                 basic_fields: {
                     customer: '',
-                    trans_date: '',
-                    due_date: '',
+                    trans_date: erp_acct_var.current_date,
+                    due_date: erp_acct_var.current_date,
                     billing_address: ''
                 },
 
@@ -154,6 +154,9 @@
             this.getProducts();
 
             this.$root.$on('remove-row', index => {
+                if ( this.transactionLines.length < 2 ) {
+                    return;
+                }
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
             });
@@ -173,7 +176,8 @@
                     response.data.forEach(element => {
                         this.products.push({
                             id: element.id,
-                            name: element.name
+                            name: element.name,
+                            unitPrice: element.cost_price
                         });
                     });
                 });
@@ -182,7 +186,7 @@
             getCustomerAddress() {
                 let customer_id = this.basic_fields.customer.id;
 
-                HTTP.get(`/customers/${customer_id}`).then((response) => {
+                HTTP.get(`/vendors/${customer_id}`).then((response) => {
                     // add more info
                     this.basic_fields.billing_address = `
                     Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
