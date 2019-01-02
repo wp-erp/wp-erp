@@ -7,7 +7,7 @@
                         Invoice
                     </h4>
                     <div class="d-print-none">
-                        <a href="#" class="wperp-btn btn--default print-btn">
+                        <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                             <i class="flaticon-printer-1"></i>
                             &nbsp; Print
                         </a>
@@ -203,6 +203,10 @@
 
             outside() {
                 this.$root.$emit('sales-modal-close');
+            },
+
+            printPopup() {
+                window.print();
             }
         },
 
