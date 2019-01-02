@@ -1,14 +1,21 @@
 <template>
     <div class="wperp-container">
 
+        <print-preview
+            type="Invoice"
+            :customer="basic_fields"
+            :totalAmount="finalTotalAmount"
+            :transactions="transactionLines"
+            v-if="invoiceModal" />
+
         <!-- Start .header-section -->
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">New Invoice</h2>
                     <!-- just for showing modal -->
-                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showInvoiceModal">
-                        <span>Print</span>
+                    <a href="#" class="wperp-btn btn--primary" v-if="showPrintPreview" @click.prevent="showInvoiceModal">
+                        <span>Print Preview</span>
                     </a>
                 </div>
             </div>
@@ -112,7 +119,7 @@
             </div>
         </div>
 
-        <invoice-modal v-if="invoiceModal" />
+        <!-- <invoice-modal v-if="invoiceModal" /> -->
 
         <!-- End .wperp-crm-table -->
     </div>
@@ -127,6 +134,8 @@ import InvoiceModal from 'admin/components/invoice/InvoiceModal.vue'
 import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue'
 import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
 
+import PrintPreview from 'admin/components/base/PrintPreview.vue';
+
 export default {
     name: 'InvoiceCreate',
 
@@ -134,6 +143,7 @@ export default {
         HTTP,
         Datepicker,
         FileUpload,
+        PrintPreview,
         SubmitButton,
         InvoiceModal,
         InvoiceTrnRow,
@@ -156,11 +166,14 @@ export default {
 
             invoiceModal: false,
             isWorking: false,
+
+            showPrintPreview: false,
         }
     },
 
     watch: {
-        'basic_fields.customer'() {            
+        'basic_fields.customer'() {
+            this.showPrintPreview = true;
             this.getCustomerAddress();
         }
     },
@@ -177,7 +190,7 @@ export default {
             this.updateFinalAmount();
         });
 
-        this.$root.$on('invoice-modal-close', () => {
+        this.$root.$on('preview-modal-close', () => {
             this.invoiceModal = false;
         });
     },
