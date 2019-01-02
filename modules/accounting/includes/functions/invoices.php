@@ -40,7 +40,7 @@ function erp_acct_get_all_invoices( $args = [] ) {
     if ( $args['count'] ) {
         $sql .= " COUNT( DISTINCT invoice.id ) as total_number";
     } else {
-        $sql .= " invoice.*, SUM(ledger_detail.debit) - SUM(ledger_detail.credit) as due";
+        $sql .= " invoice.*, SUM(ledger_detail.credit) - SUM(ledger_detail.debit) as due";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_invoices AS invoice LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail"; 
@@ -107,12 +107,11 @@ function erp_acct_get_invoice( $invoice_no ) {
     LEFT JOIN {$wpdb->prefix}erp_acct_invoice_details as inv_detail ON invoice.voucher_no = inv_detail.trn_no
     LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.invoice_no
     LEFT JOIN {$wpdb->prefix}erp_acct_products as product ON inv_detail.product_id = product.id
-    WHERE invoice.voucher_no = {$invoice_no} LIMIT 1";
+    WHERE invoice.voucher_no = {$invoice_no}";
 
-    $row = $wpdb->get_row( $sql, ARRAY_A );
+    $row = $wpdb->get_results( $sql, ARRAY_A );
 
-    $row['billing_address'] = unserialize(unserialize( $row['billing_address'] ));
-    $row['attachments'] = unserialize( $row['attachments'] );
+    $row[0]['attachments'] = unserialize( $row[0]['attachments'] );
 
     return $row;
 }

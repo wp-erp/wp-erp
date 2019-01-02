@@ -6,6 +6,7 @@ import Expenses         from 'admin/components/expenses/Expenses.vue';
 import Products         from 'admin/components/products/Products.vue';
 import Employees        from 'admin/components/people/Employees.vue';
 import Dashboard        from 'admin/components/Dashboard.vue';
+// import SalesReport      from 'admin/components/reports/SalesReport.vue';
 import PeopleDetails    from 'admin/components/people/PeopleDetails.vue';
 import InvoiceCreate    from 'admin/components/invoice/InvoiceCreate.vue';
 import DummyComponent   from 'admin/components/DummyComponent.vue';
@@ -94,6 +95,11 @@ export default new Router({
             name: 'Sales',
             component: Sales
         },
+        // {
+        //     path: '/sales/:id/report',
+        //     name: 'SalesReport',
+        //     component: SalesReport
+        // },
         {
             path: '/expenses',
             name: 'Expenses',
