@@ -11720,6 +11720,10 @@ if (false) {(function () {
     showPaymentModal: function showPaymentModal() {
       this.getDuePurchases();
       this.pay_bill_modal = true;
+    },
+    remove_item: function remove_item(index) {
+      this.$delete(this.pay_purchases, index);
+      this.updateFinalAmount();
     }
   },
   watch: {
@@ -21321,7 +21325,7 @@ var render = function() {
                             }
                           ],
                           staticClass: "text-right",
-                          attrs: { type: "text", name: "amount" },
+                          attrs: { type: "number", name: "amount" },
                           domProps: { value: _vm.totalAmounts[key] },
                           on: {
                             keyup: _vm.updateFinalAmount,
@@ -21340,7 +21344,31 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._m(3, true)
+                    _c(
+                      "td",
+                      {
+                        staticClass: "delete-row",
+                        attrs: { "data-colname": "Remove Above Selection" }
+                      },
+                      [
+                        _c(
+                          "a",
+                          {
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                _vm.remove_item(key)
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "flaticon-trash" }),
+                            _vm._v("Remove")
+                          ]
+                        )
+                      ]
+                    )
                   ])
                 }),
                 _vm._v(" "),
@@ -21549,23 +21577,6 @@ var staticRenderFns = [
         _c("th", { staticClass: "col--actions", attrs: { scope: "col" } })
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "td",
-      {
-        staticClass: "delete-row",
-        attrs: { "data-colname": "Remove Above Selection" }
-      },
-      [
-        _c("a", { attrs: { href: "#" } }, [
-          _c("i", { staticClass: "flaticon-trash" })
-        ])
-      ]
-    )
   }
 ]
 render._withStripped = true

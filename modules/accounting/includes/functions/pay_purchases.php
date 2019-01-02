@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_pay_purchases() {
+function erp_acct_get_pay_purchases( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -105,7 +105,7 @@ function erp_acct_insert_pay_purchase( $data ) {
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_pay_purchase_details', array(
                 'voucher_no'  => $voucher_no,
-                'purchase_no' => $purchase_no,
+                'purchase_no' => $item['voucher_no'],
                 'amount'      => $item['line_total'],
                 'created_at'  => $pay_purchase_data['created_at'],
                 'created_by'  => $created_by,

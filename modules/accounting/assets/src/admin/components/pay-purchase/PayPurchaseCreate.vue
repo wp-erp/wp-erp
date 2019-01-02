@@ -77,10 +77,10 @@
                         <td class="col--total" data-colname="Total">{{item.total}}</td>
                         <td class="col--due" data-colname="Due">{{item.total}}</td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="text" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
+                            <input type="number" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
-                            <a href="#"><i class="flaticon-trash"></i></a>
+                            <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i>Remove</a>
                         </td>
                     </tr>
 
@@ -249,6 +249,11 @@
             showPaymentModal() {
                 this.getDuePurchases();
                 this.pay_bill_modal = true;
+            },
+
+            remove_item( index ) {
+                this.$delete( this.pay_purchases, index );
+                this.updateFinalAmount();
             }
         },
 
