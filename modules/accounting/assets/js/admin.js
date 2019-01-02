@@ -10855,6 +10855,17 @@ if (false) {(function () {
     SubmitForApproval: function SubmitForApproval() {
       var _this4 = this;
 
+      if (this.basic_fields.customer.length == 0) {
+        this.$swal({
+          position: 'center',
+          type: 'error',
+          title: 'Select a Vendor',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        return;
+      }
+
       this.isWorking = true;
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/Purchases', {
         vendor_id: this.basic_fields.customer.id,
@@ -10873,7 +10884,7 @@ if (false) {(function () {
         console.log(res.data);
 
         _this4.$swal({
-          position: 'top-end',
+          position: 'center',
           type: 'success',
           title: 'Purchase Created!',
           showConfirmButton: false,

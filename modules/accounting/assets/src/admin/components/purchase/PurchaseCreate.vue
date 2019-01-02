@@ -230,6 +230,20 @@
             },
 
             SubmitForApproval() {
+
+                if( this.basic_fields.customer.length == 0 ){
+
+                    this.$swal({
+                        position: 'center',
+                        type: 'error',
+                        title: 'Select a Vendor',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    return;
+                }
+
                 this.isWorking = true;
 
                 HTTP.post('/Purchases', {
@@ -248,7 +262,7 @@
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({
-                        position: 'top-end',
+                        position: 'center',
                         type: 'success',
                         title: 'Purchase Created!',
                         showConfirmButton: false,
