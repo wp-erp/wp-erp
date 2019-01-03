@@ -74,12 +74,13 @@ function erp_acct_insert_pay_purchase( $data ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
 
+        //create voucher
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'pay_purchase',
             'created_at' => $data['created_at'],
             'created_by' => $data['created_by'],
-            'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
-            'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : ''
+            'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : date( "Y-m-d" ),
+            'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : get_current_user_id()
         ) );
 
         $voucher_no = $wpdb->insert_id;
@@ -115,18 +116,19 @@ function erp_acct_insert_pay_purchase( $data ) {
 
             erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $item );
         }
-
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
-            'purchase_no' => $voucher_no,
-            'trn_no'      => $purchase_no,
-            'particulars' => $pay_purchase_data['particulars'],
-            'debit'       => $pay_purchase_data['amount'],
-            'credit'      => 0,
-            'created_at'  => $pay_purchase_data['created_at'],
-            'created_by'  => $created_by,
-            'updated_at'  => $pay_purchase_data['updated_at'],
-            'updated_by'  => $pay_purchase_data['updated_by'],
-        ) );
+        foreach ( $items as $key => $item ) {
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
+                'purchase_no' => $item['voucher_no'],
+                'trn_no'      => $voucher_no,
+                'particulars' => $pay_purchase_data['particulars'],
+                'debit'       => $item['line_total'],
+                'credit'      => 0,
+                'created_at'  => $pay_purchase_data['created_at'],
+                'created_by'  => $created_by,
+                'updated_at'  => $pay_purchase_data['updated_at'],
+                'updated_by'  => $pay_purchase_data['updated_by'],
+            ) );
+        }
 
         erp_acct_insert_people_trn_data( $pay_purchase_data, $pay_purchase_data['vendor_id'], 'debit' );
 
