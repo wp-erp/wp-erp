@@ -27,7 +27,7 @@
                 <form action="#" class="wperp-form" method="post">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
-                            <select-customers v-model="basic_fields.customer"></select-customers>
+                            <select-customers :reset="reset" v-model="basic_fields.customer"></select-customers>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
@@ -167,6 +167,8 @@ export default {
             invoiceModal: false,
             isWorking: false,
 
+            reset: false,
+
             showPrintPreview: false,
         }
     },
@@ -174,6 +176,8 @@ export default {
     watch: {
         'basic_fields.customer'() {
             this.showPrintPreview = true;
+            this.reset = false;
+
             this.getCustomerAddress();
         }
     },
@@ -209,6 +213,11 @@ export default {
 
         getCustomerAddress() {
             let customer_id = this.basic_fields.customer.id;
+
+            if ( ! customer_id ) {
+                this.basic_fields.billing_address = '';
+                return;
+            }
 
             HTTP.get(`/customers/${customer_id}`).then((response) => {
                 // add more info
@@ -268,7 +277,6 @@ export default {
                 trn_by: 'cash',
                 estimate: 0,
             }).then(res => {
-                console.log(res.data);
                 this.$swal({
                     position: 'top-end',
                     type: 'success',
@@ -276,6 +284,8 @@ export default {
                     showConfirmButton: false,
                     timer: 1500
                 });
+
+                this.reset = true;
             }).then(() => {
                 this.isWorking = false;
             });

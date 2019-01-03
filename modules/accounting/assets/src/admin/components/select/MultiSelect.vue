@@ -5,9 +5,10 @@
     :multiple="multiple"
     :close-on-select="!multiple"
     :loading="isLoading"
-    placeholder="Please select"
+    placeholder="Please search"
     label="name"
     track-by="id"
+    @open="onDropdownOpen"
     @remove="onRemove"
     @select="onSelect"
     @search-change="asyncFind">
@@ -81,6 +82,10 @@ export default {
       this.results = this.results.filter(element => element.id !== removed.id);
 
       this.$emit('input', this.results);
+    },
+
+    onDropdownOpen(id) {
+        this.$root.$emit('dropdown-open');
     },
 
     asyncFind: debounce(function (query) {
