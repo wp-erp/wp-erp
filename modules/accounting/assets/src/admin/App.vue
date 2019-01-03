@@ -19,6 +19,10 @@
 </script>
 
 <style>
+    .wrap {
+        margin: 0 20px 0 0 !important;
+    }
+
     .has-err {
         border-color: #f44336 !important;
     }

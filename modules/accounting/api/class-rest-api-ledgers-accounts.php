@@ -98,18 +98,36 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_all_ledger_accounts( $request ) {
-        global $wpdb; $chart_ids = [];
+        global $wpdb;
+        $chart_ids = [];
 
-        $ledgers = $wpdb->get_results( 'SELECT * FROM `ledgers` LEFT OUTER JOIN `chart_of_accounts` ON ledgers.chart_id = chart_of_accounts.id', ARRAY_N );
+        $sql = "SELECT
+            ledger.id,
+            ledger.chart_id,
+            ledger.category_id,
+            ledger.name as ledger_name,
+            ledger.code,
+            ledger.system,
 
-        $result = array_map( function( $item ) {
-            $item->id       = (int) $item->id;
-            $item->system = (int) $item->system;
+            chart_of_account.name as account_name
 
-            return $item;
-        }, $ledgers );
+            FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+            LEFT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id";
 
-        return new WP_REST_Response( $result );
+        $ledgers = $wpdb->get_results( $sql, ARRAY_A );
+
+        // $result = array_map( function( $item ) {
+        //     $item->id     = (int) $item->id;
+        //     $item->system = (int) $item->system;
+
+        //     return $item;
+        // }, $ledgers );
+
+        $response = rest_ensure_response( $ledgers );
+
+        $response->set_status( 200 );
+
+        return $response;
     }
 
     /**

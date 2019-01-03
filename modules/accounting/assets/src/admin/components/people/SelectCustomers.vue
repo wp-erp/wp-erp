@@ -18,6 +18,13 @@
             MultiSelect
         },
 
+        props: {
+            reset: {
+                type: Boolean,
+                default: false
+            }
+        },
+
         data() {
             return {
                 selected: [],
@@ -32,12 +39,26 @@
                 if ( query ) {
                     this.getCustomers(query);
                 }
+
+            } );
+
+            this.$root.$on( 'dropdown-open', () => {                
+                if ( typeof this.selected.id == 'undefined' ) {
+                    return;
+                }
+
+                this.options = [];
+                this.options.push(this.selected);
             } );
         },
 
         watch: {
             selected() {
                 this.$emit('input', this.selected);
+            },
+
+            reset() {
+                this.selected = [];
             }
         },
 

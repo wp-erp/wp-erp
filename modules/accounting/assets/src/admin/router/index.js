@@ -7,10 +7,12 @@ import Products         from 'admin/components/products/Products.vue';
 import Employees        from 'admin/components/people/Employees.vue';
 import Dashboard        from 'admin/components/Dashboard.vue';
 // import SalesReport      from 'admin/components/reports/SalesReport.vue';
+import TrialBalance      from 'admin/components/reports/TrialBalance.vue';
 import PeopleDetails    from 'admin/components/people/PeopleDetails.vue';
 import InvoiceCreate    from 'admin/components/invoice/InvoiceCreate.vue';
 import DummyComponent   from 'admin/components/DummyComponent.vue';
 import ChartOfAccounts  from 'admin/components/ChartOfAccounts.vue';
+import ReportsOverview  from 'admin/components/reports/ReportsOverview.vue';
 import ProductCategory  from 'admin/components/product-category/ProductCategory.vue';
 import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue';
 import BillCreate       from 'admin/components/bill/BillCreate.vue';
@@ -162,5 +164,22 @@ export default new Router({
             name: 'PayPurchaseCreate',
             component: PayPurchaseCreate
         },
+        {
+            path: '/reports',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'ReportsOverview',
+                    component: ReportsOverview,
+                },
+                {
+                    path: 'trial-balance',
+                    name: 'TrialBalance',
+                    component: TrialBalance,
+                },
+            ]
+        },
+        
     ]
 })
