@@ -41,7 +41,7 @@ class Journals_Controller extends REST_Controller {
                     return current_user_can( 'erp_ac_create_journal' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
@@ -63,7 +63,19 @@ class Journals_Controller extends REST_Controller {
                     return current_user_can( 'erp_ac_create_journal' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/next', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_next_journal_id' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_journal' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
     }
 
@@ -117,6 +129,29 @@ class Journals_Controller extends REST_Controller {
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_journal_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
+
+        $response = rest_ensure_response( $item );
+
+        return $response;
+    }
+
+    /**
+     * Get a next journal id
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_next_journal_id( $request ) {
+        global $wpdb;
+
+        $count = $wpdb->get_row( "SELECT count(*) FROM " . $wpdb->prefix . "erp_acct_journals", ARRAY_N );
+        $item['id'] = $count['0'] + 1;
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -202,6 +237,7 @@ class Journals_Controller extends REST_Controller {
         $item = (object) $item;
 
         $data = [
+            'id'          => $item->id,
             'particulars' => $item->particulars,
             'trn_date'    => $item->trn_date,
             'line_items'  => $item->line_items,
