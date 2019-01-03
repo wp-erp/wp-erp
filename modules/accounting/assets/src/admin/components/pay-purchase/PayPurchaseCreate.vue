@@ -75,9 +75,9 @@
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{item.due_date}}</td>
                         <td class="col--total" data-colname="Total">{{item.total}}</td>
-                        <td class="col--due" data-colname="Due">{{item.total}}</td>
+                        <td class="col--due" data-colname="Due">{{item.due}}</td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="number" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
+                            <input type="number" min="0" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i>Remove</a>
@@ -199,20 +199,21 @@
                 if ( undefined === vendorId ) {
                     vendorId = 1;
                 }
-
+                this.pay_purchases = [];
                 HTTP.get(`/purchases/due/${vendorId}`).then((response) => {
                     response.data.forEach(element => {
                         this.pay_purchases.push({
                             id: element.id,
                             voucher_no: element.voucher_no,
                             due_date: element.due_date,
-                            total: parseFloat(element.amount)
+                            total: parseFloat(element.amount),
+                            due: parseFloat(element.due_total)
                         });
                     });
                 }).then(() => {
                     this.pay_purchases.forEach(element => {
-                        this.totalAmounts[idx++] = parseFloat(element.total);
-                        finalAmount += parseFloat(element.total);
+                        this.totalAmounts[idx++] = parseFloat(element.due);
+                        finalAmount += parseFloat(element.due);
                     });
 
                     this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
@@ -261,7 +262,7 @@
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({
-                        position: 'top-end',
+                        position: 'center',
                         type: 'success',
                         title: 'Pay Purchase Created!',
                         showConfirmButton: false,

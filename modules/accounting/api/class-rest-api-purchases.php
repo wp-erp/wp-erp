@@ -168,10 +168,10 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $bill_data = erp_acct_get_due_purchases_by_vendor( $args );
-        $total_items = count( $bill_data );
+        $puchase_data = erp_acct_get_due_purchases_by_vendor( $args );
+        $total_items = count( $puchase_data );
 
-        foreach ( $bill_data as $item ) {
+        foreach ( $puchase_data as $item ) {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
@@ -395,6 +395,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'            => $item->type,
             'status'          => $item->status,
             'amount'          => $item->amount,
+            'due_total'       => $item->due
         ];
 
         $data = array_merge( $data, $additional_fields );
