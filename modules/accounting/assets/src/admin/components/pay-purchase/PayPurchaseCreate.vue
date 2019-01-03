@@ -35,7 +35,7 @@
                         <div class="wperp-col-sm-3">
                             <div class="wperp-form-group">
                                 <label>Payment Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.payment_date"></datepicker>
+                                <datepicker v-model="basic_fields.payment_date" :defaultDate="basic_fields.payment_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
@@ -75,9 +75,9 @@
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{item.due_date}}</td>
                         <td class="col--total" data-colname="Total">{{item.total}}</td>
-                        <td class="col--due" data-colname="Due">{{item.total}}</td>
+                        <td class="col--due" data-colname="Due">{{item.due}}</td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="number" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
+                            <input type="number" min="0" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i>Remove</a>
@@ -101,7 +101,7 @@
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
                                 <label class="col--attachement">Attachment</label>
-                                <file-upload v-model="attachments" url="/bills/attachments"/>
+                                <file-upload v-model="attachments" url="/invoices/attachments"/>
                             </div>
                         </td>
                     </tr>
@@ -148,7 +148,7 @@
                 basic_fields: {
                     vendor: '',
                     trn_ref: '',
-                    payment_date: '',
+                    payment_date: erp_acct_var.current_date,
                     deposit_to: '',
                     billing_address: ''
                 },
@@ -171,6 +171,25 @@
         },
 
         methods: {
+            resetData() {
+
+                    this.basic_fields = {
+                        vendor: '',
+                        trn_ref: '',
+                        payment_date: erp_acct_var.current_date,
+                        deposit_to: '',
+                        billing_address: ''
+                    };
+
+                    this.pay_purchases = [];
+                    this.attachments = [];
+                    this.totalAmounts = [];
+                    this.finalTotalAmount = 0;
+                    this.pay_bill_modal = false;
+                    this.particulars = '';
+                    this.isWorking = false;
+            },
+
             getDuePurchases() {
                 let vendorId = this.basic_fields.vendor.id,
                     idx = 0,
@@ -180,20 +199,21 @@
                 if ( undefined === vendorId ) {
                     vendorId = 1;
                 }
-
+                this.pay_purchases = [];
                 HTTP.get(`/purchases/due/${vendorId}`).then((response) => {
                     response.data.forEach(element => {
                         this.pay_purchases.push({
                             id: element.id,
                             voucher_no: element.voucher_no,
                             due_date: element.due_date,
-                            total: parseFloat(element.amount)
+                            total: parseFloat(element.amount),
+                            due: parseFloat(element.due_total)
                         });
                     });
                 }).then(() => {
                     this.pay_purchases.forEach(element => {
-                        this.totalAmounts[idx++] = parseFloat(element.total);
-                        finalAmount += parseFloat(element.total);
+                        this.totalAmounts[idx++] = parseFloat(element.due);
+                        finalAmount += parseFloat(element.due);
                     });
 
                     this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
@@ -241,8 +261,16 @@
                     trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
                     console.log(res.data);
+                    this.$swal({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Pay Purchase Created!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 }).then(() => {
                     this.isWorking = false;
+                    this.resetData();
                 });
             },
 
@@ -253,6 +281,7 @@
 
             remove_item( index ) {
                 this.$delete( this.pay_purchases, index );
+                this.$delete( this.totalAmounts, index );
                 this.updateFinalAmount();
             }
         },

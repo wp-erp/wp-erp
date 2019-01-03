@@ -406,7 +406,7 @@ function erp_acct_get_purchase_count() {
  * @return mixed
  */
 
-function erp_acct_get_due_purchases_by_vendor( $args = [] ) {
+function erp_acct_get_due_purchases_by_vendor( $args ) {
     global $wpdb;
 
     $defaults = [
@@ -426,13 +426,24 @@ function erp_acct_get_due_purchases_by_vendor( $args = [] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
-    $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
-    $sql .= "FROM {$wpdb->prefix}erp_acct_purchase WHERE ( vendor_id={$args['vendor_id']} ) AND (status!='paid') ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $purchases= "{$wpdb->prefix}erp_acct_purchase";
+    $purchase_act_details = "{$wpdb->prefix}erp_acct_purchase_account_details";
+    $items = $args['count'] ? " COUNT( id ) as total_number " : " * ";
+
+    $query = $wpdb->prepare( "SELECT $items FROM $purchases as purchase INNER JOIN 
+                                (
+                                    SELECT purchase_no, SUM( pa.credit - pa.debit) as due 
+                                    FROM $purchase_act_details as pa
+                                    GROUP BY pa.purchase_no
+                                    HAVING due > 0
+                                ) as ps
+                                ON purchase.voucher_no = ps.purchase_no
+                                WHERE purchase.vendor_id = %d
+                                ORDER BY %s %s $limit", $args['vendor_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {
-        return $wpdb->get_var($sql);
+        return $wpdb->get_var( $query );
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $query, ARRAY_A );
 }
