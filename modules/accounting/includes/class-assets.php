@@ -84,7 +84,8 @@ class Assets {
             'acct_assets'   => ERP_ACCOUNTING_ASSETS,
             'erp_assets'    => WPERP_ASSETS,
             'erp_acct_menus'=> $menus,
-            'erp_acct_url'  => $acct_url
+            'erp_acct_url'  => $acct_url,
+            'current_date'  => date( 'Y-m-d' ),
         ) );
     }
 
