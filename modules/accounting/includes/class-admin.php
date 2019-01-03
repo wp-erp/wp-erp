@@ -86,14 +86,14 @@ class Admin {
         erp_add_menu( 'accounting', [
             'title'      => __( 'Bank Accounts', 'erp' ),
             'capability' => $bank,
-            'slug'       => 'bank',
+            'slug'       => 'banks',
             'callback'   => [],
             'position'   => 35
         ] );
         erp_add_menu( 'accounting', [
-            'title'      =>  __( 'Journal Entries', 'erp' ),
+            'title'      =>  __( 'Journals', 'erp' ),
             'capability' => $journal,
-            'slug'       => 'journal',
+            'slug'       => 'journals',
             'callback'   => [],
             'position'   => 40
         ] );

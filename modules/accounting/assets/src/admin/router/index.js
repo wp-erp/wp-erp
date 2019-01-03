@@ -19,6 +19,8 @@ import BillCreate       from 'admin/components/bill/BillCreate.vue';
 import PayBillCreate    from 'admin/components/pay-bill/PayBillCreate.vue';
 import PurchaseCreate   from 'admin/components/purchase/PurchaseCreate.vue';
 import PayPurchaseCreate from 'admin/components/pay-purchase/PayPurchaseCreate.vue';
+import JournalList       from 'admin/components/journal/JournalList.vue';
+import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
 
 Vue.use(Router)
 
@@ -114,14 +116,14 @@ export default new Router({
             component: ChartOfAccounts
         },
         {
-            path: '/bank',
+            path: '/banks',
             name: 'BankAccounts',
             component: DummyComponent
         },
         {
-            path: '/journal',
-            name: 'JournalEntries',
-            component: DummyComponent
+            path: '/journals',
+            name: 'JournalList',
+            component: JournalList
         },
         {
             path: '/invoices/new',
@@ -180,6 +182,11 @@ export default new Router({
                 },
             ]
         },
-        
+        {
+
+            path: '/journals/new',
+            name: 'JournalCreate',
+            component: JournalCreate
+        },
     ]
 })
