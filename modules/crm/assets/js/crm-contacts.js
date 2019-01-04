@@ -243,7 +243,7 @@
             removePhoto: function(e) {
                 e.preventDefault();
 
-                var mystery_person = wpErpHr.asset_url + '/images/mystery-person.png';
+                var mystery_person = wpErpCrm.asset_url + '/images/mystery-person.png';
 
                 var html = '<img src="' + mystery_person + '" alt="">';
                     html += '<a href="#" id="erp-set-emp-photo" class="button-primary"><i class="fa fa-cloud-upload"></i>' + wpErpCrm.customer_upload_photo + '</a>';
@@ -2343,4 +2343,3 @@
     }
 
 })(jQuery, window.wperp );
-
