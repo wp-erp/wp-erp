@@ -37,7 +37,7 @@
 
 <script>
     import ListTable from 'admin/components/list-table/ListTable.vue'
-    import PeopleModal from './PeopleModal.vue'
+    import PeopleModal from 'admin/components/people/PeopleModal.vue'
     import HTTP from 'admin/http'
 
     export default {
