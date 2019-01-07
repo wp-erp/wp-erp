@@ -12,7 +12,7 @@
     @remove="onRemove"
     @select="onSelect"
     @search-change="asyncFind">
-    <template slot="tag" slot-scope="{ option, remove }">
+    <template slot="tag" slot-scope="{ option }">
       <span class="custom__tag">
         <span>{{ option.name }}</span><span class="custom__remove" @click="onRemove(option)">
           &#9747;</span>
