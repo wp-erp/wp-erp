@@ -15576,11 +15576,8 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__ = __webpack_require__(8);
-//
-//
-//
 //
 //
 //
@@ -15612,32 +15609,24 @@ if (false) {(function () {
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-  name: 'employees',
+  name: 'JournalList',
   components: {
     ListTable: __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__["a" /* default */]
   },
   data: function data() {
     return {
-      bulkActions: [{
-        key: 'trash',
-        label: 'Move to Trash',
-        img: erp_acct_var.erp_assets + '/images/trash.png'
-      }],
       columns: {
-        'employee': {
-          label: 'Name'
+        'l_id': {
+          label: 'ID'
         },
-        'designation': {
-          label: 'Designation'
+        'l_date': {
+          label: 'Date'
         },
-        'email': {
-          label: 'Email'
+        'l_particulars': {
+          label: 'Particulars'
         },
-        'phone': {
-          label: 'Phone'
-        },
-        'actions': {
-          label: 'Actions'
+        'amount': {
+          label: 'Amount'
         }
       },
       rows: [],
@@ -15646,14 +15635,7 @@ if (false) {(function () {
         totalPages: 0,
         perPage: 10,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
-      },
-      actions: [{
-        key: 'edit',
-        label: 'Edit'
-      }, {
-        key: 'trash',
-        label: 'Delete'
-      }]
+      }
     };
   },
   created: function created() {
@@ -15666,9 +15648,10 @@ if (false) {(function () {
     row_data: function row_data() {
       var items = this.rows;
       items.map(function (item) {
-        item.employee = item.full_name;
-        item.email = item.user_email;
-        item.designation = item.designation.title;
+        item.l_id = item.id;
+        item.l_date = item.trn_date;
+        item.l_particulars = item.particulars;
+        item.amount = item.total;
       });
       return items;
     }
@@ -15678,7 +15661,7 @@ if (false) {(function () {
       var _this = this;
 
       this.rows = [];
-      __WEBPACK_IMPORTED_MODULE_0_admin_http_js__["a" /* default */].get('employees', {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('journals', {
         params: {
           per_page: this.paginationData.perPage,
           page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
@@ -15693,55 +15676,20 @@ if (false) {(function () {
       }).then(function () {//ready
       });
     },
-    onActionClick: function onActionClick(action, row, index) {
-      var _this2 = this;
-
-      switch (action) {
-        case 'trash':
-          if (confirm('Are you sure to delete?')) {
-            __WEBPACK_IMPORTED_MODULE_0_admin_http_js__["a" /* default */].delete('employees/' + row.id).then(function (response) {
-              _this2.$delete(_this2.rows, index);
-            });
-          }
-
-          break;
-
-        case 'edit':
-          //TODO
-          break;
-
-        default:
-      }
-    },
-    onBulkAction: function onBulkAction(action, items) {
-      var _this3 = this;
-
-      if ('trash' === action) {
-        if (confirm('Are you sure to delete?')) {
-          __WEBPACK_IMPORTED_MODULE_0_admin_http_js__["a" /* default */].delete('employees/delete/' + items.join(',')).then(function (response) {
-            var toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-            if (toggleCheckbox.checked) {
-              // simulate click event to remove checked state
-              toggleCheckbox.click();
-            }
-
-            _this3.fetchItems();
-          });
-        }
-      }
-    },
     goToPage: function goToPage(page) {
       var queries = Object.assign({}, this.$route.query);
       this.paginationData.currentPage = page;
       this.$router.push({
-        name: 'PaginateEmployees',
+        name: 'PaginateJournals',
         params: {
           page: page
         },
         query: queries
       });
       this.fetchItems();
+    },
+    newJournal: function newJournal() {
+      this.$router.push('journals/new');
     }
   }
 });
@@ -16498,9 +16446,25 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_2_vue
       component: __WEBPACK_IMPORTED_MODULE_8_admin_components_reports_TrialBalance_vue__["a" /* default */]
     }]
   }, {
-    path: '/journals/new',
-    name: 'JournalCreate',
-    component: __WEBPACK_IMPORTED_MODULE_21_admin_components_journal_JournalCreate_vue__["a" /* default */]
+    path: '/journals',
+    component: {
+      render: function render(c) {
+        return c('router-view');
+      }
+    },
+    children: [{
+      path: '',
+      name: 'Journals',
+      component: __WEBPACK_IMPORTED_MODULE_20_admin_components_journal_JournalList_vue__["a" /* default */]
+    }, {
+      path: '/journals/new',
+      name: 'JournalCreate',
+      component: __WEBPACK_IMPORTED_MODULE_21_admin_components_journal_JournalCreate_vue__["a" /* default */]
+    }, {
+      path: 'page/:page',
+      name: 'PaginateJournals',
+      component: __WEBPACK_IMPORTED_MODULE_20_admin_components_journal_JournalList_vue__["a" /* default */]
+    }]
   }]
 }));
 
@@ -30207,28 +30171,38 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "app-employees" },
+    { staticClass: "app-journals" },
     [
-      _vm._m(0),
+      _c("h2", { staticClass: "add-new-journal" }, [
+        _c("span", [_vm._v("Journals")]),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            attrs: { href: "", id: "erp-journal-new" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.newJournal($event)
+              }
+            }
+          },
+          [_vm._v("New Journal Entry")]
+        )
+      ]),
       _vm._v(" "),
       _c("list-table", {
         attrs: {
-          tableClass: "wp-ListTable widefat fixed employee-list",
+          tableClass: "wp-ListTable widefat fixed journal-list",
           "action-column": "actions",
           columns: _vm.columns,
           rows: _vm.row_data,
-          "bulk-actions": _vm.bulkActions,
           "total-items": _vm.paginationData.totalItems,
           "total-pages": _vm.paginationData.totalPages,
           "per-page": _vm.paginationData.perPage,
-          "current-page": _vm.paginationData.currentPage,
-          actions: _vm.actions
+          "current-page": _vm.paginationData.currentPage
         },
-        on: {
-          pagination: _vm.goToPage,
-          "action:click": _vm.onActionClick,
-          "bulk:click": _vm.onBulkAction
-        },
+        on: { pagination: _vm.goToPage },
         scopedSlots: _vm._u([
           {
             key: "title",
@@ -30243,12 +30217,12 @@ var render = function() {
             }
           },
           {
-            key: "employee",
+            key: "journal",
             fn: function(data) {
               return [
                 _c("strong", [
                   _c("a", { attrs: { href: data.row.user_url } }, [
-                    _vm._v(_vm._s(data.row.employee))
+                    _vm._v(_vm._s(data.row.journal))
                   ])
                 ])
               ]
@@ -30260,16 +30234,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("h2", { staticClass: "add-new-employee" }, [
-      _c("span", [_vm._v("Employees")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);

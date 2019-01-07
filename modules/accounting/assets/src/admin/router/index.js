@@ -183,10 +183,26 @@ export default new Router({
             ]
         },
         {
+            path: '/journals',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'Journals',
+                    component: JournalList,
+                },
+                {
 
-            path: '/journals/new',
-            name: 'JournalCreate',
-            component: JournalCreate
+                    path: '/journals/new',
+                    name: 'JournalCreate',
+                    component: JournalCreate
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateJournals',
+                    component: JournalList,
+                },
+            ]
         },
     ]
 })
