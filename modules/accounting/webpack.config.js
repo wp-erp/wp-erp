@@ -14,7 +14,7 @@ var entryPoint = {
     frontend: './assets/src/frontend/main.js',
     admin: './assets/src/admin/main.js',
     vendor: Object.keys(pkg.dependencies),
-    style: './assets/less/style.less',
+    style: './assets/less/master.less',
 };
 
 var exportPath = path.resolve(__dirname, './assets/js');
