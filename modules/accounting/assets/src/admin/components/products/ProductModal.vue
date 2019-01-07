@@ -121,7 +121,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js'
+    import HTTP from 'admin/http'
     import Modal from 'admin/components/modal/Modal.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
 
