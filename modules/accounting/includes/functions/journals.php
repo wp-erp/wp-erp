@@ -35,10 +35,12 @@ function erp_acct_get_all_journals( $args = [] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
-    $sql = "SELECT *";
+    $sql = "SELECT";
 
     if ( $args['count'] ) {
         $sql .= " COUNT( DISTINCT journal.id ) as total_number";
+    } else {
+        $sql .= " *";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_journals AS journal LEFT JOIN {$wpdb->prefix}erp_acct_journal_details AS journal_detail";
@@ -48,7 +50,6 @@ function erp_acct_get_all_journals( $args = [] ) {
         return $wpdb->get_var($sql);
     }
 
-    error_log( print_r( $sql, true ) );
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
