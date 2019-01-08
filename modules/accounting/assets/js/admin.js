@@ -14551,10 +14551,6 @@ if (false) {(function () {
 //
 //
 //
-//
-//
-//
-//
 
 
 
@@ -14616,15 +14612,16 @@ if (false) {(function () {
         response.data.forEach(function (element) {
           _this2.invoices.push({
             id: element.id,
-            voucher_no: element.voucher_no,
+            invoice_no: element.voucher_no,
             due_date: element.due_date,
-            total: parseFloat(element.amount)
+            amount: parseFloat(element.amount),
+            due: parseFloat(element.due)
           });
         });
       }).then(function () {
         _this2.invoices.forEach(function (element) {
-          _this2.totalAmounts[idx++] = parseFloat(element.total);
-          finalAmount += parseFloat(element.total);
+          _this2.totalAmounts[idx++] = parseFloat(element.due);
+          finalAmount += parseFloat(element.due);
         });
 
         _this2.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
@@ -14649,11 +14646,13 @@ if (false) {(function () {
     SubmitForPayment: function SubmitForPayment() {
       var _this4 = this;
 
+      this.invoices.forEach(function (element, index) {
+        element['line_total'] = parseFloat(_this4.totalAmounts[index]);
+      });
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/payments', {
         customer_id: this.basic_fields.customer.id,
         ref: this.basic_fields.trn_ref,
         trn_date: this.basic_fields.trans_date,
-        due_date: this.basic_fields.due_date,
         line_items: this.invoices,
         attachments: this.attachments,
         type: 'payment',
@@ -14671,12 +14670,21 @@ if (false) {(function () {
           timer: 1500
         });
       }).then(function () {
+        _this4.resetData();
+
         _this4.isWorking = false;
       });
     },
     showPaymentModal: function showPaymentModal() {
       this.getDueInvoices();
       this.paymentModal = true;
+    },
+    resetData: function resetData() {
+      Object.assign(this.$data, this.$options.data.call(this));
+    },
+    removeRow: function removeRow(index) {
+      this.$delete(this.transactionLines, index);
+      this.updateFinalAmount();
     }
   },
   watch: {
@@ -14685,7 +14693,6 @@ if (false) {(function () {
     },
     'basic_fields.customer': function basic_fieldsCustomer() {
       this.showPrintPreview = true;
-      this.getDueInvoices();
       this.getCustomerAddress();
     }
   }
@@ -16514,6 +16521,7 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_admin_components_pay_purchase_PayPurchaseCreate_vue__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20_admin_components_journal_JournalList_vue__ = __webpack_require__(286);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_admin_components_journal_JournalCreate_vue__ = __webpack_require__(289);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_admin_components_transfers_Transfer_vue__ = __webpack_require__(344);
 
 
 
@@ -16522,6 +16530,7 @@ if (false) {
 
 
  // import SalesReport      from 'admin/components/reports/SalesReport.vue';
+
 
 
 
@@ -16696,6 +16705,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_2_vue
       name: 'PaginateJournals',
       component: __WEBPACK_IMPORTED_MODULE_20_admin_components_journal_JournalList_vue__["a" /* default */]
     }]
+  }, {
+    path: '/transfer/new',
+    name: 'Transfer',
+    component: __WEBPACK_IMPORTED_MODULE_22_admin_components_transfers_Transfer_vue__["a" /* default */]
   }]
 }));
 
@@ -27617,7 +27630,7 @@ var render = function() {
                         staticClass: "col--total",
                         attrs: { "data-colname": "Total" }
                       },
-                      [_vm._v(_vm._s(invoice.total))]
+                      [_vm._v(_vm._s(invoice.amount))]
                     ),
                     _vm._v(" "),
                     _c(
@@ -27626,7 +27639,7 @@ var render = function() {
                         staticClass: "col--due",
                         attrs: { "data-colname": "Due" }
                       },
-                      [_vm._v("$240.00")]
+                      [_vm._v(_vm._s(invoice.due))]
                     ),
                     _vm._v(" "),
                     _c(
@@ -27646,7 +27659,7 @@ var render = function() {
                             }
                           ],
                           staticClass: "text-right",
-                          attrs: { type: "text", name: "amount" },
+                          attrs: { type: "text" },
                           domProps: { value: _vm.totalAmounts[key] },
                           on: {
                             keyup: _vm.updateFinalAmount,
@@ -27665,7 +27678,28 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._m(3, true)
+                    _c(
+                      "td",
+                      {
+                        staticClass: "delete-row",
+                        attrs: { "data-colname": "Remove Above Selection" }
+                      },
+                      [
+                        _c(
+                          "a",
+                          {
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                _vm.removeRow(key)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "flaticon-trash" })]
+                        )
+                      ]
+                    )
                   ])
                 }),
                 _vm._v(" "),
@@ -27863,23 +27897,6 @@ var staticRenderFns = [
         _c("th", { staticClass: "col--actions", attrs: { scope: "col" } })
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "td",
-      {
-        staticClass: "delete-row",
-        attrs: { "data-colname": "Remove Above Selection" }
-      },
-      [
-        _c("a", { attrs: { href: "#" } }, [
-          _c("i", { staticClass: "flaticon-trash" })
-        ])
-      ]
-    )
   }
 ]
 render._withStripped = true
@@ -30277,6 +30294,522 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-3a5d331b", esExports)
+  }
+}
+
+/***/ }),
+/* 292 */,
+/* 293 */,
+/* 294 */,
+/* 295 */,
+/* 296 */,
+/* 297 */,
+/* 298 */,
+/* 299 */,
+/* 300 */,
+/* 301 */,
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */,
+/* 308 */,
+/* 309 */,
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */,
+/* 320 */,
+/* 321 */,
+/* 322 */,
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */,
+/* 328 */,
+/* 329 */,
+/* 330 */,
+/* 331 */,
+/* 332 */,
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */,
+/* 343 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: "Transfer"
+});
+
+/***/ }),
+/* 344 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Transfer_vue__ = __webpack_require__(343);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_59de0702_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Transfer_vue__ = __webpack_require__(346);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(345)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-59de0702"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Transfer_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_59de0702_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Transfer_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "assets/src/admin/components/transfers/Transfer.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-59de0702", Component.options)
+  } else {
+    hotAPI.reload("data-v-59de0702", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 345 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 346 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "wperp-container" }, [
+      _c(
+        "div",
+        {
+          staticClass: "wperp-modal has-form wperp-modal-open",
+          attrs: { id: "wperp-transfer-money-modal", role: "dialog" }
+        },
+        [
+          _c("div", { staticClass: "wperp-modal-dialog" }, [
+            _c("div", { staticClass: "wperp-modal-content" }, [
+              _c("div", { staticClass: "wperp-modal-header" }, [
+                _c("h3", [_vm._v("Transfer Money")]),
+                _vm._v(" "),
+                _c("span", { staticClass: "modal-close" }, [
+                  _c("i", { staticClass: "flaticon-close" })
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  staticClass: "modal-form edit-customer-modal",
+                  attrs: { action: "", method: "post" }
+                },
+                [
+                  _c("div", { staticClass: "wperp-modal-body" }, [
+                    _c("div", { staticClass: "wperp-row wperp-gutter-20" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                        },
+                        [
+                          _c(
+                            "label",
+                            { attrs: { for: "transfer_funds_from" } },
+                            [_vm._v("Transfer Funds From")]
+                          ),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "wperp-custom-select" }, [
+                            _c(
+                              "select",
+                              {
+                                staticClass:
+                                  "wperp-form-field wperp-is-select2",
+                                attrs: {
+                                  name: "transfer_funds_from",
+                                  id: "transfer_funds_from"
+                                }
+                              },
+                              [
+                                _c("option", { attrs: { value: "0" } }, [
+                                  _vm._v("Select")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "1" } }, [
+                                  _vm._v("Option1")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "2" } }, [
+                                  _vm._v("Option2")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "3" } }, [
+                                  _vm._v("Option3")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("i", {
+                              staticClass:
+                                "flaticon-arrow-down-sign-to-navigate"
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "balance mt-10 display-inline-block"
+                            },
+                            [_vm._v("Balance: $30,000.0")]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                        },
+                        [
+                          _c("label", { attrs: { for: "transfer_funds_to" } }, [
+                            _vm._v("Transfer Funds To")
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "wperp-custom-select" }, [
+                            _c(
+                              "select",
+                              {
+                                staticClass:
+                                  "wperp-form-field wperp-is-select2",
+                                attrs: {
+                                  name: "transfer_funds_to",
+                                  id: "transfer_funds_to"
+                                }
+                              },
+                              [
+                                _c("option", { attrs: { value: "0" } }, [
+                                  _vm._v("Select")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "1" } }, [
+                                  _vm._v("Option1")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "2" } }, [
+                                  _vm._v("Option2")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "3" } }, [
+                                  _vm._v("Option3")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("i", {
+                              staticClass:
+                                "flaticon-arrow-down-sign-to-navigate"
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "balance mt-10 display-inline-block"
+                            },
+                            [_vm._v("Balance: $30,000.0")]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                        },
+                        [
+                          _c("label", { attrs: { for: "transfer_amount" } }, [
+                            _vm._v("Transfer Amount")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            staticClass: "wperp-form-field",
+                            attrs: {
+                              type: "text",
+                              name: "transfer_amount",
+                              id: "transfer_amount",
+                              placeholder: "$100.00"
+                            }
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                        },
+                        [
+                          _c("label", { attrs: { for: "transfer_date" } }, [
+                            _vm._v("Transfer Date")
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "wperp-has-datepicker" }, [
+                            _c("input", {
+                              staticClass: "wperp-form-field",
+                              attrs: {
+                                type: "date",
+                                name: "transfer_date",
+                                id: "transfer_date",
+                                placeholder: "$100.00"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "datepicker-icon" }, [
+                              _c("i", { staticClass: "flaticon-calendar" })
+                            ])
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "wperp-col-xs-12 wperp-form-group" },
+                        [
+                          _c("label", { attrs: { for: "transfer_memo" } }, [
+                            _vm._v("Memo")
+                          ]),
+                          _vm._v(" "),
+                          _c("textarea", {
+                            staticClass: "wperp-form-field",
+                            attrs: {
+                              name: "transfer_memo",
+                              id: "transfer_memo",
+                              rows: "3",
+                              placeholder: "Type Here"
+                            }
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "wperp-col-xs-12" }, [
+                        _c("div", { staticClass: "attachment-container" }, [
+                          _c("label", { staticClass: "col--attachement" }, [
+                            _vm._v("Attachment")
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "attachment-preview" }, [
+                            _c("img", {
+                              attrs: {
+                                src: "assets/images/img-thumb.png",
+                                alt: "attachment image"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("i", {
+                              staticClass: "flaticon-close remove-attachment"
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "attachment-placeholder" }, [
+                            _vm._v(
+                              "\n                                        To attach "
+                            ),
+                            _c("input", {
+                              staticClass: "display-none",
+                              attrs: {
+                                type: "file",
+                                id: "attachment",
+                                name: "attachment"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "label",
+                              {
+                                staticClass: "mt-0",
+                                attrs: { for: "attachment" }
+                              },
+                              [_vm._v("Select files")]
+                            ),
+                            _vm._v(
+                              " from your computer\n                                    "
+                            )
+                          ])
+                        ])
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "wperp-btn btn--primary",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Submit")]
+                    )
+                  ])
+                ]
+              )
+            ])
+          ])
+        ]
+      )
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-59de0702", esExports)
   }
 }
 
