@@ -181,7 +181,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['bill_details']; $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['total'];
+            $item_total[$key] = $item['amount'];
         }
 
         $pay_bill_data['amount'] = array_sum( $item_total );
@@ -313,6 +313,9 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] = absint( $request['trn_date'] );
+        }
+        if ( isset( $request['due_date'] ) ) {
+            $prepared_item['due_date'] = absint( $request['due_date'] );
         }
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );

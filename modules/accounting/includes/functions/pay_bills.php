@@ -112,7 +112,6 @@ function erp_acct_insert_pay_bill( $data ) {
         ) );
 
         $voucher_no = $wpdb->insert_id;
-        $bill_no = $voucher_no;
 
         $pay_bill_data = erp_acct_get_formatted_pay_bill_data( $data, $voucher_no );
 
@@ -133,7 +132,7 @@ function erp_acct_insert_pay_bill( $data ) {
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_pay_bill_details', array(
                 'voucher_no'  => $voucher_no,
-                'bill_no'     => $item['id'],
+                'bill_no'     => $item['voucher_no'],
                 'amount'      => $item['amount'],
                 'created_at'  => $pay_bill_data['created_at'],
                 'created_by'  => $pay_bill_data['created_by'],
@@ -141,24 +140,24 @@ function erp_acct_insert_pay_bill( $data ) {
                 'updated_by'  => $pay_bill_data['updated_by'],
             ) );
 
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
+                'bill_no'     => $item['voucher_no'],
+                'trn_no'      => $voucher_no,
+                'particulars' => $pay_bill_data['particulars'],
+                'debit'       => $item['amount'],
+                'credit'      => 0,
+                'created_at'  => $pay_bill_data['created_at'],
+                'created_by'  => $pay_bill_data['created_by'],
+                'updated_at'  => $pay_bill_data['updated_at'],
+                'updated_by'  => $pay_bill_data['updated_by'],
+            ) );
+
             erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item );
+
+            erp_acct_insert_people_trn_data( $pay_bill_data, $pay_bill_data['vendor_id'], 'debit' );
+
+            $wpdb->query( 'COMMIT' );
         }
-
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
-            'bill_no'     => $bill_no,
-            'trn_no'      => $voucher_no,
-            'particulars' => $pay_bill_data['particulars'],
-            'debit'       => $pay_bill_data['amount'],
-            'credit'      => 0,
-            'created_at'  => $pay_bill_data['created_at'],
-            'created_by'  => $pay_bill_data['created_by'],
-            'updated_at'  => $pay_bill_data['updated_at'],
-            'updated_by'  => $pay_bill_data['updated_by'],
-        ) );
-
-        erp_acct_insert_people_trn_data( $pay_bill_data, $pay_bill_data['vendor_id'], 'debit' );
-
-        $wpdb->query( 'COMMIT' );
 
     } catch (Exception $e) {
         $wpdb->query( 'ROLLBACK' );
@@ -210,7 +209,7 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
 
         foreach ( $items as $key => $item ) {
             $wpdb->update( $wpdb->prefix . 'erp_acct_pay_bill_details', array(
-                'bill_no'     => $item['id'],
+                'bill_no'     => $item['voucher_no'],
                 'amount'      => $item['amount'],
                 'created_at'  => $pay_bill_data['created_at'],
                 'created_by'  => $pay_bill_data['created_by'],
@@ -220,23 +219,25 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
                 'voucher_no'  => $pay_bill_id
             ) );
 
+            $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
+                'bill_no'     => $item['voucher_no'],
+                'particulars' => $pay_bill_data['particulars'],
+                'debit'       => 0,
+                'credit'      => $item['amount'],
+                'created_at'  => $pay_bill_data['created_at'],
+                'created_by'  => $pay_bill_data['created_by'],
+                'updated_at'  => $pay_bill_data['updated_at'],
+                'updated_by'  => $pay_bill_data['updated_by'],
+            ), array(
+                'trn_no'      => $pay_bill_id
+            ) );
+
             erp_acct_update_bill_data_into_ledger( $pay_bill_data, $pay_bill_id, $item );
+
+            erp_acct_update_people_trn_data( $pay_bill_data, $pay_bill_data['vendor_id'], 'debit' );
+
+            $wpdb->query( 'COMMIT' );
         }
-
-        $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
-            'bill_no'     => $pay_bill_id,
-            'particulars' => $pay_bill_data['particulars'],
-            'debit'       => 0,
-            'credit'      => $pay_bill_data['amount'],
-            'created_at'  => $pay_bill_data['created_at'],
-            'created_by'  => $pay_bill_data['created_by'],
-            'updated_at'  => $pay_bill_data['updated_at'],
-            'updated_by'  => $pay_bill_data['updated_by'],
-        ), array(
-            'trn_no'      => $pay_bill_id
-        ) );
-
-        $wpdb->query( 'COMMIT' );
 
     } catch (Exception $e) {
         $wpdb->query( 'ROLLBACK' );
