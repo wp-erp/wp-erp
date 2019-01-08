@@ -938,6 +938,21 @@ Company'
             ) $collate;",
 
 
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_transfer_voucher`(
+              `id` int(11) NOT NULL AUTO_INCREMENT, 
+              `voucher_no` int(11) DEFAULT NULL, 
+              `trn_date` int(11) DEFAULT NULL, 
+              `amount` int(11) DEFAULT NULL, 
+              `ac_from` int(11) DEFAULT NULL, 
+              `ac_to` int(11) DEFAULT NULL,
+              `created_at` date DEFAULT NULL,
+              `created_by` varchar(50) DEFAULT NULL,
+              `updated_at` date DEFAULT NULL,
+              `updated_by` varchar(50) DEFAULT NULL,
+               PRIMARY KEY (`id`)
+            ) $collate;",
+
+
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_opening_balance` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `balance_date` date DEFAULT NULL,
@@ -1147,10 +1162,34 @@ Company'
             ) $collate;",
 
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_categories` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
-              `name` varchar(255) DEFAULT NULL,
+              `name` varchar(100) DEFAULT NULL,
+              `description` varchar(255) DEFAULT NULL,
+              `created_at` date DEFAULT NULL,
+              `created_by` varchar(50) DEFAULT NULL,
+              `updated_at` date DEFAULT NULL,
+              `updated_by` varchar(50) DEFAULT NULL,
+              PRIMARY KEY (`id`)
+            ) $collate;",
+
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_sales_tax_categories` (
+              `tax_id` int(11) NOT NULL,
+              `sales_tax_category_id` int(11) DEFAULT NULL,
+              `created_at` date DEFAULT NULL,
+              `created_by` varchar(50) DEFAULT NULL,
+              `updated_at` date DEFAULT NULL,
+              `updated_by` varchar(50) DEFAULT NULL
+            ) $collate;",
+
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_taxes` (
+              `id` int(11) NOT NULL AUTO_INCREMENT,
+              `tax_name` varchar(255) DEFAULT NULL,
               `tax_number` int(11) DEFAULT NULL,
+              `default` boolean DEFAULT NULL,
+              `tax_rate` int(11) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,
@@ -1162,8 +1201,18 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_items` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `tax_id` int(11) DEFAULT NULL,
-              `component_name` varchar(255) DEFAULT NULL,
-              `agency_name` varchar(255) DEFAULT NULL,
+              `agency_id` int(11) DEFAULT NULL,
+              `tax_rate` int(11) DEFAULT NULL,
+              `created_at` date DEFAULT NULL,
+              `created_by` varchar(50) DEFAULT NULL,
+              `updated_at` date DEFAULT NULL,
+              `updated_by` varchar(50) DEFAULT NULL,
+              PRIMARY KEY (`id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agency_names` (
+              `id` int(11) NOT NULL AUTO_INCREMENT,
+              `name` varchar(255) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,
@@ -1230,10 +1279,15 @@ Company'
         // check if people_types exists
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_people_types` LIMIT 0, 1" ) ) {
             $sql = "INSERT INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`)
-                    VALUES (1,'contact'), (2,'company'), (3,'customer'), (4,'vendor');";
+                    VALUES (1,'contact'), (2,'company'), (3,'customer'), (4,'vendor'), (5,'employee');";
 
             $wpdb->query( $sql );
         }
+
+        $product_types = "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`)
+                    VALUES (1,'product'), (2,'service');";
+
+        $wpdb->query( $product_types );
 
 //        //Accounting
 //
