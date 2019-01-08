@@ -15606,6 +15606,7 @@ if (false) {(function () {
       },
       pay_bills: [],
       attachments: [],
+      dueAmounts: [],
       totalAmounts: [],
       finalTotalAmount: 0,
       pay_bill_modal: false,
@@ -15672,7 +15673,7 @@ if (false) {(function () {
       var _this4 = this;
 
       this.pay_bills.forEach(function (element, index) {
-        element['bill_details'] = parseFloat(_this4.totalAmounts[index]);
+        element['amount'] = parseFloat(_this4.totalAmounts[index]);
       });
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/pay-bills', {
         vendor_id: this.basic_fields.people.id,
@@ -15696,12 +15697,21 @@ if (false) {(function () {
           timer: 1500
         });
       }).then(function () {
+        _this4.resetData();
+
         _this4.isWorking = false;
       });
     },
     showPaymentModal: function showPaymentModal() {
       this.getDueBills();
       this.pay_bill_modal = true;
+    },
+    resetData: function resetData() {
+      Object.assign(this.$data, this.$options.data.call(this));
+    },
+    removeRow: function removeRow(index) {
+      this.$delete(this.transactionLines, index);
+      this.updateFinalAmount();
     }
   },
   watch: {
@@ -29317,15 +29327,13 @@ var render = function() {
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: (_vm.totalAmounts[key] = pay_bill.due),
-                              expression: "totalAmounts[key] = pay_bill.due"
+                              value: _vm.totalAmounts[key],
+                              expression: "totalAmounts[key]"
                             }
                           ],
                           staticClass: "text-right",
-                          attrs: { type: "text", name: "amount" },
-                          domProps: {
-                            value: (_vm.totalAmounts[key] = pay_bill.due)
-                          },
+                          attrs: { type: "text", min: "0", max: pay_bill.due },
+                          domProps: { value: _vm.totalAmounts[key] },
                           on: {
                             keyup: _vm.updateFinalAmount,
                             input: function($event) {
@@ -29333,8 +29341,8 @@ var render = function() {
                                 return
                               }
                               _vm.$set(
-                                (_vm.totalAmounts[key] = pay_bill),
-                                "due",
+                                _vm.totalAmounts,
+                                key,
                                 $event.target.value
                               )
                             }
@@ -29343,7 +29351,28 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._m(3, true)
+                    _c(
+                      "td",
+                      {
+                        staticClass: "delete-row",
+                        attrs: { "data-colname": "Remove Above Selection" }
+                      },
+                      [
+                        _c(
+                          "a",
+                          {
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                _vm.removeRow(key)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "flaticon-trash" })]
+                        )
+                      ]
+                    )
                   ])
                 }),
                 _vm._v(" "),
@@ -29374,12 +29403,7 @@ var render = function() {
                           }
                         ],
                         staticClass: "text-right",
-                        attrs: {
-                          type: "text",
-                          name: "finalamount",
-                          readonly: "",
-                          disabled: ""
-                        },
+                        attrs: { type: "text", readonly: "", disabled: "" },
                         domProps: { value: _vm.finalTotalAmount },
                         on: {
                           input: function($event) {
@@ -29552,23 +29576,6 @@ var staticRenderFns = [
         _c("th", { staticClass: "col--actions", attrs: { scope: "col" } })
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "td",
-      {
-        staticClass: "delete-row",
-        attrs: { "data-colname": "Remove Above Selection" }
-      },
-      [
-        _c("a", { attrs: { href: "#" } }, [
-          _c("i", { staticClass: "flaticon-trash" })
-        ])
-      ]
-    )
   }
 ]
 render._withStripped = true
