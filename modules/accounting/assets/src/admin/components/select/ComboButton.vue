@@ -1,20 +1,20 @@
 <template>
     <div class="wperp-select-container select-primary">
-        <div @click="toggleMenu()" class="wperp-selected-option" v-if="selectedOption.name !== undefined">
-      		{{ selectedOption.name }}
-      		<span class="caret"></span>
-        </div>
+        <div class="wperp-selected-option">
+      		<div class="left-part" v-on="optionSelected(options[0])">
+				{{ options[0].text }}
+			</div>
 
-        <div @click="toggleMenu()" class="wperp-selected-option" v-if="selectedOption.name === undefined">
-      		{{placeholderText}}
-      		<span class="caret"></span>
+      		<div class="right-part" @click="toggleButtons">
+				<span class="caret"></span>
+			</div>
         </div>
 
         <ul class="wperp-options" v-if="showMenu">
             <li :key="index" v-for="(option, index) in options">
-				<router-link v-if="hasUrl" :to="{name: option.namedRoute}">{{ option.name }}</router-link>
-                <a v-else href="#" @click.prevent="updateOption(option)">
-                    {{ option.name }}
+
+                <a href="#" @click.prevent="optionSelected(option)">
+                    {{ option.text }}
                 </a>
             </li>
         </ul>
@@ -23,48 +23,28 @@
 
 <script>
     export default {
-        name: 'ComboBox',
+        name: 'ComboButton',
 
         data() {
             return {
-                selectedOption: {
-                  name: '',
-                },
-                showMenu: false,
-                placeholderText: '-Select-',
+				showMenu: false
             }
         },
         props: {
-            selected: {},
             options: {
-                type: [Array, Object]
-            },
-			placeholder: {
-				type: String
-			},
-			hasUrl: {
-				type: Boolean,
-				default: false,
-			}
-        },
-
-        mounted() {
-            // this.selectedOption.id = this.selected;
-            if (this.placeholder) {
-				this.selectedOption.name = this.placeholder;
-                // this.placeholderText = this.placeholder;
+				type: Array,
+				default: []
             }
         },
 
         methods: {
-            updateOption(option) {
-                this.selectedOption = option;
-                this.showMenu = false;
-                this.$root.$emit('comboSelected', this.selectedOption);
+            optionSelected(option) {
+                this.ssm = false;
+                this.$root.$emit('combo-btn-select', option);
             },
 
-            toggleMenu() {
-              this.showMenu = !this.showMenu;
+            toggleButtons() {
+				this.showMenu = !this.showMenu;
             }
         }
     }
@@ -83,11 +63,10 @@
 			justify-content: space-between;
 			background: @theme-color;
 			color: #fff;
-			padding: 4px 20px;
 			border-radius: 3px;
 			white-space: nowrap;
 			cursor: pointer;
-			min-width: 140px;
+			min-width: 150px;
 		}
 		a:hover {
 			text-decoration: none;
@@ -150,12 +129,33 @@
 		}
 	}
 	.caret {
-		position: relative;
-		top: 10px;
-		margin-left: 5px;
 		border-top: 4px solid #fff;
 		border-right: 4px solid transparent;
 		border-left: 4px solid transparent;
+	}
+
+	.left-part,
+	.right-part {
+		float: left;
+
+	}
+
+	.left-part {
+		width: 80%;
+		border-top-left-radius: 3px;
+		border-bottom-left-radius: 3px;
+		line-height: 2;
+		text-align: center;
+	}
+
+	.right-part {
+		width: 20%;
+		background: #03A9F4;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-top-right-radius: 3px;
+		border-bottom-right-radius: 3px;
 	}
 
 </style>

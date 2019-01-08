@@ -110,7 +110,7 @@
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import PurchaseModal from 'admin/components/purchase/PurchaseModal.vue'
     import PurchaseRow from 'admin/components/purchase/PurchaseRow.vue'
-    import SelectVendors from 'admin/components/purchase/SelectVendors.vue'
+    import SelectVendors from 'admin/components/people/SelectVendors.vue'
 
     export default {
         name: 'PurchaseCreate',

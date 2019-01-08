@@ -8,7 +8,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js'
+    import HTTP from 'admin/http'
     import UserBasicInfo from 'admin/components/userinfo/UserBasic.vue'
 
     export default {

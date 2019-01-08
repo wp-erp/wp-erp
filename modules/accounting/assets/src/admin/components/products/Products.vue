@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js'
+    import HTTP from 'admin/http'
     import Menu from 'admin/components/menu/ERPMenu.vue'
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import ProductModal from 'admin/components/products/ProductModal.vue'

@@ -115,9 +115,11 @@
 
                 if ( ! product_id ) return;
 
-                HTTP.get(`/products/${product_id}`).then((response) => {
-                    this.unitPrice = response.data.sale_price;
+                let product = this.products.find(element => {
+                    return element.id == product_id;
                 });
+
+                this.line.unitPrice = parseFloat(product.sale_price);
             },
 
             removeRow() {
