@@ -129,7 +129,7 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import PayBillModal from 'admin/components/pay-bill/PayBillModal.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import SelectVendors from "admin/components/purchase/SelectVendors.vue";
+    import SelectVendors from "admin/components/people/SelectVendors.vue";
 
     export default {
         name: 'PayPurchaseCreate',

@@ -30,11 +30,11 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js'
+    import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
 
     export default {
-        name: 'employees',
+        name: 'Employees',
 
         components: {
             ListTable

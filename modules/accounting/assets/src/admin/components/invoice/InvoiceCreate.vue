@@ -97,8 +97,8 @@
                         </tr>
                     </tbody>
                     <tfoot>
-                        <!-- <tr>
-                            <td colspan="4"><button class="wperp-btn btn--default">Cancel</button></td>
+                        <tr>
+                            <!-- <td colspan="4"><button class="wperp-btn btn--default">Cancel</button></td>
                             <td colspan="5" style="text-align: right;">
                                 <div class="wperp-has-dropdown">
                                     <button class="wperp-btn btn--primary">Submit for approval</button>
@@ -107,11 +107,12 @@
                                     </div>
                                 </div>
                                 <button class="wperp-btn btn--default wperp-dropdown-trigger">Cancel</button>
-                            </td>
-                        </tr> -->
+                            </td> -->
+                        </tr>
                         <tr>
                             <td colspan="9" style="text-align: right;">
-                                <submit-button text="Submit for approval" @click.native="SubmitForApproval" :working="isWorking"></submit-button>
+                            <combo-button :options="buttons" />
+                                <!-- <submit-button text="Submit for approval" @click.native="SubmitForApproval" :working="isWorking"></submit-button> -->
                             </td>
                         </tr>
                     </tfoot>
@@ -129,10 +130,11 @@
 import HTTP from 'admin/http'
 import Datepicker from 'admin/components/base/Datepicker.vue'
 import FileUpload from 'admin/components/base/FileUpload.vue'
+import ComboButton from 'admin/components/select/ComboButton.vue';
 import SubmitButton from 'admin/components/base/SubmitButton.vue'
 import InvoiceModal from 'admin/components/invoice/InvoiceModal.vue'
 import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue'
-import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
+import SelectCustomers from 'admin/components/people/SelectCustomers.vue';
 
 import PrintPreview from 'admin/components/base/PrintPreview.vue';
 
@@ -143,6 +145,7 @@ export default {
         HTTP,
         Datepicker,
         FileUpload,
+        ComboButton,
         PrintPreview,
         SubmitButton,
         InvoiceModal,
@@ -158,6 +161,11 @@ export default {
                 due_date: '',
                 billing_address: ''
             },
+
+            buttons: [
+                {id: 'save', text: 'Save'},
+                {id: 'save_create', text: 'Save & Create'},
+            ],
 
             products: [],
             attachments: [],
@@ -205,7 +213,8 @@ export default {
                 response.data.forEach(element => {
                     this.products.push({
                         id: element.id,
-                        name: element.name
+                        name: element.name,
+                        sale_price: element.sale_price
                     });
                 });
             });
@@ -278,7 +287,7 @@ export default {
                 estimate: 0,
             }).then(res => {
                 this.$swal({
-                    position: 'top-end',
+                    position: 'center',
                     type: 'success',
                     title: 'Invoice Created!',
                     showConfirmButton: false,
@@ -295,7 +304,7 @@ export default {
 
         showInvoiceModal() {
             this.invoiceModal = true;
-        }
+        },
     }
 
 }
