@@ -923,7 +923,6 @@ Company'
               `updated_at` date DEFAULT NULL,
               `updated_by` varchar(50) DEFAULT NULL,
               PRIMARY KEY (`id`),
-              UNIQUE KEY `chart_id` (`chart_id`)
             ) $collate;",
 
 

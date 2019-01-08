@@ -138,16 +138,18 @@ function erp_acct_get_account_debit_credit( $ledger_id ) {
 function erp_acct_perform_transfer( $item ) {
     global $wpdb;
     $created_by = get_current_user_id();
+    $updated_at = date("Y-m-d");
+    $updated_by = $created_by;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-            'type'       => 'sales_invoice',
-            'created_at' => date("Y/m/d"),
+            'type'       => 'transfer_voucher',
+            'created_at' => date("Y-m-d"),
             'created_by' => $created_by,
-            'updated_at' => '',
-            'updated_by' => '',
+            'updated_at' => $updated_at,
+            'updated_by' => $updated_by,
         ) );
 
         $voucher_no = $wpdb->insert_id;
@@ -186,4 +188,37 @@ function erp_acct_perform_transfer( $item ) {
         return new WP_error( 'transfer-exception', $e->getMessage() );
     }
 
+}
+
+/**
+ * Get transferrable accounts
+ */
+function erp_get_transfer_accounts() {
+    global $wpdb;
+
+    $table_name = $wpdb->prefix.'erp_acct_ledgers';
+    $chart_id = 107;
+    $results = $wpdb->get_results( $wpdb->prepare( "Select * FROM $table_name WHERE chart_id = %d", $chart_id ), ARRAY_A );
+
+    return $results;
+}
+
+/**
+ * Get balance by Ledger ID
+ *
+ * @param $id array
+ *
+ * @return array
+ */
+function erp_get_balance_by_ledger( $id ) {
+    if ( is_array( $id ) ) {
+        $id = "'" . implode( "','", $id ) . "'";
+    }
+
+    global $wpdb;
+    $table_name = $wpdb->prefix.'erp_acct_ledger_details';
+    $query = "Select ld.ledger_id,SUM(ld.debit - ld.credit) as balance From $table_name as ld Where ld.ledger_id IN ($id) Group BY ld.ledger_id ";
+    $result = $wpdb->get_results( $query, ARRAY_A );
+
+    return $result;
 }
