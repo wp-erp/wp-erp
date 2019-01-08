@@ -146,7 +146,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['line_items']; $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['total'];
+            $item_total[$key] = $item['line_total'];
         }
 
         $payment_data['amount'] = array_sum( $item_total );
