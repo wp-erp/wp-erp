@@ -458,7 +458,7 @@ class Admin_Menu {
      */
     public function highlight_menu(){
         $screen = get_current_screen();
-        if ( $screen->id != 'edit-erp_hr_announcement' && $screen->id != 'edit-erp_hr_questionnaire' ) {
+        if ( $screen->parent_file != 'admin.php?page=erp' ) {
             return;
         }
 
