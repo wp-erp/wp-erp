@@ -22,6 +22,7 @@ import Transfer          from 'admin/components/transfers/Transfer.vue';
 import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
 import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
+import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
 
 Vue.use(Router)
 
@@ -37,6 +38,21 @@ export default new Router({
                     component: Dashboard,
                 }
             ]
+        },
+        {
+            path : '/users',
+            name : 'Customers',
+            component: People,
+        },
+        {
+            path : '/transactions',
+            name : 'Sales',
+            component: Sales,
+        },
+        {
+            path : '/inventory',
+            name : 'Products',
+            component: Products,
         },
         {
             path: '/customers',
@@ -107,6 +123,11 @@ export default new Router({
             component: Expenses
         },
         {
+            path: '/transactions/purchases',
+            name: 'Purchases',
+            component: Purchases
+        },
+        {
             path: '/charts',
             name: 'ChartOfAccounts',
             component: ChartOfAccounts
@@ -128,12 +149,12 @@ export default new Router({
         },
         {
 
-            path: '/erp_inv_product',
+            path: '/products',
             name: 'Products',
             component: Products
         },
         {
-            path: '/erp_inv_product_category',
+            path: '/product_categories',
             name: 'ProductCategory',
             component: ProductCategory
         },

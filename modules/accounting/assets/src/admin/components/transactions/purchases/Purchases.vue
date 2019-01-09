@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Sales Transactions</h2>
+                    <h2 class="content-header__title">Purchases Transactions</h2>
                     <combo-box 
                         :options="pages"
                         :hasUrl="true"
@@ -15,9 +15,9 @@
         </div>
         <!-- End .header-section -->
 
-        <sales-stats />
+        <purchases-stats />
         <transactions-filter />
-        <sales-list />
+        <purchases-list />
 
     </div>
 </template>
@@ -27,16 +27,16 @@ import 'assets/js/plugins/chart.min';
 import 'assets/js/status_chart';
 
 import ComboBox from 'admin/components/select/ComboBox.vue';
-import SalesStats from 'admin/components/transactions/sales/SalesStats.vue';
-import SalesList from 'admin/components/transactions/sales/SalesList.vue';
+import PurchasesStats from 'admin/components/transactions/purchases/PurchasesStats.vue';
+import PurchasesList from 'admin/components/transactions/purchases/PurchasesList.vue';
 import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
 
 export default {
-    name: 'Sales',
+    name: 'Purchases',
 
     components: {
-        SalesStats,
-        SalesList,
+        PurchasesStats,
+        PurchasesList,
         TransactionsFilter,
         ComboBox,
     },
