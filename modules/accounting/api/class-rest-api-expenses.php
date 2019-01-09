@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
+class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Endpoint namespace.
      *
@@ -22,7 +22,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @var string
      */
-    protected $rest_base = 'accounting/v1/bills';
+    protected $rest_base = 'accounting/v1/expenses';
 
     /**
      * Register the routes for the objects of the controller.
@@ -31,7 +31,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_bills' ],
+                'callback'            => [ $this, 'get_expenses' ],
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
@@ -39,7 +39,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_bill' ],
+                'callback'            => [ $this, 'create_expense' ],
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
@@ -51,7 +51,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_bill' ],
+                'callback'            => [ $this, 'get_expense' ],
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
@@ -59,7 +59,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_bill' ],
+                'callback'            => [ $this, 'update_expense' ],
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
@@ -67,7 +67,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_bill' ],
+                'callback'            => [ $this, 'delete_expense' ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
@@ -75,21 +75,10 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/due' . '/(?P<id>[\d]+)', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'due_bills' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_create_expenses_voucher' );
-                },
-            ],
-        ] );
-
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void', [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'void_bill' ],
+                'callback'            => [ $this, 'void_expense' ],
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_publish_expenses_voucher' );
@@ -110,13 +99,13 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Get a collection of bills
+     * Get a collection of expenses
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_bills( $request ) {
+    public function get_expenses( $request ) {
         $args = [
             'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
@@ -128,10 +117,10 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $bill_data  = erp_acct_get_bills( $args );
-        $total_items = erp_acct_get_bills( [ 'count' => true, 'number' => -1 ] );
+        $expense_data  = erp_acct_get_expenses( $args );
+        $total_items = erp_acct_get_expenses( [ 'count' => true, 'number' => -1 ] );
 
-        foreach ( $bill_data as $item ) {
+        foreach ( $expense_data as $item ) {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
@@ -153,28 +142,28 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Get a bill
+     * Get a expense
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_bill( $request ) {
+    public function get_expense( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $bill_data =  erp_acct_get_bill( $id );
-        $bill_data['id'] = $id;
+        $expense_data =  erp_acct_get_expense( $id );
+        $expense_data['id'] = $id;
 
-        $bill_data['created_by'] = $this->get_user( $bill_data['created_by'] );
+        $expense_data['created_by'] = $this->get_user( $expense_data['created_by'] );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $data = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
+        $data = $this->prepare_item_for_response( $expense_data, $request, $additional_fields );
         $formatted_items[] = $this->prepare_response_for_collection( $data );
         $response = rest_ensure_response( $formatted_items );
 
@@ -184,14 +173,14 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Create a bill
+     * Create a expense
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_bill( $request ) {
-        $bill_data = $this->prepare_item_for_database( $request );
+    public function create_expense( $request ) {
+        $expense_data = $this->prepare_item_for_database( $request );
 
         $item_amount = []; $item_tax = []; $item_total = []; $additional_fields = [];
 
@@ -201,38 +190,38 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $item_amount[$key] = $item['amount'];
             $item_total[$key] = $item['amount'];
         }
-        $bill_data['attachments']     = maybe_serialize( $request['attachments'] );
-        $bill_data['amount']          = array_sum( $item_total );
+        $expense_data['attachments']     = maybe_serialize( $request['attachments'] );
+        $expense_data['amount']          = array_sum( $item_total );
 
-        $bill_id = erp_acct_insert_bill( $bill_data );
+        $expense_id = erp_acct_insert_expense( $expense_data );
 
-        $bill_data['id'] = $bill_id;
+        $expense_data['id'] = $expense_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $bill_data = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
+        $expense_data = $this->prepare_item_for_response( $expense_data, $request, $additional_fields );
 
-        $response = rest_ensure_response( $bill_data );
+        $response = rest_ensure_response( $expense_data );
         $response->set_status( 201 );
 
         return $response;
     }
 
     /**
-     * Update a bill
+     * Update a expense
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_bill( $request ) {
+    public function update_expense( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $bill_data = $this->prepare_item_for_database( $request );
+        $expense_data = $this->prepare_item_for_database( $request );
 
         $item_amount = []; $item_tax = []; $item_total = []; $additional_fields = [];
 
@@ -242,112 +231,64 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $item_amount[$key] = $item['amount'];
             $item_total[$key] = $item['amount'];
         }
-        $bill_data['attachments'] = maybe_serialize( $request['attachments'] );
-        $bill_data['amount']      = array_sum( $item_total );
+        $expense_data['attachments'] = maybe_serialize( $request['attachments'] );
+        $expense_data['amount']      = array_sum( $item_total );
 
-        $bill_id = erp_acct_update_bill( $bill_data, $id );
+        $expense_id = erp_acct_update_expense( $expense_data, $id );
 
-        $$bill_data['id'] = $bill_id;
+        $expense_data['id'] = $expense_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $bill_data = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
+        $expense_data = $this->prepare_item_for_response( $expense_data, $request, $additional_fields );
 
-        $response = rest_ensure_response( $bill_data );
+        $response = rest_ensure_response( $expense_data );
         $response->set_status( 200 );
 
         return $response;
     }
 
     /**
-     * Delete a bill
+     * Delete a expense
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_bill( $request ) {
+    public function delete_expense( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        erp_acct_delete_bill( $id );
+        erp_acct_delete_expense( $id );
 
         return new WP_REST_Response(true, 204 );
     }
 
     /**
-     * Void a bill
+     * Void a expense
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function void_bill( $request ) {
+    public function void_expense( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        erp_acct_void_bill( $id );
+        erp_acct_void_expense( $id );
 
         return new WP_REST_Response( true, 204 );
     }
 
-    /**
-     * Get a collection of bills with due of a people
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Response
-     */
-    public function due_bills( $request ) {
-        $id = (int) $request['id'];
-
-        if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
-        }
-
-        $args = [
-            'number' => !empty( $request['per_page'] ) ? $request['per_page'] : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
-        ];
-
-        $formatted_items = [];
-        $additional_fields = [];
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $bill_data  = erp_acct_get_due_bills_by_people( [ 'people_id' => $id ] );
-        $total_items   = count( $bill_data );
-
-        foreach ( $bill_data as $item ) {
-            if ( isset( $request['include'] ) ) {
-                $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
-
-                if ( in_array( 'created_by', $include_params ) ) {
-                    $item['created_by'] = $this->get_user( $item['created_by'] );
-                }
-            }
-
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
-            $formatted_items[] = $this->prepare_response_for_collection( $data );
-        }
-
-        $response = rest_ensure_response( $formatted_items );
-        $response = $this->format_collection_response( $response, $request, $total_items );
-
-        $response->set_status( 200 );
-
-        return $response;
-    }
 
     /**
-     * Upload attachment for bill
+     * Upload attachment for expenses
      *
      * @param WP_REST_Request $request
      *
@@ -399,14 +340,17 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['bill_details'] ) ) {
             $prepared_item['bill_details'] = $request['bill_details'];
         }
-        if ( isset( $request['status'] ) ) {
-            $prepared_item['status'] = $request['status'];
-        }
         if ( isset( $request['remarks'] ) ) {
             $prepared_item['remarks'] = $request['remarks'];
         }
+        if ( isset( $request['status'] ) ) {
+            $prepared_item['status'] = $request['status'];
+        }
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = $request['attachments'];
+        }
+        if ( isset( $request['trn_by_ledger_id'] ) ) {
+            $prepared_item['trn_by_ledger_id'] = $request['trn_by_ledger_id'];
         }
 
         return $prepared_item;
@@ -436,7 +380,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'ref'             => $item->ref,
             'remarks'         => $item->remarks,
             'status'          => $item->status,
-            'attachments'     => $item->attachments
+            'attachments'     => $item->attachments,
+            'trn_by_ledger_id'=> $item->trn_by_ledger_id,
         ];
 
         $data = array_merge( $data, $additional_fields );

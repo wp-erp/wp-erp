@@ -10,12 +10,35 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_payments() {
+function erp_acct_get_payments( $args = [] ) {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_invoice_receipts", ARRAY_A );
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
 
-    return $rows;
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_invoice_receipts ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
+
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**
@@ -29,7 +52,36 @@ function erp_acct_get_payments() {
 function erp_acct_get_payment( $invoice_no ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_invoice_receipts WHERE voucher_no = {$invoice_no}", ARRAY_A );
+    $sql = "SELECT
+
+    pay_inv.id,
+    pay_inv.voucher_no,
+    pay_inv.trn_date,
+    pay_inv.amount,
+    pay_inv.trn_by,
+    pay_inv.particulars,
+    pay_inv.attachments,
+    pay_inv.status,
+    pay_inv.created_at,
+    pay_inv.created_by,
+    pay_inv.updated_at,
+    pay_inv.updated_by,
+
+    pay_inv_detail.invoice_no,
+    pay_inv_detail.amount as pay_inv_detail_amount,
+    
+    ledger_detail.particulars,
+    ledger_detail.debit,
+    ledger_detail.credit
+
+    from {$wpdb->prefix}erp_acct_invoice_receipts as pay_inv
+
+    LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts_details as pay_inv_detail ON pay_inv.voucher_no = pay_inv_detail.voucher_no
+    LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ledger_detail ON pay_inv.voucher_no = ledger_detail.trn_no
+
+    WHERE pay_inv.voucher_no = {$invoice_no}";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
 
     return $row;
 }
