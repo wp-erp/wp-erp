@@ -322,7 +322,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $bill_data  = erp_acct_get_due_bills_people( [ 'people_id' => $id ] );
+        $bill_data  = erp_acct_get_due_bills_by_people( [ 'people_id' => $id ] );
         $total_items   = count( $bill_data );
 
         foreach ( $bill_data as $item ) {
@@ -427,6 +427,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'address'         => $item->address,
             'bill_details'    => $item->bill_details,
             'total'           => (int) $item->amount,
+            'due'             => (int) $item->due,
             'tax'             => (int) $item->tax,
             'ref'             => $item->ref,
             'remarks'         => $item->remarks,

@@ -86,7 +86,7 @@ function erp_acct_insert_payment( $data ) {
 
 	        $payment_data['amount'] = $total;
 
-	        erp_acct_insert_payment_line_items( $payment_data, $invoice_no[$key], $voucher_no );
+	        erp_acct_insert_payment_line_items( $payment_data, $item, $voucher_no );
 	    }
 
         erp_acct_insert_people_trn_data( $payment_data, $payment_data['customer_id'], 'credit' );
@@ -112,20 +112,20 @@ function erp_acct_insert_payment( $data ) {
  * @param $due
  * @return int
  */
-function erp_acct_insert_payment_line_items( $data, $invoice_no, $voucher_no ) {
+function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
     global $wpdb;
 
-    $payment_data = erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no );
+    $payment_data = erp_acct_get_formatted_payment_data( $data, $voucher_no, $item['invoice_no'] );
     $created_by = get_current_user_id();
     $payment_data['created_at'] = date('Y-m-d H:i:s');
     $payment_data['created_by'] = $created_by;
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-        'invoice_no' => $invoice_no,
+        'invoice_no' => $item['invoice_no'],
         'trn_no'     => $voucher_no,
         'particulars'=> $payment_data['particulars'],
         'debit'      => 0,
-        'credit'     => $payment_data['amount'],
+        'credit'     => $item['line_total'],
         'created_at' => $payment_data['created_at'],
         'created_by' => $payment_data['created_by'],
         'updated_at' => $payment_data['updated_at'],
@@ -134,8 +134,8 @@ function erp_acct_insert_payment_line_items( $data, $invoice_no, $voucher_no ) {
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_receipts_details', array(
         'voucher_no' => $voucher_no,
-        'invoice_no' => $invoice_no,
-        'amount'     => $payment_data['amount'],
+        'invoice_no' => $item['invoice_no'],
+        'amount'     => $item['line_total'],
         'created_at' => $payment_data['created_at'],
         'created_by' => $payment_data['created_by'],
         'updated_at' => $payment_data['updated_at'],
@@ -418,10 +418,3 @@ function erp_acct_get_payment_count() {
 
     return $row->count;
 }
-
-
-
-
-
-
-
