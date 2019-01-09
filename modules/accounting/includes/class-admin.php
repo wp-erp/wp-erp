@@ -65,14 +65,14 @@ class Admin {
         erp_add_menu( 'accounting', [
             'title'      => __( 'Sales', 'erp' ),
             'capability' => $sale,
-            'slug'       => 'sales',
+            'slug'       => 'transactions/sales',
             'callback'   => [],
             'position'   => 20
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Expenses', 'erp' ),
             'capability' => $expense,
-            'slug'       => 'expenses',
+            'slug'       => 'transactions/expenses',
             'callback'   => [],
             'position'   => 25
         ] );

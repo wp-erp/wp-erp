@@ -72,8 +72,8 @@ import 'assets/js/plugins/chart.min';
 import 'assets/js/status_chart';
 
 import ComboBox from 'admin/components/select/ComboBox.vue';
-import ExpensesStats from 'admin/components/expenses/ExpensesStats.vue';
-import ExpensesList from 'admin/components/expenses/ExpensesList.vue';
+import ExpensesStats from 'admin/components/transactions/expenses/ExpensesStats.vue';
+import ExpensesList from 'admin/components/transactions/expenses/ExpensesList.vue';
 // import PurchaseCreate from 'admin/components/purchase/PurchaseCreate.vue';
 // import PayPurchaseCreate from 'admin/components/pay-purchase/PayPurchaseCreate.vue';
 
@@ -89,10 +89,11 @@ export default {
     data() {
         return {
             pages: [
-                { namedRoute: 'PurchaseCreate', name: 'Purchases' },
-                { namedRoute: 'PayPurchaseCreate', name: 'Pay Purchases' },
-                { namedRoute: 'BillCreate', name: 'Bills' },
-                { namedRoute: 'PayBillCreate', name: 'Pay Bills' },
+                { namedRoute: 'ExpenseCreate', name: 'Expense' },
+                { namedRoute: 'PurchaseCreate', name: 'Purchase' },
+                { namedRoute: 'PayPurchaseCreate', name: 'Pay Purchase' },
+                { namedRoute: 'BillCreate', name: 'Bill' },
+                { namedRoute: 'PayBillCreate', name: 'Pay Bill' },
             ],
         };
     },

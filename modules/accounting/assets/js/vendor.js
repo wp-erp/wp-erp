@@ -98,7 +98,7 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 304);
+/******/ 	return __webpack_require__(__webpack_require__.s = 296);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -15136,8 +15136,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ValidationObserver", function() { return ValidationObserver; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withValidation", function() { return withValidation; });
 /**
-  * vee-validate v2.1.5
-  * (c) 2019 Abdelrahman Awad
+  * vee-validate v2.1.4
+  * (c) 2018 Abdelrahman Awad
   * @license MIT
   */
 // 
@@ -16223,12 +16223,10 @@ ErrorBag.prototype.remove = function remove (field, scope, vmId) {
   var selector = isNullOrUndefined(scope) ? String(field) : (scope + "." + field);
   var ref = this._makeCandidateFilters(selector);
     var isPrimary = ref.isPrimary;
-    var isAlt = ref.isAlt;
-  var matches = function (item) { return isPrimary(item) || isAlt(item); };
   var shouldRemove = function (item) {
-    if (isNullOrUndefined(vmId)) { return matches(item); }
+    if (isNullOrUndefined(vmId)) { return isPrimary(item); }
 
-    return matches(item) && item.vmId === vmId;
+    return isPrimary(item) && item.vmId === vmId;
   };
 
   for (var i = 0; i < this.items.length; ++i) {
@@ -16344,28 +16342,15 @@ function findModel (vnode) {
   return !!(vnode.data.directives) && find(vnode.data.directives, function (d) { return d.name === 'model'; });
 }
 
-function extractChildren (vnode) {
-  if (Array.isArray(vnode)) {
-    return vnode;
-  }
-
-  if (Array.isArray(vnode.children)) {
-    return vnode.children;
-  }
-
-  if (vnode.componentOptions && Array.isArray(vnode.componentOptions.children)) {
-    return vnode.componentOptions.children;
-  }
-
-  return [];
-}
-
 function extractVNodes (vnode) {
   if (findModel(vnode)) {
     return [vnode];
   }
 
-  var children = extractChildren(vnode);
+  var children = Array.isArray(vnode) ? vnode : vnode.children;
+  if (!Array.isArray(children)) {
+    return [];
+  }
 
   return children.reduce(function (nodes, node) {
     var candidates = extractVNodes(node);
@@ -17117,7 +17102,7 @@ Field.prototype.reset = function reset () {
 
   this.addValueListeners();
   this.addActionListeners();
-  this.updateClasses(true);
+  this.updateClasses();
   this.updateAriaAttrs();
   this.updateCustomValidity();
 };
@@ -17234,9 +17219,8 @@ Field.prototype.unwatch = function unwatch (tag) {
 /**
  * Updates the element classes depending on each field flag status.
  */
-Field.prototype.updateClasses = function updateClasses (isReset) {
+Field.prototype.updateClasses = function updateClasses () {
     var this$1 = this;
-    if ( isReset === void 0 ) isReset = false;
 
   if (!this.classes || this.isDisabled) { return; }
   var applyClasses = function (el) {
@@ -17244,13 +17228,6 @@ Field.prototype.updateClasses = function updateClasses (isReset) {
     toggleClass(el, this$1.classNames.pristine, this$1.flags.pristine);
     toggleClass(el, this$1.classNames.touched, this$1.flags.touched);
     toggleClass(el, this$1.classNames.untouched, this$1.flags.untouched);
-
-    // remove valid/invalid classes on reset.
-    if (isReset) {
-      toggleClass(el, this$1.classNames.valid, false);
-      toggleClass(el, this$1.classNames.invalid, false);
-    }
-
     // make sure we don't set any classes if the state is undetermined.
     if (!isNullOrUndefined(this$1.flags.valid) && this$1.flags.validated) {
       toggleClass(el, this$1.classNames.valid, this$1.flags.valid);
@@ -17753,8 +17730,12 @@ ScopedValidator.prototype.remove = function remove (ruleName) {
   return this._base.remove(ruleName);
 };
 
-ScopedValidator.prototype.detach = function detach (name, scope) {
-  return this._base.detach(name, scope, this.id);
+ScopedValidator.prototype.detach = function detach () {
+    var ref;
+
+    var args = [], len = arguments.length;
+    while ( len-- ) args[ len ] = arguments[ len ];
+  return (ref = this._base).detach.apply(ref, args.concat( [this.id] ));
 };
 
 ScopedValidator.prototype.extend = function extend () {
@@ -18864,8 +18845,6 @@ var mapFields = function (fields) {
 
 var $validator = null;
 
-var PROVIDER_COUNTER = 0;
-
 function createValidationCtx (ctx) {
   return {
     errors: ctx.messages,
@@ -18873,12 +18852,11 @@ function createValidationCtx (ctx) {
     classes: ctx.classes,
     valid: ctx.isValid,
     reset: function () { return ctx.reset(); },
-    validate: function () {
-      var args = [], len = arguments.length;
-      while ( len-- ) args[ len ] = arguments[ len ];
+    validate: function (e) {
+      ctx.syncValue(e);
 
-      return ctx.validate.apply(ctx, args);
-  },
+      return ctx.validate().then(ctx.applyResult);
+    },
     aria: {
       'aria-invalid': ctx.flags.invalid ? 'true' : 'false',
       'aria-required': ctx.isRequired ? 'true' : 'false'
@@ -18911,7 +18889,7 @@ function onRenderUpdate (model) {
     };
 
     this.value = model.value;
-    this.validateSilent().then(this.immediate || shouldRevalidate ? this.applyResult : silentHandler);
+    this.validate().then(this.immediate || shouldRevalidate ? this.applyResult : silentHandler);
   }
 
   this._needsValidation = false;
@@ -18979,20 +18957,22 @@ function createValuesLookup (ctx) {
     }
 
     acc[depName] = providers[depName].value;
+    var watcherName = "$__" + depName;
+    if (!isCallable(ctx[watcherName])) {
+      ctx[watcherName] = providers[depName].$watch('value', function () {
+        ctx.validate(ctx.value).then(ctx.applyResult);
+        ctx[watcherName]();
+      });
+    }
 
     return acc;
   }, {});
 }
 
 function updateRenderingContextRefs (ctx) {
-  // IDs should not be nullable.
-  if (isNullOrUndefined(ctx.id) && ctx.id === ctx.vid) {
-    ctx.id = PROVIDER_COUNTER;
-    PROVIDER_COUNTER++;
-  }
-
   var id = ctx.id;
   var vid = ctx.vid;
+
   // Nothing has changed.
   if (id === vid && ctx.$_veeObserver.refs[id]) {
     return;
@@ -19019,6 +18999,8 @@ function createObserver () {
   };
 }
 
+var id$1 = 0;
+
 var ValidationProvider = {
   $__veeInject: false,
   inject: {
@@ -19037,9 +19019,8 @@ var ValidationProvider = {
     vid: {
       type: [String, Number],
       default: function () {
-        PROVIDER_COUNTER++;
-
-        return PROVIDER_COUNTER;
+        id$1++;
+        return id$1;
       }
     },
     name: {
@@ -19102,24 +19083,10 @@ var ValidationProvider = {
       this._waiting = null;
       this.initialValue = this.value;
       var flags = createFlags();
+      flags.changed = false;
       this.setFlags(flags);
     },
     validate: function validate () {
-      var this$1 = this;
-      var args = [], len = arguments.length;
-      while ( len-- ) args[ len ] = arguments[ len ];
-
-      if (args[0]) {
-        this.syncValue(args[0]);
-      }
-
-      return this.validateSilent().then(function (result) {
-        this$1.applyResult(result);
-
-        return result;
-      });
-    },
-    validateSilent: function validateSilent () {
       var this$1 = this;
 
       this.setFlags({ pending: true });
@@ -19165,21 +19132,10 @@ var ValidationProvider = {
       return this.flags.valid;
     },
     fieldDeps: function fieldDeps () {
-      var this$1 = this;
-
       var rules = normalizeRules(this.rules);
-      var providers = this.$_veeObserver.refs;
 
       return Object.keys(rules).filter(RuleContainer.isTargetRule).map(function (rule) {
-        var depName = rules[rule][0];
-        var watcherName = "$__" + depName;
-        if (!isCallable(this$1[watcherName])) {
-          this$1[watcherName] = providers[depName].$watch('value', function () {
-            this$1.validate();
-          });
-        }
-
-        return depName;
+        return rules[rule][0];
       });
     },
     normalizedEvents: function normalizedEvents () {
@@ -19204,18 +19160,6 @@ var ValidationProvider = {
       var names = VeeValidate$1.config.classNames;
       return Object.keys(this.flags).reduce(function (classes, flag) {
         var className = (names && names[flag]) || flag;
-        if (flag === 'invalid') {
-          classes[className] = !!this$1.messages.length;
-
-          return classes;
-        }
-
-        if (flag === 'valid') {
-          classes[className] = !this$1.messages.length;
-
-          return classes;
-        }
-
         if (className) {
           classes[className] = this$1.flags[flag];
         }
@@ -19294,12 +19238,18 @@ var ValidationObserver = {
       this.refs = Object.assign({}, this.refs);
     },
     validate: function validate () {
-      return Promise.all(
-        values(this.refs).map(function (ref) { return ref.validate(); })
-      ).then(function (results) { return results.every(function (r) { return r.valid; }); });
+      return Promise.all(values(this.refs).map(function (ref) {
+        return ref.validate().then(function (result) {
+          ref.applyResult(result);
+
+          return result;
+        });
+      })).then(function (results) { return results.every(function (r) { return r.valid; }); });
     },
     reset: function reset () {
-      return values(this.refs).forEach(function (ref) { return ref.reset(); });
+      return values(this.refs).forEach(function (ref) {
+        ref.reset();
+      });
     }
   },
   computed: {
@@ -19478,16 +19428,11 @@ I18nDictionary.prototype.setDateFormat = function setDateFormat (locale, value) 
 
 I18nDictionary.prototype.getMessage = function getMessage (_, key, data) {
   var path = (this.rootKey) + ".messages." + key;
-  if (this.i18n.te(path)) {
-    return this.i18n.t(path, data);
+  var result = this.i18n.t(path, data);
+  if (result !== path) {
+    return result;
   }
 
-  // fallback to the fallback message
-  if (this.i18n.te(path, this.i18n.fallbackLocale)) {
-    return this.i18n.t(path, this.i18n.fallbackLocale, data);
-  }
-
-  // fallback to the root message
   return this.i18n.t(((this.rootKey) + ".messages._default"), data);
 };
 
@@ -19495,8 +19440,9 @@ I18nDictionary.prototype.getAttribute = function getAttribute (_, key, fallback)
     if ( fallback === void 0 ) fallback = '';
 
   var path = (this.rootKey) + ".attributes." + key;
-  if (this.i18n.te(path)) {
-    return this.i18n.t(path);
+  var result = this.i18n.t(path);
+  if (result !== path) {
+    return result;
   }
 
   return fallback;
@@ -19504,8 +19450,9 @@ I18nDictionary.prototype.getAttribute = function getAttribute (_, key, fallback)
 
 I18nDictionary.prototype.getFieldMessage = function getFieldMessage (_, field, key, data) {
   var path = (this.rootKey) + ".custom." + field + "." + key;
-  if (this.i18n.te(path)) {
-    return this.i18n.t(path, data);
+  var result = this.i18n.t(path, data);
+  if (result !== path) {
+    return result;
   }
 
   return this.getMessage(_, key, data);
@@ -19709,7 +19656,7 @@ VeeValidate$1.prototype.resolveConfig = function resolveConfig (ctx) {
 Object.defineProperties( VeeValidate$1.prototype, prototypeAccessors$6 );
 Object.defineProperties( VeeValidate$1, staticAccessors$2 );
 
-VeeValidate$1.version = '2.1.5';
+VeeValidate$1.version = '2.1.4';
 VeeValidate$1.mixin = mixin;
 VeeValidate$1.directive = directive;
 VeeValidate$1.Validator = Validator;
@@ -22549,7 +22496,6 @@ var alpha = {
   ru: /^[А-ЯЁ]*$/i,
   sk: /^[A-ZÁÄČĎÉÍĹĽŇÓŔŠŤÚÝŽ]*$/i,
   sr: /^[A-ZČĆŽŠĐ]*$/i,
-  sv: /^[A-ZÅÄÖ]*$/i,
   tr: /^[A-ZÇĞİıÖŞÜ]*$/i,
   uk: /^[А-ЩЬЮЯЄІЇҐ]*$/i,
   ar: /^[ءآأؤإئابةتثجحخدذرزسشصضطظعغفقكلمنهوىيًٌٍَُِّْٰ]*$/
@@ -22570,7 +22516,6 @@ var alphaSpaces = {
   ru: /^[А-ЯЁ\s]*$/i,
   sk: /^[A-ZÁÄČĎÉÍĹĽŇÓŔŠŤÚÝŽ\s]*$/i,
   sr: /^[A-ZČĆŽŠĐ\s]*$/i,
-  sv: /^[A-ZÅÄÖ\s]*$/i,
   tr: /^[A-ZÇĞİıÖŞÜ\s]*$/i,
   uk: /^[А-ЩЬЮЯЄІЇҐ\s]*$/i,
   ar: /^[ءآأؤإئابةتثجحخدذرزسشصضطظعغفقكلمنهوىيًٌٍَُِّْٰ\s]*$/
@@ -22591,7 +22536,6 @@ var alphanumeric = {
   ru: /^[0-9А-ЯЁ]*$/i,
   sk: /^[0-9A-ZÁÄČĎÉÍĹĽŇÓŔŠŤÚÝŽ]*$/i,
   sr: /^[0-9A-ZČĆŽŠĐ]*$/i,
-  sv: /^[0-9A-ZÅÄÖ]*$/i,
   tr: /^[0-9A-ZÇĞİıÖŞÜ]*$/i,
   uk: /^[0-9А-ЩЬЮЯЄІЇҐ]*$/i,
   ar: /^[٠١٢٣٤٥٦٧٨٩0-9ءآأؤإئابةتثجحخدذرزسشصضطظعغفقكلمنهوىيًٌٍَُِّْٰ]*$/
@@ -22612,7 +22556,6 @@ var alphaDash = {
   ru: /^[0-9А-ЯЁ_-]*$/i,
   sk: /^[0-9A-ZÁÄČĎÉÍĹĽŇÓŔŠŤÚÝŽ_-]*$/i,
   sr: /^[0-9A-ZČĆŽŠĐ_-]*$/i,
-  sv: /^[0-9A-ZÅÄÖ_-]*$/i,
   tr: /^[0-9A-ZÇĞİıÖŞÜ_-]*$/i,
   uk: /^[0-9А-ЩЬЮЯЄІЇҐ_-]*$/i,
   ar: /^[٠١٢٣٤٥٦٧٨٩0-9ءآأؤإئابةتثجحخدذرزسشصضطظعغفقكلمنهوىيًٌٍَُِّْٰ_-]*$/
@@ -23902,7 +23845,7 @@ var Rules = /*#__PURE__*/Object.freeze({
   url: url
 });
 
-var version = '2.1.5';
+var version = '2.1.4';
 
 Object.keys(Rules).forEach(function (rule) {
   Validator.extend(rule, Rules[rule].validate, assign({}, Rules[rule].options, { paramNames: Rules[rule].paramNames }));
@@ -29600,14 +29543,21 @@ exports.push([module.i, "fieldset[disabled] .multiselect{pointer-events:none}.mu
 /* 268 */,
 /* 269 */,
 /* 270 */,
-/* 271 */
+/* 271 */,
+/* 272 */,
+/* 273 */,
+/* 274 */,
+/* 275 */,
+/* 276 */,
+/* 277 */,
+/* 278 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayWithoutHoles = __webpack_require__(272);
+var arrayWithoutHoles = __webpack_require__(279);
 
-var iterableToArray = __webpack_require__(273);
+var iterableToArray = __webpack_require__(280);
 
-var nonIterableSpread = __webpack_require__(274);
+var nonIterableSpread = __webpack_require__(281);
 
 function _toConsumableArray(arr) {
   return arrayWithoutHoles(arr) || iterableToArray(arr) || nonIterableSpread();
@@ -29616,7 +29566,7 @@ function _toConsumableArray(arr) {
 module.exports = _toConsumableArray;
 
 /***/ }),
-/* 272 */
+/* 279 */
 /***/ (function(module, exports) {
 
 function _arrayWithoutHoles(arr) {
@@ -29632,7 +29582,7 @@ function _arrayWithoutHoles(arr) {
 module.exports = _arrayWithoutHoles;
 
 /***/ }),
-/* 273 */
+/* 280 */
 /***/ (function(module, exports) {
 
 function _iterableToArray(iter) {
@@ -29642,7 +29592,7 @@ function _iterableToArray(iter) {
 module.exports = _iterableToArray;
 
 /***/ }),
-/* 274 */
+/* 281 */
 /***/ (function(module, exports) {
 
 function _nonIterableSpread() {
@@ -29652,13 +29602,6 @@ function _nonIterableSpread() {
 module.exports = _nonIterableSpread;
 
 /***/ }),
-/* 275 */,
-/* 276 */,
-/* 277 */,
-/* 278 */,
-/* 279 */,
-/* 280 */,
-/* 281 */,
 /* 282 */,
 /* 283 */,
 /* 284 */,
@@ -29673,15 +29616,7 @@ module.exports = _nonIterableSpread;
 /* 293 */,
 /* 294 */,
 /* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */,
-/* 300 */,
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */
+/* 296 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(24);
@@ -29693,11 +29628,11 @@ __webpack_require__(9);
 __webpack_require__(51);
 __webpack_require__(13);
 __webpack_require__(14);
-module.exports = __webpack_require__(305);
+module.exports = __webpack_require__(297);
 
 
 /***/ }),
-/* 305 */
+/* 297 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30644,8 +30579,8 @@ var index_esm = {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(4)))
 
 /***/ }),
-/* 306 */,
-/* 307 */
+/* 298 */,
+/* 299 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
