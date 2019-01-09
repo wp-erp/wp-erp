@@ -22,6 +22,7 @@ import PayPurchaseCreate from 'admin/components/pay-purchase/PayPurchaseCreate.v
 import JournalList       from 'admin/components/journal/JournalList.vue';
 import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
 import Transfer          from 'admin/components/transfers/Transfer.vue';
+import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
 
 Vue.use(Router)
 
@@ -209,6 +210,11 @@ export default new Router({
             path: '/transfer/new',
             name: 'Transfer',
             component: Transfer
+        },
+        {
+            path: '/expenses/new',
+            name: 'ExpenseCreate',
+            component: ExpenseCreate
         },
     ]
 })
