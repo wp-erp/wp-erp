@@ -399,6 +399,9 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['bill_details'] ) ) {
             $prepared_item['bill_details'] = $request['bill_details'];
         }
+        if ( isset( $request['status'] ) ) {
+            $prepared_item['status'] = $request['status'];
+        }
         if ( isset( $request['remarks'] ) ) {
             $prepared_item['remarks'] = $request['remarks'];
         }

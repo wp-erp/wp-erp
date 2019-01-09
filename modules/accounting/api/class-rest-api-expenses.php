@@ -343,6 +343,9 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['remarks'] ) ) {
             $prepared_item['remarks'] = $request['remarks'];
         }
+        if ( isset( $request['status'] ) ) {
+            $prepared_item['status'] = $request['status'];
+        }
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = $request['attachments'];
         }
