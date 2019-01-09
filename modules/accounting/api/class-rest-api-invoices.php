@@ -329,7 +329,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $args = [
-            'number' => $request['per_page'],
+            'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
