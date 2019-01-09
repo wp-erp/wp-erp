@@ -50,7 +50,31 @@ function erp_acct_get_pay_purchases( $args = [] ) {
 function erp_acct_get_pay_purchase( $purchase_no ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_pay_purchase WHERE purchase_no = {$purchase_no}", ARRAY_A );
+    $sql = "SELECT
+
+    pay_purchase.id,
+    pay_purchase.voucher_no,
+    pay_purchase.trn_date,
+    pay_purchase.amount,
+    pay_purchase.trn_by,
+    pay_purchase.particulars,
+    pay_purchase.attachments,
+    pay_purchase.status,
+    pay_purchase.created_at,
+    pay_purchase.created_by,
+    pay_purchase.updated_at,
+    pay_purchase.updated_by,
+
+    pay_purchase_detail.purchase_no,
+    pay_purchase_detail.amount as pay_purchase_detail_amount
+
+    from {$wpdb->prefix}erp_acct_pay_purchase as pay_purchase
+
+    LEFT JOIN {$wpdb->prefix}erp_acct_pay_purchase_details as pay_purchase_detail ON pay_purchase.voucher_no = pay_purchase_detail.purchase_no
+
+    WHERE pay_purchase.voucher_no = {$purchase_no}";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
 
     return $row;
 }
@@ -192,18 +216,20 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
             erp_acct_update_pay_purchase_data_into_ledger( $pay_purchase_data, $pay_purchase_id, $item );
         }
 
-        $wpdb->update( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
-            'trn_no'      => $pay_purchase_id,
-            'particulars' => $pay_purchase_data['particulars'],
-            'debit'       => $pay_purchase_data['amount'],
-            'credit'      => 0,
-            'created_at'  => $pay_purchase_data['created_at'],
-            'created_by'  => $created_by,
-            'updated_at'  => $pay_purchase_data['updated_at'],
-            'updated_by'  => $pay_purchase_data['updated_by'],
-        ), array (
-            'purchase_no'      => $pay_purchase_id,
-        ) );
+        foreach ( $items as $key => $item ) {
+            $wpdb->update($wpdb->prefix . 'erp_acct_purchase_account_details', array(
+                'trn_no'     => $pay_purchase_id,
+                'particulars'=> $pay_purchase_data['particulars'],
+                'debit'      => $item['line_total'],
+                'credit'     => 0,
+                'created_at' => $pay_purchase_data['created_at'],
+                'created_by' => $created_by,
+                'updated_at' => $pay_purchase_data['updated_at'],
+                'updated_by' => $pay_purchase_data['updated_by'],
+            ), array(
+                'purchase_no' => $item['voucher_no'],
+            ));
+        }
 
         $wpdb->query( 'COMMIT' );
 
