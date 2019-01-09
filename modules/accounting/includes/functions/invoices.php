@@ -462,7 +462,7 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => 307, // @TODO change later
         'trn_no'      => $invoice_data['voucher_no'],
-        'particulars'     => $invoice_data['particulars'],
+        'particulars' => $invoice_data['particulars'],
         'debit'       => $invoice_data['tax'],
         'credit'      => 0,
         'trn_date'    => $invoice_data['trn_date'],
@@ -488,12 +488,12 @@ function erp_acct_get_invoice_count() {
 }
 
 /**
- * Get invoices with due of a customer
+ * Receive payments with due from a customer
  *
  * @return mixed
  */
 
-function erp_acct_get_due_invoices_customer( $args = [] ) {
+function erp_acct_receive_payments_from_customer( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -513,14 +513,25 @@ function erp_acct_get_due_invoices_customer( $args = [] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
-    $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
-    $sql .= "FROM {$wpdb->prefix}erp_acct_invoices WHERE ( people_id={$args['people_id']} ) AND (estimate!=1) AND (status!='paid') ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $invoices = "{$wpdb->prefix}erp_acct_invoices";
+    $invoice_act_details = "{$wpdb->prefix}erp_acct_invoice_account_details";
+    $items = $args['count'] ? " COUNT( id ) as total_number " : " * ";
+
+    $query = $wpdb->prepare( "SELECT $items FROM $invoices as invoice LEFT JOIN
+                                (
+                                    SELECT invoice_no, SUM( ia.debit - ia.credit) as due
+                                    FROM $invoice_act_details as ia
+                                    GROUP BY ia.invoice_no
+                                    HAVING due > 0
+                                ) as invs
+                                ON invoice.voucher_no = invs.invoice_no
+                                WHERE invoice.people_id = %d
+                                ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {
-        return $wpdb->get_var($sql);
+        return $wpdb->get_var( $query );
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $query, ARRAY_A );
 }
 

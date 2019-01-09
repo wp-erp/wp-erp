@@ -61,7 +61,7 @@ function erp_acct_get_bill( $bill_no ) {
     bill.vendor_name,
     bill.address,
     bill.trn_date,
-    bill.due_date, 
+    bill.due_date,
     bill.amount,
     bill.ref,
     bill.particulars,
@@ -71,29 +71,29 @@ function erp_acct_get_bill( $bill_no ) {
     bill.created_by,
     bill.updated_at,
     bill.updated_by,
-    
+
     b_detail.amount,
-    
+
     ledg.id,
     ledg.chart_id,
     ledg.category_id,
     ledg.name,
     ledg.code,
     ledg.system,
-                  
+
     ledg_detail.debit,
     ledg_detail.credit,
-    
+
     b_ac_detail.id,
     b_ac_detail.bill_no
-    
+
     FROM {$wpdb->prefix}erp_acct_bills AS bill
-    
+
     LEFT JOIN {$wpdb->prefix}erp_acct_bill_details AS b_detail ON bill.voucher_no = b_detail.trn_no
     LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS b_ac_detail ON bill.voucher_no = b_ac_detail.trn_no
     LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON bill.voucher_no = ledg_detail.trn_no
     LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledg ON ledg.id = ledg_detail.ledger_id
-    
+
     WHERE bill.voucher_no = {$bill_no}";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
@@ -164,11 +164,11 @@ function erp_acct_insert_bill( $data ) {
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
-            'bill_no'    => $voucher_no,
-            'trn_no'     => $voucher_no,
-            'particulars'=> '',
-            'debit'      => 0,
-            'credit'     => $bill_data['total'],
+            'bill_no'     => $voucher_no,
+            'trn_no'      => $voucher_no,
+            'particulars' => $bill_data['remarks'],
+            'debit'       => 0,
+            'credit'      => $bill_data['amount'],
             'created_at'  => $bill_data['created_at'],
             'created_by'  => $bill_data['created_by'],
             'updated_at'  => $bill_data['updated_at'],
@@ -242,10 +242,10 @@ function erp_acct_update_bill( $data, $bill_id ) {
         }
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
-            'bill_no'    => $bill_id,
-            'particulars'=> '',
-            'debit'      => 0,
-            'credit'     => $bill_data['amount'],
+            'bill_no'     => $bill_id,
+            'particulars' => $bill_data['remarks'],
+            'debit'       => 0,
+            'credit'      => $bill_data['total'],
             'created_at'  => $bill_data['created_at'],
             'created_by'  => $bill_data['created_by'],
             'updated_at'  => $bill_data['updated_at'],
@@ -410,7 +410,7 @@ function erp_acct_get_bill_count() {
  * @return mixed
  */
 
-function erp_acct_get_due_bills_people( $args = [] ) {
+function erp_acct_get_due_bills_by_people( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -430,13 +430,24 @@ function erp_acct_get_due_bills_people( $args = [] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
-    $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
-    $sql .= "FROM {$wpdb->prefix}erp_acct_bills WHERE ( vendor_id={$args['people_id']} ) AND (status!='paid') ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $bills = "{$wpdb->prefix}erp_acct_bills";
+    $bill_act_details = "{$wpdb->prefix}erp_acct_bill_account_details";
+    $items = $args['count'] ? " COUNT( id ) as total_number " : " * ";
+
+    $query = $wpdb->prepare( "SELECT $items FROM $bills as bill LEFT JOIN
+                                (
+                                    SELECT bill_no, SUM( ba.credit - ba.debit) as due
+                                    FROM $bill_act_details as ba
+                                    GROUP BY ba.bill_no
+                                    HAVING due > 0
+                                ) as bs
+                                ON bill.voucher_no = bs.bill_no
+                                WHERE bill.vendor_id = %d
+                                ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {
-        return $wpdb->get_var($sql);
+        return $wpdb->get_var( $query );
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $query, ARRAY_A );
 }

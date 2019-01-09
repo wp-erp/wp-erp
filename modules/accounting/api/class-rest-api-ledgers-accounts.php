@@ -88,6 +88,17 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/accounts', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_chart_accounts' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_account_lists' );
+                },
+            ],
+        ] );
     }
 
     /**
@@ -112,16 +123,9 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             chart_of_account.name as account_name
 
             FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-            LEFT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id";
+            RIGHT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id";
 
         $ledgers = $wpdb->get_results( $sql, ARRAY_A );
-
-        // $result = array_map( function( $item ) {
-        //     $item->id     = (int) $item->id;
-        //     $item->system = (int) $item->system;
-
-        //     return $item;
-        // }, $ledgers );
 
         $response = rest_ensure_response( $ledgers );
 
@@ -273,6 +277,23 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $wpdb->delete( 'ledgers', array( 'id' => $id ) );
 
         return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Get chart of accounts
+     * 
+     * @param WP_REST_REQUEST $request
+     * 
+     * @return WP_ERROR|WP_REST_REQUEST
+     */
+    public function get_chart_accounts( $request ) {
+        $accounts  = erp_acct_get_all_charts( $args );
+        
+        $response = rest_ensure_response( $accounts );
+
+        $response->set_status( 200 );
+
+        return $response;
     }
 
     /**

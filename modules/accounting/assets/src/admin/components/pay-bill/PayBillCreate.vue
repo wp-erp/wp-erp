@@ -74,20 +74,20 @@
                     <tr :key="key" v-for="(pay_bill,key) in pay_bills">
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{pay_bill.due_date}}</td>
-                        <td class="col--total" data-colname="Total">{{pay_bill.total}}</td>
-                        <td class="col--due" data-colname="Due">{{pay_bill.total}}</td>
+                        <td class="col--total" data-colname="Total">{{pay_bill.amount}}</td>
+                        <td class="col--due" data-colname="Due">{{pay_bill.due}}</td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="text" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
+                            <input type="text" min="0" :max="pay_bill.due" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
-                            <a href="#"><i class="flaticon-trash"></i></a>
+                            <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
 
                     <tr class="total-amount-row">
                         <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
                         <td class="text-right" data-colname="Total Amount">
-                            <input type="text" class="text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
+                            <input type="text" class="text-right" v-model="finalTotalAmount" readonly disabled/></td>
                         <td class="text-right"></td>
                     </tr>
                     </tbody>
@@ -156,6 +156,7 @@
 
                 pay_bills: [],
                 attachments: [],
+                dueAmounts: [],
                 totalAmounts:[],
                 finalTotalAmount: 0,
                 pay_bill_modal: false,
@@ -188,13 +189,14 @@
                             id: element.id,
                             voucher_no: element.voucher_no,
                             due_date: element.due_date,
-                            total: parseFloat(element.total)
+                            amount: parseFloat(element.total),
+                            due: parseFloat(element.due)
                         });
                     });
                 }).then(() => {
                     this.pay_bills.forEach(element => {
-                        this.totalAmounts[idx++] = parseFloat(element.total);
-                        finalAmount += parseFloat(element.total);
+                        this.totalAmounts[idx++] = parseFloat(element.due);
+                        finalAmount += parseFloat(element.due);
                     });
 
                     this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
@@ -223,6 +225,10 @@
             },
 
             SubmitForPayment() {
+                this.pay_bills.forEach( (element,index) => {
+                    element['amount'] = parseFloat( this.totalAmounts[index] );
+                });
+
                 HTTP.post('/pay-bills', {
                     vendor_id: this.basic_fields.people.id,
                     ref: this.basic_fields.trn_ref,
@@ -244,6 +250,7 @@
                         timer: 1500
                     });
                 }).then(() => {
+                    this.resetData();
                     this.isWorking = false;
                 });
             },
@@ -251,7 +258,16 @@
             showPaymentModal() {
                 this.getDueBills();
                 this.pay_bill_modal = true;
-            }
+            },
+
+            resetData() {
+                Object.assign(this.$data, this.$options.data.call(this));
+            },
+
+            removeRow(index) {
+                this.$delete(this.transactionLines, index);
+                this.updateFinalAmount();
+            },
         },
 
         watch: {

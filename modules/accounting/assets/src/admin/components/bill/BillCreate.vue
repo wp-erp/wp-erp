@@ -39,12 +39,10 @@
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
-                            <label>Deposit to</label>
-                            <select v-model="basic_fields.deposit_to" name="deposit-to" class="wperp-form-field">
-                                <option value="0">-Select-</option>
-                                <option value="1">Cash</option>
-                                <option value="2">Bank</option>
-                            </select>
+                            <div class="wperp-form-group">
+                                <label>Due Date<span class="wperp-required-sign">*</span></label>
+                                <datepicker v-model="basic_fields.due_date"></datepicker>
+                            </div>
                         </div>
                         <div class="wperp-col-xs-12">
                             <label>Billing Address</label>
@@ -82,7 +80,8 @@
                             <input type="text" :value="line.amount" readonly disabled/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
-                            <a href="#"><i class="flaticon-trash"></i></a>
+                            <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
+
                         </td>
                     </tr>
 
@@ -108,7 +107,7 @@
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
                                 <label class="col--attachement">Attachment</label>
-                                <file-upload v-model="attachments" url="/ledgers/attachments"/>
+                                <file-upload v-model="attachments" url="/bills/attachments"/>
                             </div>
                         </td>
                     </tr>
@@ -245,6 +244,7 @@
                         timer: 1500
                     });
                 }).then(() => {
+                    this.resetData();
                     this.isWorking = false;
                 });
             },
@@ -261,7 +261,17 @@
                     description: 'desc',
                     amount: 1000
                 };
-            }
+            },
+
+            resetData() {
+                Object.assign(this.$data, this.$options.data.call(this));
+            },
+
+            removeRow(index) {
+                this.$delete(this.transactionLines, index);
+                this.updateFinalAmount();
+            },
+            
         },
 
         watch: {
