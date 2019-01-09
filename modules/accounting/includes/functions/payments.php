@@ -53,7 +53,7 @@ function erp_acct_insert_payment( $data ) {
 		$wpdb->query( 'START TRANSACTION' );
 
 		$wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-			'type'       => 'sales_invoice',
+			'type'       => 'payment',
 			'created_at' => $data['created_at'],
 			'created_by' => $data['created_by'],
             'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
@@ -66,8 +66,8 @@ function erp_acct_insert_payment( $data ) {
 
 	    $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_receipts', array(
             'voucher_no' => $voucher_no,
-            'trn_date'   => date( "Y-m-d" ),
-            'particulars'    => $payment_data['particulars'],
+            'trn_date'   => date( 'Y-m-d' ),
+            'particulars'=> $payment_data['particulars'],
             'amount'     => $payment_data['amount'],
             'trn_by'     => $payment_data['trn_by'],
             'created_at' => $payment_data['created_at'],
@@ -76,12 +76,12 @@ function erp_acct_insert_payment( $data ) {
             'updated_by' => $payment_data['updated_by'],
 	    ) );
 
-		$items = $payment_data['line_items'];
+        $items = $payment_data['line_items'];
 
 	    foreach ( $items as $key => $item ) {
 	        $total = 0; $due = 0;
 
-	        $invoice_no[$key] = $item['invoice_no'];
+	        $invoice_no[$key] = $payment_data['invoice_no'];
 	        $total += $item['line_total'];
 
 	        $payment_data['amount'] = $total;
@@ -117,7 +117,7 @@ function erp_acct_insert_payment_line_items( $data, $invoice_no, $voucher_no ) {
 
     $payment_data = erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no );
     $created_by = get_current_user_id();
-    $payment_data['created_at'] = date("Y-m-d H:i:s");
+    $payment_data['created_at'] = date('Y-m-d H:i:s');
     $payment_data['created_by'] = $created_by;
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(

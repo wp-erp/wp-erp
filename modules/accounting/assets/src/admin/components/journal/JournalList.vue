@@ -1,122 +1,203 @@
 <template>
+    <div class="app-journals">
+        <h2 class="add-new-journal">
+            <span>Journals</span>
+            <a href="" id="erp-journal-new" @click.prevent="newJournal">New Journal Entry</a>
+        </h2>
+        <list-table
+            tableClass="wp-ListTable widefat fixed journal-list"
+            action-column="actions"
+            :columns="columns"
+            :rows="row_data"
+            :total-items="paginationData.totalItems"
+            :total-pages="paginationData.totalPages"
+            :per-page="paginationData.perPage"
+            :current-page="paginationData.currentPage"
+            @pagination="goToPage">
+            <template slot="title" slot-scope="data">
+                <strong><a href="#">{{ data.row.title }}</a></strong>
+            </template>
+            <template slot="journal" slot-scope="data">
+                <strong><a :href="data.row.user_url">{{data.row.journal}}</a></strong>
+            </template>
 
-    <table class="wperp-table table-striped table-dark widefat table2">
-                <thead>
-                    <tr>
-                        <td scope="col" class="col--check">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input id="cb-select-all" class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-sign">
-                                        <span class="check"></span>
-                                    </span>
-                                </label>
-                            </div>
-                        </td>
-                        <th scope="col" class="col--name column-primary">Date</th>
-                        <th scope="col" class="col--email">Type</th>
-                        <th scope="col" class="col--phone">Ref</th>
-                        <th scope="col" class="col--life-stage">Customer</th>
-                        <th scope="col" class="col--owner">Due Date</th>
-                        <th scope="col" class="col--cd">Due</th>
-                        <th scope="col" class="col--total">Total</th>
-                        <th scope="col" class="col--status">Status</th>
-                        <th scope="col" class="col--actions"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row" class="col--check">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox">
-                                    <span class="form-check-sign">
-                                        <span class="check"></span>
-                                    </span>
-                                </label>
-                            </div>
-                        </th>
-                        <td class="col--name column-primary">26-09-18
-                            <button type="button" class="wperp-toggle-row">
-                                <span class="screen-reader-text">Show more details</span>
-                            </button>
-                        </td>
-                        <td class="col--email" data-colname="Type">Invoice</td>
-                        <td class="col--phone" data-colname="Ref">012</td>
-                        <td class="col--life-stage subscriber" data-colname="Customer">Rizvi Amin khan</td>
-                        <td class="col--owner" data-colname="Due Date">06-09-2018</td>
-                        <td class="col--cd" data-colname="Due">$24,000.00</td>
-                        <td class="col--cd" data-colname="Total">$24,000.00</td>
-                        <td class="col--cd" data-colname="Status">Recieved</td>
-                        <td class="col--actions">
-                            <div class="wperp-has-dropdown dropdown right--middle">
-                                <a href="#" class="dropdown-trigger"><i class="flaticon-menu"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#"><i class="flaticon-printer"></i>Print</a></li>
-                                    <li><a href="#"><i class="flaticon-sent-mail"></i>Send</a></li>
-                                    <li><a href="#"><i class="flaticon-alarm-clock"></i>Send Reminder</a></li>
-                                    <li><a href="#"><i class="flaticon-share"></i>Share Invoice</a></li>
-                                    <li><a href="#"><i class="flaticon-link-symbol"></i>Print Packing Link</a></li>
-                                    <li><a href="#"><i class="flaticon-edit"></i>View/Edit</a></li>
-                                    <li><a href="#"><i class="flaticon-copy-content"></i>Copy</a></li>
-                                    <li><a href="#"><i class="flaticon-trash"></i>Delete</a></li>
-                                    <li><a href="#"><i class="flaticon-delete"></i>Void</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="col--check">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox">
-                                    <span class="form-check-sign">
-                                    <span class="check"></span>
-                                </span>
-                                </label>
-                            </div>
-                        </th>
-                        <td class="col--name column-primary">26-09-18
-                            <button type="button" class="wperp-toggle-row">
-                                <span class="screen-reader-text">Show more details</span>
-                            </button>
-                        </td>
-                        <td class="col--email" data-colname="Email Address">Invoice</td>
-                        <td class="col--phone" data-colname="Phone">012</td>
-                        <td class="col--life-stage subscriber" data-colname="Life Stage">Rizvi Amin khan</td>
-                        <td class="col--owner" data-colname="Owner">06-09-2018</td>
-                        <td class="col--cd" data-colname="Created At">$24,000.00</td>
-                        <td class="col--cd" data-colname="Created At">$24,000.00</td>
-                        <td class="col--cd" data-colname="Created At">Recieved</td>
-                        <td class="col--actions">
-                            <div class="wperp-has-dropdown dropdown right--middle">
-                                <a href="#" class="dropdown-trigger"><i class="flaticon-menu"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#"><i class="flaticon-printer"></i>Print</a></li>
-                                    <li><a href="#"><i class="flaticon-sent-mail"></i>Send</a></li>
-                                    <li><a href="#"><i class="flaticon-alarm-clock"></i>Send Reminder</a></li>
-                                    <li><a href="#"><i class="flaticon-share"></i>Share Invoice</a></li>
-                                    <li><a href="#"><i class="flaticon-link-symbol"></i>Print Packing Link</a></li>
-                                    <li><a href="#"><i class="flaticon-edit"></i>View/Edit</a></li>
-                                    <li><a href="#"><i class="flaticon-copy-content"></i>Copy</a></li>
-                                    <li><a href="#"><i class="flaticon-trash"></i>Delete</a></li>
-                                    <li><a href="#"><i class="flaticon-delete"></i>Void</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
+        </list-table>
 
-                </tbody>
-            </table>
-
+    </div>
 </template>
 
 <script>
+    import HTTP from 'admin/http'
+    import ListTable from 'admin/components/list-table/ListTable.vue'
+
     export default {
-        name: "JournalList"
-    }
+        name: 'JournalList',
+
+        components: {
+            ListTable
+        },
+
+        data () {
+            return {
+                columns: {
+                    'l_id': {label: 'ID'},
+                    'l_date': {label: 'Date'},
+                    'l_particulars': {label: 'Particulars'},
+                    'amount': {label: 'Amount'},
+                },
+                rows: [],
+                paginationData: {
+                    totalItems: 0,
+                    totalPages: 0,
+                    perPage: 10,
+                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+                }
+            };
+        },
+        created() {
+            this.$on('modal-close', function() {
+                this.showModal = false;
+            });
+
+            this.fetchItems();
+        },
+
+        computed: {
+            row_data(){
+                let items = this.rows;
+                items.map( item => {
+                    item.l_id = item.id;
+                    item.l_date = item.trn_date;
+                    item.l_particulars = item.particulars;
+                    item.amount = item.total;
+                } );
+                return items;
+            }
+        },
+
+        methods: {
+            fetchItems(){
+                this.rows = [];
+                HTTP.get('journals', {
+                    params: {
+                        per_page: this.paginationData.perPage,
+                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+                        include: 'designation'
+                    }
+                })
+                    .then( (response) => {
+                        this.rows = response.data;
+                        this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                        this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                    .then( () => {
+                        //ready
+                    } );
+            },
+
+            goToPage(page) {
+                let queries = Object.assign({}, this.$route.query);
+                this.paginationData.currentPage = page;
+                this.$router.push({
+                    name: 'PaginateJournals',
+                    params: { page: page },
+                    query: queries
+                });
+
+                this.fetchItems();
+            },
+
+            newJournal() {
+                this.$router.push('journals/new');
+            },
+        }
+
+    };
 </script>
-
-<style scoped>
-
+<style lang="less">
+    .app-journals {
+        .add-new-journal {
+            align-items: center;
+            display: flex;
+            span {
+                font-size: 18px;
+                font-weight: bold;
+            }
+            a {
+                background: #1a9ed4;
+                border-radius: 3px;
+                color: #fff;
+                font-size: 12px;
+                height: 29px;
+                line-height: 29px;
+                margin-left: 13px;
+                text-align: center;
+                text-decoration: none;
+                width: 135px;
+            }
+        }
+        .journal-list {
+            border-radius: 3px;
+            tbody {
+                background: #FAFAFA;
+            }
+            tfoot th,
+            thead th {
+                color: #1A9ED4;
+                font-weight: bold;
+            }
+            th ul,
+            th li {
+                margin: 0;
+            }
+            th li {
+                display: flex;
+                align-items: center;
+                img {
+                    width: 14px;
+                    padding-right: 5px;
+                }
+            }
+            .column.title {
+                &.selected {
+                    color: #1A9ED4;
+                }
+                a {
+                    color: #222;
+                    font-weight: normal;
+                    &:hover {
+                        color: #1A9ED4;
+                    }
+                }
+            }
+            .check-column input {
+                border-color: #E7E7E7;
+                box-shadow: none;
+                border-radius: 3px;
+                &:checked {
+                    background: #1ABC9C;
+                    border-color: #1ABC9C;
+                    border-radius: 3px;
+                    &:before {
+                        color: #fff;
+                    }
+                }
+            }
+            .row-actions {
+                padding-left: 20px;
+            }
+        }
+        .widefat {
+            tfoot td,
+            tbody th {
+                line-height: 2.5em;
+            }
+            tbody td {
+                line-height: 3em;
+            }
+        }
+    }
 </style>

@@ -9,7 +9,7 @@
     import ERPMenu from 'admin/components/menu/ERPMenu.vue';
     import VueSweetalert2 from 'vue-sweetalert2';
 
-    // import '../../font/flaticon.css'
+    import '../../font/flaticon.css'
     import '../../css/master.css'
 
     export default {
