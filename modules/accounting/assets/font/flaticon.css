@@ -1,6 +1,6 @@
 	/*
   	Flaticon icon font: Flaticon
-  	Creation date: 05/12/2018 09:12
+  	Creation date: 08/01/2019 12:54
   	*/
 
 @font-face {
@@ -24,9 +24,9 @@
 [class^="flaticon-"]:before, [class*=" flaticon-"]:before,
 [class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
   font-family: Flaticon;
-  font-size: 20px;
-  font-style: normal;
-  margin-left: 20px;
+        font-size: 20px;
+font-style: normal;
+margin-left: 20px;
 }
 
 .flaticon-menu:before { content: "\f100"; }
@@ -56,6 +56,22 @@
 .flaticon-copy-content:before { content: "\f118"; }
 .flaticon-delete:before { content: "\f119"; }
 .flaticon-filter-tool-black-shape:before { content: "\f11a"; }
-.flaticon-calendar:before { content: "\f11b"; }
-.flaticon-printer-1:before { content: "\f11c"; }
-.flaticon-settings-work-tool:before { content: "\f11d"; }
+.flaticon-printer-1:before { content: "\f11b"; }
+.flaticon-settings-work-tool:before { content: "\f11c"; }
+.flaticon-close:before { content: "\f11d"; }
+.flaticon-menu-1:before { content: "\f11e"; }
+.flaticon-locked-padlock:before { content: "\f11f"; }
+.flaticon-left-arrow-key:before { content: "\f120"; }
+.flaticon-tag:before { content: "\f121"; }
+.flaticon-timeline:before { content: "\f122"; }
+.flaticon-envelope:before { content: "\f123"; }
+.flaticon-edit-1:before { content: "\f124"; }
+.flaticon-notifications:before { content: "\f125"; }
+.flaticon-calendar:before { content: "\f126"; }
+.flaticon-list:before { content: "\f127"; }
+.flaticon-document:before { content: "\f128"; }
+.flaticon-cloud-storage-uploading-option:before { content: "\f129"; }
+.flaticon-image:before { content: "\f12a"; }
+.flaticon-group-contacts:before { content: "\f12b"; }
+.flaticon-contact-book:before { content: "\f12c"; }
+.flaticon-company:before { content: "\f12d"; }

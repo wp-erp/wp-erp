@@ -1,12 +1,47 @@
 <template>
     <div class="app-customers">
-        <h2 class="add-new-customer">
-            <span>{{ pageTitle }}</span>
-            <a href="" id="erp-customer-new" @click.prevent="showModal = true">+ Add New {{ buttonTitle }}</a>
-        </h2>
+        <div class="content-header-section separator">
+            <div class="wperp-row wperp-between-xs">
+                <div class="wperp-col">
+                    <h2 class="content-header__title">{{ pageTitle }}</h2>
+                    <a href="invoice.html" id="erp-customer-new" class="wperp-btn btn--primary" data-modal="wperp-modal-content" @click.prevent="showModal = true">
+                        <i class="flaticon-add-plus-button"></i>
+                        <span>Add New {{buttonTitle}}</span>
+                    </a>
+                </div>
+                <div class="wperp-col">
+                    <form class="wperp-form form--inline crm-contact-search">
+                        <div :class="(isActiveOptionDropdown) ? 'option-dropdown active' : 'option-dropdown'" @click.prevent="isActiveOptionDropdown = !isActiveOptionDropdown">
+                            <div class="select">
+                                <span><i class="flaticon-user"></i>Customers</span>
+                                <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                            </div>
+                            <input type="hidden" name="selected_option" id="selected_option">
+                            <ul :class="(isActiveOptionDropdown) ? 'dropdown-content dropdown-content-opened' : 'dropdown-content'">
+                                <li data-option="all">
+                                    <a href="#"><i class="flaticon-move"></i>All</a>
+                                </li>
+                                <li data-option="trash">
+                                    <a href="#"><i class="flaticon-trash"></i>Trash</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="input-icon">
+                            <i class="flaticon-magnifying-glass"></i>
+                            <input type="search" value="" name="s" id="search-input" class="wperp-input" placeholder="Search Contact">
+                        </div>
+                    </form>
+                    <div class="import-export-box">
+                        <a href="#" title="Import"><i class="flaticon-import"></i></a>
+                        <a href="#" title="Export"><i class="flaticon-download"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <people-modal v-if="showModal" :people.sync="people" :countries="countries" :state="states" :title="buttonTitle"></people-modal>
         <list-table
-            tableClass="wperp-table table-striped table-dark widefat"
+            tableClass="wperp-table table-striped table-dark"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -55,7 +90,7 @@
                     {
                         key: 'trash',
                         label: 'Move to Trash',
-                        img: erp_acct_var.erp_assets + '/images/trash.png'
+                        iconClass: 'flaticon-trash'
                     }
                 ],
                 columns: {
@@ -74,8 +109,8 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions : [
-                    { key: 'edit', label: 'Edit' },
-                    { key: 'trash', label: 'Delete' }
+                    { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
+                    { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
                 ],
                 showModal: false,
                 countries: [],
@@ -83,7 +118,8 @@
                 buttonTitle: '',
                 pageTitle: '',
                 url: '',
-                singleUrl: ''
+                singleUrl: '',
+                isActiveOptionDropdown: false
             };
         },
         created() {
