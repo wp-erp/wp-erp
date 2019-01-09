@@ -40,13 +40,24 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/expenses', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_expenses' ],
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/purchases', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_purchases' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
         ] );

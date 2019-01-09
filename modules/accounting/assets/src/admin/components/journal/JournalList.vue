@@ -1,5 +1,7 @@
 <template>
     <div class="app-journals">
+        <journal-modal v-if="journalModal"/>
+
         <h2 class="add-new-journal">
             <span>Journals</span>
             <a href="" id="erp-journal-new" @click.prevent="newJournal">New Journal Entry</a>
@@ -14,11 +16,8 @@
             :per-page="paginationData.perPage"
             :current-page="paginationData.currentPage"
             @pagination="goToPage">
-            <template slot="title" slot-scope="data">
-                <strong><a href="#">{{ data.row.title }}</a></strong>
-            </template>
-            <template slot="journal" slot-scope="data">
-                <strong><a :href="data.row.user_url">{{data.row.journal}}</a></strong>
+            <template slot="l_id" slot-scope="data">
+                <strong><a href="#" @click.prevent="showJournalModal(data.row)">{{ data.row.l_id }}</a></strong>
             </template>
 
         </list-table>
@@ -29,16 +28,20 @@
 <script>
     import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
+    import JournalModal from 'admin/components/journal/JournalModal.vue'
 
     export default {
         name: 'JournalList',
 
         components: {
-            ListTable
+            ListTable,
+            JournalModal
         },
 
         data () {
             return {
+                journalModal: false,
+                modalParams: null,
                 columns: {
                     'l_id': {label: 'ID'},
                     'l_date': {label: 'Date'},
@@ -112,6 +115,12 @@
 
             newJournal() {
                 this.$router.push('journals/new');
+            },
+
+            showJournalModal(row) {
+                this.modalParams = row;
+
+                this.journalModal = true;
             },
         }
 
