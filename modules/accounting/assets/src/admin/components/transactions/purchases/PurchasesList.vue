@@ -33,7 +33,7 @@
                     <strong>
                         <!-- <router-link :to="{ name: 'user', params: { id:  }}">{{ data.row.trn_date }}</router-link> -->
 
-                        <a href="#" @click.prevent="showSalesReportModal(data.row)">
+                        <a href="#" @click.prevent="showPurchasesReportModal(data.row)">
                             {{ data.row.trn_date }}
                         </a>
                     </strong>
@@ -50,7 +50,7 @@
     import SalesReport from 'admin/components/reports/SalesReport.vue';
 
     export default {
-        name: 'SalesList',
+        name: 'PurchasesList',
 
         components: {
             ListTable,
