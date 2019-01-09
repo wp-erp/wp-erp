@@ -15,6 +15,7 @@ var entryPoint = {
     admin: './assets/src/admin/main.js',
     vendor: Object.keys(pkg.dependencies),
     style: './assets/less/style.less',
+    // master: './assets/less/master.less'
 };
 
 var exportPath = path.resolve(__dirname, './assets/js');
@@ -140,7 +141,7 @@ module.exports = {
             {
                 test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
                 use: [{
-                    loader: 'file-loader',
+                    loader: 'url-loader',
                     options: {
                         name: '[name].[ext]',
                         outputPath: path.resolve(path.join(__dirname, 'assets/font/'))

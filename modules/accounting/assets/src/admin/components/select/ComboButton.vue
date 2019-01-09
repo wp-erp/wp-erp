@@ -1,21 +1,18 @@
 <template>
-    <div class="wperp-select-container select-primary">
+    <div class="wperp-select-container select-primary combo-btns">
         <div class="wperp-selected-option">
-      		<div class="left-part" v-on="optionSelected(options[0])">
-				{{ options[0].text }}
+      		<div class="left-part" @click="optionSelected(options[0])">
+				<button class="btn-fake">{{ options[0].text }}</button>
 			</div>
 
       		<div class="right-part" @click="toggleButtons">
-				<span class="caret"></span>
+				<span class="btn-caret"></span>
 			</div>
         </div>
 
         <ul class="wperp-options" v-if="showMenu">
-            <li :key="index" v-for="(option, index) in options">
-
-                <a href="#" @click.prevent="optionSelected(option)">
-                    {{ option.text }}
-                </a>
+            <li :key="index" v-for="(option, index) in options.slice(1)">
+                <button class="btn-fake" @click="optionSelected(option)">{{ option.text }}</button>
             </li>
         </ul>
     </div>
@@ -39,7 +36,7 @@
 
         methods: {
             optionSelected(option) {
-                this.ssm = false;
+                this.showMenu = false;
                 this.$root.$emit('combo-btn-select', option);
             },
 
@@ -51,111 +48,70 @@
 </script>
 
 <style lang="less">
-	@theme-color: #1A9ED4;
-	@theme-border-color: #ECECEC;
-
-	.wperp-select-container {
-		display: inline-flex;
-		width: auto;
-		position: relative;
+	.combo-btns {
 		.wperp-selected-option {
-			display: flex;
-			justify-content: space-between;
-			background: @theme-color;
-			color: #fff;
-			border-radius: 3px;
-			white-space: nowrap;
-			cursor: pointer;
-			min-width: 150px;
+			padding: 0;
 		}
-		a:hover {
-			text-decoration: none;
-		}
-	}
 
-	.wperp-options {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		z-index: 1000;
-		min-width: 100%;
-		white-space: nowrap;
-		list-style: none;
-		text-align: left;
-		background-color: #fff;
-		border: 1px solid @theme-border-color;
-		border-radius: 3px;
-		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-		background-clip: padding-box;
-		list-style: none;
-		margin: 6px 0 0;	
-		padding: 5px 0;
-		font-size: 14px;
-		display: block;
-		&:after,
-		&:before {
-			content: '';
-		    position: absolute;
-		    top: -6px;
-		    right: 20px;
-		    border-bottom: 5px solid @theme-border-color;
-		    border-right: 5px solid transparent;
-		    border-left: 5px solid transparent;
+		 .btn-fake {
+			 border: 0;
+			 box-shadow: none;
+			 background: none;
+			 cursor: pointer;
+		 }
+
+		.btn-caret {
+			border-top: 4px solid #fff;
+			border-right: 4px solid transparent;
+			border-left: 4px solid transparent;
 		}
-		&:after {
-		    top: -4px;
-		    right: 20px;
-		    border-bottom-color: #fff;
+
+		.left-part,
+		.right-part {
+			float: left;
+
 		}
-		li {
-			overflow: hidden;
-			width: 100%;
-			position: relative;
-			margin: 0;
-			a {
+
+		.left-part {
+			width: 80%;
+			border-top-left-radius: 3px;
+			border-bottom-left-radius: 3px;
+			line-height: 2;
+			text-align: center;
+
+			.btn-fake {
+				color: #fff;
+			}
+		}
+
+		.right-part {
+			width: 20%;
+			background: #03A9F4;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-top-right-radius: 3px;
+			border-bottom-right-radius: 3px;
+		}
+
+		.wperp-options {
+			.btn-fake {
 				padding: 5px 20px;
 				display: block;
 				clear: both;
-				font-weight: normal;
+				font-weight: 400;
 				line-height: 1.6;
-				color: #333333;
+				color: #333;
 				white-space: nowrap;
 				text-decoration: none;
+				width: 100%;
+
 				&:hover {
-					background: @theme-border-color;
-					color: @theme-color;
+					background: #ececec;
+    				color: #1a9ed4;
 				}
 			}
 		}
-	}
-	.caret {
-		border-top: 4px solid #fff;
-		border-right: 4px solid transparent;
-		border-left: 4px solid transparent;
-	}
-
-	.left-part,
-	.right-part {
-		float: left;
-
-	}
-
-	.left-part {
-		width: 80%;
-		border-top-left-radius: 3px;
-		border-bottom-left-radius: 3px;
-		line-height: 2;
-		text-align: center;
-	}
-
-	.right-part {
-		width: 20%;
-		background: #03A9F4;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-top-right-radius: 3px;
-		border-bottom-right-radius: 3px;
 	}
 
 </style>

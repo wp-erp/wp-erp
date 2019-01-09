@@ -90,7 +90,6 @@ class Journals_Controller extends REST_Controller {
         $args['number'] = !empty( $request['per_page'] ) ? $request['per_page'] : 20;
         $args['offset'] = 0;
 
-        $formatted_items = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
@@ -101,8 +100,6 @@ class Journals_Controller extends REST_Controller {
 
         $formatted_items = [];
         foreach ( $items as $item ) {
-            $additional_fields = [];
-
             $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }

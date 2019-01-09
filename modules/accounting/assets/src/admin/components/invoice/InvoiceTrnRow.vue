@@ -9,7 +9,7 @@
                 v-model="line.qty"
                 @keyup="calculateAmount"
                 name="qty"
-                class="wperp-form-field">
+                class="wperp-form-field" required>
         </td>
         <td class="col--uni_price" data-colname="Unit Price">
             <input type="text" v-model="line.unitPrice" @keyup="calculateAmount" class="wperp-form-field">

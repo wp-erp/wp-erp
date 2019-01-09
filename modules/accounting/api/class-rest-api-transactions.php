@@ -29,7 +29,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function register_routes() {
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_sales' ],
@@ -61,7 +61,9 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_sales( $request ) {
-        return true;
+        $invoices = erp_acct_get_all_invoices();
+
+        return $invoices;
     }
 
 }
