@@ -100,12 +100,12 @@
             transformBalance( val ){
                 let currency = '$';
                 if ( val < 0 ){
-                    return `Dr. ${currency} ${Math.abs(val)}`;
+                    return `Cr. ${currency} ${Math.abs(val)}`;
                 }
 
-                return `Cr. ${currency} ${val}`;
+                return `Dr. ${currency} ${val}`;
             },
-            
+
             submitTransfer(){
                 HTTP.post( '/transfer-voucher/transfer', {
                     date : this.transferdate,
