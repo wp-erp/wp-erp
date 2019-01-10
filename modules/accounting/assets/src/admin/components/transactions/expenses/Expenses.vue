@@ -91,8 +91,6 @@ export default {
         return {
             pages: [
                 { namedRoute: 'ExpenseCreate', name: 'Expense' },
-                { namedRoute: 'PurchaseCreate', name: 'Purchase' },
-                { namedRoute: 'PayPurchaseCreate', name: 'Pay Purchase' },
                 { namedRoute: 'BillCreate', name: 'Bill' },
                 { namedRoute: 'PayBillCreate', name: 'Pay Bill' },
             ],

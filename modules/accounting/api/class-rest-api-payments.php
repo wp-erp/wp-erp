@@ -287,9 +287,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] = $request['trn_date'] ;
         }
-        if ( isset( $request['due_date'] ) ) {
-            $prepared_item['due_date'] = $request['due_date'];
-        }
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = $request['billing_address'];
         }
@@ -385,15 +382,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'trn_date'       => [
                     'description' => __( 'Date for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                    'required'    => true,
-                ],
-                'due_date'       => [
-                    'description' => __( 'Due date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
