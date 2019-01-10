@@ -193,12 +193,26 @@ function erp_acct_perform_transfer( $item ) {
 /**
  * Get transferrable accounts
  */
-function erp_get_transfer_accounts() {
+function erp_acct_get_transfer_accounts( $show_balance = false ) {
     global $wpdb;
 
-    $table_name = $wpdb->prefix.'erp_acct_ledgers';
+    $ledgers = $wpdb->prefix.'erp_acct_ledgers';
     $chart_id = 107;
-    $results = $wpdb->get_results( $wpdb->prepare( "Select * FROM $table_name WHERE chart_id = %d", $chart_id ), ARRAY_A );
+
+    if ( !$show_balance ) {
+        $query = $wpdb->prepare( "Select * FROM $ledgers WHERE chart_id = %d", $chart_id );
+        $results = $wpdb->get_results( $query, ARRAY_A );
+        return $results;
+    }
+
+    $sub_query = $wpdb->prepare( "Select id FROM $ledgers WHERE chart_id = %d", $chart_id );
+    $ledger_details = $wpdb->prefix.'erp_acct_ledger_details';
+    $query = "Select ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance 
+              From $ledger_details as ld
+              LEFT JOIN $ledgers as l ON l.id = ld.ledger_id
+              Where ld.ledger_id IN ($sub_query) 
+              Group BY ld.ledger_id";
+    $results = $wpdb->get_results( $query, ARRAY_A );
 
     return $results;
 }
@@ -210,7 +224,7 @@ function erp_get_transfer_accounts() {
  *
  * @return array
  */
-function erp_get_balance_by_ledger( $id ) {
+function erp_acct_get_balance_by_ledger( $id ) {
     if ( is_array( $id ) ) {
         $id = "'" . implode( "','", $id ) . "'";
     }
