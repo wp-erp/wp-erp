@@ -124,7 +124,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
+    import HTTP from '../../http.js'
     import MultiSelect from 'admin/components/select/MultiSelect.vue';
     export default {
         name: "CustomerModal",
@@ -189,8 +189,7 @@
                     var type = 'put';
                 }
                 HTTP[type]( url, this.peopleFields ).then( response => {
-                    this.$parent.fetchItems();
-                    this.$parent.showModal = false;
+                    this.$root.$emit('peopleUpdate');
                     this.resetForm();
                 } );
             },
@@ -274,7 +273,18 @@
             selectedState( id ) {
                 return this.state.find( item => item.id == id );
             },
+            generateUrl() {
+                var url;
+                if ( this.$route.name.toLowerCase() == 'customerdetails' ) {
+                    url = 'customers';
+                } else if ( this.$route.name.toLowerCase() == 'vendordetails' ) {
+                    url = 'vendors';
+                } else {
+                    url = this.$route.name.toLowerCase();
+                }
 
+                return url;
+            },
             resetForm() {
                 this.peopleFields.first_name = '';
                 this.peopleFields.last_name = '';
@@ -294,7 +304,10 @@
             }
         },
         created() {
-            this.url = this.$route.name.toLowerCase();
+            if ( this.$route.name.toLowerCase() === 'ven' ) {
+
+            }
+            this.url = this.generateUrl();
             this.selectedCountry();
             this.setInputField();
             this.getCustomers();

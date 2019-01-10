@@ -37,9 +37,8 @@
 
 <script>
     import ListTable from 'admin/components/list-table/ListTable.vue'
-    import PeopleModal from 'admin/components/people/PeopleModal.vue'
-    import HTTP from 'admin/http'
-
+    import PeopleModal from './PeopleModal.vue'
+    import HTTP from 'admin/http.js'
     export default {
         name: 'People',
 
@@ -91,6 +90,10 @@
                 this.showModal = false;
                 this.people = null;
             });
+            this.$on( 'peopleUpdate', function() {
+                this.showModal = false;
+                this.fetchItems();
+            } );
 
             this.getCountries();
             this.buttonTitle    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'customer' : 'vendor';

@@ -1,25 +1,42 @@
 <template>
     <div class="wperp-panel wperp-panel-default mt-20">
         <div class="wperp-panel-body wperp-customer-panel">
+            <people-modal  :people="userData" :title="title" v-if="showModal" :countries="countries" :state="states"></people-modal>
             <!-- edit customers info trigger -->
             <span class="edit-badge" data-toggle="wperp-modal" data-target="wperp-edit-customer-modal">
-                <i class="flaticon-edit"></i>
+                <i class="flaticon-edit" @click="showModal = true"></i>
             </span>
             <div class="wperp-row">
                 <div class="wperp-col-lg-3 wperp-col-md-4 wperp-col-sm-4 wperp-col-xs-12">
                     <div class="customer-identity">
-                        <img :src=user.img_url :alt=user.name>
+                        <img :src="img_url" :alt=user.name>
                         <div class="">
-                            <h3>{{user.name}}</h3>
+                            <h3>{{user.first_name}}  {{ user.last_name }}</h3>
                             <span>{{user.email}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="wperp-col-lg-9 wperp-col-md-8 wperp-col-sm-8 wperp-col-xs-12">
                     <ul class="customer-meta">
-                        <li :key="key" v-for="(val, key) in user.meta">
-                            <strong>{{camelCase(key)}}:</strong>
-                            <span>{{val}}</span>
+                        <li>
+                            <strong>Phone:</strong>
+                            <span>{{ user.phone }}</span>
+                        </li>
+                        <li>
+                            <strong>Mobile:</strong>
+                            <span>{{ user.mobile }}</span>
+                        </li>
+                        <li>
+                            <strong>Website:</strong>
+                            <span>{{ user.website }}</span>
+                        </li>
+                        <li>
+                            <strong>Fax:</strong>
+                            <span>{{ user.fax }}</span>
+                        </li>
+                        <li>
+                            <strong>Address:</strong>
+                            <span v-if="userData.billing">{{ userData.billing.street_1 }}, {{ userData.billing.city }} </span>
                         </li>
                     </ul>
                 </div>
@@ -29,9 +46,14 @@
 </template>
 
 <script>
+    import HTTP from 'admin/http.js'
+    import PeopleModal from 'admin/components/people/PeopleModal.vue'
     export default {
         name: 'UserBasicInfo',
-    
+        components: {
+            PeopleModal
+        },
+
         props: {
             userData:{
                 type: Object,
@@ -54,6 +76,15 @@
             }
         },
 
+        data() {
+            return {
+                showModal: false,
+                title: '',
+                countries: [],
+                states: [],
+                img_url: erp_acct_var.acct_assets + '/images/dummy-user.png',
+            }
+        },
         computed: {
             user(){
                 return this.userData;
@@ -65,7 +96,37 @@
                 return str.toLowerCase().replace(/(?:(^.)|(\s+.))/g, function(match) {
                     return match.charAt(match.length-1).toUpperCase();
                 });
+            },
+            getCountries() {
+                HTTP.get( 'customers/country' ).then( response => {
+                    let country = response.data.country;
+                    let states   = response.data.state;
+                    for ( let x in country ) {
+                        if( states[x] == undefined) {
+                            states[x] = [];
+                        }
+                        this.countries.push( { id: x, name: country[x], state: states[x] });
+                    }
+                    for ( let state in states ) {
+                        for ( let x in states[state] ) {
+                            this.states.push({ id: x, name: states[state][x] });
+                        }
+                    }
+                } );
             }
+        },
+
+        created() {
+            this.title    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'customer' : 'vendor';
+            this.getCountries();
+            this.$on('modal-close', function() {
+                this.showModal = false;
+            });
+            var self = this;
+            this.$root.$on( 'peopleUpdate', function() {
+                self.showModal = false;
+                self.$parent.fetchItem( self.$route.params.id );
+            } );
         }
     }
 

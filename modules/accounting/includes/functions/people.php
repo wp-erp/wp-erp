@@ -92,8 +92,24 @@ function erp_acct_get_people_transactions( $people_id ) {
     global $wpdb;
 
     $row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_people_trn WHERE people_id = {$people_id}", ARRAY_A );
-
     return $row;
+}
+
+/**
+ * Get transaction by date
+ *
+ * @param  integer $people_id
+ * @param  array  $args
+ * @return array
+ */
+function erp_people_filter_transaction( $people_id, $args = [] ) {
+    global $wpdb;
+    error_log( print_r( $people_id,true ) );
+    $start_date = isset( $args['start_date'] ) ? $args['start_date'] : '';
+    $end_date = isset( $args['end_date'] ) ? $args['start_date'] : '';
+
+    $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_people_trn WHERE trn_date >= '{$start_date}' AND trn_date <= '{$end_date}' AND people_id = {$people_id}", ARRAY_A );
+    return $rows;
 }
 
 /**
