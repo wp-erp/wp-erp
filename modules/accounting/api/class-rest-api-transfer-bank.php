@@ -76,7 +76,8 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_accounts( $request ) {
-        $items = erp_acct_get_banks();
+
+        $items = erp_acct_get_transfer_accounts( true );
 
         $formatted_items = [];
         foreach ( $items as $item ) {
@@ -193,13 +194,16 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+
         $data = [
-            'id'             => (int) $item->id,
-            'code'           => (int) $item->code,
+            'id'             => (int) $item->ledger_id,
+//            'code'           => (int) $item->code,
             'name'           => $item->name,
-            'description'    => $item->description,
-            'account_number' => isset( $item->bank_details['account_number'] ) ? $item->bank_details['account_number']: '',
-            'balance'        => erp_acct_get_single_account_balance( intval( $item->id ) ),
+//            'description'    => $item->description,
+//            'account_number' => isset( $item->bank_details['account_number'] ) ? $item->bank_details['account_number']: '',
+//            'balance'        => erp_acct_get_single_account_balance( intval( $item->id ) ),
+            'balance'        => $item->balance,
         ];
 
         if ( isset( $request['include'] ) ) {

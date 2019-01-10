@@ -15,59 +15,43 @@
                             <div class="wperp-row wperp-gutter-20">
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="transfer_funds_from">Transfer Funds From</label>
-                                    <div class="wperp-custom-select">
-                                        <select name="transfer_funds_from" id="transfer_funds_from" class="wperp-form-field wperp-is-select2">
-                                            <option value="0">Select</option>
-                                            <option value="1">Option1</option>
-                                            <option value="2">Option2</option>
-                                            <option value="3">Option3</option>
-                                        </select>
-                                        <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                                    <div class="wperp-custom-select with-multiselect">
+                                        <multi-select name="from" v-model="transferFrom" :multiple="false" :options="accounts" placeholder="Select Account"></multi-select>
                                     </div>
-                                    <span class="balance mt-10 display-inline-block">Balance: $30,000.0</span>
+                                    <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferFrom.balance)}}</span>
                                 </div>
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="transfer_funds_to">Transfer Funds To</label>
-                                    <div class="wperp-custom-select">
-                                        <select name="transfer_funds_to" id="transfer_funds_to" class="wperp-form-field wperp-is-select2">
-                                            <option value="0">Select</option>
-                                            <option value="1">Option1</option>
-                                            <option value="2">Option2</option>
-                                            <option value="3">Option3</option>
-                                        </select>
-                                        <i class="flaticon-arrow-down-sign-to-navigate"></i>
+
+                                    <div class="wperp-custom-select with-multiselect">
+                                        <multi-select name="to" v-model="transferTo" :multiple="false" :options="accounts" placeholder="Select Account"></multi-select>
                                     </div>
-                                    <span class="balance mt-10 display-inline-block">Balance: $30,000.0</span>
+                                    <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferTo.balance)}}</span>
                                 </div>
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="transfer_amount">Transfer Amount</label>
-                                    <input type="text" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00">
+                                    <input type="number" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00">
                                 </div>
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="transfer_date">Transfer Date</label>
-                                    <div class="wperp-has-datepicker">
-                                        <input type="date" name="transfer_date" id="transfer_date" class="wperp-form-field" placeholder="$100.00">
-                                        <span class="datepicker-icon">
-                                        <i class="flaticon-calendar"></i>
-                                    </span>
-                                    </div>
+                                    <datepicker name="transfer_date" v-model="transferdate" :defaultDate="transferdate"></datepicker>
                                 </div>
                                 <div class="wperp-col-xs-12 wperp-form-group">
                                     <label for="transfer_memo">Memo</label>
                                     <textarea name="transfer_memo" id="transfer_memo" rows="3" class="wperp-form-field" placeholder="Type Here"></textarea>
                                 </div>
-                                <div class="wperp-col-xs-12">
-                                    <div class="attachment-container">
-                                        <label class="col--attachement">Attachment</label>
-                                        <div class="attachment-preview">
-                                            <img src="assets/images/img-thumb.png" alt="attachment image">
-                                            <i class="flaticon-close remove-attachment"></i>
-                                        </div>
-                                        <div class="attachment-placeholder">
-                                            To attach <input type="file" id="attachment" name="attachment" class="display-none"> <label class="mt-0" for="attachment">Select files</label> from your computer
-                                        </div>
-                                    </div>
-                                </div>
+                                <!--<div class="wperp-col-xs-12">-->
+                                    <!--<div class="attachment-container">-->
+                                        <!--<label class="col&#45;&#45;attachement">Attachment</label>-->
+                                        <!--<div class="attachment-preview">-->
+                                            <!--<img src="assets/images/img-thumb.png" alt="attachment image">-->
+                                            <!--<i class="flaticon-close remove-attachment"></i>-->
+                                        <!--</div>-->
+                                        <!--<div class="attachment-placeholder">-->
+                                            <!--To attach <input type="file" id="attachment" name="attachment" class="display-none"> <label class="mt-0" for="attachment">Select files</label> from your computer-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
                             </div>
 
                         </div>
@@ -84,8 +68,46 @@
 </template>
 
 <script>
+    import MultiSelect from "admin/components/select/MultiSelect.vue";
+    import HTTP from 'admin/http';
+    import Datepicker from 'admin/components/base/Datepicker.vue';
     export default {
-        name: "Transfer"
+        name: "Transfer",
+        components: { MultiSelect, HTTP, Datepicker },
+
+        data() {
+            return {
+                transferFrom: { balance : 0 },
+                transferTo: { balance : 0 },
+                accounts: [],
+                transferdate: erp_acct_var.current_date,
+            };
+        },
+
+        created(){
+            this.fetchAccounts();
+        },
+
+        methods: {
+            fetchAccounts(){
+                HTTP.get('transfer-voucher').then( (response) => {
+                    this.accounts = response.data;
+                } );
+            },
+
+            transformBalance( val ){
+                let currency = '$';
+                if ( val < 0 ){
+                    return `Dr. ${currency} ${Math.abs(val)}`;
+                }
+
+                return `Cr. ${currency} ${val}`;
+            }
+        },
+
+        computed: {
+
+        }
     }
 </script>
 
