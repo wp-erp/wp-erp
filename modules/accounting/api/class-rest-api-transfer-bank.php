@@ -145,15 +145,19 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function transfer_money( $request ) {
         $item = $this->prepare_item_for_database( $request );
 
-        $debit_credit  = erp_acct_get_account_debit_credit( $item['from_account_id'] );
-        $ledger_amount = abs( $debit_credit['debit'] - $debit_credit['credit'] );
-
         if ( empty( $item['from_account_id'] ) || empty( $item['to_account_id'] ) ) {
             return new WP_Error( 'rest_transfer_invalid_accounts', __( 'Both accounts should be present.' ), [ 'status' => 400 ] );
         }
 
-        if ( $ledger_amount < $item['amount'] ) {
-            return new WP_Error( 'rest_transfer_insufficient_funds', __( 'No enough money from your transfer account.' ), [ 'status' => 400 ] );
+        $ledger_details = erp_acct_get_balance_by_ledger( $item['from_account_id'] );
+        if ( empty( $ledger_details ) ) {
+            return new WP_Error( 'rest_transfer_invalid_account', __( 'Something Went Wrong! Account not found.' ), [ 'status' => 400 ] );
+        }
+
+        $from_balance = $ledger_details[0]['balance'];
+
+        if ( $from_balance < $item['amount'] ) {
+            return new WP_Error( 'rest_transfer_insufficient_funds', __( 'Not enough money on selected transfer source.' ), [ 'status' => 400 ] );
         }
 
         $id = erp_acct_perform_transfer( $item );
