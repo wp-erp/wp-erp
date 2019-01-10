@@ -99,6 +99,25 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/categories', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_ledger_categories' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_account_lists' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_ledger_category' ],
+                // 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_account' );
+                },
+            ],
+        ] );
     }
 
     /**
@@ -203,21 +222,19 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
 
-        $result = $wpdb->insert( 'ledgers', array(
-            'id'            => $item['id'],
+        $result = $wpdb->insert( "{$wpdb->prefix}erp_acct_ledgers", [
             'chart_id'      => $item['chart_id'],
             'category_id'   => $item['category_id'],
             'name'          => $item['name'],
-            'code'          => $item['code'],
-            'system'        => $item['system'],
-        ) );
+            'code'          => $item['code']
+         ] );
 
-        $id = $item['id'];
+         $id = $wpdb->insert_id;
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( (object) $result, $request );
         $response = rest_ensure_response( $response );
-        $response->set_status( 201 );
+        $response->set_status( 200 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
@@ -287,9 +304,43 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_ERROR|WP_REST_REQUEST
      */
     public function get_chart_accounts( $request ) {
-        $accounts  = erp_acct_get_all_charts( $args );
+        $accounts  = erp_acct_get_all_charts( $request );
         
         $response = rest_ensure_response( $accounts );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get ledger categories
+     * 
+     * @param WP_REST_REQUEST $request
+     * 
+     * @return WP_ERROR|WP_REST_REQUEST
+     */
+    public function get_ledger_categories( $request ) {
+        $categories = erp_acct_get_ledger_categories();
+
+        $response = rest_ensure_response( $categories );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Create ledger categories
+     * 
+     * @param WP_REST_REQUEST $request
+     * 
+     * @return WP_ERROR|WP_REST_REQUEST
+     */
+    public function create_ledger_category( $request ) {
+        $category = erp_acct_create_ledger_category( $request );
+
+        $response = rest_ensure_response( $category );
 
         $response->set_status( 200 );
 
@@ -306,12 +357,10 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
-        $prepared_item['id']          = isset( $request['id'] ) ? (int) $request['id'] : 0;
-        $prepared_item['chart_id']    = isset( $request['chart_id'] ) ? (int) $request['chart_id'] : '';
-        $prepared_item['category_id'] = isset( $request['category_id'] ) ? (int) $request['category_id'] : '';
-        $prepared_item['name']        = isset( $request['name'] ) ? $request['name'] : '';
-        $prepared_item['code']        = isset( $request['code'] ) ? $request['code'] : '';
-        $prepared_item['system']      = isset( $request['system'] ) ? (int) $request['system'] : 1;
+        $prepared_item['chart_id']    = ! empty( $request['chart_id'] ) ? (int) $request['chart_id'] : '';
+        $prepared_item['category_id'] = ! empty( $request['category_id'] ) ? (int) $request['category_id'] : null;
+        $prepared_item['name']        = ! empty( $request['name'] ) ? $request['name'] : '';
+        $prepared_item['code']        = ! empty( $request['code'] ) ? $request['code'] : null;
 
         return $prepared_item;
     }
@@ -372,7 +421,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'description' => __( 'Code for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
-                    'required'    => true,
+                    'required'    => false,
                 ],
                 'name'  => [
                     'description' => __( 'Name for the resource.' ),
@@ -390,12 +439,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                ],
-                'system'  => [
-                    'description' => __( 'Description for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ]
-                ],
+                ]
             ],
         ];
 

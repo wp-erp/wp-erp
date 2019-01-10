@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_all_charts() {
     global $wpdb;
 
-    $charts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_acct_chart_of_accounts", ARRAY_A);
+    $charts = $wpdb->get_results("SELECT id, name AS label FROM {$wpdb->prefix}erp_acct_chart_of_accounts", ARRAY_A);
 
     return $charts;
 }
@@ -20,7 +20,7 @@ function erp_acct_get_all_charts() {
 
 
 /**
- * Fetch all chart from database
+ * Ledger count
  *
  * @return array
  */
@@ -128,7 +128,35 @@ function erp_acct_get_chart_types_by_class_id( $class_id ) {
 }
 
 
+/**
+ * Get ledger categories
+ */
 
+function erp_acct_get_ledger_categories() {
+    global $wpdb;
+
+    return $wpdb->get_results("SELECT id, name AS label, parent_id FROM {$wpdb->prefix}erp_acct_ledger_categories");
+}
+
+/**
+ * Create ledger account
+ */
+function erp_acct_create_ledger_category( $args ) {
+    global $wpdb;
+
+    $exist = $wpdb->get_var("SELECT name FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE name = '{$args['name']}'");
+
+    if ( empty( $exist ) ) {
+        $wpdb->insert("{$wpdb->prefix}erp_acct_ledger_categories", array(
+            'name'      => $args['name'],
+            'parent_id' => ! empty($args['parent']) ? $args['parent'] : null
+        ));
+
+        return $wpdb->insert_id;
+    }
+
+    return false;
+}
 
 
 /**
