@@ -5,7 +5,7 @@
     :multiple="multiple"
     :close-on-select="!multiple"
     :loading="isLoading"
-    placeholder="Please search"
+    :placeholder="placeholder"
     label="name"
     track-by="id"
     @open="onDropdownOpen"
@@ -51,6 +51,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    placeholder: {
+        type: String,
+        default: 'Please search'
+    }
   },
 
   data() {
