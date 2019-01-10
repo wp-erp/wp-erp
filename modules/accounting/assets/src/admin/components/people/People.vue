@@ -4,9 +4,8 @@
             <span>{{ pageTitle }}</span>
             <a href="" id="erp-customer-new" @click.prevent="showModal = true">+ Add New {{ buttonTitle }}</a>
         </h2>
-        <people-modal v-if="showModal" :people.sync="people"  :title="buttonTitle"></people-modal>
-        <list-table
-            tableClass="wperp-table table-striped table-dark widefat"
+        <people-modal v-if="showModal" :people.sync="people"  :title="buttonTitle"></people-modal><list-table
+            tableClass="wperp-table table-striped table-dark"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -54,11 +53,11 @@
                     {
                         key: 'trash',
                         label: 'Move to Trash',
-                        img: erp_acct_var.erp_assets + '/images/trash.png'
+                        iconClass: 'flaticon-trash'
                     }
                 ],
                 columns: {
-                    'customer': { label: 'Name' },
+                    'customer': { label: 'Name', isColPrimary: true },
                     'company': { label: 'Company' },
                     'email': { label: 'Email' },
                     'phone': { label: 'Phone' },
@@ -73,14 +72,15 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions : [
-                    { key: 'edit', label: 'Edit' },
-                    { key: 'trash', label: 'Delete' }
+                    { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
+                    { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
                 ],
                 showModal: false,
                 buttonTitle: '',
                 pageTitle: '',
                 url: '',
-                singleUrl: ''
+                singleUrl: '',
+                isActiveOptionDropdown: false
             };
         },
         created() {
