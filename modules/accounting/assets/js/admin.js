@@ -3126,18 +3126,6 @@ if (false) {(function () {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -4811,12 +4799,6 @@ if (false) {(function () {
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 
 
@@ -4876,13 +4858,15 @@ if (false) {(function () {
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/invoices/due/".concat(customerId)).then(function (response) {
         response.data.forEach(function (element) {
-          _this2.invoices.push({
-            id: element.id,
-            invoice_no: element.voucher_no,
-            due_date: element.due_date,
-            amount: parseFloat(element.amount),
-            due: parseFloat(element.due)
-          });
+          if (element.due !== null) {
+            _this2.invoices.push({
+              id: element.id,
+              invoice_no: element.voucher_no,
+              due_date: element.due_date,
+              amount: parseFloat(element.amount),
+              due: parseFloat(element.due)
+            });
+          }
         });
       }).then(function () {
         _this2.invoices.forEach(function (element) {
@@ -4947,6 +4931,7 @@ if (false) {(function () {
     },
     resetData: function resetData() {
       Object.assign(this.$data, this.$options.data.call(this));
+      this.basic_fields.customer.id = '';
     },
     removeRow: function removeRow(index) {
       this.$delete(this.transactionLines, index);
@@ -16485,12 +16470,6 @@ if (false) {(function () {
         namedRoute: 'ExpenseCreate',
         name: 'Expense'
       }, {
-        namedRoute: 'PurchaseCreate',
-        name: 'Purchase'
-      }, {
-        namedRoute: 'PayPurchaseCreate',
-        name: 'Pay Purchase'
-      }, {
         namedRoute: 'BillCreate',
         name: 'Bill'
       }, {
@@ -23073,8 +23052,6 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c("tfoot", [
-                  _c("tr"),
-                  _vm._v(" "),
                   _c("tr", [
                     _c(
                       "td",
@@ -24271,32 +24248,7 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _c("div", { staticClass: "content-header-section separator" }, [
-        _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
-          _c("div", { staticClass: "wperp-col" }, [
-            _c("h2", { staticClass: "content-header__title" }, [
-              _vm._v("Receive Payment")
-            ]),
-            _vm._v(" "),
-            _vm.showPrintPreview
-              ? _c(
-                  "a",
-                  {
-                    staticClass: "wperp-btn btn--primary",
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.showPaymentModal($event)
-                      }
-                    }
-                  },
-                  [_c("span", [_vm._v("Print Preview")])]
-                )
-              : _vm._e()
-          ])
-        ])
-      ]),
+      _vm._m(0),
       _vm._v(" "),
       _c(
         "div",
@@ -24336,7 +24288,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "wperp-col-sm-3" }, [
                     _c("div", { staticClass: "wperp-form-group" }, [
-                      _vm._m(0),
+                      _vm._m(1),
                       _vm._v(" "),
                       _c("input", {
                         directives: [
@@ -24370,7 +24322,7 @@ var render = function() {
                       "div",
                       { staticClass: "wperp-form-group" },
                       [
-                        _vm._m(1),
+                        _vm._m(2),
                         _vm._v(" "),
                         _c("datepicker", {
                           model: {
@@ -24481,7 +24433,7 @@ var render = function() {
       _c("div", { staticClass: "wperp-table-responsive" }, [
         _c("div", { staticClass: "table-container" }, [
           _c("table", { staticClass: "wperp-table wperp-form-table" }, [
-            _vm._m(2),
+            _vm._m(3),
             _vm._v(" "),
             _c(
               "tbody",
@@ -24738,6 +24690,20 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "content-header-section separator" }, [
+      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
+        _c("div", { staticClass: "wperp-col" }, [
+          _c("h2", { staticClass: "content-header__title" }, [
+            _vm._v("Receive Payment")
+          ])
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -32896,11 +32862,11 @@ if (false) {
   data: function data() {
     return {
       pages: [{
-        namedRoute: 'InvoiceCreate',
-        name: 'Invoice'
+        namedRoute: 'PurchaseCreate',
+        name: 'Purchase'
       }, {
-        namedRoute: 'RecPaymentCreate',
-        name: 'Payment'
+        namedRoute: 'PayPurchaseCreate',
+        name: 'Pay Purchase'
       }]
     };
   },
