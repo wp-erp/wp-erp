@@ -7249,9 +7249,13 @@ if (false) {(function () {
     newJournal: function newJournal() {
       this.$router.push('journals/new');
     },
-    showJournalModal: function showJournalModal(row) {
-      this.modalParams = row;
-      this.journalModal = true;
+    showJournalModal: function showJournalModal(journal_id) {
+      this.$router.push({
+        name: 'SingleJournal',
+        params: {
+          id: journal_id
+        }
+      });
     }
   }
 });
@@ -7261,6 +7265,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 //
 //
 //
@@ -7336,30 +7341,41 @@ if (false) {(function () {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 /* harmony default export */ __webpack_exports__["a"] = ({
-  name: "JournalModal"
+  name: "JournalModal",
+  data: function data() {
+    return {
+      entry_id: 0,
+      trn_date: '',
+      particulars: '',
+      line_items: {
+        trn_no: '',
+        ledger_id: '',
+        debit: 0,
+        credit: 0
+      },
+      total: 0,
+      acct_var: erp_acct_var
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    this.entry_id = this.$route.params.id;
+    __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/journals/".concat(this.entry_id)).then(function (response) {
+      _this.trn_date = response.data.trn_date;
+      _this.particulars = response.data.particulars;
+      _this.line_items = response.data.line_items;
+      _this.total = response.data.total;
+    });
+  },
+  methods: {
+    inside: function inside() {},
+    outside: function outside() {
+      this.$router.go(-1);
+    }
+  }
 });
 
 /***/ }),
@@ -17252,11 +17268,13 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_admin_components_pay_purchase_PayPurchaseCreate_vue__ = __webpack_require__(269);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_admin_components_journal_JournalList_vue__ = __webpack_require__(272);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_admin_components_journal_JournalCreate_vue__ = __webpack_require__(278);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20_admin_components_transfers_Transfer_vue__ = __webpack_require__(281);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_admin_components_expense_ExpenseCreate_vue__ = __webpack_require__(284);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_admin_components_transactions_sales_Sales_vue__ = __webpack_require__(290);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_admin_components_transactions_expenses_Expenses_vue__ = __webpack_require__(308);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24_admin_components_transactions_purchases_Purchases_vue__ = __webpack_require__(383);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20_admin_components_journal_JournalModal_vue__ = __webpack_require__(274);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_admin_components_transfers_Transfer_vue__ = __webpack_require__(281);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_admin_components_expense_ExpenseCreate_vue__ = __webpack_require__(284);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_admin_components_transactions_sales_Sales_vue__ = __webpack_require__(290);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24_admin_components_transactions_expenses_Expenses_vue__ = __webpack_require__(308);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25_admin_components_transactions_purchases_Purchases_vue__ = __webpack_require__(383);
+
 
 
 
@@ -17299,7 +17317,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
   }, {
     path: '/transactions',
     name: 'Sales',
-    component: __WEBPACK_IMPORTED_MODULE_22_admin_components_transactions_sales_Sales_vue__["a" /* default */]
+    component: __WEBPACK_IMPORTED_MODULE_23_admin_components_transactions_sales_Sales_vue__["a" /* default */]
   }, {
     path: '/inventory',
     name: 'Products',
@@ -17363,15 +17381,15 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
   }, {
     path: '/transactions/sales',
     name: 'Sales',
-    component: __WEBPACK_IMPORTED_MODULE_22_admin_components_transactions_sales_Sales_vue__["a" /* default */]
+    component: __WEBPACK_IMPORTED_MODULE_23_admin_components_transactions_sales_Sales_vue__["a" /* default */]
   }, {
     path: '/transactions/expenses',
     name: 'Expenses',
-    component: __WEBPACK_IMPORTED_MODULE_23_admin_components_transactions_expenses_Expenses_vue__["a" /* default */]
+    component: __WEBPACK_IMPORTED_MODULE_24_admin_components_transactions_expenses_Expenses_vue__["a" /* default */]
   }, {
     path: '/transactions/purchases',
     name: 'Purchases',
-    component: __WEBPACK_IMPORTED_MODULE_24_admin_components_transactions_purchases_Purchases_vue__["a" /* default */]
+    component: __WEBPACK_IMPORTED_MODULE_25_admin_components_transactions_purchases_Purchases_vue__["a" /* default */]
   }, {
     path: '/charts',
     name: 'ChartOfAccounts',
@@ -17448,6 +17466,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
       name: 'JournalCreate',
       component: __WEBPACK_IMPORTED_MODULE_19_admin_components_journal_JournalCreate_vue__["a" /* default */]
     }, {
+      path: '/journals/:id',
+      name: 'SingleJournal',
+      component: __WEBPACK_IMPORTED_MODULE_20_admin_components_journal_JournalModal_vue__["a" /* default */]
+    }, {
       path: 'page/:page',
       name: 'PaginateJournals',
       component: __WEBPACK_IMPORTED_MODULE_18_admin_components_journal_JournalList_vue__["a" /* default */]
@@ -17455,11 +17477,11 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
   }, {
     path: '/transfer/new',
     name: 'Transfer',
-    component: __WEBPACK_IMPORTED_MODULE_20_admin_components_transfers_Transfer_vue__["a" /* default */]
+    component: __WEBPACK_IMPORTED_MODULE_21_admin_components_transfers_Transfer_vue__["a" /* default */]
   }, {
     path: '/expenses/new',
     name: 'ExpenseCreate',
-    component: __WEBPACK_IMPORTED_MODULE_21_admin_components_expense_ExpenseCreate_vue__["a" /* default */]
+    component: __WEBPACK_IMPORTED_MODULE_22_admin_components_expense_ExpenseCreate_vue__["a" /* default */]
   }]
 }));
 
@@ -28698,111 +28720,33 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "wperp-modal wperp-modal-open wperp-printable-modal",
-        attrs: { role: "dialog" }
-      },
-      [
-        _c("div", { staticClass: "wperp-modal-dialog" }, [
+  return _c(
+    "div",
+    {
+      staticClass: "wperp-modal wperp-modal-open wperp-printable-modal",
+      attrs: { role: "dialog" }
+    },
+    [
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "click-outside",
+              rawName: "v-click-outside",
+              value: _vm.outside,
+              expression: "outside"
+            }
+          ],
+          staticClass: "wperp-modal-dialog",
+          on: { click: _vm.inside }
+        },
+        [
           _c("div", { staticClass: "wperp-modal-content" }, [
-            _c("div", { staticClass: "wperp-modal-header" }, [
-              _c("h1", [
-                _vm._v("\n                    Journal\n                ")
-              ]),
-              _vm._v(" "),
-              _c("span", { staticClass: "modal-close" }, [
-                _c("i", { staticClass: "flaticon-close" })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "d-print-none buttons-wrapper" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass:
-                      "wperp-btn btn--default print-btn wperp-hidden-sm",
-                    attrs: { href: "#" }
-                  },
-                  [
-                    _c("i", { staticClass: "flaticon-printer-1" }),
-                    _vm._v(
-                      "\n                          Print\n                    "
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-has-dropdown" }, [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "wperp-btn btn--default dropdown-trigger m0",
-                      attrs: { href: "#" }
-                    },
-                    [
-                      _c("i", { staticClass: "flaticon-settings-work-tool" }),
-                      _vm._v(
-                        "\n                              More Action\n                        "
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "ul",
-                    { staticClass: "dropdown-menu dropdown-menu-right" },
-                    [
-                      _c("li", [
-                        _c("a", { attrs: { href: "#" } }, [_vm._v("Option1")])
-                      ]),
-                      _vm._v(" "),
-                      _c("li", [
-                        _c("a", { attrs: { href: "#" } }, [_vm._v("Option2")])
-                      ]),
-                      _vm._v(" "),
-                      _c("li", [
-                        _c("a", { attrs: { href: "#" } }, [_vm._v("Option3")])
-                      ])
-                    ]
-                  )
-                ])
-              ])
-            ]),
+            _vm._m(0),
             _vm._v(" "),
             _c("div", { staticClass: "wperp-modal-body pb-30" }, [
               _c("div", { staticClass: "wperp-invoice-panel" }, [
-                _c("div", { staticClass: "invoice-body" }, [
-                  _c("h4", { staticClass: "modal-subtitle" }, [
-                    _vm._v("Journal")
-                  ]),
-                  _vm._v(" "),
-                  _c("ul", { staticClass: "wperp-list-unstyled" }, [
-                    _c("li", [
-                      _c("strong", [_vm._v("Voucher No:")]),
-                      _vm._v(" "),
-                      _c("span", [_vm._v("30214")])
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", [_vm._v("Voucher Date:")]),
-                      _vm._v(" "),
-                      _c("span", [_vm._v("17-11-2018")])
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("strong", [_vm._v("Ref. No:")]),
-                      _vm._v(" "),
-                      _c("span", [_vm._v("30214")])
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
                 _c("div", { staticClass: "wperp-invoice-table " }, [
                   _c(
                     "table",
@@ -28810,108 +28754,45 @@ var staticRenderFns = [
                       staticClass: "wperp-table wperp-form-table invoice-table"
                     },
                     [
-                      _c("thead", [
-                        _c("tr", [
-                          _c("td", { staticClass: "col--check" }, [
-                            _vm._v("SL.")
-                          ]),
-                          _vm._v(" "),
-                          _c("th", { staticClass: "column-primary" }, [
-                            _vm._v("Account Name")
-                          ]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v("Description")]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v("Debit")]),
-                          _vm._v(" "),
-                          _c("th", { staticClass: "text-right" }, [
-                            _vm._v("Credit")
-                          ])
-                        ])
-                      ]),
+                      _vm._m(1),
                       _vm._v(" "),
                       _c("tbody", [
                         _c("tr", [
                           _c("th", { staticClass: "col--check" }, [
-                            _vm._v("01")
+                            _vm._v(_vm._s(_vm.line_items.trn_no))
                           ]),
                           _vm._v(" "),
                           _c("td", { staticClass: "column-primary" }, [
-                            _vm._v("Salary"),
-                            _c(
-                              "button",
-                              {
-                                staticClass: "wperp-toggle-row",
-                                attrs: { type: "button" }
-                              },
-                              [
-                                _c(
-                                  "span",
-                                  { staticClass: "screen-reader-text" },
-                                  [_vm._v("Show more details")]
-                                )
-                              ]
-                            )
+                            _vm._v(_vm._s(_vm.line_items.ledger_id)),
+                            _vm._m(2)
                           ]),
                           _vm._v(" "),
-                          _c(
-                            "td",
-                            { attrs: { "data-colname": "Description" } },
-                            [_vm._v("Lorem ipsom dolor site amit.")]
-                          ),
+                          _c("td", { attrs: { "data-colname": "Debit" } }, [
+                            _vm._v(_vm._s(_vm.line_items.particulars))
+                          ]),
                           _vm._v(" "),
                           _c("td", { attrs: { "data-colname": "Debit" } }, [
-                            _vm._v("$200.00")
+                            _vm._v(_vm._s(_vm.line_items.debit))
                           ]),
                           _vm._v(" "),
                           _c("td", { attrs: { "data-colname": "Credit" } }, [
-                            _vm._v("$0.00")
+                            _vm._v(_vm._s(_vm.line_items.credit))
                           ])
                         ])
                       ]),
                       _vm._v(" "),
                       _c("tfoot", [
                         _c("tr", { staticClass: "hide-sm" }, [
-                          _c(
-                            "td",
-                            {
-                              staticClass: "text-right",
-                              attrs: { colspan: "3" }
-                            },
-                            [_c("strong", [_vm._v("Total = ")])]
-                          ),
+                          _vm._m(3),
                           _vm._v(" "),
                           _c("td", { attrs: { "data-colname": "Debit" } }, [
-                            _vm._v("$10000.00")
+                            _vm._v(_vm._s(_vm.total))
                           ]),
                           _vm._v(" "),
                           _c("td", { attrs: { "data-colname": "Credit" } }, [
-                            _vm._v("$10000.00")
+                            _vm._v(_vm._s(_vm.total))
                           ])
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "tr",
-                          {
-                            staticClass:
-                              "show-sm is-row-expanded total-debit-credit"
-                          },
-                          [
-                            _c(
-                              "th",
-                              { staticClass: "text-right column-primary" },
-                              [_c("strong", [_vm._v("Total")])]
-                            ),
-                            _vm._v(" "),
-                            _c("td", { attrs: { "data-colname": "Debit" } }, [
-                              _vm._v("$10000.00")
-                            ]),
-                            _vm._v(" "),
-                            _c("td", { attrs: { "data-colname": "Credit" } }, [
-                              _vm._v("$10000.00")
-                            ])
-                          ]
-                        )
+                        ])
                       ])
                     ]
                   )
@@ -28922,18 +28803,106 @@ var staticRenderFns = [
                     _vm._v("Particulars")
                   ]),
                   _vm._v(" "),
-                  _c("span", [
-                    _vm._v(
-                      "Lorem ipsum dolor sit amen, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat."
-                    )
-                  ])
+                  _c("span", [_vm._v(_vm._s(_vm.particulars))])
                 ])
               ])
             ])
           ])
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "wperp-modal-header" }, [
+      _c("h1", [_vm._v("\n                    Journal\n                ")]),
+      _vm._v(" "),
+      _c("span", { staticClass: "modal-close" }, [
+        _c("i", { staticClass: "flaticon-close" })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "d-print-none buttons-wrapper" }, [
+        _c(
+          "a",
+          {
+            staticClass: "wperp-btn btn--default print-btn wperp-hidden-sm",
+            attrs: { href: "#" }
+          },
+          [
+            _c("i", { staticClass: "flaticon-printer-1" }),
+            _vm._v("\n                          Print\n                    ")
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "wperp-has-dropdown" }, [
+          _c(
+            "a",
+            {
+              staticClass: "wperp-btn btn--default dropdown-trigger m0",
+              attrs: { href: "#" }
+            },
+            [
+              _c("i", { staticClass: "flaticon-settings-work-tool" }),
+              _vm._v(
+                "\n                              More Action\n                        "
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
+            _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Option1")])]),
+            _vm._v(" "),
+            _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Option2")])]),
+            _vm._v(" "),
+            _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Option3")])])
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("td", { staticClass: "col--check" }, [_vm._v("SL.")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "column-primary" }, [_vm._v("Account Name")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "column-primary" }, [_vm._v("Descriptions")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Debit")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-right" }, [_vm._v("Credit")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      { staticClass: "wperp-toggle-row", attrs: { type: "button" } },
+      [
+        _c("span", { staticClass: "screen-reader-text" }, [
+          _vm._v("Show more details")
         ])
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right", attrs: { colspan: "3" } }, [
+      _c("strong", [_vm._v("Total = ")])
+    ])
   }
 ]
 render._withStripped = true
@@ -29004,7 +28973,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          _vm.showJournalModal(data.row)
+                          _vm.showJournalModal(data.row.l_id)
                         }
                       }
                     },

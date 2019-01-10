@@ -18,6 +18,7 @@ import PurchaseCreate    from 'admin/components/purchase/PurchaseCreate.vue';
 import PayPurchaseCreate from 'admin/components/pay-purchase/PayPurchaseCreate.vue';
 import JournalList       from 'admin/components/journal/JournalList.vue';
 import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
+import JournalModal      from 'admin/components/journal/JournalModal.vue';
 import Transfer          from 'admin/components/transfers/Transfer.vue';
 import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
@@ -213,6 +214,12 @@ export default new Router({
                     path: '/journals/new',
                     name: 'JournalCreate',
                     component: JournalCreate
+                },
+                {
+
+                    path: '/journals/:id',
+                    name: 'SingleJournal',
+                    component: JournalModal
                 },
                 {
                     path: 'page/:page',
