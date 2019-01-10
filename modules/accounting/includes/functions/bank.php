@@ -138,6 +138,7 @@ function erp_acct_get_account_debit_credit( $ledger_id ) {
 function erp_acct_perform_transfer( $item ) {
     global $wpdb;
     $created_by = get_current_user_id();
+    $created_at = date("Y-m-d");
     $updated_at = date("Y-m-d");
     $updated_by = $created_by;
 
@@ -146,7 +147,7 @@ function erp_acct_perform_transfer( $item ) {
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'transfer_voucher',
-            'created_at' => date("Y-m-d"),
+            'created_at' => $created_at,
             'created_by' => $created_by,
             'updated_at' => $updated_at,
             'updated_by' => $updated_by,
@@ -159,26 +160,38 @@ function erp_acct_perform_transfer( $item ) {
             'ledger_id'   => $item['from_account_id'],
             'trn_no'      => $voucher_no,
             'particulars' => $item['remarks'],
-            'debit'       => $item['amount'],
-            'credit'      => 0,
+            'debit'       => 0,
+            'credit'      => $item['amount'],
             'trn_date'    => $item['date'],
-            'created_at'  => date("Y/m/d"),
+            'created_at'  => $created_at,
             'created_by'  => $created_by,
-            'updated_at'  => '',
-            'updated_by'  => '',
+            'updated_at'  => $updated_at,
+            'updated_by'  => $updated_by,
         ) );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
             'ledger_id'   => $item['to_account_id'],
             'trn_no'      => $voucher_no,
             'particulars' => $item['remarks'],
-            'debit'       => 0,
-            'credit'      => $item['amount'],
+            'debit'       => $item['amount'],
+            'credit'      => 0,
             'trn_date'    => $item['date'],
-            'created_at'  => date("Y/m/d"),
+            'created_at'  => $created_at,
             'created_by'  => $created_by,
-            'updated_at'  => '',
-            'updated_by'  => '',
+            'updated_at'  => $updated_at,
+            'updated_by'  => $updated_by,
+        ) );
+
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_transfer_voucher', array(
+            'voucher_no' => $voucher_no,
+            'amount'     => $item['amount'],
+            'ac_from'    => $item['from_account_id'],
+            'ac_to'      => $item['to_account_id'],
+            'trn_date'   => $item['date'],
+            'created_at' => $created_at,
+            'created_by' => $created_by,
+            'updated_at' => $updated_at,
+            'updated_by' => $updated_by,
         ) );
 
         $wpdb->query( 'COMMIT' );
