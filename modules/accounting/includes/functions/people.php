@@ -104,7 +104,6 @@ function erp_acct_get_people_transactions( $people_id ) {
  */
 function erp_people_filter_transaction( $people_id, $args = [] ) {
     global $wpdb;
-    error_log( print_r( $people_id,true ) );
     $start_date = isset( $args['start_date'] ) ? $args['start_date'] : '';
     $end_date = isset( $args['end_date'] ) ? $args['start_date'] : '';
 

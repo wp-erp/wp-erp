@@ -46,7 +46,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js'
+    import HTTP from 'admin/http'
     import PeopleModal from 'admin/components/people/PeopleModal.vue'
     export default {
         name: 'UserBasicInfo',
