@@ -6,12 +6,6 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Bill</h2>
-
-                    <!-- Print Dialogue -->
-
-                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showBillModal">
-                        <span>Print</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -23,7 +17,7 @@
                     <div class="wperp-row">
                         <div class="wperp-col-sm-3">
                             <div class="wperp-form-group">
-                                <select-people v-model="basic_fields.customer"></select-people>
+                                <select-people v-model="basic_fields.user"></select-people>
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
@@ -122,10 +116,6 @@
             </div>
         </div>
 
-        <template v-if="billModal">
-            <bill-modal :basic_fields="basic_fields" :ledgers="ledgers" :transactionLines="transactionLines" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
-        </template>
-
     </div>
 </template>
 
@@ -196,10 +186,10 @@
                 ]
             },
 
-            getCustomerAddress() {
-                let customer_id = this.basic_fields.customer.id;
+            getPeopleAddress() {
+                let people_id = this.basic_fields.user.id;
 
-                HTTP.get(`/customers/${customer_id}`).then((response) => {
+                HTTP.get(`/customers/${people_id}`).then((response) => {
                     // add more info
                     this.basic_fields.billing_address =
                         `Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
@@ -224,7 +214,7 @@
 
             SubmitForBill() {
                 HTTP.post('/bills', {
-                    vendor_id: this.basic_fields.customer.id,
+                    vendor_id: this.basic_fields.user.id,
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trans_date,
                     due_date: this.basic_fields.due_date,
@@ -249,22 +239,10 @@
                 });
             },
 
-            showBillModal() {
-                this.billModal = true;
-
-                //remove later
-                this.transactionLines[0] = {
-                    id: 1,
-                    ledger_id: 305,
-                    voucher_no: 100,
-                    due_date: "01-01-2019",
-                    description: 'desc',
-                    amount: 1000
-                };
-            },
 
             resetData() {
                 Object.assign(this.$data, this.$options.data.call(this));
+                this.basic_fields.user = '';
             },
 
             removeRow(index) {
@@ -279,8 +257,8 @@
                 this.finalTotalAmount = newval;
             },
 
-            'basic_fields.customer'() {
-                this.getCustomerAddress();
+            'basic_fields.user'() {
+                this.getPeopleAddress();
             }
         },
 

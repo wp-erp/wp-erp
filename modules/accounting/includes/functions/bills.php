@@ -326,6 +326,7 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['created_at'] = date("Y-m-d" );
     $bill_data['address'] = isset( $data['address'] ) ? maybe_serialize( $data['address'] ) : '';
     $bill_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $bill_data['due'] = isset( $data['due'] ) ? $data['due'] : 0;
     $bill_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $bill_data['ref'] = isset( $data['ref'] ) ? $data['ref'] : '';
     $bill_data['remarks'] = isset( $data['remarks'] ) ? $data['remarks'] : '';
@@ -443,11 +444,9 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
                                 (
                                     SELECT bill_no, SUM( ba.credit - ba.debit) as due
                                     FROM $bill_act_details as ba
-                                    GROUP BY ba.bill_no
-                                    HAVING due > 0
-                                ) as bs
-                                ON bill.voucher_no = bs.bill_no
-                                WHERE bill.vendor_id = %d
+                                    GROUP BY ba.bill_no HAVING due > 0
+                                ) as bs ON bill.voucher_no = bs.bill_no
+                                WHERE bill.vendor_id = %d AND bill.trn_by_ledger_id IS NULL
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {
@@ -455,4 +454,19 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
     }
 
     return $wpdb->get_results( $query, ARRAY_A );
+}
+
+/**
+ * Get due of a bill
+ *
+ * @param $bill_no
+ * @return int
+ */
+function erp_acct_get_bill_due( $bill_no ) {
+    global $wpdb;
+
+    $result = $wpdb->get_row( "SELECT bill_no, SUM( ba.debit - ba.credit) as due FROM {$wpdb->prefix}erp_acct_bill_account_details as ba WHERE ba.bill_no = {$bill_no} GROUP BY ba.bill_no", ARRAY_A );
+
+
+    return $result['due'];
 }

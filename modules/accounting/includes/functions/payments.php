@@ -407,7 +407,7 @@ function erp_acct_change_invoice_status( $invoice_no ) {
 function erp_acct_get_invoice_due( $invoice_no ) {
     global $wpdb;
 
-    $result = $wpdb->get_row( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM wp_erp_acct_invoice_account_details as ia WHERE ia.invoice_no = {$invoice_no} GROUP BY ia.invoice_no", ARRAY_A );
+    $result = $wpdb->get_row( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = {$invoice_no} GROUP BY ia.invoice_no", ARRAY_A );
 
 
     return $result['due'];
