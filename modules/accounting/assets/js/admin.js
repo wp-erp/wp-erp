@@ -15944,7 +15944,9 @@ if (false) {(function () {
         balance: 0
       },
       accounts: [],
-      transferdate: erp_acct_var.current_date
+      transferdate: erp_acct_var.current_date,
+      remarks: '',
+      amount: ''
     };
   },
   created: function created() {
@@ -15962,10 +15964,55 @@ if (false) {(function () {
       var currency = '$';
 
       if (val < 0) {
-        return "Dr. ".concat(currency, " ").concat(Math.abs(val));
+        return "Cr. ".concat(currency, " ").concat(Math.abs(val));
       }
 
-      return "Cr. ".concat(currency, " ").concat(val);
+      return "Dr. ".concat(currency, " ").concat(val);
+    },
+    submitTransfer: function submitTransfer() {
+      var _this2 = this;
+
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].post('/transfer-voucher/transfer', {
+        date: this.transferdate,
+        from_account_id: this.transferFrom.id,
+        to_account_id: this.transferTo.id,
+        amount: this.amount,
+        remarks: this.remarks
+      }).then(function (res) {
+        _this2.$swal({
+          position: 'center',
+          type: 'success',
+          title: 'Transfer Successful!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+
+        _this2.fetchAccounts();
+
+        _this2.resetData();
+      }).catch(function (err) {
+        var msg = err.response.data.message;
+
+        _this2.$swal({
+          position: 'center',
+          type: 'error',
+          title: msg,
+          showConfirmButton: true,
+          timer: 0
+        });
+      });
+    },
+    resetData: function resetData() {
+      this.transferFrom = {
+        balance: 0
+      };
+      this.transferTo = {
+        balance: 0
+      };
+      this.accounts = [];
+      this.transferdate = erp_acct_var.current_date;
+      this.remarks = '';
+      this.amount = '';
     }
   },
   computed: {}
@@ -31118,11 +31165,11 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Transfer_vue__ = __webpack_require__(93);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_59de0702_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Transfer_vue__ = __webpack_require__(296);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_59de0702_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Transfer_vue__ = __webpack_require__(399);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(295)
+  __webpack_require__(398)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -31135,12 +31182,12 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-59de0702"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Transfer_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_59de0702_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Transfer_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_59de0702_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Transfer_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -31168,265 +31215,8 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 295 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 296 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wperp-container" }, [
-    _c(
-      "div",
-      {
-        staticClass: "wperp-modal has-form wperp-modal-open",
-        attrs: { id: "wperp-transfer-money-modal", role: "dialog" }
-      },
-      [
-        _c("div", { staticClass: "wperp-modal-dialog" }, [
-          _c("div", { staticClass: "wperp-modal-content" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c(
-              "form",
-              {
-                staticClass: "modal-form edit-customer-modal",
-                attrs: { action: "", method: "post" }
-              },
-              [
-                _c("div", { staticClass: "wperp-modal-body" }, [
-                  _c("div", { staticClass: "wperp-row wperp-gutter-20" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
-                      },
-                      [
-                        _c("label", { attrs: { for: "transfer_funds_from" } }, [
-                          _vm._v("Transfer Funds From")
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "wperp-custom-select with-multiselect"
-                          },
-                          [
-                            _c("multi-select", {
-                              attrs: {
-                                name: "from",
-                                multiple: false,
-                                options: _vm.accounts,
-                                placeholder: "Select Account"
-                              },
-                              model: {
-                                value: _vm.transferFrom,
-                                callback: function($$v) {
-                                  _vm.transferFrom = $$v
-                                },
-                                expression: "transferFrom"
-                              }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "span",
-                          { staticClass: "balance mt-10 display-inline-block" },
-                          [
-                            _vm._v(
-                              "Balance: " +
-                                _vm._s(
-                                  _vm.transformBalance(_vm.transferFrom.balance)
-                                )
-                            )
-                          ]
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
-                      },
-                      [
-                        _c("label", { attrs: { for: "transfer_funds_to" } }, [
-                          _vm._v("Transfer Funds To")
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "wperp-custom-select with-multiselect"
-                          },
-                          [
-                            _c("multi-select", {
-                              attrs: {
-                                name: "to",
-                                multiple: false,
-                                options: _vm.accounts,
-                                placeholder: "Select Account"
-                              },
-                              model: {
-                                value: _vm.transferTo,
-                                callback: function($$v) {
-                                  _vm.transferTo = $$v
-                                },
-                                expression: "transferTo"
-                              }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "span",
-                          { staticClass: "balance mt-10 display-inline-block" },
-                          [
-                            _vm._v(
-                              "Balance: " +
-                                _vm._s(
-                                  _vm.transformBalance(_vm.transferTo.balance)
-                                )
-                            )
-                          ]
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
-                      },
-                      [
-                        _c("label", { attrs: { for: "transfer_date" } }, [
-                          _vm._v("Transfer Date")
-                        ]),
-                        _vm._v(" "),
-                        _c("datepicker", {
-                          attrs: {
-                            name: "transfer_date",
-                            defaultDate: _vm.transferdate
-                          },
-                          model: {
-                            value: _vm.transferdate,
-                            callback: function($$v) {
-                              _vm.transferdate = $$v
-                            },
-                            expression: "transferdate"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _vm._m(2)
-                  ])
-                ]),
-                _vm._v(" "),
-                _vm._m(3)
-              ]
-            )
-          ])
-        ])
-      ]
-    )
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wperp-modal-header" }, [
-      _c("h3", [_vm._v("Transfer Money")]),
-      _vm._v(" "),
-      _c("span", { staticClass: "modal-close" }, [
-        _c("i", { staticClass: "flaticon-close" })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "wperp-form-group wperp-col-sm-6 wperp-col-xs-12" },
-      [
-        _c("label", { attrs: { for: "transfer_amount" } }, [
-          _vm._v("Transfer Amount")
-        ]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "wperp-form-field",
-          attrs: {
-            type: "number",
-            name: "transfer_amount",
-            id: "transfer_amount",
-            placeholder: "$100.00"
-          }
-        })
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wperp-col-xs-12 wperp-form-group" }, [
-      _c("label", { attrs: { for: "transfer_memo" } }, [_vm._v("Memo")]),
-      _vm._v(" "),
-      _c("textarea", {
-        staticClass: "wperp-form-field",
-        attrs: {
-          name: "transfer_memo",
-          id: "transfer_memo",
-          rows: "3",
-          placeholder: "Type Here"
-        }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
-      _c(
-        "button",
-        { staticClass: "wperp-btn btn--primary", attrs: { type: "submit" } },
-        [_vm._v("Submit")]
-      )
-    ])
-  }
-]
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-59de0702", esExports)
-  }
-}
-
-/***/ }),
+/* 295 */,
+/* 296 */,
 /* 297 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -34529,6 +34319,368 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-f85b4caa", esExports)
+  }
+}
+
+/***/ }),
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */,
+/* 380 */,
+/* 381 */,
+/* 382 */,
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */,
+/* 396 */,
+/* 397 */,
+/* 398 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 399 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wperp-container" }, [
+    _c(
+      "div",
+      {
+        staticClass: "wperp-modal has-form wperp-modal-open",
+        attrs: { id: "wperp-transfer-money-modal", role: "dialog" }
+      },
+      [
+        _c("div", { staticClass: "wperp-modal-dialog" }, [
+          _c("div", { staticClass: "wperp-modal-content" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                staticClass: "modal-form edit-customer-modal",
+                attrs: { action: "", method: "post" },
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.submitTransfer($event)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "wperp-modal-body" }, [
+                  _c("div", { staticClass: "wperp-row wperp-gutter-20" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                      },
+                      [
+                        _c("label", { attrs: { for: "transfer_funds_from" } }, [
+                          _vm._v("Transfer Funds From")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "wperp-custom-select with-multiselect"
+                          },
+                          [
+                            _c("multi-select", {
+                              attrs: {
+                                id: "transfer_funds_from",
+                                name: "from",
+                                multiple: false,
+                                options: _vm.accounts,
+                                placeholder: "Select Account"
+                              },
+                              model: {
+                                value: _vm.transferFrom,
+                                callback: function($$v) {
+                                  _vm.transferFrom = $$v
+                                },
+                                expression: "transferFrom"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "span",
+                          { staticClass: "balance mt-10 display-inline-block" },
+                          [
+                            _vm._v(
+                              "Balance: " +
+                                _vm._s(
+                                  _vm.transformBalance(_vm.transferFrom.balance)
+                                )
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                      },
+                      [
+                        _c("label", { attrs: { for: "transfer_funds_to" } }, [
+                          _vm._v("Transfer Funds To")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "wperp-custom-select with-multiselect"
+                          },
+                          [
+                            _c("multi-select", {
+                              attrs: {
+                                id: "transfer_funds_to",
+                                name: "to",
+                                multiple: false,
+                                options: _vm.accounts,
+                                placeholder: "Select Account"
+                              },
+                              model: {
+                                value: _vm.transferTo,
+                                callback: function($$v) {
+                                  _vm.transferTo = $$v
+                                },
+                                expression: "transferTo"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "span",
+                          { staticClass: "balance mt-10 display-inline-block" },
+                          [
+                            _vm._v(
+                              "Balance: " +
+                                _vm._s(
+                                  _vm.transformBalance(_vm.transferTo.balance)
+                                )
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                      },
+                      [
+                        _c("label", { attrs: { for: "transfer_amount" } }, [
+                          _vm._v("Transfer Amount")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.amount,
+                              expression: "amount"
+                            }
+                          ],
+                          staticClass: "wperp-form-field",
+                          attrs: {
+                            required: "",
+                            type: "number",
+                            name: "transfer_amount",
+                            id: "transfer_amount",
+                            placeholder: "$100.00"
+                          },
+                          domProps: { value: _vm.amount },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.amount = $event.target.value
+                            }
+                          }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                      },
+                      [
+                        _c("label", { attrs: { for: "transfer_date" } }, [
+                          _vm._v("Transfer Date")
+                        ]),
+                        _vm._v(" "),
+                        _c("datepicker", {
+                          attrs: {
+                            id: "transfer_date",
+                            name: "transfer_date",
+                            defaultDate: _vm.transferdate
+                          },
+                          model: {
+                            value: _vm.transferdate,
+                            callback: function($$v) {
+                              _vm.transferdate = $$v
+                            },
+                            expression: "transferdate"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "wperp-col-xs-12 wperp-form-group" },
+                      [
+                        _c("label", { attrs: { for: "transfer_memo" } }, [
+                          _vm._v("Memo")
+                        ]),
+                        _vm._v(" "),
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.remarks,
+                              expression: "remarks"
+                            }
+                          ],
+                          staticClass: "wperp-form-field",
+                          attrs: {
+                            name: "transfer_memo",
+                            id: "transfer_memo",
+                            rows: "3",
+                            placeholder: "Type Here"
+                          },
+                          domProps: { value: _vm.remarks },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.remarks = $event.target.value
+                            }
+                          }
+                        })
+                      ]
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._m(1)
+              ]
+            )
+          ])
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "wperp-modal-header" }, [
+      _c("h3", [_vm._v("Transfer Money")]),
+      _vm._v(" "),
+      _c("span", { staticClass: "modal-close" }, [
+        _c("i", { staticClass: "flaticon-close" })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
+      _c(
+        "button",
+        { staticClass: "wperp-btn btn--primary", attrs: { type: "submit" } },
+        [_vm._v("Submit")]
+      )
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-59de0702", esExports)
   }
 }
 
