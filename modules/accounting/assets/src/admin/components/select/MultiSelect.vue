@@ -5,14 +5,14 @@
     :multiple="multiple"
     :close-on-select="!multiple"
     :loading="isLoading"
-    placeholder="Please search"
+    :placeholder="placeholder"
     label="name"
     track-by="id"
     @open="onDropdownOpen"
     @remove="onRemove"
     @select="onSelect"
     @search-change="asyncFind">
-    <template slot="tag" slot-scope="{ option, remove }">
+    <template slot="tag" slot-scope="{ option }">
       <span class="custom__tag">
         <span>{{ option.name }}</span><span class="custom__remove" @click="onRemove(option)">
           &#9747;</span>
@@ -51,6 +51,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    placeholder: {
+        type: String,
+        default: 'Please search'
+    }
   },
 
   data() {
@@ -91,7 +95,7 @@ export default {
     asyncFind: debounce(function (query) {
       this.isLoading = true;
       this.$root.$emit('options-query', query);
-    }, 300),
+    }, 700),
   },
 };
 </script>

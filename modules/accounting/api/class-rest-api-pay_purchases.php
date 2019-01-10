@@ -96,7 +96,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_pay_purchases( $request ) {
         $args = [
-            'number' => $request['per_page'],
+            'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
@@ -138,7 +138,6 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_pay_purchase( $request ) {
-        global $wpdb;
 
         $id = (int) $request['id'];
 
@@ -150,8 +149,12 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
+
         $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+
         $response = rest_ensure_response( $item );
+
+        error_log( print_r( $response, true ) );
 
         $response->set_status( 200 );
     }
@@ -324,9 +327,12 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor_id'       => (int) $item->vendor_id,
             'trn_date'        => $item->trn_date,
             'trn_by'          => $item->trn_by,
+            'line_items'      => $item->line_items,
             'purchase_details'=> $item->purchase_details,
             'amount'          => (int) $item->amount,
-            'ref'             => (int) $item->ref,
+            'ref'             => $item->ref,
+            'attachments'     => $item->attachments,
+            'status'          => $item->status,
         ];
 
         $data = array_merge( $data, $additional_fields );

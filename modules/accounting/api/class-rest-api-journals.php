@@ -1,11 +1,11 @@
 <?php
-namespace WeDevs\ERP\API;
+namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
 use WP_REST_Response;
 use WP_Error;
 
-class Journals_Controller extends REST_Controller {
+class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Endpoint namespace.
      *
@@ -121,12 +121,13 @@ class Journals_Controller extends REST_Controller {
      */
     public function get_journal( $request ) {
         $id   = (int) $request['id']; $additional_fields = [];
-        $item = erp_acct_get_journal( $id );
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_journal_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
+        $item = erp_acct_get_journal( $id );
+        
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -233,11 +234,17 @@ class Journals_Controller extends REST_Controller {
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
+        $line_items['trn_no'] = $item->trn_no;
+        $line_items['ledger_id'] = $item->ledger_id;
+        $line_items['particulars'] = isset( $item->particulars ) ? $item->particulars : '';
+        $line_items['debit'] = $item->debit;
+        $line_items['credit'] = $item->credit;
+
         $data = [
             'id'          => $item->id,
             'particulars' => $item->particulars,
             'trn_date'    => $item->trn_date,
-            'line_items'  => $item->line_items,
+            'line_items'  => $line_items,
             'total'       => (float) $item->voucher_amount,
         ];
 

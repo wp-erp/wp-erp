@@ -1,23 +1,16 @@
 <template>
     <div class="wperp-container">
 
-        <print-preview
-            type="Payment"
-            :customer="basic_fields"
-            :totalAmount="finalTotalAmount"
-            :transactions="invoices"
-            v-if="paymentModal" />
-
         <!-- Start .header-section -->
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Receive Payment</h2>
+                    <h2 class="content-header__title">Expense</h2>
 
                     <!-- Print Dialogue -->
 
-                    <a href="#" class="wperp-btn btn--primary" v-if="showPrintPreview" @click.prevent="showPaymentModal">
-                        <span>Print Preview</span>
+                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showExpenseModal">
+                        <span>Print</span>
                     </a>
                 </div>
             </div>
@@ -30,7 +23,7 @@
                     <div class="wperp-row">
                         <div class="wperp-col-sm-3">
                             <div class="wperp-form-group">
-                                <select-customers @input="getDueInvoices" v-model="basic_fields.customer"></select-customers>
+                                <select-people v-model="basic_fields.customer"></select-people>
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
@@ -41,7 +34,7 @@
                         </div>
                         <div class="wperp-col-sm-3">
                             <div class="wperp-form-group">
-                                <label>Payment Date<span class="wperp-required-sign">*</span></label>
+                                <label>Expense Date<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.payment_date"></datepicker>
                             </div>
                         </div>
@@ -69,25 +62,28 @@
                 <table class="wperp-table wperp-form-table">
                     <thead>
                     <tr>
-                        <th scope="col" class="col--id column-primary">Invoice ID</th>
-                        <th scope="col">Due Date</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Due</th>
+                        <th scope="col" class="col--id column-primary">ID</th>
+                        <th scope="col">Account</th>
+                        <th scope="col">Description</th>
                         <th scope="col">Amount</th>
+                        <th scope="col">Total</th>
                         <th scope="col" class="col--actions"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr :key="key" v-for="(invoice,key) in invoices">
-                        <td scope="row" class="col--id column-primary">{{invoice.id}}</td>
-                        <td class="col--due-date" data-colname="Due Date">{{invoice.due_date}}</td>
-                        <td class="col--total" data-colname="Total">{{invoice.amount}}</td>
-                        <td class="col--due" data-colname="Due">{{invoice.due}}</td>
+                    <tr :key="key" v-for="(line,key) in transactionLines">
+                        <td scope="row" class="col--id column-primary">{{key+1}}</td>
+                        <td class="col--account"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
+                        <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="text" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
+                            <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
+                        </td>
+                        <td class="col--total" style="text-align: center" data-colname="Total">
+                            <input type="text" :value="line.amount" readonly disabled/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
+
                         </td>
                     </tr>
 
@@ -97,25 +93,30 @@
                             <input type="text" class="text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
                         <td class="text-right"></td>
                     </tr>
-                    </tbody>
+                    <tr class="add-new-line">
+                        <td colspan="9" style="text-align: left;">
+                            <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                        </td>
+                    </tr>
                     <tr class="wperp-form-group">
                         <td colspan="9" style="text-align: left;">
                             <label>Particulars</label>
                             <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
                         </td>
                     </tr>
+                    </tbody>
                     <tr class="add-attachment-row">
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
                                 <label class="col--attachement">Attachment</label>
-                                <file-upload v-model="attachments" url="/invoices/attachments"/>
+                                <file-upload v-model="attachments" url="/bills/attachments"/>
                             </div>
                         </td>
                     </tr>
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Receive Payment" @click.native="SubmitForPayment" :working="isWorking"></submit-button>
+                            <submit-button text="Add New Expense" @click.native="SubmitForExpense" :working="isWorking"></submit-button>
                         </td>
                     </tr>
                     </tfoot>
@@ -123,88 +124,78 @@
             </div>
         </div>
 
+        <template v-if="billModal">
+            <bill-modal :basic_fields="basic_fields" :ledgers="ledgers" :transactionLines="transactionLines" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
+        </template>
+
     </div>
 </template>
 
 <script>
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import RecPaymentModal from 'admin/components/rec-payment/RecPaymentModal.vue'
-    import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
+    import ExpenseModal from 'admin/components/expense/ExpenseModal.vue'
+    import SelectPeople from 'admin/components/people/SelectPeople.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import PrintPreview from 'admin/components/base/PrintPreview.vue';
+
 
     export default {
-        name: 'RecPaymentCreate',
+        name: 'ExpenseCreate',
 
         components: {
             HTTP,
             Datepicker,
+            MultiSelect,
             FileUpload,
-            RecPaymentModal,
+            ExpenseModal,
             SubmitButton,
-            PrintPreview,
-            SelectCustomers
+            SelectPeople
         },
 
         data() {
             return {
                 basic_fields: {
-                    customer: '',
+                    user: '',
                     trn_ref: '',
-                    payment_date: '',
+                    trn_date: '',
                     deposit_to: '',
                     billing_address: ''
                 },
 
-                invoices: [],
+                transactionLines: [{}],
+                selected:[],
+                ledgers: [],
                 attachments: [],
                 totalAmounts:[],
                 finalTotalAmount: 0,
-                paymentModal: false,
-                particulars: '',
+                billModal: false,
+                particulars: [],
                 isWorking: false,
-                acct_assets: erp_acct_var.acct_assets,
-                showPrintPreview: false,
+                acct_assets: erp_acct_var.acct_assets
             }
         },
 
         created() {
-            this.$root.$on('preview-modal-close', () => {
-                this.paymentModal = false;
+            this.getLedgers();
+
+            this.$root.$on('remove-row', index => {
+                this.$delete(this.transactionLines, index);
+                this.updateFinalAmount();
+            });
+
+            this.$root.$on('bill-modal-close', () => {
+                this.billModal = false;
             });
         },
 
         methods: {
-            getDueInvoices() {
-                let customerId = this.basic_fields.customer.id,
-                    idx = 0,
-                    finalAmount = 0;
-
-                // for modal test. remove later
-                if ( undefined === customerId ) {
-                    customerId = 1;
-                }
-
-                HTTP.get(`/invoices/due/${customerId}`).then((response) => {
-                    response.data.forEach(element => {
-                        this.invoices.push({
-                            id: element.id,
-                            invoice_no: element.voucher_no,
-                            due_date: element.due_date,
-                            amount: parseFloat(element.amount),
-                            due: parseFloat(element.due)
-                        });
-                    });
-                }).then(() => {
-                    this.invoices.forEach(element => {
-                        this.totalAmounts[idx++] = parseFloat(element.due);
-                        finalAmount += parseFloat(element.due);
-                    });
-
-                    this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
-                });
+            getLedgers() {
+                this.ledgers = [
+                    { id: 305, name: "Ledger 1" },
+                    { id: 306, name: "Ledger 2" },
+                ]
             },
 
             getCustomerAddress() {
@@ -221,35 +212,35 @@
             updateFinalAmount() {
                 let finalAmount = 0;
 
-                this.totalAmounts.forEach(element => {
-                    finalAmount += parseFloat(element);
+                this.transactionLines.forEach(element => {
+                    finalAmount += parseFloat(element.amount);
                 });
 
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
             },
 
-            SubmitForPayment() {
+            addLine() {
+                this.transactionLines.push({});
+            },
 
-                this.invoices.forEach( (element,index) => {
-                    element['line_total'] = parseFloat( this.totalAmounts[index] );
-                });
 
-                HTTP.post('/payments', {
-                    customer_id: this.basic_fields.customer.id,
+            SubmitForExpense() {
+                HTTP.post('/expenses', {
+                    vendor_id: this.basic_fields.customer.id,
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trans_date,
-                    line_items: this.invoices,
+                    trn_by_ledger_id: 100, //change later
+                    bill_details: this.transactionLines,
                     attachments: this.attachments,
-                    type: 'payment',
+                    type: 'expense',
                     status: 'paid',
-                    particulars: this.particulars,
-                    trn_by: this.basic_fields.deposit_to,
+                    remarks: this.particulars,
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({
                         position: 'top-end',
                         type: 'success',
-                        title: 'Payment Created!',
+                        title: 'Expense Created!',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -259,9 +250,18 @@
                 });
             },
 
-            showPaymentModal() {
-                this.getDueInvoices();
-                this.paymentModal = true;
+            showExpenseModal() {
+                this.billModal = true;
+
+                //remove later
+                this.transactionLines[0] = {
+                    id: 1,
+                    ledger_id: 305,
+                    voucher_no: 100,
+                    due_date: "01-01-2019",
+                    description: 'desc',
+                    amount: 1000
+                };
             },
 
             resetData() {
@@ -272,6 +272,7 @@
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
             },
+            
         },
 
         watch: {
@@ -280,7 +281,6 @@
             },
 
             'basic_fields.customer'() {
-                this.showPrintPreview = true;
                 this.getCustomerAddress();
             }
         },

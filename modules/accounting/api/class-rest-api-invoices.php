@@ -329,7 +329,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $args = [
-            'number' => $request['per_page'],
+            'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
@@ -339,7 +339,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $invoice_data  = erp_acct_get_due_invoices_customer( [ 'people_id' => $id ] );
+        $invoice_data  = erp_acct_receive_payments_from_customer( [ 'people_id' => $id ] );
         $total_items   = count( $invoice_data );
 
         foreach ( $invoice_data as $item ) {

@@ -10,13 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array
  */
 function erp_acct_get_all_charts() {
-    $charts = [
-        1 => __( 'Assets', 'erp' ),
-        2 => __( 'Liabilities', 'erp' ),
-        3 => __( 'Expenses', 'erp' ),
-        4 => __( 'Income', 'erp' ),
-        5 => __( 'Equity', 'erp' ),
-    ];
+    global $wpdb;
+
+    $charts = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_acct_chart_of_accounts", ARRAY_A);
 
     return $charts;
 }

@@ -9,7 +9,7 @@
                 v-model="line.qty"
                 @keyup="calculateAmount"
                 name="qty"
-                class="wperp-form-field">
+                class="wperp-form-field" required>
         </td>
         <td class="col--uni_price" data-colname="Unit Price">
             <input type="text" v-model="line.unitPrice" @keyup="calculateAmount" class="wperp-form-field">
@@ -115,9 +115,11 @@
 
                 if ( ! product_id ) return;
 
-                HTTP.get(`/products/${product_id}`).then((response) => {
-                    this.unitPrice = response.data.sale_price;
+                let product = this.products.find(element => {
+                    return element.id == product_id;
                 });
+
+                this.line.unitPrice = parseFloat(product.sale_price);
             },
 
             removeRow() {
