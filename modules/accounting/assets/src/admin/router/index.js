@@ -1,27 +1,29 @@
-import Vue              from 'vue';
-import Sales            from 'admin/components/sales/Sales.vue';
-import Router           from 'vue-router';
-import People           from 'admin/components/people/People.vue';
-import Expenses         from 'admin/components/expenses/Expenses.vue';
-import Products         from 'admin/components/products/Products.vue';
-import Employees        from 'admin/components/people/Employees.vue';
-import Dashboard        from 'admin/components/Dashboard.vue';
-// import SalesReport      from 'admin/components/reports/SalesReport.vue';
+import Vue               from 'vue';
+import Router            from 'vue-router';
+import People            from 'admin/components/people/People.vue';
+import Products          from 'admin/components/products/Products.vue';
+import Employees         from 'admin/components/people/Employees.vue';
+import Dashboard         from 'admin/components/Dashboard.vue';
 import TrialBalance      from 'admin/components/reports/TrialBalance.vue';
-import PeopleDetails    from 'admin/components/people/PeopleDetails.vue';
-import InvoiceCreate    from 'admin/components/invoice/InvoiceCreate.vue';
-import DummyComponent   from 'admin/components/DummyComponent.vue';
-import ChartOfAccounts  from 'admin/components/ChartOfAccounts.vue';
-import ReportsOverview  from 'admin/components/reports/ReportsOverview.vue';
-import ProductCategory  from 'admin/components/product-category/ProductCategory.vue';
-import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue';
-import BillCreate       from 'admin/components/bill/BillCreate.vue';
-import PayBillCreate    from 'admin/components/pay-bill/PayBillCreate.vue';
-import PurchaseCreate   from 'admin/components/purchase/PurchaseCreate.vue';
+import PeopleDetails     from 'admin/components/people/PeopleDetails.vue';
+import InvoiceCreate     from 'admin/components/invoice/InvoiceCreate.vue';
+import DummyComponent    from 'admin/components/DummyComponent.vue';
+import ChartOfAccounts   from 'admin/components/ChartOfAccounts.vue';
+import ReportsOverview   from 'admin/components/reports/ReportsOverview.vue';
+import ProductCategory   from 'admin/components/product-category/ProductCategory.vue';
+import RecPaymentCreate  from 'admin/components/rec-payment/RecPaymentCreate.vue';
+import BillCreate        from 'admin/components/bill/BillCreate.vue';
+import PayBillCreate     from 'admin/components/pay-bill/PayBillCreate.vue';
+import PurchaseCreate    from 'admin/components/purchase/PurchaseCreate.vue';
 import PayPurchaseCreate from 'admin/components/pay-purchase/PayPurchaseCreate.vue';
 import JournalList       from 'admin/components/journal/JournalList.vue';
 import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
+import JournalModal      from 'admin/components/journal/JournalModal.vue';
 import Transfer          from 'admin/components/transfers/Transfer.vue';
+import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
+import Sales             from 'admin/components/transactions/sales/Sales.vue';
+import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
+import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
 
 Vue.use(Router)
 
@@ -37,6 +39,21 @@ export default new Router({
                     component: Dashboard,
                 }
             ]
+        },
+        {
+            path : '/users',
+            name : 'Customers',
+            component: People,
+        },
+        {
+            path : '/transactions',
+            name : 'Sales',
+            component: Sales,
+        },
+        {
+            path : '/inventory',
+            name : 'Products',
+            component: Products,
         },
         {
             path: '/customers',
@@ -97,19 +114,19 @@ export default new Router({
             ]
         },
         {
-            path: '/sales',
+            path: '/transactions/sales',
             name: 'Sales',
             component: Sales
         },
-        // {
-        //     path: '/sales/:id/report',
-        //     name: 'SalesReport',
-        //     component: SalesReport
-        // },
         {
-            path: '/expenses',
+            path: '/transactions/expenses',
             name: 'Expenses',
             component: Expenses
+        },
+        {
+            path: '/transactions/purchases',
+            name: 'Purchases',
+            component: Purchases
         },
         {
             path: '/charts',
@@ -133,12 +150,12 @@ export default new Router({
         },
         {
 
-            path: '/erp_inv_product',
+            path: '/products',
             name: 'Products',
             component: Products
         },
         {
-            path: '/erp_inv_product_category',
+            path: '/product_categories',
             name: 'ProductCategory',
             component: ProductCategory
         },
@@ -199,6 +216,12 @@ export default new Router({
                     component: JournalCreate
                 },
                 {
+
+                    path: '/journals/:id',
+                    name: 'SingleJournal',
+                    component: JournalModal
+                },
+                {
                     path: 'page/:page',
                     name: 'PaginateJournals',
                     component: JournalList,
@@ -209,6 +232,11 @@ export default new Router({
             path: '/transfer/new',
             name: 'Transfer',
             component: Transfer
+        },
+        {
+            path: '/expenses/new',
+            name: 'ExpenseCreate',
+            component: ExpenseCreate
         },
     ]
 })

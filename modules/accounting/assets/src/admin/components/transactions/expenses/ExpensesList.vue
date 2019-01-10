@@ -1,13 +1,5 @@
 <template>
-
     <div class="wperp-transactions-section wperp-section">
-        <sales-report
-            v-if="salesReportModal"
-            :id="modalParams.voucher_no"
-            :type="modalParams.type"
-            :totalDue="modalParams.due"
-            :totalAmount="modalParams.amount" />
-
         <!-- Start .wperp-crm-table -->
         <div class="table-container">
             <div class="bulk-action">
@@ -90,7 +82,7 @@
                                 </label>
                             </div>
                         </th>
-                        <td class="col--name column-primary">26-09-18 
+                        <td class="col--name column-primary">26-09-18
                             <button type="button" class="wperp-toggle-row">
                                 <span class="screen-reader-text">Show more details</span>
                             </button>
@@ -119,9 +111,9 @@
                             </div>
                         </td>
                     </tr>
-                    
                 </tbody>
             </table> -->
+
             <list-table
                 tableClass="wperp-table table-striped table-dark widefat table2"
                 action-column="actions"
@@ -152,23 +144,19 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js';
+    import HTTP from 'admin/http';
     import ListTable from 'admin/components/list-table/ListTable.vue';
-    import SalesReport from 'admin/components/reports/SalesReport.vue';
 
     export default {
-        name: 'SalesList',
+        name: 'ExpensesList',
 
         components: {
-            ListTable,
-            SalesReport
+            ListTable
         },
 
         data() {
             return {
-                salesReportModal: false,
-                modalParams: null,
-                bulkActions: [
+                 bulkActions: [
                     {
                         key: 'trash',
                         label: 'Move to Trash',
@@ -198,18 +186,10 @@
                     { key: 'edit', label: 'Edit' },
                     { key: 'trash', label: 'Delete' }
                 ]
-            };
+            }
         },
 
         created() {
-            this.$root.$on('sales-filter', filters => {
-                this.fetchItems(filters);
-            });
-
-            this.$root.$on('sales-modal-close', () => {
-                this.salesReportModal = false;
-            });
-
             this.fetchItems();
         },
 
@@ -290,12 +270,15 @@
                 this.fetchItems();
             },
 
-            showSalesReportModal(row) {
-                this.modalParams = row;
+            // showSalesReportModal(row) {
+            //     this.modalParams = row;
 
-                this.salesReportModal = true;
-            }
+            //     this.salesReportModal = true;
+            // }
         },
-
     }
 </script>
+
+<style scoped>
+
+</style>

@@ -22,9 +22,11 @@
         </div>
         <!-- End .header-section -->
 
+        <form action="" method="post" @submit.prevent="submitInvoiceForm">
+
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
-                <form action="#" class="wperp-form" method="post">
+                <!-- <form action="#" class="wperp-form" method="post"> -->
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
                             <select-customers :reset="reset" v-model="basic_fields.customer"></select-customers>
@@ -46,78 +48,68 @@
                             <textarea v-model.trim="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                     </div>
-                </form>
+                <!-- </form> -->
                 
             </div>
         </div>
 
-        <div class="wperp-table-responsive">
-            <!-- Start .wperp-crm-table -->
-            <div class="table-container">
-                <table class="wperp-table wperp-form-table">
-                    <thead>
-                        <tr>
-                            <td scope="col" class="col--check">Product/Service</td>
-                            <th scope="col" class="column-primary">Qty</th>
-                            <th scope="col">Unit Price</th>
-                            <th scope="col">Discount</th>
-                            <th scope="col">Tax(%)</th>
-                            <th scope="col">Tax Amount</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col" class="col--actions"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="test">
-                        <invoice-trn-row
-                            :line="line"
-                            :products="products"
-                            :key="index"
-                            v-for="(line, index) in transactionLines"
-                        ></invoice-trn-row>
+            <div class="wperp-table-responsive">
+                <!-- Start .wperp-crm-table -->
+                <div class="table-container">
+                    <table class="wperp-table wperp-form-table">
+                        <thead>
+                            <tr>
+                                <td scope="col" class="col--check">Product/Service</td>
+                                <th scope="col" class="column-primary">Qty</th>
+                                <th scope="col">Unit Price</th>
+                                <th scope="col">Discount</th>
+                                <th scope="col">Tax(%)</th>
+                                <th scope="col">Tax Amount</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col" class="col--actions"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="test">
+                            <invoice-trn-row
+                                :line="line"
+                                :products="products"
+                                :key="index"
+                                v-for="(line, index) in transactionLines"
+                            ></invoice-trn-row>
 
-                        <tr class="total-amount-row">
-                            <td colspan="6" class="text-right">
-                                <span>Total Amount = </span>
-                            </td>
-                            <td><input type="text" v-model="finalTotalAmount" readonly></td>
-                            <td></td>
-                        </tr>
-                        <tr class="add-new-line">
-                            <td colspan="9" style="text-align: left;">
-                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
-                            </td>
-                        </tr>
-                        <tr class="add-attachment-row" >
-                            <td colspan="9" style="text-align: left;">
-                                <div class="attachment-container">
-                                    <label class="col--attachement">Attachment</label>
-                                    <file-upload v-model="attachments" url="/invoices/attachments"/>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <!-- <tr>
-                            <td colspan="4"><button class="wperp-btn btn--default">Cancel</button></td>
-                            <td colspan="5" style="text-align: right;">
-                                <div class="wperp-has-dropdown">
-                                    <button class="wperp-btn btn--primary">Submit for approval</button>
-                                    <div class="dropdown-menu">
-                                        <span>something</span>
+                            <tr class="total-amount-row">
+                                <td colspan="6" class="text-right">
+                                    <span>Total Amount = </span>
+                                </td>
+                                <td><input type="text" v-model="finalTotalAmount" readonly></td>
+                                <td></td>
+                            </tr>
+                            <tr class="add-new-line">
+                                <td colspan="9" style="text-align: left;">
+                                    <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                                </td>
+                            </tr>
+                            <tr class="add-attachment-row" >
+                                <td colspan="9" style="text-align: left;">
+                                    <div class="attachment-container">
+                                        <label class="col--attachement">Attachment</label>
+                                        <file-upload v-model="attachments" url="/invoices/attachments"/>
                                     </div>
-                                </div>
-                                <button class="wperp-btn btn--default wperp-dropdown-trigger">Cancel</button>
-                            </td>
-                        </tr> -->
-                        <tr>
-                            <td colspan="9" style="text-align: right;">
-                                <submit-button text="Submit for approval" @click.native="SubmitForApproval" :working="isWorking"></submit-button>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="9" style="text-align: right;">
+                                    <combo-button :options="buttons" />
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
-        </div>
+
+        </form>
 
         <!-- <invoice-modal v-if="invoiceModal" /> -->
 
@@ -129,10 +121,11 @@
 import HTTP from 'admin/http'
 import Datepicker from 'admin/components/base/Datepicker.vue'
 import FileUpload from 'admin/components/base/FileUpload.vue'
+import ComboButton from 'admin/components/select/ComboButton.vue';
 import SubmitButton from 'admin/components/base/SubmitButton.vue'
 import InvoiceModal from 'admin/components/invoice/InvoiceModal.vue'
 import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue'
-import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
+import SelectCustomers from 'admin/components/people/SelectCustomers.vue';
 
 import PrintPreview from 'admin/components/base/PrintPreview.vue';
 
@@ -143,6 +136,7 @@ export default {
         HTTP,
         Datepicker,
         FileUpload,
+        ComboButton,
         PrintPreview,
         SubmitButton,
         InvoiceModal,
@@ -159,6 +153,12 @@ export default {
                 billing_address: ''
             },
 
+            buttons: [
+                {id: 'save', text: 'Save'},
+                {id: 'save_create', text: 'Save & Create'},
+                {id: 'save_draft', text: 'Create Draft'},
+            ],
+
             products: [],
             attachments: [],
             transactionLines: [{}],
@@ -170,6 +170,8 @@ export default {
             reset: false,
 
             showPrintPreview: false,
+
+            actionType: null,
         }
     },
 
@@ -197,6 +199,10 @@ export default {
         this.$root.$on('preview-modal-close', () => {
             this.invoiceModal = false;
         });
+
+        this.$root.$on('combo-btn-select', button => {
+            this.actionType = button.id;
+        });
     },
 
     methods: {
@@ -205,7 +211,8 @@ export default {
                 response.data.forEach(element => {
                     this.products.push({
                         id: element.id,
-                        name: element.name
+                        name: element.name,
+                        sale_price: element.sale_price
                     });
                 });
             });
@@ -262,7 +269,7 @@ export default {
             return lineItems;
         },
 
-        SubmitForApproval(event) {
+        submitInvoiceForm() {
             this.isWorking = true;
 
             HTTP.post('/invoices', {
@@ -278,23 +285,41 @@ export default {
                 estimate: 0,
             }).then(res => {
                 this.$swal({
-                    position: 'top-end',
+                    position: 'center',
                     type: 'success',
                     title: 'Invoice Created!',
                     showConfirmButton: false,
                     timer: 1500
                 });
-
-                this.reset = true;
             }).then(() => {
                 this.isWorking = false;
-            });
+                this.reset = true;
 
-            // this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+                if ( 'save' == this.actionType ) {
+                    this.$router.push({ name: 'Sales' });
+                } else if ( 'save_create' == this.actionType ) {
+                    this.resetFields();
+                }
+
+            });
         },
 
         showInvoiceModal() {
             this.invoiceModal = true;
+        },
+
+        resetFields() {
+            this.basic_fields.customer = '';
+            this.basic_fields.trans_date = '';
+            this.basic_fields.due_date = '';
+            this.basic_fields.billing_address = '';
+            this.attachments = [];
+            this.transactionLines = [{}];
+            this.finalTotalAmount = 0;
+            this.invoiceModal = false;
+            this.isWorking = false;
+            this.reset = false;
+            this.actionType = null;
         }
     }
 

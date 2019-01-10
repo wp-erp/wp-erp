@@ -6,14 +6,17 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Sales Transactions</h2>
-                    <combo-box :options="pages" :hasUrl="true" placeholder="New Transaction" />
+                    <combo-box 
+                        :options="pages"
+                        :hasUrl="true"
+                        placeholder="New Transaction" />
                 </div>
             </div>
         </div>
         <!-- End .header-section -->
 
         <sales-stats />
-        <sales-filter />
+        <transactions-filter />
         <sales-list />
 
     </div>
@@ -24,9 +27,9 @@ import 'assets/js/plugins/chart.min';
 import 'assets/js/status_chart';
 
 import ComboBox from 'admin/components/select/ComboBox.vue';
-import SalesStats from 'admin/components/sales/SalesStats.vue';
-import SalesFilter from 'admin/components/sales/SalesFilter.vue';
-import SalesList from 'admin/components/sales/SalesList.vue';
+import SalesStats from 'admin/components/transactions/sales/SalesStats.vue';
+import SalesList from 'admin/components/transactions/sales/SalesList.vue';
+import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
 
 export default {
     name: 'Sales',
@@ -34,7 +37,7 @@ export default {
     components: {
         SalesStats,
         SalesList,
-        SalesFilter,
+        TransactionsFilter,
         ComboBox,
     },
 
