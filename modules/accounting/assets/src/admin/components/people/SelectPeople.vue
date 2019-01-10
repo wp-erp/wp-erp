@@ -73,7 +73,6 @@
                         response = [ ...customers.data,...employees.data ];
                     })).then(() => {
                         response.forEach(item => {
-                            this.options = [];
                             this.options.push({
                                 id: item.id,
                                 name: item.first_name + ' ' + item.last_name

@@ -94,7 +94,7 @@
                     }
                 ],
                 columns: {
-                    'customer': { label: 'Name' },
+                    'customer': { label: 'Name', isColPrimary: true },
                     'company': { label: 'Company' },
                     'email': { label: 'Email' },
                     'phone': { label: 'Phone' },

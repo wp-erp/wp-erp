@@ -68,100 +68,102 @@
 	                    </div>
 					</td>
 					<th v-for="(value, key) in columns" :key="key" :class="[
-					'column',
-					key,
-					{ 'sortable': isSortable(value) },
-					{ 'sorted': isSorted(key) },
-					{ 'asc': isSorted(key) && sortOrder === 'asc' },
-					{ 'desc': isSorted(key) && sortOrder === 'desc' }
-					]">
-					<template v-if="!isSortable(value)">
-						{{ value.label }}
-					</template>
-					<a v-else href="#"
-					@click.prevent="handleSortBy(key)">
-					<span>{{ value.label }}</span>
-					<span class="sorting-indicator"/>
-				</a>
-			</th>
-		</tr>
-	</thead>
-	<tfoot>
-		<bulk-actions-tpl v-if="checkedItems.length"
-		:select-all="selectAll"
-		:bulk-actions="bulkActions"
-		:show-cb="showCb"
-		:columns-count="columnsCount" />
+						'column',
+						key,
+						(value.isColPrimary) ? 'column-primary' : '',
+						{ 'sortable': isSortable(value) },
+						{ 'sorted': isSorted(key) },
+						{ 'asc': isSorted(key) && sortOrder === 'asc' },
+						{ 'desc': isSorted(key) && sortOrder === 'desc' }
+						]">
+						<template v-if="!isSortable(value)">
+							{{ value.label }}
+						</template>
+						<a v-else href="#"
+							@click.prevent="handleSortBy(key)">
+							<span>{{ value.label }}</span>
+							<span class="sorting-indicator"/>
+						</a>
+					</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<bulk-actions-tpl v-if="checkedItems.length"
+				:select-all="selectAll"
+				:bulk-actions="bulkActions"
+				:show-cb="showCb"
+				:columns-count="columnsCount" />
 
-		<tr v-else>
-			<td v-if="showCb" class="manage-column column-cb check-column">
-				<div class="form-check">
-                    <label class="form-check-label">
-                    	<input v-model="selectAll" type="checkbox" class="form-check-input">
-                        <span class="form-check-sign">
-                            <span class="check"></span>
-                        </span>
-                    </label>
-                </div>
-			</td>
-			<th v-for="(value, key) in columns" :key="key"
-			:class="['column', key]">{{ value.label }}</th>
-		</tr>
-	</tfoot>
-	<tbody>
-		<template v-if="rows.length">
-			<tr v-for="(row, i) in rows" :key="row[index]">
-				<th v-if="showCb" scope="row" class="check-column">
-					<div class="form-check">
-                        <label class="form-check-label">
-							<input :value="row[index]" v-model="checkedItems" class="form-check-input" type="checkbox" name="item[]">
-                            <span class="form-check-sign">
-                                <span class="check"></span>
-                            </span>
-                        </label>
-                    </div>
-				</th>
-				<td v-for="(value, key) in columns" :key="key" :data-colname="ucFirst(key)"
-					:class="['column', key, { 'selected': checkedItems.includes(row[index]) }]">
-					<slot :name="key" :row="row">
-						{{ row[key] }}
-					</slot>
-
-					<div v-if="actionColumn === key && hasActions" class="row-actions col--actions">
-						<slot :row="row" name="row-actions">
-							<dropdown placement="left-start">
-								<template slot="button">
-									<span>&vellip;</span>
-								</template>
-								<template slot="dropdown">
-									<ul slot="action-items" role="menu">
-										<li v-for="action in actions" :key="action.key" :class="action.key">
-											<a href="#" @click.prevent="actionClicked(action.key, row, i)"><i :class="action.iconClass"></i>{{ action.label }}</a>
-										</li>
-									</ul>
-								</template>
-							</dropdown>
-						</slot>
-	                    <!-- <div class="col--actions">
-	                    	<div class="wperp-has-dropdown dropdown right--middle">
-		                        <a href="#" class="dropdown-trigger"><i class="flaticon-menu"></i></a>
-		                        <ul class="dropdown-menu" role="menu">
-		                            <li><a href="#"><i class="flaticon-edit"></i>Edit</a></li>
-		                            <li><a href="#"><i class="flaticon-quick-edit"></i>Create Invoice</a></li>
-		                            <li><a href="#"><i class="flaticon-trash"></i>Trash</a></li>
-		                        </ul>
+				<tr v-else>
+					<td v-if="showCb" class="manage-column column-cb check-column">
+						<div class="form-check">
+		                    <label class="form-check-label">
+		                    	<input v-model="selectAll" type="checkbox" class="form-check-input">
+		                        <span class="form-check-sign">
+		                            <span class="check"></span>
+		                        </span>
+		                    </label>
+		                </div>
+					</td>
+					<th v-for="(value, key) in columns" :key="key"
+					:class="['column', key, (value.isColPrimary) ? 'column-primary' : '', ]">{{ value.label }}</th>
+				</tr>
+			</tfoot>
+			<tbody>
+				<template v-if="rows.length">
+					<tr v-for="(row, i) in rows" :key="row[index]" :class="collapsRow(row)">
+						<th v-if="showCb" scope="row" class="col--check check-column">
+							<div class="form-check">
+		                        <label class="form-check-label">
+									<input :value="row[index]" v-model="checkedItems" class="form-check-input" type="checkbox" name="item[]">
+		                            <span class="form-check-sign">
+		                                <span class="check"></span>
+		                            </span>
+		                        </label>
 		                    </div>
-	                    </div> -->
-					</div>
+						</th>
+						<td v-for="(value, key) in columns" :key="key" :data-colname="ucFirst(key)"
+							:class="['column', key, (value.isColPrimary) ? 'column-primary' : '', (actionColumn === key && hasActions) ? 'col--actions': '', { 'selected': checkedItems.includes(row[index]) }]">
+							<slot :name="key" :row="row">
+								{{ row[key] }}
+							</slot>
+							<button v-if="value.isColPrimary" type="button" class="wperp-toggle-row" @click.prevent="toggleRow(row)"><span class="screen-reader-text">Show more details</span></button>
 
-				</td>
-			</tr>
-		</template>
-		<tr v-else>
-			<td :colspan="colspan">{{ notFound }}</td>
-		</tr>
-	</tbody>
-</table>
+							<div v-if="actionColumn === key && hasActions" class="row-actions">
+								<slot :row="row" name="row-actions">
+									<dropdown placement="left-start">
+										<template slot="button">
+											<a class="dropdown-trigger"><i class="flaticon-menu"></i></a>
+										</template>
+										<template slot="dropdown">
+											<ul slot="action-items" role="menu">
+												<li v-for="action in actions" :key="action.key" :class="action.key">
+													<a href="#" @click.prevent="actionClicked(action.key, row, i)"><i :class="action.iconClass"></i>{{ action.label }}</a>
+												</li>
+											</ul>
+										</template>
+									</dropdown>
+								</slot>
+			                    <!-- <div class="col--actions">
+			                    	<div class="wperp-has-dropdown dropdown right--middle">
+				                        <a href="#" class="dropdown-trigger"><i class="flaticon-menu"></i></a>
+				                        <ul class="dropdown-menu" role="menu">
+				                            <li><a href="#"><i class="flaticon-edit"></i>Edit</a></li>
+				                            <li><a href="#"><i class="flaticon-quick-edit"></i>Create Invoice</a></li>
+				                            <li><a href="#"><i class="flaticon-trash"></i>Trash</a></li>
+				                        </ul>
+				                    </div>
+			                    </div> -->
+							</div>
+
+						</td>
+					</tr>
+				</template>
+				<tr v-else>
+					<td :colspan="colspan">{{ notFound }}</td>
+				</tr>
+			</tbody>
+		</table>
 <div class="tablenav bottom">
 
 	<div class="tablenav-pages">
@@ -289,10 +291,13 @@ data() {
 	return {
 		bulkLocal: '-1',
 		checkedItems: [],
+		isRowExpanded: []
 	};
 },
 
 computed: {
+
+
 
 	hasActions() {
 		return this.actions.length > 0;
@@ -379,6 +384,7 @@ computed: {
 			this.checkedItems = selected;
 		},
 	},
+
 },
 
 created() {
@@ -395,6 +401,23 @@ created() {
 },
 
 methods: {
+
+	collapsRow (obj) {
+        if (this.isRowExpanded.findIndex(x => x == obj.id) ==  -1  ) {
+            return '';
+        } else {
+            return 'is-row-expanded';
+        }
+    },
+
+    toggleRow (obj) {
+        let i = this.isRowExpanded.findIndex(x => x == obj.id);
+        if ( i ==  -1  ) {
+            this.isRowExpanded.push(obj.id);
+        } else {
+            this.isRowExpanded.splice(i, 1);
+        }
+    },
 
 	// Capitalize First Letter
 	ucFirst(string) {
@@ -530,6 +553,12 @@ methods: {
 		left: 0;
 		bottom: 0;
 		right: 0;
+	}
+}
+
+@media (max-width: 782px) {
+	.tablenav.top {
+		display: none;
 	}
 }
 

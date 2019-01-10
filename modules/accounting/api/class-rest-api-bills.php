@@ -118,7 +118,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_bills( $request ) {
         $args = [
-            'number' => $request['per_page'],
+            'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
@@ -312,7 +312,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $args = [
-            'number' => $request['per_page'],
+            'number' => !empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
@@ -322,7 +322,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $bill_data  = erp_acct_get_due_bills_people( [ 'people_id' => $id ] );
+        $bill_data  = erp_acct_get_due_bills_by_people( [ 'people_id' => $id ] );
         $total_items   = count( $bill_data );
 
         foreach ( $bill_data as $item ) {
@@ -402,6 +402,9 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['remarks'] ) ) {
             $prepared_item['remarks'] = $request['remarks'];
         }
+        if ( isset( $request['attachments'] ) ) {
+            $prepared_item['attachments'] = $request['attachments'];
+        }
 
         return $prepared_item;
     }
@@ -427,9 +430,9 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'address'         => $item->address,
             'bill_details'    => $item->bill_details,
             'total'           => (int) $item->amount,
-            'tax'             => (int) $item->tax,
             'ref'             => $item->ref,
             'remarks'         => $item->remarks,
+            'status'          => $item->status,
             'attachments'     => $item->attachments
         ];
 
@@ -552,14 +555,6 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'type'        => 'integer',
                             'context'     => [ 'edit' ],
                         ],
-                    ],
-                ],
-                'type'       => [
-                    'description' => __( 'Type for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
                 'status'       => [

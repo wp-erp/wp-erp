@@ -81,13 +81,13 @@
                     <tr :key="key" v-for="(invoice,key) in invoices">
                         <td scope="row" class="col--id column-primary">{{invoice.id}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{invoice.due_date}}</td>
-                        <td class="col--total" data-colname="Total">{{invoice.total}}</td>
-                        <td class="col--due" data-colname="Due">$240.00</td>
+                        <td class="col--total" data-colname="Total">{{invoice.amount}}</td>
+                        <td class="col--due" data-colname="Due">{{invoice.due}}</td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="text" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
+                            <input type="text" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
-                            <a href="#"><i class="flaticon-trash"></i></a>
+                            <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
 
@@ -122,10 +122,6 @@
                 </table>
             </div>
         </div>
-
-        <!-- <template v-if="paymentModal">
-            <rec-payment-modal :basic_fields="basic_fields" :invoices="invoices" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
-        </template> -->
 
     </div>
 </template>
@@ -195,15 +191,16 @@
                     response.data.forEach(element => {
                         this.invoices.push({
                             id: element.id,
-                            voucher_no: element.voucher_no,
+                            invoice_no: element.voucher_no,
                             due_date: element.due_date,
-                            total: parseFloat(element.amount)
+                            amount: parseFloat(element.amount),
+                            due: parseFloat(element.due)
                         });
                     });
                 }).then(() => {
                     this.invoices.forEach(element => {
-                        this.totalAmounts[idx++] = parseFloat(element.total);
-                        finalAmount += parseFloat(element.total);
+                        this.totalAmounts[idx++] = parseFloat(element.due);
+                        finalAmount += parseFloat(element.due);
                     });
 
                     this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
@@ -232,11 +229,15 @@
             },
 
             SubmitForPayment() {
+
+                this.invoices.forEach( (element,index) => {
+                    element['line_total'] = parseFloat( this.totalAmounts[index] );
+                });
+
                 HTTP.post('/payments', {
                     customer_id: this.basic_fields.customer.id,
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trans_date,
-                    due_date: this.basic_fields.due_date,
                     line_items: this.invoices,
                     attachments: this.attachments,
                     type: 'payment',
@@ -253,6 +254,7 @@
                         timer: 1500
                     });
                 }).then(() => {
+                    this.resetData();
                     this.isWorking = false;
                 });
             },
@@ -260,7 +262,16 @@
             showPaymentModal() {
                 this.getDueInvoices();
                 this.paymentModal = true;
-            }
+            },
+
+            resetData() {
+                Object.assign(this.$data, this.$options.data.call(this));
+            },
+
+            removeRow(index) {
+                this.$delete(this.transactionLines, index);
+                this.updateFinalAmount();
+            },
         },
 
         watch: {
@@ -270,7 +281,6 @@
 
             'basic_fields.customer'() {
                 this.showPrintPreview = true;
-                this.getDueInvoices();
                 this.getCustomerAddress();
             }
         },
