@@ -19927,7 +19927,7 @@ var render = function() {
             _c("div", { staticClass: "wperp-modal-content" }, [
               _c("div", { staticClass: "wperp-modal-header" }, [
                 !_vm.people
-                  ? _c("h3", [_vm._v("Add new " + _vm._s(_vm.title))])
+                  ? _c("h3", [_vm._v(_vm._s(_vm.title))])
                   : _c("h3", [_vm._v("Update " + _vm._s(_vm.title))])
               ]),
               _vm._v(" "),
