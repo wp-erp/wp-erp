@@ -15944,6 +15944,8 @@ if (false) {(function () {
         balance: 0
       },
       accounts: [],
+      fa: [],
+      ta: [],
       transferdate: erp_acct_var.current_date,
       remarks: '',
       amount: ''
@@ -15958,6 +15960,8 @@ if (false) {(function () {
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('transfer-voucher').then(function (response) {
         _this.accounts = response.data;
+        _this.fa = response.data;
+        _this.ta = response.data;
       });
     },
     transformBalance: function transformBalance(val) {
@@ -16015,7 +16019,20 @@ if (false) {(function () {
       this.amount = '';
     }
   },
-  computed: {}
+  watch: {
+    'transferFrom': function transferFrom() {
+      var id = this.transferFrom.id;
+      this.ta = jQuery.grep(this.accounts, function (e) {
+        return e.id != id;
+      });
+    },
+    'transferTo': function transferTo() {
+      var id = this.transferTo.id;
+      this.fa = jQuery.grep(this.accounts, function (e) {
+        return e.id != id;
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -34448,7 +34465,7 @@ var render = function() {
                                 id: "transfer_funds_from",
                                 name: "from",
                                 multiple: false,
-                                options: _vm.accounts,
+                                options: _vm.fa,
                                 placeholder: "Select Account"
                               },
                               model: {
@@ -34500,7 +34517,7 @@ var render = function() {
                                 id: "transfer_funds_to",
                                 name: "to",
                                 multiple: false,
-                                options: _vm.accounts,
+                                options: _vm.ta,
                                 placeholder: "Select Account"
                               },
                               model: {
@@ -34553,6 +34570,7 @@ var render = function() {
                           staticClass: "wperp-form-field",
                           attrs: {
                             required: "",
+                            min: "0",
                             type: "number",
                             name: "transfer_amount",
                             id: "transfer_amount",
