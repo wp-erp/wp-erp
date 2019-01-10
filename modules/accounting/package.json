@@ -29,6 +29,7 @@
     "lint-fix": "npm run lint -- --fix"
   },
   "dependencies": {
+    "@riophae/vue-treeselect": "0.0.37",
     "@wordpress/i18n": "^3.1.0",
     "axios": "^0.18.0",
     "popper.js": "^1.14.4",

@@ -11,7 +11,8 @@ import TrialBalance      from 'admin/components/reports/TrialBalance.vue';
 import PeopleDetails    from 'admin/components/people/PeopleDetails.vue';
 import InvoiceCreate    from 'admin/components/invoice/InvoiceCreate.vue';
 import DummyComponent   from 'admin/components/DummyComponent.vue';
-import ChartOfAccounts  from 'admin/components/ChartOfAccounts.vue';
+import ChartOfAccounts  from 'admin/components/chart-accounts/ChartOfAccounts.vue';
+import AddChartAccounts from 'admin/components/chart-accounts/AddChartAccounts.vue';
 import ReportsOverview  from 'admin/components/reports/ReportsOverview.vue';
 import ProductCategory  from 'admin/components/product-category/ProductCategory.vue';
 import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue';
@@ -114,8 +115,19 @@ export default new Router({
         },
         {
             path: '/charts',
-            name: 'ChartOfAccounts',
-            component: ChartOfAccounts
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'ChartOfAccounts',
+                    component: ChartOfAccounts,
+                },
+                {
+                    path: 'new',
+                    name: 'AddChartAccounts',
+                    component: AddChartAccounts,
+                },
+            ]
         },
         {
             path: '/banks',
@@ -133,7 +145,6 @@ export default new Router({
             component: InvoiceCreate
         },
         {
-
             path: '/erp_inv_product',
             name: 'Products',
             component: Products
