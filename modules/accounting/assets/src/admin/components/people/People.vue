@@ -1,46 +1,10 @@
 <template>
     <div class="app-customers">
-        <div class="content-header-section separator">
-            <div class="wperp-row wperp-between-xs">
-                <div class="wperp-col">
-                    <h2 class="content-header__title">{{ pageTitle }}</h2>
-                    <a href="invoice.html" id="erp-customer-new" class="wperp-btn btn--primary" data-modal="wperp-modal-content" @click.prevent="showModal = true">
-                        <i class="flaticon-add-plus-button"></i>
-                        <span>Add New {{buttonTitle}}</span>
-                    </a>
-                </div>
-                <div class="wperp-col">
-                    <form class="wperp-form form--inline crm-contact-search">
-                        <div :class="(isActiveOptionDropdown) ? 'option-dropdown active' : 'option-dropdown'" @click.prevent="isActiveOptionDropdown = !isActiveOptionDropdown">
-                            <div class="select">
-                                <span><i class="flaticon-user"></i>Customers</span>
-                                <i class="flaticon-arrow-down-sign-to-navigate"></i>
-                            </div>
-                            <input type="hidden" name="selected_option" id="selected_option">
-                            <ul :class="(isActiveOptionDropdown) ? 'dropdown-content dropdown-content-opened' : 'dropdown-content'">
-                                <li data-option="all">
-                                    <a href="#"><i class="flaticon-move"></i>All</a>
-                                </li>
-                                <li data-option="trash">
-                                    <a href="#"><i class="flaticon-trash"></i>Trash</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="input-icon">
-                            <i class="flaticon-magnifying-glass"></i>
-                            <input type="search" value="" name="s" id="search-input" class="wperp-input" placeholder="Search Contact">
-                        </div>
-                    </form>
-                    <div class="import-export-box">
-                        <a href="#" title="Import"><i class="flaticon-import"></i></a>
-                        <a href="#" title="Export"><i class="flaticon-download"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <people-modal v-if="showModal" :people.sync="people" :countries="countries" :state="states" :title="buttonTitle"></people-modal>
-        <list-table
+        <h2 class="add-new-customer">
+            <span>{{ pageTitle }}</span>
+            <a href="" id="erp-customer-new" @click.prevent="showModal = true">+ Add New {{ buttonTitle }}</a>
+        </h2>
+        <people-modal v-if="showModal" :people.sync="people"  :title="buttonTitle"></people-modal><list-table
             tableClass="wperp-table table-striped table-dark"
             action-column="actions"
             :columns="columns"
@@ -74,7 +38,6 @@
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import PeopleModal from 'admin/components/people/PeopleModal.vue'
     import HTTP from 'admin/http'
-
     export default {
         name: 'People',
 
@@ -113,8 +76,6 @@
                     { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
                 ],
                 showModal: false,
-                countries: [],
-                states:[],
                 buttonTitle: '',
                 pageTitle: '',
                 url: '',
@@ -123,12 +84,16 @@
             };
         },
         created() {
+            var self = this;
             this.$on('modal-close', function() {
                 this.showModal = false;
                 this.people = null;
             });
+            this.$root.$on( 'peopleUpdate', function() {
+                self.showModal = false;
+                self.fetchItems();
+            } );
 
-            this.getCountries();
             this.buttonTitle    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'customer' : 'vendor';
             this.pageTitle      =   this.$route.name;
             this.url            =   this.$route.name.toLowerCase();
@@ -168,23 +133,6 @@
                 })
                 .then( () => {
                     //ready
-                } );
-            },
-            getCountries() {
-                HTTP.get( 'customers/country' ).then( response => {
-                    let country = response.data.country;
-                    let states   = response.data.state;
-                    for ( let x in country ) {
-                        if( states[x] == undefined) {
-                            states[x] = [];
-                        }
-                        this.countries.push( { id: x, name: country[x], state: states[x] });
-                    }
-                    for ( let state in states ) {
-                        for ( let x in states[state] ) {
-                            this.states.push({ id: x, name: states[state][x] });
-                        }
-                    }
                 } );
             },
             onActionClick(action, row, index) {

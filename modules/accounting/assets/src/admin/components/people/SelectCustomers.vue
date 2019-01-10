@@ -1,21 +1,24 @@
 <template>
     <div class="wperp-form-group invoice-customers with-multiselect">
+        <people-modal v-if="showModal" title="Add new customer" type="customer"></people-modal>
         <label for="customer">Customer<span class="wperp-required-sign">*</span></label>
         <multi-select v-model="selected" :options="options" />
 
-        <a href="#" class="add-new-customer"><i class="flaticon-add-plus-button"></i>Add new</a>
+        <a href="#" class="add-new-customer" @click="showModal = true"><i class="flaticon-add-plus-button"></i>Add new</a>
     </div>
 </template>
 
 <script>
     import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
+    import PeopleModal from 'admin/components/people/PeopleModal.vue'
 
     export default {
         name: 'SelectCustomers',
 
         components: {
-            MultiSelect
+            MultiSelect,
+            PeopleModal
         },
 
         props: {
@@ -29,10 +32,12 @@
             return {
                 selected: [],
                 options: [],
+                showModal: false
             }
         },
 
         created() {
+            var self = this;
             this.$root.$on( 'options-query', query => {
                 this.options = [];
 
@@ -42,13 +47,21 @@
 
             } );
 
-            this.$root.$on( 'dropdown-open', () => {                
+            this.$root.$on( 'dropdown-open', () => {
                 if ( typeof this.selected.id == 'undefined' ) {
                     return;
                 }
 
                 this.options = [];
                 this.options.push(this.selected);
+            } );
+
+            this.$on('modal-close', function() {
+                this.showModal = false;
+                this.people = null;
+            });
+            this.$root.$on( 'peopleUpdate', function() {
+                self.showModal = false;
             } );
         },
 
@@ -68,7 +81,7 @@
                     params: {
                         search: query
                     }
-                }).then((response) => {                    
+                }).then((response) => {
                     response.data.forEach(item => {
                         this.options.push({
                             id: item.id,
