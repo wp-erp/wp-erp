@@ -62,7 +62,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js'
+    import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import Datepicker from 'admin/components/base/Datepicker.vue';
 

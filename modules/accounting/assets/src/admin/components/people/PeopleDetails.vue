@@ -28,7 +28,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js'
+    import HTTP from 'admin/http'
     import UserBasicInfo from 'admin/components/userinfo/UserBasic.vue'
     import PieChart from 'admin/components/chart/PieChart.vue'
     import PeopleTransaction from 'admin/components/people/PeopleTransaction.vue'

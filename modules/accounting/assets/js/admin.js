@@ -8272,7 +8272,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__PeopleModal_vue__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_http_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_http__ = __webpack_require__(1);
 //
 //
 //
@@ -8362,8 +8362,6 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         label: 'Delete'
       }],
       showModal: false,
-      countries: [],
-      states: [],
       buttonTitle: '',
       pageTitle: '',
       url: '',
@@ -8371,15 +8369,15 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
     };
   },
   created: function created() {
+    var self = this;
     this.$on('modal-close', function () {
       this.showModal = false;
       this.people = null;
     });
-    this.$on('peopleUpdate', function () {
-      this.showModal = false;
-      this.fetchItems();
+    this.$root.$on('peopleUpdate', function () {
+      self.showModal = false;
+      self.fetchItems();
     });
-    this.getCountries();
     this.buttonTitle = this.$route.name.toLowerCase() == 'customers' ? 'customer' : 'vendor';
     this.pageTitle = this.$route.name;
     this.url = this.$route.name.toLowerCase();
@@ -8402,7 +8400,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       var _this = this;
 
       this.rows = [];
-      __WEBPACK_IMPORTED_MODULE_2_admin_http_js__["a" /* default */].get(this.url, {
+      __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get(this.url, {
         params: {
           per_page: this.paginationData.perPage,
           page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
@@ -8416,43 +8414,14 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       }).then(function () {//ready
       });
     },
-    getCountries: function getCountries() {
-      var _this2 = this;
-
-      __WEBPACK_IMPORTED_MODULE_2_admin_http_js__["a" /* default */].get('customers/country').then(function (response) {
-        var country = response.data.country;
-        var states = response.data.state;
-
-        for (var x in country) {
-          if (states[x] == undefined) {
-            states[x] = [];
-          }
-
-          _this2.countries.push({
-            id: x,
-            name: country[x],
-            state: states[x]
-          });
-        }
-
-        for (var state in states) {
-          for (var _x in states[state]) {
-            _this2.states.push({
-              id: _x,
-              name: states[state][_x]
-            });
-          }
-        }
-      });
-    },
     onActionClick: function onActionClick(action, row, index) {
-      var _this3 = this;
+      var _this2 = this;
 
       switch (action) {
         case 'trash':
           if (confirm('Are you sure to delete?')) {
-            __WEBPACK_IMPORTED_MODULE_2_admin_http_js__["a" /* default */].delete(this.url + '/' + row.id).then(function (response) {
-              _this3.$delete(_this3.rows, index);
+            __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].delete(this.url + '/' + row.id).then(function (response) {
+              _this2.$delete(_this2.rows, index);
             });
           }
 
@@ -8467,11 +8436,11 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       }
     },
     onBulkAction: function onBulkAction(action, items) {
-      var _this4 = this;
+      var _this3 = this;
 
       if ('trash' === action) {
         if (confirm('Are you sure to delete?')) {
-          __WEBPACK_IMPORTED_MODULE_2_admin_http_js__["a" /* default */].delete(this.url + '/delete/' + items.join(',')).then(function (response) {
+          __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].delete(this.url + '/delete/' + items.join(',')).then(function (response) {
             var toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
             if (toggleCheckbox.checked) {
@@ -8479,7 +8448,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
               toggleCheckbox.click();
             }
 
-            _this4.fetchItems();
+            _this3.fetchItems();
           });
         }
       }
@@ -9201,7 +9170,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__http_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(4);
 //
 //
@@ -9337,20 +9306,12 @@ if (false) {(function () {
   },
   props: {
     people: {
-      type: Object,
-      default: {}
-    },
-    countries: {
-      type: Array,
-      default: []
-    },
-    state: {
-      type: Array,
-      default: []
+      type: Object
     },
     title: {
       required: true
-    }
+    },
+    type: ''
   },
   data: function data() {
     return {
@@ -9376,7 +9337,9 @@ if (false) {(function () {
       showMore: false,
       customers: [],
       url: '',
-      error_message: []
+      error_message: [],
+      countries: [],
+      get_states: []
     };
   },
   methods: {
@@ -9395,7 +9358,7 @@ if (false) {(function () {
         var type = 'put';
       }
 
-      __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* default */][type](url, this.peopleFields).then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */][type](url, this.peopleFields).then(function (response) {
         _this.$root.$emit('peopleUpdate');
 
         _this.resetForm();
@@ -9425,8 +9388,37 @@ if (false) {(function () {
     showDetails: function showDetails() {
       this.showMore = !this.showMore;
     },
+    getCountries: function getCountries() {
+      var _this2 = this;
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('customers/country').then(function (response) {
+        var country = response.data.country;
+        var states = response.data.state;
+
+        for (var x in country) {
+          if (states[x] == undefined) {
+            states[x] = [];
+          }
+
+          _this2.countries.push({
+            id: x,
+            name: country[x],
+            state: states[x]
+          });
+        }
+
+        for (var state in states) {
+          for (var _x in states[state]) {
+            _this2.get_states.push({
+              id: _x,
+              name: states[state][_x]
+            });
+          }
+        }
+      });
+    },
     getState: function getState(country) {
-      var states = this.state;
+      var states = this.get_states;
       this.states = [];
       this.peopleFields.state = '';
 
@@ -9438,11 +9430,11 @@ if (false) {(function () {
       }
     },
     isEmailExist: function isEmailExist() {
-      var _this2 = this;
+      var _this3 = this;
 
       var customer;
       customer = this.customers.filter(function (item) {
-        return _this2.peopleFields.email = item.email;
+        return _this3.peopleFields.email = item.email;
       });
 
       if (customer.length) {
@@ -9452,10 +9444,10 @@ if (false) {(function () {
       return false;
     },
     getCustomers: function getCustomers() {
-      var _this3 = this;
+      var _this4 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0__http_js__["a" /* default */].get('customers').then(function (response) {
-        _this3.customers = response.data;
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('customers').then(function (response) {
+        _this4.customers = response.data;
       });
     },
     setInputField: function setInputField() {
@@ -9485,14 +9477,20 @@ if (false) {(function () {
       });
     },
     selectedState: function selectedState(id) {
-      return this.state.find(function (item) {
+      return this.get_states.find(function (item) {
         return item.id == id;
       });
     },
     generateUrl: function generateUrl() {
       var url;
 
-      if (this.$route.name.toLowerCase() == 'customerdetails') {
+      if (this.type) {
+        if (this.type == 'customer') {
+          url = 'customers';
+        } else {
+          url = 'vendors';
+        }
+      } else if (this.$route.name.toLowerCase() == 'customerdetails') {
         url = 'customers';
       } else if (this.$route.name.toLowerCase() == 'vendordetails') {
         url = 'vendors';
@@ -9527,6 +9525,7 @@ if (false) {(function () {
     this.selectedCountry();
     this.setInputField();
     this.getCustomers();
+    this.getCountries();
   }
 });
 
@@ -10587,7 +10586,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_userinfo_UserBasic_vue__ = __webpack_require__(207);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_chart_PieChart_vue__ = __webpack_require__(210);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_people_PeopleTransaction_vue__ = __webpack_require__(213);
@@ -10685,7 +10684,7 @@ if (false) {(function () {
     fetchItem: function fetchItem(id) {
       var _this2 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http_js__["a" /* default */].get(this.url + '/' + id, {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get(this.url + '/' + id, {
         params: {}
       }).then(function (response) {
         _this2.resData = response.data;
@@ -10697,7 +10696,7 @@ if (false) {(function () {
     getTransactions: function getTransactions() {
       var _this3 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http_js__["a" /* default */].get(this.url + '/' + this.userId + '/transactions').then(function (res) {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get(this.url + '/' + this.userId + '/transactions').then(function (res) {
         _this3.transactions = res.data;
       });
     },
@@ -10705,7 +10704,7 @@ if (false) {(function () {
       var _this4 = this;
 
       var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      __WEBPACK_IMPORTED_MODULE_0_admin_http_js__["a" /* default */].get(this.url + '/' + this.userId + '/transactions/filter', {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get(this.url + '/' + this.userId + '/transactions/filter', {
         params: {
           start_date: filters.start_date,
           end_date: filters.end_date
@@ -10803,8 +10802,6 @@ if (false) {(function () {
     return {
       showModal: false,
       title: '',
-      countries: [],
-      states: [],
       img_url: erp_acct_var.acct_assets + '/images/dummy-user.png'
     };
   },
@@ -10818,40 +10815,10 @@ if (false) {(function () {
       return str.toLowerCase().replace(/(?:(^.)|(\s+.))/g, function (match) {
         return match.charAt(match.length - 1).toUpperCase();
       });
-    },
-    getCountries: function getCountries() {
-      var _this = this;
-
-      __WEBPACK_IMPORTED_MODULE_0_admin_http_js__["a" /* default */].get('customers/country').then(function (response) {
-        var country = response.data.country;
-        var states = response.data.state;
-
-        for (var x in country) {
-          if (states[x] == undefined) {
-            states[x] = [];
-          }
-
-          _this.countries.push({
-            id: x,
-            name: country[x],
-            state: states[x]
-          });
-        }
-
-        for (var state in states) {
-          for (var _x in states[state]) {
-            _this.states.push({
-              id: _x,
-              name: states[state][_x]
-            });
-          }
-        }
-      });
     }
   },
   created: function created() {
     this.title = this.$route.name.toLowerCase() == 'customers' ? 'customer' : 'vendor';
-    this.getCountries();
     this.$on('modal-close', function () {
       this.showModal = false;
     });
@@ -10982,7 +10949,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 //
@@ -12099,6 +12066,7 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_people_PeopleModal_vue__ = __webpack_require__(38);
 //
 //
 //
@@ -12108,12 +12076,15 @@ if (false) {(function () {
 //
 //
 //
+//
+
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'SelectCustomers',
   components: {
-    MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */]
+    MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
+    PeopleModal: __WEBPACK_IMPORTED_MODULE_2_admin_components_people_PeopleModal_vue__["a" /* default */]
   },
   props: {
     reset: {
@@ -12124,12 +12095,14 @@ if (false) {(function () {
   data: function data() {
     return {
       selected: [],
-      options: []
+      options: [],
+      showModal: false
     };
   },
   created: function created() {
     var _this = this;
 
+    var self = this;
     this.$root.$on('options-query', function (query) {
       _this.options = [];
 
@@ -12145,6 +12118,13 @@ if (false) {(function () {
       _this.options = [];
 
       _this.options.push(_this.selected);
+    });
+    this.$on('modal-close', function () {
+      this.showModal = false;
+      this.people = null;
+    });
+    this.$root.$on('peopleUpdate', function () {
+      self.showModal = false;
     });
   },
   watch: {
@@ -14911,6 +14891,7 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_people_PeopleModal_vue__ = __webpack_require__(38);
 //
 //
 //
@@ -14920,28 +14901,40 @@ if (false) {(function () {
 //
 //
 //
+//
+
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'SelectVendors',
   components: {
-    MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */]
+    MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
+    PeopleModal: __WEBPACK_IMPORTED_MODULE_2_admin_components_people_PeopleModal_vue__["a" /* default */]
   },
   data: function data() {
     return {
       selected: [],
-      options: []
+      options: [],
+      showModal: false
     };
   },
   created: function created() {
     var _this = this;
 
+    var self = this;
     this.$root.$on('options-query', function (query) {
       _this.options = [];
 
       if (query) {
         _this.getvendors(query);
       }
+    });
+    this.$on('modal-close', function () {
+      this.showModal = false;
+      this.people = null;
+    });
+    this.$root.$on('peopleUpdate', function () {
+      self.showModal = false;
     });
   },
   watch: {
@@ -20532,12 +20525,7 @@ var render = function() {
       _vm._v(" "),
       _vm.showModal
         ? _c("people-modal", {
-            attrs: {
-              people: _vm.people,
-              countries: _vm.countries,
-              state: _vm.states,
-              title: _vm.buttonTitle
-            },
+            attrs: { people: _vm.people, title: _vm.buttonTitle },
             on: {
               "update:people": function($event) {
                 _vm.people = $event
@@ -22100,12 +22088,7 @@ var render = function() {
       [
         _vm.showModal
           ? _c("people-modal", {
-              attrs: {
-                people: _vm.userData,
-                title: _vm.title,
-                countries: _vm.countries,
-                state: _vm.states
-              }
+              attrs: { people: _vm.userData, title: _vm.title }
             })
           : _vm._e(),
         _vm._v(" "),
@@ -23865,6 +23848,12 @@ var render = function() {
     "div",
     { staticClass: "wperp-form-group invoice-customers with-multiselect" },
     [
+      _vm.showModal
+        ? _c("people-modal", {
+            attrs: { title: "Add new customer", type: "customer" }
+          })
+        : _vm._e(),
+      _vm._v(" "),
       _vm._m(0),
       _vm._v(" "),
       _c("multi-select", {
@@ -23878,7 +23867,22 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _vm._m(1)
+      _c(
+        "a",
+        {
+          staticClass: "add-new-customer",
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              _vm.showModal = true
+            }
+          }
+        },
+        [
+          _c("i", { staticClass: "flaticon-add-plus-button" }),
+          _vm._v("Add new")
+        ]
+      )
     ],
     1
   )
@@ -23891,15 +23895,6 @@ var staticRenderFns = [
     return _c("label", { attrs: { for: "customer" } }, [
       _vm._v("Customer"),
       _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("a", { staticClass: "add-new-customer", attrs: { href: "#" } }, [
-      _c("i", { staticClass: "flaticon-add-plus-button" }),
-      _vm._v("Add new")
     ])
   }
 ]
@@ -29071,6 +29066,12 @@ var render = function() {
     "div",
     { staticClass: "wperp-form-group invoice-customers with-multiselect" },
     [
+      _vm.showModal
+        ? _c("people-modal", {
+            attrs: { title: "Add new vendor", type: "vendor" }
+          })
+        : _vm._e(),
+      _vm._v(" "),
       _vm._m(0),
       _vm._v(" "),
       _c("multi-select", {
@@ -29084,7 +29085,22 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _vm._m(1)
+      _c(
+        "a",
+        {
+          staticClass: "add-new-customer",
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              _vm.showModal = true
+            }
+          }
+        },
+        [
+          _c("i", { staticClass: "flaticon-add-plus-button" }),
+          _vm._v("Add new")
+        ]
+      )
     ],
     1
   )
@@ -29097,15 +29113,6 @@ var staticRenderFns = [
     return _c("label", { attrs: { for: "vendor" } }, [
       _vm._v("vendor"),
       _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("a", { staticClass: "add-new-customer", attrs: { href: "#" } }, [
-      _c("i", { staticClass: "flaticon-add-plus-button" }),
-      _vm._v("Add new")
     ])
   }
 ]

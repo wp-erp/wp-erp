@@ -1,7 +1,7 @@
 <template>
     <div class="wperp-panel wperp-panel-default mt-20">
         <div class="wperp-panel-body wperp-customer-panel">
-            <people-modal  :people="userData" :title="title" v-if="showModal" :countries="countries" :state="states"></people-modal>
+            <people-modal  :people="userData" :title="title" v-if="showModal"></people-modal>
             <!-- edit customers info trigger -->
             <span class="edit-badge" data-toggle="wperp-modal" data-target="wperp-edit-customer-modal">
                 <i class="flaticon-edit" @click="showModal = true"></i>
@@ -80,8 +80,6 @@
             return {
                 showModal: false,
                 title: '',
-                countries: [],
-                states: [],
                 img_url: erp_acct_var.acct_assets + '/images/dummy-user.png',
             }
         },
@@ -97,28 +95,10 @@
                     return match.charAt(match.length-1).toUpperCase();
                 });
             },
-            getCountries() {
-                HTTP.get( 'customers/country' ).then( response => {
-                    let country = response.data.country;
-                    let states   = response.data.state;
-                    for ( let x in country ) {
-                        if( states[x] == undefined) {
-                            states[x] = [];
-                        }
-                        this.countries.push( { id: x, name: country[x], state: states[x] });
-                    }
-                    for ( let state in states ) {
-                        for ( let x in states[state] ) {
-                            this.states.push({ id: x, name: states[state][x] });
-                        }
-                    }
-                } );
-            }
         },
 
         created() {
             this.title    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'customer' : 'vendor';
-            this.getCountries();
             this.$on('modal-close', function() {
                 this.showModal = false;
             });

@@ -124,7 +124,7 @@
 </template>
 
 <script>
-    import HTTP from '../../http.js'
+    import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue';
     export default {
         name: "CustomerModal",
@@ -134,19 +134,11 @@
         props: {
             people: {
                 type: Object,
-                default: {}
-            },
-            countries: {
-                type: Array,
-                default: []
-            },
-            state: {
-                type: Array,
-                default: [],
             },
             title: {
                 required: true
-            }
+            },
+            type: '',
         },
         data() {
             return {
@@ -173,6 +165,8 @@
                 customers:[],
                 url: '',
                 error_message: [],
+                countries: [],
+                get_states: []
             }
         },
         methods: {
@@ -217,9 +211,25 @@
             showDetails() {
                 this.showMore = !this.showMore;
             },
-
+            getCountries() {
+                HTTP.get( 'customers/country' ).then( response => {
+                    let country = response.data.country;
+                    let states   = response.data.state;
+                    for ( let x in country ) {
+                        if( states[x] == undefined) {
+                            states[x] = [];
+                        }
+                        this.countries.push( { id: x, name: country[x], state: states[x] });
+                    }
+                    for ( let state in states ) {
+                        for ( let x in states[state] ) {
+                            this.get_states.push({ id: x, name: states[state][x] });
+                        }
+                    }
+                } );
+            },
             getState( country ) {
-                let states = this.state;
+                let states = this.get_states;
                 this.states = [];
                 this.peopleFields.state = '';
                 for ( let state in country.state ) {
@@ -271,11 +281,17 @@
             },
 
             selectedState( id ) {
-                return this.state.find( item => item.id == id );
+                return this.get_states.find( item => item.id == id );
             },
             generateUrl() {
                 var url;
-                if ( this.$route.name.toLowerCase() == 'customerdetails' ) {
+                if ( this.type ) {
+                    if ( this.type == 'customer' ) {
+                        url = 'customers';
+                    } else {
+                        url = 'vendors';
+                    }
+                } else if ( this.$route.name.toLowerCase() == 'customerdetails' ) {
                     url = 'customers';
                 } else if ( this.$route.name.toLowerCase() == 'vendordetails' ) {
                     url = 'vendors';
@@ -311,6 +327,7 @@
             this.selectedCountry();
             this.setInputField();
             this.getCustomers();
+            this.getCountries();
         }
     }
 </script>
