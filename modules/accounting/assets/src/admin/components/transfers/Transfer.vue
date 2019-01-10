@@ -16,7 +16,7 @@
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="transfer_funds_from">Transfer Funds From</label>
                                     <div class="wperp-custom-select with-multiselect">
-                                        <multi-select id="transfer_funds_from" name="from" v-model="transferFrom" :multiple="false" :options="accounts" placeholder="Select Account"></multi-select>
+                                        <multi-select id="transfer_funds_from" name="from" v-model="transferFrom" :multiple="false" :options="fa" placeholder="Select Account"></multi-select>
                                     </div>
                                     <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferFrom.balance)}}</span>
                                 </div>
@@ -24,13 +24,13 @@
                                     <label for="transfer_funds_to">Transfer Funds To</label>
 
                                     <div class="wperp-custom-select with-multiselect">
-                                        <multi-select id="transfer_funds_to" name="to" v-model="transferTo" :multiple="false" :options="accounts" placeholder="Select Account"></multi-select>
+                                        <multi-select id="transfer_funds_to" name="to" v-model="transferTo" :multiple="false" :options="ta" placeholder="Select Account"></multi-select>
                                     </div>
                                     <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferTo.balance)}}</span>
                                 </div>
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="transfer_amount">Transfer Amount</label>
-                                    <input required type="number" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00" v-model="amount">
+                                    <input required min="0" type="number" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00" v-model="amount">
                                 </div>
                                 <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                     <label for="transfer_date">Transfer Date</label>
@@ -80,9 +80,12 @@
                 transferFrom: { balance : 0 },
                 transferTo: { balance : 0 },
                 accounts: [],
+                fa: [],
+                ta: [],
                 transferdate: erp_acct_var.current_date,
                 remarks : '',
-                amount: ''
+                amount: '',
+
             };
         },
 
@@ -94,6 +97,9 @@
             fetchAccounts(){
                 HTTP.get('transfer-voucher').then( (response) => {
                     this.accounts = response.data;
+                    this.fa = response.data;
+                    this.ta = response.data;
+
                 } );
             },
 
@@ -145,7 +151,19 @@
             }
         },
 
-        computed: {
+        watch: {
+            'transferFrom'(){
+                let id = this.transferFrom.id;
+                this.ta = jQuery.grep(this.accounts, function(e){
+                    return e.id != id;
+                });
+            },
+            'transferTo'(){
+                let id = this.transferTo.id;
+                this.fa = jQuery.grep(this.accounts, function(e){
+                    return e.id != id;
+                });
+            }
 
         }
     }
