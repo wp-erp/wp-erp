@@ -943,7 +943,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_transfer_voucher`(
               `id` int(11) NOT NULL AUTO_INCREMENT, 
               `voucher_no` int(11) DEFAULT NULL, 
-              `trn_date` int(11) DEFAULT NULL, 
+              `trn_date` date DEFAULT NULL, 
               `amount` int(11) DEFAULT NULL, 
               `ac_from` int(11) DEFAULT NULL, 
               `ac_to` int(11) DEFAULT NULL,

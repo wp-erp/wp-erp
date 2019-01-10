@@ -83,7 +83,7 @@ class Admin {
         erp_add_submenu( 'accounting', 'transactions', [
             'title'      =>  __( 'Transfer Vouchers', 'erp' ),
             'capability' => $expense,
-            'slug'       => '/transfer/new',
+            'slug'       => 'transfer/new',
             'position'   => 25
         ] );
         erp_add_menu( 'accounting', [
