@@ -19,16 +19,17 @@
   }
 }*/
 
-@modal-width: 800px;
-@modal-header-bg: #F5F5F5;
-@modal-body-bg: #F5F5F5;
-@modal-border-color: #707070;
+@modal-width: 740px;
+@modal-header-bg: #fff;
+@modal-body-bg: #fff;
+@printable-modal-bg: #F5F5F5;
+@modal-border-color: #e2e2e2;
 @modal-footer-border-color: @modal-border-color;
 @modal-header-padding: 20px;
 @modal-body-padding: 20px;
 @modal-footer-padding: @modal-header-padding;
 @modal-backdrop-bg: rgba(0,0,0,.4);
-@modal-border-radius: 4px;
+@modal-border-radius: 3px;
 
 // Kill the scroll on the body
 .@{theme-prefix}-has-modal {
@@ -50,10 +51,49 @@
     opacity: 0;
     visibility: hidden;
     transition: all .3s ease-in-out;
+    // modal close
+    span.modal-close {
+        width: 24px;
+        height: 24px;
+        text-align: center;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.8);
+        border: 1px solid #f2f2f2;
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        z-index: 9999;
+        cursor: pointer;
+        i {
+            font-size: 7px;
+        }
+        &:hover {
+            background: rgba(0,0,0,1);
+        }
+    }
+    &.has-form {
+        .modal-form {
+            .@{theme-prefix}-modal-body {
+                margin: 0 20px 20px;
+                padding: 20px;
+                border: 1px solid @input-border-color;
+                border-radius: 3px;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+        }
+    }
+    &.@{theme-prefix}-printable-modal {
+        .@{theme-prefix}-modal-header,
+        // .@{theme-prefix}-modal-body,
+        .@{theme-prefix}-modal-content, {
+            background: @printable-modal-bg;
+        }
+    }
     .@{theme-prefix}-modal-dialog {
         position: relative;
-        width: @modal-width;
-        max-width: 100%;
+        max-width: @modal-width;
+        width: 95%;
         max-height: 100%;
         margin-top: -100px;
         transition: all .3s ease-in-out;
@@ -83,7 +123,7 @@
         .@{theme-prefix}-modal-body {
             padding: 0;
             margin: 0 20px;
-            border-radius: 4px;
+            border-radius: 3px;
             border: 1px solid #F1F1F1;
             .@{theme-prefix}-invoice-panel {
                 background: transparent;
@@ -123,20 +163,25 @@
 // Modal header
 // Top section of the modal w/ title and dismiss
 .@{theme-prefix}-modal-header {
-    background: @modal-header-bg;
-    padding: @modal-header-padding; 
-    border-bottom: 1px solid @modal-footer-border-color;
+    padding: @modal-header-padding;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-radius: 3px 3px 0 0;
     font-weight: 400;
     color: #000;
+    background: #fff;
     h2, h3, h4, h5 {
         margin: 0;
-        font-size: 23px;
         font-weight: 400;
     }
+    &.has-border {
+        border-bottom: 1px solid @modal-border-color;
+    }
+    &.has-bg {
+        background: @modal-header-bg;
+    }
+
     .@{theme-prefix}-close {
         color: #cec9cb;
         font-size: 16px;
@@ -167,12 +212,14 @@
 .@{theme-prefix}-modal-footer {
     padding: @modal-footer-padding;
     text-align: right; // right align buttons
-    border-top: 1px solid @modal-border-color;
     .clearfix();
+    &.has-border {
+        border-top: 1px solid @modal-border-color;
+    }
 
     // Properly space out buttons
     .@{theme-prefix}-btn + .@{theme-prefix}-btn {
-        margin-left: 5px;
+        margin-left: 15px;
         margin-bottom: 0; // account for input[type="submit"] which gets the bottom margin like all other inputs
     }
     // but override that for button groups
@@ -202,6 +249,7 @@
         font-weight: 400;
     }
 }
+
 
 /*
 

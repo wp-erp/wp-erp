@@ -25,6 +25,22 @@
     flex-wrap: wrap;
     margin-right: -0.5rem;
     margin-left: -0.5rem;
+    &.@{theme-prefix}-gutter-20 {
+        margin-right: -10px;
+        margin-left: -10px;
+        [class*=wperp-col-] {
+          padding-right: 10px;
+          padding-left: 10px;
+        }
+    }
+    &.@{theme-prefix}gutter-15 {
+        margin-right: -7.5px;
+        margin-left: -7.5px;
+        [class*=wperp-col-] {
+          padding-right: 7.5px;
+          padding-left: 7.5px;
+        }
+    }
 }
 
 .@{theme-prefix}-row.@{theme-prefix}-reverse {
@@ -73,6 +89,7 @@
     flex: 0 0 auto;
     padding-right: 0.5rem;
     padding-left: 0.5rem;
+
 }
 
 .@{theme-prefix}-col-xs {

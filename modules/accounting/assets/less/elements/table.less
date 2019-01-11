@@ -8,8 +8,12 @@
     margin-bottom: @spacer;
     background-color: @table-bg; // Reset for nesting within parents with `background-color`.
     .rounded(3px);
-    td, th {
-        line-height: 20px;
+    // label.form-check-label {
+    //     margin-left: 0;
+    // }
+
+    thead tr .col--check {
+        width: 45px;
     }
 
      // justified table
@@ -29,22 +33,28 @@
     }
 
     @media screen and (max-width: 782px) {
+        // thead tr .col--check {
+        //     padding: 10px 5px;
+        //     width: 45px;
+        // }
+        thead tr th, thead tr td {
+            padding: 10px !important;
+        }
 
-        thead, tfoot{
-            .column-primary {
-                padding-left: 10px;
+        .column-primary {
+            .@{theme-prefix}-custom-select {
+                max-width: 80%;
             }
-        } 
+            & + .@{theme-prefix}-toggle-row {
+                background: #f3f3f3;
+            }
+        }
 
-        tr th.col--check {
+        tr .col--check {
             display: table-cell;
             width: 45px;
             vertical-align: top;
-            padding: 10px 5px;
-        }
-
-        tr td {
-            min-height: 41px;
+            padding: 10px;
         }
 
         tr:not(.inline-edit-row):not(.no-items) td:not(.col--check) {
@@ -81,30 +91,6 @@
                     padding-left: 10px; 
                 }
                 &.col--actions {
-                    .@{theme-prefix}-has-dropdown {
-                        width: 100%;
-                        .dropdown-menu {
-                            opacity: 1 !important;
-                            left: inherit !important;
-                            background: transparent !important;
-                            right: -10px !important;
-                            transform: none !important;
-                            top: -21px !important;
-                            .popper__arrow {
-                                display: none;
-                            }
-                            ul {
-                                padding: 0 !important;
-                                li a {
-                                    line-height: 20px;
-                                    font-size: 12px;
-                                    padding: 3px 10px;
-                                    background: #fff;
-                                    border: 1px solid #e2e2e2;
-                                }
-                            }
-                        }
-                    }
                     .dropdown-menu {
                         visibility: visible;
                         opacity: 1;
@@ -115,8 +101,10 @@
                         flex-wrap: wrap;
                         max-width: 100%;
                         li a {
-                            padding: 5px 10px;
-                            background: rgba(0,0,0,0.05);
+                            padding: 3px 8px;
+                            background: #fff;
+                            border: 1px solid @border-color;
+                            font-size: 12px;
                             border-radius: 3px;
                             margin: 0 10px 10px 0;
                             i {
@@ -131,8 +119,9 @@
             tr {
                 th {
                     border-right: 1px solid #e5e5e5;
+                    padding: 10px;
                 }
-                td, th {
+                td {
                     border-top: 1px solid #e5e5e5 !important;
                 }
             }
@@ -148,36 +137,30 @@
         border-top: @table-border-width solid @table-border-color;
     }
 
-    thead, tfoot {
+    thead {
         tr {
             box-shadow: 0 5px 12px 0 rgba(0,100,235,0.06);
             .translateY(-.1px);
             th {
                 font-weight: 300;
             }
+        }
 
-            td, th {
-                vertical-align: bottom;
-                border: none;
-                color: #1A9ED4;
-                font-size: 1.077em;
-                @media (max-width: 782px) {
-                    padding: 10px 5px;
+        th,
+        td {
+            vertical-align: bottom;
+            border: none;
+            color: #1A9ED4;
+            font-size: 1.077em;
+            @media (min-width: 783px) {
+                &:first-child {
+                    padding-left: 20px;
                 }
-                @media (min-width: 783px) {
-                    &:first-child {
-                        padding-left: 20px;
-                    }
-                    &:last-child {
-                        padding-right: 20px;
-                    }
+                &:last-child {
+                    padding-right: 20px;
                 }
             }
         }
-    }
-    tfoot tr {
-        background: #fff;
-        border-top: 1px solid #e5e5e5;
     }
 
     tbody {
@@ -293,6 +276,7 @@
         border: 1px solid #e2e2e2;
         border-collapse: inherit;
         border-spacing: 0;
+        
         thead {
             tr {
                 background: @theme-color;
@@ -315,7 +299,7 @@
                 &:first-child,
                 &.add-new-line,
                 &.add-attachment-row {
-                    td {
+                    td, th {
                         padding-top: 20px; 
                     }
                 }
@@ -355,6 +339,89 @@
         tfoot {
             td {
                 padding: 20px;
+            }
+        }
+     
+        @media (min-width: 783px){
+            .show-sm {
+                display: none !important;
+            }  
+        }
+        @media (max-width: 782px){
+            &:not(.new-journal-form) .wperp-toggle-row{
+                height: 35px;
+                border: 1px solid @field-border-color;
+                border-radius: 3px;
+                top: 10px;
+                &:before {
+                    top: 5px;
+                }
+            }
+            .hide-sm {
+                display: none !important;
+            }
+            tbody {
+                tr {
+                    .column-primary {
+                        padding: 10px !important;
+                    }
+                    .delete-row {
+                        text-align: right;
+                        padding-left: 60% important;
+                        &:before {
+                            top: 10px;
+                            text-align: left;
+                        }
+                    }
+                    .col--qty input {
+                        width: 100%;
+                    }
+                    .col--total-amount {
+                        i:before {
+                            color: @content-color;
+                            font-size: 10px;
+                            margin-left: 5px;
+                        }
+                    }
+                    td {
+                        padding-top: 10px !important;
+                        padding-bottom: 10px !important;
+                        
+                        &:before {
+                            top: 16px;
+                        }
+                        .attachment-placeholder {
+                            padding: 10px;
+                        }
+                    }
+                    .attachment-placeholder {
+                        display: block;
+                        text-align: left;
+                        label {
+                            display: inline-block;
+                        }
+                    }
+
+                    &.total-amount-row {
+                        td:empty {
+                            display: none !important;
+                        }
+                        td.text-right {
+                            text-align: left !important;
+                        }
+                    }
+                    &.add-new-line {
+                        td {
+                            padding-left: 10px !important;
+                        }
+                    }
+                }
+            }
+            tfoot td {
+                padding: 10px !important;
+            }
+            &.new-journal-form {
+                
             }
         }
     }
@@ -426,7 +493,6 @@ td input[type="text"] {
         color: @headings-color;
         font-size: 1.154em;
         font-weight: @font-weight-semi;
-
         &:hover,
         &:focus {
             color: @theme-color;
@@ -554,9 +620,12 @@ td input[type="text"] {
     z-index: 1;
     background-color: @white;
     display: none;
-    left: 46px;
+    left: 50px;
     top: 12px;
-
+    @media (max-width: 782px){
+        left: 30px;
+        top: 5px;
+    }
     a {
         display: inline-block;
         color: @headings-color;

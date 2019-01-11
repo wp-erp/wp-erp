@@ -235,7 +235,9 @@ input[type="number"] {
     width: 100%;
     border-radius: @field-border-radius;
     border: 1px solid @field-border-color;
-    padding: @field-padding;
+    padding: @field-padding !important;
+    line-height: inherit !important;
+    box-shadow: none !important;
     /*color: #d6d7e4;*/
     &:focus {
         outline: 0;
