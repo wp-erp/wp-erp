@@ -29,6 +29,7 @@ import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
 import NewTax            from 'admin/components/tax/NewTax.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
+import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 
 Vue.use(Router)
 
