@@ -6,6 +6,7 @@
                     <h2 class="content-header__title">
                         Chart of Accounts
                         <router-link class="wperp-btn btn--primary" :to="{ name: 'AddChartAccounts'}">Add New</router-link>
+                        <button class="test-seed" @click="testSeed">Test Seed</button>
                     </h2>
                 </div>
             </div>
@@ -111,6 +112,18 @@
                 }
             },
 
+            testSeed() {
+                HTTP.post('/ledgers/chart/seed').then( response => {
+                    this.$swal({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Success!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                });
+            }
+
         }
     }
 </script>
@@ -140,6 +153,12 @@
                     text-align: right;
                 }
             }
+        }
+
+        .test-seed {
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 20px;
         }
     }
 </style>

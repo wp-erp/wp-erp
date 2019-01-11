@@ -28,6 +28,17 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/chart/seed', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'seed_chart_accounts' ],
+                // 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_account' );
+                },
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
@@ -136,6 +147,34 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
         ] );
+    }
+
+    /**
+     * Test seed
+     */
+    public function seed_chart_accounts( $request ) {
+        global $wpdb;
+
+        $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}erp_acct_chart_of_accounts");
+        $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}erp_acct_ledgers");
+        $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_chart_of_accounts (`name`) VALUES ('Asset'), ('Liability'), ('Income'), ('Expense'), ('Equity'), ('Asset & Liability'), ('Bank')");
+        $wpdb->query("INSERT INTO `wp_erp_acct_ledgers` (`chart_id`, `name`, `code`, `system`) VALUES
+        (1,	'Chair', 200, NULL),
+        (3,	'Salary', 202, NULL),
+        (7,	'Cash In Hand',	300, 1),
+        (7,	'Cash At Bank',	205, NULL),
+        (4,	'Sales', 208, 1),
+        (5,	'Managing Director', 299, 1),
+        (6,	'Sales Tax', 287, 1),
+        (3,	'Sales Discount', 103, 1),
+        (3,	'Purchase',	302, 1),
+        (7,	'A/C 80034', 211, NULL)");
+
+        $response = rest_ensure_response( true );
+
+        $response->set_status( 200 );
+
+        return $response;
     }
 
     /**
