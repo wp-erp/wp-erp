@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container invoice-create">
 
         <print-preview
             type="Invoice"
@@ -325,3 +325,4 @@ export default {
 
 }
 </script>
+

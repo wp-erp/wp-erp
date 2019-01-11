@@ -50,7 +50,7 @@
 <style lang="less">
 	.combo-btns {
 		.wperp-selected-option {
-			padding: 0;
+			padding: 0 !important;
 		}
 
 		 .btn-fake {

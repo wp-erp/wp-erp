@@ -12571,6 +12571,7 @@ if (false) {(function () {
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -12654,6 +12655,19 @@ if (false) {(function () {
 
         default:
       }
+    },
+    testSeed: function testSeed() {
+      var _this4 = this;
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/ledgers/chart/seed').then(function (response) {
+        _this4.$swal({
+          position: 'center',
+          type: 'success',
+          title: 'Success!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      });
     }
   }
 });
@@ -24918,7 +24932,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "wperp-container" },
+    { staticClass: "wperp-container invoice-create" },
     [
       _vm.invoiceModal
         ? _c("print-preview", {
@@ -25452,6 +25466,12 @@ var render = function() {
                   attrs: { to: { name: "AddChartAccounts" } }
                 },
                 [_vm._v("Add New")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                { staticClass: "test-seed", on: { click: _vm.testSeed } },
+                [_vm._v("Test Seed")]
               )
             ],
             1
