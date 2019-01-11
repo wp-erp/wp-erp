@@ -25,6 +25,10 @@ import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
 import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
 import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
+import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
+import NewTax            from 'admin/components/tax/NewTax.vue';
+import TaxRates          from 'admin/components/tax/TaxRates.vue';
+import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 
 Vue.use(Router)
 
@@ -248,6 +252,26 @@ export default new Router({
             path: '/expenses/new',
             name: 'ExpenseCreate',
             component: ExpenseCreate
+        },
+        {
+            path: '/tax/tax_categories',
+            name: 'Tax Categories',
+            component: TaxCategories
+        },
+        {
+            path: '/tax/new_tax',
+            name: 'New Tax',
+            component: NewTax
+        },
+        {
+            path: '/tax/tax_rates',
+            name: 'Tax Rates',
+            component: TaxRates
+        },
+        {
+            path: '/tax/tax_records',
+            name: 'Record Sales Tax Payment',
+            component: TaxRecords
         },
     ]
 })
