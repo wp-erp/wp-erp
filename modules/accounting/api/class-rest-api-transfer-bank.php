@@ -76,7 +76,8 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_accounts( $request ) {
-        $items = erp_acct_get_banks();
+
+        $items = erp_acct_get_transfer_accounts( true );
 
         $formatted_items = [];
         foreach ( $items as $item ) {
@@ -144,15 +145,19 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function transfer_money( $request ) {
         $item = $this->prepare_item_for_database( $request );
 
-        $debit_credit  = erp_acct_get_account_debit_credit( $item['from_account_id'] );
-        $ledger_amount = abs( $debit_credit['debit'] - $debit_credit['credit'] );
-
         if ( empty( $item['from_account_id'] ) || empty( $item['to_account_id'] ) ) {
             return new WP_Error( 'rest_transfer_invalid_accounts', __( 'Both accounts should be present.' ), [ 'status' => 400 ] );
         }
 
-        if ( $ledger_amount < $item['amount'] ) {
-            return new WP_Error( 'rest_transfer_insufficient_funds', __( 'No enough money from your transfer account.' ), [ 'status' => 400 ] );
+        $ledger_details = erp_acct_get_balance_by_ledger( $item['from_account_id'] );
+        if ( empty( $ledger_details ) ) {
+            return new WP_Error( 'rest_transfer_invalid_account', __( 'Something Went Wrong! Account not found.' ), [ 'status' => 400 ] );
+        }
+
+        $from_balance = $ledger_details[0]['balance'];
+
+        if ( $from_balance < $item['amount'] ) {
+            return new WP_Error( 'rest_transfer_insufficient_funds', __( 'Not enough money on selected transfer source.' ), [ 'status' => 400 ] );
         }
 
         $id = erp_acct_perform_transfer( $item );
@@ -193,13 +198,16 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+
         $data = [
-            'id'             => (int) $item->id,
-            'code'           => (int) $item->code,
+            'id'             => (int) $item->ledger_id,
+//            'code'           => (int) $item->code,
             'name'           => $item->name,
-            'description'    => $item->description,
-            'account_number' => isset( $item->bank_details['account_number'] ) ? $item->bank_details['account_number']: '',
-            'balance'        => erp_acct_get_single_account_balance( intval( $item->id ) ),
+//            'description'    => $item->description,
+//            'account_number' => isset( $item->bank_details['account_number'] ) ? $item->bank_details['account_number']: '',
+//            'balance'        => erp_acct_get_single_account_balance( intval( $item->id ) ),
+            'balance'        => $item->balance,
         ];
 
         if ( isset( $request['include'] ) ) {

@@ -13,12 +13,6 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Receive Payment</h2>
-
-                    <!-- Print Dialogue -->
-
-                    <a href="#" class="wperp-btn btn--primary" v-if="showPrintPreview" @click.prevent="showPaymentModal">
-                        <span>Print Preview</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -189,13 +183,15 @@
 
                 HTTP.get(`/invoices/due/${customerId}`).then((response) => {
                     response.data.forEach(element => {
-                        this.invoices.push({
-                            id: element.id,
-                            invoice_no: element.voucher_no,
-                            due_date: element.due_date,
-                            amount: parseFloat(element.amount),
-                            due: parseFloat(element.due)
-                        });
+                        if ( element.due !== null ) {
+                            this.invoices.push({
+                                id: element.id,
+                                invoice_no: element.voucher_no,
+                                due_date: element.due_date,
+                                amount: parseFloat(element.amount),
+                                due: parseFloat(element.due)
+                            });
+                        }
                     });
                 }).then(() => {
                     this.invoices.forEach(element => {
@@ -266,6 +262,7 @@
 
             resetData() {
                 Object.assign(this.$data, this.$options.data.call(this));
+                this.basic_fields.customer.id = '';
             },
 
             removeRow(index) {

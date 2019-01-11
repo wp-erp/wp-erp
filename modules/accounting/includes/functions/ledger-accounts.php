@@ -139,23 +139,70 @@ function erp_acct_get_ledger_categories() {
 }
 
 /**
- * Create ledger account
+ * Create ledger category
  */
 function erp_acct_create_ledger_category( $args ) {
     global $wpdb;
 
     $exist = $wpdb->get_var("SELECT name FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE name = '{$args['name']}'");
 
-    if ( empty( $exist ) ) {
-        $wpdb->insert("{$wpdb->prefix}erp_acct_ledger_categories", array(
+    if ( ! $exist ) {
+        $wpdb->insert("{$wpdb->prefix}erp_acct_ledger_categories", [
             'name'      => $args['name'],
             'parent_id' => ! empty($args['parent']) ? $args['parent'] : null
-        ));
+        ]);
 
         return $wpdb->insert_id;
     }
 
     return false;
+}
+
+
+/**
+ * Update ledger category
+ */
+function erp_acct_update_ledger_category($args) {
+    global $wpdb;
+
+    $exist = $wpdb->get_var("SELECT name FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE name = '{$args['name']}' AND id <> {$args['id']}");
+
+    if ( ! $exist ) {
+        return $wpdb->update( 
+            "{$wpdb->prefix}erp_acct_ledger_categories",
+            [
+                'name' => $args['name'],
+                'parent_id' => ! empty($args['parent']) ? $args['parent'] : null
+            ],
+            [ 'id' => $args['id'] ],
+            [ '%s', '%d'], 
+            [ '%d' ]
+        );
+    }
+
+    return false;
+}
+
+/**
+ * Remove ledger category
+ */
+function erp_acct_delete_ledger_category( $id ) {
+    global $wpdb;
+
+    $table = "{$wpdb->prefix}erp_acct_ledger_categories";
+
+    $parent_id = $wpdb->get_var("SELECT parent_id FROM {$table} WHERE id = {$id}");
+
+    $wpdb->update( 
+        $table, 
+        [ 'parent_id' => $parent_id ],
+        [ 'parent_id' => $id ],
+        [ '%s' ],
+        [ '%d']
+    );
+
+    return $wpdb->delete( $table, ['id' => $id] );
+
 }
 
 

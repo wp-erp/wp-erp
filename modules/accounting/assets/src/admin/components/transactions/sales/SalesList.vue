@@ -45,7 +45,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js';
+    import HTTP from 'admin/http';
     import ListTable from 'admin/components/list-table/ListTable.vue';
     import SalesReport from 'admin/components/reports/SalesReport.vue';
 

@@ -10,9 +10,14 @@
         </div>
 
         <form action="" class="chart-accounts" @submit.prevent="saveAccount">
+
+            <div class="form-row" v-if="error">
+                <p class="error-message">{{ error }}</p>
+            </div>
+
             <div class="form-row">
                 <label for="">Select chart of accounts</label>
-                 <treeselect v-model="fields.chart_id"
+                 <treeselect v-model="ledgFields.chart_id"
                     :options="chartAccounts"
                     :disable-branch-nodes="true"
                     :show-count="true"
@@ -21,7 +26,7 @@
 
             <div class="form-row">
                 <label for="">Select Category (optional)</label>
-                <treeselect v-model="fields.category_id"
+                <treeselect v-model="ledgFields.category_id"
                     :options="categories"
                     :disable-branch-nodes="true"
                     :show-count="true"
@@ -44,19 +49,21 @@
             <div class="form-row">
                 <label for="">Account Name</label>
 
-                <input type="text" v-model="fields.name" required>
+                <input type="text" v-model="ledgFields.name" required>
             </div>
 
             <div class="form-row">
                 <label for="">Code (optional)</label>
 
-                <input type="number" v-model="fields.code">
+                <input type="number" v-model="ledgFields.code">
             </div>
 
-            <button class="wperp-btn btn--primary" type="submit" @click.prevent="saveAccount">Save</button>
+            <button class="wperp-btn btn--primary" type="submit">
+                {{ isChartAdding ? 'Saving...': 'Save' }}
+            </button>
         </form>
 
-        <cat-add-modal v-if="catAddModal" :categories="categories" />
+        <cat-add-modal v-if="catAddModal" :categories="categories" :catData="catData" />
 
     </div>
 </template>
@@ -76,12 +83,20 @@
                 categories: [],
                 catAddModal: false,
 
-                fields: {
+                ledgFields: {
                     chart_id: null,
                     category_id: null,
                     account_name: '',
                     code: ''
-                }
+                },
+
+                catData: {
+                    title: 'Add New',
+                    node: null
+                },
+
+                error: false,
+                isChartAdding: false,
             };
         },
 
@@ -100,13 +115,18 @@
 
             this.$root.$on('category-created', () => {
                 this.catAddModal = false;
+
+                this.catData.title = 'Add New';
+                this.catData.node = null;
+
                 this.$swal({
                     position: 'center',
                     type: 'success',
-                    title: 'Category Created!',
+                    title: 'Successful!',
                     showConfirmButton: false,
                     timer: 1500
                 });
+
                 this.fetchLedgerCategories();
             });
         },
@@ -151,23 +171,55 @@
             },
 
             editCategory(node) {
-                console.log(node);
+                this.catData.title = 'Update';
+                this.catData.node = node;
+
+                this.catAddModal = true;
             },
 
             removeCategory(node) {
-                if ( confirm('Are you sure to remove this category?') ) {
-                    // 
+                if ( confirm('Are you sure to remove this category?') ) {                    
+                    HTTP.delete(`/ledgers/categories/${node.id}`).then(response => {
+                        this.$swal({
+                            position: 'center',
+                            type: 'error',
+                            title: 'Category Removed!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+                        this.fetchLedgerCategories();
+                    });
                 }
             },
 
             saveAccount() {
+                this.error = false;
+                this.isChartAdding = true;
+
                 HTTP.post('/ledgers', {
-                    chart_id: fields.chart_id,
-                    category_id: fields.category_id,
-                    name: fields.name,
-                    code: fields.code
+                    chart_id: this.ledgFields.chart_id,
+                    category_id: this.ledgFields.category_id,
+                    name: this.ledgFields.name,
+                    code: this.ledgFields.code
                 }).then(response => {
+                    this.$swal({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Success!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }).catch((err) => {
+                    // Error message
+                    this.error = err.response.data.message;
                     
+                }).then(() => {
+                    this.ledgFields.chart_id = null;
+                    this.ledgFields.category_id = null;
+                    this.ledgFields.name = '';
+                    this.ledgFields.code = '';
+                    this.isChartAdding = false;
                 });
             }
         }

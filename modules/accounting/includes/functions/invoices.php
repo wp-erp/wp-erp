@@ -68,7 +68,7 @@ function erp_acct_get_invoice( $invoice_no ) {
 
     invoice.id,
     invoice.voucher_no,
-    invoice.people_id,
+    invoice.customer_id,
     invoice.customer_name,
     invoice.trn_date,
     invoice.due_date,
@@ -147,7 +147,7 @@ function erp_acct_insert_invoice( $data ) {
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_invoices', array(
             'voucher_no'      => $invoice_data['voucher_no'],
-            'people_id'       => $invoice_data['people_id'],
+            'customer_id'     => $invoice_data['customer_id'],
             'customer_name'   => $invoice_data['customer_name'],
             'trn_date'        => $invoice_data['trn_date'],
             'due_date'        => $invoice_data['due_date'],
@@ -228,7 +228,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
         $invoice_data = erp_acct_get_formatted_invoice_data( $data, $invoice_no );
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_invoices', array(
-            'people_id'       => $invoice_data['people_id'],
+            'customer_id'     => $invoice_data['customer_id'],
             'customer_name'   => $invoice_data['customer_name'],
             'trn_date'        => $invoice_data['trn_date'],
             'due_date'        => $invoice_data['due_date'],
@@ -305,10 +305,10 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data = [];
 
     $invoice_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
-    $invoice_data['people_id'] = isset( $data['customer_id'] ) ? $data['customer_id'] : 1;
+    $invoice_data['customer_id'] = isset( $data['customer_id'] ) ? $data['customer_id'] : 1;
 
     // $user_info = get_userdata( $invoice_data['people_id'] );
-    $user_info = erp_get_people( $invoice_data['people_id'] );
+    $user_info = erp_get_people( $invoice_data['customer_id'] );
 
     $invoice_data['customer_name'] = $user_info->first_name . ' ' . $user_info->last_name;
     $invoice_data['trn_date']   = isset( $data['date'] ) ? $data['date'] : date("Y-m-d" );
@@ -525,7 +525,7 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
                                     HAVING due > 0
                                 ) as invs
                                 ON invoice.voucher_no = invs.invoice_no
-                                WHERE invoice.people_id = %d
+                                WHERE invoice.customer_id = %d
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {

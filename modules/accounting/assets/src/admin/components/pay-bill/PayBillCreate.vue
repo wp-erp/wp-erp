@@ -6,12 +6,6 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Pay Bill</h2>
-
-                    <!-- Print Dialogue -->
-
-                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showPaymentModal">
-                        <span>Print</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -185,13 +179,15 @@
 
                 HTTP.get(`/bills/due/${peopleId}`).then((response) => {
                     response.data.forEach(element => {
-                        this.pay_bills.push({
-                            id: element.id,
-                            voucher_no: element.voucher_no,
-                            due_date: element.due_date,
-                            amount: parseFloat(element.total),
-                            due: parseFloat(element.due)
-                        });
+                        if ( element.due !== null && element.due > 0 ) {
+                            this.pay_bills.push({
+                                id: element.id,
+                                voucher_no: element.voucher_no,
+                                due_date: element.due_date,
+                                amount: parseFloat(element.total),
+                                due: parseFloat(element.due)
+                            });
+                        }
                     });
                 }).then(() => {
                     this.pay_bills.forEach(element => {

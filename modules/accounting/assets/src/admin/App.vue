@@ -26,4 +26,8 @@
     .has-err {
         border-color: #f44336 !important;
     }
+
+    .error-message {
+        color: #d32f2f;
+    }
 </style>

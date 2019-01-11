@@ -4,9 +4,9 @@
             <span>{{ pageTitle }}</span>
             <a href="" id="erp-customer-new" @click.prevent="showModal = true">+ Add New {{ buttonTitle }}</a>
         </h2>
-        <people-modal v-if="showModal" :people.sync="people" :countries="countries" :state="states" :title="buttonTitle"></people-modal>
+        <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle"></people-modal>
         <list-table
-            tableClass="wperp-table table-striped table-dark widefat"
+            tableClass="wperp-table table-striped table-dark"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -39,7 +39,6 @@
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import PeopleModal from 'admin/components/people/PeopleModal.vue'
     import HTTP from 'admin/http'
-
     export default {
         name: 'People',
 
@@ -55,11 +54,11 @@
                     {
                         key: 'trash',
                         label: 'Move to Trash',
-                        img: erp_acct_var.erp_assets + '/images/trash.png'
+                        iconClass: 'flaticon-trash'
                     }
                 ],
                 columns: {
-                    'customer': { label: 'Name' },
+                    'customer': { label: 'Name', isColPrimary: true },
                     'company': { label: 'Company' },
                     'email': { label: 'Email' },
                     'phone': { label: 'Phone' },
@@ -74,25 +73,28 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions : [
-                    { key: 'edit', label: 'Edit' },
-                    { key: 'trash', label: 'Delete' }
+                    { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
+                    { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
                 ],
                 showModal: false,
-                countries: [],
-                states:[],
                 buttonTitle: '',
                 pageTitle: '',
                 url: '',
-                singleUrl: ''
+                singleUrl: '',
+                isActiveOptionDropdown: false
             };
         },
         created() {
+            var self = this;
             this.$on('modal-close', function() {
                 this.showModal = false;
                 this.people = null;
             });
+            this.$root.$on( 'peopleUpdate', function() {
+                self.showModal = false;
+                self.fetchItems();
+            } );
 
-            this.getCountries();
             this.buttonTitle    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'customer' : 'vendor';
             this.pageTitle      =   this.$route.name;
             this.url            =   this.$route.name.toLowerCase();
@@ -132,23 +134,6 @@
                 })
                 .then( () => {
                     //ready
-                } );
-            },
-            getCountries() {
-                HTTP.get( 'customers/country' ).then( response => {
-                    let country = response.data.country;
-                    let states   = response.data.state;
-                    for ( let x in country ) {
-                        if( states[x] == undefined) {
-                            states[x] = [];
-                        }
-                        this.countries.push( { id: x, name: country[x], state: states[x] });
-                    }
-                    for ( let state in states ) {
-                        for ( let x in states[state] ) {
-                            this.states.push({ id: x, name: states[state][x] });
-                        }
-                    }
                 } );
             },
             onActionClick(action, row, index) {
