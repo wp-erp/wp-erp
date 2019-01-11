@@ -12637,13 +12637,10 @@ if (false) {(function () {
       });
     },
     onActionClick: function onActionClick(action, row, index) {
-      var _this3 = this;
-
       switch (action) {
         case 'trash':
           if (confirm('Are you sure to delete?')) {
-            __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].delete('/' + row.id).then(function (response) {
-              _this3.$delete(_this3.rows, index);
+            __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].delete("/ledgers/".concat(row.id)).then(function (response) {// this.$delete(this.rows, index);
             });
           }
 
@@ -12657,10 +12654,10 @@ if (false) {(function () {
       }
     },
     testSeed: function testSeed() {
-      var _this4 = this;
+      var _this3 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/ledgers/chart/seed').then(function (response) {
-        _this4.$swal({
+        _this3.$swal({
           position: 'center',
           type: 'success',
           title: 'Success!',
@@ -12683,7 +12680,6 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect_dist_vue_treeselect_css__ = __webpack_require__(285);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect_dist_vue_treeselect_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__riophae_vue_treeselect_dist_vue_treeselect_css__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_chart_accounts_CatAddModal_vue__ = __webpack_require__(287);
-//
 //
 //
 //
@@ -25966,35 +25962,37 @@ var render = function() {
                             ])
                           : _vm._e(),
                         _vm._v(" "),
-                        _c("span", { staticClass: "list-actions" }, [
-                          _c(
-                            "strong",
-                            {
-                              staticClass: "edit",
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  _vm.editCategory(node)
-                                }
-                              }
-                            },
-                            [_vm._v("✎")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "strong",
-                            {
-                              staticClass: "remove",
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  _vm.removeCategory(node)
-                                }
-                              }
-                            },
-                            [_vm._v("✗")]
-                          )
-                        ])
+                        node.raw.system == null
+                          ? _c("span", { staticClass: "list-actions" }, [
+                              _c(
+                                "strong",
+                                {
+                                  staticClass: "edit",
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      _vm.editCategory(node)
+                                    }
+                                  }
+                                },
+                                [_vm._v("✎")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "strong",
+                                {
+                                  staticClass: "remove",
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      _vm.removeCategory(node)
+                                    }
+                                  }
+                                },
+                                [_vm._v("✗")]
+                              )
+                            ])
+                          : _vm._e()
                       ])
                     }
                   }

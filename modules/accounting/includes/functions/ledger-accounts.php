@@ -135,7 +135,7 @@ function erp_acct_get_chart_types_by_class_id( $class_id ) {
 function erp_acct_get_ledger_categories() {
     global $wpdb;
 
-    return $wpdb->get_results("SELECT id, name AS label, parent_id FROM {$wpdb->prefix}erp_acct_ledger_categories");
+    return $wpdb->get_results("SELECT id, name AS label, parent_id, system FROM {$wpdb->prefix}erp_acct_ledger_categories");
 }
 
 /**
