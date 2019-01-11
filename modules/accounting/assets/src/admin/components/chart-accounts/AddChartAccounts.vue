@@ -35,12 +35,11 @@
                     <label slot="option-label" slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" :class="labelClassName">
                         {{ node.label }}
                         <span v-if="shouldShowCount" :class="countClassName">({{ count }})</span>
-                        <span class="list-actions">
+                        <span class="list-actions" v-if="node.raw.system == null">
                             <strong class="edit" @click.prevent="editCategory(node)">&#9998;</strong>
                             <strong class="remove" @click.prevent="removeCategory(node)">&cross;</strong>
                         </span>
                     </label>
-
                 </treeselect>
 
                 <a href="#" @click.prevent="categoryAddModal" role="button" class="after-select-dropdown">Add new category</a>

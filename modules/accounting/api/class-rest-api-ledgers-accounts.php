@@ -151,24 +151,91 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
     /**
      * Test seed
+     *  -- REMOVE LATER
      */
     public function seed_chart_accounts( $request ) {
         global $wpdb;
 
         $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}erp_acct_chart_of_accounts");
         $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}erp_acct_ledgers");
+        $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}erp_acct_ledger_categories");
+
         $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_chart_of_accounts (`name`) VALUES ('Asset'), ('Liability'), ('Income'), ('Expense'), ('Equity'), ('Asset & Liability'), ('Bank')");
-        $wpdb->query("INSERT INTO `wp_erp_acct_ledgers` (`chart_id`, `name`, `code`, `system`) VALUES
-        (1,	'Chair', 200, NULL),
-        (3,	'Salary', 202, NULL),
-        (7,	'Cash In Hand',	300, 1),
-        (7,	'Cash At Bank',	205, NULL),
-        (4,	'Sales', 208, 1),
-        (5,	'Managing Director', 299, 1),
-        (6,	'Sales Tax', 287, 1),
-        (3,	'Sales Discount', 103, 1),
-        (3,	'Purchase',	302, 1),
-        (7,	'A/C 80034', 211, NULL)");
+
+        $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_ledgers (`chart_id`, `category_id`, `name`, `code`, `system`) VALUES
+        (1, NULL, 'Chair', 200, NULL),
+        (3, 3, 'Salary', 202, NULL),
+        (7, 2, 'Cash In Hand', 300, 1),
+        (7, NULL, 'Cash At Bank', 205, NULL),
+        (4, NULL, 'Sales', 208, 1),
+        (5, NULL, 'Managing Director', 299, 1),
+        (6, NULL, 'Sales Tax', 287, 1),
+        (3, 4, 'Sales Discount', 103, 1),
+        (3, NULL, 'Purchase', 302, 1),
+        (7, NULL, 'A/C 80034', 211, NULL),
+        (4, NULL, 'CASH Operating', 1010, NULL),
+        (2, NULL, 'Debitors', 1022, 1),
+        (1, NULL, 'Trade Notes Receivable', 987, NULL),
+        (2, NULL, 'Unbilled Cost & Fees', 553, 1),
+        (1, NULL, 'Machinery & Equipment', 473, 1),
+        (1, 7, 'Computer Equipment', 763, 1),
+        (3, NULL, 'Furniture & Fixtures', 394, NULL),
+        (2, NULL, 'DEPR Vehicles', 229, NULL),
+        (7, NULL, 'Organization Costs', 837, 1)");
+
+        $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_ledger_categories (`name`, `parent_id`, `system`) VALUES
+        ('Furniture', NULL, NULL),
+        ('AB Bank', NULL, NULL),
+        ('AB Bank Mirpur', '2', NULL),
+        ('Accounts Receivable', NULL, NULL),
+        ('Inventory', NULL, NULL),
+        ('Office Equipment', NULL, NULL),
+        ('Depreciation on Office Equipment', NULL, NULL),
+        ('Computer Equipment', NULL, 1),
+        ('Depreciation on Computer Equipment', '5', NULL),
+        ('Petty Cash', NULL, NULL),
+        ('Accounts Payable', NULL, 1),
+        ('Accrualsooos', NULL, NULL),
+        ('Unpaid Expense Claims', NULL, NULL),
+        ('Wages Payable', NULL, NULL),
+        ('Wages Payable - Payroll', '5', 1),
+        ('Sales Tax', NULL, NULL),
+        ('Employee Tax Payable', NULL, NULL),
+        ('Employee Benefits Payable', '7', NULL),
+        ('Employee Deductions payable', NULL, NULL),
+        ('Income Tax Payable', '2', 1),
+        ('Suspense', NULL, NULL),
+        ('Historical Adjustments', '25', 1),
+        ('Rounding', NULL, NULL),
+        ('Revenue Received in Advance', NULL, 1),
+        ('Clearing Account', '2', NULL),
+        ('Loan', NULL, NULL),
+        ('Costs of Goods Sold', NULL, NULL),
+        ('Advertising', '6', NULL),
+        ('Bank Service Charges', NULL, 1),
+        ('Consulting & Accounting', '25', NULL),
+        ('Entertainment', '25', NULL),
+        ('Postage & Delivary', NULL, NULL),
+        ('General Expenses', NULL, NULL),
+        ('Insurance', '5', 1),
+        ('Legal Expenses', NULL, NULL),
+        ('Utilities', NULL, 1),
+        ('Automobile Expenses', NULL, NULL),
+        ('Office Expenses', NULL, NULL),
+        ('Printing & Stationary', '5', NULL),
+        ('Rent', NULL, 1),
+        ('Repairs & Maintenance', NULL, NULL),
+        ('Wages & Salaries', NULL, NULL),
+        ('Payroll Tax Expense', NULL, NULL),
+        ('Dues & Subscriptions', NULL, NULL),
+        ('Telephone & Internet', NULL, NULL),
+        ('Travel', NULL, NULL),
+        ('Bad Debts', NULL, NULL),
+        ('Depreciation', NULL, NULL),
+        ('Income Tax Expense', NULL, NULL),
+        ('Employee Benefits Expense', NULL, NULL),
+        ('Interest Expense', NULL, NULL),
+        ('Bank Revaluations', NULL, NULL)");
 
         $response = rest_ensure_response( true );
 

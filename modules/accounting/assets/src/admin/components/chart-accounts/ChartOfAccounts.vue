@@ -97,8 +97,8 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete('/' + row.id).then( response => {
-                                this.$delete(this.rows, index);
+                            HTTP.delete(`/ledgers/${row.id}`).then( response => {
+                                // this.$delete(this.rows, index);
                             });
                         }
                         break;
