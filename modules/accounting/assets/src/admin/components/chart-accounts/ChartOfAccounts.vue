@@ -14,7 +14,7 @@
 
         <ul>
             <li :key="index" v-for="(chart, index) in chartAccounts">
-                <h3>{{ chart.name }}</h3>
+                <h3>{{ chart.label }}</h3>
 
                 <list-table
                     tableClass="wperp-table table-striped table-dark widefat table2 chart-list"
@@ -98,13 +98,13 @@
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
                             HTTP.delete(`/ledgers/${row.id}`).then( response => {
-                                // this.$delete(this.rows, index);
+                                this.fetchChartAccounts();
                             });
                         }
                         break;
 
                     case 'edit':
-                        //TODO
+                        this.$router.push({name: 'AddChartAccounts', params: { row: row } });
                         break;
 
                     default :

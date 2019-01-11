@@ -421,7 +421,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $wpdb->delete( 'ledgers', array( 'id' => $id ) );
+        $wpdb->delete( "{$wpdb->prefix}erp_acct_ledgers", [ 'id' => $id ] );
 
         return new WP_REST_Response( true, 204 );
     }
