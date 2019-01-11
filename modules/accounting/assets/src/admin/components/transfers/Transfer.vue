@@ -1,7 +1,7 @@
 <template>
     <div class="wperp-container">
         <div id="wperp-transfer-money-modal" class="wperp-modal has-form wperp-modal-open" role="dialog">
-            <div class="wperp-modal-dialog">
+            <div class="wperp-modal-dialog" v-click-outside="outside" @click="inside">
                 <div class="wperp-modal-content">
                     <!-- modal body title -->
                     <div class="wperp-modal-header">
@@ -148,6 +148,12 @@
                 this.transferdate = erp_acct_var.current_date;
                 this.remarks = '';
                 this.amount = '';
+            },
+
+            inside() {},
+
+            outside() {
+
             }
         },
 
