@@ -152,7 +152,8 @@
 
     div.erp-nav-container {
         background-color: #fff;
-        margin-left: -20px;
+        margin-left: 0;
+        margin-top: 20px;
         padding-left: 20px;
         border: 1px solid @border-color;
         color: #000;

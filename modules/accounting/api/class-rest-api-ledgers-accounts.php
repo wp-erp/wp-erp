@@ -116,6 +116,24 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_account' );
                 },
+            ]
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/categories/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_ledger_category' ],
+                // 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_edit_account' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_ledger_category' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_delete_account' );
+                },
             ],
         ] );
     }
@@ -219,6 +237,12 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function create_ledger_account( $request ) {
         global $wpdb;
+
+        $exist = $wpdb->get_var("SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE name = '{$request['name']}'");
+
+        if ( $exist ) {
+            return new WP_Error( 'rest_ledger_name_already_exist', __( 'Name already exist.' ), [ 'status' => 404 ] );
+        }
 
         $item = $this->prepare_item_for_database( $request );
 
@@ -340,11 +364,57 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_ledger_category( $request ) {
         $category = erp_acct_create_ledger_category( $request );
 
+        if ( ! $category ) {
+            return new WP_Error( 'rest_ledger_already_exist', __( 'Category already exist.' ), [ 'status' => 404 ] );
+        }
+
         $response = rest_ensure_response( $category );
 
         $response->set_status( 200 );
 
         return $response;
+    }
+
+    /**
+     * Update ledger categories
+     * 
+     * @param WP_REST_REQUEST $request
+     * 
+     * @return WP_ERROR|WP_REST_REQUEST
+     */
+    public function update_ledger_category( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $category = erp_acct_update_ledger_category( $request );
+
+        if ( ! $category ) {
+            return new WP_Error( 'rest_ledger_already_exist', __( 'Category already exist.' ), [ 'status' => 404 ] );
+        }
+
+        $response = rest_ensure_response( $category );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Remove category
+     */
+    public function delete_ledger_category( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        erp_acct_delete_ledger_category( $id );
+
+        return new WP_REST_Response( true, 204 );
     }
 
     /**

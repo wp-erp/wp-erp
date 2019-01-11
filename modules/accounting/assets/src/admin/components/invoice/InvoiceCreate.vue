@@ -100,18 +100,6 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <!-- <td colspan="4"><button class="wperp-btn btn--default">Cancel</button></td>
-                                <td colspan="5" style="text-align: right;">
-                                    <div class="wperp-has-dropdown">
-                                        <button class="wperp-btn btn--primary">Submit for approval</button>
-                                        <div class="dropdown-menu">
-                                            <span>something</span>
-                                        </div>
-                                    </div>
-                                    <button class="wperp-btn btn--default wperp-dropdown-trigger">Cancel</button>
-                                </td> -->
-                            </tr>
-                            <tr>
                                 <td colspan="9" style="text-align: right;">
                                     <combo-button :options="buttons" />
                                 </td>

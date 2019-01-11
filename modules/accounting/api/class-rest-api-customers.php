@@ -101,6 +101,16 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
         ] );
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions/filter', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'filter_transactions' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_customer' );
+                },
+            ],
+        ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/country', [
             [
@@ -329,6 +339,26 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $state      =   $country->get_states();
         $response   =   array(  'country' => $c, 'state' => $state );
         $response   =   rest_ensure_response( $response );
+        return $response;
+    }
+
+    /**
+     * Get transaction by date
+     *
+     * @param  object $request
+     * @return array
+     */
+    public function filter_transactions( $request ) {
+        $id         = $request['id'];
+        $start_date = $request['start_date'];
+        $end_date   = $request['end_date'];
+        $args       = [
+            'start_date' => $start_date,
+            'end_date'   => $end_date
+        ];
+        $transactions   =   erp_people_filter_transaction( $id, $args );
+        $response       =   rest_ensure_response( $transactions );
+
         return $response;
     }
     /**

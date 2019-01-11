@@ -138,6 +138,7 @@ function erp_acct_get_account_debit_credit( $ledger_id ) {
 function erp_acct_perform_transfer( $item ) {
     global $wpdb;
     $created_by = get_current_user_id();
+    $created_at = date("Y-m-d");
     $updated_at = date("Y-m-d");
     $updated_by = $created_by;
 
@@ -146,7 +147,7 @@ function erp_acct_perform_transfer( $item ) {
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'transfer_voucher',
-            'created_at' => date("Y-m-d"),
+            'created_at' => $created_at,
             'created_by' => $created_by,
             'updated_at' => $updated_at,
             'updated_by' => $updated_by,
@@ -159,26 +160,38 @@ function erp_acct_perform_transfer( $item ) {
             'ledger_id'   => $item['from_account_id'],
             'trn_no'      => $voucher_no,
             'particulars' => $item['remarks'],
-            'debit'       => $item['amount'],
-            'credit'      => 0,
+            'debit'       => 0,
+            'credit'      => $item['amount'],
             'trn_date'    => $item['date'],
-            'created_at'  => date("Y/m/d"),
+            'created_at'  => $created_at,
             'created_by'  => $created_by,
-            'updated_at'  => '',
-            'updated_by'  => '',
+            'updated_at'  => $updated_at,
+            'updated_by'  => $updated_by,
         ) );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
             'ledger_id'   => $item['to_account_id'],
             'trn_no'      => $voucher_no,
             'particulars' => $item['remarks'],
-            'debit'       => 0,
-            'credit'      => $item['amount'],
+            'debit'       => $item['amount'],
+            'credit'      => 0,
             'trn_date'    => $item['date'],
-            'created_at'  => date("Y/m/d"),
+            'created_at'  => $created_at,
             'created_by'  => $created_by,
-            'updated_at'  => '',
-            'updated_by'  => '',
+            'updated_at'  => $updated_at,
+            'updated_by'  => $updated_by,
+        ) );
+
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_transfer_voucher', array(
+            'voucher_no' => $voucher_no,
+            'amount'     => $item['amount'],
+            'ac_from'    => $item['from_account_id'],
+            'ac_to'      => $item['to_account_id'],
+            'trn_date'   => $item['date'],
+            'created_at' => $created_at,
+            'created_by' => $created_by,
+            'updated_at' => $updated_at,
+            'updated_by' => $updated_by,
         ) );
 
         $wpdb->query( 'COMMIT' );
@@ -193,12 +206,26 @@ function erp_acct_perform_transfer( $item ) {
 /**
  * Get transferrable accounts
  */
-function erp_get_transfer_accounts() {
+function erp_acct_get_transfer_accounts( $show_balance = false ) {
     global $wpdb;
 
-    $table_name = $wpdb->prefix.'erp_acct_ledgers';
+    $ledgers = $wpdb->prefix.'erp_acct_ledgers';
     $chart_id = 107;
-    $results = $wpdb->get_results( $wpdb->prepare( "Select * FROM $table_name WHERE chart_id = %d", $chart_id ), ARRAY_A );
+
+    if ( !$show_balance ) {
+        $query = $wpdb->prepare( "Select * FROM $ledgers WHERE chart_id = %d", $chart_id );
+        $results = $wpdb->get_results( $query, ARRAY_A );
+        return $results;
+    }
+
+    $sub_query = $wpdb->prepare( "Select id FROM $ledgers WHERE chart_id = %d", $chart_id );
+    $ledger_details = $wpdb->prefix.'erp_acct_ledger_details';
+    $query = "Select ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance 
+              From $ledger_details as ld
+              LEFT JOIN $ledgers as l ON l.id = ld.ledger_id
+              Where ld.ledger_id IN ($sub_query) 
+              Group BY ld.ledger_id";
+    $results = $wpdb->get_results( $query, ARRAY_A );
 
     return $results;
 }
@@ -210,7 +237,7 @@ function erp_get_transfer_accounts() {
  *
  * @return array
  */
-function erp_get_balance_by_ledger( $id ) {
+function erp_acct_get_balance_by_ledger( $id ) {
     if ( is_array( $id ) ) {
         $id = "'" . implode( "','", $id ) . "'";
     }

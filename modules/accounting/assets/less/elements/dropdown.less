@@ -5,26 +5,26 @@
             right: 35px;
             top: -4px;
 
-            &:after,
-            &:before {
-                left: 100%;
-                border: solid transparent;
-                content: " ";
-                height: 0;
-                width: 0;
-                pointer-events: none;
-            }
+            // &:after,
+            // &:before {
+            //     left: 100%;
+            //     border: solid transparent;
+            //     content: " ";
+            //     height: 0;
+            //     width: 0;
+            //     pointer-events: none;
+            // }
 
-            &:after {
-                top: 14px;
-                border-left-color: @white;
-                border-width: 6px 9px;
-            }
-            &:before {
-                top: 13px;
-                border-left-color: @border-color;
-                border-width: 7px 10px;
-            }
+            // &:after {
+            //     top: 14px;
+            //     border-left-color: @white;
+            //     border-width: 6px 9px;
+            // }
+            // &:before {
+            //     top: 13px;
+            //     border-left-color: @border-color;
+            //     border-width: 7px 10px;
+            // }
         }
     }
 }
@@ -49,6 +49,11 @@
     transition: all .3s ease;
     opacity: 0;
     visibility: hidden;
+    text-align: left;
+    li {
+        margin-bottom: 0;
+        text-align: left;
+    }
     &.dropdown-menu-right {
         left: inherit;
         right: 0;
@@ -73,25 +78,25 @@
         }
     }
 
-    &:before,
-    &:after {
-        position: absolute;
-        z-index: 999;
-        border-width: 8px;
-        border-style: solid;
-        border-color: transparent;
-        right: 15px;
-        content: "";
-    }
+    // &:before,
+    // &:after {
+    //     position: absolute;
+    //     z-index: 999;
+    //     border-width: 8px;
+    //     border-style: solid;
+    //     border-color: transparent;
+    //     right: 15px;
+    //     content: "";
+    // }
 
-    &:before {
-        top: -16px;
-        border-bottom-color: @border-color;
-    }
-    &:after {
-        top: -14px;
-        border-bottom-color: #fff;
-    }
+    // &:before {
+    //     top: -16px;
+    //     border-bottom-color: @border-color;
+    // }
+    // &:after {
+    //     top: -14px;
+    //     border-bottom-color: #fff;
+    // }
 }
 
 
@@ -216,6 +221,7 @@
         }
 
         li {
+            margin-bottom: 0 !important;
             a {
                 display: block;
                 padding: 5px 20px;

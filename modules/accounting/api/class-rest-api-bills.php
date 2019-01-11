@@ -322,8 +322,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $bill_data  = erp_acct_get_due_bills_by_people( [ 'people_id' => $id ] );
-        $total_items   = count( $bill_data );
+        $bill_data   = erp_acct_get_due_bills_by_people( [ 'people_id' => $id ] );
+        $total_items = erp_acct_get_due_bills_by_people( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $bill_data as $item ) {
             if ( isset( $request['include'] ) ) {
@@ -385,7 +385,10 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['due_date'] = $request['due_date'];
         }
         if ( isset( $request['amount'] ) ) {
-            $prepared_item['total'] = $request['amount'];
+            $prepared_item['total'] = (int)$request['amount'];
+        }
+        if ( isset( $request['due'] ) ) {
+            $prepared_item['due'] = (int)$request['due'];
         }
         if ( isset( $request['trn_no'] ) ) {
             $prepared_item['trn_no'] = $request['trn_no'];
@@ -433,6 +436,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'address'         => $item->address,
             'bill_details'    => $item->bill_details,
             'total'           => (int) $item->amount,
+            'due'             => (int) $item->due,
             'ref'             => $item->ref,
             'remarks'         => $item->remarks,
             'status'          => $item->status,

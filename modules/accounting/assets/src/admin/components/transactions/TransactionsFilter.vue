@@ -49,7 +49,7 @@
     import Datepicker from 'admin/components/base/Datepicker.vue';
 
     export default {
-        name: 'SalesFilter',
+        name: 'TransactionsFilter',
 
         components: {
             Datepicker,
