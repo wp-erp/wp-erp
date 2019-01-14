@@ -69,6 +69,12 @@ class Admin {
             'position'   => 25
         ] );
         erp_add_submenu( 'accounting', 'transactions', [
+            'title'      => __( 'Sales', 'erp' ),
+            'capability' => $sale,
+            'slug'       => 'transactions/sales',
+            'position'   => 15
+        ] );
+        erp_add_submenu( 'accounting', 'transactions', [
             'title'      => __( 'Expenses', 'erp' ),
             'capability' => $expense,
             'slug'       => 'transactions/expenses',
@@ -117,15 +123,33 @@ class Admin {
             'position'      =>  10,
         ] );
         erp_add_submenu( 'accounting', 'inventory', [
-            'title'      => __( 'Sales', 'erp' ),
-            'capability' => $sale,
-            'slug'       => 'transactions/sales',
-            'position'   => 15
-        ] );
-        erp_add_submenu( 'accounting', 'inventory', [
             'title'      => __( 'Purchases', 'erp' ),
             'capability' => $sale,
             'slug'       => 'transactions/purchases',
+            'position'   => 15
+        ] );
+        erp_add_menu( 'accounting', [
+            'title'      =>  __( 'Tax', 'erp' ),
+            'capability' => 'erp_ac_view_sale',
+            'slug'       => 'tax',
+            'position'   => 45,
+        ] );
+        erp_add_submenu( 'accounting', 'tax', [
+            'title'      => __( 'Tax Rates', 'erp' ),
+            'capability' => $sale,
+            'slug'       => 'taxes',
+            'position'   => 15
+        ] );
+        erp_add_submenu( 'accounting', 'tax', [
+            'title'      => __( 'Tax Categories', 'erp' ),
+            'capability' => $sale,
+            'slug'       => 'tax-cats',
+            'position'   => 15
+        ] );
+        erp_add_submenu( 'accounting', 'tax', [
+            'title'      => __( 'Tax Agencies', 'erp' ),
+            'capability' => $sale,
+            'slug'       => 'tax-agencies',
             'position'   => 15
         ] );
         erp_add_menu( 'accounting', [
