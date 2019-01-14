@@ -12637,27 +12637,35 @@ if (false) {(function () {
       });
     },
     onActionClick: function onActionClick(action, row, index) {
+      var _this3 = this;
+
       switch (action) {
         case 'trash':
           if (confirm('Are you sure to delete?')) {
-            __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].delete("/ledgers/".concat(row.id)).then(function (response) {// this.$delete(this.rows, index);
+            __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].delete("/ledgers/".concat(row.id)).then(function (response) {
+              _this3.fetchChartAccounts();
             });
           }
 
           break;
 
         case 'edit':
-          //TODO
+          this.$router.push({
+            name: 'AddChartAccounts',
+            params: {
+              row: row
+            }
+          });
           break;
 
         default:
       }
     },
     testSeed: function testSeed() {
-      var _this3 = this;
+      var _this4 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/ledgers/chart/seed').then(function (response) {
-        _this3.$swal({
+        _this4.$swal({
           position: 'center',
           type: 'success',
           title: 'Success!',
@@ -25629,7 +25637,7 @@ var render = function() {
           "li",
           { key: index },
           [
-            _c("h3", [_vm._v(_vm._s(chart.name))]),
+            _c("h3", [_vm._v(_vm._s(chart.label))]),
             _vm._v(" "),
             _c("list-table", {
               attrs: {
