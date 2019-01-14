@@ -19585,7 +19585,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
   }, {
     path: '/banks',
     name: 'BankAccounts',
-    component: __WEBPACK_IMPORTED_MODULE_9_admin_components_DummyComponent_vue__["a" /* default */]
+    component: __WEBPACK_IMPORTED_MODULE_31_admin_components_bank_accounts_BankAccounts_vue__["a" /* default */]
   }, {
     path: '/journals',
     name: 'JournalList',
@@ -25942,7 +25942,7 @@ if (false) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DummyComponent_vue__ = __webpack_require__(72);
-/* unused harmony namespace reexport */
+/* unused harmony reexport namespace */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_41d77e85_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DummyComponent_vue__ = __webpack_require__(256);
 var disposed = false
 function injectStyle (ssrContext) {
@@ -25989,7 +25989,7 @@ if (false) {(function () {
   })
 })()}
 
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+/* unused harmony default export */ var _unused_webpack_default_export = (Component.exports);
 
 
 /***/ }),
@@ -37927,7 +37927,7 @@ if (false) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BankAccounts_vue__ = __webpack_require__(123);
-/* unused harmony reexport namespace */
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1342a7ca_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BankAccounts_vue__ = __webpack_require__(396);
 var disposed = false
 function injectStyle (ssrContext) {
@@ -37974,7 +37974,7 @@ if (false) {(function () {
   })
 })()}
 
-/* unused harmony default export */ var _unused_webpack_default_export = (Component.exports);
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
 
 /***/ }),
