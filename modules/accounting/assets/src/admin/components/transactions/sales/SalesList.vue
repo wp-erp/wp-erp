@@ -110,7 +110,7 @@
             fetchItems(filters = {}) {
                 this.rows = [];
 
-                HTTP.get('invoices', {
+                HTTP.get('/transactions/sales', {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
@@ -118,10 +118,7 @@
                         end_date: filters.end_date
                     }
                 }).then( (response) => {
-                    response.data.forEach(element => {
-                        element['type'] = 'Invoice';
-                        this.rows.push(element);
-                    });
+                    this.rows = response.data;
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
