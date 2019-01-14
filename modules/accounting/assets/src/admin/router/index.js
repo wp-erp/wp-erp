@@ -153,7 +153,7 @@ export default new Router({
         {
             path: '/banks',
             name: 'BankAccounts',
-            component: DummyComponent
+            component: BankAccounts
         },
         {
             path: '/journals',
