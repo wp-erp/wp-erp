@@ -5,17 +5,17 @@ import Products          from 'admin/components/products/Products.vue';
 import Employees         from 'admin/components/people/Employees.vue';
 import Dashboard         from 'admin/components/Dashboard.vue';
 import TrialBalance      from 'admin/components/reports/TrialBalance.vue';
-import PeopleDetails    from 'admin/components/people/PeopleDetails.vue';
-import InvoiceCreate    from 'admin/components/invoice/InvoiceCreate.vue';
-import DummyComponent   from 'admin/components/DummyComponent.vue';
-import ChartOfAccounts  from 'admin/components/chart-accounts/ChartOfAccounts.vue';
-import AddChartAccounts from 'admin/components/chart-accounts/AddChartAccounts.vue';
-import ReportsOverview  from 'admin/components/reports/ReportsOverview.vue';
-import ProductCategory  from 'admin/components/product-category/ProductCategory.vue';
-import RecPaymentCreate from 'admin/components/rec-payment/RecPaymentCreate.vue';
-import BillCreate       from 'admin/components/bill/BillCreate.vue';
-import PayBillCreate    from 'admin/components/pay-bill/PayBillCreate.vue';
-import PurchaseCreate   from 'admin/components/purchase/PurchaseCreate.vue';
+import PeopleDetails     from 'admin/components/people/PeopleDetails.vue';
+import InvoiceCreate     from 'admin/components/invoice/InvoiceCreate.vue';
+import DummyComponent    from 'admin/components/DummyComponent.vue';
+import ChartOfAccounts   from 'admin/components/chart-accounts/ChartOfAccounts.vue';
+import AddChartAccounts  from 'admin/components/chart-accounts/AddChartAccounts.vue';
+import ReportsOverview   from 'admin/components/reports/ReportsOverview.vue';
+import ProductCategory   from 'admin/components/product-category/ProductCategory.vue';
+import RecPaymentCreate  from 'admin/components/rec-payment/RecPaymentCreate.vue';
+import BillCreate        from 'admin/components/bill/BillCreate.vue';
+import PayBillCreate     from 'admin/components/pay-bill/PayBillCreate.vue';
+import PurchaseCreate    from 'admin/components/purchase/PurchaseCreate.vue';
 import PayPurchaseCreate from 'admin/components/pay-purchase/PayPurchaseCreate.vue';
 import JournalList       from 'admin/components/journal/JournalList.vue';
 import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
@@ -153,7 +153,7 @@ export default new Router({
         {
             path: '/banks',
             name: 'BankAccounts',
-            component: DummyComponent
+            component: BankAccounts
         },
         {
             path: '/journals',
