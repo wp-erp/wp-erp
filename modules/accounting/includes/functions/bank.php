@@ -231,6 +231,40 @@ function erp_acct_get_transfer_accounts( $show_balance = false ) {
 }
 
 /**
+ * Get created Transfer voucher list
+ *
+ * @param array $args
+ *
+ * @return array
+ */
+function erp_acct_get_transfer_vouchers( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'order_by'   => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $table = $wpdb->prefix . 'erp_acct_transfer_voucher';
+    $query = "Select * From $table ORDER BY {$args['order_by']} {$args['order']} {$limit}";
+
+    $result = $wpdb->get_results( $query, ARRAY_A );
+
+    return $result;
+}
+/**
  * Get balance by Ledger ID
  *
  * @param $id array

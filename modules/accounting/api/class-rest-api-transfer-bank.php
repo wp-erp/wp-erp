@@ -66,6 +66,17 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/list', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_transfer_list' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_bank_transfer' );
+                },
+            ],
+        ] );
     }
 
     /**
@@ -170,6 +181,39 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
+     * Get a list of transfers
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_REST_Response
+     */
+    public function get_transfer_list( $request ) {
+
+        $args = [
+            'order_by' => isset( $request['order_by'] ) ? $request['order_by'] : 'id',
+            'order'    => isset( $request['order'] ) ? $request['order'] : 'DESC',
+            'number'   => isset( $request['per_page'] ) ? $request['per_page'] : 20,
+            'offset'   => ( $request['per_page'] * ( $request['page'] - 1 ) )
+        ];
+
+        $items = erp_acct_get_transfer_vouchers( $args );
+        $accounts = erp_acct_get_transfer_accounts();
+        $accounts = wp_list_pluck( $accounts, 'name', 'id' );
+
+        $formatted_items = [];
+        foreach ( $items as $item ) {
+            $additional_fields = [];
+
+            $data = $this->prepare_list_item_for_response( $item, $request, $additional_fields, $accounts );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, 0 );
+
+        return $response;
+    }
+    /**
      * Prepare a single item for create or update
      *
      * @param WP_REST_Request $request Request object.
@@ -226,6 +270,33 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
+    public function prepare_list_item_for_response(  $item, $request, $additional_fields, $accounts ){
+        $item = (object) $item;
+
+        $data = [
+            'voucher'  => (int) $item->voucher_no,
+            'ac_from'  => $accounts[$item->ac_from],
+            'ac_to'    => $accounts[$item->ac_to],
+            'trn_date' => $item->trn_date,
+            'amount'   => $item->amount,
+            'created_by' => $this->get_user(1)
+        ];
+
+        if ( isset( $request['include'] ) ) {
+//            $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+//
+//            if ( in_array( 'created_by', $include_params ) ) {
+//                $data['created_by'] = $this->get_user( intval( $item->created_by ) );
+//            }
+        }
+
+        $data = array_merge( $data, $additional_fields );
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        return $response;
+    }
     /**
      * Get the User's schema, conforming to JSON Schema
      *
