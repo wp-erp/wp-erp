@@ -297,6 +297,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'id'              => (int) $item->id,
             'tax_name'        => $item->tax_rate_name,
             'tax_number'      => $item->tax_number,
+            'tax_rate'        => $item->tax_rate,
             'default'         => $item->default,
             'tax_components'  => $item->tax_components,
         ];

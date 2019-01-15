@@ -72,6 +72,8 @@ function erp_acct_get_tax_rate( $tax_no ) {
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
+    $row['tax_components'] = erp_acct_format_tax_line_items( $tax_no );
+
     return $row;
 }
 
@@ -204,6 +206,28 @@ function erp_acct_delete_tax_rate( $tax_no ) {
 }
 
 /**
+ * Format payment line items
+ *
+ * @param string $tax
+ *
+ * @return array
+ */
+function erp_acct_format_tax_line_items( $tax = 'all' ) {
+    global $wpdb;
+
+    $sql = "SELECT id, tax_id, agency_id, tax_rate ";
+
+    if ( $tax == 'all' ) {
+        $tax_sql = '';
+    } else {
+        $tax_sql = "WHERE tax_id = " .  $tax ;
+    }
+    $sql .= "FROM {$wpdb->prefix}erp_acct_tax_items {$tax_sql} ORDER BY tax_id";
+
+    return $wpdb->get_results( $sql, ARRAY_A );
+}
+
+/**
  * Get formatted tax data
  *
  * @param $data
@@ -220,7 +244,7 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['tax_id'] = isset($data['tax_id']) ? $data['tax_id'] : 0;
     $tax_data['tax_category_id'] = isset($data['tax_category_id']) ? $data['tax_category_id'] : 0;
     $tax_data['agency_id'] = isset($data['agency_id']) ? $data['agency_id'] : '';
-    $tax_data['components'] = isset($data['components']) ? $data['components'] : '';
+    $tax_data['tax_components'] = isset($data['tax_components']) ? $data['tax_components'] : '';
     $tax_data['created_at'] = date("Y-m-d");
     $tax_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
     $tax_data['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : '';
