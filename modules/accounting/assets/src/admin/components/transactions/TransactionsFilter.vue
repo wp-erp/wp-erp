@@ -5,7 +5,7 @@
                 <h2 class="content-header__title">Transactions</h2>
             </div>
             <div class="wperp-col">
-                <form class="wperp-form form--inline">
+                <form class="wperp-form form--inline" action="" @submit.prevent="filterList">
                     <div :class="['wperp-has-dropdown', {'dropdown-opened': showFilters}]">
                         <a class="wperp-btn btn--default dropdown-trigger filter-button" @click.prevent="toggleFilter">
                             <span><i class="flaticon-search-segment"></i>Filters</span>
@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="wperp-panel-footer">
                                     <input type="reset" value="Cancel" class="wperp-btn btn--default" @click="toggleFilter">
-                                    <input type="submit" value="Submit" class="wperp-btn btn--primary" @click.prevent="filterList">
+                                    <input type="submit" value="Submit" class="wperp-btn btn--primary">
                                 </div>
                             </div>
                         </div>
@@ -73,12 +73,8 @@
             filterList() {
                 this.toggleFilter();
 
-                this.$root.$emit('sales-filter', this.filters);
+                this.$root.$emit('transactions-filter', this.filters);
             }
         }
     }
 </script>
-
-<style scoped>
-
-</style>
