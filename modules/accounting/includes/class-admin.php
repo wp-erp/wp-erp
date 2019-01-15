@@ -137,19 +137,25 @@ class Admin {
         erp_add_submenu( 'accounting', 'tax', [
             'title'      => __( 'Tax Rates', 'erp' ),
             'capability' => $sale,
-            'slug'       => 'taxes',
+            'slug'       => 'tax-rates',
             'position'   => 15
         ] );
         erp_add_submenu( 'accounting', 'tax', [
             'title'      => __( 'Tax Categories', 'erp' ),
             'capability' => $sale,
-            'slug'       => 'tax-cats',
+            'slug'       => 'tax-categories',
             'position'   => 15
         ] );
         erp_add_submenu( 'accounting', 'tax', [
             'title'      => __( 'Tax Agencies', 'erp' ),
             'capability' => $sale,
             'slug'       => 'tax-agencies',
+            'position'   => 15
+        ] );
+        erp_add_submenu( 'accounting', 'tax', [
+            'title'      => __( 'Tax Records', 'erp' ),
+            'capability' => $sale,
+            'slug'       => 'tax-records',
             'position'   => 15
         ] );
         erp_add_menu( 'accounting', [

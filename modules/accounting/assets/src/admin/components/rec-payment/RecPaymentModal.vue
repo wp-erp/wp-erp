@@ -22,7 +22,6 @@
                     <div class="wperp-invoice-panel">
                         <div class="invoice-header">
                             <div class="invoice-logo">
-                                <img :src="assets_url + '/images/dummy-logo.png'" alt="logo name">
                             </div>
                             <div class="invoice-address">
                                 <address>
@@ -75,29 +74,26 @@
                             <table class="wperp-table wperp-form-table invoice-table">
                                 <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Invoice ID</th>
-                                    <th>Due Date</th>
                                     <th>Total</th>
-                                    <th>Due</th>
                                     <th>Amount</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr :key="key" v-for="(invoice,key) in invoices">
-                                    <td>{{invoice.id}}</td>
-                                    <td>{{invoice.due_date}}</td>
-                                    <td>{{invoice.total}}</td>
-                                    <td>$240.00</td>
-                                    <td>{{invoice.total}}</td>
+                                <tr :key="key" v-for="(payment,key) in payments">
+                                    <td>{{payment.id}}</td>
+                                    <td>{{payment.invoice_no}}</td>
+                                    <td>{{payment.amount}}</td>
+                                    <td>{{payment.line_total}}</td>
                                 </tr>
                                 </tbody>
                                 <tfoot>
                                 <tr>
                                     <td colspan="7">
                                         <ul>
-                                            <li><span>Subtotal:</span> $15,000.00</li>
-                                            <li><span>Total:</span> $15,000.00</li>
-                                            <li><span>Total Related Payments:</span> $15,000.00</li>
+                                            <li><span>Subtotal:</span>{{total}}</li>
+                                            <li><span>Total:</span>{{total}}</li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -105,30 +101,6 @@
                             </table>
                         </div>
 
-                    </div>
-                    <div class="invoice-attachments d-print-none">
-                        <h4>Attachments</h4>
-                        <a class="attachment-item" href="#">
-                            <img :src="assets_url + '/images/img-thumb.png'" alt="image name">
-                            <div class="attachment-meta">
-                                <span>File name with extension</span><br>
-                                <span class="text-muted">file size</span>
-                            </div>
-                        </a>
-                        <a class="attachment-item" href="#">
-                            <img :src="assets_url + '/images/doc-thumb.png'" alt="image name">
-                            <div class="attachment-meta">
-                                <span>File name with extension</span><br>
-                                <span class="text-muted">file size</span>
-                            </div>
-                        </a>
-                        <a class="attachment-item" href="#">
-                            <img :src="assets_url + '/images/pdf-thumb.png'" alt="image name">
-                            <div class="attachment-meta">
-                                <span>File name with extension</span><br>
-                                <span class="text-muted">file size</span>
-                            </div>
-                        </a>
                     </div>
 
                 </div>
@@ -138,15 +110,41 @@
 </template>
 
 <script>
+    import HTTP from 'admin/http'
+
     export default {
         name: "RecPaymentModal",
 
-        props: {
-            basic_fields: Object,
-            invoices: Array,
-            attachments: Array,
-            finalTotalAmount: [ String, Number ],
-            assets_url: String
+        data() {
+            return {
+                entry_id: 0,
+                trn_date: '',
+                particulars: '',
+                payments: [{}],
+                total: 0,
+                acct_var: erp_acct_var
+            }
+        },
+
+        created() {
+            this.entry_id = this.$route.params.id;
+
+            HTTP.get(`/payments/${this.entry_id}`).then((response) => {
+                var total = 0
+
+                response.data.line_items.forEach(element => {
+                    total += parseFloat(element.amount);
+
+                    this.payments.push({
+                        id: element.id,
+                        invoice_no: parseFloat(element.invoice_no),
+                        amount: parseFloat(element.amount),
+                        line_total: parseFloat(element.amount),
+                        total: total
+                    });
+                });
+                this.total = total;
+            });
         },
 
         methods: {
