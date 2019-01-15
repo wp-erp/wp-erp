@@ -38,7 +38,9 @@ function erp_acct_get_payments( $args = [] ) {
         return $wpdb->get_var($sql);
     }
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    $payment_data = $wpdb->get_results( $sql, ARRAY_A );
+
+    return $payment_data;
 }
 
 /**
@@ -82,6 +84,8 @@ function erp_acct_get_payment( $invoice_no ) {
     WHERE pay_inv.voucher_no = {$invoice_no}";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    $row['line_items'] = erp_acct_format_payment_line_items( $invoice_no );
 
     return $row;
 }
@@ -475,4 +479,26 @@ function erp_acct_get_payment_count() {
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_invoice_receipts" );
 
     return $row->count;
+}
+
+/**
+ * Format payment line items
+ *
+ * @param string $invoice
+ *
+ * @return array
+ */
+function erp_acct_format_payment_line_items( $invoice = 'all' ) {
+    global $wpdb;
+
+    $sql = "SELECT id, voucher_no, invoice_no, amount";
+
+    if ( $invoice == 'all' ) {
+        $invoice_sql = '';
+    } else {
+        $invoice_sql = "WHERE voucher_no = " .  $invoice ;
+    }
+    $sql .= "FROM {$wpdb->prefix}erp_acct_invoice_receipts_details {$invoice_sql}";
+
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
