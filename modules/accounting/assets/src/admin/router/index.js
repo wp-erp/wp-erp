@@ -7,7 +7,6 @@ import Dashboard         from 'admin/components/Dashboard.vue';
 import TrialBalance      from 'admin/components/reports/TrialBalance.vue';
 import PeopleDetails     from 'admin/components/people/PeopleDetails.vue';
 import InvoiceCreate     from 'admin/components/invoice/InvoiceCreate.vue';
-import DummyComponent    from 'admin/components/DummyComponent.vue';
 import ChartOfAccounts   from 'admin/components/chart-accounts/ChartOfAccounts.vue';
 import AddChartAccounts  from 'admin/components/chart-accounts/AddChartAccounts.vue';
 import ReportsOverview   from 'admin/components/reports/ReportsOverview.vue';
@@ -25,11 +24,19 @@ import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
 import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
 import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
+import NewTaxCategory    from 'admin/components/tax/NewTaxCategory.vue';
 import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
 import NewTax            from 'admin/components/tax/NewTax.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
+import NewTaxAgency      from 'admin/components/tax/NewTaxAgency.vue';
+import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
+import PayTaxRecord      from 'admin/components/tax/PayTaxRecord.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
+import TaxRateModal      from 'admin/components/tax/TaxRateModal.vue';
+import TaxCatModal       from 'admin/components/tax/TaxCatModal.vue';
+import TaxAgencyModal    from 'admin/components/tax/TaxAgencyModal.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
+import RecPaymentModal   from 'admin/components/rec-payment/RecPaymentModal.vue';
 
 Vue.use(Router)
 
@@ -181,6 +188,12 @@ export default new Router({
             component: RecPaymentCreate
         },
         {
+
+            path: '/payments/:id',
+            name: 'SinglePayment',
+            component: RecPaymentModal
+        },
+        {
             path: '/bills/new',
             name: 'BillCreate',
             component: BillCreate
@@ -245,6 +258,90 @@ export default new Router({
             ]
         },
         {
+            path: '/tax-rates',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'TaxRates',
+                    component: TaxRates,
+                },
+                {
+
+                    path: '/tax-rates/new',
+                    name: 'NewTax',
+                    component: NewTax
+                },
+                {
+
+                    path: '/tax-rates/:id',
+                    name: 'SingleTaxRate',
+                    component: TaxRateModal
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateTaxRates',
+                    component: TaxRates,
+                },
+            ]
+        },
+        {
+            path: '/tax-categories',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'TaxCategories',
+                    component: TaxCategories,
+                },
+                {
+
+                    path: '/tax-categories/new',
+                    name: 'NewTaxCategory',
+                    component: NewTaxCategory
+                },
+                {
+
+                    path: '/tax-categories/:id',
+                    name: 'SingleTaxCategory',
+                    component: TaxCatModal
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateTaxCategories',
+                    component: TaxCategories,
+                },
+            ]
+        },
+        {
+            path: '/tax-agencies',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'TaxAgencies',
+                    component: TaxAgencies,
+                },
+                {
+
+                    path: '/tax-categories/new',
+                    name: 'NewTaxAgency',
+                    component: NewTaxAgency
+                },
+                {
+
+                    path: '/tax-categories/:id',
+                    name: 'SingleTaxAgency',
+                    component: TaxAgencyModal
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateTaxAgencies',
+                    component: TaxAgencies,
+                },
+            ]
+        },
+        {
             path: '/transfer/new',
             name: 'Transfer',
             component: Transfer
@@ -255,23 +352,13 @@ export default new Router({
             component: ExpenseCreate
         },
         {
-            path: '/tax/tax_categories',
-            name: 'Tax Categories',
-            component: TaxCategories
+            path: '/pay-tax',
+            name: 'PayTaxRecord',
+            component: PayTaxRecord
         },
         {
-            path: '/tax/new_tax',
-            name: 'New Tax',
-            component: NewTax
-        },
-        {
-            path: '/tax/tax_rates',
-            name: 'Tax Rates',
-            component: TaxRates
-        },
-        {
-            path: '/tax/tax_records',
-            name: 'Record Sales Tax Payment',
+            path: '/tax-records',
+            name: 'TaxRecords',
             component: TaxRecords
         },
     ]

@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
+class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Endpoint namespace.
      *
@@ -22,7 +22,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @var string
      */
-    protected $rest_base = 'accounting/v1/tax-rates';
+    protected $rest_base = 'accounting/v1/tax-agencies';
 
     /**
      * Register the routes for the objects of the controller.
@@ -31,7 +31,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_tax_rates' ],
+                'callback'            => [ $this, 'get_tax_agencies' ],
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
@@ -39,7 +39,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_tax_rate' ],
+                'callback'            => [ $this, 'create_tax_agency' ],
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
@@ -51,7 +51,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_tax_rate' ],
+                'callback'            => [ $this, 'get_tax_agency' ],
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
@@ -59,7 +59,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_tax_rate' ],
+                'callback'            => [ $this, 'update_tax_agency' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
@@ -67,7 +67,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_tax_rate' ],
+                'callback'            => [ $this, 'delete_tax_agency' ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
@@ -96,7 +96,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_tax_rates( $request ) {
+    public function get_tax_agencies( $request ) {
         $args = [
             'number' => !empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -110,8 +110,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $tax_data    = erp_acct_get_all_tax_rates( $args );
-        $total_items = erp_acct_get_all_tax_rates( [ 'count' => true, 'number' => -1 ] );
+        $tax_data    = erp_acct_get_all_tax_agencies( $args );
+        $total_items = erp_acct_get_all_tax_agencies( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $tax_data as $item ) {
             if ( isset( $request['include'] ) ) {
@@ -142,14 +142,14 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_tax_rate( $request ) {
+    public function get_tax_agency( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item = erp_acct_get_tax_rate( $id );
+        $item = erp_acct_get_tax_agency( $id );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -169,19 +169,11 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_tax_rate( $request ) {
+    public function create_tax_agency( $request ) {
 
         $tax_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['tax_components'];
-
-        foreach ( $items as $key => $item ) {
-            $item_rates[$key] = $item['tax_rate'];
-        }
-
-        $tax_data['total_rate'] = array_sum( $item_rates );
-
-        $tax_id = erp_acct_insert_tax_rate( $tax_data );
+        $tax_id = erp_acct_insert_tax_agency( $tax_data );
 
         $tax_data['id'] = $tax_id;
 
@@ -203,7 +195,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_tax_rate( $request ) {
+    public function update_tax_agency( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -212,15 +204,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['tax_components'];
-
-        foreach ( $items as $key => $item ) {
-            $item_rates[$key] = $item['tax_rate'];
-        }
-
-        $tax_data['total_rate'] = array_sum( $item_rates );
-
-        $tax_id = erp_acct_update_tax_rate( $tax_data, $id );
+        $tax_id = erp_acct_update_tax_agency( $tax_data, $id );
 
         $tax_data['id'] = $tax_id;
         $additional_fields['namespace'] = $this->namespace;
@@ -242,14 +226,14 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_tax_rate( $request ) {
+    public function delete_tax_agency( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        erp_acct_delete_tax_rate( $id );
+        erp_acct_delete_tax_agency( $id );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -265,17 +249,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
-        if ( isset( $request['tax_rate_name'] ) ) {
-            $prepared_item['tax_rate_name'] = $request['tax_rate_name'];
-        }
-        if ( isset( $request['tax_number'] ) ) {
-            $prepared_item['tax_number'] = $request['tax_number'];
-        }
-        if ( isset( $request['is_compound'] ) ) {
-            $prepared_item['is_compound'] = $request['is_compound'];
-        }
-        if ( isset( $request['tax_components'] ) ) {
-            $prepared_item['tax_components'] = $request['tax_components'];
+        if ( isset( $request['agency_name'] ) ) {
+            $prepared_item['agency_name'] = $request['agency_name'];
         }
 
         return $prepared_item;
@@ -295,11 +270,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'tax_name'        => $item->tax_rate_name,
-            'tax_number'      => $item->tax_number,
-            'tax_rate'        => $item->tax_rate,
-            'default'         => $item->default,
-            'tax_components'  => $item->tax_components,
+            'name'            => $item->agency_name,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -329,42 +300,16 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'tax_rate_name'  => [
-                    'description' => __( 'Tax Rate name for the resource.' ),
+                'agency_name'  => [
+                    'description' => __( 'Tax Category name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                ],
-                'tax_number'  => [
-                    'description' => __( 'Tax number for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'is_compound'       => [
-                    'description' => __( 'Tax type for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'tax_components'       => [
-                    'description' => __( 'Tax components for the resource.' ),
-                    'type'        => 'object',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                    'required'    => true,
-                ],
+                ]
             ],
         ];
-
 
         return $schema;
     }

@@ -79,12 +79,21 @@
                             </td>
                             <!-- actions column -->
                             <td class="col--actions">
-                                <div class="wperp-has-dropdown dropdown right--middle">
-                                    <a href="#" class="dropdown-trigger"><i class="flaticon-menu"></i></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#"><i class="flaticon-edit"></i>View/Edit</a></li>
-                                        <li><a href="#"><i class="flaticon-trash"></i>Delete</a></li>
-                                    </ul>
+                                <div class="row-actions">
+                                    <slot name="row-actions">
+                                        <dropdown placement="left-start">
+                                            <template slot="button">
+                                                <a class="dropdown-trigger"><i class="flaticon-menu"></i></a>
+                                            </template>
+                                            <template slot="dropdown">
+                                                <ul slot="action-items" role="menu">
+                                                    <li v-for="action in actions" :key="action.key" :class="action.key">
+                                                        <a href="#" @click.prevent="actionClicked(action.key, account.id)"><i :class="action.iconClass"></i>{{ action.label }}</a>
+                                                    </li>
+                                                </ul>
+                                            </template>
+                                        </dropdown>
+                                    </slot>
                                 </div>
                             </td>
                         </tr>
@@ -99,17 +108,21 @@
 
 <script>
     import HTTP from 'admin/http';
+    import Dropdown from 'admin/components/base/Dropdown.vue'
     export default {
         name: 'bankAccounts',
 
         components: {
-            HTTP
+            HTTP, Dropdown
         },
 
         data () {
             return {
                 pageTitle: 'Accounts',
-                accounts: []
+                accounts: [],
+                actions : [
+                    { key: 'transfer', label: 'Transfer', iconClass: 'flaticon-sent-mail' },
+                ],
             }
         },
 
@@ -132,6 +145,11 @@
 
                 return `Dr. ${currency} ${val}`;
             },
+
+            actionClicked( action, acct_id ) {
+
+            }
+
         }
 
     };
