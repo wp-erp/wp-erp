@@ -32,6 +32,7 @@ class REST_API {
             '\WeDevs\ERP\Accounting\API\Company_Controller',
             '\WeDevs\ERP\Accounting\API\Journals_Controller',
             '\WeDevs\ERP\Accounting\API\Expenses_Controller',
+            '\WeDevs\ERP\Accounting\API\Tax_Cats_Controller',
         ] );
 
         return $controllers;
