@@ -535,3 +535,18 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
     return $wpdb->get_results( $query, ARRAY_A );
 }
 
+/**
+ * Get due of a bill
+ *
+ * @param $bill_no
+ * @return int
+ */
+function erp_acct_get_due_payment( $invoice_no ) {
+    global $wpdb;
+
+    $result = $wpdb->get_row( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = {$invoice_no} GROUP BY ia.invoice_no", ARRAY_A );
+
+
+    return $result['due'];
+}
+

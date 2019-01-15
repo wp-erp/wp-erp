@@ -491,7 +491,7 @@ function erp_acct_get_payment_count() {
 function erp_acct_format_payment_line_items( $invoice = 'all' ) {
     global $wpdb;
 
-    $sql = "SELECT id, voucher_no, invoice_no, amount";
+    $sql = "SELECT id, voucher_no, invoice_no, amount ";
 
     if ( $invoice == 'all' ) {
         $invoice_sql = '';

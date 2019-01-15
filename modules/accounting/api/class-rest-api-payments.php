@@ -148,7 +148,8 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
-        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+
+        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $item );
 
         $response->set_status( 200 );
@@ -295,6 +296,18 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['particulars'] ) ) {
             $prepared_item['particulars'] = $request['particulars'];
+        }
+        if ( isset( $request['invoice_no'] ) ) {
+            $prepared_item['invoice_no'] = $request['invoice_no'];
+        }
+        if ( isset( $request['amount'] ) ) {
+            $prepared_item['amount'] = $request['amount'];
+        }
+        if ( isset( $request['due'] ) ) {
+            $prepared_item['due'] = $request['due'];
+        }
+        if ( isset( $request['line_total'] ) ) {
+            $prepared_item['line_total'] = $request['line_total'];
         }
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = $request['attachments'];
