@@ -54,16 +54,17 @@ function erp_acct_get_tax_rate( $tax_no ) {
 
     $sql = "SELECT
 
-    tax.name,
+    tax.tax_rate_name,
     tax.tax_number,
+    tax.default,
+    tax.tax_rate,
     tax.created_at,
     tax.created_by,
     tax.updated_at,
     tax.updated_by,
     
     tax_item.tax_id,
-    tax_item.component_name,
-    tax_item.agency_name
+    tax_item.agency_id
     
     FROM {$wpdb->prefix}erp_acct_taxes AS tax
     LEFT JOIN {$wpdb->prefix}erp_acct_tax_items AS tax_item ON tax.id = tax_item.tax_id
@@ -161,8 +162,8 @@ function erp_acct_update_tax_rate( $data, $id ) {
 
     foreach ($items as $key => $item) {
         $wpdb->update($wpdb->prefix . 'erp_acct_tax_items', array(
-            'agency_id' => $item['agency_id'],
-            'tax_rate'    => $item['tax_rate'],
+            'agency_id'  => $item['agency_id'],
+            'tax_rate'   => $item['tax_rate'],
             'created_at' => $tax_data['created_at'],
             'created_by' => $tax_data['created_by'],
             'updated_at' => $tax_data['updated_at'],
@@ -191,13 +192,15 @@ function erp_acct_update_tax_rate( $data, $id ) {
  *
  * @param $tax_no
  *
- * @return void
+ * @return int
  */
 
 function erp_acct_delete_tax_rate( $tax_no ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', array( 'tax_number' => $tax_no ) );
+
+    return $tax_no;
 }
 
 /**
@@ -222,6 +225,8 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
     $tax_data['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : '';
     $tax_data['updated_by'] = isset($data['updated_by']) ? $data['updated_by'] : '';
+    $tax_data['cat_name'] = isset($data['cat_name']) ? $data['cat_name'] : '';
+    $tax_data['description'] = isset($data['description']) ? $data['description'] : '';
 
     return $tax_data;
 }
