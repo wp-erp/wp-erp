@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_tax_cats( $args = [] ) {
+function erp_acct_get_all_tax_agencies( $args = [] ) {
         global $wpdb;
     
         $defaults = [
@@ -32,7 +32,7 @@ function erp_acct_get_all_tax_cats( $args = [] ) {
     
         $sql = "SELECT";
         $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
-        $sql .= "FROM {$wpdb->prefix}erp_acct_tax_categories ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+        $sql .= "FROM {$wpdb->prefix}erp_acct_tax_agencies ORDER BY {$args['orderby']} {$args['order']} {$limit}";
     
         if ( $args['count'] ) {
             return $wpdb->get_var($sql);
@@ -49,10 +49,10 @@ function erp_acct_get_all_tax_cats( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_tax_cat( $tax_no ) {
+function erp_acct_get_tax_agency( $tax_no ) {
     global $wpdb;
 
-    $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_tax_categories
+    $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_tax_agencies
     WHERE tax.id = {$tax_no} LIMIT 1";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
@@ -66,7 +66,7 @@ function erp_acct_get_tax_cat( $tax_no ) {
  * @param $data
  * @return int
  */
-function erp_acct_insert_tax_cat( $data ) {
+function erp_acct_insert_tax_agency( $data ) {
     global $wpdb;
 
     $created_by = get_current_user_id();
@@ -75,9 +75,8 @@ function erp_acct_insert_tax_cat( $data ) {
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
-    $wpdb->insert($wpdb->prefix . 'erp_acct_tax_categories', array(
-        'name'       => $tax_data['cat_name'],
-        'description'=> $tax_data['description'],
+    $wpdb->insert($wpdb->prefix . 'erp_acct_tax_agencies', array(
+        'name'       => $tax_data['agency_name'],
         'created_at' => $tax_data['created_at'],
         'created_by' => $tax_data['created_by'],
         'updated_at' => $tax_data['updated_at'],
@@ -96,7 +95,7 @@ function erp_acct_insert_tax_cat( $data ) {
  * @param $data
  * @return int
  */
-function erp_acct_update_tax_cat( $data, $id ) {
+function erp_acct_update_tax_agency( $data, $id ) {
     global $wpdb;
 
     $updated_by = get_current_user_id();
@@ -105,8 +104,8 @@ function erp_acct_update_tax_cat( $data, $id ) {
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
-    $wpdb->update($wpdb->prefix . 'erp_acct_tax_categories', array(
-        'name'       => $tax_data['cat_name'],
+    $wpdb->update($wpdb->prefix . 'erp_acct_tax_agencies', array(
+        'name'       => $tax_data['agency_name'],
         'description'=> $tax_data['description'],
         'created_at' => $tax_data['created_at'],
         'created_by' => $tax_data['created_by'],
@@ -128,10 +127,10 @@ function erp_acct_update_tax_cat( $data, $id ) {
  * @return int
  */
 
-function erp_acct_delete_tax_cat( $id ) {
+function erp_acct_delete_tax_agency( $id ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_categories', array( 'id' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agencies', array( 'id' => $id ) );
 
     return $tax_no;
 }
