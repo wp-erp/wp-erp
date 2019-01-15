@@ -1,75 +1,184 @@
 <template>
-    <div class="home">
-        <div class="erp accounting-dashboard">
-            <h2><span>{{ msg }}</span></h2>
-            <div class="erp-acc-dashboard-1">
-                <div class="erp-acc-dashboard-1-col">
-                    <MetaBox :title="title1" :closable="false">
-                        <h1 slot="metabox-content">Metabox Content</h1>
-                    </MetaBox>
-                </div>
-                <div class="erp-acc-dashboard-1-col">
-                    <MetaBox :title="title2" :closable="false">
-                        <h1 slot="metabox-content">Metabox Content2</h1>
-                    </MetaBox>
+    <div class="wperp-container">
+
+        <!-- Start .header-section -->
+        <div class="content-header-section separator">
+            <div class="wperp-row wperp-between-xs">
+                <div class="wperp-col">
+                    <h2 class="content-header__title">Dashboard</h2>
                 </div>
             </div>
-            <div class="erp-acc-dashboard-2">
-                <div class="erp-acc-dashboard-2-col">
-                    <MetaBox :title="title3" :closable="false">
-                        <h1 slot="metabox-content">
-                            <table>
-                                <tr>
-                                    <td>Coming Due</td>
-                                    <td class="price">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>1-30 days overdue</td>
-                                    <td class="price">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>31-60 days overdue</td>
-                                    <td class="price">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>61-90 days overdue</td>
-                                    <td class="price">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>&gt; 90 days overdue</td>
-                                    <td class="price">$0.00</td>
-                                </tr>
-                            </table>
-                        </h1>
-                    </MetaBox>
-                </div>
-                <div class="erp-acc-dashboard-2-col">
-                    <MetaBox :title="title4" :closable="false">
-                        <div slot="metabox-content">
-                            <table>
-                                <tr>
-                                    <td>Coming Due</td>
-                                    <td class="price">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>1-30 days overdue</td>
-                                    <td class="price">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>31-60 days overdue</td>
-                                    <td class="price">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>61-90 days overdue</td>
-                                    <td class="price">$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>&gt; 90 days overdue</td>
-                                    <td class="price">$0.00</td>
-                                </tr>
-                            </table>
+        </div>
+        <!-- End .header-section -->
+
+        <div class="wperp-dashboard">
+            <div class="wperp-row">
+                <div class="wperp-col-md-9 wperp-col-sm-12 wperp-col-xs-12">
+                    <!-- Start .income-expense-section -->
+                    <div class="income-expense-section wperp-panel wperp-panel-default">
+                        <div class="wperp-panel-heading wperp-bg-white"><h4>Income & Expense</h4></div>
+                        <div class="wperp-panel-body">
+                            <div class="wperp-custom-select wperp-custom-select--inline-block wperp-pull-right mb-20">
+                                <select name="query_time" class="wperp-form-field" id="att-filter-duration">
+                                    <option value="this_month">This Month</option>
+                                    <option value="last_month">Last Month</option>
+                                    <option value="this_quarter">This Quarter</option>
+                                    <option value="last_quarter" selected="selected">Last Quarter</option>
+                                    <option value="this_year">This Year</option>
+                                    <option value="last_year">Last Year</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                            </div>
+
+                            <div class="wperp-chart-block">
+                                <canvas id="bar_chart"></canvas>
+                            </div>
                         </div>
-                    </MetaBox>
+                    </div>
+                    <!-- End .income-expense-section -->
+
+                    <div class="wperp-row">
+                        <div class="wperp-col-sm-6 wperp-col-xs-12">
+                            <!-- Start .invoice-own-section -->
+                            <div class="invoice-own-section wperp-panel wperp-panel-default">
+                                <div class="wperp-panel-heading wperp-bg-white"><h4>Invoices owed to you</h4></div>
+                                <div class="wperp-panel-body pb-0">
+                                    <ul class="wperp-list-unstyled list-table-content">
+                                        <li>
+                                            <span class="title">1-30 days overdue</span>
+                                            <span class="price">$165,290.00</span>
+                                        </li>
+                                        <li>
+                                            <span class="title">1-30 days overdue</span>
+                                            <span class="price">$165,290.00</span>
+                                        </li>
+                                        <li>
+                                            <span class="title">1-30 days overdue</span>
+                                            <span class="price">$165,290.00</span>
+                                        </li>
+                                        <li class="total">
+                                            <span class="title">Total Balance</span>
+                                            <span class="price">$165,290.00</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- End .invoice-own-section -->
+                        </div>
+                        <div class="wperp-col-sm-6 wperp-col-xs-12">
+                            <!-- Start .invoice-own-section -->
+                            <div class="invoice-own-section wperp-panel wperp-panel-default">
+                                <div class="wperp-panel-heading wperp-bg-white"><h4>Invoices owed to you</h4></div>
+                                <div class="wperp-panel-body pb-0">
+                                    <ul class="wperp-list-unstyled list-table-content">
+                                        <li>
+                                            <span class="title">1-30 days overdue</span>
+                                            <span class="price">$165,290.00</span>
+                                        </li>
+                                        <li>
+                                            <span class="title">1-30 days overdue</span>
+                                            <span class="price">$165,290.00</span>
+                                        </li>
+                                        <li>
+                                            <span class="title">1-30 days overdue</span>
+                                            <span class="price">$165,290.00</span>
+                                        </li>
+                                        <li class="total">
+                                            <span class="title">Total Balance</span>
+                                            <span class="price">$165,290.00</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- End .invoice-own-section -->
+                        </div>
+                    </div>
+                </div>
+                <div class="wperp-col-md-3 wperp-col-sm-12 wperp-col-xs-12">
+                    <!-- Start .bank-accounts-section -->
+                    <div class="bank-accounts-section wperp-panel wperp-panel-default">
+                        <div class="wperp-panel-heading wperp-bg-white">
+                            <h4>Bank Accounts</h4>
+                            <a href="#" id="bank-account-edit" class="panel-badge"><i class="flaticon-quick-edit"></i></a>
+                        </div>
+                        <div class="wperp-panel-body pb-0">
+                            <ul class="wperp-list-unstyled list-table-content list-table-content--border list-table-content--bg-space">
+                                <li>
+                                    <div class="left">
+                                        <i class="flaticon-menu-1"></i>
+                                        <a href="#" class="title">Checking</a>
+                                    </div>
+                                    <div class="right">
+                                        <span class="price">$165,290.00</span>
+                                        <i class="flaticon-trash"></i>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="left">
+                                        <i class="flaticon-menu-1"></i>
+                                        <a href="#" class="title">Patty Cash</a>
+                                    </div>
+                                    <div class="right">
+                                        <span class="price">$165,290.00</span>
+                                        <i class="flaticon-trash"></i>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="left">
+                                        <i class="flaticon-menu-1"></i>
+                                        <a href="#" class="title">Savings</a>
+                                    </div>
+                                    <div class="right">
+                                        <span class="price">$165,290.00</span>
+                                        <i class="flaticon-trash"></i>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="left">
+                                        <i class="flaticon-menu-1"></i>
+                                        <a href="#" class="title">Master Card</a>
+                                    </div>
+                                    <div class="right">
+                                        <span class="price">$165,290.00</span>
+                                        <i class="flaticon-trash"></i>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="left">
+                                        <i class="flaticon-menu-1"></i>
+                                        <a href="#" class="title">Visa</a>
+                                    </div>
+                                    <div class="right">
+                                        <span class="price">$165,290.00</span>
+                                        <i class="flaticon-trash"></i>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <div class="wperp-has-dropdown">
+                                <a href="#" class="dropdown-trigger wperp-btn btn--default">
+                                    <i class="flaticon-add-plus-button"></i>
+                                    <span>Add New</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                    <li><a href="#">Master Card</a></li>
+                                    <li><a href="#">Paypal Account</a></li>
+                                    <li><a href="#">Skrill</a></li>
+                                    <li><a href="#">Payza Account</a></li>
+                                    <li><a href="#">Master Card</a></li>
+                                </ul>
+                            </div>
+
+                        </div>
+                        <div class="wperp-panel-footer mt-50">
+                            <div class="bank-accounts-total">
+                                <span class="title">Total Balance</span>
+                                <span class="price">$165,290.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End .bank-accounts-section -->
                 </div>
             </div>
         </div>
