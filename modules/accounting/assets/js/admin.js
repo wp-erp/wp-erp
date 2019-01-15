@@ -8035,12 +8035,8 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TransactionsFilter_vue__ = __webpack_require__(112);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c3e1a572_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TransactionsFilter_vue__ = __webpack_require__(363);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c3e1a572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TransactionsFilter_vue__ = __webpack_require__(466);
 var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(362)
-}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -8050,14 +8046,14 @@ var normalizeComponent = __webpack_require__(0)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = injectStyle
+var __vue_styles__ = null
 /* scopeId */
-var __vue_scopeId__ = "data-v-c3e1a572"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TransactionsFilter_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c3e1a572_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TransactionsFilter_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c3e1a572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TransactionsFilter_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -17115,6 +17111,23 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -17128,11 +17141,6 @@ if (false) {(function () {
     return {
       salesReportModal: false,
       modalParams: null,
-      bulkActions: [{
-        key: 'trash',
-        label: 'Move to Trash',
-        img: erp_acct_var.erp_assets + '/images/trash.png'
-      }],
       columns: {
         'trn_date': {
           label: 'Date'
@@ -17169,10 +17177,8 @@ if (false) {(function () {
         perPage: 10,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
-      actions: [{
-        key: 'edit',
-        label: 'Edit'
-      }, {
+      actions: [// { key: 'edit', label: 'Edit' },
+      {
         key: 'trash',
         label: 'Delete'
       }]
@@ -17181,13 +17187,31 @@ if (false) {(function () {
   created: function created() {
     var _this = this;
 
-    this.$root.$on('sales-filter', function (filters) {
+    this.$root.$on('transactions-filter', function (filters) {
+      _this.$router.push({
+        path: '/transactions/sales',
+        query: {
+          start: filters.start_date,
+          end: filters.end_date
+        }
+      });
+
       _this.fetchItems(filters);
     });
     this.$root.$on('sales-modal-close', function () {
       _this.salesReportModal = false;
     });
-    this.fetchItems();
+    var filters = {};
+
+    if (this.$route.query.start && this.$route.query.end) {
+      filters.start_date = this.$route.query.start;
+      filters.end_date = this.$route.query.end;
+    }
+
+    this.fetchItems(filters);
+  },
+  watch: {
+    '$route': 'fetchItems'
   },
   methods: {
     fetchItems: function fetchItems() {
@@ -17231,24 +17255,20 @@ if (false) {(function () {
         default:
       }
     },
-    onBulkAction: function onBulkAction(action, items) {
-      var _this4 = this;
-
-      if ('trash' === action) {
-        if (confirm('Are you sure to delete?')) {
-          __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].delete("invoices/delete/".concat(items.join(','))).then(function (response) {
-            var toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-            if (toggleCheckbox.checked) {
-              // simulate click event to remove checked state
-              toggleCheckbox.click();
-            }
-
-            _this4.fetchItems();
-          });
-        }
-      }
-    },
+    // onBulkAction(action, items) {
+    //     if ( 'trash' === action ) {
+    //         if ( confirm('Are you sure to delete?') ) {
+    //             HTTP.delete(`invoices/delete/${items.join(',')}`).then(response => {
+    //                 let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
+    //                 if ( toggleCheckbox.checked ) {
+    //                     // simulate click event to remove checked state
+    //                     toggleCheckbox.click();
+    //                 }
+    //                 this.fetchItems();
+    //             });
+    //         }
+    //     }
+    // },
     goToPage: function goToPage(page) {
       var queries = Object.assign({}, this.$route.query);
       this.paginationData.currentPage = page;
@@ -17264,6 +17284,9 @@ if (false) {(function () {
     showSalesReportModal: function showSalesReportModal(row) {
       this.modalParams = row;
       this.salesReportModal = true;
+    },
+    isPayment: function isPayment(row) {
+      return row.type === 'payment' ? true : false;
     }
   }
 });
@@ -17606,7 +17629,7 @@ if (false) {(function () {
     },
     filterList: function filterList() {
       this.toggleFilter();
-      this.$root.$emit('sales-filter', this.filters);
+      this.$root.$emit('transactions-filter', this.filters);
     }
   }
 });
@@ -34588,6 +34611,10 @@ if (false) {
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_17fe58dd_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesList_vue__ = __webpack_require__(361);
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(467)
+}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -34597,7 +34624,7 @@ var normalizeComponent = __webpack_require__(0)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -34985,48 +35012,126 @@ var render = function() {
           _vm._v(" "),
           _c("list-table", {
             attrs: {
-              tableClass: "wperp-table table-striped table-dark widefat table2",
+              tableClass:
+                "wperp-table table-striped table-dark widefat table2 transactions-table",
               "action-column": "actions",
               columns: _vm.columns,
               rows: _vm.rows,
-              "bulk-actions": _vm.bulkActions,
               "total-items": _vm.paginationData.totalItems,
               "total-pages": _vm.paginationData.totalPages,
               "per-page": _vm.paginationData.perPage,
               "current-page": _vm.paginationData.currentPage,
               actions: _vm.actions
             },
-            on: {
-              pagination: _vm.goToPage,
-              "action:click": _vm.onActionClick,
-              "bulk:click": _vm.onBulkAction
-            },
+            on: { pagination: _vm.goToPage, "action:click": _vm.onActionClick },
             scopedSlots: _vm._u([
               {
                 key: "trn_date",
                 fn: function(data) {
                   return [
-                    _c("strong", [
-                      _c(
-                        "a",
-                        {
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              _vm.showSalesReportModal(data.row)
-                            }
-                          }
-                        },
-                        [
+                    _vm.isPayment(data.row)
+                      ? _c("strong", [
                           _vm._v(
-                            "\n                        " +
-                              _vm._s(data.row.trn_date) +
-                              "\n                    "
+                            "\n                    " +
+                              _vm._s(data.row.payment_trn_date) +
+                              "\n                "
                           )
-                        ]
-                      )
-                    ])
+                        ])
+                      : _c("strong", [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  _vm.showSalesReportModal(data.row)
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                        " +
+                                  _vm._s(data.row.invoice_tran_date) +
+                                  "\n                    "
+                              )
+                            ]
+                          )
+                        ])
+                  ]
+                }
+              },
+              {
+                key: "type",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.isPayment(data.row) ? "Payment" : "Invoice"
+                        ) +
+                        "\n            "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "due_date",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.isPayment(data.row) ? "-" : data.row.due_date
+                        ) +
+                        "\n            "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "due",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.isPayment(data.row)
+                            ? "-"
+                            : data.row.sales_amount - data.row.payment_amount
+                        ) +
+                        "\n            "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "amount",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.isPayment(data.row)
+                            ? data.row.payment_amount
+                            : data.row.sales_amount
+                        ) +
+                        "\n            "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "status",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.isPayment(data.row) ? "Colsed" : data.row.status
+                        ) +
+                        "\n            "
+                    )
                   ]
                 }
               }
@@ -35067,206 +35172,8 @@ if (false) {
 }
 
 /***/ }),
-/* 362 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 363 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "content-header-section separator wperp-has-border-top" },
-    [
-      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "wperp-col" }, [
-          _c("form", { staticClass: "wperp-form form--inline" }, [
-            _c(
-              "div",
-              {
-                class: [
-                  "wperp-has-dropdown",
-                  { "dropdown-opened": _vm.showFilters }
-                ]
-              },
-              [
-                _c(
-                  "a",
-                  {
-                    staticClass:
-                      "wperp-btn btn--default dropdown-trigger filter-button",
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.toggleFilter($event)
-                      }
-                    }
-                  },
-                  [
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _c("i", {
-                      staticClass: "flaticon-arrow-down-sign-to-navigate"
-                    })
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "dropdown-menu dropdown-menu-right wperp-filter-container"
-                  },
-                  [
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "wperp-panel wperp-panel-default wperp-filter-panel"
-                      },
-                      [
-                        _c("h3", [_vm._v("Filter")]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "wperp-panel-body" }, [
-                          _c("h3", [_vm._v("Date")]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "form-fields" }, [
-                            _c(
-                              "div",
-                              { staticClass: "start-date has-addons" },
-                              [
-                                _c("datepicker", {
-                                  model: {
-                                    value: _vm.filters.start_date,
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.filters, "start_date", $$v)
-                                    },
-                                    expression: "filters.start_date"
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "flaticon-calendar" })
-                              ],
-                              1
-                            ),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "label-to" }, [
-                              _vm._v("To")
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "end-date has-addons" },
-                              [
-                                _c("datepicker", {
-                                  model: {
-                                    value: _vm.filters.end_date,
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.filters, "end_date", $$v)
-                                    },
-                                    expression: "filters.end_date"
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "flaticon-calendar" })
-                              ],
-                              1
-                            )
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "wperp-panel-footer" }, [
-                          _c("input", {
-                            staticClass: "wperp-btn btn--default",
-                            attrs: { type: "reset", value: "Cancel" },
-                            on: { click: _vm.toggleFilter }
-                          }),
-                          _vm._v(" "),
-                          _c("input", {
-                            staticClass: "wperp-btn btn--primary",
-                            attrs: { type: "submit", value: "Submit" },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.filterList($event)
-                              }
-                            }
-                          })
-                        ])
-                      ]
-                    )
-                  ]
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _vm._m(2)
-          ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wperp-col" }, [
-      _c("h2", { staticClass: "content-header__title" }, [
-        _vm._v("Transactions")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", [
-      _c("i", { staticClass: "flaticon-search-segment" }),
-      _vm._v("Filters")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "wperp-import-wrapper display-inline-block" },
-      [
-        _c(
-          "a",
-          {
-            staticClass: "wperp-btn btn--default",
-            attrs: { href: "#", title: "Import" }
-          },
-          [_c("span", { staticClass: "flaticon-import" })]
-        )
-      ]
-    )
-  }
-]
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-c3e1a572", esExports)
-  }
-}
-
-/***/ }),
+/* 362 */,
+/* 363 */,
 /* 364 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -38100,6 +38007,286 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-1342a7ca", esExports)
   }
 }
+
+/***/ }),
+/* 397 */,
+/* 398 */,
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */,
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */,
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */,
+/* 444 */,
+/* 445 */,
+/* 446 */,
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */,
+/* 451 */,
+/* 452 */,
+/* 453 */,
+/* 454 */,
+/* 455 */,
+/* 456 */,
+/* 457 */,
+/* 458 */,
+/* 459 */,
+/* 460 */,
+/* 461 */,
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "content-header-section separator wperp-has-border-top" },
+    [
+      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "wperp-col" }, [
+          _c(
+            "form",
+            {
+              staticClass: "wperp-form form--inline",
+              attrs: { action: "" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.filterList($event)
+                }
+              }
+            },
+            [
+              _c(
+                "div",
+                {
+                  class: [
+                    "wperp-has-dropdown",
+                    { "dropdown-opened": _vm.showFilters }
+                  ]
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass:
+                        "wperp-btn btn--default dropdown-trigger filter-button",
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.toggleFilter($event)
+                        }
+                      }
+                    },
+                    [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c("i", {
+                        staticClass: "flaticon-arrow-down-sign-to-navigate"
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "dropdown-menu dropdown-menu-right wperp-filter-container"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "wperp-panel wperp-panel-default wperp-filter-panel"
+                        },
+                        [
+                          _c("h3", [_vm._v("Filter")]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "wperp-panel-body" }, [
+                            _c("h3", [_vm._v("Date")]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-fields" }, [
+                              _c(
+                                "div",
+                                { staticClass: "start-date has-addons" },
+                                [
+                                  _c("datepicker", {
+                                    model: {
+                                      value: _vm.filters.start_date,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.filters, "start_date", $$v)
+                                      },
+                                      expression: "filters.start_date"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("span", {
+                                    staticClass: "flaticon-calendar"
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "label-to" }, [
+                                _vm._v("To")
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "end-date has-addons" },
+                                [
+                                  _c("datepicker", {
+                                    model: {
+                                      value: _vm.filters.end_date,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.filters, "end_date", $$v)
+                                      },
+                                      expression: "filters.end_date"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("span", {
+                                    staticClass: "flaticon-calendar"
+                                  })
+                                ],
+                                1
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "wperp-panel-footer" }, [
+                            _c("input", {
+                              staticClass: "wperp-btn btn--default",
+                              attrs: { type: "reset", value: "Cancel" },
+                              on: { click: _vm.toggleFilter }
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              staticClass: "wperp-btn btn--primary",
+                              attrs: { type: "submit", value: "Submit" }
+                            })
+                          ])
+                        ]
+                      )
+                    ]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(2)
+            ]
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "wperp-col" }, [
+      _c("h2", { staticClass: "content-header__title" }, [
+        _vm._v("Transactions")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", [
+      _c("i", { staticClass: "flaticon-search-segment" }),
+      _vm._v("Filters")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "wperp-import-wrapper display-inline-block" },
+      [
+        _c(
+          "a",
+          {
+            staticClass: "wperp-btn btn--default",
+            attrs: { href: "#", title: "Import" }
+          },
+          [_c("span", { staticClass: "flaticon-import" })]
+        )
+      ]
+    )
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-c3e1a572", esExports)
+  }
+}
+
+/***/ }),
+/* 467 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 ],[138]);

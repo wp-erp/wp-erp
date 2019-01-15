@@ -16,28 +16,45 @@
             </div>
 
             <list-table
-                tableClass="wperp-table table-striped table-dark widefat table2"
+                tableClass="wperp-table table-striped table-dark widefat table2 transactions-table"
                 action-column="actions"
                 :columns="columns"
                 :rows="rows"
-                :bulk-actions="bulkActions"
                 :total-items="paginationData.totalItems"
                 :total-pages="paginationData.totalPages"
                 :per-page="paginationData.perPage"
                 :current-page="paginationData.currentPage"
                 @pagination="goToPage"
                 :actions="actions"
-                @action:click="onActionClick"
-                @bulk:click="onBulkAction">
+                @action:click="onActionClick">
                 <template slot="trn_date" slot-scope="data">
-                    <strong>
-                        <!-- <router-link :to="{ name: 'user', params: { id:  }}">{{ data.row.trn_date }}</router-link> -->
+                    <strong v-if="isPayment(data.row)">
+                        {{ data.row.payment_trn_date }}
+                    </strong>
+                    <strong v-else>
+                        <!-- <router-link :to="{ name: 'user', params: { id:  }}">{{ data.row.invoice_tran_date }}</router-link> -->
 
                         <a href="#" @click.prevent="showSalesReportModal(data.row)">
-                            {{ data.row.trn_date }}
+                            {{ data.row.invoice_tran_date }}
                         </a>
                     </strong>
                 </template>
+                <template slot="type" slot-scope="data">
+                    {{ isPayment(data.row) ? 'Payment' : 'Invoice' }}
+                </template>
+                <template slot="due_date" slot-scope="data">
+                    {{ isPayment(data.row) ? '-' : data.row.due_date }}
+                </template>
+                <template slot="due" slot-scope="data">
+                    {{ isPayment(data.row) ? '-' : data.row.sales_amount - data.row.payment_amount }}
+                </template>
+                <template slot="amount" slot-scope="data">
+                    {{ isPayment(data.row) ? data.row.payment_amount : data.row.sales_amount }}
+                </template>
+                <template slot="status" slot-scope="data">
+                    {{ isPayment(data.row) ? 'Colsed' : data.row.status }}
+                </template>
+
             </list-table>
 
         </div>
@@ -61,13 +78,6 @@
             return {
                 salesReportModal: false,
                 modalParams: null,
-                bulkActions: [
-                    {
-                        key: 'trash',
-                        label: 'Move to Trash',
-                        img: erp_acct_var.erp_assets + '/images/trash.png'
-                    }
-                ],
                 columns: {
                     'trn_date':      {label: 'Date'},
                     'type':          {label: 'Type'},
@@ -88,14 +98,15 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions : [
-                    { key: 'edit', label: 'Edit' },
+                    // { key: 'edit', label: 'Edit' },
                     { key: 'trash', label: 'Delete' }
                 ]
             };
         },
 
         created() {
-            this.$root.$on('sales-filter', filters => {
+            this.$root.$on('transactions-filter', filters => {
+                this.$router.push({ path: '/transactions/sales', query: { start: filters.start_date, end: filters.end_date } });
                 this.fetchItems(filters);
             });
 
@@ -103,11 +114,22 @@
                 this.salesReportModal = false;
             });
 
-            this.fetchItems();
+            let filters = {};
+            
+            if ( this.$route.query.start && this.$route.query.end ) {
+                filters.start_date = this.$route.query.start;
+                filters.end_date = this.$route.query.end;
+            }
+
+            this.fetchItems(filters);
+        },
+
+        watch: {
+            '$route': 'fetchItems'
         },
 
         methods: {
-            fetchItems(filters = {}) {
+            fetchItems(filters = {}) {                
                 this.rows = [];
 
                 HTTP.get('/transactions/sales', {
@@ -151,22 +173,22 @@
                 }
             },
 
-            onBulkAction(action, items) {
-                if ( 'trash' === action ) {
-                    if ( confirm('Are you sure to delete?') ) {
-                        HTTP.delete(`invoices/delete/${items.join(',')}`).then(response => {
-                            let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
+            // onBulkAction(action, items) {
+            //     if ( 'trash' === action ) {
+            //         if ( confirm('Are you sure to delete?') ) {
+            //             HTTP.delete(`invoices/delete/${items.join(',')}`).then(response => {
+            //                 let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
-                            if ( toggleCheckbox.checked ) {
-                                // simulate click event to remove checked state
-                                toggleCheckbox.click();
-                            }
+            //                 if ( toggleCheckbox.checked ) {
+            //                     // simulate click event to remove checked state
+            //                     toggleCheckbox.click();
+            //                 }
 
-                            this.fetchItems();
-                        });
-                    }
-                }
-            },
+            //                 this.fetchItems();
+            //             });
+            //         }
+            //     }
+            // },
 
             goToPage(page) {
                 let queries = Object.assign({}, this.$route.query);
@@ -184,8 +206,23 @@
                 this.modalParams = row;
 
                 this.salesReportModal = true;
+            },
+
+            isPayment(row) {
+                return row.type === 'payment' ? true : false;
             }
         },
 
     }
 </script>
+
+<style lang="less">
+    .transactions-table {
+        .tablenav,
+        .column-cb,
+        .check-column {
+            display: none;
+        }
+    }
+</style>
+
