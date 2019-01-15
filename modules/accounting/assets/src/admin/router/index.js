@@ -32,6 +32,9 @@ import NewTaxAgency      from 'admin/components/tax/NewTaxAgency.vue';
 import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
 import PayTaxRecord      from 'admin/components/tax/PayTaxRecord.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
+import TaxRateModal      from 'admin/components/tax/TaxRateModal.vue';
+import TaxCatModal       from 'admin/components/tax/TaxCatModal.vue';
+import TaxAgencyModal    from 'admin/components/tax/TaxAgencyModal.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import RecPaymentModal   from 'admin/components/rec-payment/RecPaymentModal.vue';
 
@@ -255,6 +258,90 @@ export default new Router({
             ]
         },
         {
+            path: '/tax-rates',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'TaxRates',
+                    component: TaxRates,
+                },
+                {
+
+                    path: '/tax-rates/new',
+                    name: 'NewTax',
+                    component: NewTax
+                },
+                {
+
+                    path: '/tax-rates/:id',
+                    name: 'SingleTaxRate',
+                    component: TaxRateModal
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateTaxRates',
+                    component: TaxRates,
+                },
+            ]
+        },
+        {
+            path: '/tax-categories',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'TaxCategories',
+                    component: TaxCategories,
+                },
+                {
+
+                    path: '/tax-categories/new',
+                    name: 'NewTaxCategory',
+                    component: NewTaxCategory
+                },
+                {
+
+                    path: '/tax-categories/:id',
+                    name: 'SingleTaxCategory',
+                    component: TaxCatModal
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateTaxCategories',
+                    component: TaxCategories,
+                },
+            ]
+        },
+        {
+            path: '/tax-agencies',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'TaxAgencies',
+                    component: TaxAgencies,
+                },
+                {
+
+                    path: '/tax-categories/new',
+                    name: 'NewTaxAgency',
+                    component: NewTaxAgency
+                },
+                {
+
+                    path: '/tax-categories/:id',
+                    name: 'SingleTaxAgency',
+                    component: TaxAgencyModal
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateTaxAgencies',
+                    component: TaxAgencies,
+                },
+            ]
+        },
+        {
             path: '/transfer/new',
             name: 'Transfer',
             component: Transfer
@@ -263,36 +350,6 @@ export default new Router({
             path: '/expenses/new',
             name: 'ExpenseCreate',
             component: ExpenseCreate
-        },
-        {
-            path: '/new-tax',
-            name: 'NewTax',
-            component: NewTax
-        },
-        {
-            path: '/tax-rates',
-            name: 'TaxRates',
-            component: TaxRates
-        },
-        {
-            path: '/new-tax-cat',
-            name: 'NewTaxCategory',
-            component: NewTaxCategory
-        },
-        {
-            path: '/tax-categories',
-            name: 'TaxCategories',
-            component: TaxCategories
-        },
-        {
-            path: '/new-tax-agency',
-            name: 'NewTaxAgency',
-            component: NewTaxAgency
-        },
-        {
-            path: '/tax-agencies',
-            name: 'TaxAgencies',
-            component: TaxAgencies
         },
         {
             path: '/pay-tax',
