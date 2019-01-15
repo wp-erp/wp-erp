@@ -808,3 +808,21 @@ function erp_ac_customer_auto_create_from_crm( $contact_id, $data ) {
     return erp_ac_customer_create_from_crm( [], $contact_id, $data );
 }
 
+/**
+ * Get invoice by refference
+ * @param  string $refference
+ * @return object
+ */
+function erp_ac_get_invoice_by_refference( $refference ) {
+    global $wpdb;
+    if ( ! $refference ) {
+        return;
+    }
+
+    $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}erp_ac_transactions WHERE form_type = 'invoice' AND ref = '{$refference}'" );
+    if ( $row ) {
+        return $row;
+    }
+    return false;
+}
+

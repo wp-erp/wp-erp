@@ -12,7 +12,7 @@ $more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
 ?>
 <div class="wrap">
 
-    <h2><?php _e( 'Payment', 'erp' ); 
+    <h2><?php _e( 'Payment', 'erp' );
     if ( isset( $popup_status ) ) {
     printf( '<a href="%1$s" class="erp-ac-more-details">%2$s →</a>', $more_details_url, __('More Details','erp') );
     } ?>
@@ -22,7 +22,7 @@ $more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
 
         <div class="erp-grid-container">
             <?php if ( ! isset( $popup_status ) ) : ?>
-            
+
             <div class="row payment-buttons erp-hide-print" id="payment-button-container" data-theme="drop-theme-hubspot-popovers">
                 <div class="col-6">
                     <?php if ( $status ) {
@@ -102,7 +102,11 @@ $more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
                             </tr>
                             <tr>
                                 <th><?php _e( 'Amount Due', 'erp' ); ?>:</th>
-                                <td><?php echo erp_ac_get_price( $transaction->due ); ?></td>
+                                <td>
+                                    <?php
+                                        echo erp_ac_get_price( erp_ac_get_invoice_by_refference( $transaction->ref )->due ) ? : 0;
+                                    ?>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
