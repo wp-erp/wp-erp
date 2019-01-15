@@ -7,7 +7,6 @@ import Dashboard         from 'admin/components/Dashboard.vue';
 import TrialBalance      from 'admin/components/reports/TrialBalance.vue';
 import PeopleDetails     from 'admin/components/people/PeopleDetails.vue';
 import InvoiceCreate     from 'admin/components/invoice/InvoiceCreate.vue';
-import DummyComponent    from 'admin/components/DummyComponent.vue';
 import ChartOfAccounts   from 'admin/components/chart-accounts/ChartOfAccounts.vue';
 import AddChartAccounts  from 'admin/components/chart-accounts/AddChartAccounts.vue';
 import ReportsOverview   from 'admin/components/reports/ReportsOverview.vue';
@@ -30,6 +29,7 @@ import NewTax            from 'admin/components/tax/NewTax.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
+import RecPaymentModal   from 'admin/components/rec-payment/RecPaymentModal.vue';
 
 Vue.use(Router)
 
@@ -179,6 +179,12 @@ export default new Router({
             path: '/payments/new',
             name: 'RecPaymentCreate',
             component: RecPaymentCreate
+        },
+        {
+
+            path: '/payments/:id',
+            name: 'SinglePayment',
+            component: RecPaymentModal
         },
         {
             path: '/bills/new',
