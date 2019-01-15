@@ -227,6 +227,7 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['updated_by'] = isset($data['updated_by']) ? $data['updated_by'] : '';
     $tax_data['cat_name'] = isset($data['cat_name']) ? $data['cat_name'] : '';
     $tax_data['description'] = isset($data['description']) ? $data['description'] : '';
+    $tax_data['agency_name'] = isset($data['agency_name']) ? $data['agency_name'] : '';
 
     return $tax_data;
 }

@@ -1221,7 +1221,7 @@ Company'
               `updated_by` varchar(50) DEFAULT NULL
             ) $collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agency_names` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agencies` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `name` varchar(255) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
