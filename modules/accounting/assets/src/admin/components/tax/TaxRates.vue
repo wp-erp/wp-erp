@@ -8,7 +8,6 @@
                         <i class="flaticon-add-plus-button"></i>
                         <span>Add Tax Rate</span>
                     </a>
-                    <tax-rate-modal v-if="taxModal" :taxes.sync="rows" :title="buttonTitle"></tax-rate-modal>
                 </div>
             </div>
         </div>
@@ -39,7 +38,6 @@
     import HTTP from 'admin/http'
     import ListTable     from 'admin/components/list-table/ListTable.vue'
     import NewTax        from 'admin/components/tax/NewTax.vue';
-    import TaxRateModal  from 'admin/components/tax/TaxRateModal.vue';
 
     export default {
         name: 'TaxRates',
@@ -47,7 +45,6 @@
         components: {
             ListTable,
             NewTax,
-            TaxRateModal
         },
 
         data () {
@@ -196,5 +193,5 @@
    	}
 </script>
 <style lang="less">
-    
+
 </style>
