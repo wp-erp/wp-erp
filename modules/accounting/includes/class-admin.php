@@ -137,7 +137,7 @@ class Admin {
         erp_add_submenu( 'accounting', 'tax', [
             'title'      => __( 'Tax Rates', 'erp' ),
             'capability' => $sale,
-            'slug'       => 'tax-rates',
+            'slug'       => 'taxes',
             'position'   => 15
         ] );
         erp_add_submenu( 'accounting', 'tax', [
