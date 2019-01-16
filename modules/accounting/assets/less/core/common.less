@@ -314,3 +314,153 @@ margin: 0 !important;
 .padding-0 {
 padding: 0 !important;
 }
+
+
+.border-0 {
+    border: 0 !important;
+}
+.bl-0 {
+    border-left: 0 !important;
+}
+.br-0 {
+    border-right: 0 !important;
+}
+.bt-0 {
+    border-top: 0 !important;
+}
+.bb-0 {
+    border-bottom: 0 !important;
+}
+
+
+
+
+
+// Background color classes
+
+.@{theme-prefix}-bg {
+    &-white {
+        background-color: @white !important;
+    }
+}
+
+// pull
+.@{theme-prefix}-pull-right {
+    float: right;
+}
+
+
+// list
+
+.@{theme-prefix}-list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+
+.list-table-content {
+    color: @table-content-color;
+
+    li {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        position: relative;
+
+        &:first-child {
+            padding-top: 0;
+        }
+
+        &.total {
+            border-top: 1px solid @border-color;
+            font-size: 14px;
+            margin-top: 19px;
+            padding-top: 20px
+        }
+    }
+
+    &--border li {
+        border-bottom: 1px solid @border-color;
+    }
+    &--bg-space {
+        margin-bottom: 27px !important;
+
+        li {
+            padding: 26px 0;
+
+            &:first-child {
+                padding-top: 6px;
+            }
+        }
+    }
+}
+
+
+.bank-accounts-section {
+    .panel-badge {
+        font-size: 14px;
+        line-height: 1;
+
+        i {
+            font-size: 16px;
+            line-height: 1;
+        }
+    }
+
+    .list-table-content li {
+        i {
+            display: none;
+            cursor: pointer;
+
+            &:before {
+                .transition(all .2s);
+            }
+        }
+        .flaticon-menu-1 {
+            font-size: 11px;
+            margin-right: 17px;
+
+            &:hover:before {
+                color: @theme-color;
+            }
+        }
+
+        .flaticon-trash {
+            margin-left: 15px;
+
+            &:hover:before {
+                color: #E9485E;
+            }
+        }
+    }
+
+    &.open-edit {
+        .list-table-content li {
+            i {
+                display: inline;
+            }
+
+            a {
+                pointer-events: none;
+                color: @table-content-color;
+            }
+
+        }
+
+        .wperp-btn {
+            display: none;
+        }
+    }
+}
+.bank-accounts-total {
+    font-size: 14px;
+    color: @table-content-color;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.wperp-account-chart-table {
+    .wperp-width-60 {
+        width: 60%;
+    }
+}

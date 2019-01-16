@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-containers">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -32,7 +32,7 @@
                             </div>
 
                             <div class="wperp-chart-block">
-                                <canvas id="bar_chart"></canvas>
+                                <canvas id="bar_chart" ref="bar_chart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -97,10 +97,13 @@
                 </div>
                 <div class="wperp-col-md-3 wperp-col-sm-12 wperp-col-xs-12">
                     <!-- Start .bank-accounts-section -->
-                    <div class="bank-accounts-section wperp-panel wperp-panel-default">
+                    <div :class="['bank-accounts-section', 'wperp-panel', 'wperp-panel-default', ( isEditSettingsEnabled ? 'open-edit':'' )]">
                         <div class="wperp-panel-heading wperp-bg-white">
                             <h4>Bank Accounts</h4>
-                            <a href="#" id="bank-account-edit" class="panel-badge"><i class="flaticon-quick-edit"></i></a>
+                            <a href="#" @click.prevent="isEditSettingsEnabled = !isEditSettingsEnabled" id="bank-account-edit" class="panel-badge">
+                                <span v-if="isEditSettingsEnabled">Save</span>
+                                <i v-else class="flaticon-quick-edit"></i>
+                            </a>
                         </div>
                         <div class="wperp-panel-body pb-0">
                             <ul class="wperp-list-unstyled list-table-content list-table-content--border list-table-content--bg-space">
@@ -155,20 +158,24 @@
                                     </div>
                                 </li>
                             </ul>
-
-                            <div class="wperp-has-dropdown">
-                                <a href="#" class="dropdown-trigger wperp-btn btn--default">
-                                    <i class="flaticon-add-plus-button"></i>
-                                    <span>Add New</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                                    <li><a href="#">Master Card</a></li>
-                                    <li><a href="#">Paypal Account</a></li>
-                                    <li><a href="#">Skrill</a></li>
-                                    <li><a href="#">Payza Account</a></li>
-                                    <li><a href="#">Master Card</a></li>
-                                </ul>
-                            </div>
+                            
+                            <dropdown placement="bottom-start">
+                                <template slot="button">
+                                    <a href="#" class="dropdown-trigger wperp-btn btn--default">
+                                        <i class="flaticon-add-plus-button"></i>
+                                        <span>Add New</span>
+                                    </a>
+                                </template>
+                                <template slot="dropdown">
+                                    <ul slot="action-items" role="menu">
+                                        <li><a href="#">Master Card</a></li>
+                                        <li><a href="#">Paypal Account</a></li>
+                                        <li><a href="#">Skrill</a></li>
+                                        <li><a href="#">Payza Account</a></li>
+                                        <li><a href="#">Master Card</a></li>
+                                    </ul>
+                                </template>
+                            </dropdown>
 
                         </div>
                         <div class="wperp-panel-footer mt-50">
@@ -186,13 +193,16 @@
 </template>
 
 <script>
+    import 'assets/js/plugins/chart.min'
+    import Dropdown from 'admin/components/base/Dropdown.vue'
     import MetaBox from 'admin/components/wp/MetaBox.vue'
 
     export default {
         name: 'Dashboard',
 
         components: {
-            MetaBox
+            MetaBox,
+            Dropdown
         },
 
         data () {
@@ -202,88 +212,53 @@
                 title3: 'Invoices owed to you',
                 title4: 'Bills to pay',
                 closable: true,
-                msg: 'Accounting'
+                msg: 'Accounting',
+                isEditSettingsEnabled: false
             }
-        }
+        },
+
+        mounted: function () {
+            let colors = ['#208DF8'],
+                labels2 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20],
+                bgColor = colors,
+                dataChart = {
+                    labels: labels2,
+                    datasets: [{
+                        label: 'Dataset 1',
+                        data: data,
+                        backgroundColor: '#208DF8'
+                    }]
+                },
+                config = {
+                    type: 'bar',
+                    data: dataChart,
+                    options: {
+                        maintainAspectRatio: true,
+                        responsive: true,
+                        legend: {
+                            display: false
+                        }
+                    }
+                };
+            window.addEventListener('load', () => {
+                let bar_chart_ctx = this.$refs['bar_chart'].getContext("2d");
+                if( bar_chart_ctx !== null || bar_chart_ctx !== undefined ){
+                    new Chart(bar_chart_ctx, config);
+                }
+            });
+
+        },
+
+        computed: {
+            function(){
+                
+            }
+        },
+
     }
 </script>
 
 <style scoped>
-    .erp-acc-dashboard-1 {
-        display: flex;
-    }
-
-    .erp-acc-dashboard-1-col {
-        margin: 5px;
-        flex: 50%;
-    }
-
-    .erp-acc-dashboard-2 {
-        display: flex;
-    }
-
-    .erp-acc-dashboard-2-col {
-        margin: 5px;
-        flex: 50%;
-    }
-
-    h1 {
-        padding: 0px;
-        line-height: 29px;
-    }
-
-    .erp.accounting-dashboard .postbox.bank-balance .inside {
-        padding-bottom: 0;
-        margin-bottom: 0;
-    }
-    .erp.accounting-dashboard .postbox.bank-balance ul {
-        margin-bottom: 0;
-    }
-    .erp.accounting-dashboard .postbox.bank-balance li {
-        margin-bottom: 6px;
-        padding: 0 10px 5px 10px;
-    }
-    .erp.accounting-dashboard .postbox.bank-balance li.total {
-        background-color: #f5f5f5;
-        border-top: 1px solid #eee;
-        color: #777;
-        padding: 10px 20px 12px 20px;
-        margin: 0 -12px 0 -12px;
-        font-weight: bold;
-    }
-
-    .erp.accounting-dashboard .postbox.bank-balance span.price {
-        float: right;
-    }
-
-    .erp.accounting-dashboard .postbox table {
-        width: 100%;
-        word-wrap: break-word;
-        border-spacing: 0;
-    }
-
-    .erp.accounting-dashboard .postbox table tbody tr:nth-child(odd) {
-        background-color: #f9f9f9;
-    }
-
-    .erp.accounting-dashboard .postbox table td {
-        padding: 8px 10px;
-        vertical-align: top;
-        color: #555;
-        line-height: 1.5em;
-        font-size: 13px;
-    }
-
-    .erp.accounting-dashboard .postbox table td.price {
-        text-align: right;
-    }
-
-    tr:nth-child(odd) {
-        background-color: #f2f2f2
-    }
-
-    td.price {
-        text-align: right;
-        margin-right: 2px;
-    }
+    
 </style>
