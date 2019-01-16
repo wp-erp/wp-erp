@@ -40455,13 +40455,14 @@ if (false) {
 /* harmony default export */ __webpack_exports__["a"] = ({
   methods: {
     formatAmount: function formatAmount(val) {
+      var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       var currency = '$';
 
       if (val < 0) {
-        return "Cr. ".concat(currency, " ").concat(Math.abs(val));
+        return prefix ? "Cr. ".concat(currency, " ").concat(Math.abs(val)) : "".concat(currency, " ").concat(Math.abs(val));
       }
 
-      return "Dr. ".concat(currency, " ").concat(val);
+      return prefix ? "Dr. ".concat(currency, " ").concat(val) : "".concat(currency, " ").concat(Math.abs(val));
     }
   }
 });
