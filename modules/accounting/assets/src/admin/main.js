@@ -3,12 +3,15 @@ import Vue from 'vue'
 import VeeValidate from 'vee-validate'
 import App from './App.vue'
 import router from './router'
-import VueSweetalert2 from 'vue-sweetalert2';
+import VueSweetalert2 from 'vue-sweetalert2'
+import commonMixins from './mixins/common'
 
 Vue.config.productionTip = false
 
 Vue.use(VeeValidate);
 Vue.use(VueSweetalert2);
+
+Vue.mixin(commonMixins);
 
 // Vue click outside directive
 Vue.directive('click-outside', {
