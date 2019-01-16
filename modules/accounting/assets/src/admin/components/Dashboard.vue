@@ -26,7 +26,6 @@
                                     <option value="last_quarter" selected="selected">Last Quarter</option>
                                     <option value="this_year">This Year</option>
                                     <option value="last_year">Last Year</option>
-                                    <option value="custom">Custom</option>
                                 </select>
                                 <i class="flaticon-arrow-down-sign-to-navigate"></i>
                             </div>
@@ -134,15 +133,23 @@
         mounted () {
             let colors = ['#208DF8'],
                 labels2 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20],
+                incomeData = [5, 6, 4, 5, 8, 7, 8, 12, 6, 9, 5, 11],
+                expenseData = [3, 2,4, 3.5, 4, 5, 6, 5, 4.5, 6, 4, 6],
                 bgColor = colors,
                 dataChart = {
                     labels: labels2,
-                    datasets: [{
-                        label: 'Dataset 1',
-                        data: data,
-                        backgroundColor: '#208DF8'
-                    }]
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: incomeData,
+                            backgroundColor: '#208DF8'
+                        },
+                        {
+                            label: 'Expense',
+                            data: expenseData,
+                            backgroundColor: '#f86e2d'
+                        }
+                    ]
                 },
                 config = {
                     type: 'bar',
@@ -152,6 +159,13 @@
                         responsive: true,
                         legend: {
                             display: false
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
                         }
                     }
                 };
