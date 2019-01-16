@@ -78,3 +78,33 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
+
+/**
+ * Get sales chart status
+ */
+function erp_acct_get_sales_chart_status() {
+    global $wpdb;
+
+    $sql = "SELECT COUNT(invoice.status) AS sub_total, status_type.invoice_type
+            FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
+            LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.status = status_type.id
+            GROUP BY status_type.id ORDER BY status_type.invoice_type ASC";
+
+    return $wpdb->get_results($sql, ARRAY_A);
+}
+
+/**
+ * Get sales chart payment
+ */
+function erp_acct_get_sales_chart_payment() {
+    global $wpdb;
+
+    $sql = "SELECT SUM(credit) as received, SUM(balance) AS outstanding
+        FROM ( SELECT invoice.voucher_no, SUM(invoice_acc_detail.credit) AS credit, SUM( invoice_acc_detail.debit - invoice_acc_detail.credit) AS balance
+        FROM wp_erp_acct_invoices AS invoice
+        LEFT JOIN wp_erp_acct_invoice_account_details AS invoice_acc_detail ON invoice.voucher_no = invoice_acc_detail.invoice_no
+        GROUP BY invoice.voucher_no HAVING balance > 0 ) AS get_amount";
+
+    return $wpdb->get_row($sql, ARRAY_A);
+}
+

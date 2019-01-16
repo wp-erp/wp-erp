@@ -21,6 +21,7 @@ import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
 import JournalModal      from 'admin/components/journal/JournalModal.vue';
 import Transfer          from 'admin/components/transfers/Transfer.vue';
 import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
+import SalesReport       from 'admin/components/reports/SalesReport.vue';
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
 import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
 import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
@@ -55,11 +56,11 @@ export default new Router({
             name : 'Customers',
             component: People,
         },
-        {
-            path : '/transactions',
-            name : 'Sales',
-            component: Sales,
-        },
+        // {
+        //     path : '/transactions',
+        //     name : 'Sales',
+        //     component: Sales,
+        // },
         {
             path : '/inventory',
             name : 'Products',
@@ -124,19 +125,41 @@ export default new Router({
             ]
         },
         {
-            path: '/transactions/sales',
-            name: 'Sales',
-            component: Sales
-        },
-        {
-            path: '/transactions/expenses',
-            name: 'Expenses',
-            component: Expenses
-        },
-        {
-            path: '/transactions/purchases',
-            name: 'Purchases',
-            component: Purchases
+            path: '/transactions',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'Transactions',
+                    component: Sales,
+                },
+                {
+                    path: 'sales',
+                    component: { render (c) { return c('router-view') } },
+                    children: [
+                        {
+                            path: '',
+                            name: 'Sales',
+                            component: Sales,
+                        },
+                        {
+                            path: ':id/report',
+                            name: 'SalesReport',
+                            component: SalesReport,
+                        },
+                    ]
+                },
+                {
+                    path: 'expenses',
+                    name: 'Expenses',
+                    component: Expenses,
+                },
+                {
+                    path: 'purchases',
+                    name: 'purchases',
+                    component: Purchases,
+                },
+            ]
         },
         {
             path: '/charts',

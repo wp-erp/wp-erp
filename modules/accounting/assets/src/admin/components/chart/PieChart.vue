@@ -5,22 +5,26 @@
             <div class="chart-container">
                 <canvas :id="`${id}_chart`" hieght="84"></canvas>
             </div>
-            <div id="legend" :id="`${id}_legend`" class="chart-legend"></div>
+            <div :id="`${id}_legend`" class="chart-legend"></div>
         </div>
     </div>
 </template>
 
 <script>
+    import 'assets/js/plugins/chart.min';
 
     export default {
         name: 'PieChart',
+
         props: [ 'id', 'title', 'labels', 'colors', 'data' ],
+
         data() {
             return {
             }
         },
+
         methods: {
-            MakeChart() {
+            makeChart() {
                 var self = this;
                 var colors = this.colors,
                 labels = this.labels,
@@ -53,14 +57,14 @@
                                         </div><div class="chart-label-values">');
                                     if (chart.data.datasets[0].data[i]) {
                                         if ( self.id == 'payment' ) {
-                                            text.push('<span class="chart-value">$ ' + chart.data.datasets[0].data[i] + '</span><br>');
+                                            text.push('<span class="chart-value">' + chart.data.datasets[0].data[i] + '</span><br>');
                                         } else {
                                             text.push('<span class="chart-value">' + chart.data.datasets[0].data[i]);
                                         }
 
                                     }
                                     if (chart.data.labels[i]) {
-                                        text.push('<span class="chart-label">' + chart.data.labels[i] + '</span>');
+                                        text.push('<span class="chart-label"> ' + chart.data.labels[i] + '</span>');
                                     }
                                     text.push('</div></li>');
                                 }
@@ -102,8 +106,9 @@
                 }, 1000);
             }
         },
+
         created() {
-            this.MakeChart();
+            this.makeChart();
         }
     }
 

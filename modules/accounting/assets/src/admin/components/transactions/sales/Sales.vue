@@ -23,9 +23,6 @@
 </template>
 
 <script>
-import 'assets/js/plugins/chart.min';
-import 'assets/js/status_chart';
-
 import ComboBox from 'admin/components/select/ComboBox.vue';
 import SalesStats from 'admin/components/transactions/sales/SalesStats.vue';
 import SalesList from 'admin/components/transactions/sales/SalesList.vue';

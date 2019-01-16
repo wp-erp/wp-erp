@@ -1,12 +1,6 @@
 <template>
 
     <div class="wperp-transactions-section wperp-section">
-        <sales-report
-            v-if="salesReportModal"
-            :id="modalParams.voucher_no"
-            :type="modalParams.type"
-            :totalDue="modalParams.due"
-            :totalAmount="modalParams.amount" />
 
         <!-- Start .wperp-crm-table -->
         <div class="table-container">
@@ -32,11 +26,9 @@
                         {{ data.row.payment_trn_date }}
                     </strong>
                     <strong v-else>
-                        <!-- <router-link :to="{ name: 'user', params: { id:  }}">{{ data.row.invoice_tran_date }}</router-link> -->
-
-                        <a href="#" @click.prevent="showSalesReportModal(data.row)">
+                        <router-link :to="{ name: 'SalesReport', params: { id: data.row.id }}">
                             {{ data.row.invoice_tran_date }}
-                        </a>
+                        </router-link>
                     </strong>
                 </template>
                 <template slot="type" slot-scope="data">
@@ -64,20 +56,16 @@
 <script>
     import HTTP from 'admin/http';
     import ListTable from 'admin/components/list-table/ListTable.vue';
-    import SalesReport from 'admin/components/reports/SalesReport.vue';
 
     export default {
         name: 'SalesList',
 
         components: {
             ListTable,
-            SalesReport
         },
 
         data() {
             return {
-                salesReportModal: false,
-                modalParams: null,
                 columns: {
                     'trn_date':      {label: 'Date'},
                     'type':          {label: 'Type'},
@@ -98,7 +86,6 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions : [
-                    // { key: 'edit', label: 'Edit' },
                     { key: 'trash', label: 'Delete' }
                 ]
             };
@@ -108,10 +95,6 @@
             this.$root.$on('transactions-filter', filters => {
                 this.$router.push({ path: '/transactions/sales', query: { start: filters.start_date, end: filters.end_date } });
                 this.fetchItems(filters);
-            });
-
-            this.$root.$on('sales-modal-close', () => {
-                this.salesReportModal = false;
             });
 
             let filters = {};
@@ -173,23 +156,6 @@
                 }
             },
 
-            // onBulkAction(action, items) {
-            //     if ( 'trash' === action ) {
-            //         if ( confirm('Are you sure to delete?') ) {
-            //             HTTP.delete(`invoices/delete/${items.join(',')}`).then(response => {
-            //                 let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-            //                 if ( toggleCheckbox.checked ) {
-            //                     // simulate click event to remove checked state
-            //                     toggleCheckbox.click();
-            //                 }
-
-            //                 this.fetchItems();
-            //             });
-            //         }
-            //     }
-            // },
-
             goToPage(page) {
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
@@ -200,12 +166,6 @@
                 });
 
                 this.fetchItems();
-            },
-
-            showSalesReportModal(row) {
-                this.modalParams = row;
-
-                this.salesReportModal = true;
             },
 
             isPayment(row) {
