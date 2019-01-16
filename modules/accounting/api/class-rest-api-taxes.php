@@ -72,12 +72,24 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/pay', [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/tax-records', [
             [
                 'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_tax_records' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sale' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/pay-tax', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'pay_tax' ],
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
@@ -254,6 +266,78 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         return new WP_REST_Response( true, 204 );
     }
 
+    /**
+     * Get all tax payment records
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function get_tax_records( $request ) {
+        $args = [
+            'number' => !empty( $request['per_page'] ) ? $request['per_page'] : 20,
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+        ];
+
+        $formatted_items = [];
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $tax_data    = erp_acct_get_tax_pay_records( $args );
+        $total_items = erp_acct_get_tax_pay_records( [ 'count' => true, 'number' => -1 ] );
+
+        foreach ( $tax_data as $item ) {
+            if ( isset( $request['include'] ) ) {
+                $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+                if ( in_array( 'created_by', $include_params ) ) {
+                    $item['created_by'] = $this->get_user( $item['created_by'] );
+                }
+            }
+
+            $data = $this->prepare_tax_pay_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
+
+        $response->set_status( 200 );
+
+        return $response;
+
+    }
+
+
+    /**
+     * Make a tax payment
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function pay_tax( $request ) {
+        $tax_data = $this->prepare_item_for_database( $request );
+
+        $tax_id = erp_acct_pay_tax( $tax_data );
+
+        $tax_data['id'] = $tax_id;
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $tax_data = $this->prepare_tax_pay_response( $tax_data, $request, $additional_fields );
+
+        $response = rest_ensure_response( $tax_data );
+        $response->set_status( 201 );
+
+        return $response;
+    }
+
 
     /**
      * Prepare a single item for create or update
@@ -277,12 +361,30 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['tax_components'] ) ) {
             $prepared_item['tax_components'] = $request['tax_components'];
         }
+        if ( isset( $request['trn_date'] ) ) {
+            $prepared_item['trn_date'] = $request['trn_date'];
+        }
+        if ( isset( $request['tax_period'] ) ) {
+            $prepared_item['tax_period'] = $request['tax_components'];
+        }
+        if ( isset( $request['particulars'] ) ) {
+            $prepared_item['particulars'] = $request['particulars'];
+        }
+        if ( isset( $request['amount'] ) ) {
+            $prepared_item['amount'] = $request['amount'];
+        }
+        if ( isset( $request['ledger_id'] ) ) {
+            $prepared_item['ledger_id'] = $request['ledger_id'];
+        }
+        if ( isset( $request['voucher_type'] ) ) {
+            $prepared_item['voucher_type'] = $request['voucher_type'];
+        }
 
         return $prepared_item;
     }
 
     /**
-     * Prepare a single user output for response
+     * Prepare a single tax rate output for response
      *
      * @param array $item
      * @param WP_REST_Request $request Request object.
@@ -300,6 +402,40 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'tax_rate'        => $item->tax_rate,
             'default'         => $item->default,
             'tax_components'  => $item->tax_components,
+        ];
+
+        $data = array_merge( $data, $additional_fields );
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        $response = $this->add_links( $response, $item, $additional_fields );
+
+        return $response;
+    }
+
+    /**
+     * Prepare a single tax payment output for response
+     *
+     * @param array $item
+     * @param WP_REST_Request $request Request object.
+     * @param array $additional_fields (optional)
+     *
+     * @return WP_REST_Response $response Response data.
+     */
+    public function prepare_tax_pay_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+
+        $data = [
+            'id'              => (int) $item->id,
+            'voucher_no'      => $item->voucher_no,
+            'agency_id'       => $item->agency_id,
+            'trn_date'        => $item->trn_date,
+            'tax_period'      => $item->tax_period,
+            'particulars'     => $item->particulars,
+            'amount'          => $item->amount,
+            'ledger_id'       => $item->ledger_id,
+            'voucher_type'    => $item->voucher_type,
         ];
 
         $data = array_merge( $data, $additional_fields );
