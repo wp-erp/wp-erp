@@ -40,6 +40,28 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales/chart-status', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_sales_chart_status' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales/chart-payment', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_sales_chart_payment' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/expenses', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -95,6 +117,34 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, $total_items );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Chart status
+     */
+    public function get_sales_chart_status( $request ) {
+        $chart_status = erp_acct_get_sales_chart_status();
+
+        $response = rest_ensure_response( $chart_status );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Chart payment
+     */
+    public function get_sales_chart_payment( $request ) {
+        $chart_payment = erp_acct_get_sales_chart_payment();
+
+        error_log(print_r($chart_payment, true));
+
+        $response = rest_ensure_response( $chart_payment );
 
         $response->set_status( 200 );
 

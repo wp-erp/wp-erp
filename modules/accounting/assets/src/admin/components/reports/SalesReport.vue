@@ -61,7 +61,7 @@
                                         </tr>
                                         <tr>
                                             <th>Amount Due:</th>
-                                            <td>{{ totalDue }}</td>
+                                            <td>{{ modalParams.totalDue }}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -96,9 +96,9 @@
                                     <tr>
                                         <td colspan="7">
                                             <ul>
-                                                <li><span>Subtotal:</span> {{ totalAmount }}</li>
-                                                <li><span>Total:</span> {{ totalAmount }}</li>
-                                                <li><span>Total Related Payments:</span> {{ totalAmount }}</li>
+                                                <li><span>Subtotal:</span> {{ modalParams.totalAmount }}</li>
+                                                <li><span>Total:</span> {{ modalParams.totalAmount }}</li>
+                                                <li><span>Total Related Payments:</span> {{ modalParams.totalAmount }}</li>
                                             </ul>
                                         </td>
                                     </tr>
@@ -146,38 +146,21 @@
     export default {
         name: 'SalesReport',
 
-        props: {
-            id: {
-                type: String,
-                required: true,
-            },
-            type: {
-                type: String,
-                required: true,
-            },
-            totalDue: {
-                type: String
-            },
-            totalAmount: {
-                type: String
-            }
-        },
-
         data() {
             return {
                 isWorking: false,
                 company: null,
                 invoice: [],
-                acct_var: erp_acct_var
+                acct_var: erp_acct_var,
             }
         },
 
         created() {
             this.getCompanyInfo();
 
-            if ( 'Invoice' == this.type ) {
-                this.getInvoice();
-            }
+            // if ( 'sales_invoice' == true ) {
+            //     this.getInvoice();
+            // }
         },
 
         methods: {
@@ -189,10 +172,10 @@
                 });
             },
 
-            getInvoice() {                
+            getInvoice() {
                 this.isWorking = true;
 
-                HTTP.get(`/invoices/${this.id}`).then((response) => {
+                HTTP.get(`/invoices/${this.$route.params.id}`).then((response) => {
                     this.invoice = response.data;
                 }).then( (e) => {} ).then(() => {
                     this.isWorking = false;
@@ -202,7 +185,7 @@
             inside() {},
 
             outside() {
-                this.$root.$emit('sales-modal-close');
+                // this.$root.$emit('sales-modal-close');
             },
 
             printPopup() {
