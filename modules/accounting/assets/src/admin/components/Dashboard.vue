@@ -26,7 +26,6 @@
                                     <option value="last_quarter" selected="selected">Last Quarter</option>
                                     <option value="this_year">This Year</option>
                                     <option value="last_year">Last Year</option>
-                                    <option value="custom">Custom</option>
                                 </select>
                                 <i class="flaticon-arrow-down-sign-to-navigate"></i>
                             </div>
@@ -69,7 +68,7 @@
                         <div class="wperp-col-sm-6 wperp-col-xs-12">
                             <!-- Start .invoice-own-section -->
                             <div class="invoice-own-section wperp-panel wperp-panel-default">
-                                <div class="wperp-panel-heading wperp-bg-white"><h4>Invoices owed to you</h4></div>
+                                <div class="wperp-panel-heading wperp-bg-white"><h4>Invoices owed by you</h4></div>
                                 <div class="wperp-panel-body pb-0">
                                     <ul class="wperp-list-unstyled list-table-content">
                                         <li>
@@ -97,94 +96,7 @@
                 </div>
                 <div class="wperp-col-md-3 wperp-col-sm-12 wperp-col-xs-12">
                     <!-- Start .bank-accounts-section -->
-                    <div :class="['bank-accounts-section', 'wperp-panel', 'wperp-panel-default', ( isEditSettingsEnabled ? 'open-edit':'' )]">
-                        <div class="wperp-panel-heading wperp-bg-white">
-                            <h4>Bank Accounts</h4>
-                            <a href="#" @click.prevent="isEditSettingsEnabled = !isEditSettingsEnabled" id="bank-account-edit" class="panel-badge">
-                                <span v-if="isEditSettingsEnabled">Save</span>
-                                <i v-else class="flaticon-quick-edit"></i>
-                            </a>
-                        </div>
-                        <div class="wperp-panel-body pb-0">
-                            <ul class="wperp-list-unstyled list-table-content list-table-content--border list-table-content--bg-space">
-                                <li>
-                                    <div class="left">
-                                        <i class="flaticon-menu-1"></i>
-                                        <a href="#" class="title">Checking</a>
-                                    </div>
-                                    <div class="right">
-                                        <span class="price">$165,290.00</span>
-                                        <i class="flaticon-trash"></i>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="left">
-                                        <i class="flaticon-menu-1"></i>
-                                        <a href="#" class="title">Patty Cash</a>
-                                    </div>
-                                    <div class="right">
-                                        <span class="price">$165,290.00</span>
-                                        <i class="flaticon-trash"></i>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="left">
-                                        <i class="flaticon-menu-1"></i>
-                                        <a href="#" class="title">Savings</a>
-                                    </div>
-                                    <div class="right">
-                                        <span class="price">$165,290.00</span>
-                                        <i class="flaticon-trash"></i>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="left">
-                                        <i class="flaticon-menu-1"></i>
-                                        <a href="#" class="title">Master Card</a>
-                                    </div>
-                                    <div class="right">
-                                        <span class="price">$165,290.00</span>
-                                        <i class="flaticon-trash"></i>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="left">
-                                        <i class="flaticon-menu-1"></i>
-                                        <a href="#" class="title">Visa</a>
-                                    </div>
-                                    <div class="right">
-                                        <span class="price">$165,290.00</span>
-                                        <i class="flaticon-trash"></i>
-                                    </div>
-                                </li>
-                            </ul>
-                            
-                            <dropdown placement="bottom-start">
-                                <template slot="button">
-                                    <a href="#" class="dropdown-trigger wperp-btn btn--default">
-                                        <i class="flaticon-add-plus-button"></i>
-                                        <span>Add New</span>
-                                    </a>
-                                </template>
-                                <template slot="dropdown">
-                                    <ul slot="action-items" role="menu">
-                                        <li><a href="#">Master Card</a></li>
-                                        <li><a href="#">Paypal Account</a></li>
-                                        <li><a href="#">Skrill</a></li>
-                                        <li><a href="#">Payza Account</a></li>
-                                        <li><a href="#">Master Card</a></li>
-                                    </ul>
-                                </template>
-                            </dropdown>
-
-                        </div>
-                        <div class="wperp-panel-footer mt-50">
-                            <div class="bank-accounts-total">
-                                <span class="title">Total Balance</span>
-                                <span class="price">$165,290.00</span>
-                            </div>
-                        </div>
-                    </div>
+                    <accounts></accounts>
                     <!-- End .bank-accounts-section -->
                 </div>
             </div>
@@ -196,11 +108,13 @@
     import 'assets/js/plugins/chart.min'
     import Dropdown from 'admin/components/base/Dropdown.vue'
     import MetaBox from 'admin/components/wp/MetaBox.vue'
+    import Accounts from 'admin/components/dashboard/Accounts.vue'
 
     export default {
         name: 'Dashboard',
 
         components: {
+            Accounts,
             MetaBox,
             Dropdown
         },
@@ -213,22 +127,29 @@
                 title4: 'Bills to pay',
                 closable: true,
                 msg: 'Accounting',
-                isEditSettingsEnabled: false
             }
         },
 
-        mounted: function () {
+        mounted () {
             let colors = ['#208DF8'],
                 labels2 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20],
+                incomeData = [5, 6, 4, 5, 8, 7, 8, 12, 6, 9, 5, 11],
+                expenseData = [3, 2,4, 3.5, 4, 5, 6, 5, 4.5, 6, 4, 6],
                 bgColor = colors,
                 dataChart = {
                     labels: labels2,
-                    datasets: [{
-                        label: 'Dataset 1',
-                        data: data,
-                        backgroundColor: '#208DF8'
-                    }]
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: incomeData,
+                            backgroundColor: '#208DF8'
+                        },
+                        {
+                            label: 'Expense',
+                            data: expenseData,
+                            backgroundColor: '#f86e2d'
+                        }
+                    ]
                 },
                 config = {
                     type: 'bar',
@@ -238,27 +159,38 @@
                         responsive: true,
                         legend: {
                             display: false
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
                         }
                     }
                 };
-            window.addEventListener('load', () => {
                 let bar_chart_ctx = this.$refs['bar_chart'].getContext("2d");
                 if( bar_chart_ctx !== null || bar_chart_ctx !== undefined ){
                     new Chart(bar_chart_ctx, config);
                 }
-            });
 
         },
+
+       created(){
+
+       },
 
         computed: {
-            function(){
-                
-            }
+
         },
+
+        methods: {
+
+        }
 
     }
 </script>
 
 <style scoped>
-    
+
 </style>
