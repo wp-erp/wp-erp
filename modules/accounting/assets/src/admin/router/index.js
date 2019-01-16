@@ -258,7 +258,7 @@ export default new Router({
             ]
         },
         {
-            path: '/tax-rates',
+            path: '/taxes',
             component: { render (c) { return c('router-view') } },
             children: [
                 {
@@ -268,13 +268,13 @@ export default new Router({
                 },
                 {
 
-                    path: '/tax-rates/new',
+                    path: '/taxes/new',
                     name: 'NewTax',
                     component: NewTax
                 },
                 {
 
-                    path: '/tax-rates/:id',
+                    path: '/taxes/:id',
                     name: 'SingleTaxRate',
                     component: TaxRateModal
                 },

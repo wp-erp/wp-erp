@@ -77,7 +77,7 @@
     import HTTP from 'admin/http'
 
     export default {
-        name: "JournalModal",
+        name: "TaxRateModal",
 
         data() {
             return {

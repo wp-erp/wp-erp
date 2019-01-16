@@ -85,7 +85,6 @@
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
-                        include: 'designation'
                     }
                 })
                     .then( (response) => {

@@ -4,10 +4,11 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Tax Rates</h2>
-                    <a href="invoice.html" id="erp-customer-new" class="wperp-btn btn--primary" data-modal="wperp-modal-content" @click.prevent="showModal = true">
+                    <a id="erp-customer-new" class="wperp-btn btn--primary" data-modal="wperp-modal-content" @click.prevent="taxModal = true">
                         <i class="flaticon-add-plus-button"></i>
-                        <span>Add New</span>
+                        <span>Add Tax Rate</span>
                     </a>
+                    <tax-rate-modal v-if="taxModal" :taxes.sync="rows" :title="buttonTitle"></tax-rate-modal>
                 </div>
             </div>
         </div>
@@ -22,11 +23,12 @@
                 :total-pages="paginationData.totalPages"
                 :per-page="paginationData.perPage"
                 :current-page="paginationData.currentPage"
-                @pagination="goToPage">
-                <template slot="l_id" slot-scope="data">
-                    <strong><a href="#" @click.prevent="showJournalModal(data.row.l_id)">{{ data.row.l_id }}</a></strong>
+                @pagination="goToPage"
+                :actions="actions"
+                @action:click="onActionClick">
+                <template slot="tax_id" slot-scope="data">
+                    <strong><a href="#" @click.prevent="showTaxModal(data.row.tax_id)">{{ data.row.tax_id }}</a></strong>
                 </template>
-
             </list-table>
 	    </div>
 
@@ -35,15 +37,17 @@
 
 <script>
     import HTTP from 'admin/http'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
-    import NewTax    from 'admin/components/tax/NewTax.vue';
+    import ListTable     from 'admin/components/list-table/ListTable.vue'
+    import NewTax        from 'admin/components/tax/NewTax.vue';
+    import TaxRateModal  from 'admin/components/tax/TaxRateModal.vue';
 
     export default {
         name: 'TaxRates',
 
         components: {
             ListTable,
-            NewTax
+            NewTax,
+            TaxRateModal
         },
 
         data () {
@@ -51,10 +55,11 @@
                 taxModal: false,
                 modalParams: null,
                 columns: {
-                    'l_id': {label: 'ID'},
-                    'l_date': {label: 'Date'},
-                    'l_particulars': {label: 'Particulars'},
-                    'amount': {label: 'Amount'},
+                    'tax_id': {label: 'ID'},
+                    'tax_name': {label: 'Component Name'},
+                    'tax_number': {label: 'Tax Number'},
+                    'tax_rate': {label: 'Tax Rate'},
+                    'actions': { label: 'Actions' }
                 },
                 rows: [],
                 paginationData: {
@@ -62,7 +67,24 @@
                     totalPages: 0,
                     perPage: 10,
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
-                }
+                },
+                actions : [
+                    { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
+                    { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
+                ],
+                bulkActions: [
+                    {
+                        key: 'trash',
+                        label: 'Move to Trash',
+                        iconClass: 'flaticon-trash'
+                    }
+                ],
+                taxes: [{}],
+                buttonTitle: '',
+                pageTitle: '',
+                url: '',
+                singleUrl: '',
+                isActiveOptionDropdown: false
             };
         },
 
@@ -71,6 +93,11 @@
                 this.taxModal = false;
             });
 
+            this.buttonTitle    =   'Add New Tax Rate';
+            this.pageTitle      =   this.$route.name;
+            this.url            =   this.$route.name.toLowerCase();
+            this.singleUrl      =   'CustomerDetails';
+
             this.fetchItems();
         },
 
@@ -78,10 +105,10 @@
             row_data(){
                 let items = this.rows;
                 items.map( item => {
-                    item.l_id = item.id;
-                    item.l_date = item.trn_date;
-                    item.l_particulars = item.particulars;
-                    item.amount = item.total;
+                    item.tax_id = item.id;
+                    item.tax_name = item.tax_name;
+                    item.tax_number = item.tax_number;
+                    item.tax_rate = item.tax_rate;
                 } );
                 return items;
             }
@@ -90,11 +117,10 @@
         methods: {
             fetchItems(){
                 this.rows = [];
-                HTTP.get('journals', {
+                HTTP.get('taxes', {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
-                        include: 'designation'
                     }
                 })
                     .then( (response) => {
@@ -114,7 +140,7 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateJournals',
+                    name: 'PaginateTaxRates',
                     params: { page: page },
                     query: queries
                 });
@@ -122,12 +148,49 @@
                 this.fetchItems();
             },
 
-            newJournal() {
-                this.$router.push('journals/new');
+            newTax() {
+                this.$router.push('taxes/new');
             },
 
-            showJournalModal(journal_id) {
-                this.$router.push({ name: 'SingleJournal', params: { id: journal_id } })
+            showTaxModal(tax_id) {
+                this.$router.push({ name: 'SingleTaxRate', params: { id: tax_id } })
+            },
+
+            onActionClick(action, row, index) {
+                switch ( action ) {
+                    case 'trash':
+                        if ( confirm('Are you sure to delete?') ) {
+                            HTTP.delete( this.url + '/' + row.id).then( response => {
+                                this.$delete(this.rows, index);
+                            });
+                        }
+                        break;
+
+                    case 'edit':
+                        this.taxModal = true;
+                        this.taxes = row;
+                        break;
+
+                    default :
+                        break;
+                }
+            },
+
+            onBulkAction(action, items) {
+                if ( 'trash' === action ) {
+                    if ( confirm('Are you sure to delete?') ) {
+                        HTTP.delete('taxes/delete/' + items.join(',')).then(response => {
+                            let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
+
+                            if ( toggleCheckbox.checked ) {
+                                // simulate click event to remove checked state
+                                toggleCheckbox.click();
+                            }
+
+                            this.fetchItems();
+                        });
+                    }
+                }
             },
         }
    	}
