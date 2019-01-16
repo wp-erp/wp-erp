@@ -137,7 +137,6 @@
                 } );
             },
             onActionClick(action, row, index) {
-
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
@@ -151,9 +150,9 @@
                         this.showModal = true;
                         this.people = row;
                         break;
+
                     default :
-
-
+                        break;
                 }
             },
 

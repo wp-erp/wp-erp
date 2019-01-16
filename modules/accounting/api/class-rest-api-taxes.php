@@ -22,7 +22,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @var string
      */
-    protected $rest_base = 'accounting/v1/tax-rates';
+    protected $rest_base = 'accounting/v1/taxes';
 
     /**
      * Register the routes for the objects of the controller.
