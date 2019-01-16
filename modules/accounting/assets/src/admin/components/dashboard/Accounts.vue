@@ -15,7 +15,7 @@
                         <a href="#" class="title">{{item.name}}</a>
                     </div>
                     <div class="right">
-                        <span class="price">{{transformBalance(item.balance)}}</span>
+                        <span class="price">{{formatAmount(item.balance)}}</span>
                         <i class="flaticon-trash"></i>
                     </div>
                 </li>
@@ -72,15 +72,6 @@
                     this.accounts = response.data;
                 } );
             },
-
-            transformBalance( val ){
-                let currency = '$';
-                if ( val < 0 ){
-                    return `Cr. ${currency} ${Math.abs(val)}`;
-                }
-
-                return `Dr. ${currency} ${val}`;
-            },
         },
 
         created(){
@@ -91,11 +82,10 @@
 
             totalAmount(){
                 let total = this.accounts.reduce( ( amount, item ) => {
+                                return amount + parseFloat(item.balance);
+                            }, 0 );
 
-                    return amount + parseFloat(item.balance);
-                }, 0 );
-
-                return this.transformBalance(total);
+                return this.formatAmount(total);
             }
 
         }
