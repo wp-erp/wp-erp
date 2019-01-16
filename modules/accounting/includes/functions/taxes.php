@@ -282,6 +282,7 @@ function erp_acct_pay_tax( $data ) {
         'updated_by' => $tax_data['updated_by'],
     ));
 
+    $tax_data['voucher_no'] = $voucher_no;
 
     erp_acct_insert_tax_pay_data_into_ledger( $tax_data );
 

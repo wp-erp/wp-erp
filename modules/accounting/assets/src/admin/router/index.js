@@ -31,7 +31,7 @@ import NewTax            from 'admin/components/tax/NewTax.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import NewTaxAgency      from 'admin/components/tax/NewTaxAgency.vue';
 import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
-import PayTaxRecord      from 'admin/components/tax/PayTaxRecord.vue';
+import RecordPayTax      from 'admin/components/tax/RecordPayTax.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import RecPaymentModal   from 'admin/components/rec-payment/RecPaymentModal.vue';
@@ -56,11 +56,6 @@ export default new Router({
             name : 'Customers',
             component: People,
         },
-        // {
-        //     path : '/transactions',
-        //     name : 'Sales',
-        //     component: Sales,
-        // },
         {
             path : '/inventory',
             name : 'Products',
@@ -355,8 +350,8 @@ export default new Router({
         },
         {
             path: '/pay-tax',
-            name: 'PayTaxRecord',
-            component: PayTaxRecord
+            name: 'RecordPayTax',
+            component: RecordPayTax
         },
         {
             path: '/tax-records',
