@@ -32,9 +32,6 @@ import NewTaxAgency      from 'admin/components/tax/NewTaxAgency.vue';
 import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
 import PayTaxRecord      from 'admin/components/tax/PayTaxRecord.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
-import TaxRateModal      from 'admin/components/tax/TaxRateModal.vue';
-import TaxCatModal       from 'admin/components/tax/TaxCatModal.vue';
-import TaxAgencyModal    from 'admin/components/tax/TaxAgencyModal.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import RecPaymentModal   from 'admin/components/rec-payment/RecPaymentModal.vue';
 
@@ -273,12 +270,6 @@ export default new Router({
                     component: NewTax
                 },
                 {
-
-                    path: '/taxes/:id',
-                    name: 'SingleTaxRate',
-                    component: TaxRateModal
-                },
-                {
                     path: 'page/:page',
                     name: 'PaginateTaxRates',
                     component: TaxRates,
@@ -301,12 +292,6 @@ export default new Router({
                     component: NewTaxCategory
                 },
                 {
-
-                    path: '/tax-categories/:id',
-                    name: 'SingleTaxCategory',
-                    component: TaxCatModal
-                },
-                {
                     path: 'page/:page',
                     name: 'PaginateTaxCategories',
                     component: TaxCategories,
@@ -327,12 +312,6 @@ export default new Router({
                     path: '/tax-categories/new',
                     name: 'NewTaxAgency',
                     component: NewTaxAgency
-                },
-                {
-
-                    path: '/tax-categories/:id',
-                    name: 'SingleTaxAgency',
-                    component: TaxAgencyModal
                 },
                 {
                     path: 'page/:page',
