@@ -16,7 +16,7 @@
     export default {
         name: 'PieChart',
 
-        props: [ 'id', 'title', 'labels', 'colors', 'data' ],
+        props: [ 'id', 'title', 'sign', 'labels', 'colors', 'data' ],
 
         data() {
             return {
@@ -57,7 +57,7 @@
                                         </div><div class="chart-label-values">');
                                     if (chart.data.datasets[0].data[i]) {
                                         if ( self.id == 'payment' ) {
-                                            text.push('<span class="chart-value">' + chart.data.datasets[0].data[i] + '</span><br>');
+                                            text.push('<span class="chart-value">' + self.sign + chart.data.datasets[0].data[i] + '</span><br>');
                                         } else {
                                             text.push('<span class="chart-value">' + chart.data.datasets[0].data[i]);
                                         }

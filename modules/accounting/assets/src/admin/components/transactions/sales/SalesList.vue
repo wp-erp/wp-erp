@@ -38,10 +38,10 @@
                     {{ isPayment(data.row) ? '-' : data.row.due_date }}
                 </template>
                 <template slot="due" slot-scope="data">
-                    {{ isPayment(data.row) ? '-' : data.row.sales_amount - data.row.payment_amount }}
+                    {{ isPayment(data.row) ? '-' : formatAmount(data.row.sales_amount - data.row.payment_amount) }}
                 </template>
                 <template slot="amount" slot-scope="data">
-                    {{ isPayment(data.row) ? data.row.payment_amount : data.row.sales_amount }}
+                    {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
                     {{ isPayment(data.row) ? 'Colsed' : data.row.status }}

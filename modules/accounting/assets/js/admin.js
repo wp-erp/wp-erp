@@ -11062,7 +11062,7 @@ if (false) {(function () {
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PieChart',
-  props: ['id', 'title', 'labels', 'colors', 'data'],
+  props: ['id', 'title', 'sign', 'labels', 'colors', 'data'],
   data: function data() {
     return {};
   },
@@ -11102,7 +11102,7 @@ if (false) {(function () {
 
                 if (chart.data.datasets[0].data[i]) {
                   if (self.id == 'payment') {
-                    text.push('<span class="chart-value">' + chart.data.datasets[0].data[i] + '</span><br>');
+                    text.push('<span class="chart-value">' + self.sign + chart.data.datasets[0].data[i] + '</span><br>');
                   } else {
                     text.push('<span class="chart-value">' + chart.data.datasets[0].data[i]);
                   }
@@ -17408,6 +17408,8 @@ if (false) {(function () {
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -18956,9 +18958,6 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_tax_NewTax_vue__ = __webpack_require__(121);
-//
-//
-//
 //
 //
 //
@@ -35481,8 +35480,12 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SalesStats_vue__ = __webpack_require__(110);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9057a020_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesStats_vue__ = __webpack_require__(502);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9057a020_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesStats_vue__ = __webpack_require__(363);
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(362)
+}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -35492,14 +35495,14 @@ var normalizeComponent = __webpack_require__(0)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = null
+var __vue_scopeId__ = "data-v-9057a020"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SalesStats_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9057a020_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesStats_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9057a020_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesStats_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -35527,8 +35530,88 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 362 */,
-/* 363 */,
+/* 362 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 363 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wperp-stats wperp-section" }, [
+    _c("div", { staticClass: "wperp-panel wperp-panel-default" }, [
+      _c("div", { staticClass: "wperp-panel-body" }, [
+        _c("div", { staticClass: "wperp-row" }, [
+          _c(
+            "div",
+            { staticClass: "wperp-col-sm-4" },
+            [
+              _c("pie-chart", {
+                attrs: {
+                  id: "payment",
+                  title: "Payment",
+                  sign: _vm.getCurrencySign(),
+                  labels: _vm.chartPayment.labels,
+                  colors: _vm.chartPayment.colors,
+                  data: _vm.chartPayment.values
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wperp-col-sm-4" },
+            [
+              _c("pie-chart", {
+                attrs: {
+                  id: "status",
+                  title: "Status",
+                  sign: "",
+                  labels: _vm.chartStatus.labels,
+                  colors: _vm.chartStatus.colors,
+                  data: _vm.chartStatus.values
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "wperp-col-sm-4" }, [
+            _c("div", { staticClass: "wperp-chart-block" }, [
+              _c("h3", [_vm._v("Outstanding")]),
+              _vm._v(" "),
+              _c("div", { staticClass: "wperp-total" }, [
+                _c("h2", [
+                  _vm._v(_vm._s(_vm.formatAmount(_vm.chartPayment.outstanding)))
+                ])
+              ])
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-9057a020", esExports)
+  }
+}
+
+/***/ }),
 /* 364 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -35700,7 +35783,9 @@ var render = function() {
                         _vm._s(
                           _vm.isPayment(data.row)
                             ? "-"
-                            : data.row.sales_amount - data.row.payment_amount
+                            : _vm.formatAmount(
+                                data.row.sales_amount - data.row.payment_amount
+                              )
                         ) +
                         "\n            "
                     )
@@ -35715,8 +35800,8 @@ var render = function() {
                       "\n                " +
                         _vm._s(
                           _vm.isPayment(data.row)
-                            ? data.row.payment_amount
-                            : data.row.sales_amount
+                            ? _vm.formatAmount(data.row.payment_amount)
+                            : _vm.formatAmount(data.row.sales_amount)
                         ) +
                         "\n            "
                     )
@@ -38390,31 +38475,7 @@ var render = function() {
             "current-page": _vm.paginationData.currentPage,
             actions: _vm.actions
           },
-          on: { pagination: _vm.goToPage, "action:click": _vm.onActionClick },
-          scopedSlots: _vm._u([
-            {
-              key: "tax_id",
-              fn: function(data) {
-                return [
-                  _c("strong", [
-                    _c(
-                      "a",
-                      {
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            _vm.showTaxModal(data.row.tax_id)
-                          }
-                        }
-                      },
-                      [_vm._v(_vm._s(data.row.tax_id))]
-                    )
-                  ])
-                ]
-              }
-            }
-          ])
+          on: { pagination: _vm.goToPage, "action:click": _vm.onActionClick }
         })
       ],
       1
@@ -40466,90 +40527,20 @@ if (false) {
 /* harmony default export */ __webpack_exports__["a"] = ({
   methods: {
     formatAmount: function formatAmount(val) {
-      var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+      var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       var currency = '$';
 
       if (val < 0) {
-        return prefix ? "Cr. ".concat(currency, " ").concat(Math.abs(val)) : "".concat(currency, " ").concat(Math.abs(val));
+        return prefix ? "Cr. ".concat(currency).concat(Math.abs(val)) : "".concat(currency).concat(Math.abs(val));
       }
 
-      return prefix ? "Dr. ".concat(currency, " ").concat(val) : "".concat(currency, " ").concat(Math.abs(val));
+      return prefix ? "Dr. ".concat(currency).concat(val) : "".concat(currency).concat(Math.abs(val));
+    },
+    getCurrencySign: function getCurrencySign() {
+      return '$';
     }
   }
 });
-
-/***/ }),
-/* 501 */,
-/* 502 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wperp-stats wperp-section" }, [
-    _c("div", { staticClass: "wperp-panel wperp-panel-default" }, [
-      _c("div", { staticClass: "wperp-panel-body" }, [
-        _c("div", { staticClass: "wperp-row" }, [
-          _c(
-            "div",
-            { staticClass: "wperp-col-sm-4" },
-            [
-              _c("pie-chart", {
-                attrs: {
-                  id: "payment",
-                  title: "Payment",
-                  labels: _vm.chartPayment.labels,
-                  colors: _vm.chartPayment.colors,
-                  data: _vm.chartPayment.values
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "wperp-col-sm-4" },
-            [
-              _c("pie-chart", {
-                attrs: {
-                  id: "status",
-                  title: "Status",
-                  labels: _vm.chartStatus.labels,
-                  colors: _vm.chartStatus.colors,
-                  data: _vm.chartStatus.values
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "wperp-col-sm-4" }, [
-            _c("div", { staticClass: "wperp-chart-block" }, [
-              _c("h3", [_vm._v("Outstanding")]),
-              _vm._v(" "),
-              _c("div", { staticClass: "wperp-total" }, [
-                _c("h2", [_vm._v(_vm._s(_vm.chartPayment.outstanding))])
-              ])
-            ])
-          ])
-        ])
-      ])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-9057a020", esExports)
-  }
-}
 
 /***/ })
 ],[146]);
