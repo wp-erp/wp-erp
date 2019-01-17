@@ -141,9 +141,6 @@
                 this.fetchItems();
             },
 
-            newTaxCategory() {
-                this.$router.push('tax-cats/new');
-            },
 
             singleTaxCategory(tax_id) {
                 this.$router.push({ name: 'SingleTaxCategory', params: { id: tax_id } })
