@@ -107,7 +107,7 @@
             }
         },
 
-        created() {
+        created() {            
             this.makeChart();
         }
     }

@@ -150,6 +150,7 @@ final class Accounting {
     public function include_classes() {
         require_once ERP_ACCOUNTING_API . '/class-controller-rest-api.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/class-assets.php';
+        require_once ERP_ACCOUNTING_INCLUDES . '/class-ledger-map.php';
 
         if ( $this->is_request( 'admin' ) ) {
             require_once ERP_ACCOUNTING_INCLUDES . '/class-admin.php';
