@@ -49,7 +49,6 @@
 
         data () {
             return {
-                taxModal: false,
                 modalParams: null,
                 columns: {
                     'tax_id': {label: 'ID'},
@@ -88,7 +87,7 @@
 
         created() {
             this.$on('tax-modal-close', function() {
-                this.taxModal = false;
+                this.showModal = false;
             });
 
             this.pageTitle      =   this.$route.name;
@@ -166,7 +165,7 @@
                         break;
 
                     case 'edit':
-                        this.taxModal = true;
+                        this.showModal = true;
                         this.taxes = row;
                         break;
 

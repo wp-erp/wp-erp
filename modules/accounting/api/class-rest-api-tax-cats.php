@@ -258,7 +258,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
         $prepared_item = [];
 
         if ( isset( $request['name'] ) ) {
-            $prepared_item['cat_name'] = $request['name'];
+            $prepared_item['name'] = $request['name'];
         }
         if ( isset( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
