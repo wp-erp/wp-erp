@@ -6,6 +6,12 @@
             tableClass="wperp-table table-striped table-dark widefat"
             :columns="columns"
             :rows="rows">
+            <template slot="debit" slot-scope="data">
+                {{ Math.sign(data.row.balance) === 1 ? data.row.balance : '' }}
+            </template>
+            <template slot="credit" slot-scope="data">
+                {{ Math.sign(data.row.balance) === -1 ? Math.abs(data.row.balance) : '' }}
+            </template>
         </list-table>
 
     </div>
@@ -32,7 +38,7 @@
                     }
                 ],
                 columns: {
-                    'account': { label: 'Accounting Name' },
+                    'name': { label: 'Account Name' },
                     'debit': { label: 'Debit Total' },
                     'credit': { label: 'Credit Total' }
                 },
@@ -48,9 +54,7 @@
             fetchItems() {
                 this.rows = [];
 
-                HTTP.get( '/ledgers').then( (response) => {
-                    console.log(response.data);
-
+                HTTP.get( '/reports/trial-balance').then( (response) => {
                     this.rows = response.data;
                 })
                 .catch((error) => {

@@ -38,12 +38,12 @@
                     <!-- End .income-expense-section -->
 
                     <div class="wperp-row">
-                        <div class="wperp-col-sm-6 wperp-col-xs-12" v-if="Object.values(to_receive).length">
+                        <div class="wperp-col-sm-6 wperp-col-xs-12" >
                             <!-- Start .invoice-own-section -->
                             <div class="invoice-own-section wperp-panel wperp-panel-default">
                                 <div class="wperp-panel-heading wperp-bg-white"><h4>Acounts Receivable</h4></div>
                                 <div class="wperp-panel-body pb-0">
-                                    <ul class="wperp-list-unstyled list-table-content">
+                                    <ul class="wperp-list-unstyled list-table-content" v-if="Object.values(to_receive).length">
                                         <li>
                                             <span class="title">1-30 days overdue</span>
                                             <span class="price">{{formatAmount(to_receive.amount.first)}}</span>
@@ -65,27 +65,27 @@
                             </div>
                             <!-- End .invoice-own-section -->
                         </div>
-                        <div class="wperp-col-sm-6 wperp-col-xs-12">
+                        <div class="wperp-col-sm-6 wperp-col-xs-12 ">
                             <!-- Start .invoice-own-section -->
                             <div class="invoice-own-section wperp-panel wperp-panel-default">
                                 <div class="wperp-panel-heading wperp-bg-white"><h4>Accounts Payable</h4></div>
                                 <div class="wperp-panel-body pb-0">
-                                    <ul class="wperp-list-unstyled list-table-content">
+                                    <ul class="wperp-list-unstyled list-table-content"  v-if="Object.values(to_pay).length">
                                         <li>
                                             <span class="title">1-30 days overdue</span>
-                                            <span class="price">$165,290.00</span>
+                                            <span class="price">{{formatAmount(to_pay.amount.first)}}</span>
                                         </li>
                                         <li>
-                                            <span class="title">1-30 days overdue</span>
-                                            <span class="price">$165,290.00</span>
+                                            <span class="title">31-60 days overdue</span>
+                                            <span class="price">{{formatAmount(to_pay.amount.second)}}</span>
                                         </li>
                                         <li>
-                                            <span class="title">1-30 days overdue</span>
-                                            <span class="price">$165,290.00</span>
+                                            <span class="title">61-90 days overdue</span>
+                                            <span class="price">{{formatAmount(to_pay.amount.third)}}</span>
                                         </li>
                                         <li class="total">
                                             <span class="title">Total Balance</span>
-                                            <span class="price">$165,290.00</span>
+                                            <span class="price">{{total_payable}}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -130,7 +130,8 @@
                 closable: true,
                 msg: 'Accounting',
 
-                to_receive: []
+                to_receive: [],
+                to_pay: []
             }
         },
 
@@ -182,6 +183,7 @@
 
        created(){
             this.fetchReceivables();
+            this.fetchPayables();
        },
 
         computed: {
@@ -192,7 +194,15 @@
                 }, 0 );
 
                 return this.formatAmount(total);
-            }
+            },
+            total_payable() {
+                let amounts = Object.values(this.to_pay.amount);
+                let total = amounts.reduce( ( amount, item ) => {
+                    return amount + parseFloat(item);
+                }, 0 );
+
+                return this.formatAmount(total);
+            },
         },
 
         methods: {
@@ -201,7 +211,15 @@
                 HTTP.get( 'invoices/overview-receivable' ).then( (res) => {
                    this.to_receive = res.data;
                 } );
+            },
+
+            fetchPayables(){
+                this.to_pay = [];
+                HTTP.get( 'bills/overview-payable' ).then( (res) => {
+                    this.to_pay = res.data;
+                } );
             }
+
         }
 
     }

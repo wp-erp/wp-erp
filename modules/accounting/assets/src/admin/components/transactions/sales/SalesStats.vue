@@ -4,7 +4,7 @@
             <div class="wperp-panel-body">
                 <div class="wperp-row">
                     <div class="wperp-col-sm-4">
-                        <pie-chart 
+                        <pie-chart v-if="chartPayment.values.length"
                             id="payment"
                             title="Payment"
                             :sign="getCurrencySign()"
@@ -13,7 +13,7 @@
                             :data="chartPayment.values" />
                     </div>
                     <div class="wperp-col-sm-4">
-                        <pie-chart 
+                        <pie-chart v-if="chartStatus.values.length"
                             id="status"
                             title="Status"
                             sign=""
@@ -61,12 +61,32 @@
         },
 
         created() {
-            this.getSalesChartData();
+            this.$root.$on('transactions-filter', filters => {
+                this.getSalesChartData(filters);
+            });
+
+            let filters = {};
+
+            if ( this.$route.query.start && this.$route.query.end ) {
+                filters.start_date = this.$route.query.start;
+                filters.end_date = this.$route.query.end;
+            }
+
+            this.getSalesChartData(filters);
+        },
+
+        watch: {
+            '$route': 'getSalesChartData'
         },
 
         methods: {
-            getSalesChartData() {
-                HTTP.get('/transactions/sales/chart-payment').then( response => {                    
+            getSalesChartData(filters = {}) {
+                HTTP.get('/transactions/sales/chart-payment', {
+                    params: {
+                        start_date: filters.start_date,
+                        end_date: filters.end_date
+                    }
+                }).then( response => {                    
                     this.chartPayment.outstanding = response.data.outstanding;
 
                     this.chartPayment.values.push(
@@ -75,7 +95,12 @@
                     );
                 });
 
-                HTTP.get('/transactions/sales/chart-status').then( response => {
+                HTTP.get('/transactions/sales/chart-status', {
+                    params: {
+                        start_date: filters.start_date,
+                        end_date: filters.end_date
+                    }
+                }).then( response => {
                     response.data.forEach(element => {
                         this.chartStatus.labels.push(element.invoice_type)
                         this.chartStatus.values.push(element.sub_total)
