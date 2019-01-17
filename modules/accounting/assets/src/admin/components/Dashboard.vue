@@ -41,7 +41,7 @@
                         <div class="wperp-col-sm-6 wperp-col-xs-12">
                             <!-- Start .invoice-own-section -->
                             <div class="invoice-own-section wperp-panel wperp-panel-default">
-                                <div class="wperp-panel-heading wperp-bg-white"><h4>Invoices owed to you</h4></div>
+                                <div class="wperp-panel-heading wperp-bg-white"><h4>Acounts recievable</h4></div>
                                 <div class="wperp-panel-body pb-0">
                                     <ul class="wperp-list-unstyled list-table-content">
                                         <li>
@@ -68,7 +68,7 @@
                         <div class="wperp-col-sm-6 wperp-col-xs-12">
                             <!-- Start .invoice-own-section -->
                             <div class="invoice-own-section wperp-panel wperp-panel-default">
-                                <div class="wperp-panel-heading wperp-bg-white"><h4>Invoices owed by you</h4></div>
+                                <div class="wperp-panel-heading wperp-bg-white"><h4>Accounts Payable</h4></div>
                                 <div class="wperp-panel-body pb-0">
                                     <ul class="wperp-list-unstyled list-table-content">
                                         <li>
