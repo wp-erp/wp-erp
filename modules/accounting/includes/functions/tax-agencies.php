@@ -76,7 +76,7 @@ function erp_acct_insert_tax_agency( $data ) {
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
     $wpdb->insert($wpdb->prefix . 'erp_acct_tax_agencies', array(
-        'name'       => $tax_data['agency_name'],
+        'name'       => $tax_data['name'],
         'created_at' => $tax_data['created_at'],
         'created_by' => $tax_data['created_by'],
         'updated_at' => $tax_data['updated_at'],
@@ -105,7 +105,7 @@ function erp_acct_update_tax_agency( $data, $id ) {
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
     $wpdb->update($wpdb->prefix . 'erp_acct_tax_agencies', array(
-        'name'       => $tax_data['agency_name'],
+        'name'       => $tax_data['name'],
         'description'=> $tax_data['description'],
         'created_at' => $tax_data['created_at'],
         'created_by' => $tax_data['created_by'],
@@ -132,6 +132,6 @@ function erp_acct_delete_tax_agency( $id ) {
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agencies', array( 'id' => $id ) );
 
-    return $tax_no;
+    return $id;
 }
 
