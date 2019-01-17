@@ -281,7 +281,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'name'            => $item->cat_name,
+            'name'            => $item->name,
             'description'     => $item->description
         ];
 

@@ -372,7 +372,7 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
     $tax_data['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : '';
     $tax_data['updated_by'] = isset($data['updated_by']) ? $data['updated_by'] : '';
-    $tax_data['cat_name'] = isset($data['cat_name']) ? $data['cat_name'] : '';
+    $tax_data['name'] = isset($data['name']) ? $data['name'] : '';
     $tax_data['description'] = isset($data['description']) ? $data['description'] : '';
     $tax_data['voucher_no'] = isset($data['voucher_no']) ? $data['voucher_no'] : '';
     $tax_data['trn_date'] = isset($data['trn_date']) ? $data['trn_date'] : date("Y-m-d");
