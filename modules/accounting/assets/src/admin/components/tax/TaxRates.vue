@@ -4,16 +4,18 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Tax Rates</h2>
-                    <a id="erp-customer-new" class="wperp-btn btn--primary" @click.prevent="newTaxRate">
+                    <a class="wperp-btn btn--primary" @click.prevent="showModal = true">
                         <span>Add Tax Rate</span>
                     </a>
                 </div>
             </div>
         </div>
 
+        <tax-modal v-if="showModal" @close="showModal = false"></tax-modal>
+
         <div class="table-container">
             <list-table
-                tableClass="wp-ListTable widefat fixed tax-rate-list"
+                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark"
                 action-column="actions"
                 :columns="columns"
                 :rows="row_data"
@@ -35,14 +37,17 @@
 <script>
     import HTTP from 'admin/http'
     import ListTable     from 'admin/components/list-table/ListTable.vue'
-    import NewTax        from 'admin/components/tax/NewTax.vue';
+    import NewTaxModal     from 'admin/components/tax/NewTaxModal.vue'
+    // import NewTax        from 'admin/components/tax/NewTax.vue';
+
 
     export default {
         name: 'TaxRates',
 
         components: {
             ListTable,
-            NewTax
+            // NewTax,
+            'tax-modal': NewTaxModal
         },
 
         data () {
@@ -79,7 +84,8 @@
                 pageTitle: '',
                 url: '',
                 singleUrl: '',
-                isActiveOptionDropdown: false
+                isActiveOptionDropdown: false,
+                showModal: false
             };
         },
 
@@ -108,6 +114,9 @@
         },
 
         methods: {
+            close() {
+                this.showModal = false;
+            },
             fetchItems(){
                 this.rows = [];
                 HTTP.get('taxes', {
