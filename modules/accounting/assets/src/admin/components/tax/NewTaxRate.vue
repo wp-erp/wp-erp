@@ -7,10 +7,8 @@
                     <h3>Add New Tax</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
-                <!-- end modal body title -->
                 <form action="" method="post" class="modal-form edit-customer-modal">
                     <div class="wperp-modal-body">
-                        <!-- add new product form -->
                         <div class="wperp-row wperp-gutter-20">
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                 <label for="tax_name">Tax Name</label>
@@ -28,7 +26,7 @@
                                 <input type="text" name="tax_number" id="tax_number" placeholder="Enter Tax Number" class="wperp-form-field">
                             </div>
                             <div class="wperp-col-xs-12">
-                                <label for="is_tax_component">Tax Components</label> 
+                                <label>Tax Components</label>
                                 <div class="form-check">
                                     <label class="form-check-label">
                                         <input type="checkbox" id="is_tax_compound" name="is_taxcompound" class="form-check-input" @change="isTaxComponent = !isTaxComponent"> 
@@ -53,10 +51,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr :class="isRowExanded ? 'is-row-expanded' : ''">
+                                    <tr :class="isRowExpanded ? 'is-row-expanded' : ''">
                                         <td scope="row" class="col--component-name column-primary">
                                             <input type="text" class="wperp-form-field" placeholder="Component Name">
-                                            <button type="button" class="wperp-toggle-row" @click.prevent="isRowExanded = !isRowExanded"><span class="screen-reader-text">Show more details</span></button>
+                                            <button type="button" class="wperp-toggle-row" @click.prevent="isRowExpanded = !isRowExpanded"><span class="screen-reader-text">Show more details</span></button>
                                         </td>
                                         <td class="col--agency" data-colname="Agency">
                                             <input type="text" class="wperp-form-field" placeholder="Agency">
@@ -84,13 +82,6 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                                <!-- <tfoot>
-                                    <tr>
-                                        <td colspan="6" class="text-right">
-                                            <button class="wperp-btn btn--primary wperp-dropdown-trigger">Add Entry</button>
-                                        </td>
-                                    </tr>
-                                </tfoot> -->
                             </table>
                         </div>
 
@@ -113,7 +104,7 @@
     import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue';
     export default {
-        name: "NewTaxModal",
+        name: "NewTaxRate",
         components: {
             MultiSelect,
         },
@@ -123,7 +114,7 @@
         data() {
             return {
                isTaxComponent: false,
-               isRowExanded: false
+               isRowExpanded: false
             }
         },
         methods: {

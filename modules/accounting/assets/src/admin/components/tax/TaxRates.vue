@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <tax-modal v-if="showModal" @close="showModal = false"></tax-modal>
+        <new-tax-rate v-if="showModal" @close="showModal = false"></new-tax-rate>
 
         <div class="table-container">
             <list-table
@@ -37,17 +37,14 @@
 <script>
     import HTTP from 'admin/http'
     import ListTable     from 'admin/components/list-table/ListTable.vue'
-    import NewTaxModal     from 'admin/components/tax/NewTaxModal.vue'
-    // import NewTax        from 'admin/components/tax/NewTax.vue';
-
+    import NewTaxRate     from 'admin/components/tax/NewTaxRate.vue'
 
     export default {
         name: 'TaxRates',
 
         components: {
             ListTable,
-            // NewTax,
-            'tax-modal': NewTaxModal
+            NewTaxRate
         },
 
         data () {
