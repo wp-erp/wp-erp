@@ -38,27 +38,27 @@
                     <!-- End .income-expense-section -->
 
                     <div class="wperp-row">
-                        <div class="wperp-col-sm-6 wperp-col-xs-12">
+                        <div class="wperp-col-sm-6 wperp-col-xs-12" v-if="Object.values(to_receive).length">
                             <!-- Start .invoice-own-section -->
                             <div class="invoice-own-section wperp-panel wperp-panel-default">
-                                <div class="wperp-panel-heading wperp-bg-white"><h4>Acounts recievable</h4></div>
+                                <div class="wperp-panel-heading wperp-bg-white"><h4>Acounts Receivable</h4></div>
                                 <div class="wperp-panel-body pb-0">
                                     <ul class="wperp-list-unstyled list-table-content">
                                         <li>
                                             <span class="title">1-30 days overdue</span>
-                                            <span class="price">$165,290.00</span>
+                                            <span class="price">{{formatAmount(to_receive.amount.first)}}</span>
                                         </li>
                                         <li>
-                                            <span class="title">1-30 days overdue</span>
-                                            <span class="price">$165,290.00</span>
+                                            <span class="title">31-60 days overdue</span>
+                                            <span class="price">{{formatAmount(to_receive.amount.second)}}</span>
                                         </li>
                                         <li>
-                                            <span class="title">1-30 days overdue</span>
-                                            <span class="price">$165,290.00</span>
+                                            <span class="title">61-90 days overdue</span>
+                                            <span class="price">{{formatAmount(to_receive.amount.third)}}</span>
                                         </li>
                                         <li class="total">
                                             <span class="title">Total Balance</span>
-                                            <span class="price">$165,290.00</span>
+                                            <span class="price">{{total_receivable}}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -109,6 +109,7 @@
     import Dropdown from 'admin/components/base/Dropdown.vue'
     import MetaBox from 'admin/components/wp/MetaBox.vue'
     import Accounts from 'admin/components/dashboard/Accounts.vue'
+    import HTTP from 'admin/http';
 
     export default {
         name: 'Dashboard',
@@ -116,7 +117,8 @@
         components: {
             Accounts,
             MetaBox,
-            Dropdown
+            Dropdown,
+            HTTP
         },
 
         data () {
@@ -127,6 +129,8 @@
                 title4: 'Bills to pay',
                 closable: true,
                 msg: 'Accounting',
+
+                to_receive: []
             }
         },
 
@@ -177,15 +181,27 @@
         },
 
        created(){
-
+            this.fetchReceivables();
        },
 
         computed: {
+            total_receivable() {
+                let amounts = Object.values(this.to_receive.amount);
+                let total = amounts.reduce( ( amount, item ) => {
+                    return amount + parseFloat(item);
+                }, 0 );
 
+                return this.formatAmount(total);
+            }
         },
 
         methods: {
-
+            fetchReceivables(){
+                this.to_receive = [];
+                HTTP.get( 'invoices/overview-receivable' ).then( (res) => {
+                   this.to_receive = res.data;
+                } );
+            }
         }
 
     }
