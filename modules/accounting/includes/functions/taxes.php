@@ -367,6 +367,7 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['tax_id'] = isset($data['tax_id']) ? $data['tax_id'] : 0;
     $tax_data['tax_category_id'] = isset($data['tax_category_id']) ? $data['tax_category_id'] : 0;
     $tax_data['agency_id'] = isset($data['agency_id']) ? $data['agency_id'] : 0;
+    $tax_data['agency_name'] = isset($data['agency_name']) ? $data['agency_name'] : '';
     $tax_data['tax_components'] = isset($data['tax_components']) ? $data['tax_components'] : '';
     $tax_data['created_at'] = date("Y-m-d");
     $tax_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';

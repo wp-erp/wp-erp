@@ -327,7 +327,7 @@ export default new Router({
                 },
                 {
 
-                    path: '/tax-categories/new',
+                    path: '/tax-agencies/new',
                     name: 'NewTaxAgency',
                     component: NewTaxAgency
                 },
