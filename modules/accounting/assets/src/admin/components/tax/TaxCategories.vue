@@ -4,12 +4,14 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Tax Categories</h2>
-                    <a id="erp-customer-new" class="wperp-btn btn--primary" @click.prevent="newTaxCategory">
+                    <a class="wperp-btn btn--primary" @click.prevent="showModal = true">
                         <span>Add Tax Category</span>
                     </a>
                 </div>
             </div>
         </div>
+
+        <new-tax-category v-if="showModal" @close="showModal = false"></new-tax-category>
 
         <div class="table-container">
             <list-table
@@ -47,7 +49,7 @@
 
         data() {
             return {
-                taxModal: false,
+                showModal: false,
                 modalParams: null,
                 columns: {
                     'tax_cat_id': {label: 'ID'},
@@ -84,7 +86,7 @@
 
         created() {
             this.$on('tax-modal-close', function() {
-                this.taxModal = false;
+                this.showModal = false;
             });
 
             this.pageTitle      =   this.$route.name;
@@ -158,7 +160,7 @@
                         break;
 
                     case 'edit':
-                        this.taxModal = true;
+                        this.showModal = true;
                         this.tax_cats = row;
                         break;
 
