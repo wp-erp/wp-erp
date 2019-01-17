@@ -280,7 +280,7 @@ export default {
                 line_items: this.formatLineItems(),
                 attachments: this.attachments,
                 type: 'invoice',
-                status: 'awaiting_payment',
+                status: '1',
                 trn_by: 'cash',
                 estimate: 0,
             }).then(res => {

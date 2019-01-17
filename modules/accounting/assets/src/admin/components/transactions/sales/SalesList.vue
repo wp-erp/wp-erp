@@ -44,7 +44,7 @@
                     {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Colsed' : data.row.status }}
+                    {{ data.row.status }}
                 </template>
 
             </list-table>
@@ -99,6 +99,7 @@
 
             let filters = {};
             
+            // Get start & end date from url on page load
             if ( this.$route.query.start && this.$route.query.end ) {
                 filters.start_date = this.$route.query.start;
                 filters.end_date = this.$route.query.end;

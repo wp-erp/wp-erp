@@ -95,7 +95,7 @@ export default {
     asyncFind: debounce(function (query) {
       this.isLoading = true;
       this.$root.$emit('options-query', query);
-    }, 700),
+    }, 1),
   },
 };
 </script>

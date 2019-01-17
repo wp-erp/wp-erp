@@ -63,6 +63,7 @@
                         selectedProduct: [],
                         unitPrice: 0,
                         discount: 0,
+                        discountAmount: 0,
                         taxAmount: 0,
                         totalAmount: 0
                     };
@@ -97,11 +98,12 @@
 
                 if ( discount ) {
                     discount = (amount * discount) / 100;
+                    field.discountAmount = discount;
                     amount = amount - discount;                   
                 }
 
                 if ( taxAmount ) {
-                    amount = amount - taxAmount;
+                    amount = amount + taxAmount;
                 }
 
                 field.totalAmount = amount.toFixed(2);
