@@ -242,7 +242,7 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
         $wpdb->update( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
             'purchase_no'   => $purchase_id,
             'trn_no'        => $purchase_id,
-            'particulars'       => $purchase_data['particulars'],
+            'particulars'   => $purchase_data['particulars'],
             'debit'         => 0,
             'credit'        => $purchase_data['amount'],
             'created_at'    => $purchase_data['created_at'],

@@ -205,15 +205,15 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_bill( $request ) {
         $bill_data = $this->prepare_item_for_database( $request );
 
-        $item_amount = []; $item_tax = []; $item_total = []; $additional_fields = [];
+        $item_total = []; $additional_fields = [];
 
         $items = $request['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $item_amount[$key] = $item['amount'];
             $item_total[$key] = $item['amount'];
         }
-        $bill_data['attachments']     = maybe_serialize( $request['attachments'] );
+        $bill_data['attachments']     = maybe_serialize( $bill_data['attachments'] );
+        $bill_data['billing_address'] = maybe_serialize( $bill_data['billing_address'] );
         $bill_data['amount']          = array_sum( $item_total );
 
         $bill_id = erp_acct_insert_bill( $bill_data );
@@ -246,16 +246,17 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $bill_data = $this->prepare_item_for_database( $request );
 
-        $item_amount = []; $item_tax = []; $item_total = []; $additional_fields = [];
+        $item_total = []; $additional_fields = [];
 
         $items = $request['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $item_amount[$key] = $item['amount'];
             $item_total[$key] = $item['amount'];
         }
-        $bill_data['attachments'] = maybe_serialize( $request['attachments'] );
-        $bill_data['amount']      = array_sum( $item_total );
+
+        $bill_data['attachments']     = maybe_serialize( $bill_data['attachments'] );
+        $bill_data['billing_address'] = maybe_serialize( $bill_data['billing_address'] );
+        $bill_data['amount']          = array_sum( $item_total );
 
         $bill_id = erp_acct_update_bill( $bill_data, $id );
 
@@ -436,8 +437,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['remarks'] ) ) {
             $prepared_item['remarks'] = $request['remarks'];
         }
-        if ( isset( $request['attachments'] ) ) {
-            $prepared_item['attachments'] = $request['attachments'];
+        if ( isset( $request['billing_address'] ) ) {
+            $prepared_item['billing_address'] = $request['billing_address'];
         }
 
         return $prepared_item;
