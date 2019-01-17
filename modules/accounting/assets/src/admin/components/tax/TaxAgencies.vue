@@ -4,12 +4,14 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Tax Agencies</h2>
-                    <a id="erp-customer-new" class="wperp-btn btn--primary" @click.prevent="newTaxAgency">
+                    <a class="wperp-btn btn--primary" @click.prevent="showModal = true">
                         <span>Add Tax Agency</span>
                     </a>
                 </div>
             </div>
         </div>
+
+        <new-tax-agency v-if="showModal" @close="showModal = false"></new-tax-agency>
 
         <div class="table-container">
             <list-table
@@ -33,8 +35,8 @@
 </template>
 
 <script>
-    import HTTP            from 'admin/http'
-    import ListTable       from 'admin/components/list-table/ListTable.vue'
+    import HTTP          from 'admin/http'
+    import ListTable     from 'admin/components/list-table/ListTable.vue'
     import NewTaxAgency  from 'admin/components/tax/NewTaxAgency.vue';
 
     export default {
@@ -47,7 +49,7 @@
 
         data() {
             return {
-                taxModal: false,
+                showModal: false,
                 modalParams: null,
                 columns: {
                     'tax_agency_id': {label: 'ID'},
@@ -83,7 +85,7 @@
 
         created() {
             this.$on('tax-modal-close', function() {
-                this.taxModal = false;
+                this.showModal = false;
             });
 
             this.pageTitle      =   this.$route.name;
@@ -97,7 +99,7 @@
                 let items = this.rows;
                 items.map( item => {
                     item.tax_agency_id = item.id;
-                    item.tax_agency_name = item.agency_name;
+                    item.tax_agency_name = item.name;
                 } );
                 return items;
             }
@@ -137,10 +139,6 @@
                 this.fetchItems();
             },
 
-            newTaxAgency() {
-                this.$router.push('tax-agencies/new');
-            },
-
             singleTaxAgency(tax_id) {
                 this.$router.push({ name: 'SingleTaxAgency', params: { id: tax_id } })
             },
@@ -156,7 +154,7 @@
                         break;
 
                     case 'edit':
-                        this.taxModal = true;
+                        this.showModal = true;
                         this.tax_agencies = row;
                         break;
 

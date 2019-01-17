@@ -13,7 +13,7 @@
 
                         <div class="wperp-form-group">
                             <label>Tax Category Name</label>
-                                <!--<multi-select v-model="category" :options="ledgers" />-->
+                                <!--<multi-select v-model="category" :options="categories" />-->
                                 <input type="text" v-model="category" />
                         </div>
 
@@ -43,7 +43,7 @@
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
 
     export default {
-        name: 'TaxCategories',
+        name: 'NewTaxCategory',
 
         components: {
             HTTP,
