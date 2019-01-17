@@ -130,7 +130,7 @@ input, select, textarea {
 
 .@{theme-prefix}-custom-select {
     position: relative;
-    border: 1px solid @field-border-color;
+    // border: 1px solid @field-border-color;
     border-radius: 3px;
 
     &--inline-block {
@@ -139,7 +139,7 @@ input, select, textarea {
     }
     
     select {
-        border: 0;
+        border: 1px solid @field-border-color;
         -webkit-appearance: none;
         -moz-appearance:    none;
         appearance:         none;
@@ -152,7 +152,7 @@ input, select, textarea {
         display: flex;
         align-items: center;
         height: 100%;
-        background: #fff;
+        background: transparent;
         width: 20px;
         pointer-events: none;
         z-index: 2;
