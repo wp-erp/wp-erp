@@ -107,6 +107,18 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/overview-payable', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_overview_payables' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            //'schema' => [ $this, 'get_item_schema' ],
+        ] );
     }
 
     /**
@@ -357,6 +369,22 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $movefiles = erp_acct_upload_attachments($_FILES['attachments']);
 
         $response = rest_ensure_response( $movefiles );
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get Dashboard Payable segments
+     *
+     * @param $request
+     *
+     * @return mixed|WP_REST_Response
+     */
+    function get_overview_payables( $request ){
+        $items = erp_acct_get_payables_overview();
+        $response = rest_ensure_response( $items );
+
         $response->set_status( 200 );
 
         return $response;

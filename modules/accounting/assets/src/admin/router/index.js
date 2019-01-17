@@ -25,13 +25,10 @@ import SalesReport       from 'admin/components/reports/SalesReport.vue';
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
 import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
 import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
-import NewTaxCategory    from 'admin/components/tax/NewTaxCategory.vue';
 import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
-import NewTax            from 'admin/components/tax/NewTax.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
-import NewTaxAgency      from 'admin/components/tax/NewTaxAgency.vue';
 import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
-import PayTaxRecord      from 'admin/components/tax/PayTaxRecord.vue';
+import RecordPayTax      from 'admin/components/tax/RecordPayTax.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import RecPaymentModal   from 'admin/components/rec-payment/RecPaymentModal.vue';
@@ -56,11 +53,6 @@ export default new Router({
             name : 'Customers',
             component: People,
         },
-        // {
-        //     path : '/transactions',
-        //     name : 'Sales',
-        //     component: Sales,
-        // },
         {
             path : '/inventory',
             name : 'Products',
@@ -287,12 +279,6 @@ export default new Router({
                     component: TaxRates,
                 },
                 {
-
-                    path: '/taxes/new',
-                    name: 'NewTax',
-                    component: NewTax
-                },
-                {
                     path: 'page/:page',
                     name: 'PaginateTaxRates',
                     component: TaxRates,
@@ -309,12 +295,6 @@ export default new Router({
                     component: TaxCategories,
                 },
                 {
-
-                    path: '/tax-categories/new',
-                    name: 'NewTaxCategory',
-                    component: NewTaxCategory
-                },
-                {
                     path: 'page/:page',
                     name: 'PaginateTaxCategories',
                     component: TaxCategories,
@@ -329,12 +309,6 @@ export default new Router({
                     path: '',
                     name: 'TaxAgencies',
                     component: TaxAgencies,
-                },
-                {
-
-                    path: '/tax-categories/new',
-                    name: 'NewTaxAgency',
-                    component: NewTaxAgency
                 },
                 {
                     path: 'page/:page',
@@ -355,8 +329,8 @@ export default new Router({
         },
         {
             path: '/pay-tax',
-            name: 'PayTaxRecord',
-            component: PayTaxRecord
+            name: 'RecordPayTax',
+            component: RecordPayTax
         },
         {
             path: '/tax-records',

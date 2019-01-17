@@ -282,6 +282,7 @@ function erp_acct_pay_tax( $data ) {
         'updated_by' => $tax_data['updated_by'],
     ));
 
+    $tax_data['voucher_no'] = $voucher_no;
 
     erp_acct_insert_tax_pay_data_into_ledger( $tax_data );
 
@@ -366,12 +367,13 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['tax_id'] = isset($data['tax_id']) ? $data['tax_id'] : 0;
     $tax_data['tax_category_id'] = isset($data['tax_category_id']) ? $data['tax_category_id'] : 0;
     $tax_data['agency_id'] = isset($data['agency_id']) ? $data['agency_id'] : 0;
+    $tax_data['agency_name'] = isset($data['agency_name']) ? $data['agency_name'] : '';
     $tax_data['tax_components'] = isset($data['tax_components']) ? $data['tax_components'] : '';
     $tax_data['created_at'] = date("Y-m-d");
     $tax_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
     $tax_data['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : '';
     $tax_data['updated_by'] = isset($data['updated_by']) ? $data['updated_by'] : '';
-    $tax_data['cat_name'] = isset($data['cat_name']) ? $data['cat_name'] : '';
+    $tax_data['name'] = isset($data['name']) ? $data['name'] : '';
     $tax_data['description'] = isset($data['description']) ? $data['description'] : '';
     $tax_data['voucher_no'] = isset($data['voucher_no']) ? $data['voucher_no'] : '';
     $tax_data['trn_date'] = isset($data['trn_date']) ? $data['trn_date'] : date("Y-m-d");
