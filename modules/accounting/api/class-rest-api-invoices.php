@@ -193,15 +193,19 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_invoice( $request ) {
         $invoice_data = $this->prepare_item_for_database( $request );
 
-        $item_total = []; $item_subtotal = []; $item_tax_total = []; $item_discount_total = []; $additional_fields = [];
+        $item_total = [];
+        $item_subtotal = [];
+        $item_tax_total = [];
+        $item_discount_total = [];
+        $additional_fields = [];
 
         $items = $request['line_items'];
 
         foreach ( $items as $key => $item ) {
             $item_subtotal[$key] = $item['qty'] * $item['unit_price'];
             // $item_tax_total[$key] = $item_subtotal[$key] * ($item['tax_percent'] / 100);
-            $item_tax_total[$key] = 0; // remove me please ...
-            $item_discount_total[$key] = $item['discount'] * $item['qty'];
+            $item_tax_total[$key] = $item['discountAmount'];
+            $item_discount_total[$key] = $item['discountAmount'] * $item['qty'];
             $item_total[$key] = $item_subtotal[$key] + $item_tax_total[$key] - $item_discount_total[$key];
         }
 

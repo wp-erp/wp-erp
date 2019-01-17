@@ -127,7 +127,12 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Chart status
      */
     public function get_sales_chart_status( $request ) {
-        $chart_status = erp_acct_get_sales_chart_status();
+        $args = [
+            'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'] 
+        ];
+
+        $chart_status = erp_acct_get_sales_chart_status($args);
 
         $response = rest_ensure_response( $chart_status );
 
@@ -140,9 +145,12 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Chart payment
      */
     public function get_sales_chart_payment( $request ) {
-        $chart_payment = erp_acct_get_sales_chart_payment();
+        $args = [
+            'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'] 
+        ];
 
-        error_log(print_r($chart_payment, true));
+        $chart_payment = erp_acct_get_sales_chart_payment($args);
 
         $response = rest_ensure_response( $chart_payment );
 

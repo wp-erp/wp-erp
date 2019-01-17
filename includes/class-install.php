@@ -919,6 +919,7 @@ Company'
               `chart_id` int(11) DEFAULT NULL,
               `category_id` int(11) DEFAULT NULL,
               `name` varchar(255) DEFAULT NULL,
+              `slug` varchar(255) DEFAULT NULL,
               `code` int(11) DEFAULT NULL,
               `system` tinyint(1) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
