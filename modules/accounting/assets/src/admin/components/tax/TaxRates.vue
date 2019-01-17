@@ -88,10 +88,8 @@
                 this.taxModal = false;
             });
 
-            this.buttonTitle    =   'Add New Tax Rate';
             this.pageTitle      =   this.$route.name;
             this.url            =   this.$route.name.toLowerCase();
-            this.singleUrl      =   'CustomerDetails';
 
             this.fetchItems();
         },
