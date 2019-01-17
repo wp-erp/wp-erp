@@ -109,6 +109,18 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             //'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/overview-receivable', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_overview_receivables' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            //'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
     }
 
     /**
@@ -361,6 +373,22 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, $total_items );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get Dashboard Recievables segments
+     *
+     * @param $request
+     *
+     * @return mixed|WP_REST_Response
+     */
+    function get_overview_receivables( $request ){
+        $items = erp_acct_get_recievables_overview();
+        $response = rest_ensure_response( $items );
 
         $response->set_status( 200 );
 

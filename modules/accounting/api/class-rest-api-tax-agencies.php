@@ -266,11 +266,12 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $item['name'] = isset( $item['agency_name'] ) ? $item['agency_name'] : $item['name'];
         $item = (object) $item;
 
         $data = [
-            'id'              => (int) $item->id,
-            'name'            => $item->agency_name,
+            'id'       => (int) $item->id,
+            'name'     => $item->name,
         ];
 
         $data = array_merge( $data, $additional_fields );

@@ -4,17 +4,18 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Tax Rates</h2>
-                    <a id="erp-customer-new" class="wperp-btn btn--primary" data-modal="wperp-modal-content" @click.prevent="taxModal = true">
-                        <i class="flaticon-add-plus-button"></i>
+                    <a class="wperp-btn btn--primary" @click.prevent="showModal = true">
                         <span>Add Tax Rate</span>
                     </a>
                 </div>
             </div>
         </div>
 
+        <new-tax-rate v-if="showModal" @close="showModal = false"></new-tax-rate>
+
         <div class="table-container">
             <list-table
-                tableClass="wp-ListTable widefat fixed tax-rate-list"
+                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark"
                 action-column="actions"
                 :columns="columns"
                 :rows="row_data"
@@ -24,7 +25,9 @@
                 :current-page="paginationData.currentPage"
                 @pagination="goToPage"
                 :actions="actions"
-                @action:click="onActionClick">
+                :bulk-actions="bulkActions"
+                @action:click="onActionClick"
+                @bulk:click="onBulkAction">
             </list-table>
 	    </div>
 
@@ -34,19 +37,18 @@
 <script>
     import HTTP from 'admin/http'
     import ListTable     from 'admin/components/list-table/ListTable.vue'
-    import NewTax        from 'admin/components/tax/NewTax.vue';
+    import NewTaxRate     from 'admin/components/tax/NewTaxRate.vue'
 
     export default {
         name: 'TaxRates',
 
         components: {
             ListTable,
-            NewTax
+            NewTaxRate
         },
 
         data () {
             return {
-                taxModal: false,
                 modalParams: null,
                 columns: {
                     'tax_id': {label: 'ID'},
@@ -78,19 +80,18 @@
                 pageTitle: '',
                 url: '',
                 singleUrl: '',
-                isActiveOptionDropdown: false
+                isActiveOptionDropdown: false,
+                showModal: false
             };
         },
 
         created() {
             this.$on('tax-modal-close', function() {
-                this.taxModal = false;
+                this.showModal = false;
             });
 
-            this.buttonTitle    =   'Add New Tax Rate';
             this.pageTitle      =   this.$route.name;
             this.url            =   this.$route.name.toLowerCase();
-            this.singleUrl      =   'CustomerDetails';
 
             this.fetchItems();
         },
@@ -109,6 +110,9 @@
         },
 
         methods: {
+            close() {
+                this.showModal = false;
+            },
             fetchItems(){
                 this.rows = [];
                 HTTP.get('taxes', {
@@ -142,11 +146,11 @@
                 this.fetchItems();
             },
 
-            newTax() {
+            newTaxRate() {
                 this.$router.push('taxes/new');
             },
 
-            showTaxModal(tax_id) {
+            singleTaxRate(tax_id) {
                 this.$router.push({ name: 'SingleTaxRate', params: { id: tax_id } })
             },
 
@@ -161,7 +165,7 @@
                         break;
 
                     case 'edit':
-                        this.taxModal = true;
+                        this.showModal = true;
                         this.taxes = row;
                         break;
 

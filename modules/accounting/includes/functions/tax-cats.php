@@ -76,7 +76,7 @@ function erp_acct_insert_tax_cat( $data ) {
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
     $wpdb->insert($wpdb->prefix . 'erp_acct_tax_categories', array(
-        'name'       => $tax_data['cat_name'],
+        'name'       => $tax_data['name'],
         'description'=> $tax_data['description'],
         'created_at' => $tax_data['created_at'],
         'created_by' => $tax_data['created_by'],
@@ -106,7 +106,7 @@ function erp_acct_update_tax_cat( $data, $id ) {
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
     $wpdb->update($wpdb->prefix . 'erp_acct_tax_categories', array(
-        'name'       => $tax_data['cat_name'],
+        'name'       => $tax_data['name'],
         'description'=> $tax_data['description'],
         'created_at' => $tax_data['created_at'],
         'created_by' => $tax_data['created_by'],
@@ -133,6 +133,6 @@ function erp_acct_delete_tax_cat( $id ) {
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_categories', array( 'id' => $id ) );
 
-    return $tax_no;
+    return $id;
 }
 

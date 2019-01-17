@@ -132,6 +132,6 @@ function erp_acct_delete_tax_agency( $id ) {
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agencies', array( 'id' => $id ) );
 
-    return $tax_no;
+    return $id;
 }
 

@@ -556,3 +556,81 @@ function erp_acct_get_due_payment( $invoice_no ) {
     return $result['due'];
 }
 
+/**
+ * Get recievables from given date
+ *
+ * @param $from String
+ * @param $to   String
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_recievables( $from, $to ) {
+    global $wpdb;
+
+    $from_date = date( "Y-m-d", strtotime( $from ) );
+    $to_date   = date( "Y-m-d", strtotime( $to ) );
+
+    $invoices = $wpdb->prefix . 'erp_acct_invoices';
+    $invoices_acct_details = $wpdb->prefix . 'erp_acct_invoice_account_details';
+
+    $query = $wpdb->prepare( "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
+                              FROM $invoices 
+                              LEFT JOIN $invoices_acct_details as ad 
+                              ON ad.invoice_no = voucher_no  where due_date 
+                              BETWEEN %s and %s
+                              Group BY voucher_no Having due > 0 ", $from_date, $to_date );
+
+    $results = $wpdb->get_results( $query, ARRAY_A );
+
+    return $results;
+}
+
+/**
+ * Get Dashboard Overview details
+ */
+function erp_acct_get_recievables_overview() {
+    // get dates till coming 90 days
+    $from_date = date( "Y-m-d" );
+    $to_date   = date( "Y-m-d", strtotime("+90 day", strtotime( $from_date ) ));
+
+    $data = [];
+    $amount = [
+        'first' => 0,
+        'second' => 0,
+        'third' => 0,
+    ];
+
+    $result = erp_acct_get_recievables( $from_date, $to_date );
+
+    if ( !empty( $result ) ) {
+        $from_date = new DateTime($from_date);
+
+        foreach ( $result as $item_data ) {
+            $item = (object) $item_data;
+            $later = new DateTime($item->due_date);
+            $diff = $later->diff($from_date)->format("%a");
+
+            //segment by date difference
+            switch ( $diff ) {
+                case ( $diff <= 30 ):
+                    $data['first'][] = $item_data;
+                    $amount['first'] = $amount['first'] + $item->due;
+                    break;
+                case ( $diff <= 60 ):
+                    $data['second'][] = $item_data;
+                    $amount['second'] = $amount['second'] + $item->due;
+                    break;
+                case ( $diff <= 90 ):
+                    $data['third'][] = $item_data;
+                    $amount['third'] = $amount['third'] + $item->due;
+                    break;
+
+                default:
+
+            }
+        }
+    }
+
+    return [ 'data' => $data, 'amount' => $amount ];
+}
+
