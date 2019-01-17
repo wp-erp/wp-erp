@@ -168,7 +168,7 @@
         created() {
             this.getLedgers();
 
-            this.$root.$on('remove-row', index => {
+            this.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
             });

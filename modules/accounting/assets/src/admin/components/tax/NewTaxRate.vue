@@ -11,76 +11,73 @@
                     <div class="wperp-modal-body">
                         <div class="wperp-row wperp-gutter-20">
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="tax_name">Tax Name</label>
+                                <label>Tax Name</label>
                                 <div class="wperp-custom-select">
-                                    <select name="tax_name" id="tax_name" class="wperp-form-field">
-                                        <option value="0">Select</option> 
-                                        <option value="1">Option1</option> 
-                                        <option value="2">Option2</option>
-                                    </select> 
-                                    <i class="flaticon-arrow-down-sign-to-navigate"></i>
+                                    <input type="text" placeholder="Enter Tax Name" v-model="tax_name" class="wperp-form-field">
                                 </div>
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="tax_number">Tax Number</label>
-                                <input type="text" name="tax_number" id="tax_number" placeholder="Enter Tax Number" class="wperp-form-field">
+                                <label>Tax Number</label>
+                                <input type="text" placeholder="Enter Tax Number" v-model="tax_number" class="wperp-form-field">
                             </div>
-                            <div class="wperp-col-xs-12">
-                                <label>Tax Components</label>
+                            <div class="wperp-col-sm-6">
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input type="checkbox" id="is_tax_compound" name="is_taxcompound" class="form-check-input" @change="isTaxComponent = !isTaxComponent"> 
-                                        <span class="form-check-sign"></span> 
+                                        <input type="checkbox" v-model="is_compound" class="form-check-input" @change="isTaxComponent = !isTaxComponent">
+                                        <span class="form-check-sign"></span>
                                         <span class="field-label">Is this tax compound?</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="wperp-col-sm-6">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" v-model="is_default" class="form-check-input">
+                                        <span class="form-check-sign"></span>
+                                        <span class="field-label">Is this tax default?</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-
-
                         <div class="table-container mt-20">
                             <table class="wperp-table wperp-form-table new-journal-form">
                                 <thead>
-                                    <tr>
-                                        <th scope="col" class="column-primary">Component Name</th>
-                                        <th scope="col">Agency</th>
-                                        <th scope="col">Tax Category</th>
-                                        <th scope="col">Tax Rate</th>
-                                        <th scope="col" class="col--actions"></th>
-                                    </tr>
+                                <tr>
+                                    <th scope="col" class="column-primary">Component Name</th>
+                                    <th scope="col">Agency</th>
+                                    <th scope="col">Tax Category</th>
+                                    <th scope="col">Tax Rate</th>
+                                    <th scope="col" class="col--actions"></th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    <tr :class="isRowExpanded ? 'is-row-expanded' : ''">
-                                        <td scope="row" class="col--component-name column-primary">
-                                            <input type="text" class="wperp-form-field" placeholder="Component Name">
-                                            <button type="button" class="wperp-toggle-row" @click.prevent="isRowExpanded = !isRowExpanded"><span class="screen-reader-text">Show more details</span></button>
-                                        </td>
-                                        <td class="col--agency" data-colname="Agency">
-                                            <input type="text" class="wperp-form-field" placeholder="Agency">
-                                        </td>
-                                        <td class="col--tax-category" data-colname="Tax Category">
-                                            <div class="wperp-custom-select">
-                                                <select name="tax_category" class="wperp-form-field">
-                                                    <option value="0">Select</option>
-                                                    <option value="1">Option1</option>
-                                                    <option value="2">Option2</option>
-                                                </select>
-                                                <i class="flaticon-arrow-down-sign-to-navigate"></i>
-                                            </div>
-                                        </td>
-                                        <td class="col--tax-rate" data-colname="Tax Rate">
-                                            <input type="text" class="wperp-form-field text-right" value="$35.00">
-                                        </td>
-                                        <td class="col--actions delete-row" data-colname="Remove Above Selection">
-                                            <a href="#"><i class="flaticon-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr class="add-new-line" v-if="isTaxComponent">
-                                        <td colspan="9" class="text-left">
-                                            <button class="wperp-btn btn--primary add-line-trigger" type="button"><i class="flaticon-add-plus-button"></i>Add Component</button>
-                                        </td>
-                                    </tr>
+                                <tr :class="isRowExpanded ? 'is-row-expanded' : ''" :key="key" v-for="(line,key) in componentLines">
+                                    <td scope="row" class="col--component-name column-primary">
+                                        <input type="text" class="wperp-form-field" v-model="line.component_name">
+                                        <button type="button" class="wperp-toggle-row"
+                                                @click.prevent="isRowExpanded = !isRowExpanded"></button>
+                                    </td>
+                                    <td class="col--agency" data-colname="Agency">
+                                        <multi-select v-model="line.agency_id" :options="agencies" />
+                                    </td>
+                                    <td class="col--tax-category" data-colname="Tax Category">
+                                        <multi-select v-model="line.tax_category" :options="categories" />
+                                    </td>
+                                    <td class="col--tax-rate" data-colname="Tax Rate">
+                                        <input type="text" class="wperp-form-field text-right" v-model="line.tax_rate">
+                                    </td>
+                                    <td class="col--actions delete-row" data-colname="Remove Above Selection">
+                                        <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
+                                    </td>
+                                </tr>
+                                <tr class="add-new-line" v-if="isTaxComponent">
+                                    <td colspan="9" class="text-left">
+                                        <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger" type="button"><i
+                                            class="flaticon-add-plus-button"></i>Add Component
+                                        </button>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -90,11 +87,12 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <button class="wperp-btn btn--primary" type="submit">Add New</button>
-                            <button class="wperp-btn btn--default modal-close" type="reset" @click="closeModal">Cancel</button>
+                            <submit-button text="Add New Tax Rate" @click.native="addNewTaxRate" :working="isWorking"></submit-button>
+                            <button class="wperp-btn btn--default modal-close" type="reset" @click="closeModal">Cancel
+                            </button>
                         </div>
                     </div>
-                </form> 
+                </form>
             </div>
         </div>
     </div>
@@ -103,28 +101,102 @@
 <script>
     import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue';
+    import SubmitButton from 'admin/components/base/SubmitButton.vue'
+
     export default {
         name: "NewTaxRate",
+
         components: {
+            HTTP,
             MultiSelect,
+            SubmitButton
         },
-        props: {
-            
-        },
+
         data() {
             return {
-               isTaxComponent: false,
-               isRowExpanded: false
+                tax_name: '',
+                tax_number: '',
+                is_default: 0,
+                is_compound: 0,
+                isTaxComponent: false,
+                isRowExpanded: false,
+                componentLines: [{}],
+                categories: [{}],
+                agencies:[{}]
             }
         },
-        methods: {
-            closeModal: function(){
-                this.$emit('close');
-            }
-        },
+
         created() {
-           
-        }
+            this.getCategories();
+            this.getAgencies();
+
+            this.$on('remove-row', index => {
+                this.$delete(this.componentLines, index);
+            });
+        },
+
+
+        methods: {
+            getAgencies() {
+                HTTP.get('/tax-agencies').then((response) => {
+                    response.data.forEach(element => {
+                        this.agencies.push({
+                            id: element.id,
+                            name: element.name
+                        });
+                    });
+                });
+            },
+
+            getCategories() {
+                HTTP.get('/tax-cats').then((response) => {
+                    response.data.forEach(element => {
+                        this.categories.push({
+                            id: element.id,
+                            name: element.name
+                        });
+                    });
+                });
+            },
+
+            addNewTaxRate() {
+                HTTP.post('/taxes', {
+                    tax_rate_name : this.tax_name,
+                    tax_number: this.tax_number,
+                    is_compound: this.is_compound,
+                    is_default: this.is_default,
+                    tax_components: this.componentLines
+                }).then(res => {
+                    console.log(res.data);
+                    this.$swal({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Tax Agency Created!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }).then(() => {
+                    this.resetData();
+                    this.isWorking = false;
+                });
+            },
+
+            closeModal: function () {
+                this.$emit('close');
+            },
+
+            addLine() {
+                this.componentLines.push({});
+            },
+
+            resetData() {
+                Object.assign(this.$data, this.$options.data.call(this));
+            },
+
+            removeRow(index) {
+                this.$delete(this.componentLines, index);
+            },
+        },
     }
 </script>
 
