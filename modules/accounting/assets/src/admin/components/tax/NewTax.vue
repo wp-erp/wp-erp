@@ -1,5 +1,5 @@
 <template>
-    <div class="app-customers">
+    <div id="new-tax-rate">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
@@ -59,15 +59,15 @@
 	                <tbody>
 	                    <tr>
 	                        <td scope="row" class="col--component-name column-primary">
-	                            <input type="text" name="component_name" id="component_name" class="wperp-form-field" placeholder="Component Name">
+	                            <input type="text" class="wperp-form-field" placeholder="Component Name">
 	                            <button type="button" class="wperp-toggle-row"><span class="screen-reader-text">Show more details</span></button>
 	                        </td>
 	                        <td class="col--agency" data-colname="Agency">
-	                            <input type="text" name="agency" id="agency" class="wperp-form-field" placeholder="Agency">
+	                            <input type="text" class="wperp-form-field" placeholder="Agency">
 	                        </td>
 	                        <td class="col--tax-category" data-colname="Tax Category">
 	                            <div class="wperp-custom-select">
-	                                <select name="tax_category" id="tax_category" class="wperp-form-field">
+	                                <select name="tax_category" class="wperp-form-field">
 	                                    <option value="0">Select</option>
 	                                    <option value="1">Option1</option>
 	                                    <option value="2">Option2</option>
@@ -76,7 +76,7 @@
 	                            </div>
 	                        </td>
 	                        <td class="col--tax-rate" data-colname="Tax Rate">
-	                            <input type="text" name="tax_rate" id="tax_rate" class="wperp-form-field text-right" value="$35.00">
+	                            <input type="text" class="wperp-form-field text-right" value="$35.00">
 	                        </td>
 	                        <td class="col--actions delete-row" data-colname="Remove Above Selection">
 	                            <a href="#"><i class="flaticon-trash"></i></a>
@@ -84,15 +84,15 @@
 	                    </tr>
 	                    <tr>
 	                        <td scope="row" class="col--component-name column-primary">
-	                            <input type="text" name="component_name" id="component_name" class="wperp-form-field" placeholder="Component Name">
+	                            <input type="text" class="wperp-form-field" placeholder="Component Name">
 	                            <button type="button" class="wperp-toggle-row"><span class="screen-reader-text">Show more details</span></button>
 	                        </td>
 	                        <td class="col--agency" data-colname="Agency">
-	                            <input type="text" name="agency" id="agency" class="wperp-form-field" placeholder="Agency">
+	                            <input type="text" class="wperp-form-field" placeholder="Agency">
 	                        </td>
 	                        <td class="col--tax-category" data-colname="Tax Category">
 	                            <div class="wperp-custom-select">
-	                                <select name="tax_category" id="tax_category" class="wperp-form-field">
+	                                <select class="wperp-form-field">
 	                                    <option value="0">Select</option>
 	                                    <option value="1">Option1</option>
 	                                    <option value="2">Option2</option>
@@ -101,7 +101,7 @@
 	                            </div>
 	                        </td>
 	                        <td class="col--tax-rate" data-colname="Tax Rate">
-	                            <input type="text" name="tax_rate" id="tax_rate" class="wperp-form-field text-right" value="$35.00">
+	                            <input type="text" class="wperp-form-field text-right" value="$35.00">
 	                        </td>
 	                        <td class="col--actions delete-row" data-colname="Remove Above Selection">
 	                            <a href="#"><i class="flaticon-trash"></i></a>
@@ -109,15 +109,15 @@
 	                    </tr>
 	                    <tr>
 	                        <td scope="row" class="col--component-name column-primary">
-	                            <input type="text" name="component_name" id="component_name" class="wperp-form-field" placeholder="Component Name">
+	                            <input type="text" class="wperp-form-field" placeholder="Component Name">
 	                            <button type="button" class="wperp-toggle-row"><span class="screen-reader-text">Show more details</span></button>
 	                        </td>
 	                        <td class="col--agency" data-colname="Agency">
-	                            <input type="text" name="agency" id="agency" class="wperp-form-field" placeholder="Agency">
+	                            <input type="text" class="wperp-form-field" placeholder="Agency">
 	                        </td>
 	                        <td class="col--tax-category" data-colname="Tax Category">
 	                            <div class="wperp-custom-select">
-	                                <select name="tax_category" id="tax_category" class="wperp-form-field">
+	                                <select class="wperp-form-field">
 	                                    <option value="0">Select</option>
 	                                    <option value="1">Option1</option>
 	                                    <option value="2">Option2</option>
@@ -126,7 +126,7 @@
 	                            </div>
 	                        </td>
 	                        <td class="col--tax-rate" data-colname="Tax Rate">
-	                            <input type="text" name="tax_rate" id="tax_rate" class="wperp-form-field text-right" value="$35.00">
+	                            <input type="text" class="wperp-form-field text-right" value="$35.00">
 	                        </td>
 	                        <td class="col--actions delete-row" data-colname="Remove Above Selection">
 	                            <a href="#"><i class="flaticon-trash"></i></a>

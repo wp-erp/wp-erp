@@ -4,8 +4,7 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Tax Rates</h2>
-                    <a id="erp-customer-new" class="wperp-btn btn--primary" data-modal="wperp-modal-content" @click.prevent="taxModal = true">
-                        <i class="flaticon-add-plus-button"></i>
+                    <a id="erp-customer-new" class="wperp-btn btn--primary" @click.prevent="newTaxRate">
                         <span>Add Tax Rate</span>
                     </a>
                 </div>
@@ -24,7 +23,9 @@
                 :current-page="paginationData.currentPage"
                 @pagination="goToPage"
                 :actions="actions"
-                @action:click="onActionClick">
+                :bulk-actions="bulkActions"
+                @action:click="onActionClick"
+                @bulk:click="onBulkAction">
             </list-table>
 	    </div>
 
@@ -142,11 +143,11 @@
                 this.fetchItems();
             },
 
-            newTax() {
+            newTaxRate() {
                 this.$router.push('taxes/new');
             },
 
-            showTaxModal(tax_id) {
+            singleTaxRate(tax_id) {
                 this.$router.push({ name: 'SingleTaxRate', params: { id: tax_id } })
             },
 
