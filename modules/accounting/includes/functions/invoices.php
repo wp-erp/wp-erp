@@ -588,30 +588,34 @@ function erp_acct_get_recievables_overview() {
     $to_date   = date( "Y-m-d", strtotime("+90 day", strtotime( $from_date ) ));
 
     $data = [];
-    $amount = [];
+    $amount = [
+        'first' => 0,
+        'second' => 0,
+        'third' => 0,
+    ];
 
     $result = erp_acct_get_recievables( $from_date, $to_date );
 
     if ( !empty( $result ) ) {
         $from_date = new DateTime($from_date);
 
-        foreach ( $result as $item ) {
-            $item = (object) $item;
+        foreach ( $result as $item_data ) {
+            $item = (object) $item_data;
             $later = new DateTime($item->due_date);
             $diff = $later->diff($from_date)->format("%a");
 
             //segment by date difference
             switch ( $diff ) {
                 case ( $diff <= 30 ):
-                    $data['first'][] = $item;
+                    $data['first'][] = $item_data;
                     $amount['first'] = $amount['first'] + $item->due;
                     break;
                 case ( $diff <= 60 ):
-                    $data['second'][] = $item;
+                    $data['second'][] = $item_data;
                     $amount['second'] = $amount['second'] + $item->due;
                     break;
                 case ( $diff <= 90 ):
-                    $data['third'][] = $item;
+                    $data['third'][] = $item_data;
                     $amount['third'] = $amount['third'] + $item->due;
                     break;
 
