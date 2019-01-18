@@ -1153,7 +1153,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase_details` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `trn_no` int(11) DEFAULT NULL,
-              `product_id` decimal(10,2) DEFAULT 0,
+              `product_id` int(11) DEFAULT NULL,
               `qty` int(11) DEFAULT NULL,
               `price` decimal(10,2) DEFAULT 0,
               `amount` decimal(10,2) DEFAULT 0,
