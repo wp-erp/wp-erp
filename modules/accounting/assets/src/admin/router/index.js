@@ -318,6 +318,22 @@ export default new Router({
             ]
         },
         {
+            path: '/tax-records',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'TaxRecords',
+                    component: TaxRecords,
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateTaxRecords',
+                    component: TaxRecords,
+                },
+            ]
+        },
+        {
             path: '/transfer/new',
             name: 'Transfer',
             component: Transfer
@@ -331,11 +347,6 @@ export default new Router({
             path: '/pay-tax',
             name: 'RecordPayTax',
             component: RecordPayTax
-        },
-        {
-            path: '/tax-records',
-            name: 'TaxRecords',
-            component: TaxRecords
         },
     ]
 })
