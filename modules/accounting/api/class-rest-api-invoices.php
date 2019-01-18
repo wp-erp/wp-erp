@@ -205,30 +205,34 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_invoice( $request ) {
         $invoice_data = $this->prepare_item_for_database( $request );
 
-        $item_total = [];
-        $item_subtotal = [];
+        $item_total = 0;
         $item_tax_total = [];
-        $item_discount_total = [];
+        $item_discount_total = 0;
         $additional_fields = [];
 
         $items = $request['line_items'];
 
-        // error_log(print_r($items, true)); die;
+        foreach ($items as $key => $value) {
+            $sub_total = $value['qty'] * $value['unit_price'];
 
-        foreach ( $items as $key => $item ) {
-            $item_subtotal[$key] = $item['qty'] * $item['unit_price'];
-            // $item_tax_total[$key] = $item_subtotal[$key] * ($item['tax_percent'] / 100);
-            $item_tax_total[$key] = $item['discountAmount'];
-            $item_discount_total[$key] = $item['discountAmount'] * $item['qty'];
-            $item_total[$key] = $item_subtotal[$key] + $item_tax_total[$key] - $item_discount_total[$key];
+            $item_total += $sub_total;
+            $item_discount_total += ($sub_total * $value['discount']) / 100; // discount value from %
         }
 
+        // foreach ( $items as $key => $item ) {
+        //     $item_subtotal[$key] = $item['qty'] * $item['unit_price'];
+        //     // $item_tax_total[$key] = $item_subtotal[$key] * ($item['tax_percent'] / 100);
+        //     $item_tax_total[$key] = $item['discountAmount'];
+        //     $item_discount_total[$key] = $item['discountAmount'] * $item['qty'];
+        //     $item_total[$key] = $item_subtotal[$key] + $item_tax_total[$key] - $item_discount_total[$key];
+        // }
+
         $invoice_data['billing_address'] = maybe_serialize( $request['billing_address'] );
-        $invoice_data['subtotal'] = array_sum( $item_subtotal );
-        $invoice_data['discount'] = array_sum( $item_tax_total );
-        $invoice_data['tax'] = array_sum( $item_discount_total );
+        // $invoice_data['subtotal'] = array_sum( $item_subtotal );
+        $invoice_data['discount'] = $item_discount_total;
+        $invoice_data['tax'] = $item_discount_total;
         $invoice_data['tax_percent'] = 0; // remove me please...
-        $invoice_data['amount'] = array_sum( $item_total );
+        $invoice_data['amount'] = $item_total;
         $invoice_data['attachments'] = maybe_serialize( $request['attachments'] );
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
