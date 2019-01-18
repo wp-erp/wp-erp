@@ -103,7 +103,7 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
 /**
  * Get sales chart payment
  */
-function erp_acct_get_sales_chart_payment() {
+function erp_acct_get_sales_chart_payment( $args = [] ) {
     global $wpdb;
 
     $where = '';
@@ -118,7 +118,6 @@ function erp_acct_get_sales_chart_payment() {
         LEFT JOIN wp_erp_acct_invoice_account_details AS invoice_acc_detail ON invoice.voucher_no = invoice_acc_detail.invoice_no {$where}
         GROUP BY invoice.voucher_no HAVING balance > 0 ) AS get_amount";
 
-    error_log(print_r($sql, true));
+    // error_log(print_r($sql, true));
     return $wpdb->get_row($sql, ARRAY_A);
 }
-
