@@ -213,6 +213,8 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $items = $request['line_items'];
 
+        // error_log(print_r($items, true)); die;
+
         foreach ( $items as $key => $item ) {
             $item_subtotal[$key] = $item['qty'] * $item['unit_price'];
             // $item_tax_total[$key] = $item_subtotal[$key] * ($item['tax_percent'] / 100);

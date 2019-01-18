@@ -261,6 +261,7 @@ export default {
                     unit_price: line.unitPrice,
                     tax: line.taxAmount,
                     discount: line.discount,
+                    discountAmount: line.discountAmount,
                     item_total: line.totalAmount,
                     tax_percent: 0
                 });
@@ -269,7 +270,7 @@ export default {
             return lineItems;
         },
 
-        submitInvoiceForm() {
+        submitInvoiceForm() {            
             this.isWorking = true;
 
             HTTP.post('/invoices', {

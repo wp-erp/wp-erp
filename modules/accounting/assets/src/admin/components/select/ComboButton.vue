@@ -81,6 +81,11 @@
 
 			.btn-fake {
 				color: #fff;
+				padding: 2px 38px;
+				
+				&:focus {
+					outline: 0;
+				}
 			}
 		}
 

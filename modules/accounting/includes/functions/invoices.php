@@ -383,9 +383,15 @@ function erp_acct_void_invoice( $invoice_no ) {
 function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
     global $wpdb;
 
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
+
+    $sales_ledger_id = $ledger_map->get_ledger_id_by_slug('sales');
+    $sales_tax_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_tax');
+    $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discount');
+
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => get_ledger_id('Sales'), // @TODO change later
+        'ledger_id'   => $sales_ledger_id,
         'trn_no'      => $invoice_data['voucher_no'],
         'particulars' => $invoice_data['particulars'],
         'debit'       => 0,
@@ -397,7 +403,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
 
     // Insert tax in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => 306, // @TODO change later
+        'ledger_id'   => $sales_tax_ledger_id,
         'trn_no'      => $invoice_data['voucher_no'],
         'particulars' => $invoice_data['particulars'],
         'debit'       => 0,
@@ -409,7 +415,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
 
     // Insert discount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => 307, // @TODO change later
+        'ledger_id'   => $sales_discount_ledger_id,
         'trn_no'      => $invoice_data['voucher_no'],
         'particulars' => $invoice_data['particulars'],
         'debit'       => $invoice_data['tax'],
