@@ -18,11 +18,12 @@
 	                <div class="wperp-row wperp-gutter-20">
 	                    <div class="wperp-col-sm-6 wperp-col-xs-12">
 	                        <div class="wperp-form-group">
-	                            <label>Bank Account</label>
-	                            <div class="wperp-custom-select">
-                                    <multi-select v-model="ledger" :options="ledgers" />
-	                                <i class="flaticon-arrow-down-sign-to-navigate"></i>
-	                            </div>
+	                            <label>Account</label>
+	                            <!--<div class="wperp-custom-select">-->
+                                    <!---->
+	                                <!--<i class="flaticon-arrow-down-sign-to-navigate"></i>-->
+	                            <!--</div>-->
+                                <div class="wperp-multi-select"><multi-select v-model="ledger" :options="ledgers" /></div>
 	                        </div>
 	                    </div>
 	                    <div class="wperp-col-sm-6 wperp-col-xs-12">
