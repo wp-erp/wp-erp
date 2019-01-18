@@ -102,6 +102,16 @@ export default {
 
 <style lang="less">
 
+    .multiselect {
+        input.multiselect__input {
+            display: none;
+        }
+        &.multiselect--active input.multiselect__input {
+            display: block;
+            width: 97% !important;
+        }
+    }
+
 .with-multiselect {
     .multiselect__input {
         &::placeholder {
