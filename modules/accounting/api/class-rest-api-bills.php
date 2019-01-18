@@ -213,12 +213,12 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $item_total[$key] = $item['amount'];
         }
         $bill_data['attachments']     = maybe_serialize( $bill_data['attachments'] );
-        $bill_data['billing_address'] = maybe_serialize( $bill_data['billing_address'] );
+        $bill_data['billing_address'] = isset( $bill_data['billing_address'] ) ? maybe_serialize( $bill_data['billing_address'] ) : '';
         $bill_data['amount']          = array_sum( $item_total );
 
         $bill_id = erp_acct_insert_bill( $bill_data );
 
-        $bill_data['id'] = $bill_id;
+        $bill_data['voucher_no'] = $bill_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -255,12 +255,12 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $bill_data['attachments']     = maybe_serialize( $bill_data['attachments'] );
-        $bill_data['billing_address'] = maybe_serialize( $bill_data['billing_address'] );
+        $bill_data['billing_address'] = isset( $bill_data['billing_address'] ) ? maybe_serialize( $bill_data['billing_address'] ) : '';
         $bill_data['amount']          = array_sum( $item_total );
 
         $bill_id = erp_acct_update_bill( $bill_data, $id );
 
-        $$bill_data['id'] = $bill_id;
+        $bill_data['voucher_no'] = $bill_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -457,15 +457,14 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'              => (int) $item->id,
             'voucher_no'      => (int) $item->voucher_no,
             'vendor_id'       => (int) $item->vendor_id,
             'date'            => $item->trn_date,
             'due_date'        => $item->due_date,
-            'address'         => $item->address,
+            'address'         => $item->billing_address,
             'bill_details'    => $item->bill_details,
             'total'           => (int) $item->amount,
-            'due'             => (int) $item->due,
+            'due'             => isset( $item->due ) ? $item->due : $item->amount,
             'ref'             => $item->ref,
             'remarks'         => $item->remarks,
             'status'          => $item->status,

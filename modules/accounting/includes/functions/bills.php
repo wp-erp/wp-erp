@@ -127,6 +127,7 @@ function erp_acct_insert_bill( $data ) {
         $voucher_no = $wpdb->insert_id;
 
         $bill_data = erp_acct_get_formatted_bill_data( $data, $voucher_no );
+        $bill_data['trn_no'] = $voucher_no;
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bills', array(
             'voucher_no'      => $bill_data['voucher_no'],
@@ -153,7 +154,7 @@ function erp_acct_insert_bill( $data ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', array(
                 'trn_no'      => $voucher_no,
                 'ledger_id'   => $item['ledger_id'],
-                'particulars' => $item['description'],
+                'particulars' => isset( $item['description'] ) ? $item['description'] : '',
                 'amount'      => $item['amount'],
                 'created_at'  => $bill_data['created_at'],
                 'created_by'  => $bill_data['created_by'],
@@ -232,7 +233,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
         foreach ( $items as $key => $item ) {
             $wpdb->update( $wpdb->prefix . 'erp_acct_bill_details', array(
                 'ledger_id'   => $item['ledger_id'],
-                'particulars' => $item['remarks'],
+                'particulars' => isset( $item['description'] ) ? $item['description'] : '',
                 'amount'      => $item['amount'],
                 'created_at'  => $bill_data['created_at'],
                 'created_by'  => $bill_data['created_by'],
@@ -249,7 +250,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
             'bill_no'     => $bill_id,
             'particulars' => $bill_data['remarks'],
             'debit'       => 0,
-            'credit'      => $bill_data['total'],
+            'credit'      => $bill_data['amount'],
             'created_at'  => $bill_data['created_at'],
             'created_by'  => $bill_data['created_by'],
             'updated_at'  => $bill_data['updated_at'],
