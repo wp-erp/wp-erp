@@ -1,12 +1,6 @@
 <template>
 
     <div class="wperp-transactions-section wperp-section">
-        <sales-report
-            v-if="salesReportModal"
-            :id="modalParams.voucher_no"
-            :type="modalParams.type"
-            :totalDue="modalParams.due"
-            :totalAmount="modalParams.amount" />
 
         <!-- Start .wperp-crm-table -->
         <div class="table-container">
@@ -16,28 +10,43 @@
             </div>
 
             <list-table
-                tableClass="wperp-table table-striped table-dark widefat table2"
+                tableClass="wperp-table table-striped table-dark widefat table2 transactions-table"
                 action-column="actions"
                 :columns="columns"
                 :rows="rows"
-                :bulk-actions="bulkActions"
                 :total-items="paginationData.totalItems"
                 :total-pages="paginationData.totalPages"
                 :per-page="paginationData.perPage"
                 :current-page="paginationData.currentPage"
                 @pagination="goToPage"
                 :actions="actions"
-                @action:click="onActionClick"
-                @bulk:click="onBulkAction">
+                @action:click="onActionClick">
                 <template slot="trn_date" slot-scope="data">
-                    <strong>
-                        <!-- <router-link :to="{ name: 'user', params: { id:  }}">{{ data.row.trn_date }}</router-link> -->
-
-                        <a href="#" @click.prevent="showPurchasesReportModal(data.row)">
-                            {{ data.row.trn_date }}
-                        </a>
+                    <strong v-if="isPayment(data.row)">
+                        {{ data.row.payment_trn_date }}
+                    </strong>
+                    <strong v-else>
+                        <router-link :to="{ name: 'SalesReport', params: { id: data.row.id }}">
+                            {{ data.row.invoice_tran_date }}
+                        </router-link>
                     </strong>
                 </template>
+                <template slot="type" slot-scope="data">
+                    {{ isPayment(data.row) ? 'Payment' : 'Invoice' }}
+                </template>
+                <template slot="due_date" slot-scope="data">
+                    {{ isPayment(data.row) ? '-' : data.row.due_date }}
+                </template>
+                <template slot="due" slot-scope="data">
+                    {{ isPayment(data.row) ? '-' : formatAmount(data.row.sales_amount - data.row.payment_amount) }}
+                </template>
+                <template slot="amount" slot-scope="data">
+                    {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount) }}
+                </template>
+                <template slot="status" slot-scope="data">
+                    {{ data.row.status }}
+                </template>
+
             </list-table>
 
         </div>
@@ -47,27 +56,16 @@
 <script>
     import HTTP from 'admin/http';
     import ListTable from 'admin/components/list-table/ListTable.vue';
-    import SalesReport from 'admin/components/reports/SalesReport.vue';
 
     export default {
-        name: 'PurchasesList',
+        name: 'SalesList',
 
         components: {
             ListTable,
-            SalesReport
         },
 
         data() {
             return {
-                salesReportModal: false,
-                modalParams: null,
-                bulkActions: [
-                    {
-                        key: 'trash',
-                        label: 'Move to Trash',
-                        img: erp_acct_var.erp_assets + '/images/trash.png'
-                    }
-                ],
                 columns: {
                     'trn_date':      {label: 'Date'},
                     'type':          {label: 'Type'},
@@ -78,7 +76,7 @@
                     'amount':        {label: 'Total'},
                     'status':        {label: 'Status'},
                     'actions':       {label: ''},
-                    
+
                 },
                 rows: [],
                 paginationData: {
@@ -88,29 +86,37 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions : [
-                    { key: 'edit', label: 'Edit' },
                     { key: 'trash', label: 'Delete' }
                 ]
             };
         },
 
         created() {
-            this.$root.$on('sales-filter', filters => {
+            this.$root.$on('transactions-filter', filters => {
+                this.$router.push({ path: '/transactions/purchases', query: { start: filters.start_date, end: filters.end_date } });
                 this.fetchItems(filters);
             });
 
-            this.$root.$on('sales-modal-close', () => {
-                this.salesReportModal = false;
-            });
+            let filters = {};
 
-            this.fetchItems();
+            // Get start & end date from url on page load
+            if ( this.$route.query.start && this.$route.query.end ) {
+                filters.start_date = this.$route.query.start;
+                filters.end_date = this.$route.query.end;
+            }
+
+            this.fetchItems(filters);
+        },
+
+        watch: {
+            '$route': 'fetchItems'
         },
 
         methods: {
             fetchItems(filters = {}) {
                 this.rows = [];
 
-                HTTP.get('invoices', {
+                HTTP.get('/transactions/purchases', {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
@@ -118,20 +124,17 @@
                         end_date: filters.end_date
                     }
                 }).then( (response) => {
-                    response.data.forEach(element => {
-                        element['type'] = 'Invoice';
-                        this.rows.push(element);
-                    });
+                    this.rows = response.data;
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
                 })
-                .catch((error) => {
-                    console.log(error);
-                })
-                .then( () => {
-                    //ready
-                } );
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                    .then( () => {
+                        //ready
+                    } );
             },
 
             onActionClick(action, row, index) {
@@ -154,23 +157,6 @@
                 }
             },
 
-            onBulkAction(action, items) {
-                if ( 'trash' === action ) {
-                    if ( confirm('Are you sure to delete?') ) {
-                        HTTP.delete(`invoices/delete/${items.join(',')}`).then(response => {
-                            let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-                            if ( toggleCheckbox.checked ) {
-                                // simulate click event to remove checked state
-                                toggleCheckbox.click();
-                            }
-
-                            this.fetchItems();
-                        });
-                    }
-                }
-            },
-
             goToPage(page) {
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
@@ -183,12 +169,21 @@
                 this.fetchItems();
             },
 
-            showSalesReportModal(row) {
-                this.modalParams = row;
-
-                this.salesReportModal = true;
+            isPayment(row) {
+                return row.type === 'payment' ? true : false;
             }
         },
 
     }
 </script>
+
+<style lang="less">
+    .transactions-table {
+        .tablenav,
+        .column-cb,
+        .check-column {
+            display: none;
+        }
+    }
+</style>
+
