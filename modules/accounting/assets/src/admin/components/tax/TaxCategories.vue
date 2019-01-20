@@ -37,7 +37,7 @@
 <script>
     import HTTP            from 'admin/http'
     import ListTable       from 'admin/components/list-table/ListTable.vue'
-    import NewTaxCategory  from 'admin/components/tax/NewTaxCategory.vue';
+    import NewTaxCategory  from 'admin/components/tax/NewTaxCategory.vue'
 
     export default {
         name: 'TaxCategories',

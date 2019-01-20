@@ -37,7 +37,7 @@
 <script>
     import HTTP          from 'admin/http'
     import ListTable     from 'admin/components/list-table/ListTable.vue'
-    import NewTaxAgency  from 'admin/components/tax/NewTaxAgency.vue';
+    import NewTaxAgency  from 'admin/components/tax/NewTaxAgency.vue'
 
     export default {
         name: 'TaxAgencies',
