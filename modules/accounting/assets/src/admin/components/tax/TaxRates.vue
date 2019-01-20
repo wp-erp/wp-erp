@@ -4,7 +4,7 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Tax Rates</h2>
-                    <a class="wperp-btn btn--primary" @click.prevent="showModal = true">
+                    <a class="wperp-btn btn--primary" @click.prevent="newTaxRate">
                         <span>Add Tax Rate</span>
                     </a>
                 </div>
@@ -110,9 +110,7 @@
         },
 
         methods: {
-            close() {
-                this.showModal = false;
-            },
+
             fetchItems(){
                 this.rows = [];
                 HTTP.get('taxes', {
