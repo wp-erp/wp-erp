@@ -32,6 +32,7 @@ import RecordPayTax      from 'admin/components/tax/RecordPayTax.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import RecPaymentModal   from 'admin/components/rec-payment/RecPaymentModal.vue';
+import NewTaxRate        from 'admin/components/tax/NewTaxRate.vue';
 
 Vue.use(Router)
 
@@ -277,6 +278,11 @@ export default new Router({
                     path: '',
                     name: 'TaxRates',
                     component: TaxRates,
+                },
+                {
+                    path: '/taxes/new',
+                    name: 'NewTaxRate',
+                    component: NewTaxRate,
                 },
                 {
                     path: 'page/:page',
