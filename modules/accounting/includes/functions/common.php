@@ -36,18 +36,6 @@ function erp_acct_upload_attachments($files) {
 }
 
 /**
- * Change stock status of a product
- *
- * @param $product_id
- * @param $trn_no
- * @param $qty
- * @param $stock_in
- */
-function erp_acct_change_inventory_status( $product_id, $trn_no, $qty, $stock_in ) {
-
-}
-
-/**
  * Get payable data for given month
  *
  * @param $from
@@ -148,3 +136,109 @@ function erp_acct_get_payables_overview() {
 
     return [ 'data' => $data, 'amount' => $amount ];
 }
+
+/**
+ * Get people name, email by id
+ *
+ * @param $people_id
+ *
+ * @return string
+ */
+function erp_acct_get_people_info_by_id( $people_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT first_name, last_name, email FROM {$wpdb->prefix}erp_peoples WHERE id = {$people_id} LIMIT" );
+
+    return $row;
+}
+
+/**
+ * Get ledger name, slug by id
+ *
+ * @param $ledger_id
+ *
+ * @return string
+ */
+function erp_acct_get_ledger_by_id( $ledger_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT name, slug, code FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = {$ledger_id} LIMIT 1" );
+
+    return $row;
+}
+
+/**
+ * Get product type by id
+ *
+ * @param $product_type_id
+ *
+ * @return string
+ */
+function erp_acct_get_product_type_by_id( $product_type_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_product_types WHERE id = {$product_type_id} LIMIT 1" );
+
+    return $row;
+}
+
+/**
+ * Get product category by id
+ *
+ * @param $cat_id
+ *
+ * @return string
+ */
+function erp_acct_get_product_category_by_id( $cat_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_product_categories WHERE id = {$cat_id} LIMIT 1" );
+
+    return $row;
+}
+
+/**
+ * Get tax agency name by id
+ *
+ * @param $agency_id
+ *
+ * @return string
+ */
+function erp_acct_get_tax_agency_by_id( $agency_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_tax_agencies WHERE id = {$agency_id} LIMIT 1" );
+
+    return $row;
+}
+
+/**
+ * Get tax category by id
+ *
+ * @param $cat_id
+ *
+ * @return string
+ */
+function erp_acct_get_tax_category_by_id( $cat_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_tax_categories WHERE id = {$cat_id} LIMIT 1" );
+
+    return $row;
+}
+
+/**
+ * Get transaction status by id
+ *
+ * @param $trn_id
+ *
+ * @return string
+ */
+function erp_acct_get_trn_status_by_id( $trn_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT type_name FROM {$wpdb->prefix}erp_acct_trn_status_types WHERE id = {$trn_id} LIMIT 1" );
+
+    return $row;
+}
+
