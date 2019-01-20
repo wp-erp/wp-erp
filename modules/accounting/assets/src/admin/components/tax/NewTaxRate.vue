@@ -68,13 +68,13 @@
                                 </td>
                                 <td class="col--agency" data-colname="Agency">
                                     <multi-select v-model="line.agency_id" :options="agencies"/>
-                                    <a href="#" @click.prevent="showCatModal = true" role="button"
-                                       class="after-select-dropdown">Add Tax Category</a>
+                                    <a href="#" @click.prevent="showAgencyModal = true" role="button"
+                                       class="after-select-dropdown">Add Tax Agency</a>
                                 </td>
                                 <td class="col--tax-category" data-colname="Tax Category">
                                     <multi-select v-model="line.tax_category" :options="categories"/>
-                                    <a href="#" @click.prevent="showAgencyModal = true" role="button"
-                                       class="after-select-dropdown">Add Tax Agency</a>
+                                    <a href="#" @click.prevent="showCatModal = true" role="button"
+                                       class="after-select-dropdown">Add Tax Category</a>
                                 </td>
                                 <td class="col--tax-rate" data-colname="Tax Rate">
                                     <input type="text" class="wperp-form-field text-right" v-model="line.tax_rate">
