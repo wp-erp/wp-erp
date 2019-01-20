@@ -60,9 +60,11 @@
                                     </td>
                                     <td class="col--agency" data-colname="Agency">
                                         <multi-select v-model="line.agency_id" :options="agencies" />
+                                        <a href="#" @click.prevent="showCatModal = true" role="button" class="after-select-dropdown">Add Tax Category</a>
                                     </td>
                                     <td class="col--tax-category" data-colname="Tax Category">
                                         <multi-select v-model="line.tax_category" :options="categories" />
+                                        <a href="#" @click.prevent="showAgencyModal = true" role="button" class="after-select-dropdown">Add Tax Agency</a>
                                     </td>
                                     <td class="col--tax-rate" data-colname="Tax Rate">
                                         <input type="text" class="wperp-form-field text-right" v-model="line.tax_rate">
@@ -81,8 +83,10 @@
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
+
+                    <new-tax-category v-if="showCatModal" @close="showCatModal = false" />
+                    <new-tax-agency v-if="showAgencyModal" @close="showAgencyModal = false" />
 
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
@@ -100,8 +104,10 @@
 
 <script>
     import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue';
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import NewTaxCategory  from 'admin/components/tax/NewTaxCategory.vue'
+    import NewTaxAgency  from 'admin/components/tax/NewTaxAgency.vue'
 
     export default {
         name: "NewTaxRate",
@@ -109,7 +115,9 @@
         components: {
             HTTP,
             MultiSelect,
-            SubmitButton
+            SubmitButton,
+            NewTaxCategory,
+            NewTaxAgency
         },
 
         data() {
@@ -122,7 +130,9 @@
                 isRowExpanded: false,
                 componentLines: [{}],
                 categories: [{}],
-                agencies:[{}]
+                agencies:[{}],
+                showCatModal: false,
+                showAgencyModal: false
             }
         },
 
@@ -177,7 +187,6 @@
                     });
                 }).then(() => {
                     this.resetData();
-                    this.isWorking = false;
                 });
             },
 
