@@ -1,12 +1,12 @@
 <template>
     <div class="wperp-modal wperp-modal-open wperp-printable-modal" role="dialog">
-        <div class="wperp-modal-dialog" v-click-outside="outside" @click="inside">
+        <div class="wperp-modal-dialog">
             <div class="wperp-modal-content">
                 <div class="wperp-modal-header">
                     <h1>
                         Journal
                     </h1>
-                    <span class="modal-close"><i class="flaticon-close"></i></span>
+                    <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                     <div class="d-print-none buttons-wrapper">
                         <a href="#" class="wperp-btn btn--default print-btn wperp-hidden-sm">
                             <i class="flaticon-printer-1"></i>
@@ -79,9 +79,16 @@
     export default {
         name: "JournalModal",
 
+        props: {
+            entry_id: {
+                type: String,
+                required: true,
+            },
+        },
+
         data() {
             return {
-                entry_id: 0,
+                ledger_id: 0,
                 trn_date: '',
                 particulars: '',
                 line_items: {
@@ -96,9 +103,9 @@
         },
 
         created() {
-            this.entry_id = this.$route.params.id;
+            this.ledger_id = this.entry_id;
 
-            HTTP.get(`/journals/${this.entry_id}`).then((response) => {
+            HTTP.get(`/journals/${this.ledger_id}`).then((response) => {
                 this.trn_date = response.data.trn_date;
                 this.particulars = response.data.particulars;
                 this.line_items = response.data.line_items;
@@ -107,11 +114,9 @@
         },
 
         methods: {
-            inside() {},
-
-            outside() {
-                this.$router.go(-1);
-            }
+            closeModal: function(){
+                this.$root.$emit('close');
+            },
         },
     }
 </script>
