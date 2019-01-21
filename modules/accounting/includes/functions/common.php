@@ -142,7 +142,7 @@ function erp_acct_get_payables_overview() {
  *
  * @param $people_id
  *
- * @return string
+ * @return array
  */
 function erp_acct_get_people_info_by_id( $people_id ) {
     global $wpdb;
@@ -157,7 +157,7 @@ function erp_acct_get_people_info_by_id( $people_id ) {
  *
  * @param $ledger_id
  *
- * @return string
+ * @return array
  */
 function erp_acct_get_ledger_by_id( $ledger_id ) {
     global $wpdb;
@@ -172,7 +172,7 @@ function erp_acct_get_ledger_by_id( $ledger_id ) {
  *
  * @param $product_type_id
  *
- * @return string
+ * @return array
  */
 function erp_acct_get_product_type_by_id( $product_type_id ) {
     global $wpdb;
@@ -187,7 +187,7 @@ function erp_acct_get_product_type_by_id( $product_type_id ) {
  *
  * @param $cat_id
  *
- * @return string
+ * @return array
  */
 function erp_acct_get_product_category_by_id( $cat_id ) {
     global $wpdb;
@@ -202,7 +202,7 @@ function erp_acct_get_product_category_by_id( $cat_id ) {
  *
  * @param $agency_id
  *
- * @return string
+ * @return array
  */
 function erp_acct_get_tax_agency_by_id( $agency_id ) {
     global $wpdb;
@@ -217,7 +217,7 @@ function erp_acct_get_tax_agency_by_id( $agency_id ) {
  *
  * @param $cat_id
  *
- * @return string
+ * @return array
  */
 function erp_acct_get_tax_category_by_id( $cat_id ) {
     global $wpdb;
@@ -232,7 +232,7 @@ function erp_acct_get_tax_category_by_id( $cat_id ) {
  *
  * @param $trn_id
  *
- * @return string
+ * @return array
  */
 function erp_acct_get_trn_status_by_id( $trn_id ) {
     global $wpdb;

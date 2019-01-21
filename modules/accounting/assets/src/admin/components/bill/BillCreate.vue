@@ -180,10 +180,11 @@
 
         methods: {
             getLedgers() {
-                this.ledgers = [
-                    { id: 305, name: "Ledger 1" },
-                    { id: 306, name: "Ledger 2" },
-                ]
+                HTTP.get(`/ledgers`).then((response) => {
+                   response.data.forEach(element => {
+                       this.ledgers.push(element);
+                   });
+                });
             },
 
             getPeopleAddress() {
