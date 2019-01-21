@@ -68,7 +68,7 @@
 
         methods: {
             fetchAccounts(){
-                HTTP.get('transfer-voucher').then( (response) => {
+                HTTP.get('accounts').then( (response) => {
                     this.accounts = response.data;
                 } );
             },

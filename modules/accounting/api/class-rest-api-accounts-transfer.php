@@ -18,7 +18,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @var string
      */
-    protected $rest_base = 'accounting/v1/transfer-voucher';
+    protected $rest_base = 'accounting/v1/accounts';
 
     /**
      * Register the routes for the objects of the controller.
