@@ -182,7 +182,10 @@
             getLedgers() {
                 HTTP.get(`/ledgers`).then((response) => {
                    response.data.forEach(element => {
-                       this.ledgers.push(element);
+                       this.ledgers.push({
+                           id: element.id,
+                           name: element.name
+                       });
                    });
                 });
             },
@@ -219,7 +222,7 @@
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trans_date,
                     due_date: this.basic_fields.due_date,
-                    bill_details: this.transactionLines,
+                    bill_details: this.formatTrnLines(this.transactionLines),
                     attachments: this.attachments,
                     type: 'bill',
                     status: 'awaiting_approval',
@@ -240,6 +243,13 @@
                 });
             },
 
+            formatTrnLines( trl_lines ) {
+                trl_lines.forEach(element => {
+                    element.ledger_id = element.ledger_id.id;
+                });
+
+                return trl_lines;
+            },
 
             resetData() {
                 Object.assign(this.$data, this.$options.data.call(this));
