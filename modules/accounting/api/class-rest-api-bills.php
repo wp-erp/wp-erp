@@ -459,7 +459,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'voucher_no'      => (int) $item->voucher_no,
             'vendor_id'       => (int) $item->vendor_id,
-            'date'            => $item->trn_date,
+            'trn_date'        => $item->trn_date,
             'due_date'        => $item->due_date,
             'address'         => $item->billing_address,
             'bill_details'    => $item->bill_details,

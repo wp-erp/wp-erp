@@ -322,7 +322,7 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['vendor_id'] = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
     $bill_data['vendor_name'] = isset( $data['vendor_name'] ) ? $data['vendor_name'] : '';
     $bill_data['billing_address'] = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
-    $bill_data['trn_date']   = isset( $data['date'] ) ? $data['date'] : date("Y-m-d" );
+    $bill_data['trn_date']   = isset( $data['trn_date'] ) ? $data['trn_date'] : date("Y-m-d" );
     $bill_data['due_date']   = isset( $data['due_date'] ) ? $data['due_date'] : date("Y-m-d" );
     $bill_data['created_at'] = date("Y-m-d" );
     $bill_data['address'] = isset( $data['address'] ) ? maybe_serialize( $data['address'] ) : '';
