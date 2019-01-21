@@ -259,7 +259,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             ledger.id,
             ledger.chart_id,
             ledger.category_id,
-            ledger.name as ledger_name,
+            ledger.name,
             ledger.code,
             ledger.system,
 
