@@ -95,7 +95,7 @@
 
         methods: {
             fetchAccounts(){
-                HTTP.get('transfer-voucher').then( (response) => {
+                HTTP.get('accounts').then( (response) => {
                     this.accounts = response.data;
                     this.fa = response.data;
                     this.ta = response.data;
@@ -113,7 +113,7 @@
             },
 
             submitTransfer(){
-                HTTP.post( '/transfer-voucher/transfer', {
+                HTTP.post( '/accounts/transfer', {
                     date : this.transferdate,
                     from_account_id : this.transferFrom.id,
                     to_account_id : this.transferTo.id,
