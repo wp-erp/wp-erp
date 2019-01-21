@@ -288,9 +288,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] = $request['trn_date'] ;
         }
-        if ( isset( $request['billing_address'] ) ) {
-            $prepared_item['billing_address'] = $request['billing_address'];
-        }
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
         }
@@ -309,9 +306,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['line_total'] ) ) {
             $prepared_item['line_total'] = $request['line_total'];
         }
-        if ( isset( $request['attachments'] ) ) {
-            $prepared_item['attachments'] = $request['attachments'];
-        }
         if ( isset( $request['trn_by'] ) ) {
             $prepared_item['trn_by'] = $request['trn_by'];
         }
@@ -320,6 +314,12 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];
+        }
+        if ( isset( $request['attachments'] ) ) {
+            $prepared_item['attachments'] = maybe_serialize( $request['attachments'] );
+        }
+        if ( isset( $request['billing_address'] ) ) {
+            $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
         }
 
         return $prepared_item;

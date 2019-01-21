@@ -422,9 +422,6 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['trn_no'] ) ) {
             $prepared_item['trn_no'] = $request['trn_no'];
         }
-        if ( isset( $request['attachments'] ) ) {
-            $prepared_item['attachments'] = $request['attachments'];
-        }
         if ( isset( $request['trn_by'] ) ) {
             $prepared_item['trn_by'] = $request['trn_by'];
         }
@@ -437,8 +434,11 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['remarks'] ) ) {
             $prepared_item['remarks'] = $request['remarks'];
         }
+        if ( isset( $request['attachments'] ) ) {
+            $prepared_item['attachments'] = maybe_serialize( $request['attachments'] );
+        }
         if ( isset( $request['billing_address'] ) ) {
-            $prepared_item['billing_address'] = $request['billing_address'];
+            $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
         }
 
         return $prepared_item;
