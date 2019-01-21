@@ -15,26 +15,7 @@
             <div class="wperp-row">
                 <div class="wperp-col-md-9 wperp-col-sm-12 wperp-col-xs-12">
                     <!-- Start .income-expense-section -->
-                    <div class="income-expense-section wperp-panel wperp-panel-default">
-                        <div class="wperp-panel-heading wperp-bg-white"><h4>Income & Expense</h4></div>
-                        <div class="wperp-panel-body">
-                            <div class="wperp-custom-select wperp-custom-select--inline-block wperp-pull-right mb-20">
-                                <select name="query_time" class="wperp-form-field" id="att-filter-duration">
-                                    <option value="this_month">This Month</option>
-                                    <option value="last_month">Last Month</option>
-                                    <option value="this_quarter">This Quarter</option>
-                                    <option value="last_quarter" selected="selected">Last Quarter</option>
-                                    <option value="this_year">This Year</option>
-                                    <option value="last_year">Last Year</option>
-                                </select>
-                                <i class="flaticon-arrow-down-sign-to-navigate"></i>
-                            </div>
-
-                            <div class="wperp-chart-block">
-                                <canvas id="bar_chart" ref="bar_chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+                    <chart></chart>
                     <!-- End .income-expense-section -->
 
                     <div class="wperp-row">
@@ -105,16 +86,18 @@
 </template>
 
 <script>
-    import 'assets/js/plugins/chart.min'
+
     import Dropdown from 'admin/components/base/Dropdown.vue'
     import MetaBox from 'admin/components/wp/MetaBox.vue'
     import Accounts from 'admin/components/dashboard/Accounts.vue'
     import HTTP from 'admin/http';
+    import Chart from "admin/components/dashboard/Chart.vue";
 
     export default {
         name: 'Dashboard',
 
         components: {
+            Chart,
             Accounts,
             MetaBox,
             Dropdown,
@@ -136,48 +119,6 @@
         },
 
         mounted () {
-            let colors = ['#208DF8'],
-                labels2 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                incomeData = [5, 6, 4, 5, 8, 7, 8, 12, 6, 9, 5, 11],
-                expenseData = [3, 2,4, 3.5, 4, 5, 6, 5, 4.5, 6, 4, 6],
-                bgColor = colors,
-                dataChart = {
-                    labels: labels2,
-                    datasets: [
-                        {
-                            label: 'Income',
-                            data: incomeData,
-                            backgroundColor: '#208DF8'
-                        },
-                        {
-                            label: 'Expense',
-                            data: expenseData,
-                            backgroundColor: '#f86e2d'
-                        }
-                    ]
-                },
-                config = {
-                    type: 'bar',
-                    data: dataChart,
-                    options: {
-                        maintainAspectRatio: true,
-                        responsive: true,
-                        legend: {
-                            display: false
-                        },
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
-                        }
-                    }
-                };
-                let bar_chart_ctx = this.$refs['bar_chart'].getContext("2d");
-                if( bar_chart_ctx !== null || bar_chart_ctx !== undefined ){
-                    new Chart(bar_chart_ctx, config);
-                }
 
         },
 

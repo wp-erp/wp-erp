@@ -84,6 +84,17 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/income_expense_overview', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_income_expense_overview' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -98,7 +109,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number' => empty( $request['per_page'] ) ? 20 : $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'] 
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
         ];
 
         $formatted_items = [];
@@ -129,7 +140,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'] 
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
         ];
 
         $chart_status = erp_acct_get_sales_chart_status($args);
@@ -147,7 +158,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_payment( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'] 
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
         ];
 
         $chart_payment = erp_acct_get_sales_chart_payment($args);
@@ -159,6 +170,23 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
+    /**
+     * Get Dashboard Income Expense Overview data
+     *
+     * @param $request
+     *
+     * @return mixed|WP_REST_Response
+     */
+    public function get_income_expense_overview( $request ){
+
+        $data = erp_acct_get_income_expense_chart_data();
+
+        $response = rest_ensure_response( $data );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
     /**
      * Prepare a single user output for response
      *
