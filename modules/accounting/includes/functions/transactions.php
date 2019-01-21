@@ -57,7 +57,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             invoice.trn_date,
             (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
             invoice_receipt.amount as payment_amount,
-            status_type.invoice_type AS status,
+            status_type.type_name AS status,
             invoice_acc_detail.trn_no";
     }
 
@@ -91,10 +91,10 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
         $where .= "WHERE invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
 
-    $sql = "SELECT COUNT(invoice.status) AS sub_total, status_type.invoice_type
+    $sql = "SELECT COUNT(invoice.status) AS sub_total, status_type.type_name
             FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
             LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.status = status_type.id {$where} 
-            GROUP BY status_type.id ORDER BY status_type.invoice_type ASC";
+            GROUP BY status_type.id ORDER BY status_type.type_name ASC";
 
     // error_log(print_r($sql, true));
     return $wpdb->get_results($sql, ARRAY_A);
