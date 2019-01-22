@@ -10375,30 +10375,11 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_assets_js_plugins_chart_min__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Dropdown_vue__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_wp_MetaBox_vue__ = __webpack_require__(222);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_dashboard_Accounts_vue__ = __webpack_require__(225);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_http__ = __webpack_require__(1);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_base_Dropdown_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_wp_MetaBox_vue__ = __webpack_require__(222);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_dashboard_Accounts_vue__ = __webpack_require__(225);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_http__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_dashboard_Chart_vue__ = __webpack_require__(491);
 //
 //
 //
@@ -10494,10 +10475,11 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'Dashboard',
   components: {
-    Accounts: __WEBPACK_IMPORTED_MODULE_3_admin_components_dashboard_Accounts_vue__["a" /* default */],
-    MetaBox: __WEBPACK_IMPORTED_MODULE_2_admin_components_wp_MetaBox_vue__["a" /* default */],
-    Dropdown: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Dropdown_vue__["a" /* default */],
-    HTTP: __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */]
+    Chart: __WEBPACK_IMPORTED_MODULE_4_admin_components_dashboard_Chart_vue__["a" /* default */],
+    Accounts: __WEBPACK_IMPORTED_MODULE_2_admin_components_dashboard_Accounts_vue__["a" /* default */],
+    MetaBox: __WEBPACK_IMPORTED_MODULE_1_admin_components_wp_MetaBox_vue__["a" /* default */],
+    Dropdown: __WEBPACK_IMPORTED_MODULE_0_admin_components_base_Dropdown_vue__["a" /* default */],
+    HTTP: __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */]
   },
   data: function data() {
     return {
@@ -10511,48 +10493,7 @@ if (false) {(function () {
       to_pay: []
     };
   },
-  mounted: function mounted() {
-    var colors = ['#208DF8'],
-        labels2 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        incomeData = [5, 6, 4, 5, 8, 7, 8, 12, 6, 9, 5, 11],
-        expenseData = [3, 2, 4, 3.5, 4, 5, 6, 5, 4.5, 6, 4, 6],
-        bgColor = colors,
-        dataChart = {
-      labels: labels2,
-      datasets: [{
-        label: 'Income',
-        data: incomeData,
-        backgroundColor: '#208DF8'
-      }, {
-        label: 'Expense',
-        data: expenseData,
-        backgroundColor: '#f86e2d'
-      }]
-    },
-        config = {
-      type: 'bar',
-      data: dataChart,
-      options: {
-        maintainAspectRatio: true,
-        responsive: true,
-        legend: {
-          display: false
-        },
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
-    };
-    var bar_chart_ctx = this.$refs['bar_chart'].getContext("2d");
-
-    if (bar_chart_ctx !== null || bar_chart_ctx !== undefined) {
-      new Chart(bar_chart_ctx, config);
-    }
-  },
+  mounted: function mounted() {},
   created: function created() {
     this.fetchReceivables();
     this.fetchPayables();
@@ -10578,7 +10519,7 @@ if (false) {(function () {
       var _this = this;
 
       this.to_receive = [];
-      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('invoices/overview-receivable').then(function (res) {
+      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('invoices/overview-receivable').then(function (res) {
         _this.to_receive = res.data;
       });
     },
@@ -10586,7 +10527,7 @@ if (false) {(function () {
       var _this2 = this;
 
       this.to_pay = [];
-      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('bills/overview-payable').then(function (res) {
+      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('bills/overview-payable').then(function (res) {
         _this2.to_pay = res.data;
       });
     }
@@ -10732,7 +10673,7 @@ if (false) {(function () {
     fetchAccounts: function fetchAccounts() {
       var _this = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('transfer-voucher').then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('accounts').then(function (response) {
         _this.accounts = response.data;
       });
     }
@@ -11457,7 +11398,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
         },
         dates: new Date()
       }],
-      selectedDate: this.defaultDate
+      selectedDate: this.getCurrentDate()
     };
   },
   methods: {
@@ -11470,6 +11411,23 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
       this.selectedDate = formattedDate;
       this.$refs.datePicker.click();
       this.$emit('input', this.selectedDate);
+    },
+    getCurrentDate: function getCurrentDate() {
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+      var yyyy = today.getFullYear();
+
+      if (dd < 10) {
+        dd = '0' + dd;
+      }
+
+      if (mm < 10) {
+        mm = '0' + mm;
+      }
+
+      today = yyyy + '-' + mm + '-' + dd;
+      return today;
     }
   }
 });
@@ -12245,6 +12203,7 @@ var STATUS_INITIAL = 0,
           selectedProduct: [],
           unitPrice: 0,
           discount: 0,
+          discountAmount: 0,
           taxAmount: 0,
           totalAmount: 0
         };
@@ -12256,7 +12215,7 @@ var STATUS_INITIAL = 0,
   },
   watch: {
     'line.selectedProduct': function lineSelectedProduct() {
-      this.setSalePriceAndType();
+      this.getSalePrice();
     }
   },
   methods: {
@@ -12274,6 +12233,7 @@ var STATUS_INITIAL = 0,
 
       if (discount) {
         discount = amount * discount / 100;
+        field.discountAmount = discount;
         amount = amount - discount;
       }
 
@@ -12285,14 +12245,13 @@ var STATUS_INITIAL = 0,
       this.$root.$emit('total-updated', field.totalAmount);
       this.$forceUpdate();
     },
-    setSalePriceAndType: function setSalePriceAndType() {
+    getSalePrice: function getSalePrice() {
       var product_id = this.line.selectedProduct.id;
       if (!product_id) return;
       var product = this.products.find(function (element) {
         return element.id == product_id;
       });
       this.line.unitPrice = parseFloat(product.sale_price);
-      this.line.product_type = this.line.selectedProduct.type_name;
     },
     removeRow: function removeRow() {
       this.$root.$emit('remove-row', this.$vnode.key);
@@ -12401,6 +12360,8 @@ if (false) {(function () {
 
     var self = this;
     this.$root.$on('options-query', function (query) {
+      _this.options = [];
+
       if (query) {
         _this.getCustomers(query);
       }
@@ -12439,7 +12400,6 @@ if (false) {(function () {
           search: query
         }
       }).then(function (response) {
-        _this2.options = [];
         response.data.forEach(function (item) {
           _this2.options.push({
             id: item.id,
@@ -14145,21 +14105,24 @@ if (false) {(function () {
   },
   methods: {
     getLedgers: function getLedgers() {
-      this.ledgers = [{
-        id: 305,
-        name: "Ledger 1"
-      }, {
-        id: 306,
-        name: "Ledger 2"
-      }];
+      var _this2 = this;
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/ledgers").then(function (response) {
+        response.data.forEach(function (element) {
+          _this2.ledgers.push({
+            id: element.id,
+            name: element.name
+          });
+        });
+      });
     },
     getPeopleAddress: function getPeopleAddress() {
-      var _this2 = this;
+      var _this3 = this;
 
       var people_id = this.basic_fields.user.id;
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/customers/".concat(people_id)).then(function (response) {
         // add more info
-        _this2.basic_fields.billing_address = "Street: ".concat(response.data.billing.street_1, " ").concat(response.data.billing.street_2, ",\n                    City: ").concat(response.data.billing.city, ", Country: ").concat(response.data.billing.country);
+        _this3.basic_fields.billing_address = "Street: ".concat(response.data.billing.street_1, " ").concat(response.data.billing.street_2, ",\n                    City: ").concat(response.data.billing.city, ", Country: ").concat(response.data.billing.country);
       });
     },
     updateFinalAmount: function updateFinalAmount() {
@@ -14173,14 +14136,14 @@ if (false) {(function () {
       this.transactionLines.push({});
     },
     SubmitForBill: function SubmitForBill() {
-      var _this3 = this;
+      var _this4 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/bills', {
         vendor_id: this.basic_fields.user.id,
         ref: this.basic_fields.trn_ref,
         trn_date: this.basic_fields.trans_date,
         due_date: this.basic_fields.due_date,
-        bill_details: this.transactionLines,
+        bill_details: this.formatTrnLines(this.transactionLines),
         attachments: this.attachments,
         type: 'bill',
         status: 'awaiting_approval',
@@ -14189,7 +14152,7 @@ if (false) {(function () {
       }).then(function (res) {
         console.log(res.data);
 
-        _this3.$swal({
+        _this4.$swal({
           position: 'top-end',
           type: 'success',
           title: 'Bill Created!',
@@ -14197,10 +14160,16 @@ if (false) {(function () {
           timer: 1500
         });
       }).then(function () {
-        _this3.resetData();
+        _this4.resetData();
 
-        _this3.isWorking = false;
+        _this4.isWorking = false;
       });
+    },
+    formatTrnLines: function formatTrnLines(trl_lines) {
+      trl_lines.forEach(function (element) {
+        element.ledger_id = element.ledger_id.id;
+      });
+      return trl_lines;
     },
     resetData: function resetData() {
       Object.assign(this.$data, this.$options.data.call(this));
@@ -15981,6 +15950,7 @@ if (false) {(function () {
 //
 //
 //
+//
 
 
 
@@ -15993,7 +15963,6 @@ if (false) {(function () {
   data: function data() {
     return {
       journalModal: false,
-      modalParams: null,
       columns: {
         'l_id': {
           label: 'ID'
@@ -16014,12 +15983,15 @@ if (false) {(function () {
         totalPages: 0,
         perPage: 10,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
-      }
+      },
+      journal_id: 0
     };
   },
   created: function created() {
-    this.$on('modal-close', function () {
-      this.showModal = false;
+    var _this = this;
+
+    this.$root.$on('close', function () {
+      _this.journalModal = false;
     });
     this.fetchItems();
   },
@@ -16037,7 +16009,7 @@ if (false) {(function () {
   },
   methods: {
     fetchItems: function fetchItems() {
-      var _this = this;
+      var _this2 = this;
 
       this.rows = [];
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('journals', {
@@ -16046,9 +16018,9 @@ if (false) {(function () {
           page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
         }
       }).then(function (response) {
-        _this.rows = response.data;
-        _this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-        _this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+        _this2.rows = response.data;
+        _this2.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+        _this2.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
       }).catch(function (error) {
         console.log(error);
       }).then(function () {//ready
@@ -16070,12 +16042,8 @@ if (false) {(function () {
       this.$router.push('journals/new');
     },
     showJournalModal: function showJournalModal(journal_id) {
-      this.$router.push({
-        name: 'SingleJournal',
-        params: {
-          id: journal_id
-        }
-      });
+      this.journalModal = true;
+      this.journal_id = journal_id;
     }
   }
 });
@@ -16220,9 +16188,15 @@ if (false) {(function () {
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "JournalModal",
+  props: {
+    entry_id: {
+      type: String,
+      required: true
+    }
+  },
   data: function data() {
     return {
-      entry_id: 0,
+      ledger_id: 0,
       trn_date: '',
       particulars: '',
       line_items: {
@@ -16238,8 +16212,8 @@ if (false) {(function () {
   created: function created() {
     var _this = this;
 
-    this.entry_id = this.$route.params.id;
-    __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/journals/".concat(this.entry_id)).then(function (response) {
+    this.ledger_id = this.entry_id;
+    __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/journals/".concat(this.ledger_id)).then(function (response) {
       _this.trn_date = response.data.trn_date;
       _this.particulars = response.data.particulars;
       _this.line_items = response.data.line_items;
@@ -16247,9 +16221,8 @@ if (false) {(function () {
     });
   },
   methods: {
-    inside: function inside() {},
-    outside: function outside() {
-      this.$router.go(-1);
+    closeModal: function closeModal() {
+      this.$root.$emit('close');
     }
   }
 });
@@ -16607,7 +16580,7 @@ if (false) {(function () {
     fetchAccounts: function fetchAccounts() {
       var _this = this;
 
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('transfer-voucher').then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('accounts').then(function (response) {
         _this.accounts = response.data;
         _this.fa = response.data;
         _this.ta = response.data;
@@ -16625,7 +16598,7 @@ if (false) {(function () {
     submitTransfer: function submitTransfer() {
       var _this2 = this;
 
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].post('/transfer-voucher/transfer', {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].post('/accounts/transfer', {
         date: this.transferdate,
         from_account_id: this.transferFrom.id,
         to_account_id: this.transferTo.id,
@@ -17615,7 +17588,7 @@ if (false) {(function () {
         }
       }).then(function (response) {
         response.data.forEach(function (element) {
-          _this2.chartStatus.labels.push(element.invoice_type);
+          _this2.chartStatus.labels.push(element.type_name);
 
           _this2.chartStatus.values.push(element.sub_total);
         });
@@ -18493,6 +18466,8 @@ setTimeout(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_chart_PieChart_vue__ = __webpack_require__(60);
 //
 //
 //
@@ -18528,12 +18503,75 @@ setTimeout(function () {
 //
 //
 //
-//
-//
-//
-//
+
+
 /* harmony default export */ __webpack_exports__["a"] = ({
-  name: 'PurchasesStats'
+  name: 'SalesStats',
+  components: {
+    PieChart: __WEBPACK_IMPORTED_MODULE_1_admin_components_chart_PieChart_vue__["a" /* default */]
+  },
+  data: function data() {
+    return {
+      chartStatus: {
+        colors: ['#208DF8', '#E9485E', '#FF9900', '#2DCB67', '#9c27b0'],
+        labels: [],
+        values: []
+      },
+      chartPayment: {
+        colors: ['#40c4ff', '#e91e63'],
+        labels: ['Received', 'Outstanding'],
+        values: [],
+        outstanding: 0
+      }
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    this.$root.$on('transactions-filter', function (filters) {
+      _this.getSalesChartData(filters);
+    });
+    var filters = {};
+
+    if (this.$route.query.start && this.$route.query.end) {
+      filters.start_date = this.$route.query.start;
+      filters.end_date = this.$route.query.end;
+    }
+
+    this.getSalesChartData(filters);
+  },
+  watch: {
+    '$route': 'getSalesChartData'
+  },
+  methods: {
+    getSalesChartData: function getSalesChartData() {
+      var _this2 = this;
+
+      var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/transactions/sales/chart-payment', {
+        params: {
+          start_date: filters.start_date,
+          end_date: filters.end_date
+        }
+      }).then(function (response) {
+        _this2.chartPayment.outstanding = response.data.outstanding;
+
+        _this2.chartPayment.values.push(response.data.received, response.data.outstanding);
+      });
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/transactions/sales/chart-status', {
+        params: {
+          start_date: filters.start_date,
+          end_date: filters.end_date
+        }
+      }).then(function (response) {
+        response.data.forEach(function (element) {
+          _this2.chartStatus.labels.push(element.invoice_type);
+
+          _this2.chartStatus.values.push(element.sub_total);
+        });
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -18543,7 +18581,6 @@ setTimeout(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_reports_SalesReport_vue__ = __webpack_require__(107);
 //
 //
 //
@@ -18590,24 +18627,24 @@ setTimeout(function () {
 //
 //
 //
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-  name: 'PurchasesList',
+  name: 'SalesList',
   components: {
-    ListTable: __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__["a" /* default */],
-    SalesReport: __WEBPACK_IMPORTED_MODULE_2_admin_components_reports_SalesReport_vue__["a" /* default */]
+    ListTable: __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__["a" /* default */]
   },
   data: function data() {
     return {
-      salesReportModal: false,
-      modalParams: null,
-      bulkActions: [{
-        key: 'trash',
-        label: 'Move to Trash',
-        img: erp_acct_var.erp_assets + '/images/trash.png'
-      }],
       columns: {
         'trn_date': {
           label: 'Date'
@@ -18645,9 +18682,6 @@ setTimeout(function () {
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       actions: [{
-        key: 'edit',
-        label: 'Edit'
-      }, {
         key: 'trash',
         label: 'Delete'
       }]
@@ -18656,13 +18690,28 @@ setTimeout(function () {
   created: function created() {
     var _this = this;
 
-    this.$root.$on('sales-filter', function (filters) {
+    this.$root.$on('transactions-filter', function (filters) {
+      _this.$router.push({
+        path: '/transactions/purchases',
+        query: {
+          start: filters.start_date,
+          end: filters.end_date
+        }
+      });
+
       _this.fetchItems(filters);
     });
-    this.$root.$on('sales-modal-close', function () {
-      _this.salesReportModal = false;
-    });
-    this.fetchItems();
+    var filters = {}; // Get start & end date from url on page load
+
+    if (this.$route.query.start && this.$route.query.end) {
+      filters.start_date = this.$route.query.start;
+      filters.end_date = this.$route.query.end;
+    }
+
+    this.fetchItems(filters);
+  },
+  watch: {
+    '$route': 'fetchItems'
   },
   methods: {
     fetchItems: function fetchItems() {
@@ -18670,7 +18719,7 @@ setTimeout(function () {
 
       var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       this.rows = [];
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('invoices', {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/transactions/purchases', {
         params: {
           per_page: this.paginationData.perPage,
           page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
@@ -18678,11 +18727,7 @@ setTimeout(function () {
           end_date: filters.end_date
         }
       }).then(function (response) {
-        response.data.forEach(function (element) {
-          element['type'] = 'Invoice';
-
-          _this2.rows.push(element);
-        });
+        _this2.rows = response.data;
         _this2.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
         _this2.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
       }).catch(function (error) {
@@ -18710,24 +18755,6 @@ setTimeout(function () {
         default:
       }
     },
-    onBulkAction: function onBulkAction(action, items) {
-      var _this4 = this;
-
-      if ('trash' === action) {
-        if (confirm('Are you sure to delete?')) {
-          __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].delete("invoices/delete/".concat(items.join(','))).then(function (response) {
-            var toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-            if (toggleCheckbox.checked) {
-              // simulate click event to remove checked state
-              toggleCheckbox.click();
-            }
-
-            _this4.fetchItems();
-          });
-        }
-      }
-    },
     goToPage: function goToPage(page) {
       var queries = Object.assign({}, this.$route.query);
       this.paginationData.currentPage = page;
@@ -18740,9 +18767,8 @@ setTimeout(function () {
       });
       this.fetchItems();
     },
-    showSalesReportModal: function showSalesReportModal(row) {
-      this.modalParams = row;
-      this.salesReportModal = true;
+    isPayment: function isPayment(row) {
+      return row.type === 'payment' ? true : false;
     }
   }
 });
@@ -19184,9 +19210,6 @@ setTimeout(function () {
     }
   },
   methods: {
-    close: function close() {
-      this.showModal = false;
-    },
     fetchItems: function fetchItems() {
       var _this = this;
 
@@ -19335,6 +19358,8 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_tax_NewTaxCategory_vue__ = __webpack_require__(389);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_tax_NewTaxAgency_vue__ = __webpack_require__(400);
 //
 //
 //
@@ -19435,6 +19460,20 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -19443,7 +19482,9 @@ if (false) {(function () {
   components: {
     HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
-    SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */]
+    SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */],
+    NewTaxCategory: __WEBPACK_IMPORTED_MODULE_3_admin_components_tax_NewTaxCategory_vue__["a" /* default */],
+    NewTaxAgency: __WEBPACK_IMPORTED_MODULE_4_admin_components_tax_NewTaxAgency_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -19455,7 +19496,9 @@ if (false) {(function () {
       isRowExpanded: false,
       componentLines: [{}],
       categories: [{}],
-      agencies: [{}]
+      agencies: [{}],
+      showCatModal: false,
+      showAgencyModal: false
     };
   },
   created: function created() {
@@ -19513,8 +19556,6 @@ if (false) {(function () {
         });
       }).then(function () {
         _this4.resetData();
-
-        _this4.isWorking = false;
       });
     },
     closeModal: function closeModal() {
@@ -20363,7 +20404,7 @@ var _components;
     fetchAccounts: function fetchAccounts() {
       var _this = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('transfer-voucher').then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('accounts').then(function (response) {
         _this.accounts = response.data;
       });
     },
@@ -20819,6 +20860,8 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_31_admin_components_tax_TaxRecords_vue__ = __webpack_require__(407);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_32_admin_components_bank_accounts_BankAccounts_vue__ = __webpack_require__(410);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_33_admin_components_rec_payment_RecPaymentModal_vue__ = __webpack_require__(86);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_34_admin_components_tax_NewTaxRate_vue__ = __webpack_require__(124);
+
 
 
 
@@ -21074,6 +21117,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
       path: '',
       name: 'TaxRates',
       component: __WEBPACK_IMPORTED_MODULE_28_admin_components_tax_TaxRates_vue__["a" /* default */]
+    }, {
+      path: '/taxes/new',
+      name: 'NewTaxRate',
+      component: __WEBPACK_IMPORTED_MODULE_34_admin_components_tax_NewTaxRate_vue__["a" /* default */]
     }, {
       path: 'page/:page',
       name: 'PaginateTaxRates',
@@ -24594,27 +24641,7 @@ var render = function() {
           "div",
           { staticClass: "wperp-col-md-9 wperp-col-sm-12 wperp-col-xs-12" },
           [
-            _c(
-              "div",
-              {
-                staticClass:
-                  "income-expense-section wperp-panel wperp-panel-default"
-              },
-              [
-                _vm._m(1),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-panel-body" }, [
-                  _vm._m(2),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "wperp-chart-block" }, [
-                    _c("canvas", {
-                      ref: "bar_chart",
-                      attrs: { id: "bar_chart" }
-                    })
-                  ])
-                ])
-              ]
-            ),
+            _c("chart"),
             _vm._v(" "),
             _c("div", { staticClass: "wperp-row" }, [
               _c("div", { staticClass: "wperp-col-sm-6 wperp-col-xs-12" }, [
@@ -24625,7 +24652,7 @@ var render = function() {
                       "invoice-own-section wperp-panel wperp-panel-default"
                   },
                   [
-                    _vm._m(3),
+                    _vm._m(1),
                     _vm._v(" "),
                     _c("div", { staticClass: "wperp-panel-body pb-0" }, [
                       Object.values(_vm.to_receive).length
@@ -24709,7 +24736,7 @@ var render = function() {
                       "invoice-own-section wperp-panel wperp-panel-default"
                   },
                   [
-                    _vm._m(4),
+                    _vm._m(2),
                     _vm._v(" "),
                     _c("div", { staticClass: "wperp-panel-body pb-0" }, [
                       Object.values(_vm.to_pay).length
@@ -24779,7 +24806,8 @@ var render = function() {
                 )
               ])
             ])
-          ]
+          ],
+          1
         ),
         _vm._v(" "),
         _c(
@@ -24806,64 +24834,6 @@ var staticRenderFns = [
         ])
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wperp-panel-heading wperp-bg-white" }, [
-      _c("h4", [_vm._v("Income & Expense")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "wperp-custom-select wperp-custom-select--inline-block wperp-pull-right mb-20"
-      },
-      [
-        _c(
-          "select",
-          {
-            staticClass: "wperp-form-field",
-            attrs: { name: "query_time", id: "att-filter-duration" }
-          },
-          [
-            _c("option", { attrs: { value: "this_month" } }, [
-              _vm._v("This Month")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "last_month" } }, [
-              _vm._v("Last Month")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "this_quarter" } }, [
-              _vm._v("This Quarter")
-            ]),
-            _vm._v(" "),
-            _c(
-              "option",
-              { attrs: { value: "last_quarter", selected: "selected" } },
-              [_vm._v("Last Quarter")]
-            ),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "this_year" } }, [
-              _vm._v("This Year")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "last_year" } }, [
-              _vm._v("Last Year")
-            ])
-          ]
-        ),
-        _vm._v(" "),
-        _c("i", { staticClass: "flaticon-arrow-down-sign-to-navigate" })
-      ]
-    )
   },
   function() {
     var _vm = this
@@ -33428,89 +33398,92 @@ var render = function() {
       attrs: { role: "dialog" }
     },
     [
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "click-outside",
-              rawName: "v-click-outside",
-              value: _vm.outside,
-              expression: "outside"
-            }
-          ],
-          staticClass: "wperp-modal-dialog",
-          on: { click: _vm.inside }
-        },
-        [
-          _c("div", { staticClass: "wperp-modal-content" }, [
-            _vm._m(0),
+      _c("div", { staticClass: "wperp-modal-dialog" }, [
+        _c("div", { staticClass: "wperp-modal-content" }, [
+          _c("div", { staticClass: "wperp-modal-header" }, [
+            _c("h1", [
+              _vm._v("\n                    Journal\n                ")
+            ]),
             _vm._v(" "),
-            _c("div", { staticClass: "wperp-modal-body pb-30" }, [
-              _c("div", { staticClass: "wperp-invoice-panel" }, [
-                _c("div", { staticClass: "wperp-invoice-table " }, [
-                  _c(
-                    "table",
-                    {
-                      staticClass: "wperp-table wperp-form-table invoice-table"
-                    },
-                    [
-                      _vm._m(1),
-                      _vm._v(" "),
-                      _c("tbody", [
-                        _c("tr", [
-                          _c("th", { staticClass: "col--check" }, [
-                            _vm._v(_vm._s(_vm.line_items.trn_no))
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "column-primary" }, [
-                            _vm._v(_vm._s(_vm.line_items.ledger_id)),
-                            _vm._m(2)
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { attrs: { "data-colname": "Debit" } }, [
-                            _vm._v(_vm._s(_vm.line_items.particulars))
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { attrs: { "data-colname": "Debit" } }, [
-                            _vm._v(_vm._s(_vm.line_items.debit))
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { attrs: { "data-colname": "Credit" } }, [
-                            _vm._v(_vm._s(_vm.line_items.credit))
-                          ])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("tfoot", [
-                        _c("tr", { staticClass: "hide-sm" }, [
-                          _vm._m(3),
-                          _vm._v(" "),
-                          _c("td", { attrs: { "data-colname": "Debit" } }, [
-                            _vm._v(_vm._s(_vm.total))
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { attrs: { "data-colname": "Credit" } }, [
-                            _vm._v(_vm._s(_vm.total))
-                          ])
+            _c(
+              "span",
+              {
+                staticClass: "modal-close",
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.closeModal($event)
+                  }
+                }
+              },
+              [_c("i", { staticClass: "flaticon-close" })]
+            ),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "wperp-modal-body pb-30" }, [
+            _c("div", { staticClass: "wperp-invoice-panel" }, [
+              _c("div", { staticClass: "wperp-invoice-table " }, [
+                _c(
+                  "table",
+                  { staticClass: "wperp-table wperp-form-table invoice-table" },
+                  [
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c("tbody", [
+                      _c("tr", [
+                        _c("th", { staticClass: "col--check" }, [
+                          _vm._v(_vm._s(_vm.line_items.trn_no))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "column-primary" }, [
+                          _vm._v(_vm._s(_vm.line_items.ledger_id)),
+                          _vm._m(2)
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { attrs: { "data-colname": "Debit" } }, [
+                          _vm._v(_vm._s(_vm.line_items.particulars))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { attrs: { "data-colname": "Debit" } }, [
+                          _vm._v(_vm._s(_vm.line_items.debit))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { attrs: { "data-colname": "Credit" } }, [
+                          _vm._v(_vm._s(_vm.line_items.credit))
                         ])
                       ])
-                    ]
-                  )
+                    ]),
+                    _vm._v(" "),
+                    _c("tfoot", [
+                      _c("tr", { staticClass: "hide-sm" }, [
+                        _vm._m(3),
+                        _vm._v(" "),
+                        _c("td", { attrs: { "data-colname": "Debit" } }, [
+                          _vm._v(_vm._s(_vm.total))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { attrs: { "data-colname": "Credit" } }, [
+                          _vm._v(_vm._s(_vm.total))
+                        ])
+                      ])
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "particulars pl-30 pr-30" }, [
+                _c("h4", { staticClass: "mb-5 mt-10" }, [
+                  _vm._v("Particulars")
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "particulars pl-30 pr-30" }, [
-                  _c("h4", { staticClass: "mb-5 mt-10" }, [
-                    _vm._v("Particulars")
-                  ]),
-                  _vm._v(" "),
-                  _c("span", [_vm._v(_vm._s(_vm.particulars))])
-                ])
+                _c("span", [_vm._v(_vm._s(_vm.particulars))])
               ])
             ])
           ])
-        ]
-      )
+        ])
+      ])
     ]
   )
 }
@@ -33519,48 +33492,40 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wperp-modal-header" }, [
-      _c("h1", [_vm._v("\n                    Journal\n                ")]),
+    return _c("div", { staticClass: "d-print-none buttons-wrapper" }, [
+      _c(
+        "a",
+        {
+          staticClass: "wperp-btn btn--default print-btn wperp-hidden-sm",
+          attrs: { href: "#" }
+        },
+        [
+          _c("i", { staticClass: "flaticon-printer-1" }),
+          _vm._v("\n                          Print\n                    ")
+        ]
+      ),
       _vm._v(" "),
-      _c("span", { staticClass: "modal-close" }, [
-        _c("i", { staticClass: "flaticon-close" })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "d-print-none buttons-wrapper" }, [
+      _c("div", { staticClass: "wperp-has-dropdown" }, [
         _c(
           "a",
           {
-            staticClass: "wperp-btn btn--default print-btn wperp-hidden-sm",
+            staticClass: "wperp-btn btn--default dropdown-trigger m0",
             attrs: { href: "#" }
           },
           [
-            _c("i", { staticClass: "flaticon-printer-1" }),
-            _vm._v("\n                          Print\n                    ")
+            _c("i", { staticClass: "flaticon-settings-work-tool" }),
+            _vm._v(
+              "\n                              More Action\n                        "
+            )
           ]
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "wperp-has-dropdown" }, [
-          _c(
-            "a",
-            {
-              staticClass: "wperp-btn btn--default dropdown-trigger m0",
-              attrs: { href: "#" }
-            },
-            [
-              _c("i", { staticClass: "flaticon-settings-work-tool" }),
-              _vm._v(
-                "\n                              More Action\n                        "
-              )
-            ]
-          ),
+        _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
+          _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Option1")])]),
           _vm._v(" "),
-          _c("ul", { staticClass: "dropdown-menu dropdown-menu-right" }, [
-            _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Option1")])]),
-            _vm._v(" "),
-            _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Option2")])]),
-            _vm._v(" "),
-            _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Option3")])])
-          ])
+          _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Option2")])]),
+          _vm._v(" "),
+          _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Option3")])])
         ])
       ])
     ])
@@ -33627,9 +33592,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "app-journals" },
+    { staticClass: "journals" },
     [
-      _vm.journalModal ? _c("journal-modal") : _vm._e(),
+      _vm.journalModal
+        ? _c("journal-modal", { attrs: { entry_id: _vm.journal_id } })
+        : _vm._e(),
       _vm._v(" "),
       _c("h2", { staticClass: "add-new-journal" }, [
         _c("span", [_vm._v("Journals")]),
@@ -33637,7 +33604,8 @@ var render = function() {
         _c(
           "a",
           {
-            attrs: { href: "", id: "erp-journal-new" },
+            staticClass: "erp-journal-new",
+            attrs: { href: "#" },
             on: {
               click: function($event) {
                 $event.preventDefault()
@@ -37525,61 +37493,57 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wperp-stats wperp-section" }, [
-      _c("div", { staticClass: "wperp-panel wperp-panel-default" }, [
-        _c("div", { staticClass: "wperp-panel-body" }, [
-          _c("div", { staticClass: "wperp-row" }, [
-            _c("div", { staticClass: "wperp-col-sm-4" }, [
-              _c("div", { staticClass: "wperp-chart-block has-separator" }, [
-                _c("h3", [_vm._v("Payment")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "payment-chart" }, [
-                  _c("div", { staticClass: "chart-container" }, [
-                    _c("canvas", {
-                      attrs: { id: "payment_chart", hieght: "84" }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", {
-                    staticClass: "chart-legend",
-                    attrs: { id: "payment_legend" }
+  return _c("div", { staticClass: "wperp-stats wperp-section" }, [
+    _c("div", { staticClass: "wperp-panel wperp-panel-default" }, [
+      _c("div", { staticClass: "wperp-panel-body" }, [
+        _c("div", { staticClass: "wperp-row" }, [
+          _c(
+            "div",
+            { staticClass: "wperp-col-sm-4" },
+            [
+              _vm.chartPayment.values.length
+                ? _c("pie-chart", {
+                    attrs: {
+                      id: "payment",
+                      title: "Payment",
+                      sign: _vm.getCurrencySign(),
+                      labels: _vm.chartPayment.labels,
+                      colors: _vm.chartPayment.colors,
+                      data: _vm.chartPayment.values
+                    }
                   })
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "wperp-col-sm-4" }, [
-              _c("div", { staticClass: "wperp-chart-block has-separator" }, [
-                _c("h3", [_vm._v("Status")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "payment-chart" }, [
-                  _c("div", { staticClass: "chart-container" }, [
-                    _c("canvas", {
-                      attrs: { id: "status_chart", hieght: "84" }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", {
-                    staticClass: "chart-legend",
-                    attrs: { id: "status_legend" }
+                : _vm._e()
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wperp-col-sm-4" },
+            [
+              _vm.chartStatus.values.length
+                ? _c("pie-chart", {
+                    attrs: {
+                      id: "status",
+                      title: "Status",
+                      sign: "",
+                      labels: _vm.chartStatus.labels,
+                      colors: _vm.chartStatus.colors,
+                      data: _vm.chartStatus.values
+                    }
                   })
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "wperp-col-sm-4" }, [
-              _c("div", { staticClass: "wperp-chart-block" }, [
-                _c("h3", [_vm._v("Outstanding")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-total" }, [
-                  _c("h2", [_vm._v("$20000,00")])
+                : _vm._e()
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "wperp-col-sm-4" }, [
+            _c("div", { staticClass: "wperp-chart-block" }, [
+              _c("h3", [_vm._v("Outstanding")]),
+              _vm._v(" "),
+              _c("div", { staticClass: "wperp-total" }, [
+                _c("h2", [
+                  _vm._v(_vm._s(_vm.formatAmount(_vm.chartPayment.outstanding)))
                 ])
               ])
             ])
@@ -37587,8 +37551,9 @@ var staticRenderFns = [
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -37608,6 +37573,10 @@ if (false) {
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_96cba42e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PurchasesList_vue__ = __webpack_require__(385);
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(494)
+}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -37617,7 +37586,7 @@ var normalizeComponent = __webpack_require__(0)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -37664,17 +37633,6 @@ var render = function() {
     "div",
     { staticClass: "wperp-transactions-section wperp-section" },
     [
-      _vm.salesReportModal
-        ? _c("sales-report", {
-            attrs: {
-              id: _vm.modalParams.voucher_no,
-              type: _vm.modalParams.type,
-              totalDue: _vm.modalParams.due,
-              totalAmount: _vm.modalParams.amount
-            }
-          })
-        : _vm._e(),
-      _vm._v(" "),
       _c(
         "div",
         { staticClass: "table-container" },
@@ -37683,48 +37641,129 @@ var render = function() {
           _vm._v(" "),
           _c("list-table", {
             attrs: {
-              tableClass: "wperp-table table-striped table-dark widefat table2",
+              tableClass:
+                "wperp-table table-striped table-dark widefat table2 transactions-table",
               "action-column": "actions",
               columns: _vm.columns,
               rows: _vm.rows,
-              "bulk-actions": _vm.bulkActions,
               "total-items": _vm.paginationData.totalItems,
               "total-pages": _vm.paginationData.totalPages,
               "per-page": _vm.paginationData.perPage,
               "current-page": _vm.paginationData.currentPage,
               actions: _vm.actions
             },
-            on: {
-              pagination: _vm.goToPage,
-              "action:click": _vm.onActionClick,
-              "bulk:click": _vm.onBulkAction
-            },
+            on: { pagination: _vm.goToPage, "action:click": _vm.onActionClick },
             scopedSlots: _vm._u([
               {
                 key: "trn_date",
                 fn: function(data) {
                   return [
-                    _c("strong", [
-                      _c(
-                        "a",
-                        {
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              _vm.showPurchasesReportModal(data.row)
-                            }
-                          }
-                        },
-                        [
+                    _vm.isPayment(data.row)
+                      ? _c("strong", [
                           _vm._v(
-                            "\n                        " +
-                              _vm._s(data.row.trn_date) +
-                              "\n                    "
+                            "\n                    " +
+                              _vm._s(data.row.payment_trn_date) +
+                              "\n                "
                           )
-                        ]
-                      )
-                    ])
+                        ])
+                      : _c(
+                          "strong",
+                          [
+                            _c(
+                              "router-link",
+                              {
+                                attrs: {
+                                  to: {
+                                    name: "SalesReport",
+                                    params: { id: data.row.id }
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(data.row.invoice_tran_date) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ],
+                          1
+                        )
+                  ]
+                }
+              },
+              {
+                key: "type",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.isPayment(data.row) ? "Payment" : "Invoice"
+                        ) +
+                        "\n            "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "due_date",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.isPayment(data.row) ? "-" : data.row.due_date
+                        ) +
+                        "\n            "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "due",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.isPayment(data.row)
+                            ? "-"
+                            : _vm.formatAmount(
+                                data.row.sales_amount - data.row.payment_amount
+                              )
+                        ) +
+                        "\n            "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "amount",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.isPayment(data.row)
+                            ? _vm.formatAmount(data.row.payment_amount)
+                            : _vm.formatAmount(data.row.sales_amount)
+                        ) +
+                        "\n            "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "status",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(data.row.status) +
+                        "\n            "
+                    )
                   ]
                 }
               }
@@ -37733,8 +37772,7 @@ var render = function() {
         ],
         1
       )
-    ],
-    1
+    ]
   )
 }
 var staticRenderFns = [
@@ -38243,488 +38281,493 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wperp-modal has-form wperp-modal-open",
-      attrs: { id: "wperp-new-tax-modal", role: "dialog" }
-    },
-    [
-      _c("div", { staticClass: "wperp-modal-dialog" }, [
-        _c("div", { staticClass: "wperp-modal-content" }, [
-          _c("div", { staticClass: "wperp-modal-header" }, [
-            _c("h3", [_vm._v("Add New Tax")]),
-            _vm._v(" "),
-            _c(
-              "span",
-              {
-                staticClass: "modal-close",
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.closeModal($event)
-                  }
-                }
-              },
-              [_c("i", { staticClass: "flaticon-close" })]
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              staticClass: "modal-form edit-customer-modal",
-              attrs: { action: "", method: "post" }
-            },
-            [
-              _c("div", { staticClass: "wperp-modal-body" }, [
-                _c("div", { staticClass: "wperp-row wperp-gutter-20" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
-                    },
-                    [
-                      _c("label", [_vm._v("Tax Name")]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "wperp-custom-select" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.tax_name,
-                              expression: "tax_name"
-                            }
-                          ],
-                          staticClass: "wperp-form-field",
-                          attrs: {
-                            type: "text",
-                            placeholder: "Enter Tax Name"
-                          },
-                          domProps: { value: _vm.tax_name },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.tax_name = $event.target.value
-                            }
-                          }
-                        })
-                      ])
-                    ]
-                  ),
+  return _c("div", { staticClass: "wperp-container" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "wperp-panel wperp-panel-default pb-0" }, [
+      _c("div", { staticClass: "wperp-panel-body" }, [
+        _c(
+          "form",
+          { staticClass: "wperp-form", attrs: { action: "", method: "post" } },
+          [
+            _c("div", { staticClass: "wperp-row wperp-gutter-20" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                },
+                [
+                  _c("label", [_vm._v("Tax Name")]),
                   _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
-                    },
-                    [
-                      _c("label", [_vm._v("Tax Number")]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.tax_number,
-                            expression: "tax_number"
-                          }
-                        ],
-                        staticClass: "wperp-form-field",
-                        attrs: {
-                          type: "text",
-                          placeholder: "Enter Tax Number"
-                        },
-                        domProps: { value: _vm.tax_number },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.tax_number = $event.target.value
-                          }
+                  _c("div", { staticClass: "wperp-custom-select" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.tax_name,
+                          expression: "tax_name"
                         }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "wperp-col-sm-6" }, [
-                    _c("div", { staticClass: "form-check" }, [
-                      _c("label", { staticClass: "form-check-label" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.is_compound,
-                              expression: "is_compound"
-                            }
-                          ],
-                          staticClass: "form-check-input",
-                          attrs: { type: "checkbox" },
-                          domProps: {
-                            checked: Array.isArray(_vm.is_compound)
-                              ? _vm._i(_vm.is_compound, null) > -1
-                              : _vm.is_compound
-                          },
-                          on: {
-                            change: [
-                              function($event) {
-                                var $$a = _vm.is_compound,
-                                  $$el = $event.target,
-                                  $$c = $$el.checked ? true : false
-                                if (Array.isArray($$a)) {
-                                  var $$v = null,
-                                    $$i = _vm._i($$a, $$v)
-                                  if ($$el.checked) {
-                                    $$i < 0 &&
-                                      (_vm.is_compound = $$a.concat([$$v]))
-                                  } else {
-                                    $$i > -1 &&
-                                      (_vm.is_compound = $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1)))
-                                  }
-                                } else {
-                                  _vm.is_compound = $$c
-                                }
-                              },
-                              function($event) {
-                                _vm.isTaxComponent = !_vm.isTaxComponent
-                              }
-                            ]
+                      ],
+                      staticClass: "wperp-form-field",
+                      attrs: { type: "text", placeholder: "Enter Tax Name" },
+                      domProps: { value: _vm.tax_name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
                           }
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "form-check-sign" }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "field-label" }, [
-                          _vm._v("Is this tax compound?")
-                        ])
-                      ])
-                    ])
-                  ]),
+                          _vm.tax_name = $event.target.value
+                        }
+                      }
+                    })
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                },
+                [
+                  _c("label", [_vm._v("Tax Number")]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "wperp-col-sm-6" }, [
-                    _c("div", { staticClass: "form-check" }, [
-                      _c("label", { staticClass: "form-check-label" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.is_default,
-                              expression: "is_default"
-                            }
-                          ],
-                          staticClass: "form-check-input",
-                          attrs: { type: "checkbox" },
-                          domProps: {
-                            checked: Array.isArray(_vm.is_default)
-                              ? _vm._i(_vm.is_default, null) > -1
-                              : _vm.is_default
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.is_default,
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    (_vm.is_default = $$a.concat([$$v]))
-                                } else {
-                                  $$i > -1 &&
-                                    (_vm.is_default = $$a
-                                      .slice(0, $$i)
-                                      .concat($$a.slice($$i + 1)))
-                                }
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.tax_number,
+                        expression: "tax_number"
+                      }
+                    ],
+                    staticClass: "wperp-form-field",
+                    attrs: { type: "text", placeholder: "Enter Tax Number" },
+                    domProps: { value: _vm.tax_number },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.tax_number = $event.target.value
+                      }
+                    }
+                  })
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "wperp-col-sm-6" }, [
+                _c("div", { staticClass: "form-check" }, [
+                  _c("label", { staticClass: "form-check-label" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.is_compound,
+                          expression: "is_compound"
+                        }
+                      ],
+                      staticClass: "form-check-input",
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.is_compound)
+                          ? _vm._i(_vm.is_compound, null) > -1
+                          : _vm.is_compound
+                      },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$a = _vm.is_compound,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 && (_vm.is_compound = $$a.concat([$$v]))
                               } else {
-                                _vm.is_default = $$c
+                                $$i > -1 &&
+                                  (_vm.is_compound = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
                               }
+                            } else {
+                              _vm.is_compound = $$c
                             }
+                          },
+                          function($event) {
+                            _vm.isTaxComponent = !_vm.isTaxComponent
                           }
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "form-check-sign" }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "field-label" }, [
-                          _vm._v("Is this tax default?")
-                        ])
-                      ])
+                        ]
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "form-check-sign" }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "field-label" }, [
+                      _vm._v("Is this tax compound?")
                     ])
                   ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "table-container mt-20" }, [
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "wperp-col-sm-6" }, [
+                _c("div", { staticClass: "form-check" }, [
+                  _c("label", { staticClass: "form-check-label" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.is_default,
+                          expression: "is_default"
+                        }
+                      ],
+                      staticClass: "form-check-input",
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.is_default)
+                          ? _vm._i(_vm.is_default, null) > -1
+                          : _vm.is_default
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.is_default,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 && (_vm.is_default = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.is_default = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.is_default = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "form-check-sign" }),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "field-label" }, [
+                      _vm._v("Is this tax default?")
+                    ])
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-container mt-20" }, [
+              _c(
+                "table",
+                {
+                  staticClass: "wperp-table wperp-form-table new-journal-form"
+                },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
                   _c(
-                    "table",
-                    {
-                      staticClass:
-                        "wperp-table wperp-form-table new-journal-form"
-                    },
+                    "tbody",
                     [
-                      _vm._m(0),
-                      _vm._v(" "),
-                      _c(
-                        "tbody",
-                        [
-                          _vm._l(_vm.componentLines, function(line, key) {
-                            return _c(
-                              "tr",
+                      _vm._l(_vm.componentLines, function(line, key) {
+                        return _c(
+                          "tr",
+                          {
+                            key: key,
+                            class: _vm.isRowExpanded ? "is-row-expanded" : ""
+                          },
+                          [
+                            _c(
+                              "td",
                               {
-                                key: key,
-                                class: _vm.isRowExpanded
-                                  ? "is-row-expanded"
-                                  : ""
+                                staticClass:
+                                  "col--component-name column-primary",
+                                attrs: { scope: "row" }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: line.component_name,
+                                      expression: "line.component_name"
+                                    }
+                                  ],
+                                  staticClass: "wperp-form-field",
+                                  attrs: { type: "text" },
+                                  domProps: { value: line.component_name },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        line,
+                                        "component_name",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("button", {
+                                  staticClass: "wperp-toggle-row",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      _vm.isRowExpanded = !_vm.isRowExpanded
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticClass: "col--agency",
+                                attrs: { "data-colname": "Agency" }
+                              },
+                              [
+                                _c("multi-select", {
+                                  attrs: { options: _vm.agencies },
+                                  model: {
+                                    value: line.agency_id,
+                                    callback: function($$v) {
+                                      _vm.$set(line, "agency_id", $$v)
+                                    },
+                                    expression: "line.agency_id"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "after-select-dropdown",
+                                    attrs: { href: "#", role: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        _vm.showAgencyModal = true
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Add Tax Agency")]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticClass: "col--tax-category",
+                                attrs: { "data-colname": "Tax Category" }
+                              },
+                              [
+                                _c("multi-select", {
+                                  attrs: { options: _vm.categories },
+                                  model: {
+                                    value: line.tax_category,
+                                    callback: function($$v) {
+                                      _vm.$set(line, "tax_category", $$v)
+                                    },
+                                    expression: "line.tax_category"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "after-select-dropdown",
+                                    attrs: { href: "#", role: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        _vm.showCatModal = true
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Add Tax Category")]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticClass: "col--tax-rate",
+                                attrs: { "data-colname": "Tax Rate" }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: line.tax_rate,
+                                      expression: "line.tax_rate"
+                                    }
+                                  ],
+                                  staticClass: "wperp-form-field text-right",
+                                  attrs: { type: "text" },
+                                  domProps: { value: line.tax_rate },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        line,
+                                        "tax_rate",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticClass: "col--actions delete-row",
+                                attrs: {
+                                  "data-colname": "Remove Above Selection"
+                                }
                               },
                               [
                                 _c(
-                                  "td",
+                                  "a",
+                                  {
+                                    attrs: { href: "#" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        _vm.removeRow(key)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "flaticon-trash" })]
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _vm.isTaxComponent
+                        ? _c("tr", { staticClass: "add-new-line" }, [
+                            _c(
+                              "td",
+                              {
+                                staticClass: "text-left",
+                                attrs: { colspan: "9" }
+                              },
+                              [
+                                _c(
+                                  "button",
                                   {
                                     staticClass:
-                                      "col--component-name column-primary",
-                                    attrs: { scope: "row" }
-                                  },
-                                  [
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: line.component_name,
-                                          expression: "line.component_name"
-                                        }
-                                      ],
-                                      staticClass: "wperp-form-field",
-                                      attrs: { type: "text" },
-                                      domProps: { value: line.component_name },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            line,
-                                            "component_name",
-                                            $event.target.value
-                                          )
-                                        }
+                                      "wperp-btn btn--primary add-line-trigger",
+                                    attrs: { type: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.addLine($event)
                                       }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("button", {
-                                      staticClass: "wperp-toggle-row",
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          _vm.isRowExpanded = !_vm.isRowExpanded
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  {
-                                    staticClass: "col--agency",
-                                    attrs: { "data-colname": "Agency" }
-                                  },
-                                  [
-                                    _c("multi-select", {
-                                      attrs: { options: _vm.agencies },
-                                      model: {
-                                        value: line.agency_id,
-                                        callback: function($$v) {
-                                          _vm.$set(line, "agency_id", $$v)
-                                        },
-                                        expression: "line.agency_id"
-                                      }
-                                    })
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  {
-                                    staticClass: "col--tax-category",
-                                    attrs: { "data-colname": "Tax Category" }
-                                  },
-                                  [
-                                    _c("multi-select", {
-                                      attrs: { options: _vm.categories },
-                                      model: {
-                                        value: line.tax_category,
-                                        callback: function($$v) {
-                                          _vm.$set(line, "tax_category", $$v)
-                                        },
-                                        expression: "line.tax_category"
-                                      }
-                                    })
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  {
-                                    staticClass: "col--tax-rate",
-                                    attrs: { "data-colname": "Tax Rate" }
-                                  },
-                                  [
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: line.tax_rate,
-                                          expression: "line.tax_rate"
-                                        }
-                                      ],
-                                      staticClass:
-                                        "wperp-form-field text-right",
-                                      attrs: { type: "text" },
-                                      domProps: { value: line.tax_rate },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            line,
-                                            "tax_rate",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  {
-                                    staticClass: "col--actions delete-row",
-                                    attrs: {
-                                      "data-colname": "Remove Above Selection"
                                     }
                                   },
                                   [
-                                    _c(
-                                      "a",
-                                      {
-                                        attrs: { href: "#" },
-                                        on: {
-                                          click: function($event) {
-                                            $event.preventDefault()
-                                            _vm.removeRow(key)
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("i", {
-                                          staticClass: "flaticon-trash"
-                                        })
-                                      ]
+                                    _c("i", {
+                                      staticClass: "flaticon-add-plus-button"
+                                    }),
+                                    _vm._v(
+                                      "Add Component\n                                "
                                     )
                                   ]
                                 )
                               ]
                             )
-                          }),
-                          _vm._v(" "),
-                          _vm.isTaxComponent
-                            ? _c("tr", { staticClass: "add-new-line" }, [
-                                _c(
-                                  "td",
-                                  {
-                                    staticClass: "text-left",
-                                    attrs: { colspan: "9" }
-                                  },
-                                  [
-                                    _c(
-                                      "button",
-                                      {
-                                        staticClass:
-                                          "wperp-btn btn--primary add-line-trigger",
-                                        attrs: { type: "button" },
-                                        on: {
-                                          click: function($event) {
-                                            $event.preventDefault()
-                                            return _vm.addLine($event)
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("i", {
-                                          staticClass:
-                                            "flaticon-add-plus-button"
-                                        }),
-                                        _vm._v(
-                                          "Add Component\n                                    "
-                                        )
-                                      ]
-                                    )
-                                  ]
-                                )
-                              ])
-                            : _vm._e()
-                        ],
-                        2
-                      )
-                    ]
+                          ])
+                        : _vm._e()
+                    ],
+                    2
                   )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
-                _c(
-                  "div",
-                  { staticClass: "buttons-wrapper text-right" },
-                  [
-                    _c("submit-button", {
-                      attrs: {
-                        text: "Add New Tax Rate",
-                        working: _vm.isWorking
-                      },
-                      nativeOn: {
-                        click: function($event) {
-                          return _vm.addNewTaxRate($event)
-                        }
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _vm.showCatModal
+              ? _c("new-tax-category", {
+                  on: {
+                    close: function($event) {
+                      _vm.showCatModal = false
+                    }
+                  }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.showAgencyModal
+              ? _c("new-tax-agency", {
+                  on: {
+                    close: function($event) {
+                      _vm.showAgencyModal = false
+                    }
+                  }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
+              _c(
+                "div",
+                { staticClass: "buttons-wrapper text-right" },
+                [
+                  _c("submit-button", {
+                    attrs: { text: "Add New Tax Rate" },
+                    nativeOn: {
+                      click: function($event) {
+                        return _vm.addNewTaxRate($event)
                       }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "wperp-btn btn--default modal-close",
-                        attrs: { type: "reset" },
-                        on: { click: _vm.closeModal }
-                      },
-                      [_vm._v("Cancel\n                        ")]
-                    )
-                  ],
-                  1
-                )
-              ])
-            ]
-          )
-        ])
+                    }
+                  })
+                ],
+                1
+              )
+            ])
+          ],
+          1
+        )
       ])
-    ]
-  )
+    ])
+  ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "content-header-section separator" }, [
+      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
+        _c("div", { staticClass: "wperp-col" }, [
+          _c("h2", { staticClass: "content-header__title" }, [
+            _vm._v("Add New Tax Rate")
+          ])
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -38783,7 +38826,7 @@ var render = function() {
                 on: {
                   click: function($event) {
                     $event.preventDefault()
-                    _vm.showModal = true
+                    return _vm.newTaxRate($event)
                   }
                 }
               },
@@ -40047,6 +40090,407 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-5bdcd806", esExports)
   }
 }
+
+/***/ }),
+/* 489 */,
+/* 490 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_assets_js_plugins_chart_min__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: "Chart",
+  components: {
+    HTTP: __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */]
+  },
+  data: function data() {
+    return {
+      items: [],
+      chart: '',
+      chartRange: 'this_year',
+      respData: '',
+      showDropdown: false
+    };
+  },
+  created: function created() {
+    this.fetchData();
+  },
+  mounted: function mounted() {// this.createChart();
+  },
+  computed: {
+    thisYear: function thisYear() {
+      return {
+        labels: this.respData.thisYear.labels,
+        datasets: [{
+          label: 'Income',
+          data: this.respData.thisYear.income,
+          backgroundColor: '#208DF8'
+        }, {
+          label: 'Expense',
+          data: this.respData.thisYear.expense,
+          backgroundColor: '#f86e2d'
+        }]
+      };
+    },
+    lastYear: function lastYear() {
+      return {
+        labels: this.respData.lastYear.labels,
+        datasets: [{
+          label: 'Income',
+          data: this.respData.lastYear.income,
+          backgroundColor: '#208DF8'
+        }, {
+          label: 'Expense',
+          data: this.respData.lastYear.expense,
+          backgroundColor: '#f86e2d'
+        }]
+      };
+    },
+    thisQuarter: function thisQuarter() {
+      var quarter = this.getQuarterRange();
+      var labels = this.thisYear.labels.slice(quarter.start, quarter.end + 1);
+      var newIncome = this.thisYear.datasets[0].data.slice(quarter.start, quarter.end + 1);
+      var newExpense = this.thisYear.datasets[1].data.slice(quarter.start, quarter.end + 1);
+      return {
+        labels: labels,
+        datasets: [{
+          label: 'Income',
+          data: newIncome,
+          backgroundColor: '#208DF8'
+        }, {
+          label: 'Expense',
+          data: newExpense,
+          backgroundColor: '#f86e2d'
+        }]
+      };
+    },
+    lastQuarter: function lastQuarter() {
+      var quarter = this.getQuarterRange('previous');
+      var yearData = this.thisYear.datasets;
+
+      if (quarter.start < 0) {
+        yearData = this.lastYear;
+        quarter.start = quarter.start + 12;
+        quarter.end = quarter.end + 12;
+      }
+
+      var labels = yearData.labels.slice(quarter.start, quarter.end + 1);
+      var newIncome = yearData.datasets[0].data.slice(quarter.start, quarter.end + 1);
+      var newExpense = yearData.datasets[1].data.slice(quarter.start, quarter.end + 1);
+      return {
+        labels: labels,
+        datasets: [{
+          label: 'Income',
+          data: newIncome,
+          backgroundColor: '#208DF8'
+        }, {
+          label: 'Expense',
+          data: newExpense,
+          backgroundColor: '#f86e2d'
+        }]
+      };
+    }
+  },
+  methods: {
+    createChart: function createChart() {
+      var dataChart = {
+        labels: this.thisYear.labels,
+        datasets: this.thisYear.datasets
+      },
+          config = {
+        type: 'bar',
+        data: dataChart,
+        options: {
+          maintainAspectRatio: true,
+          responsive: true,
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      };
+      var bar_chart_ctx = this.$refs['bar_chart'].getContext("2d");
+      this.chart = new Chart(bar_chart_ctx, config);
+    },
+    fetchData: function fetchData() {
+      var _this = this;
+
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('transactions/income_expense_overview').then(function (response) {
+        _this.respData = response.data;
+
+        _this.createChart();
+
+        _this.showDropdown = true;
+      });
+    },
+    updateRange: function updateRange() {
+      var newlabels, newset;
+
+      switch (this.chartRange) {
+        case "last_year":
+          newlabels = this.lastYear.labels;
+          newset = this.lastYear.datasets;
+          break;
+
+        case "this_quarter":
+          newlabels = this.thisQuarter.labels;
+          newset = this.thisQuarter.datasets;
+          break;
+
+        case "last_quarter":
+          newlabels = this.lastQuarter.labels;
+          newset = this.lastQuarter.datasets;
+          break;
+
+        default:
+          newlabels = this.thisYear.labels;
+          newset = this.thisYear.datasets;
+          break;
+      } //update labels
+
+
+      this.chart.data.labels = newlabels; //update values
+
+      this.chart.data.datasets = newset; //update Chart view
+
+      this.chart.update();
+    },
+    getQuarterRange: function getQuarterRange() {
+      var val = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'current';
+      var today = new Date(),
+          quarter = Math.floor(today.getMonth() / 3),
+          startDate = new Date(today.getFullYear(), quarter * 3, 1);
+      var endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 3, 0);
+
+      if (val === 'current') {
+        return {
+          'start': startDate.getMonth(),
+          'end': endDate.getMonth()
+        };
+      }
+
+      return {
+        'start': startDate.getMonth() - 3,
+        'end': endDate.getMonth() - 3
+      };
+    }
+  },
+  watch: {
+    chartRange: function chartRange() {
+      this.updateRange();
+    }
+  }
+});
+
+/***/ }),
+/* 491 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(490);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3d85f783_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Chart_vue__ = __webpack_require__(493);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(492)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-3d85f783"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3d85f783_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Chart_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "assets/src/admin/components/dashboard/Chart.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3d85f783", Component.options)
+  } else {
+    hotAPI.reload("data-v-3d85f783", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 492 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 493 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "income-expense-section wperp-panel wperp-panel-default" },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "wperp-panel-body" }, [
+        _vm.showDropdown
+          ? _c(
+              "div",
+              {
+                staticClass:
+                  "wperp-custom-select wperp-custom-select--inline-block wperp-pull-right mb-20"
+              },
+              [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.chartRange,
+                        expression: "chartRange"
+                      }
+                    ],
+                    staticClass: "wperp-form-field",
+                    attrs: { name: "query_time", id: "att-filter-duration" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.chartRange = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  [
+                    _vm.thisQuarter.labels.length
+                      ? _c("option", { attrs: { value: "this_quarter" } }, [
+                          _vm._v("This Quarter")
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.lastQuarter.labels.length
+                      ? _c("option", { attrs: { value: "last_quarter" } }, [
+                          _vm._v("Last Quarter")
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "this_year" } }, [
+                      _vm._v("This Year")
+                    ]),
+                    _vm._v(" "),
+                    _vm.lastYear.labels.length
+                      ? _c("option", { attrs: { value: "last_year" } }, [
+                          _vm._v("Last Year")
+                        ])
+                      : _vm._e()
+                  ]
+                ),
+                _vm._v(" "),
+                _c("i", { staticClass: "flaticon-arrow-down-sign-to-navigate" })
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "wperp-chart-block" }, [
+          _c("canvas", { ref: "bar_chart", attrs: { id: "bar_chart" } })
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "wperp-panel-heading wperp-bg-white" }, [
+      _c("h4", [_vm._v("Income & Expense")])
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-3d85f783", esExports)
+  }
+}
+
+/***/ }),
+/* 494 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 ],[145]);
