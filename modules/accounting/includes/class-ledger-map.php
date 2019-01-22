@@ -25,14 +25,14 @@ class Ledger_Map {
     }
 
     public function get_ledger_id_by_slug( $slug ) {
-        if ( $this->ledgers[$slug] ) {
+        if ( !empty( $this->ledgers[$slug] ) ) {
             return $this->ledgers[$slug]->id;
         }
         return false;
     }
 
     public function get_ledger_details_by_slug( $slug ) {
-        if ( $this->ledgers[$slug] ) {
+        if ( !empty( $this->ledgers[$slug] ) ) {
             return $this->ledgers[$slug];
         }
         return false;
