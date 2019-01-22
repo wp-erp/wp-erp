@@ -6,7 +6,7 @@ class Admin_Dashboard {
 
     public function __construct() {
         // Only hook in admin parts if the user has admin access
-        add_action( 'wp_dashboard_setup', array( $this, 'init' ), 10 );
+        add_action( 'erp_crm_dashboard_widgets_left', array( $this, 'customer_statics' ), 9 );
     }
 
     /**
@@ -26,7 +26,17 @@ class Admin_Dashboard {
         wp_enqueue_script( 'erp-jvectormap-world-mill' );
         wp_enqueue_style( 'erp-jvectormap' );
 
-        echo '<div id="erp-hr-customer-statics" style="width: 100%; height: 300px;"></div>';
+        // echo '<div id="erp-hr-customer-statics" style="width: 100%; height: 300px;"></div>';
+        ?>
+            <div class="postbox">
+                <h4 class="handle" style="padding-left: 10px;border-bottom: 1px solid #eee;line-height: 23px;padding-bottom: 6px;margin-top: 10px;">
+                    <span><i class="dashicons dashicons-groups"></i><?php _e( 'Customer Statistics', 'erp' ); ?></span>
+                </h4>
+                <div class="inside" style="margin-bottom: 0">
+                    <div id="erp-hr-customer-statics" style="height: 300px;"></div>
+                </div>
+            </div>
+        <?php
         $customer_countries = array();
         if ( false == get_transient( 'erp_customer_countries_widget' ) ) {
             global $wpdb;

@@ -104,7 +104,7 @@ $more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
                                 <th><?php _e( 'Amount Due', 'erp' ); ?>:</th>
                                 <td>
                                     <?php
-                                        echo erp_ac_get_price( erp_ac_get_invoice_by_refference( $transaction->ref )->due ) ? : 0;
+                                        echo erp_ac_get_price( erp_ac_get_toal_due_by_user( $transaction->user_id ) );
                                     ?>
                                 </td>
                             </tr>
@@ -130,6 +130,9 @@ $more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
 
                     <tbody>
                         <?php foreach ( $transaction->items as $line ) { ?>
+                            <?php
+
+                            ?>
                             <tr>
                                 <td class="align-left product-name">
                                     <strong><?php echo $line->journal->ledger->name; ?></strong>
@@ -138,7 +141,10 @@ $more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
                                 <td><?php echo $line->qty; ?></td>
                                 <td><?php echo erp_ac_get_price( $line->unit_price ); ?></td>
                                 <td><?php echo $line->discount; ?></td>
-                                <td><?php echo $line->tax ? $taxinfo[$line->tax]['name'] .' ('. $taxinfo[$line->tax]['rate'] .'%)' : '0.00'; ?></td>
+                                <td><?php
+                                    // echo "<pre>";
+                                    // print_r($line);
+                                 echo $line->tax ? $taxinfo[$line->tax]['tax'] .' ('. $taxinfo[$line->tax]['tax_rate'] .'%)' : '0.00'; ?></td>
                                 <td><?php echo erp_ac_get_price( $line->line_total ); ?></td>
                             </tr>
                         <?php } ?>

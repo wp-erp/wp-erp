@@ -605,11 +605,11 @@ class Form_Handler {
             }
 
             if ( isset( $postdata['line_tax'] )) {
-                $lien_tax  = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_tax'][ $key ] ), 2 );
+                $line_tax  = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_tax'][ $key ] ), 2 );
             }
 
             if ( isset( $postdata['tax_amount'] )) {
-                $lien_tax  = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['tax_amount'][ $key ] ), 2 );
+                $line_tax  = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['tax_amount'][ $key ] ), 2 );
             }
 
             $line_discount = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_discount'][ $key ] ), 2 );

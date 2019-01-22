@@ -813,15 +813,16 @@ function erp_ac_customer_auto_create_from_crm( $contact_id, $data ) {
  * @param  string $refference
  * @return object
  */
-function erp_ac_get_invoice_by_refference( $refference ) {
+function erp_ac_get_toal_due_by_user( $user_id ) {
     global $wpdb;
-    if ( ! $refference ) {
+    if ( ! $user_id ) {
         return;
     }
 
-    $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}erp_ac_transactions WHERE form_type = 'invoice' AND ref = '{$refference}'" );
-    if ( $row ) {
-        return $row;
+    $due = $wpdb->get_row( "SELECT SUM(due) as total_due FROM {$wpdb->prefix}erp_ac_transactions WHERE user_id = {$user_id}" );
+
+    if ( $due->total_due ) {
+        return $due->total_due;
     }
     return false;
 }
