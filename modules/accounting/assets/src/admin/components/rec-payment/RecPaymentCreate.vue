@@ -43,8 +43,8 @@
                             <label>Deposit to</label>
                             <select v-model="basic_fields.deposit_to" name="deposit-to" class="wperp-form-field">
                                 <option value="0">-Select-</option>
-                                <option value="1">Cash</option>
-                                <option value="2">Bank</option>
+                                <option value="cash_hand">Cash</option>
+                                <option value="cash_bank">Bank</option>
                             </select>
                         </div>
                         <div class="wperp-col-xs-12">
@@ -237,13 +237,12 @@
                     line_items: this.invoices,
                     attachments: this.attachments,
                     type: 'payment',
-                    status: 'paid',
+                    status: '3',
                     particulars: this.particulars,
                     trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
-                    console.log(res.data);
                     this.$swal({
-                        position: 'top-end',
+                        position: 'center',
                         type: 'success',
                         title: 'Payment Created!',
                         showConfirmButton: false,

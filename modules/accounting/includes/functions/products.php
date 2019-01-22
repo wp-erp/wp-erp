@@ -13,15 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_all_products() {
 	global $wpdb;
 
-	$row = $wpdb->get_results(
-								"SELECT product.*,CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
-								cat.id AS cat_id, cat.name AS cat_name, type.id AS type_id, type.name AS type_name
-								FROM {$wpdb->prefix}erp_acct_products AS product
-								LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
-								LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
-								LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS type ON product.product_type_id = type.id", ARRAY_A
-							);
-	return $row;
+	return $wpdb->get_results(
+			"SELECT product.*, CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+			cat.id AS cat_id, cat.name AS cat_name, type.id AS type_id, type.name AS type_name
+			FROM {$wpdb->prefix}erp_acct_products AS product
+			LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
+			LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
+			LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS type ON product.product_type_id = type.id", ARRAY_A
+		);
 }
 
 /**

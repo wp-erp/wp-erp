@@ -425,15 +425,18 @@ function erp_acct_get_invoice_due( $invoice_no ) {
  * @return mixed
  */
 function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
-	global $wpdb;
+    global $wpdb;
+
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
+    $deposit_to = $ledger_map->get_ledger_id_by_slug( $payment_data['trn_by'] );
 
 	// Insert amount in ledger_details
 	$wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-		'ledger_id'   => 305, // @TODO change later
+		'ledger_id'   => $deposit_to, // Cash / Bank / ...
 		'trn_no'      => $payment_data['voucher_no'],
 		'particulars' => $payment_data['particulars'],
-		'debit'       => 0,
-		'credit'      => $payment_data['amount'],
+		'debit'       => $payment_data['amount'],
+		'credit'      => 0,
 		'trn_date'    => $payment_data['trn_date'],
 		'created_at'  => $payment_data['created_at'],
 		'created_by'  => $payment_data['created_by'],
@@ -450,14 +453,17 @@ function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
  * @return mixed
  */
 function erp_acct_update_payment_data_in_ledger( $payment_data, $invoice_no ) {
-	global $wpdb;
+    global $wpdb;
+
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
+    $deposit_to = $ledger_map->get_ledger_id_by_slug( $payment_data['trn_by'] );
 
 	// Update amount in ledger_details
 	$wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
-		'ledger_id'   => 305, // @TODO change later
+		'ledger_id'   => $deposit_to,
 		'particulars' => $payment_data['particulars'],
-		'debit'       => 0,
-		'credit'      => $payment_data['amount'],
+		'debit'       => $payment_data['amount'],
+		'credit'      => 0,
 		'trn_date'    => $payment_data['trn_date'],
 		'created_at'  => $payment_data['created_at'],
 		'created_by'  => $payment_data['created_by'],

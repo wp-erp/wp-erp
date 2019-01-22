@@ -168,15 +168,17 @@ function erp_acct_insert_invoice( $data ) {
         $items = $invoice_data['line_items'];
 
         foreach ( $items as $key => $item ) {
+            $sub_total = $item['qty'] * $item['unit_price'];
+
             $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details', array(
                 'trn_no'      => $voucher_no,
                 'product_id'  => $item['product_id'],
                 'qty'         => $item['qty'],
                 'unit_price'  => $item['unit_price'],
-                'discount'    => $item['discount'],
+                'discount'    => ($sub_total * $item['discount']) / 100, // discount value from %
                 'tax'         => $item['tax'],
                 'tax_percent' => 0, // remove me please
-                'item_total'  => $item['item_total'],
+                'item_total'  => $sub_total,
                 'created_at'  => $invoice_data['created_at'],
                 'created_by'  => $invoice_data['created_by'],
                 'updated_at'  => $invoice_data['updated_at'],
@@ -188,7 +190,7 @@ function erp_acct_insert_invoice( $data ) {
             'invoice_no'  => $voucher_no,
             'trn_no'      => $voucher_no,
             'particulars' => '',
-            'debit'       => $invoice_data['amount'],
+            'debit'       => ($invoice_data['amount'] + $invoice_data['tax']) - $invoice_data['discount'],
             'credit'      => 0,
             'created_at'  => $invoice_data['created_at'],
             'created_by'  => $invoice_data['created_by'],
@@ -418,7 +420,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
         'ledger_id'   => $sales_discount_ledger_id,
         'trn_no'      => $invoice_data['voucher_no'],
         'particulars' => $invoice_data['particulars'],
-        'debit'       => $invoice_data['tax'],
+        'debit'       => $invoice_data['discount'],
         'credit'      => 0,
         'trn_date'    => $invoice_data['trn_date'],
         'created_at'  => $invoice_data['created_at'],

@@ -88,26 +88,28 @@
 				</tr>
 			</thead>
 			<tfoot>
-				<bulk-actions-tpl v-if="checkedItems.length"
-				:select-all="selectAll"
-				:bulk-actions="bulkActions"
-				:show-cb="showCb"
-				:columns-count="columnsCount" />
+				<slot name="tfoot">
+					<bulk-actions-tpl v-if="checkedItems.length"
+					:select-all="selectAll"
+					:bulk-actions="bulkActions"
+					:show-cb="showCb"
+					:columns-count="columnsCount" />
 
-				<tr v-else>
-					<td v-if="showCb" class="manage-column column-cb check-column">
-						<div class="form-check">
-		                    <label class="form-check-label">
-		                    	<input v-model="selectAll" type="checkbox" class="form-check-input">
-		                        <span class="form-check-sign">
-		                            <span class="check"></span>
-		                        </span>
-		                    </label>
-		                </div>
-					</td>
-					<th v-for="(value, key) in columns" :key="key"
-					:class="['column', key, (value.isColPrimary) ? 'column-primary' : '', ]">{{ value.label }}</th>
-				</tr>
+					<tr v-else>
+						<td v-if="showCb" class="manage-column column-cb check-column">
+							<div class="form-check">
+								<label class="form-check-label">
+									<input v-model="selectAll" type="checkbox" class="form-check-input">
+									<span class="form-check-sign">
+										<span class="check"></span>
+									</span>
+								</label>
+							</div>
+						</td>
+						<th v-for="(value, key) in columns" :key="key"
+						:class="['column', key, (value.isColPrimary) ? 'column-primary' : '', ]">{{ value.label }}</th>
+					</tr>
+				</slot>
 			</tfoot>
 			<tbody>
 				<template v-if="rows.length">

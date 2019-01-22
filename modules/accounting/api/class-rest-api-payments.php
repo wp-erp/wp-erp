@@ -336,7 +336,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
-        
+
         $data = [
             'id'              => (int) $item->id,
             'customer_id'     => (int) $item->customer_id,
