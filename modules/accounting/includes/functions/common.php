@@ -242,3 +242,32 @@ function erp_acct_get_trn_status_by_id( $trn_id ) {
     return $row;
 }
 
+/**
+ * Get payment method by id
+ *
+ * @param $trn_id
+ *
+ * @return array
+ */
+function erp_acct_get_payment_method_by_id( $method_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_payment_methods WHERE id = {$method_id} LIMIT 1" );
+
+    return $row;
+}
+
+/**
+ * Get check transaction type by id
+ *
+ * @param $trn_id
+ *
+ * @return array
+ */
+function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_check_trn_tables WHERE id = {$trn_type_id} LIMIT 1" );
+
+    return $row;
+}
