@@ -135,7 +135,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => 'customer'
+            'type'   => 'customer',
+            's'      => !empty( $request['search'] ) ? $request['search'] : ''
         ];
 
         $items       = erp_get_peoples( $args );

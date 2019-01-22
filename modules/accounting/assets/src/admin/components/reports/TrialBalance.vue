@@ -3,14 +3,21 @@
         <h4>Trial Balance</h4>
 
          <list-table
-            tableClass="wperp-table table-striped table-dark widefat"
+            tableClass="wperp-table table-striped table-dark widefat trial-balance"
             :columns="columns"
             :rows="rows">
             <template slot="debit" slot-scope="data">
-                {{ Math.sign(data.row.balance) === 1 ? data.row.balance : '' }}
+                {{ Math.sign(data.row.balance) === 1 ? getCurrencySign() + data.row.balance : '' }}
             </template>
             <template slot="credit" slot-scope="data">
-                {{ Math.sign(data.row.balance) === -1 ? Math.abs(data.row.balance) : '' }}
+                {{ Math.sign(data.row.balance) === -1 ? getCurrencySign() + Math.abs(data.row.balance) : '' }}
+            </template>
+            <template slot="tfoot">
+                <tr class="t-foot">
+                    <td>Total</td>
+                    <td>{{ getCurrencySign() + totalDebit }}</td>
+                    <td>{{ getCurrencySign() + Math.abs(totalCredit) }}</td>
+                </tr>
             </template>
         </list-table>
 
@@ -42,7 +49,9 @@
                     'debit': { label: 'Debit Total' },
                     'credit': { label: 'Credit Total' }
                 },
-                rows: []
+                rows: [],
+                totalDebit: 0,
+                totalCredit: 0
             }
         },
 
@@ -54,20 +63,31 @@
             fetchItems() {
                 this.rows = [];
 
-                HTTP.get( '/reports/trial-balance').then( (response) => {
-                    this.rows = response.data;
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-                .then( () => {
-                    //ready
-                } );
+                HTTP.get( '/reports/trial-balance').then(response => {                    
+                    this.rows = response.data.rows;
+                    this.totalDebit = response.data.total_debit;
+                    this.totalCredit = response.data.total_credit;
+                });
             }
         }
     }
 </script>
 
-<style scoped>
+<style lang="less">
+    .trial-balance {
+        .col--check {
+            display: none;
+        }
 
+        tbody tr td:last-child {
+            text-align: initial !important;
+        }
+
+        .t-foot {
+            td {
+                color: #2196f3;
+                font-weight: bold;
+            }
+        }
+    }
 </style>

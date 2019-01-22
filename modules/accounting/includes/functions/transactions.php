@@ -114,8 +114,8 @@ function erp_acct_get_sales_chart_payment( $args = [] ) {
 
     $sql = "SELECT SUM(credit) as received, SUM(balance) AS outstanding
         FROM ( SELECT invoice.voucher_no, SUM(invoice_acc_detail.credit) AS credit, SUM( invoice_acc_detail.debit - invoice_acc_detail.credit) AS balance
-        FROM wp_erp_acct_invoices AS invoice
-        LEFT JOIN wp_erp_acct_invoice_account_details AS invoice_acc_detail ON invoice.voucher_no = invoice_acc_detail.invoice_no {$where}
+        FROM {$wpdb->prefix}erp_acct_invoices AS invoice
+        LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_acc_detail ON invoice.voucher_no = invoice_acc_detail.invoice_no {$where}
         GROUP BY invoice.voucher_no HAVING balance > 0 ) AS get_amount";
 
     // error_log(print_r($sql, true));

@@ -63,7 +63,6 @@
                         selectedProduct: [],
                         unitPrice: 0,
                         discount: 0,
-                        discountAmount: 0,
                         taxAmount: 0,
                         totalAmount: 0
                     };
@@ -77,7 +76,7 @@
 
         watch: {
             'line.selectedProduct'() {
-                this.getSalePrice();
+                this.setSalePriceAndType();
             }
         },
 
@@ -98,7 +97,6 @@
 
                 if ( discount ) {
                     discount = (amount * discount) / 100;
-                    field.discountAmount = discount;
                     amount = amount - discount;                   
                 }
 
@@ -112,7 +110,7 @@
                 this.$forceUpdate();
             },
 
-            getSalePrice() {
+            setSalePriceAndType() {
                 let product_id = this.line.selectedProduct.id;
 
                 if ( ! product_id ) return;
@@ -122,6 +120,7 @@
                 });
 
                 this.line.unitPrice = parseFloat(product.sale_price);
+                this.line.product_type = this.line.selectedProduct.type_name;
             },
 
             removeRow() {

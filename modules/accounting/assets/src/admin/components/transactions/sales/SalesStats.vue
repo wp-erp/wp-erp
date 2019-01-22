@@ -91,7 +91,7 @@
 
                     this.chartPayment.values.push(
                         response.data.received,
-                        response.data.outstanding
+                        response.data.outstanding,
                     );
                 });
 

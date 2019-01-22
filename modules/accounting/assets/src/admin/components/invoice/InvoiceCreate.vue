@@ -212,7 +212,8 @@ export default {
                     this.products.push({
                         id: element.id,
                         name: element.name,
-                        sale_price: element.sale_price
+                        sale_price: element.sale_price,
+                        type_name: element.type_name
                     });
                 });
             });
@@ -256,12 +257,11 @@ export default {
             this.transactionLines.forEach(line => {
                 lineItems.push({
                     product_id: line.selectedProduct.id,
-                    product_type: 'service',
+                    product_type: line.selectedProduct.type,
                     qty: line.qty,
                     unit_price: line.unitPrice,
                     tax: line.taxAmount,
                     discount: line.discount,
-                    discountAmount: line.discountAmount,
                     item_total: line.totalAmount,
                     tax_percent: 0
                 });
