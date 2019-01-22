@@ -162,26 +162,26 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_chart_of_accounts (`name`) VALUES ('Asset'), ('Liability'), ('Income'), ('Expense'), ('Equity'), ('Asset & Liability'), ('Bank')");
 
-        $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_ledgers (`chart_id`, `category_id`, `name`, `code`, `system`) VALUES
-        (1, NULL, 'Chair', 200, NULL),
-        (3, 3, 'Salary', 202, NULL),
-        (7, 2, 'Cash In Hand', 300, 1),
-        (7, NULL, 'Cash At Bank', 205, NULL),
-        (4, NULL, 'Sales', 208, 1),
-        (5, NULL, 'Managing Director', 299, 1),
-        (6, NULL, 'Sales Tax', 287, 1),
-        (3, 4, 'Sales Discount', 103, 1),
-        (3, NULL, 'Purchase', 302, 1),
-        (7, NULL, 'A/C 80034', 211, NULL),
-        (4, NULL, 'CASH Operating', 1010, NULL),
-        (2, NULL, 'Debitors', 1022, 1),
-        (1, NULL, 'Trade Notes Receivable', 987, NULL),
-        (2, NULL, 'Unbilled Cost & Fees', 553, 1),
-        (1, NULL, 'Machinery & Equipment', 473, 1),
-        (1, 7, 'Computer Equipment', 763, 1),
-        (3, NULL, 'Furniture & Fixtures', 394, NULL),
-        (2, NULL, 'DEPR Vehicles', 229, NULL),
-        (7, NULL, 'Organization Costs', 837, 1)");
+        $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_ledgers (`chart_id`, `category_id`, `name`, `slug`, `code`, `system`) VALUES
+        (1,	NULL, 'Chair', NULL, 200, NULL),
+        (3, 3, 'Salary', NULL, 202, NULL),
+        (7, 2, 'Cash In Hand', 'cash_hand', 300, 1),
+        (7, NULL, 'Cash At Bank', 'cash_bank', 205, NULL),
+        (4, NULL, 'Sales', 'sales', 208, 1),
+        (5, NULL, 'Managing Director', NULL, 299, 1),
+        (6, NULL, 'Sales Tax', 'sales_tax', 287, 1),
+        (3, 4, 'Sales Discount', 'sales_discount', 103, 1),
+        (3, NULL, 'Purchase', 'purchase', 302, 1),
+        (7, NULL, 'A/C 80034', NULL, 211, NULL),
+        (4, NULL, 'CASH Operating', NULL, 1010, NULL),
+        (2, NULL, 'Debitors', NULL, 1022, 1),
+        (1, NULL, 'Trade Notes Receivable', NULL, 987, NULL),
+        (2, NULL, 'Unbilled Cost & Fees', NULL, 553, 1),
+        (1, NULL, 'Machinery & Equipment', NULL, 473, 1),
+        (1, 7, 'Computer Equipment', NULL, 763, 1),
+        (3, NULL, 'Furniture & Fixtures', NULL, 394, NULL),
+        (2, NULL, 'DEPR Vehicles', NULL, 229, NULL),
+        (7, NULL, 'Organization Costs', NULL, 837, 1)");
 
         $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_ledger_categories (`name`, `parent_id`, `system`) VALUES
         ('Furniture', NULL, NULL),

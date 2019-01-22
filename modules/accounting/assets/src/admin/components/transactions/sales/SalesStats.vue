@@ -102,7 +102,7 @@
                     }
                 }).then( response => {
                     response.data.forEach(element => {
-                        this.chartStatus.labels.push(element.invoice_type)
+                        this.chartStatus.labels.push(element.type_name)
                         this.chartStatus.values.push(element.sub_total)
                     });
                 });

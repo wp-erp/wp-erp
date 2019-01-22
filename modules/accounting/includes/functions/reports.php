@@ -11,7 +11,7 @@ function erp_acct_get_account_receivable() {
     $sql = "SELECT SUM(balance) AS amount
         FROM ( SELECT SUM( debit - credit ) AS balance
         FROM {$wpdb->prefix}erp_acct_invoice_account_details
-        GROUP BY trn_no HAVING balance > 0 ) AS get_amount";
+        GROUP BY invoice_no HAVING balance > 0 ) AS get_amount";
 
     return $wpdb->get_var($sql);
 }
