@@ -23,11 +23,11 @@
                 @action:click="onActionClick">
                 <template slot="trn_no" slot-scope="data">
                     <strong v-if="isPayment(data.row)">
-                        #{{ data.row.trn_no }}
+                        #{{ data.row.id }}
                     </strong>
                     <strong v-else>
                         <router-link :to="{ name: 'SalesReport', params: { id: data.row.id }}">
-                            #{{ data.row.trn_no }}
+                            #{{ data.row.id }}
                         </router-link>
                     </strong>
                 </template>
@@ -37,6 +37,9 @@
                 <template slot="ref" slot-scope="data">
                     {{ data.row.ref ? data.row.ref : '-' }}
                 </template>
+                <template slot="customer_name" slot-scope="data">
+                    {{ isPayment(data.row) ? data.row.pay_cus_name : data.row.inv_cus_name }}
+                </template>
                 <template slot="trn_date" slot-scope="data">
                     {{ isPayment(data.row) ? data.row.payment_trn_date : data.row.invoice_trn_date }}
                 </template>
@@ -44,7 +47,7 @@
                     {{ isPayment(data.row) ? '-' : data.row.due_date }}
                 </template>
                 <template slot="due" slot-scope="data">
-                    {{ isPayment(data.row) ? '-' : formatAmount(data.row.sales_amount - data.row.payment_amount) }}
+                    {{ isPayment(data.row) ? '-' : formatAmount(data.row.due) }}
                 </template>
                 <template slot="amount" slot-scope="data">
                     {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount) }}
@@ -130,7 +133,7 @@
                         start_date: filters.start_date,
                         end_date: filters.end_date
                     }
-                }).then( (response) => {
+                }).then( (response) => {                    
                     this.rows = response.data;
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
