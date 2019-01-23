@@ -438,7 +438,7 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
 
     $query = $wpdb->prepare( "SELECT $items FROM $purchases as purchase INNER JOIN 
                                 (
-                                    SELECT purchase_no, SUM( pa.debit - pa.credit) as due 
+                                    SELECT purchase_no, ABS(SUM( pa.debit - pa.credit)) as due 
                                     FROM $purchase_act_details as pa
                                     GROUP BY pa.purchase_no
                                     HAVING due > 0

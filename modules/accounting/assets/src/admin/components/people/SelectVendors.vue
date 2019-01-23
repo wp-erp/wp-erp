@@ -32,8 +32,6 @@
         created() {
             var self = this;
             this.$root.$on( 'options-query', query => {
-                this.options = [];
-
                 if ( query ) {
                     this.getvendors(query);
                 }
@@ -62,6 +60,7 @@
                         search: query
                     }
                 }).then((response) => {
+                    this.options= [];
                     response.data.forEach(item => {
                         this.options.push({
                             id: item.id,

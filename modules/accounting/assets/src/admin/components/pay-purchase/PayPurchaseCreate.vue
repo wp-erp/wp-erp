@@ -38,13 +38,9 @@
                                 <datepicker v-model="basic_fields.payment_date" :defaultDate="basic_fields.payment_date"></datepicker>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-3">
+                        <div class="wperp-col-sm-3 with-multiselect">
                             <label>Transaction From</label>
-                            <select v-model="basic_fields.deposit_to" name="deposit-to" class="wperp-form-field">
-                                <option value="0">-Select-</option>
-                                <option value="1">Cash</option>
-                                <option value="2">Bank</option>
-                            </select>
+                            <multi-select :placeholder="`Select Account`" v-model="basic_fields.deposit_to" :options="deposit_accts" />
                         </div>
                         <div class="wperp-col-xs-12">
                             <label>Billing Address</label>
@@ -56,7 +52,7 @@
             </div>
         </div>
 
-        <div class="wperp-table-responsive">
+        <div class="wperp-table-responsive" v-if="pay_purchases.length">
             <!-- Start .wperp-crm-table -->
             <div class="table-container">
                 <table class="wperp-table wperp-form-table">
@@ -130,11 +126,13 @@
     import PayBillModal from 'admin/components/pay-bill/PayBillModal.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import SelectVendors from "admin/components/people/SelectVendors.vue";
+    import MultiSelect from "admin/components/select/MultiSelect.vue";
 
     export default {
         name: 'PayPurchaseCreate',
 
         components: {
+            MultiSelect,
             SelectVendors,
             HTTP,
             Datepicker,
@@ -152,7 +150,7 @@
                     deposit_to: '',
                     billing_address: ''
                 },
-
+                deposit_accts: [],
                 pay_purchases: [],
                 attachments: [],
                 totalAmounts:[],
@@ -168,6 +166,8 @@
             this.$root.$on('pay-bill-modal-close', () => {
                 this.pay_bill_modal = false;
             });
+
+            this.fetchAccounts();
         },
 
         methods: {
@@ -188,6 +188,12 @@
                     this.pay_bill_modal = false;
                     this.particulars = '';
                     this.isWorking = false;
+            },
+
+            fetchAccounts(){
+                HTTP.get('accounts').then( (response) => {
+                    this.deposit_accts = response.data;
+                } );
             },
 
             getDuePurchases() {
@@ -248,6 +254,18 @@
                     element['line_total'] = parseFloat( this.totalAmounts[index] );
                 });
 
+                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
+                    this.$swal({
+                        position: 'center',
+                        type: 'info',
+                        title: 'Please Select an Account',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    return;
+                }
+
                 HTTP.post('/pay-purchases', {
                     vendor_id: this.basic_fields.vendor.id,
                     ref: this.basic_fields.trn_ref,
@@ -258,9 +276,9 @@
                     type: 'pay_purchase',
                     status: 'paid',
                     particulars: this.particulars,
-                    trn_by: this.basic_fields.deposit_to,
+                    trn_by: this.basic_fields.deposit_to.id,
                 }).then(res => {
-                    console.log(res.data);
+
                     this.$swal({
                         position: 'center',
                         type: 'success',
@@ -268,7 +286,16 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-                }).then(() => {
+                }).catch( error => {
+                    this.$swal({
+                        position: 'center',
+                        type: 'error',
+                        title: 'Something went Wrong!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                } ).then(() => {
                     this.isWorking = false;
                     this.resetData();
                 });
