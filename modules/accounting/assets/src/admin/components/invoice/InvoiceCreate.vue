@@ -49,7 +49,7 @@
                         </div>
                     </div>
                 <!-- </form> -->
-                
+
             </div>
         </div>
 
@@ -148,8 +148,8 @@ export default {
         return {
             basic_fields: {
                 customer: '',
-                trans_date: '',
-                due_date: '',
+                trans_date: erp_acct_var.current_date,
+                due_date: erp_acct_var.current_date,
                 billing_address: ''
             },
 
@@ -187,12 +187,12 @@ export default {
     created() {
         this.getProducts();
 
-        this.$root.$on('remove-row', index => {            
+        this.$root.$on('remove-row', index => {
             this.$delete(this.transactionLines, index);
             this.updateFinalAmount();
         });
 
-        this.$root.$on('total-updated', amount => {            
+        this.$root.$on('total-updated', amount => {
             this.updateFinalAmount();
         });
 
@@ -245,10 +245,10 @@ export default {
 
             this.transactionLines.forEach(element => {
                 finalAmount += parseFloat(element.totalAmount);
-            });            
+            });
 
             this.finalTotalAmount = finalAmount.toFixed(2);
-            
+
         },
 
         formatLineItems() {
@@ -270,7 +270,7 @@ export default {
             return lineItems;
         },
 
-        submitInvoiceForm() {            
+        submitInvoiceForm() {
             this.isWorking = true;
 
             HTTP.post('/invoices', {
