@@ -17,28 +17,23 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     $defaults = [
         'number'      => 20,
         'offset'      => 0,
-        'order'       => 'DESC',
+        'order'       => 'ASC',
         'count'       => false,
-        'customer_id' => false,
+        'customer_id' => 5,
         's'           => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
 
-    $where = '';
     $limit = '';
 
-    if ( ! empty( $args['customer_id'] ) || ! empty( $args['start_date'] ) ) {
-        $where .= 'WHERE';
-    }
+    $where = "WHERE (voucher.type = 'sales_invoice' OR voucher.type = 'payment')";
+
     if ( ! empty( $args['customer_id'] ) ) {
-        $where .= " invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']} ";
-    }
-    if ( ! empty( $args['customer_id'] ) && ! empty( $args['start_date'] ) ) {
-        $where .= ' AND ';
+        $where .= " AND invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']} ";
     }
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
@@ -51,21 +46,23 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     } else {
         $sql .= " voucher.id,
             voucher.type,
-            invoice.customer_name,
-            invoice_receipt.customer_name,
+            invoice.customer_name AS inv_cus_name,
+            invoice_receipt.customer_name AS pay_cus_name,
             invoice.trn_date AS invoice_trn_date,
             invoice_receipt.trn_date AS payment_trn_date,
             invoice.due_date,
-            (invoice.amount + invoice.tax) - invoice.discount AS amount,
-            invoice_receipt.amount,
+            (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
+            SUM(invoice_account_detail.debit - invoice_account_detail.credit) AS due,
+            invoice_receipt.amount AS payment_amount,
             status_type.type_name AS status";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS invoice_receipt ON invoice_receipt.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = invoice.status {$where}
-        ORDER BY CONCAT(invoice.trn_date, invoice_receipt.trn_date) {$args['order']} {$limit}";
+        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = invoice.status
+        LEFT JOIN wp_erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.id
+        {$where} GROUP BY voucher.id ORDER BY CONCAT(invoice.trn_date, invoice_receipt.trn_date) {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         $wpdb->get_results($sql);

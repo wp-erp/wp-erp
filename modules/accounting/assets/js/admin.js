@@ -15857,8 +15857,6 @@ if (false) {(function () {
 
     var self = this;
     this.$root.$on('options-query', function (query) {
-      _this.options = [];
-
       if (query) {
         _this.getvendors(query);
       }
@@ -15885,6 +15883,7 @@ if (false) {(function () {
           search: query
         }
       }).then(function (response) {
+        _this2.options = [];
         response.data.forEach(function (item) {
           _this2.options.push({
             id: item.id,
@@ -15907,6 +15906,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_pay_bill_PayBillModal_vue__ = __webpack_require__(94);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_SubmitButton_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_people_SelectVendors_vue__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__ = __webpack_require__(3);
 //
 //
 //
@@ -16028,10 +16028,7 @@ if (false) {(function () {
 //
 //
 //
-//
-//
-//
-//
+
 
 
 
@@ -16041,6 +16038,7 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PayPurchaseCreate',
   components: {
+    MultiSelect: __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__["a" /* default */],
     SelectVendors: __WEBPACK_IMPORTED_MODULE_5_admin_components_people_SelectVendors_vue__["a" /* default */],
     HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     Datepicker: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__["a" /* default */],
@@ -16057,6 +16055,7 @@ if (false) {(function () {
         deposit_to: '',
         billing_address: ''
       },
+      deposit_accts: [],
       pay_purchases: [],
       attachments: [],
       totalAmounts: [],
@@ -16073,6 +16072,7 @@ if (false) {(function () {
     this.$root.$on('pay-bill-modal-close', function () {
       _this.pay_bill_modal = false;
     });
+    this.fetchAccounts();
   },
   methods: {
     resetData: function resetData() {
@@ -16091,8 +16091,15 @@ if (false) {(function () {
       this.particulars = '';
       this.isWorking = false;
     },
-    getDuePurchases: function getDuePurchases() {
+    fetchAccounts: function fetchAccounts() {
       var _this2 = this;
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('accounts').then(function (response) {
+        _this2.deposit_accts = response.data;
+      });
+    },
+    getDuePurchases: function getDuePurchases() {
+      var _this3 = this;
 
       var vendorId = this.basic_fields.vendor.id,
           idx = 0,
@@ -16105,7 +16112,7 @@ if (false) {(function () {
       this.pay_purchases = [];
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/purchases/due/".concat(vendorId)).then(function (response) {
         response.data.forEach(function (element) {
-          _this2.pay_purchases.push({
+          _this3.pay_purchases.push({
             id: element.id,
             voucher_no: element.voucher_no,
             due_date: element.due_date,
@@ -16114,21 +16121,21 @@ if (false) {(function () {
           });
         });
       }).then(function () {
-        _this2.pay_purchases.forEach(function (element) {
-          _this2.totalAmounts[idx++] = parseFloat(element.due);
+        _this3.pay_purchases.forEach(function (element) {
+          _this3.totalAmounts[idx++] = parseFloat(element.due);
           finalAmount += parseFloat(element.due);
         });
 
-        _this2.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+        _this3.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
       });
     },
     getCustomerAddress: function getCustomerAddress() {
-      var _this3 = this;
+      var _this4 = this;
 
       var vendors_id = this.basic_fields.vendor.id;
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/vendors/".concat(vendors_id)).then(function (response) {
         // add more info
-        _this3.basic_fields.billing_address = "\n                    Street: ".concat(response.data.billing.street_1, " ").concat(response.data.billing.street_2, ",\n                    City: ").concat(response.data.billing.city, ", Country: ").concat(response.data.billing.country, "\n                    ");
+        _this4.basic_fields.billing_address = "\n                    Street: ".concat(response.data.billing.street_1, " ").concat(response.data.billing.street_2, ",\n                    City: ").concat(response.data.billing.city, ", Country: ").concat(response.data.billing.country, "\n                    ");
       });
     },
     updateFinalAmount: function updateFinalAmount() {
@@ -16139,11 +16146,23 @@ if (false) {(function () {
       this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
     },
     SubmitForPayment: function SubmitForPayment() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.pay_purchases.forEach(function (element, index) {
-        element['line_total'] = parseFloat(_this4.totalAmounts[index]);
+        element['line_total'] = parseFloat(_this5.totalAmounts[index]);
       });
+
+      if (!this.basic_fields.deposit_to.hasOwnProperty('id')) {
+        this.$swal({
+          position: 'center',
+          type: 'info',
+          title: 'Please Select an Account',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        return;
+      }
+
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/pay-purchases', {
         vendor_id: this.basic_fields.vendor.id,
         ref: this.basic_fields.trn_ref,
@@ -16154,21 +16173,27 @@ if (false) {(function () {
         type: 'pay_purchase',
         status: 'paid',
         particulars: this.particulars,
-        trn_by: this.basic_fields.deposit_to
+        trn_by: this.basic_fields.deposit_to.id
       }).then(function (res) {
-        console.log(res.data);
-
-        _this4.$swal({
+        _this5.$swal({
           position: 'center',
           type: 'success',
           title: 'Pay Purchase Created!',
           showConfirmButton: false,
           timer: 1500
         });
+      }).catch(function (error) {
+        _this5.$swal({
+          position: 'center',
+          type: 'error',
+          title: 'Something went Wrong!',
+          showConfirmButton: false,
+          timer: 1500
+        });
       }).then(function () {
-        _this4.isWorking = false;
+        _this5.isWorking = false;
 
-        _this4.resetData();
+        _this5.resetData();
       });
     },
     showPaymentModal: function showPaymentModal() {
@@ -17828,6 +17853,9 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__ = __webpack_require__(2);
+//
+//
+//
 //
 //
 //
@@ -33447,57 +33475,28 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "wperp-col-sm-3" }, [
-                    _c("label", [_vm._v("Transaction From")]),
-                    _vm._v(" "),
-                    _c(
-                      "select",
-                      {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.basic_fields.deposit_to,
-                            expression: "basic_fields.deposit_to"
-                          }
-                        ],
-                        staticClass: "wperp-form-field",
-                        attrs: { name: "deposit-to" },
-                        on: {
-                          change: function($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function(o) {
-                                return o.selected
-                              })
-                              .map(function(o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.$set(
-                              _vm.basic_fields,
-                              "deposit_to",
-                              $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            )
-                          }
+                  _c(
+                    "div",
+                    { staticClass: "wperp-col-sm-3 with-multiselect" },
+                    [
+                      _c("label", [_vm._v("Transaction From")]),
+                      _vm._v(" "),
+                      _c("multi-select", {
+                        attrs: {
+                          placeholder: "Select Account",
+                          options: _vm.deposit_accts
+                        },
+                        model: {
+                          value: _vm.basic_fields.deposit_to,
+                          callback: function($$v) {
+                            _vm.$set(_vm.basic_fields, "deposit_to", $$v)
+                          },
+                          expression: "basic_fields.deposit_to"
                         }
-                      },
-                      [
-                        _c("option", { attrs: { value: "0" } }, [
-                          _vm._v("-Select-")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "1" } }, [
-                          _vm._v("Cash")
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "2" } }, [
-                          _vm._v("Bank")
-                        ])
-                      ]
-                    )
-                  ]),
+                      })
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
                   _c("div", { staticClass: "wperp-col-xs-12" }, [
                     _c("label", [_vm._v("Billing Address")]),
@@ -33539,266 +33538,274 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "wperp-table-responsive" }, [
-        _c("div", { staticClass: "table-container" }, [
-          _c("table", { staticClass: "wperp-table wperp-form-table" }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _c(
-              "tbody",
-              [
-                _vm._l(_vm.pay_purchases, function(item, key) {
-                  return _c("tr", { key: key }, [
-                    _c(
-                      "td",
-                      {
-                        staticClass: "col--id column-primary",
-                        attrs: { scope: "row" }
-                      },
-                      [_vm._v(_vm._s(key + 1))]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      {
-                        staticClass: "col--due-date",
-                        attrs: { "data-colname": "Due Date" }
-                      },
-                      [_vm._v(_vm._s(item.due_date))]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      {
-                        staticClass: "col--total",
-                        attrs: { "data-colname": "Total" }
-                      },
-                      [_vm._v(_vm._s(item.total))]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      {
-                        staticClass: "col--due",
-                        attrs: { "data-colname": "Due" }
-                      },
-                      [_vm._v(_vm._s(item.due))]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      {
-                        staticClass: "col--amount",
-                        attrs: { "data-colname": "Amount" }
-                      },
-                      [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.totalAmounts[key],
-                              expression: "totalAmounts[key]"
-                            }
-                          ],
-                          staticClass: "text-right",
-                          attrs: {
-                            type: "number",
-                            min: "0",
-                            max: item.due,
-                            name: "amount"
-                          },
-                          domProps: { value: _vm.totalAmounts[key] },
-                          on: {
-                            keyup: _vm.updateFinalAmount,
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.totalAmounts,
-                                key,
-                                $event.target.value
-                              )
-                            }
-                          }
-                        })
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      {
-                        staticClass: "delete-row",
-                        attrs: { "data-colname": "Remove Above Selection" }
-                      },
-                      [
+      _vm.pay_purchases.length
+        ? _c("div", { staticClass: "wperp-table-responsive" }, [
+            _c("div", { staticClass: "table-container" }, [
+              _c("table", { staticClass: "wperp-table wperp-form-table" }, [
+                _vm._m(2),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  [
+                    _vm._l(_vm.pay_purchases, function(item, key) {
+                      return _c("tr", { key: key }, [
                         _c(
-                          "a",
+                          "td",
                           {
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                _vm.remove_item(key)
-                              }
-                            }
+                            staticClass: "col--id column-primary",
+                            attrs: { scope: "row" }
+                          },
+                          [_vm._v(_vm._s(key + 1))]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          {
+                            staticClass: "col--due-date",
+                            attrs: { "data-colname": "Due Date" }
+                          },
+                          [_vm._v(_vm._s(item.due_date))]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          {
+                            staticClass: "col--total",
+                            attrs: { "data-colname": "Total" }
+                          },
+                          [_vm._v(_vm._s(item.total))]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          {
+                            staticClass: "col--due",
+                            attrs: { "data-colname": "Due" }
+                          },
+                          [_vm._v(_vm._s(item.due))]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          {
+                            staticClass: "col--amount",
+                            attrs: { "data-colname": "Amount" }
                           },
                           [
-                            _c("i", { staticClass: "flaticon-trash" }),
-                            _vm._v("Remove")
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.totalAmounts[key],
+                                  expression: "totalAmounts[key]"
+                                }
+                              ],
+                              staticClass: "text-right",
+                              attrs: {
+                                type: "number",
+                                min: "0",
+                                max: item.due,
+                                name: "amount"
+                              },
+                              domProps: { value: _vm.totalAmounts[key] },
+                              on: {
+                                keyup: _vm.updateFinalAmount,
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.totalAmounts,
+                                    key,
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          {
+                            staticClass: "delete-row",
+                            attrs: { "data-colname": "Remove Above Selection" }
+                          },
+                          [
+                            _c(
+                              "a",
+                              {
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    _vm.remove_item(key)
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "flaticon-trash" }),
+                                _vm._v("Remove")
+                              ]
+                            )
                           ]
                         )
-                      ]
-                    )
-                  ])
-                }),
+                      ])
+                    }),
+                    _vm._v(" "),
+                    _c("tr", { staticClass: "total-amount-row" }, [
+                      _c(
+                        "td",
+                        {
+                          staticClass: "text-right pr-0 hide-sm",
+                          attrs: { colspan: "4" }
+                        },
+                        [_vm._v("Total Amount")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass: "text-right",
+                          attrs: { "data-colname": "Total Amount" }
+                        },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.finalTotalAmount,
+                                expression: "finalTotalAmount"
+                              }
+                            ],
+                            staticClass: "text-right",
+                            attrs: {
+                              type: "text",
+                              name: "finalamount",
+                              readonly: "",
+                              disabled: ""
+                            },
+                            domProps: { value: _vm.finalTotalAmount },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.finalTotalAmount = $event.target.value
+                              }
+                            }
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-right" })
+                    ])
+                  ],
+                  2
+                ),
                 _vm._v(" "),
-                _c("tr", { staticClass: "total-amount-row" }, [
+                _c("tr", { staticClass: "wperp-form-group" }, [
                   _c(
                     "td",
                     {
-                      staticClass: "text-right pr-0 hide-sm",
-                      attrs: { colspan: "4" }
-                    },
-                    [_vm._v("Total Amount")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      staticClass: "text-right",
-                      attrs: { "data-colname": "Total Amount" }
+                      staticStyle: { "text-align": "left" },
+                      attrs: { colspan: "9" }
                     },
                     [
-                      _c("input", {
+                      _c("label", [_vm._v("Particulars")]),
+                      _vm._v(" "),
+                      _c("textarea", {
                         directives: [
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.finalTotalAmount,
-                            expression: "finalTotalAmount"
+                            value: _vm.particulars,
+                            expression: "particulars"
                           }
                         ],
-                        staticClass: "text-right",
+                        staticClass: "wperp-form-field display-flex",
                         attrs: {
-                          type: "text",
-                          name: "finalamount",
-                          readonly: "",
-                          disabled: ""
+                          rows: "4",
+                          placeholder: "Internal Information"
                         },
-                        domProps: { value: _vm.finalTotalAmount },
+                        domProps: { value: _vm.particulars },
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.finalTotalAmount = $event.target.value
+                            _vm.particulars = $event.target.value
                           }
                         }
                       })
                     ]
-                  ),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "text-right" })
-                ])
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _c("tr", { staticClass: "wperp-form-group" }, [
-              _c(
-                "td",
-                {
-                  staticStyle: { "text-align": "left" },
-                  attrs: { colspan: "9" }
-                },
-                [
-                  _c("label", [_vm._v("Particulars")]),
-                  _vm._v(" "),
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.particulars,
-                        expression: "particulars"
-                      }
-                    ],
-                    staticClass: "wperp-form-field display-flex",
-                    attrs: { rows: "4", placeholder: "Internal Information" },
-                    domProps: { value: _vm.particulars },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.particulars = $event.target.value
-                      }
-                    }
-                  })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("tr", { staticClass: "add-attachment-row" }, [
-              _c(
-                "td",
-                {
-                  staticStyle: { "text-align": "left" },
-                  attrs: { colspan: "9" }
-                },
-                [
-                  _c(
-                    "div",
-                    { staticClass: "attachment-container" },
-                    [
-                      _c("label", { staticClass: "col--attachement" }, [
-                        _vm._v("Attachment")
-                      ]),
-                      _vm._v(" "),
-                      _c("file-upload", {
-                        attrs: { url: "/invoices/attachments" },
-                        model: {
-                          value: _vm.attachments,
-                          callback: function($$v) {
-                            _vm.attachments = $$v
-                          },
-                          expression: "attachments"
-                        }
-                      })
-                    ],
-                    1
                   )
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("tfoot", [
-              _c("tr", [
-                _c(
-                  "td",
-                  {
-                    staticStyle: { "text-align": "right" },
-                    attrs: { colspan: "9" }
-                  },
-                  [
-                    _c("submit-button", {
-                      attrs: { text: "Pay Purchase", working: _vm.isWorking },
-                      nativeOn: {
-                        click: function($event) {
-                          return _vm.SubmitForPayment($event)
-                        }
-                      }
-                    })
-                  ],
-                  1
-                )
+                ]),
+                _vm._v(" "),
+                _c("tr", { staticClass: "add-attachment-row" }, [
+                  _c(
+                    "td",
+                    {
+                      staticStyle: { "text-align": "left" },
+                      attrs: { colspan: "9" }
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "attachment-container" },
+                        [
+                          _c("label", { staticClass: "col--attachement" }, [
+                            _vm._v("Attachment")
+                          ]),
+                          _vm._v(" "),
+                          _c("file-upload", {
+                            attrs: { url: "/invoices/attachments" },
+                            model: {
+                              value: _vm.attachments,
+                              callback: function($$v) {
+                                _vm.attachments = $$v
+                              },
+                              expression: "attachments"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("tfoot", [
+                  _c("tr", [
+                    _c(
+                      "td",
+                      {
+                        staticStyle: { "text-align": "right" },
+                        attrs: { colspan: "9" }
+                      },
+                      [
+                        _c("submit-button", {
+                          attrs: {
+                            text: "Pay Purchase",
+                            working: _vm.isWorking
+                          },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.SubmitForPayment($event)
+                            }
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                ])
               ])
             ])
           ])
-        ])
-      ]),
+        : _vm._e(),
       _vm._v(" "),
       _vm.pay_bill_modal
         ? [
@@ -37015,7 +37022,7 @@ var render = function() {
                       ? _c("strong", [
                           _vm._v(
                             "\n                    #" +
-                              _vm._s(data.row.trn_no) +
+                              _vm._s(data.row.id) +
                               "\n                "
                           )
                         ])
@@ -37035,7 +37042,7 @@ var render = function() {
                               [
                                 _vm._v(
                                   "\n                        #" +
-                                    _vm._s(data.row.trn_no) +
+                                    _vm._s(data.row.id) +
                                     "\n                    "
                                 )
                               ]
@@ -37067,6 +37074,22 @@ var render = function() {
                     _vm._v(
                       "\n                " +
                         _vm._s(data.row.ref ? data.row.ref : "-") +
+                        "\n            "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "customer_name",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.isPayment(data.row)
+                            ? data.row.pay_cus_name
+                            : data.row.inv_cus_name
+                        ) +
                         "\n            "
                     )
                   ]
@@ -37111,9 +37134,7 @@ var render = function() {
                         _vm._s(
                           _vm.isPayment(data.row)
                             ? "-"
-                            : _vm.formatAmount(
-                                data.row.sales_amount - data.row.payment_amount
-                              )
+                            : _vm.formatAmount(data.row.due)
                         ) +
                         "\n            "
                     )
