@@ -796,6 +796,8 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_receipts` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `voucher_no` int(11) DEFAULT NULL,
+              `customer_id` int(11) DEFAULT NULL,
+              `customer_name` varchar(255) DEFAULT NULL,
               `trn_date` date DEFAULT NULL,
               `amount` decimal(10,2) DEFAULT 0,
               `particulars` varchar(255) DEFAULT NULL,
