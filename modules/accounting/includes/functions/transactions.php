@@ -127,18 +127,57 @@ function erp_acct_get_sales_chart_payment( $args = [] ) {
  *
  * @return array|null|object
  */
-function erp_acct_get_income_expense_chart_data(){
+function erp_acct_get_income_expense_chart_data() {
+
+    $income_chart_id = 3; //Default db value
+    $expense_chart_id = 4; //Default db value
+
+    $current_year = date( 'Y' );
+    $start_date = $current_year . '-01-01';
+    $end_date = $current_year . '-12-31';
+
+    $incomes = erp_acct_get_monthly_balance_by_chart_id( $start_date, $end_date, $income_chart_id );
+    $income_data = erp_acct_format_monthly_data_to_yearly_data( $incomes );
+
+    $expenses = erp_acct_get_monthly_balance_by_chart_id( $start_date, $end_date, $expense_chart_id );
+    $expense_data = erp_acct_format_monthly_data_to_yearly_data( $expenses );
+
+    $this_year = [
+        'labels' => array_keys( $income_data ), 'income' => array_values( $income_data ), 'expense' => array_values( $expense_data )
+    ];
+
+    //Generate last year data
+    $last_year = $current_year - 1;
+    $start_date = $last_year . '-01-01';
+    $end_date = $last_year . '-12-31';
+
+    $incomes = erp_acct_get_monthly_balance_by_chart_id( $start_date, $end_date, $income_chart_id );
+    $income_data = erp_acct_format_monthly_data_to_yearly_data( $incomes );
+
+    $expenses = erp_acct_get_monthly_balance_by_chart_id( $start_date, $end_date, $expense_chart_id );
+    $expense_data = erp_acct_format_monthly_data_to_yearly_data( $expenses );
+    $last_yr = [
+        'labels' => array_keys( $income_data ), 'income' => array_values( $expense_data ), 'expense' => array_values( $expense_data )
+    ];
+
+    return [ 'thisYear' => $this_year, 'lastYear' => $last_yr ];
+}
+
+/**
+ * Get Balance amount for given chart of account in time range
+ *
+ * @param $start_date
+ * @param $end_date
+ * @param $chart_id
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_monthly_balance_by_chart_id( $start_date, $end_date, $chart_id ) {
     global $wpdb;
 
     $ledger_details = $wpdb->prefix . 'erp_acct_ledger_details';
     $ledgers = $wpdb->prefix . 'erp_acct_ledgers';
     $chart_of_accs = $wpdb->prefix . 'erp_acct_chart_of_accounts';
-
-    $chart_id = 103;
-
-    $current_year = date('Y');
-    $start_date = $current_year. '-01-01';
-    $end_date = $current_year. '-12-31';
 
     $query = "Select Month(ld.trn_date) as month, SUM( ld.debit-ld.credit ) as balance
               From $ledger_details as ld
@@ -149,6 +188,17 @@ function erp_acct_get_income_expense_chart_data(){
               Group By Month(ld.trn_date)";
 
     $results = $wpdb->get_results( $wpdb->prepare( $query, $chart_id, $start_date, $end_date ), ARRAY_A );
+    return $results;
+}
+
+/**
+ * Format Monthly result to Yearly data
+ *
+ * @param $result
+ *
+ * @return array
+ */
+function erp_acct_format_monthly_data_to_yearly_data( $result ) {
     $default_year_data = [
         'Jan' => 0,
         'Feb' => 0,
@@ -164,56 +214,18 @@ function erp_acct_get_income_expense_chart_data(){
         'Dec' => 0,
     ];
 
-    if ( !empty( $results ) ) {
-        $results = array_map( function ( $item ) {
-            $item['month'] = date( "M", mktime( 0, 0, 0, $item['month'] ) );
-            $item['balance'] = abs( $item['balance'] );
-            return $item;
-        }, $results );
-    }
+    $result = array_map( function ( $item ) {
+        $item['month'] = date( "M", mktime( 0, 0, 0, $item['month'] ) );
+        $item['balance'] = abs( $item['balance'] );
+        return $item;
+    }, $result );
 
-    $labels  = wp_list_pluck( $results, 'month' );
-    $incomes = wp_list_pluck( $results, 'balance' );
+    $labels = wp_list_pluck( $result, 'month' );
+    $balance = wp_list_pluck( $result, 'balance' );
 
-    $this_yr_data = array_combine( $labels, $incomes );
+    $this_yr_data = array_combine( $labels, $balance );
 
     $this_yr_data = wp_parse_args( $this_yr_data, $default_year_data );
-    //TODO expense query
-    $this_year = [
-        'labels' => array_keys($this_yr_data), 'income' => array_values($this_yr_data), 'expense' =>  array_values($this_yr_data)
-    ];
 
-    $last_year = $current_year-1;
-    $start_date = $last_year. '-01-01';
-    $end_date = $last_year. '-12-31';
-
-    $last_year_query = "Select Month(ld.trn_date) as month, SUM( ld.debit-ld.credit ) as balance
-              From $ledger_details as ld
-              Inner Join $ledgers as al on al.id = ld.ledger_id
-              Inner Join $chart_of_accs as ca on ca.id = al.chart_id
-              Where ca.id = %d
-              AND ld.trn_date BETWEEN %s AND %s
-              Group By Month(ld.trn_date)";
-
-    $last_results = $wpdb->get_results( $wpdb->prepare( $last_year_query, $chart_id, $start_date, $end_date ), ARRAY_A );
-
-    if ( !empty( $last_results ) ) {
-        $last_results = array_map( function ( $item ) {
-            $item['month'] = date( "M", mktime( 0, 0, 0, $item['month'] ) );
-            $item['balance'] = abs( $item['balance'] );
-            return $item;
-        }, $last_results );
-    }
-
-    $labels  = wp_list_pluck( $last_results, 'month' );
-    $incomes = wp_list_pluck( $last_results, 'balance' );
-
-    $last_yr_data = array_combine( $labels, $incomes );
-    $last_yr_data = wp_parse_args( $last_yr_data, $default_year_data );
-    //TODO expense query
-    $last_yr = [
-        'labels' => array_keys($last_yr_data), 'income' => array_values($last_yr_data), 'expense' => array_values($last_yr_data)
-    ];
-
-    return [ 'thisYear' => $this_year, 'lastYear' => $last_yr ];
+    return $this_yr_data;
 }
