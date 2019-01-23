@@ -977,6 +977,8 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_bill` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `voucher_no` int(11) DEFAULT NULL,
+              `vendor_id` int(11) DEFAULT NULL,
+              `vendor_name` varchar(255) DEFAULT NULL,
               `trn_date` date DEFAULT NULL,
               `amount` decimal(10,2) DEFAULT 0,
               `trn_by` varchar(255) DEFAULT NULL,
@@ -1007,6 +1009,8 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_purchase` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `voucher_no` int(11) DEFAULT NULL,
+              `vendor_id` int(11) DEFAULT NULL,
+              `vendor_name` varchar(255) DEFAULT NULL,
               `trn_date` date DEFAULT NULL,
               `amount` decimal(10,2) DEFAULT 0,
               `trn_by` varchar(255) DEFAULT NULL,
@@ -1122,7 +1126,8 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `voucher_no` int(11) DEFAULT NULL,
-              `vendor_id` varchar(255) DEFAULT NULL,
+              `vendor_id` int(11) DEFAULT NULL,
+              `vendor_name` varchar(255) DEFAULT NULL,
               `trn_date` date DEFAULT NULL,
               `due_date` date DEFAULT NULL,
               `amount` decimal(10,2) DEFAULT 0,
@@ -1307,7 +1312,8 @@ Company'
               `trn_no` int(11) DEFAULT NULL,
               `check_trn_table_id` int(11) DEFAULT NULL,
               `people_name` varchar(255) DEFAULT NULL,
-              `pay_to` varchar(255) DEFAULT NULL,
+              `payee_id` int(11) DEFAULT NULL,
+              `payee_name` varchar(255) DEFAULT NULL,
               `debit` decimal(10,2) DEFAULT 0,
               `credit` decimal(10,2) DEFAULT 0,
               `trn_date` date DEFAULT NULL,
