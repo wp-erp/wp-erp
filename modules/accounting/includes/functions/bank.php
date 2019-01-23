@@ -210,7 +210,15 @@ function erp_acct_get_transfer_accounts( $show_balance = false ) {
     global $wpdb;
 
     $ledgers = $wpdb->prefix.'erp_acct_ledgers';
-    $chart_id = 107;
+
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
+    $ledger_details = $ledger_map->get_ledger_details_by_slug( 'cash_hand' );
+
+    if ( !$ledger_details ) {
+        return new WP_Error( 505, 'Ledger ID not found for purchase', '' );
+    }
+
+    $chart_id = $ledger_details->chart_id;
 
     if ( !$show_balance ) {
         $query = $wpdb->prepare( "Select * FROM $ledgers WHERE chart_id = %d", $chart_id );
