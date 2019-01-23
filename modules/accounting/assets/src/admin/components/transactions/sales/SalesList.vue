@@ -21,18 +21,24 @@
                 @pagination="goToPage"
                 :actions="actions"
                 @action:click="onActionClick">
-                <template slot="trn_date" slot-scope="data">
+                <template slot="trn_no" slot-scope="data">
                     <strong v-if="isPayment(data.row)">
-                        {{ data.row.payment_trn_date }}
+                        #{{ data.row.trn_no }}
                     </strong>
                     <strong v-else>
                         <router-link :to="{ name: 'SalesReport', params: { id: data.row.id }}">
-                            {{ data.row.invoice_tran_date }}
+                            #{{ data.row.trn_no }}
                         </router-link>
                     </strong>
                 </template>
                 <template slot="type" slot-scope="data">
                     {{ isPayment(data.row) ? 'Payment' : 'Invoice' }}
+                </template>
+                <template slot="ref" slot-scope="data">
+                    {{ data.row.ref ? data.row.ref : '-' }}
+                </template>
+                <template slot="trn_date" slot-scope="data">
+                    {{ isPayment(data.row) ? data.row.payment_trn_date : data.row.invoice_trn_date }}
                 </template>
                 <template slot="due_date" slot-scope="data">
                     {{ isPayment(data.row) ? '-' : data.row.due_date }}
@@ -44,7 +50,7 @@
                     {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
-                    {{ data.row.status }}
+                    {{ isPayment(data.row) ? 'Received' : data.row.status }}
                 </template>
 
             </list-table>
@@ -67,10 +73,11 @@
         data() {
             return {
                 columns: {
-                    'trn_date':      {label: 'Date'},
+                    'trn_no':        {label: 'Voucher No.'},
                     'type':          {label: 'Type'},
                     'ref':           {label: 'Ref'},
                     'customer_name': {label: 'Customer'},
+                    'trn_date':      {label: 'Trn Date'},
                     'due_date':      {label: 'Due Date'},
                     'due':           {label: 'Due'},
                     'amount':        {label: 'Total'},
