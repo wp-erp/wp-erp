@@ -1310,6 +1310,7 @@ Company'
               `credit` decimal(10,2) DEFAULT 0,
               `trn_date` date DEFAULT NULL,
               `ledger_id` int(11) DEFAULT NULL,
+              `particulars` varchar(255) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,
@@ -1337,7 +1338,6 @@ Company'
               `trn_no` int(11) DEFAULT NULL,
               `trn_date` date DEFAULT NULL,
               `status` varchar(255) DEFAULT NULL,
-              `particulars` varchar(255) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,
@@ -1374,6 +1374,12 @@ Company'
                     VALUES (1,'product'), (2,'service');";
 
         $wpdb->query( $product_types );
+
+        $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_acct_payment_methods` (`id`, `name`)
+                    VALUES (1,'cash'), (2,'bank'), (3,'check');" );
+
+        $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_acct_trn_status_types` (`id`, `type_name`)
+                    VALUES (1,'draft'), (2,'awaiting_approval'), (3,'awaiting_payment'), (4,'paid'), (5,'partially_paid'), (6,'approved'), (7,'bounced');" );
 
 //        //Accounting
 //
