@@ -342,13 +342,19 @@ function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
 function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
     global $wpdb;
 
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
+    $ledger_id = $ledger_map->get_ledger_id_by_slug('purchase');
+
+    if ( !$ledger_id ) {
+        return new WP_Error( 505, 'Ledger ID not found for purchase', $purchase_data );
+    }
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => 405, // @TODO change later
+        'ledger_id'   => $ledger_id,
         'trn_no'      => $purchase_data['voucher_no'],
         'particulars' => $purchase_data['particulars'],
-        'debit'       => 0,
-        'credit'      => $purchase_data['amount'],
+        'debit'       => $purchase_data['amount'],
+        'credit'      => 0,
         'trn_date'    => $purchase_data['trn_date'],
         'created_at'  => $purchase_data['created_at'],
         'created_by'  => $purchase_data['created_by'],
@@ -373,8 +379,8 @@ function erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_no
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => 405, // @TODO change later
         'particulars' => $purchase_data['particulars'],
-        'debit'       => 0,
-        'credit'      => $purchase_data['amount'],
+        'debit'       => $purchase_data['amount'],
+        'credit'      => 0,
         'trn_date'    => $purchase_data['trn_date'],
         'created_at'  => $purchase_data['created_at'],
         'created_by'  => $purchase_data['created_by'],
@@ -432,7 +438,7 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
 
     $query = $wpdb->prepare( "SELECT $items FROM $purchases as purchase INNER JOIN 
                                 (
-                                    SELECT purchase_no, SUM( pa.credit - pa.debit) as due 
+                                    SELECT purchase_no, SUM( pa.debit - pa.credit) as due 
                                     FROM $purchase_act_details as pa
                                     GROUP BY pa.purchase_no
                                     HAVING due > 0

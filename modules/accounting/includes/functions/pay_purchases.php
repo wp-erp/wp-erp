@@ -318,11 +318,11 @@ function erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $ite
 
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => 605, //change later
+        'ledger_id'   => $pay_purchase_data['trn_by'],
         'trn_no'      => $pay_purchase_data['voucher_no'],
         'particulars' => $pay_purchase_data['particulars'],
-        'debit'       => $item_data['line_total'],
-        'credit'      => 0,
+        'debit'       => 0,
+        'credit'      => $item_data['line_total'],
         'trn_date'    => $pay_purchase_data['trn_date'],
         'created_at'  => $pay_purchase_data['created_at'],
         'created_by'  => $pay_purchase_data['created_by'],
