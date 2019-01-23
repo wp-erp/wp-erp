@@ -880,6 +880,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_ledger_categories` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `name` varchar(255) DEFAULT NULL,
+              `slug` varchar(255) DEFAULT NULL,
               `parent_id` int(11) DEFAULT NULL,
               `system` tinyint(1) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
@@ -1131,7 +1132,6 @@ Company'
               `trn_date` date DEFAULT NULL,
               `due_date` date DEFAULT NULL,
               `amount` decimal(10,2) DEFAULT 0,
-              `vendor_name` varchar(255) DEFAULT NULL,
               `ref` varchar(255) DEFAULT NULL,
               `status` varchar(255) DEFAULT NULL,
               `attachments` varchar(255) DEFAULT NULL,
