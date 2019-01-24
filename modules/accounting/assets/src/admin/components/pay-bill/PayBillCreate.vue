@@ -34,11 +34,7 @@
                         </div>
                         <div class="wperp-col-sm-3">
                             <label>Deposit to</label>
-                            <select v-model="basic_fields.deposit_to" name="deposit-to" class="wperp-form-field">
-                                <option value="0">-Select-</option>
-                                <option value="1">Cash</option>
-                                <option value="2">Bank</option>
-                            </select>
+                            <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
                         <div class="wperp-col-xs-12">
                             <label>Billing Address</label>
@@ -124,12 +120,13 @@
     import PayBillModal from 'admin/components/pay-bill/PayBillModal.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import SelectPeople from "admin/components/people/SelectPeople.vue";
-
+    import SelectAccounts from "admin/components/select/SelectAccounts.vue";
 
     export default {
         name: 'PayBillCreate',
 
         components: {
+            SelectAccounts,
             SelectPeople,
             HTTP,
             Datepicker,
@@ -221,6 +218,19 @@
             },
 
             SubmitForPayment() {
+
+                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
+                    this.$swal({
+                        position: 'center',
+                        type: 'info',
+                        title: 'Please Select an Account',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    return;
+                }
+
                 this.pay_bills.forEach( (element,index) => {
                     element['amount'] = parseFloat( this.totalAmounts[index] );
                 });
@@ -245,7 +255,15 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-                }).then(() => {
+                }).catch( error => {
+                    this.$swal({
+                        position: 'center',
+                        type: 'error',
+                        title: 'Something went Wrong!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } ),then(() => {
                     this.resetData();
                     this.isWorking = false;
                 });
