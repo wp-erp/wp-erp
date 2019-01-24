@@ -265,8 +265,8 @@ class Checks_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['people_name'] ) ) {
             $prepared_item['people_name'] = $request['people_name'];
         }
-        if ( isset( $request['pay_to'] ) ) {
-            $prepared_item['pay_to'] = $request['pay_to'];
+        if ( isset( $request['payee_name'] ) ) {
+            $prepared_item['payee_name'] = $request['payee_name'];
         }
         if ( isset( $request['invoice_no'] ) ) {
             $prepared_item['invoice_no'] = $request['invoice_no'];
@@ -311,12 +311,12 @@ class Checks_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'trn_no'          => (int) $item->trn_no,
             'people_name'     => $item->people_name,
-            'date'            => $item->trn_date,
+            'trn_date'        => $item->trn_date,
             'amount'          => $item->amount,
-            'pay_to'          => $item->pay_to,
+            'payee_name'      => $item->payee_name,
             'ledger_id'       => $item->ledger_id,
             'particulars'     => $item->particulars,
-            'status'          => $item->status,
+            'status'          => get_check_status_by_id( $item->trn_no ),
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -378,7 +378,7 @@ class Checks_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'pay_to'       => [
+                'payee_name'       => [
                     'description' => __( 'Type for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
