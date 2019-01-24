@@ -33,6 +33,7 @@ import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import RecPaymentModal   from 'admin/components/rec-payment/RecPaymentModal.vue';
 import NewTaxRate        from 'admin/components/tax/NewTaxRate.vue';
+import ChecksList        from 'admin/components/check/ChecksList.vue';
 
 Vue.use(Router)
 
@@ -336,6 +337,22 @@ export default new Router({
                     path: 'page/:page',
                     name: 'PaginateTaxRecords',
                     component: TaxRecords,
+                },
+            ]
+        },
+        {
+            path: '/checks',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'ChecksList',
+                    component: ChecksList,
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateChecksList',
+                    component: ChecksList,
                 },
             ]
         },

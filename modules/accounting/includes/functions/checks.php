@@ -31,7 +31,7 @@ function erp_acct_get_checks( $args = [] ) {
     }
 
     $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " trn_no, people_name, payee_name, trn_date, (debit - credit) as amount ";
     $sql .= "FROM {$wpdb->prefix}erp_acct_checks ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
@@ -252,6 +252,26 @@ function erp_acct_perform_check_action( $check_data, $args = [] ) {
         'updated_at'  => $check_data['updated_at'],
         'updated_by'  => $check_data['updated_by'],
     ) );
+}
+
+/**
+ * Get check status
+ *
+ * @param $id
+ * @return array|string
+ */
+function get_check_status_by_id( $id ) {
+    global $wpdb;
+
+    $check_statuses = $wpdb->get_results("SELECT trn_no, status FROM {$wpdb->prefix}erp_acct_check_transactions WHERE trn_no = {$id}", ARRAY_A );
+
+    $rowcount = count( $check_statuses );
+
+    if( $rowcount ) {
+        return erp_acct_get_trn_status_by_id( $check_statuses['status'] );
+    }
+
+    return 'awaiting_approval';
 }
 
 /**
