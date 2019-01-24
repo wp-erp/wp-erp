@@ -40,11 +40,7 @@
                         </div>
                         <div class="wperp-col-sm-3">
                             <label>Deposit to</label>
-                            <select v-model="basic_fields.deposit_to" name="deposit-to" class="wperp-form-field">
-                                <option value="0">-Select-</option>
-                                <option value="1">Cash</option>
-                                <option value="2">Bank</option>
-                            </select>
+                            <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
                         <div class="wperp-col-xs-12">
                             <label>Billing Address</label>
@@ -139,12 +135,14 @@
     import ExpenseModal from 'admin/components/expense/ExpenseModal.vue'
     import SelectPeople from 'admin/components/people/SelectPeople.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import SelectAccounts from "admin/components/select/SelectAccounts.vue";
 
 
     export default {
         name: 'ExpenseCreate',
 
         components: {
+            SelectAccounts,
             HTTP,
             Datepicker,
             MultiSelect,
@@ -225,11 +223,23 @@
 
 
             SubmitForExpense() {
+                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
+                    this.$swal({
+                        position: 'center',
+                        type: 'info',
+                        title: 'Please Select an Account',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    return;
+                }
+
                 HTTP.post('/expenses', {
                     vendor_id: this.basic_fields.customer.id,
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trans_date,
-                    trn_by_ledger_id: 100, //change later
+                    trn_by: this.basic_fields.deposit_to.id, //change later
                     bill_details: this.transactionLines,
                     attachments: this.attachments,
                     type: 'expense',
@@ -244,7 +254,16 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-                }).then(() => {
+                }).catch( error => {
+                    this.$swal({
+                        position: 'center',
+                        type: 'error',
+                        title: 'Something went Wrong!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } )
+                .then(() => {
                     this.resetData();
                     this.isWorking = false;
                 });
@@ -272,7 +291,7 @@
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
             },
-            
+
         },
 
         watch: {
