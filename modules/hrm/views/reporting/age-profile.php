@@ -3,7 +3,7 @@
 
     <?php
         $employees    = new \WeDevs\ERP\HRM\Models\Employee();
-        $emp_all      = $employees->get();
+        $emp_all      = $employees->where( 'status', 'active' )->get();
         $emp_all_data = get_employee_breakdown_by_age( $emp_all );
         $departments  = erp_hr_get_departments();
         $index        = 0;
@@ -14,7 +14,7 @@
 
             array_push( $yaxis_ticks, [$index, $department->title]);
 
-            $emp_by_dept      = $employees->where( 'department', $department->id )->get();
+            $emp_by_dept      = $employees->where( array( 'department' => $department->id, 'status' => 'active' ) )->get();
             $emp_by_dept_data = get_employee_breakdown_by_age( $emp_by_dept );
 
             $_under18[]       = [$emp_by_dept_data['_under_18'], $index];
