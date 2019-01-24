@@ -317,10 +317,10 @@ function erp_acct_void_bill( $id ) {
  */
 function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data = [];
-
+    $vendor = erp_get_people( $data['vendor_id'] );
     $bill_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
     $bill_data['vendor_id'] = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
-    $bill_data['vendor_name'] = isset( $data['vendor_name'] ) ? $data['vendor_name'] : '';
+    $bill_data['vendor_name'] = isset( $vendor ) ?  $vendor->first_name . ' ' . $vendor->last_name : '';
     $bill_data['billing_address'] = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
     $bill_data['trn_date']   = isset( $data['trn_date'] ) ? $data['trn_date'] : date("Y-m-d" );
     $bill_data['due_date']   = isset( $data['due_date'] ) ? $data['due_date'] : date("Y-m-d" );
@@ -333,7 +333,7 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['remarks'] = isset( $data['remarks'] ) ? $data['remarks'] : '';
     $bill_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $bill_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
-    $bill_data['trn_by_ledger_id'] = isset( $data['trn_by_ledger_id'] ) ? $data['trn_by_ledger_id'] : null;
+    $bill_data['trn_by_ledger_id'] = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
     $bill_data['created_at'] = date("Y-m-d" );
     $bill_data['created_by'] = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $bill_data['updated_at'] = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
@@ -355,7 +355,7 @@ function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
 
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $item_data['ledger_id'],
+        'ledger_id'   => $item_data['trn_by_ledger_id'],
         'trn_no'      => $bill_data['trn_no'],
         'particulars' => $bill_data['remarks'],
         'debit'       => $item_data['amount'],
