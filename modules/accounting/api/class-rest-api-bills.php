@@ -336,7 +336,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $bill_data   = erp_acct_get_due_bills_by_people( [ 'people_id' => $id ] );
-        $total_items = erp_acct_get_due_bills_by_people( [ 'count' => true, 'number' => -1 ] );
+        $total_items = erp_acct_get_due_bills_by_people( [ 'people_id' => $id, 'count' => true, 'number' => -1 ] );
 
         foreach ( $bill_data as $item ) {
             if ( isset( $request['include'] ) ) {
@@ -461,12 +461,12 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor_id'       => (int) $item->vendor_id,
             'trn_date'        => $item->trn_date,
             'due_date'        => $item->due_date,
-            'address'         => $item->billing_address,
-            'bill_details'    => $item->bill_details,
+            'address'         => $item->address,
+//            'bill_details'    => $item->bill_details,
             'total'           => (int) $item->amount,
             'due'             => isset( $item->due ) ? $item->due : $item->amount,
             'ref'             => $item->ref,
-            'remarks'         => $item->remarks,
+            'particulars'     => $item->particulars,
             'status'          => $item->status,
             'attachments'     => $item->attachments
         ];

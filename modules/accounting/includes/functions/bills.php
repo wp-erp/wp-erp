@@ -443,11 +443,11 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
 
     $query = $wpdb->prepare( "SELECT $items FROM $bills as bill LEFT JOIN
                                 (
-                                    SELECT bill_no, SUM( ba.credit - ba.debit) as due
+                                    SELECT bill_no, ABS(SUM( ba.debit - ba.credit)) as due
                                     FROM $bill_act_details as ba
-                                    GROUP BY ba.bill_no HAVING due > 0
+                                    GROUP BY ba.bill_no HAVING due < 0
                                 ) as bs ON bill.voucher_no = bs.bill_no
-                                WHERE bill.vendor_id = %d AND bill.trn_by_ledger_id IS NULL
+                                WHERE bill.vendor_id = %d
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {
