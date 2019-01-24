@@ -80,10 +80,6 @@ function erp_acct_get_invoice( $invoice_no ) {
     invoice.attachments,
     invoice.status, 
     invoice.particulars,
-    invoice.created_at,
-    invoice.created_by,
-    invoice.updated_at, 
-    invoice.updated_by,
     
     inv_detail.product_id,
     inv_detail.qty,
@@ -105,15 +101,22 @@ function erp_acct_get_invoice( $invoice_no ) {
     
     FROM {$wpdb->prefix}erp_acct_invoices as invoice
     LEFT JOIN {$wpdb->prefix}erp_acct_invoice_details as inv_detail ON invoice.voucher_no = inv_detail.trn_no
-    LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.invoice_no
+    LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.trn_no
     LEFT JOIN {$wpdb->prefix}erp_acct_products as product ON inv_detail.product_id = product.id
     WHERE invoice.voucher_no = {$invoice_no}";
 
-    $row = $wpdb->get_results( $sql, ARRAY_A );
+    $rows = $wpdb->get_results( $sql, ARRAY_A );
 
-    $row[0]['attachments'] = unserialize( $row[0]['attachments'] );
+    // calculate every line total
+    foreach ( $rows as $key => $row ) {
+        $rows[$key]['line_total'] = ($row['item_total'] + $row['tax']) - $row['discount'];
+    }
 
-    return $row;
+    // Same for every row
+    $rows[0]['attachments'] = unserialize( $rows[0]['attachments'] );
+    $rows[0]['total_due'] = $rows[0]['debit'] - $rows[0]['credit'];
+
+    return $rows;
 }
 
 /**

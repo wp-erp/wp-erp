@@ -19,11 +19,18 @@ function erp_acct_get_account_receivable() {
 function erp_acct_get_account_payable() {
     global $wpdb;
 
-    $sql = "SELECT SUM(balance) AS amount 
-        FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_bill_account_details GROUP BY bill_no HAVING balance > 0 )
+    $bill_sql = "SELECT SUM(balance) AS amount 
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_bill_account_details GROUP BY bill_no HAVING balance < 0 )
         AS get_amount";
 
-    return $wpdb->get_var($sql);
+    $purchase_sql = "SELECT SUM(balance) AS amount 
+    FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_purchase_account_details GROUP BY purchase_no HAVING balance < 0 )
+    AS get_amount";
+
+    $bill_amount = $wpdb->get_var($bill_sql);
+    $purchase_amount = $wpdb->get_var($purchase_sql);
+
+    return $bill_amount + $purchase_amount;
 }
 
 /**
