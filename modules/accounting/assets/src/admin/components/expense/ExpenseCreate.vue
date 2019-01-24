@@ -35,11 +35,12 @@
                         <div class="wperp-col-sm-3">
                             <div class="wperp-form-group">
                                 <label>Expense Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.payment_date"></datepicker>
+                                <datepicker v-model="basic_fields.trn_date"></datepicker>
                             </div>
+
                         </div>
                         <div class="wperp-col-sm-3">
-                            <label>Deposit to</label>
+                            <label>From Account</label>
                             <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
                         <div class="wperp-col-xs-12">
@@ -157,7 +158,7 @@
                 basic_fields: {
                     user: '',
                     trn_ref: '',
-                    trn_date: '',
+                    trn_date: erp_acct_var.current_date,
                     deposit_to: '',
                     billing_address: ''
                 },
@@ -190,10 +191,14 @@
 
         methods: {
             getLedgers() {
-                this.ledgers = [
-                    { id: 305, name: "Ledger 1" },
-                    { id: 306, name: "Ledger 2" },
-                ]
+                HTTP.get(`/ledgers`).then((response) => {
+                    response.data.forEach(element => {
+                        this.ledgers.push({
+                            id: element.id,
+                            name: element.name
+                        });
+                    });
+                });
             },
 
             getCustomerAddress() {
@@ -238,17 +243,18 @@
                 HTTP.post('/expenses', {
                     vendor_id: this.basic_fields.customer.id,
                     ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.trans_date,
-                    trn_by: this.basic_fields.deposit_to.id, //change later
+                    trn_date: this.basic_fields.trn_date,
+                    trn_by: this.basic_fields.deposit_to.id,
                     bill_details: this.transactionLines,
+                    billing_address: this.basic_fields.billing_address,
                     attachments: this.attachments,
                     type: 'expense',
-                    status: 'paid',
+                    status: 4,
                     remarks: this.particulars,
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({
-                        position: 'top-end',
+                        position: 'center',
                         type: 'success',
                         title: 'Expense Created!',
                         showConfirmButton: false,
