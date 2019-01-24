@@ -4,31 +4,27 @@
             <div class="wperp-panel-body">
                 <div class="wperp-row">
                     <div class="wperp-col-sm-4">
-                        <div class="wperp-chart-block has-separator">
-                            <h3>Payment</h3>
-                            <div class="payment-chart">
-                                <div class="chart-container">
-                                    <canvas id="payment_chart" hieght="84"></canvas>
-                                </div>
-                                <div id="payment_legend" class="chart-legend"></div>
-                            </div>
-                        </div>
+                        <pie-chart v-if="chartExpense.values.length"
+                                   id="payment"
+                                   title="Payment"
+                                   :sign="getCurrencySign()"
+                                   :labels="chartExpense.labels"
+                                   :colors="chartExpense.colors"
+                                   :data="chartExpense.values" />
                     </div>
                     <div class="wperp-col-sm-4">
-                        <div class="wperp-chart-block has-separator">
-                            <h3>Status</h3>
-                            <div class="payment-chart">
-                                <div class="chart-container">
-                                    <canvas id="status_chart" hieght="84"></canvas>
-                                </div>
-                                <div id="status_legend" class="chart-legend"></div>
-                            </div>
-                        </div>
+                        <pie-chart v-if="chartStatus.values.length"
+                                   id="status"
+                                   title="Status"
+                                   sign=""
+                                   :labels="chartStatus.labels"
+                                   :colors="chartStatus.colors"
+                                   :data="chartStatus.values" />
                     </div>
                     <div class="wperp-col-sm-4">
                         <div class="wperp-chart-block">
                             <h3>Outstanding</h3>
-                            <div class="wperp-total"><h2>$20000,00</h2></div>
+                            <div class="wperp-total"><h2>{{ formatAmount(chartExpense.outstanding) }}</h2></div>
                         </div>
                     </div>
                 </div>
@@ -38,8 +34,81 @@
 </template>
 
 <script>
+    import HTTP from 'admin/http'
+    import PieChart from 'admin/components/chart/PieChart.vue'
+
     export default {
-        name: 'ExpensesStats'
+        name: 'ExpenseStats',
+
+        components: {
+            PieChart
+        },
+
+        data() {
+            return {
+                chartStatus: {
+                    colors: ['#208DF8', '#E9485E', '#FF9900', '#2DCB67', '#9c27b0'],
+                    labels: [],
+                    values: []
+                },
+                chartExpense: {
+                    colors: ['#40c4ff', '#e91e63'],
+                    labels: ['Paid', 'Payable'],
+                    values: [],
+                    outstanding: 0
+                },
+            };
+        },
+
+        created() {
+            this.$root.$on('transactions-filter', filters => {
+                this.getExpenseChartData(filters);
+            });
+
+            let filters = {};
+
+            if ( this.$route.query.start && this.$route.query.end ) {
+                filters.start_date = this.$route.query.start;
+                filters.end_date = this.$route.query.end;
+            }
+
+            this.getExpenseChartData(filters);
+        },
+
+        watch: {
+            '$route': 'getExpenseChartData'
+        },
+
+        methods: {
+            getExpenseChartData(filters = {}) {
+                HTTP.get('/transactions/expense/chart-expense', {
+                    params: {
+                        start_date: filters.start_date,
+                        end_date: filters.end_date
+                    }
+                }).then( response => {
+                    this.chartExpense.outstanding = response.data.payable;
+
+                    this.chartExpense.values.push(
+                        response.data.paid,
+                        response.data.payable,
+                    );
+                });
+
+                HTTP.get('/transactions/expense/chart-status', {
+                    params: {
+                        start_date: filters.start_date,
+                        end_date: filters.end_date
+                    }
+                }).then( response => {
+                    response.data.forEach(element => {
+                        this.chartStatus.labels.push(element.type_name)
+                        this.chartStatus.values.push(element.sub_total)
+                    });
+                });
+            }
+        }
+
     }
 </script>
 

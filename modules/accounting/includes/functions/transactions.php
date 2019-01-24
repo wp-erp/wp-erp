@@ -19,7 +19,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         'offset'      => 0,
         'order'       => 'ASC',
         'count'       => false,
-        'customer_id' => 5,
+        'customer_id' => false,
         's'           => '',
     ];
 
@@ -222,4 +222,55 @@ function erp_acct_format_monthly_data_to_yearly_data( $result ) {
     $this_yr_data = wp_parse_args( $this_yr_data, $default_year_data );
 
     return $this_yr_data;
+}
+
+
+/**
+ * Get expense chart data
+ *
+ * @param array $args
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_expense_chart_data( $args = [] ) {
+    global $wpdb;
+
+    $where = '';
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+
+    $sql = "SELECT SUM(debit) as paid, ABS(SUM(balance)) AS payable
+        FROM ( SELECT bill.voucher_no, SUM(bill_acc_detail.debit) AS debit, SUM( bill_acc_detail.debit - bill_acc_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_bills AS bill
+        LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.bill_no {$where}
+        GROUP BY bill.voucher_no HAVING balance < 0 ) AS get_amount";
+
+    return $wpdb->get_row($sql, ARRAY_A);
+}
+
+/**
+ * Get expense chart status
+ *
+ * @param array $args
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_expense_chart_status( $args = [] ) {
+    global $wpdb;
+
+    $where = '';
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+
+    $sql = "SELECT COUNT(bill.status) AS sub_total, status_type.type_name
+            FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
+            LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.status = status_type.id {$where} 
+            GROUP BY status_type.id ORDER BY status_type.type_name ASC";
+
+    $result =  $wpdb->get_results($sql, ARRAY_A);
+    return $result;
 }
