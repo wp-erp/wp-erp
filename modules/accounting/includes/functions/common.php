@@ -271,3 +271,19 @@ function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
 
     return $row;
 }
+
+/**
+ *
+ */
+function erp_acct_format_people_address( $address = [] ) {
+    $add = '';
+
+    $keys = array_keys( $address );
+    $values = array_values( $address );
+
+    for ( $idx = 0; $idx < count( $address ); $idx++ ) {
+        $add .= $keys[$idx] . ': ' . $values[$idx] . '; ';
+    }
+
+    return $add;
+}
