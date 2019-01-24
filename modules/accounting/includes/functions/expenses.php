@@ -106,7 +106,8 @@ function erp_acct_insert_expense( $data ) {
     $created_by = get_current_user_id();
     $data['created_at'] = date("Y-m-d H:i:s");
     $data['created_by'] = $created_by;
-
+    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_by'] = $created_by;
     try {
         $wpdb->query( 'START TRANSACTION' );
 
@@ -146,7 +147,7 @@ function erp_acct_insert_expense( $data ) {
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', array(
                 'trn_no'      => $voucher_no,
-                'ledger_id'   => $item['ledger_id'],
+                'ledger_id'   => $item['trn_by_ledger_id'],
                 'particulars' => $item['description'],
                 'amount'      => $item['amount'],
                 'created_at'  => $bill_data['created_at'],
