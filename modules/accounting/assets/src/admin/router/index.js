@@ -3,7 +3,7 @@ import Router            from 'vue-router';
 import People            from 'admin/components/people/People.vue';
 import Products          from 'admin/components/products/Products.vue';
 import Employees         from 'admin/components/people/Employees.vue';
-import Dashboard         from 'admin/components/Dashboard.vue';
+import DashBoard         from 'admin/components/dashboard/DashBoard.vue';
 import TrialBalance      from 'admin/components/reports/TrialBalance.vue';
 import PeopleDetails     from 'admin/components/people/PeopleDetails.vue';
 import InvoiceCreate     from 'admin/components/invoice/InvoiceCreate.vue';
@@ -41,12 +41,12 @@ export default new Router({
     routes: [
         {
             path: '/',
-            component: Dashboard,
+            component: DashBoard,
             children: [
                 {
                     path : '/dashboard',
-                    name : 'Dashboard',
-                    component: Dashboard,
+                    name : 'DashBoard',
+                    component: DashBoard,
                 }
             ]
         },
