@@ -31,7 +31,7 @@ function erp_acct_get_checks( $args = [] ) {
     }
 
     $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " trn_no, people_name, payee_name, trn_date, (debit - credit) as amount ";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " trn_no, people_name, payee_name, trn_date, (debit - credit) as amount, status ";
     $sql .= "FROM {$wpdb->prefix}erp_acct_checks ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
@@ -83,6 +83,7 @@ function erp_acct_update_check( $data, $check_id ) {
         'trn_date'           => $data['trn_date'],
         'ledger_id'          => $data['ledger_id'],
         'particulars'        => $data['particulars'],
+        'status'             => $data['status'],
         'debit'              => $data['debit'],
         'credit'             => $data['credit'],
         'created_at'         => $data['created_at'],
@@ -137,7 +138,8 @@ function erp_acct_record_check_data( $trn_data, $trn_no, $items ) {
         'credit' => 0,
         'trn_date' => $trn_data['trn_date'],
         'ledger_id' => 999,
-        'particulars' => $trn_data['particulars'],
+        'status'    => $trn_data['status'],
+        'particulars'=> $trn_data['particulars'],
         'created_at' => $trn_data['created_at'],
         'created_by' => $trn_data['created_by'],
         'updated_at' => $trn_data['updated_at'],
@@ -225,7 +227,7 @@ function erp_acct_update_check_data_into_ledger( $check_data, $check_no, $item_d
  *
  * @return boolean
  */
-function erp_acct_perform_check_action( $check_data, $args = [] ) {
+function erp_acct_perform_check_action( $check_data ) {
     global $wpdb;
 
     $created_by = get_current_user_id();
@@ -242,10 +244,16 @@ function erp_acct_perform_check_action( $check_data, $args = [] ) {
 
     $voucher_no = $wpdb->insert_id;
 
+    $wpdb->update( $wpdb->prefix . 'erp_acct_checks', array(
+        'status'    => $check_data['action'],
+    ), array(
+        'trn_no' => $check_data['trn_no'],
+    ) );
+
     $wpdb->insert( $wpdb->prefix . 'erp_acct_check_transactions', array(
         'voucher_no'  => $voucher_no,
         'trn_no'      => $check_data['trn_no'],
-        'status'      => $check_data['status'],
+        'status'      => $check_data['action'],
         'trn_date'    => $check_data['trn_date'],
         'created_at'  => $check_data['created_at'],
         'created_by'  => $check_data['created_by'],
@@ -254,25 +262,6 @@ function erp_acct_perform_check_action( $check_data, $args = [] ) {
     ) );
 }
 
-/**
- * Get check status
- *
- * @param $id
- * @return array|string
- */
-function get_check_status_by_id( $id ) {
-    global $wpdb;
-
-    $check_statuses = $wpdb->get_results("SELECT trn_no, status FROM {$wpdb->prefix}erp_acct_check_transactions WHERE trn_no = {$id}", ARRAY_A );
-
-    $rowcount = count( $check_statuses );
-
-    if( $rowcount ) {
-        return erp_acct_get_trn_status_by_id( $check_statuses['status'] );
-    }
-
-    return 'awaiting_approval';
-}
 
 /**
  * Get formatted check data
@@ -295,7 +284,7 @@ function erp_acct_get_formatted_check_data( $data, $voucher_no ) {
     $check_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
     $check_data['debit'] = isset( $data['debit'] ) ? $data['debit'] : 0;
     $check_data['credit'] = isset( $data['credit'] ) ? $data['credit'] : 0;
-    $check_data['status'] = isset( $data['status'] ) ? $data['status'] : 7;
+    $check_data['status'] = isset( $data['status'] ) ? $data['status'] : 0;
     $check_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $check_data['created_at'] = date("Y-m-d" );
     $check_data['created_by'] = isset( $data['created_by'] ) ? $data['created_by'] : '';

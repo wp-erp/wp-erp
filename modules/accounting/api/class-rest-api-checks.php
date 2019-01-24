@@ -140,8 +140,9 @@ class Checks_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $item = erp_acct_get_check( $id );
+        $item['action'] = 6;
 
-        erp_acct_perform_check_action( $item, [ 'action' => '6' ] );
+        erp_acct_perform_check_action( $item );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -306,7 +307,7 @@ class Checks_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        $item = (object) $item;
+        $item = (object) $item; $id = $item->status;
 
         $data = [
             'trn_no'          => (int) $item->trn_no,
@@ -316,7 +317,7 @@ class Checks_Controller extends \WeDevs\ERP\API\REST_Controller {
             'payee_name'      => $item->payee_name,
             'ledger_id'       => $item->ledger_id,
             'particulars'     => $item->particulars,
-            'status'          => get_check_status_by_id( $item->trn_no ),
+            'status'          => erp_acct_get_trn_status_by_id( $item->status )
         ];
 
         $data = array_merge( $data, $additional_fields );
