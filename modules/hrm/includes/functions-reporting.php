@@ -173,7 +173,7 @@ function erp_hr_get_age_breakdown_data() {
 
     foreach( $departments as $department ) {
 
-        $emp_by_dept      = $employees->where( 'department', $department->id )->get();
+        $emp_by_dept      = $employees->where( [ 'department' => $department->id, 'status' => 'active' ] )->get();
         $emp_by_dept_data = get_employee_breakdown_by_age( $emp_by_dept );
 
         $tot_under18  += $emp_by_dept_data['_under_18'];
