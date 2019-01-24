@@ -312,7 +312,7 @@ function erp_acct_void_purchase( $id ) {
  * @return mixed
  */
 function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
-    $user_info = get_userdata( $data['vendor_id'] );
+    $user_info = erp_get_people( $data['vendor_id'] );
 
     $purchase_data['voucher_no']  = isset( $data['voucher_no'] ) ? $data['voucher_no'] : 1;
     $purchase_data['vendor_id']   = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;

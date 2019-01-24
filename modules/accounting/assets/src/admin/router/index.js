@@ -137,7 +137,7 @@ export default new Router({
                             component: Sales,
                         },
                         {
-                            path: ':id/report',
+                            path: ':id',
                             name: 'SalesReport',
                             component: SalesReport,
                         },

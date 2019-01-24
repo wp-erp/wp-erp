@@ -244,9 +244,9 @@
                     return;
                 }
 
-                this.isWorking = true;
+                this.isWorking = true;                
 
-                HTTP.post('/Purchases', {
+                HTTP.post('/purchases', {
                     vendor_id: this.basic_fields.customer.id,
                     vendor_name: this.basic_fields.customer.name,
                     trn_date: this.basic_fields.trans_date,
