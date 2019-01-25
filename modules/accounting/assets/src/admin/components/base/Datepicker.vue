@@ -40,8 +40,13 @@
                     contentStyle: { color: '#fff' },
                     dates: new Date()
                 }],
-                selectedDate: this.getCurrentDate(),
+                selectedDate: '',
             }
+        },
+
+        created() {
+            this.selectedDate = this.getCurrentDate();
+            this.$emit('input', this.selectedDate);
         },
 
         methods: {
