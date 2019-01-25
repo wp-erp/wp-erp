@@ -308,12 +308,11 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data = [];
 
-    $invoice_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
-    $invoice_data['customer_id'] = isset( $data['customer_id'] ) ? $data['customer_id'] : 1;
-
-    // $user_info = get_userdata( $invoice_data['people_id'] );
+    // We can pass the name from view... to reduce query load
     $user_info = erp_get_people( $invoice_data['customer_id'] );
 
+    $invoice_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
+    $invoice_data['customer_id'] = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
     $invoice_data['customer_name'] = $user_info->first_name . ' ' . $user_info->last_name;
     $invoice_data['trn_date']   = isset( $data['date'] ) ? $data['date'] : date("Y-m-d" );
     $invoice_data['due_date']   = isset( $data['due_date'] ) ? $data['due_date'] : date("Y-m-d" );

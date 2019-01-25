@@ -39,45 +39,24 @@
         },
 
         methods: {
-            getCustomers(query) {
-                return HTTP.get('/customers', {
-                    params: {
-                        search: query
-                    }
-                });
-            },
-
-            getVendors(query) {
-                return HTTP.get('/vendors', {
-                    params: {
-                        search: query
-                    }
-                });
-            },
-
-            getEmployees(query) {
-                return HTTP.get('/employees', {
-                    params: {
-                        search: query
-                    }
-                });
-            },
-
             getPeople(query) {
-                this.options = [];
                 let response = {};
-                axios.all([this.getCustomers(query), this.getVendors(query), this.getEmployees(query)])
-                    .then(axios.spread(function (customers, vendors, employees) {
-                        Array.prototype.push.apply(customers.data, vendors.data);
-                        response = [ ...customers.data,...employees.data ];
-                    })).then(() => {
-                        response.forEach(item => {
-                            this.options.push({
-                                id: item.id,
-                                name: item.first_name + ' ' + item.last_name
-                            });
+
+                HTTP.get('/customers', {
+                    params: {
+                        search: query
+                    }
+                }).then(response => {
+                    this.options = [];
+
+                    response.forEach(item => {
+                        this.options.push({
+                            id: item.id,
+                            name: item.first_name + ' ' + item.last_name
                         });
                     });
+                });
+
             },
 
         }
