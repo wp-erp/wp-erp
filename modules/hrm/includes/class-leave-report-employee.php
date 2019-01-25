@@ -178,7 +178,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? $_GET['filter_employment_type'] : '';
         $selected_time         = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : date( 'Y' );
 
-        $query = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->select( 'user_id' );
+        $query = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->select( 'user_id' )->orderBy( 'hiring_date', 'desc' );
 
         if ( $selected_department && '-1' != $selected_department ) {
             $query->where( 'department', intval( $selected_department ) );
