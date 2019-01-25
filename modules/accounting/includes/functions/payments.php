@@ -122,15 +122,17 @@ function erp_acct_insert_payment( $data ) {
         $payment_data = erp_acct_get_formatted_payment_data( $data, $voucher_no );
 
 	    $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_receipts', array(
-            'voucher_no' => $voucher_no,
-            'trn_date'   => date( 'Y-m-d' ),
-            'particulars'=> $payment_data['particulars'],
-            'amount'     => $payment_data['amount'],
-            'trn_by'     => $payment_data['trn_by'],
-            'created_at' => $payment_data['created_at'],
-            'created_by' => $payment_data['created_by'],
-            'updated_at' => $payment_data['updated_at'],
-            'updated_by' => $payment_data['updated_by'],
+            'voucher_no'    => $voucher_no,
+            'customer_id'   => $payment_data['customer_id'],
+            'customer_name' => $payment_data['customer_name'],
+            'trn_date'      => date( 'Y-m-d' ),
+            'particulars'   => $payment_data['particulars'],
+            'amount'        => $payment_data['amount'],
+            'trn_by'        => $payment_data['trn_by'],
+            'created_at'    => $payment_data['created_at'],
+            'created_by'    => $payment_data['created_by'],
+            'updated_at'    => $payment_data['updated_at'],
+            'updated_by'    => $payment_data['updated_by'],
 	    ) );
 
         $items = $payment_data['line_items'];
@@ -319,10 +321,14 @@ function erp_acct_update_payment_line_items( $data, $invoice_no, $voucher_no ) {
 function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 0 ) {
     $payment_data = [];
 
+    // We can pass the name from view... to reduce query load
+    $user_info = erp_get_people( $data['customer_id'] );
+
     $payment_data['voucher_no']  = ! empty( $voucher_no ) ? $voucher_no : 0;
     $payment_data['invoice_no']  = ! empty( $invoice_no ) ? $invoice_no : 0;
+    $payment_data['customer_id'] = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
     $payment_data['customer_id'] = isset( $data['customer_id'] ) ? $data['customer_id'] : 1;
-
+    $payment_data['customer_name'] = $user_info->first_name . ' ' . $user_info->last_name;
     $payment_data['trn_date']    = isset( $data['date'] ) ? $data['date'] : date( "Y-m-d" );
     $payment_data['line_items']  = isset( $data['line_items'] ) ? $data['line_items'] : array();
     $payment_data['created_at']  = date( "Y-m-d" );
