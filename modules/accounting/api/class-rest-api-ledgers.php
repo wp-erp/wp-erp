@@ -171,7 +171,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         (5, NULL, 'Managing Director', NULL, 299, 1),
         (6, NULL, 'Sales Tax', 'sales_tax', 287, 1),
         (3, 4, 'Sales Discount', 'sales_discount', 103, 1),
-        (3, NULL, 'Purchase', 'purchase', 302, 1),
+        (4, NULL, 'Purchase', 'purchase', 302, 1),
         (7, NULL, 'A/C 80034', NULL, 211, NULL),
         (4, NULL, 'CASH Operating', NULL, 1010, NULL),
         (2, NULL, 'Debitors', NULL, 1022, 1),
