@@ -112,7 +112,6 @@ function erp_acct_get_invoice( $invoice_no ) {
         $rows[$key]['line_total'] = ($row['item_total'] + $row['tax']) - $row['discount'];
     }
 
-    // Same for every row
     $rows[0]['attachments'] = unserialize( $rows[0]['attachments'] );
     $rows[0]['total_due'] = $rows[0]['debit'] - $rows[0]['credit'];
 
