@@ -73,7 +73,7 @@ function erp_acct_get_payables( $from, $to ) {
     $bill_results = $wpdb->get_results( $bills_query, ARRAY_A );
 
     if ( !empty( $purchase_results) && !empty( $bill_results ) ) {
-        return array_merge( null, $purchase_results );
+        return array_merge( $bill_results, $purchase_results );
     }
 
     if ( empty( $bill_results ) ) {

@@ -147,7 +147,7 @@ function erp_acct_insert_expense( $data ) {
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', array(
                 'trn_no'      => $voucher_no,
-                'ledger_id'   => $item['trn_by_ledger_id'],
+                'ledger_id'   => $item['ledger_id']['id'],
                 'particulars' => $item['description'],
                 'amount'      => $item['amount'],
                 'created_at'  => $bill_data['created_at'],
@@ -162,6 +162,7 @@ function erp_acct_insert_expense( $data ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
             'bill_no'     => $voucher_no,
             'trn_no'      => $voucher_no,
+            'trn_date'    => $bill_data['trn_date'],
             'particulars' => $bill_data['remarks'],
             'debit'       => 0,
             'credit'      => $bill_data['amount'],
