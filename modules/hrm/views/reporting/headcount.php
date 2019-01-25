@@ -8,7 +8,7 @@
         $current_year    = current_time( 'Y' );
         $dept_raw        = erp_hr_get_departments_dropdown_raw();
         $query_dept      = isset( $_REQUEST['department'] ) && '-1' != $_REQUEST['department'] ? intval( $_REQUEST['department'] ) : '';
-        $query_year      = isset( $_REQUEST['year'] ) && '-1' != $_REQUEST['year'] ? intval( $_REQUEST['year'] ) : '';
+        $query_year      = isset( $_REQUEST['year'] ) && '-1' != $_REQUEST['year'] ? intval( $_REQUEST['year'] ) : date('Y');
         $query           = "SELECT user_id, department, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'";
         $user_all        = $wpdb->get_results( $query );
         $user_filtered   = [];
