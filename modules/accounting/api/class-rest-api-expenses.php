@@ -370,21 +370,18 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
-
         $data = [
             'id'              => (int) $item->id,
-            'voucher_no'      => (int) $item->voucher_no,
             'vendor_id'       => (int) $item->vendor_id,
             'date'            => $item->trn_date,
-            'due_date'        => $item->due_date,
-            'address'         => $item->address,
+            'address'         => $item->billing_address,
             'bill_details'    => $item->bill_details,
             'total'           => (int) $item->amount,
             'ref'             => $item->ref,
             'remarks'         => $item->remarks,
             'status'          => $item->status,
             'attachments'     => $item->attachments,
-            'trn_by_ledger_id'=> $item->trn_by_ledger_id,
+            'trn_by_ledger_id'=> $item->trn_by,
         ];
 
         $data = array_merge( $data, $additional_fields );
