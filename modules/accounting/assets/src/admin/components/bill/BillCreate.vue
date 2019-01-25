@@ -29,7 +29,7 @@
                         <div class="wperp-col-sm-3">
                             <div class="wperp-form-group">
                                 <label>Bill Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.payment_date"></datepicker>
+                                <datepicker v-model="basic_fields.trn_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
