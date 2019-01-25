@@ -26,8 +26,6 @@
 
         created() {
             this.$root.$on( 'options-query', query => {
-                this.options = [];
-
                 if ( query ) {
                     this.getPeople(query);
                 }
