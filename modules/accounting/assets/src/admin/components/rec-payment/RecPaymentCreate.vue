@@ -41,11 +41,7 @@
                         </div>
                         <div class="wperp-col-sm-3">
                             <label>Deposit to</label>
-                            <select v-model="basic_fields.deposit_to" name="deposit-to" class="wperp-form-field">
-                                <option value="0">-Select-</option>
-                                <option value="cash_hand">Cash</option>
-                                <option value="cash_bank">Bank</option>
-                            </select>
+                            <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
                         <div class="wperp-col-xs-12">
                             <label>Billing Address</label>
@@ -128,11 +124,13 @@
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import PrintPreview from 'admin/components/base/PrintPreview.vue';
+    import SelectAccounts from "admin/components/select/SelectAccounts.vue";
 
     export default {
         name: 'RecPaymentCreate',
 
         components: {
+            SelectAccounts,
             HTTP,
             Datepicker,
             FileUpload,
@@ -147,7 +145,7 @@
                 basic_fields: {
                     customer: '',
                     trn_ref: '',
-                    payment_date: '',
+                    payment_date: erp_acct_var.current_date,
                     deposit_to: '',
                     billing_address: ''
                 },
@@ -226,6 +224,18 @@
 
             SubmitForPayment() {
 
+                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
+                    this.$swal({
+                        position: 'center',
+                        type: 'info',
+                        title: 'Please Select an Account',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    return;
+                }
+
                 this.invoices.forEach( (element,index) => {
                     element['line_total'] = parseFloat( this.totalAmounts[index] );
                 });
@@ -239,7 +249,7 @@
                     type: 'payment',
                     status: '3',
                     particulars: this.particulars,
-                    trn_by: this.basic_fields.deposit_to,
+                    trn_by: this.basic_fields.deposit_to.id,
                 }).then(res => {
                     this.$swal({
                         position: 'center',

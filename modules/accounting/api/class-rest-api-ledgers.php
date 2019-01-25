@@ -235,7 +235,10 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         ('Income Tax Expense', NULL, NULL),
         ('Employee Benefits Expense', NULL, NULL),
         ('Interest Expense', NULL, NULL),
-        ('Bank Revaluations', NULL, NULL)");
+        ('Bank Revaluations', NULL, NULL),
+        ('Direct Expense', NULL, 1),
+        ('Indirect Expense', NULL, 1)
+        ");
 
         $response = rest_ensure_response( true );
 
