@@ -126,7 +126,7 @@
                                 ?>
                             </div>
                             <?php endif; ?>
-                            
+
                             <?php do_action( 'erp-hr-employee-form-basic' ); ?>
                         </div>
                     </div>
@@ -249,6 +249,45 @@
                         <div class="erp-grid-container">
                             <div class="col-6">
                                 <h3 class="modal-section-title"><?php _e( 'Personal Details', 'erp' ); ?></h3>
+                            </div>
+                            <div class="col-3" data-selected="{{ data.personal.blood_group }}">
+                                <?php erp_html_form_input( array(
+                                    'label' => __( 'Blood Group', 'erp' ),
+                                    'name'  => 'personal[blood_group]',
+                                    'value' => '{{ data.personal.blood_group }}',
+                                    'class'   => 'erp-hrm-select2',
+                                    'type'    => 'select',
+                                    'options' => array(
+                                        '-1'    => __( '- Select -', 'erp' ),
+                                        'ab+'   => __( 'AB+', 'erp' ),
+                                        'ab-'   => __( 'AB-', 'erp' ),
+                                        'b+'   => __( 'B+', 'erp' ),
+                                        'b-'   => __( 'B-', 'erp' ),
+                                        'o+'   => __( 'O+', 'erp' ),
+                                        'o-'   => __( 'O-', 'erp' )
+                                    )
+                                ) ); ?>
+                            </div>
+                            <div class="col-3">
+                                <?php erp_html_form_input( array(
+                                    'label' => __( 'Spouse\'s name', 'erp' ),
+                                    'name'  => 'personal[spouse_name]',
+                                    'value' => '{{ data.personal.spouse_name }}'
+                                ) ); ?>
+                            </div>
+                            <div class="col-3">
+                                <?php erp_html_form_input( array(
+                                    'label' => __( 'Father\'s name', 'erp' ),
+                                    'name'  => 'personal[father_name]',
+                                    'value' => '{{ data.personal.father_name }}'
+                                ) ); ?>
+                            </div>
+                            <div class="col-3">
+                                <?php erp_html_form_input( array(
+                                    'label' => __( 'Mother\'s name', 'erp' ),
+                                    'name'  => 'personal[mother_name]',
+                                    'value' => '{{ data.personal.mother_name }}'
+                                ) ); ?>
                             </div>
                             <div class="col-3">
                                 <?php erp_html_form_input( array(
