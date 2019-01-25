@@ -37,7 +37,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         }
 
         $current_year  = date( 'Y' );
-        $selected_year = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : '';
+        $selected_year = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : $current_year;
         ?>
         <div class="alignleft actions">
 

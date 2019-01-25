@@ -11,7 +11,6 @@
                     <input type="hidden" name="sub-section" value="leave-requests">
                     <?php
                     $requests_table = new \WeDevs\ERP\HRM\Leave_Requests_List_Table();
-                    $requests_table = new \WeDevs\ERP\HRM\Leave_Requests_List_Table();
                     $requests_table->prepare_items();
                     $requests_table->search_box( __( 'Search Employee', 'erp' ), 'search_request' );
                     $requests_table->views();
