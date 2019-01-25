@@ -64,6 +64,7 @@
             },
 
             getPeople(query) {
+                this.options = [];
                 let response = {};
                 axios.all([this.getCustomers(query), this.getVendors(query), this.getEmployees(query)])
                     .then(axios.spread(function (customers, vendors, employees) {

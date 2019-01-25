@@ -64,20 +64,20 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions : [
-                    { key: 'bounce', label: 'Bounce', iconClass: 'flaticon-trash' },
-                    { key: 'approve', label: 'Approve', iconClass: 'flaticon-trash' }
+                    { key: 'accept', label: 'Approve', iconClass: 'flaticon-edit' },
+                    { key: 'bounce', label: 'Bounce', iconClass: 'flaticon-trash' }
                 ],
                 bulkActions: [
+                    {
+                        key: 'accept',
+                        label: 'Approve',
+                        iconClass: 'flaticon-edit'
+                    },
                     {
                         key: 'bounce',
                         label: 'Bounce',
                         iconClass: 'flaticon-trash'
                     },
-                    {
-                        key: 'approve',
-                        label: 'Approve',
-                        iconClass: 'flaticon-trash'
-                    }
                 ],
                 taxes: [{}],
                 buttonTitle: '',
@@ -153,7 +153,7 @@
 
             onActionClick(action, row, index) {
                 switch ( action ) {
-                    case 'approve':
+                    case 'accept':
                         if ( confirm('Are you sure to approve the check?') ) {
                             HTTP.post( 'checks' + '/' + row.trn_no + '/approve' ).then( response => {
                                 this.$swal({

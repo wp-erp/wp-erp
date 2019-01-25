@@ -1320,6 +1320,7 @@ Company'
               `trn_date` date DEFAULT NULL,
               `ledger_id` int(11) DEFAULT NULL,
               `particulars` varchar(255) DEFAULT NULL,
+              `status` int(11) DEFAULT 0,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,
