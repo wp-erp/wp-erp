@@ -113,6 +113,9 @@ function erp_acct_insert_bill( $data ) {
     $data['created_at'] = date("Y-m-d H:i:s");
     $data['created_by'] = $created_by;
 
+    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_by'] = $created_by;
+
     try {
         $wpdb->query( 'START TRANSACTION' );
 
@@ -168,6 +171,7 @@ function erp_acct_insert_bill( $data ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
             'bill_no'     => $voucher_no,
             'trn_no'      => $voucher_no,
+            'trn_date'    => $bill_data['trn_date'],
             'particulars' => $bill_data['remarks'],
             'debit'       => 0,
             'credit'      => $bill_data['amount'],
@@ -325,7 +329,6 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['trn_date']   = isset( $data['trn_date'] ) ? $data['trn_date'] : date("Y-m-d" );
     $bill_data['due_date']   = isset( $data['due_date'] ) ? $data['due_date'] : date("Y-m-d" );
     $bill_data['created_at'] = date("Y-m-d" );
-    $bill_data['address'] = isset( $data['address'] ) ? maybe_serialize( $data['address'] ) : '';
     $bill_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
     $bill_data['due'] = isset( $data['due'] ) ? $data['due'] : 0;
     $bill_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
@@ -353,9 +356,9 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
 function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
     global $wpdb;
 
-    // Insert amount in ledger_details
+    // Insert items amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $bill_data['trn_by_ledger_id'],
+        'ledger_id'   => $item_data['ledger_id'],
         'trn_no'      => $bill_data['voucher_no'],
         'particulars' => $bill_data['remarks'],
         'debit'       => $item_data['amount'],
@@ -367,6 +370,30 @@ function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
         'updated_by'  => $bill_data['updated_by'],
     ) );
 
+}
+
+/**
+ * Insert Expense from account data into ledger
+ *
+ * @param array $bill_data
+ *
+ * @return void
+ */
+function erp_acct_insert_expense_data_into_ledger( $bill_data ) {
+    global $wpdb;
+    // Insert amount in ledger_details
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
+        'ledger_id'   => $bill_data['trn_by_ledger_id'],
+        'trn_no'      => $bill_data['voucher_no'],
+        'particulars' => $bill_data['remarks'],
+        'debit'       => 0,
+        'credit'      => $bill_data['amount'],
+        'trn_date'    => $bill_data['trn_date'],
+        'created_at'  => $bill_data['created_at'],
+        'created_by'  => $bill_data['created_by'],
+        'updated_at'  => $bill_data['updated_at'],
+        'updated_by'  => $bill_data['updated_by'],
+    ) );
 }
 
 /**

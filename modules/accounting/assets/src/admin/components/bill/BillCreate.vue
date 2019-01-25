@@ -147,8 +147,8 @@
                 basic_fields: {
                     user: '',
                     trn_ref: '',
-                    trn_date: '',
-                    due_date: '',
+                    trn_date: erp_acct_var.current_date,
+                    due_date: erp_acct_var.current_date,
                     billing_address: ''
                 },
 
@@ -159,7 +159,7 @@
                 totalAmounts:[],
                 finalTotalAmount: 0,
                 billModal: false,
-                particulars: [],
+                particulars: '',
                 isWorking: false,
                 acct_assets: erp_acct_var.acct_assets
             }
@@ -220,14 +220,15 @@
                 HTTP.post('/bills', {
                     vendor_id: this.basic_fields.user.id,
                     ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.trans_date,
+                    trn_date: this.basic_fields.trn_date,
                     due_date: this.basic_fields.due_date,
                     bill_details: this.formatTrnLines(this.transactionLines),
                     attachments: this.attachments,
+                    billing_address: this.basic_fields.billing_address,
                     type: 'bill',
-                    status: 'awaiting_approval',
+                    status: 2,
                     remarks: this.particulars,
-                    trn_by: this.basic_fields.deposit_to,
+                    // trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({
@@ -260,7 +261,7 @@
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
             },
-            
+
         },
 
         watch: {

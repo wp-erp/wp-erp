@@ -461,12 +461,12 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor_id'       => (int) $item->vendor_id,
             'trn_date'        => $item->trn_date,
             'due_date'        => $item->due_date,
-            'address'         => $item->address,
-//            'bill_details'    => $item->bill_details,
+            'address'         => $item->billing_address,
+            'bill_details'    => $item->bill_details,
             'total'           => (int) $item->amount,
             'due'             => isset( $item->due ) ? $item->due : $item->amount,
             'ref'             => $item->ref,
-            'particulars'     => $item->particulars,
+            'particulars'     => $item->remarks,
             'status'          => $item->status,
             'attachments'     => $item->attachments
         ];

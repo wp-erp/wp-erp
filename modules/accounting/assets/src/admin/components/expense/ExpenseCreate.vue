@@ -170,7 +170,7 @@
                 totalAmounts:[],
                 finalTotalAmount: 0,
                 billModal: false,
-                particulars: [],
+                particulars: '',
                 isWorking: false,
                 acct_assets: erp_acct_var.acct_assets
             }
@@ -245,7 +245,7 @@
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trn_date,
                     trn_by: this.basic_fields.deposit_to.id,
-                    bill_details: this.transactionLines,
+                    bill_details: this.formatTrnLines(this.transactionLines),
                     billing_address: this.basic_fields.billing_address,
                     attachments: this.attachments,
                     type: 'expense',
@@ -297,6 +297,14 @@
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
             },
+
+            formatTrnLines( trl_lines ) {
+                trl_lines.forEach(element => {
+                    element.ledger_id = element.ledger_id.id;
+                });
+
+                return trl_lines;
+            }
 
         },
 
