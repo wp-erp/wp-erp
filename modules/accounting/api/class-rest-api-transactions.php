@@ -29,6 +29,17 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function register_routes() {
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/type/(?P<voucher_no>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_transaction_type' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -117,6 +128,25 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+    }
+
+    /**
+     * Get transactions type
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_transaction_type( $request ) {
+        $voucher_no = ! empty( $request['voucher_no'] ) ? $request['voucher_no'] : 0;
+
+        $voucher_type = erp_acct_get_transaction_type( $voucher_no );
+
+        $response = rest_ensure_response( $voucher_type );
+
+        $response->set_status( 200 );
+
+        return $response;
     }
 
     /**

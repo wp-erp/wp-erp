@@ -81,41 +81,57 @@ function erp_acct_get_invoice( $invoice_no ) {
     invoice.status, 
     invoice.particulars,
     
-    inv_detail.product_id,
-    inv_detail.qty,
-    inv_detail.unit_price,
-    inv_detail.discount,
-    inv_detail.tax,
-    inv_detail.item_total, 
-    inv_detail.tax_percent,
-    
     inv_acc_detail.debit,
-    inv_acc_detail.credit,
-    
-    product.name,
-    product.product_type_id,
-    product.category_id,
-    product.vendor,
-    product.cost_price,
-    product.sale_price
+    inv_acc_detail.credit
     
     FROM {$wpdb->prefix}erp_acct_invoices as invoice
-    LEFT JOIN {$wpdb->prefix}erp_acct_invoice_details as inv_detail ON invoice.voucher_no = inv_detail.trn_no
     LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.trn_no
-    LEFT JOIN {$wpdb->prefix}erp_acct_products as product ON inv_detail.product_id = product.id
     WHERE invoice.voucher_no = {$invoice_no}";
 
-    $rows = $wpdb->get_results( $sql, ARRAY_A );
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    $row['line_items'] = erp_acct_format_invoice_line_items( $invoice_no );
 
     // calculate every line total
-    foreach ( $rows as $key => $row ) {
-        $rows[$key]['line_total'] = ($row['item_total'] + $row['tax']) - $row['discount'];
+    foreach ( $row['line_items'] as $key => $value ) {
+        $total = ($value['item_total'] + $value['tax']) - $value['discount'];
+        $row['line_items'][$key]['line_total'] = $total;
     }
 
-    $rows[0]['attachments'] = unserialize( $rows[0]['attachments'] );
-    $rows[0]['total_due'] = $rows[0]['debit'] - $rows[0]['credit'];
+    $row['attachments'] = unserialize( $row['attachments'] );
+    $row['total_due'] = $row['debit'] - $row['credit'];
 
-    return $rows;
+    return $row;
+}
+
+/**
+ * Get formatted line items
+ */
+function erp_acct_format_invoice_line_items($voucher_no) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT 
+        inv_detail.product_id,
+        inv_detail.qty,
+        inv_detail.unit_price,
+        inv_detail.discount,
+        inv_detail.tax,
+        inv_detail.item_total, 
+        inv_detail.tax_percent,
+
+        product.name,
+        product.product_type_id,
+        product.category_id,
+        product.vendor,
+        product.cost_price,
+        product.sale_price
+
+        FROM wp_erp_acct_invoices as invoice
+        LEFT JOIN wp_erp_acct_invoice_details as inv_detail ON invoice.voucher_no = inv_detail.trn_no
+        LEFT JOIN wp_erp_acct_products as product ON inv_detail.product_id = product.id
+        WHERE invoice.voucher_no = %d", $voucher_no);
+
+    return $wpdb->get_results($sql, ARRAY_A);
 }
 
 /**
@@ -167,6 +183,8 @@ function erp_acct_insert_invoice( $data ) {
             'updated_by'      => $invoice_data['updated_by'],
         ) );
 
+        $invoice_id = $wpdb->insert_id;
+
         $items = $invoice_data['line_items'];
 
         foreach ( $items as $key => $item ) {
@@ -189,8 +207,9 @@ function erp_acct_insert_invoice( $data ) {
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-            'invoice_no'  => $voucher_no,
+            'invoice_no'  => $invoice_id,
             'trn_no'      => $voucher_no,
+            'trn_date'    => $invoice_data['trn_date'],
             'particulars' => '',
             'debit'       => ($invoice_data['amount'] + $invoice_data['tax']) - $invoice_data['discount'],
             'credit'      => 0,
@@ -308,12 +327,12 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data = [];
 
-    // We can pass the name from view... to reduce query load
-    $user_info = erp_get_people( $invoice_data['customer_id'] );
+    // We can pass the name from view... to reduce DB query load
+    $customer = erp_get_people( $data['customer_id'] );
 
     $invoice_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
     $invoice_data['customer_id'] = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
-    $invoice_data['customer_name'] = $user_info->first_name . ' ' . $user_info->last_name;
+    $invoice_data['customer_name'] = $customer->first_name . ' ' . $customer->last_name;
     $invoice_data['trn_date']   = isset( $data['date'] ) ? $data['date'] : date("Y-m-d" );
     $invoice_data['due_date']   = isset( $data['due_date'] ) ? $data['due_date'] : date("Y-m-d" );
     $invoice_data['billing_address'] = isset( $data['billing_address'] ) ? maybe_serialize( $data['billing_address'] ) : '';
@@ -642,4 +661,5 @@ function erp_acct_get_recievables_overview() {
 
     return [ 'data' => $data, 'amount' => $amount ];
 }
+
 

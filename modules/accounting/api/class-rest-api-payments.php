@@ -339,9 +339,10 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
+            'voucher_no'      => (int) $item->voucher_no,
             'customer_id'     => (int) $item->customer_id,
-            'date'            => $item->trn_date,
-            // 'due_date'        => $item->due_date,
+            'customer_name'   => $item->customer_name,
+            'trn_date'        => $item->trn_date,
             'amount'          => $item->amount,
             'billing_address' => $item->billing_address,
             'line_items'      => $item->line_items,
