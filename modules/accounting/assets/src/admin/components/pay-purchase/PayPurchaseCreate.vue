@@ -269,12 +269,12 @@
                 HTTP.post('/pay-purchases', {
                     vendor_id: this.basic_fields.vendor.id,
                     ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.trans_date,
+                    trn_date: this.basic_fields.payment_date,
                     due_date: this.basic_fields.due_date,
                     purchase_details: this.pay_purchases,
                     attachments: this.attachments,
                     type: 'pay_purchase',
-                    status: 'paid',
+                    status: 4,
                     particulars: this.particulars,
                     trn_by: this.basic_fields.deposit_to.id,
                 }).then(res => {

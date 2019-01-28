@@ -93,6 +93,8 @@ function erp_acct_insert_pay_purchase( $data ) {
     $created_by = get_current_user_id();
     $data['created_at'] = date("Y-m-d H:i:s");
     $data['created_by'] = $created_by;
+    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_by'] = $created_by;
     $purchase_no = '';
 
     try {
@@ -114,11 +116,14 @@ function erp_acct_insert_pay_purchase( $data ) {
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_pay_purchase', array(
             'voucher_no'      => $voucher_no,
+            'vendor_id'       => $pay_purchase_data['vendor_id'],
+            'vendor_name'     => $pay_purchase_data['vendor_name'],
             'trn_date'        => $pay_purchase_data['trn_date'],
             'amount'          => $pay_purchase_data['amount'],
             'trn_by'          => $pay_purchase_data['trn_by'],
             'particulars'     => $pay_purchase_data['particulars'],
             'attachments'     => $pay_purchase_data['attachments'],
+            'status'          => $pay_purchase_data['status'],
             'created_at'      => $pay_purchase_data['created_at'],
             'created_by'      => $created_by,
             'updated_at'      => $pay_purchase_data['updated_at'],
@@ -288,15 +293,20 @@ function erp_acct_void_pay_purchase( $id ) {
  * @return mixed
  */
 function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
+    $user_data = erp_get_people($data['vendor_id']);
+
     $pay_purchase_data['voucher_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
     $pay_purchase_data['order_no']         = isset( $data['order_no'] ) ? $data['order_no'] : 1;
     $pay_purchase_data['vendor_id']        = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
+    $pay_purchase_data['vendor_name']      = $user_data->first_name. ' ' .$user_data->last_name;
     $pay_purchase_data['purchase_details'] = isset( $data['purchase_details'] ) ? $data['purchase_details'] : '';
-    $pay_purchase_data['trn_date']         = isset( $data['date'] ) ? $data['date'] : date( "Y-m-d" );
+    $pay_purchase_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
     $pay_purchase_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
     $pay_purchase_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
     $pay_purchase_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $pay_purchase_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
     $pay_purchase_data['particulars']      = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $pay_purchase_data['status']           = isset( $data['status'] ) ? $data['status'] : '';
     $pay_purchase_data['created_at']       = date( "Y-m-d" );
     $pay_purchase_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : get_current_user_id();
     $pay_purchase_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : date( "Y-m-d" );
