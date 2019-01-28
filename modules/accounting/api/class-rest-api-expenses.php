@@ -313,11 +313,14 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
-        if ( isset( $request['vendor_id'] ) ) {
-            $prepared_item['vendor_id'] = $request['vendor_id'];
+        if ( isset( $request['people_id'] ) ) {
+            $prepared_item['people_id'] = $request['people_id'];
         }
         if ( isset( $request['ref'] ) ) {
             $prepared_item['ref'] = $request['ref'];
+        }
+        if ( isset( $request['check_no'] ) ) {
+            $prepared_item['check_no'] = $request['check_no'];
         }
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] =  $request['trn_date'];
@@ -376,17 +379,18 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'vendor_id'       => (int) $item->vendor_id,
+            'people_id'       => (int) $item->people_id,
             'date'            => $item->trn_date,
             'address'         => $item->billing_address,
-            'expense_details'    => $item->expense_details,
+            'expense_details' => $item->expense_details,
             'total'           => (int) $item->amount,
             'ref'             => $item->ref,
             'remarks'         => $item->remarks,
             'status'          => $item->status,
             'attachments'     => $item->attachments,
             'trn_by_ledger_id'=> $item->trn_by,
-            'deposit_to'      => $item->deposit_to
+            'deposit_to'      => $item->deposit_to,
+            'check_no'        => $item->check_no
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -424,7 +428,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'vendor_id'   => [
+                'people_id'   => [
                     'description' => __( 'People id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],

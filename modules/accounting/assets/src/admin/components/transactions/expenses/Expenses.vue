@@ -90,8 +90,9 @@ export default {
     data() {
         return {
             pages: [
-                { namedRoute: 'ExpenseCreate', name: 'Expense' },
-                { namedRoute: 'BillCreate', name: 'Bill' },
+                { namedRoute: 'ExpenseCreate', name: 'Create Expense' },
+                { namedRoute: 'CheckCreate', name: 'Create Check' },
+                { namedRoute: 'BillCreate', name: 'Create Bill' },
                 { namedRoute: 'PayBillCreate', name: 'Pay Bill' },
             ],
         };

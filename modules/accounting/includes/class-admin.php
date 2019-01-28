@@ -81,12 +81,6 @@ class Admin {
             'position'   => 25
         ] );
         erp_add_submenu( 'accounting', 'transactions', [
-            'title'      =>  __( 'Checks', 'erp' ),
-            'capability' => $expense,
-            'slug'       => 'checks',
-            'position'   => 25
-        ] );
-        erp_add_submenu( 'accounting', 'transactions', [
             'title'      =>  __( 'Journals', 'erp' ),
             'capability' => $journal,
             'slug'       => 'journals',
