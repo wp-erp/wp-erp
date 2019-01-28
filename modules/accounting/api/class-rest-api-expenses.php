@@ -184,7 +184,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item_amount = []; $item_tax = []; $item_total = []; $additional_fields = [];
 
-        $items = $request['bill_details'];
+        $items = $request['expense_details'];
 
         foreach ( $items as $key => $item ) {
             $item_amount[$key] = $item['amount'];
@@ -225,7 +225,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item_amount = []; $item_tax = []; $item_total = []; $additional_fields = [];
 
-        $items = $request['bill_details'];
+        $items = $request['expense_details'];
 
         foreach ( $items as $key => $item ) {
             $item_amount[$key] = $item['amount'];
@@ -334,11 +334,14 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = $request['attachments'];
         }
+        if ( isset( $request['deposit_to'] ) ) {
+            $prepared_item['deposit_to'] = $request['deposit_to'];
+        }
         if ( isset( $request['trn_by'] ) ) {
             $prepared_item['trn_by'] = $request['trn_by'];
         }
-        if ( isset( $request['bill_details'] ) ) {
-            $prepared_item['bill_details'] = $request['bill_details'];
+        if ( isset( $request['expense_details'] ) ) {
+            $prepared_item['expense_details'] = $request['expense_details'];
         }
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = $request['billing_address'];
@@ -370,18 +373,20 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
+
         $data = [
             'id'              => (int) $item->id,
             'vendor_id'       => (int) $item->vendor_id,
             'date'            => $item->trn_date,
             'address'         => $item->billing_address,
-            'bill_details'    => $item->bill_details,
+            'expense_details'    => $item->expense_details,
             'total'           => (int) $item->amount,
             'ref'             => $item->ref,
             'remarks'         => $item->remarks,
             'status'          => $item->status,
             'attachments'     => $item->attachments,
             'trn_by_ledger_id'=> $item->trn_by,
+            'deposit_to'      => $item->deposit_to
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -478,7 +483,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                         ],
                     ],
                 ],
-                'bill_details' => [
+                'expense_details' => [
                     'description' => __( 'List of line items data.', 'erp' ),
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
@@ -507,6 +512,22 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'status'       => [
                     'description' => __( 'Status for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'trn_by'       => [
+                    'description' => __( 'Payment method for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'deposit_to'       => [
+                    'description' => __( 'Account for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
