@@ -1306,6 +1306,7 @@ Company'
               `trn_date` date DEFAULT NULL,
               `amount` decimal(10,2) DEFAULT 0,
               `ref` varchar(255) DEFAULT NULL,
+              `check_no` int(11) DEFAULT 0,
               `particulars` varchar(255) DEFAULT NULL,
               `status` varchar(255) DEFAULT NULL,
               `trn_by` int(11) DEFAULT NULL,

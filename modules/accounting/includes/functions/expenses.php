@@ -127,6 +127,7 @@ function erp_acct_insert_expense( $data ) {
             'trn_date'        => $expense_data['trn_date'],
             'amount'          => $expense_data['amount'],
             'ref'             => $expense_data['ref'],
+            'check_no'        => $expense_data['check_no'],
             'particulars'     => $expense_data['particulars'],
             'status'          => $expense_data['status'],
             'trn_by'          => $expense_data['trn_by'],
@@ -157,6 +158,8 @@ function erp_acct_insert_expense( $data ) {
 
         //Insert into Ledger for source account
         erp_acct_insert_source_expense_data_into_ledger( $expense_data );
+
+        erp_acct_insert_people_trn_data( $expense_data, $expense_data['people_id'], 'debit' );
 
         $wpdb->query( 'COMMIT' );
 
@@ -196,6 +199,7 @@ function erp_acct_update_expense( $data, $expense_id ) {
             'trn_date'        => $expense_data['trn_date'],
             'amount'          => $expense_data['amount'],
             'ref'             => $expense_data['ref'],
+            'check_no'        => $expense_data['check_no'],
             'particulars'     => $expense_data['particulars'],
             'status'          => $expense_data['status'],
             'trn_by'          => $expense_data['trn_by'],
@@ -297,6 +301,7 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
     $expense_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $expense_data['ref'] = isset( $data['ref'] ) ? $data['ref'] : '';
+    $expense_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : 0;
     $expense_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $expense_data['expense_details'] = isset( $data['expense_details'] ) ? $data['expense_details'] : '';
     $expense_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
