@@ -21,30 +21,39 @@
                 @pagination="goToPage"
                 :actions="actions"
                 @action:click="onActionClick">
-                <template slot="trn_date" slot-scope="data">
+                <template slot="trn_no" slot-scope="data">
                     <strong v-if="isPayment(data.row)">
-                        {{ data.row.payment_trn_date }}
+                        #{{ data.row.id }}
                     </strong>
                     <strong v-else>
-                        <router-link :to="{ name: 'SalesReport', params: { id: data.row.id }}">
-                            {{ data.row.invoice_tran_date }}
+                        <router-link :to="{ name: 'PurchaseReport', params: { id: data.row.id }}">
+                            #{{ data.row.id }}
                         </router-link>
                     </strong>
                 </template>
                 <template slot="type" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Payment' : 'Invoice' }}
+                    {{ isPayment(data.row) ? 'Pay Purchase' : 'Purchase Order' }}
+                </template>
+                <template slot="ref" slot-scope="data">
+                    {{ data.row.ref ? data.row.ref : '-' }}
+                </template>
+                <template slot="customer_name" slot-scope="data">
+                    {{ isPayment(data.row) ? data.row.pay_bill_vendor_name : data.row.vendor_name }}
+                </template>
+                <template slot="trn_date" slot-scope="data">
+                    {{ isPayment(data.row) ? data.row.pay_bill_trn_date : data.row.bill_trn_date }}
                 </template>
                 <template slot="due_date" slot-scope="data">
                     {{ isPayment(data.row) ? '-' : data.row.due_date }}
                 </template>
                 <template slot="due" slot-scope="data">
-                    {{ isPayment(data.row) ? '-' : formatAmount(data.row.sales_amount - data.row.payment_amount) }}
+                    {{ isPayment(data.row) ? '-' : formatAmount(data.row.due) }}
                 </template>
                 <template slot="amount" slot-scope="data">
-                    {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount) }}
+                    {{ isPayment(data.row) ? formatAmount(data.row.pay_bill_amount) : formatAmount(data.row.amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
-                    {{ data.row.status }}
+                    {{ isPayment(data.row) ? 'Paid' : data.row.status }}
                 </template>
 
             </list-table>
@@ -58,7 +67,7 @@
     import ListTable from 'admin/components/list-table/ListTable.vue';
 
     export default {
-        name: 'SalesList',
+        name: 'PurchaseList',
 
         components: {
             ListTable,
@@ -67,10 +76,11 @@
         data() {
             return {
                 columns: {
-                    'trn_date':      {label: 'Date'},
+                    'trn_no':        {label: 'Voucher No.'},
                     'type':          {label: 'Type'},
                     'ref':           {label: 'Ref'},
                     'customer_name': {label: 'Customer'},
+                    'trn_date':      {label: 'Trn Date'},
                     'due_date':      {label: 'Due Date'},
                     'due':           {label: 'Due'},
                     'amount':        {label: 'Total'},
@@ -142,9 +152,9 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete('invoices/' + row.id).then( response => {
-                                this.$delete(this.rows, index);
-                            });
+                            // HTTP.delete('purchases/' + row.id).then( response => {
+                            //     this.$delete(this.rows, index);
+                            // });
                         }
                         break;
 
@@ -170,7 +180,7 @@
             },
 
             isPayment(row) {
-                return row.type === 'payment' ? true : false;
+                return row.type === 'pay_purchase' ? true : false;
             }
         },
 
