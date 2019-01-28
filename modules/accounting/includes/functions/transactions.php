@@ -266,11 +266,14 @@ function erp_acct_get_expense_chart_status( $args = [] ) {
         $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
 
-    $sql = "SELECT COUNT(bill.status) AS sub_total, status_type.type_name
+    $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
             FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
             LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.status = status_type.id {$where} 
-            GROUP BY status_type.id ORDER BY status_type.type_name ASC";
+            GROUP BY status_type.id 
+            HAVING sub_total > 0
+            ORDER BY status_type.type_name ASC";
 
     $result =  $wpdb->get_results($sql, ARRAY_A);
+
     return $result;
 }

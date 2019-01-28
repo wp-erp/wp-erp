@@ -79,9 +79,11 @@
                             callbacks: {
                                 label: function(tooltipItem, data) {
                                     var total = 0;
+
                                     data.datasets[tooltipItem.datasetIndex].data.forEach(function(element /*, index, array*/ ) {
-                                        total += element;
+                                        total += parseFloat(element);
                                     });
+
                                     var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                                     var percentTxt = Math.round(value / total * 100);
                                     return data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + ' (' + percentTxt + '%)';
@@ -107,7 +109,7 @@
             }
         },
 
-        created() {            
+        created() {
             this.makeChart();
         }
     }
