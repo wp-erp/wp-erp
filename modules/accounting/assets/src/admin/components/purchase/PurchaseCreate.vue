@@ -244,7 +244,7 @@
                     return;
                 }
 
-                this.isWorking = true;                
+                this.isWorking = true;
 
                 HTTP.post('/purchases', {
                     vendor_id: this.basic_fields.customer.id,
@@ -255,10 +255,10 @@
                     line_items: this.formatLineItems(),
                     attachments: this.attachments,
                     type: 'purchase',
-                    status: 'awaiting_payment',
-                    trn_by: 'cash',
-                    ref : ' ',
-                    particulars: ''
+                    status: 3,
+                    // trn_by: 'cash',
+                    // ref : ' ',
+                    // particulars: ''
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({
