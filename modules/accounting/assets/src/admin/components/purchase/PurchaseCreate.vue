@@ -171,7 +171,14 @@
         },
 
         methods: {
+
+            resetData() {
+                Object.assign(this.$data, this.$options.data.call(this));
+                this.getProducts();
+            },
+
             getProducts() {
+                this.products = [];
                 HTTP.get('/products').then((response) => {
                     response.data.forEach(element => {
                         this.products.push({
@@ -184,6 +191,9 @@
             },
 
             getCustomerAddress() {
+                if ( ! this.basic_fields.customer.hasOwnProperty('id') ){
+                    return;
+                }
                 let customer_id = this.basic_fields.customer.id;
 
                 HTTP.get(`/vendors/${customer_id}`).then((response) => {
@@ -244,7 +254,7 @@
                     return;
                 }
 
-                this.isWorking = true;                
+                this.isWorking = true;
 
                 HTTP.post('/purchases', {
                     vendor_id: this.basic_fields.customer.id,
@@ -255,12 +265,11 @@
                     line_items: this.formatLineItems(),
                     attachments: this.attachments,
                     type: 'purchase',
-                    status: 'awaiting_payment',
-                    trn_by: 'cash',
-                    ref : ' ',
-                    particulars: ''
+                    status: 3,
+                    // trn_by: 'cash',
+                    // ref : ' ',
+                    // particulars: ''
                 }).then(res => {
-                    console.log(res.data);
                     this.$swal({
                         position: 'center',
                         type: 'success',
@@ -270,7 +279,8 @@
                     });
                 }).then(() => {
                     this.isWorking = false;
-                    this.$router.go();
+                    this.resetData();
+
                 });
 
             },

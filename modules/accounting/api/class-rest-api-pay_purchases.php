@@ -326,11 +326,11 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'voucher_no'      => (int) $item->voucher_no,
+            'voucher_no'      => isset( $item->voucher_no ) ? (int) $item->voucher_no : '',
             'vendor_id'       => (int) $item->vendor_id,
             'trn_date'        => $item->trn_date,
             'trn_by'          => $item->trn_by,
-            'line_items'      => $item->line_items,
+            'line_items'      => isset( $item->line_items ) ? $item->line_items : [],
             'purchase_details'=> $item->purchase_details,
             'amount'          => (int) $item->amount,
             'ref'             => $item->ref,

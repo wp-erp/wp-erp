@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Bill</h2>
+                    <h2 class="content-header__title">Check</h2>
                 </div>
             </div>
         </div>
@@ -15,33 +15,33 @@
             <div class="wperp-panel-body">
                 <form action="" class="wperp-form" method="post">
                     <div class="wperp-row">
-                        <div class="wperp-col-sm-3">
+                        <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <select-people v-model="basic_fields.user"></select-people>
+                                <select-people v-model="basic_fields.people"></select-people>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-3">
+                        <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Reference<span class="wperp-required-sign">*</span></label>
-                                <input type="text" v-model="basic_fields.trn_ref"/>
+                                <label>Check No<span class="wperp-required-sign">*</span></label>
+                                <input type="text" v-model="basic_fields.check_no"/>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-3">
+                        <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Bill Date<span class="wperp-required-sign">*</span></label>
+                                <label>Payment Date<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.trn_date"></datepicker>
                             </div>
+
                         </div>
-                        <div class="wperp-col-sm-3">
-                            <div class="wperp-form-group">
-                                <label>Due Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.due_date"></datepicker>
-                            </div>
-                        </div>
-                        <div class="wperp-col-xs-12">
+                        <div class="wperp-col-sm-4">
                             <label>Billing Address</label>
                             <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
+                        <div class="wperp-col-sm-4 with-multiselect">
+                            <label>From Account</label>
+                            <multi-select v-model="basic_fields.deposit_to" :options="bank_accounts"></multi-select>
+                        </div>
+
                     </div>
                 </form>
 
@@ -65,7 +65,7 @@
                     <tbody>
                     <tr :key="key" v-for="(line,key) in transactionLines">
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
-                        <td class="col--account"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
+                        <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
                         <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
                         <td class="col--amount" data-colname="Amount">
                             <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
@@ -108,7 +108,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Add New Bill" @click.native="SubmitForBill" :working="isWorking"></submit-button>
+                            <submit-button text="Add New Check" @click.native="SubmitForCheck" :working="isWorking"></submit-button>
                         </td>
                     </tr>
                     </tfoot>
@@ -124,20 +124,20 @@
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import BillModal from 'admin/components/bill/BillModal.vue'
     import SelectPeople from 'admin/components/people/SelectPeople.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
 
 
     export default {
-        name: 'BillCreate',
+        name: 'CheckCreate',
 
         components: {
+            SelectAccounts,
             HTTP,
             Datepicker,
             MultiSelect,
             FileUpload,
-            BillModal,
             SubmitButton,
             SelectPeople
         },
@@ -145,16 +145,24 @@
         data() {
             return {
                 basic_fields: {
-                    user: '',
-                    trn_ref: '',
+                    people: '',
+                    check_no: '',
                     trn_date: erp_acct_var.current_date,
-                    due_date: erp_acct_var.current_date,
+                    deposit_to: '',
+                    trn_by: '',
                     billing_address: ''
+                },
+
+                check_data: {
+                    payer_name: '',
+                    check_no: ''
                 },
 
                 transactionLines: [{}],
                 selected:[],
                 ledgers: [],
+                bank_accounts: [],
+                pay_methods: [],
                 attachments: [],
                 totalAmounts:[],
                 finalTotalAmount: 0,
@@ -167,37 +175,48 @@
 
         created() {
             this.getLedgers();
+            this.getBankAccounts();
 
-            this.$on('remove-row', index => {
+            this.$root.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
             });
 
-            this.$root.$on('bill-modal-close', () => {
-                this.billModal = false;
-            });
         },
 
         methods: {
             getLedgers() {
-                HTTP.get(`/ledgers`).then((response) => {
-                   response.data.forEach(element => {
-                       this.ledgers.push({
-                           id: element.id,
-                           name: element.name
-                       });
-                   });
+                HTTP.get('ledgers').then((response) => {
+                    response.data.forEach(element => {
+                        this.ledgers.push({
+                            id: element.id,
+                            name: element.name
+                        });
+                    });
                 });
             },
 
-            getPeopleAddress() {
-                let people_id = this.basic_fields.user.id;
+            getBankAccounts() {
+                HTTP.get('/accounts/bank-accounts').then((response) => {
+                    response.data.forEach(element => {
+                        this.bank_accounts.push({
+                            id: element.id,
+                            name: element.name
+                        });
+                    });
+                });
+            },
 
-                HTTP.get(`/customers/${people_id}`).then((response) => {
+            setCheckFields( check_data ) {
+                this.check_data = check_data;
+            },
+
+            getPeopleAddress() {
+                let user_id = this.basic_fields.people.id;
+
+                HTTP.get(`/people/${user_id}/address`).then((response) => {
                     // add more info
-                    this.basic_fields.billing_address =
-                        `Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
-                        City: ${response.data.billing.city}, Country: ${response.data.billing.country}`;
+                    this.basic_fields.billing_address = response.data;
                 });
             },
 
@@ -216,32 +235,62 @@
             },
 
 
-            SubmitForBill() {
-                HTTP.post('/bills', {
-                    vendor_id: this.basic_fields.user.id,
-                    ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.trn_date,
-                    due_date: this.basic_fields.due_date,
-                    bill_details: this.formatTrnLines(this.transactionLines),
-                    attachments: this.attachments,
-                    billing_address: this.basic_fields.billing_address,
-                    type: 'bill',
-                    status: 2,
-                    remarks: this.particulars,
-                    // trn_by: this.basic_fields.deposit_to,
-                }).then(res => {
-                    console.log(res.data);
+            SubmitForCheck() {
+                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
                     this.$swal({
-                        position: 'top-end',
-                        type: 'success',
-                        title: 'Bill Created!',
+                        position: 'center',
+                        type: 'info',
+                        title: 'Please Select an Account',
                         showConfirmButton: false,
                         timer: 1500
                     });
-                }).then(() => {
+
+                    return;
+                }
+
+                HTTP.post('/expenses', {
+                    people_id: this.basic_fields.people.id,
+                    check_no: this.basic_fields.check_no,
+                    trn_date: this.basic_fields.trn_date,
+                    trn_by: this.basic_fields.trn_by.id,
+                    expense_details: this.formatTrnLines(this.transactionLines),
+                    deposit_to: this.basic_fields.deposit_to.id,
+                    billing_address: this.basic_fields.billing_address,
+                    attachments: this.attachments,
+                    type: 'check',
+                    status: 4,
+                    remarks: this.particulars,
+                }).then(res => {
+                    console.log(res.data);
+                    this.$swal({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Check Created!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }).catch( error => {
+                    this.$swal({
+                        position: 'center',
+                        type: 'error',
+                        title: 'Something went Wrong!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } )
+                .then(() => {
                     this.resetData();
                     this.isWorking = false;
                 });
+            },
+
+            resetData() {
+                Object.assign(this.$data, this.$options.data.call(this));
+            },
+
+            removeRow(index) {
+                this.$delete(this.transactionLines, index);
+                this.updateFinalAmount();
             },
 
             formatTrnLines( trl_lines ) {
@@ -250,17 +299,7 @@
                 });
 
                 return trl_lines;
-            },
-
-            resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
-                this.basic_fields.user = '';
-            },
-
-            removeRow(index) {
-                this.$delete(this.transactionLines, index);
-                this.updateFinalAmount();
-            },
+            }
 
         },
 
@@ -269,7 +308,7 @@
                 this.finalTotalAmount = newval;
             },
 
-            'basic_fields.user'() {
+            'basic_fields.people'() {
                 this.getPeopleAddress();
             }
         },

@@ -33,7 +33,7 @@ import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import RecPaymentModal   from 'admin/components/rec-payment/RecPaymentModal.vue';
 import NewTaxRate        from 'admin/components/tax/NewTaxRate.vue';
-import ChecksList        from 'admin/components/check/ChecksList.vue';
+import CheckCreate       from 'admin/components/check/CheckCreate.vue';
 
 Vue.use(Router)
 
@@ -341,22 +341,6 @@ export default new Router({
             ]
         },
         {
-            path: '/checks',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'ChecksList',
-                    component: ChecksList,
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateChecksList',
-                    component: ChecksList,
-                },
-            ]
-        },
-        {
             path: '/transfer/new',
             name: 'Transfer',
             component: Transfer
@@ -365,6 +349,11 @@ export default new Router({
             path: '/expenses/new',
             name: 'ExpenseCreate',
             component: ExpenseCreate
+        },
+        {
+            path: '/checks/new',
+            name: 'CheckCreate',
+            component: CheckCreate
         },
         {
             path: '/pay-tax',

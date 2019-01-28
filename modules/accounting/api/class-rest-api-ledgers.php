@@ -163,11 +163,11 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_chart_of_accounts (`name`) VALUES ('Asset'), ('Liability'), ('Income'), ('Expense'), ('Equity'), ('Asset & Liability'), ('Bank')");
 
         $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_ledgers (`chart_id`, `category_id`, `name`, `slug`, `code`, `system`) VALUES
-        (1,	NULL, 'Chair', NULL, 200, NULL),
+        (3,	NULL, 'Chair', NULL, 200, NULL),
         (3, 3, 'Salary', NULL, 202, NULL),
         (7, 2, 'Cash In Hand', 'cash_hand', 300, 1),
         (7, NULL, 'Cash At Bank', 'cash_bank', 205, NULL),
-        (4, NULL, 'Sales', 'sales', 208, 1),
+        (3, NULL, 'Sales', 'sales', 208, 1),
         (5, NULL, 'Managing Director', NULL, 299, 1),
         (6, NULL, 'Sales Tax', 'sales_tax', 287, 1),
         (3, 4, 'Sales Discount', 'sales_discount', 103, 1),
@@ -178,7 +178,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         (1, NULL, 'Trade Notes Receivable', NULL, 987, NULL),
         (2, NULL, 'Unbilled Cost & Fees', NULL, 553, 1),
         (1, NULL, 'Machinery & Equipment', NULL, 473, 1),
-        (1, 7, 'Computer Equipment', NULL, 763, 1),
+        (3, 7, 'Computer Equipment', NULL, 763, 1),
         (3, NULL, 'Furniture & Fixtures', NULL, 394, NULL),
         (2, NULL, 'DEPR Vehicles', NULL, 229, NULL),
         (7, NULL, 'Organization Costs', NULL, 837, 1)");
@@ -431,14 +431,14 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
     /**
      * Get chart of accounts
-     * 
+     *
      * @param WP_REST_REQUEST $request
-     * 
+     *
      * @return WP_ERROR|WP_REST_REQUEST
      */
     public function get_chart_accounts( $request ) {
         $accounts  = erp_acct_get_all_charts( $request );
-        
+
         $response = rest_ensure_response( $accounts );
 
         $response->set_status( 200 );
@@ -448,9 +448,9 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
     /**
      * Get ledger categories
-     * 
+     *
      * @param WP_REST_REQUEST $request
-     * 
+     *
      * @return WP_ERROR|WP_REST_REQUEST
      */
     public function get_ledger_categories( $request ) {
@@ -465,9 +465,9 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
     /**
      * Create ledger categories
-     * 
+     *
      * @param WP_REST_REQUEST $request
-     * 
+     *
      * @return WP_ERROR|WP_REST_REQUEST
      */
     public function create_ledger_category( $request ) {
@@ -486,9 +486,9 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
     /**
      * Update ledger categories
-     * 
+     *
      * @param WP_REST_REQUEST $request
-     * 
+     *
      * @return WP_ERROR|WP_REST_REQUEST
      */
     public function update_ledger_category( $request ) {
