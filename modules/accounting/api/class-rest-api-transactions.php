@@ -128,6 +128,28 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/purchase/chart-purchase', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_purchase_chart_data' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/purchase/chart-status', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_purchase_chart_status' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -296,6 +318,50 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, $total_items );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get Purchase chart stauts data
+     *
+     * @param $request
+     *
+     * @return mixed|WP_REST_Response
+     */
+    public function get_purchase_chart_data( $request ) {
+        $args = [
+            'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+        ];
+
+        $chart_payment = erp_acct_get_purchase_chart_data($args);
+
+        $response = rest_ensure_response( $chart_payment );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get Purchase Chart status
+     *
+     * @param $request
+     *
+     * @return mixed|WP_REST_Response
+     */
+    public function get_purchase_chart_status( $request ) {
+        $args = [
+            'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+        ];
+
+        $chart_status = erp_acct_get_purchase_chart_status($args);
+
+        $response = rest_ensure_response( $chart_status );
 
         $response->set_status( 200 );
 
