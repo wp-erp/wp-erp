@@ -77,6 +77,17 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/bank-accounts', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_bank_accounts' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_bank_transfer' );
+                },
+            ],
+        ] );
     }
 
     /**
@@ -213,6 +224,30 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
+
+    /**
+     * Get a collection of bank accounts
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_bank_accounts( $request ) {
+        $items = erp_acct_get_banks();
+
+        foreach ( $items as $item ) {
+            $additional_fields = [];
+
+            $data = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, 0 );
+
+        return $response;
+    }
+
     /**
      * Prepare a single item for create or update
      *
@@ -270,6 +305,13 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
+    /**
+     * @param $item
+     * @param $request
+     * @param $additional_fields
+     * @param $accounts
+     * @return mixed|WP_REST_Response
+     */
     public function prepare_list_item_for_response(  $item, $request, $additional_fields, $accounts ){
         $item = (object) $item;
 
@@ -297,6 +339,22 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
+
+    /**
+     * @param $item
+     * @param $request
+     * @param $additional_fields
+     * @return mixed|WP_REST_Response
+     */
+    public function prepare_bank_item_for_response(  $item, $request, $additional_fields ){
+        $data = array_merge( $item, $additional_fields );
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        return $response;
+    }
+
     /**
      * Get the User's schema, conforming to JSON Schema
      *
