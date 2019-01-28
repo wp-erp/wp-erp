@@ -42,7 +42,7 @@
             getPeople(query) {
                 let response = {};
 
-                HTTP.get('/customers', {
+                HTTP.get('/people', {
                     params: {
                         search: query
                     }

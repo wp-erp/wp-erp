@@ -128,6 +128,17 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/payment-methods', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_payment_methods' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -301,6 +312,23 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
+
+    /**
+     * Return available payment methods
+     *
+     * @return array
+     */
+    public function get_payment_methods() {
+        global $wpdb;
+
+        $sql = "SELECT id, name
+            FROM {$wpdb->prefix}erp_acct_payment_methods";
+
+        $row = $wpdb->get_results( $sql, ARRAY_A );
+
+        return $row;
+    }
+
     /**
      * Prepare a single user output for response
      *
