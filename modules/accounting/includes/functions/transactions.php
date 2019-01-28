@@ -271,6 +271,16 @@ function erp_acct_get_expense_chart_status( $args = [] ) {
             LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.status = status_type.id {$where} 
             GROUP BY status_type.id ORDER BY status_type.type_name ASC";
 
-    $result =  $wpdb->get_results($sql, ARRAY_A);
-    return $result;
+    return $wpdb->get_results($sql, ARRAY_A);
+}
+
+/**
+ * Get voucher type by id
+ */
+function erp_acct_get_transaction_type($voucher_no) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT type FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = %d", $voucher_no);
+
+    return $wpdb->get_var($sql);
 }

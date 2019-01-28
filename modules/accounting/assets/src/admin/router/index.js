@@ -21,7 +21,7 @@ import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
 import JournalModal      from 'admin/components/journal/JournalModal.vue';
 import Transfer          from 'admin/components/transfers/Transfer.vue';
 import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
-import SalesReport       from 'admin/components/reports/SalesReport.vue';
+import SalesSingle       from 'admin/components/transactions/sales/SalesSingle.vue';
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
 import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
 import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
@@ -138,8 +138,8 @@ export default new Router({
                         },
                         {
                             path: ':id',
-                            name: 'SalesReport',
-                            component: SalesReport,
+                            name: 'SalesSingle',
+                            component: SalesSingle,
                         },
                     ]
                 },
