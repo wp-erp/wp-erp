@@ -49,7 +49,7 @@
                 }).then(response => {
                     this.options = [];
 
-                    response.forEach(item => {
+                    response.data.forEach(item => {
                         this.options.push({
                             id: item.id,
                             name: item.first_name + ' ' + item.last_name
