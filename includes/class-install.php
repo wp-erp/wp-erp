@@ -1297,9 +1297,21 @@ Company'
             ) $collate;",
 
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_check_trn_tables` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_expenses` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
-              `name` varchar(255) DEFAULT NULL,
+              `voucher_no` int(11) DEFAULT NULL,
+              `people_id` int(11) DEFAULT NULL,
+              `people_name` varchar(255) DEFAULT NULL,
+              `address` varchar(255) DEFAULT NULL,
+              `trn_date` date DEFAULT NULL,
+              `amount` decimal(10,2) DEFAULT 0,
+              `ref` varchar(255) DEFAULT NULL,
+              `check_no` int(11) DEFAULT 0,
+              `particulars` varchar(255) DEFAULT NULL,
+              `status` varchar(255) DEFAULT NULL,
+              `trn_by` int(11) DEFAULT NULL,
+              `trn_by_ledger_id` int(11) DEFAULT NULL,
+              `attachments` varchar(255) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,
@@ -1308,31 +1320,11 @@ Company'
             ) $collate;",
 
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_checks` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_expense_details` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
               `trn_no` int(11) DEFAULT NULL,
-              `check_trn_table_id` int(11) DEFAULT NULL,
-              `people_name` varchar(255) DEFAULT NULL,
-              `payee_id` int(11) DEFAULT NULL,
-              `payee_name` varchar(255) DEFAULT NULL,
-              `debit` decimal(10,2) DEFAULT 0,
-              `credit` decimal(10,2) DEFAULT 0,
-              `trn_date` date DEFAULT NULL,
               `ledger_id` int(11) DEFAULT NULL,
               `particulars` varchar(255) DEFAULT NULL,
-              `status` int(11) DEFAULT 0,
-              `created_at` date DEFAULT NULL,
-              `created_by` varchar(50) DEFAULT NULL,
-              `updated_at` date DEFAULT NULL,
-              `updated_by` varchar(50) DEFAULT NULL,
-              PRIMARY KEY (`id`)
-            ) $collate;",
-
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_check_details` (
-              `id` int(11) NOT NULL AUTO_INCREMENT,
-              `invoice_no` int(11) DEFAULT NULL,
-              `check_id` int(11) DEFAULT NULL,
               `amount` decimal(10,2) DEFAULT 0,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
@@ -1342,12 +1334,13 @@ Company'
             ) $collate;",
 
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_check_transactions` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_expense_checks` (
               `id` int(11) NOT NULL AUTO_INCREMENT,
-              `voucher_no` int(11) DEFAULT NULL,
               `trn_no` int(11) DEFAULT NULL,
-              `trn_date` date DEFAULT NULL,
-              `status` varchar(255) DEFAULT NULL,
+              `check_no` int(11) DEFAULT NULL,
+              `amount` decimal(10,2) DEFAULT 0,
+              `name` varchar(255) DEFAULT NULL,
+              `pay_to` varchar(255) DEFAULT NULL,
               `created_at` date DEFAULT NULL,
               `created_by` varchar(50) DEFAULT NULL,
               `updated_at` date DEFAULT NULL,
@@ -1381,12 +1374,12 @@ Company'
         }
 
         $product_types = "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`)
-                    VALUES (1,'product'), (2,'service');";
+                    VALUES (1,'Product'), (2,'Service');";
 
         $wpdb->query( $product_types );
 
         $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_acct_payment_methods` (`id`, `name`)
-                    VALUES (1,'cash'), (2,'bank'), (3,'check');" );
+                    VALUES (1,'Cash'), (2,'Bank'), (3,'Check');" );
 
         $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_acct_trn_status_types` (`id`, `type_name`)
                     VALUES (1,'draft'), (2,'awaiting_approval'), (3,'awaiting_payment'), (4,'paid'), (5,'partially_paid'), (6,'approved'), (7,'bounced');" );
