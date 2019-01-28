@@ -372,29 +372,6 @@ function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
 
 }
 
-/**
- * Insert Expense from account data into ledger
- *
- * @param array $bill_data
- *
- * @return void
- */
-function erp_acct_insert_expense_data_into_ledger( $bill_data ) {
-    global $wpdb;
-    // Insert amount in ledger_details
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $bill_data['trn_by_ledger_id'],
-        'trn_no'      => $bill_data['voucher_no'],
-        'particulars' => $bill_data['remarks'],
-        'debit'       => 0,
-        'credit'      => $bill_data['amount'],
-        'trn_date'    => $bill_data['trn_date'],
-        'created_at'  => $bill_data['created_at'],
-        'created_by'  => $bill_data['created_by'],
-        'updated_at'  => $bill_data['updated_at'],
-        'updated_by'  => $bill_data['updated_by'],
-    ) );
-}
 
 /**
  * Update bill/s data into ledger
