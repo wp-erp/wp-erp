@@ -4,13 +4,13 @@
             <div class="wperp-panel-body">
                 <div class="wperp-row">
                     <div class="wperp-col-sm-4">
-                        <pie-chart v-if="chartPayment.values.length"
+                        <pie-chart v-if="chartPurchase.values.length"
                                    id="payment"
                                    title="Payment"
                                    :sign="getCurrencySign()"
-                                   :labels="chartPayment.labels"
-                                   :colors="chartPayment.colors"
-                                   :data="chartPayment.values" />
+                                   :labels="chartPurchase.labels"
+                                   :colors="chartPurchase.colors"
+                                   :data="chartPurchase.values" />
                     </div>
                     <div class="wperp-col-sm-4">
                         <pie-chart v-if="chartStatus.values.length"
@@ -24,7 +24,7 @@
                     <div class="wperp-col-sm-4">
                         <div class="wperp-chart-block">
                             <h3>Outstanding</h3>
-                            <div class="wperp-total"><h2>{{ formatAmount(chartPayment.outstanding) }}</h2></div>
+                            <div class="wperp-total"><h2>{{ formatAmount(chartPurchase.outstanding) }}</h2></div>
                         </div>
                     </div>
                 </div>
@@ -38,10 +38,10 @@
     import PieChart from 'admin/components/chart/PieChart.vue'
 
     export default {
-        name: 'SalesStats',
+        name: 'PurchaseStats',
 
         components: {
-            PieChart
+            PieChart, HTTP
         },
 
         data() {
@@ -51,9 +51,9 @@
                     labels: [],
                     values: []
                 },
-                chartPayment: {
+                chartPurchase: {
                     colors: ['#40c4ff', '#e91e63'],
-                    labels: ['Received', 'Outstanding'],
+                    labels: ['Paid', 'Payable'],
                     values: [],
                     outstanding: 0
                 },
@@ -62,7 +62,7 @@
 
         created() {
             this.$root.$on('transactions-filter', filters => {
-                this.getSalesChartData(filters);
+                this.getChartData(filters);
             });
 
             let filters = {};
@@ -72,37 +72,37 @@
                 filters.end_date = this.$route.query.end;
             }
 
-            this.getSalesChartData(filters);
+            this.getChartData(filters);
         },
 
         watch: {
-            '$route': 'getSalesChartData'
+            '$route': 'getChartData'
         },
 
         methods: {
-            getSalesChartData(filters = {}) {
-                HTTP.get('/transactions/sales/chart-payment', {
+            getChartData(filters = {}) {
+                HTTP.get('/transactions/purchase/chart-purchase', {
                     params: {
                         start_date: filters.start_date,
                         end_date: filters.end_date
                     }
                 }).then( response => {
-                    this.chartPayment.outstanding = response.data.outstanding;
+                    this.chartPurchase.outstanding = response.data.payable;
 
-                    this.chartPayment.values.push(
-                        response.data.received,
-                        response.data.outstanding
+                    this.chartPurchase.values.push(
+                        response.data.paid,
+                        response.data.payable,
                     );
                 });
 
-                HTTP.get('/transactions/sales/chart-status', {
+                HTTP.get('/transactions/purchase/chart-status', {
                     params: {
                         start_date: filters.start_date,
                         end_date: filters.end_date
                     }
                 }).then( response => {
                     response.data.forEach(element => {
-                        this.chartStatus.labels.push(element.invoice_type)
+                        this.chartStatus.labels.push(element.type_name)
                         this.chartStatus.values.push(element.sub_total)
                     });
                 });

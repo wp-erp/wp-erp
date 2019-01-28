@@ -108,6 +108,8 @@ function erp_acct_insert_purchase( $data ) {
     $created_by = get_current_user_id();
     $data['created_at'] = date("Y-m-d H:i:s");
     $data['created_by'] = $created_by;
+    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_by'] = $created_by;
     $voucher_no = 0;
 
     try {
@@ -314,14 +316,14 @@ function erp_acct_void_purchase( $id ) {
 function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
     $user_info = erp_get_people( $data['vendor_id'] );
 
-    $purchase_data['voucher_no']  = isset( $data['voucher_no'] ) ? $data['voucher_no'] : 1;
-    $purchase_data['vendor_id']   = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
+    $purchase_data['voucher_no']  = isset( $data['voucher_no'] ) ? $data['voucher_no'] : $voucher_no;
+    $purchase_data['vendor_id']   = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 0;
     $purchase_data['vendor_name'] = $user_info->first_name . ' ' . $user_info->last_name;
-    $purchase_data['trn_date']    = isset( $data['date'] ) ? $data['date'] : date( "Y-m-d" );
+    $purchase_data['trn_date']    = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
     $purchase_data['due_date']    = isset( $data['due_date'] ) ? $data['due_date'] : date( "Y-m-d" );
-    $purchase_data['amount']      = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $purchase_data['amount']      = isset( $data['amount'] ) ? floatval( $data['amount'] ) : 0;
     $purchase_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $purchase_data['status']      = isset( $data['status'] ) ? $data['status'] : '';
+    $purchase_data['status']      = isset( $data['status'] ) ? intval( $data['status'] ) : '';
     $purchase_data['ref']         = isset( $data['ref'] ) ? $data['ref'] : '';
     $purchase_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $purchase_data['created_at']  = date( "Y-m-d" );
