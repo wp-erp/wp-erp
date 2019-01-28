@@ -1296,65 +1296,6 @@ Company'
               PRIMARY KEY (`id`)
             ) $collate;",
 
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_check_trn_tables` (
-              `id` int(11) NOT NULL AUTO_INCREMENT,
-              `name` varchar(255) DEFAULT NULL,
-              `created_at` date DEFAULT NULL,
-              `created_by` varchar(50) DEFAULT NULL,
-              `updated_at` date DEFAULT NULL,
-              `updated_by` varchar(50) DEFAULT NULL,
-              PRIMARY KEY (`id`)
-            ) $collate;",
-
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_checks` (
-              `id` int(11) NOT NULL AUTO_INCREMENT,
-              `trn_no` int(11) DEFAULT NULL,
-              `check_trn_table_id` int(11) DEFAULT NULL,
-              `people_name` varchar(255) DEFAULT NULL,
-              `payee_id` int(11) DEFAULT NULL,
-              `payee_name` varchar(255) DEFAULT NULL,
-              `debit` decimal(10,2) DEFAULT 0,
-              `credit` decimal(10,2) DEFAULT 0,
-              `trn_date` date DEFAULT NULL,
-              `ledger_id` int(11) DEFAULT NULL,
-              `particulars` varchar(255) DEFAULT NULL,
-              `status` int(11) DEFAULT 0,
-              `created_at` date DEFAULT NULL,
-              `created_by` varchar(50) DEFAULT NULL,
-              `updated_at` date DEFAULT NULL,
-              `updated_by` varchar(50) DEFAULT NULL,
-              PRIMARY KEY (`id`)
-            ) $collate;",
-
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_check_details` (
-              `id` int(11) NOT NULL AUTO_INCREMENT,
-              `invoice_no` int(11) DEFAULT NULL,
-              `check_id` int(11) DEFAULT NULL,
-              `amount` decimal(10,2) DEFAULT 0,
-              `created_at` date DEFAULT NULL,
-              `created_by` varchar(50) DEFAULT NULL,
-              `updated_at` date DEFAULT NULL,
-              `updated_by` varchar(50) DEFAULT NULL,
-              PRIMARY KEY (`id`)
-            ) $collate;",
-
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_check_transactions` (
-              `id` int(11) NOT NULL AUTO_INCREMENT,
-              `voucher_no` int(11) DEFAULT NULL,
-              `trn_no` int(11) DEFAULT NULL,
-              `trn_date` date DEFAULT NULL,
-              `status` varchar(255) DEFAULT NULL,
-              `created_at` date DEFAULT NULL,
-              `created_by` varchar(50) DEFAULT NULL,
-              `updated_at` date DEFAULT NULL,
-              `updated_by` varchar(50) DEFAULT NULL,
-              PRIMARY KEY (`id`)
-            ) $collate;",
-
         ];
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
