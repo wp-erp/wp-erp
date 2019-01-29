@@ -461,7 +461,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                    'required'    => true,
                 ],
                 'address' => [
                     'description' => __( 'List of billing address data.', 'erp' ),
