@@ -1,7 +1,7 @@
 <template>
     <div class="wperp-modal-body">
         <div class="wperp-invoice-panel">
-            <div class="invoice-header" v-if="null != company">
+            <div class="invoice-header">
                 <div class="invoice-logo">
                     <img :src="company.logo" alt="logo name" width="100" height="100">
                 </div>
@@ -17,32 +17,32 @@
             </div>
 
             <div class="invoice-body">
-                <h4>{{ contentType }}</h4>
+                <h4>Invoice</h4>
                 <div class="wperp-row">
                     <div class="wperp-col-sm-6">
                         <h5>Bill to:</h5>
                         <div class="persons-info">
-                            <strong>{{ content.customer_name }}</strong><br>
-                            {{ content.billing_address }}
+                            <strong>{{ invoice.customer_name }}</strong><br>
+                            {{ invoice.billing_address }}
                         </div>
                     </div>
                     <div class="wperp-col-sm-6">
                         <table class="invoice-info">
                             <tr>
-                                <th>{{ contentType }} No.</th>
-                                <td>#{{ content.voucher_no }}</td>
+                                <th>Invoice No.</th>
+                                <td>#{{ invoice.voucher_no }}</td>
                             </tr>
                             <tr>
-                                <th>{{ contentType }} Date:</th>
-                                <td>{{ content.trn_date }}</td>
+                                <th>Invoice Date:</th>
+                                <td>{{ invoice.trn_date }}</td>
                             </tr>
-                            <tr v-if="'Invoice' == contentType">
+                            <tr>
                                 <th>Due Date:</th>
-                                <td>{{ content.due_date }}</td>
+                                <td>{{ invoice.due_date }}</td>
                             </tr>
-                            <tr v-if="'Invoice' == contentType">
+                            <tr>
                                 <th>Amount Due:</th>
-                                <td>{{ getCurrencySign() + content.total_due }}</td>
+                                <td>{{ getCurrencySign() + invoice.total_due }}</td>
                             </tr>
                         </table>
                     </div>
@@ -63,23 +63,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr :key="index" v-for="(detail, index) in content.line_items">
+                        <tr :key="index" v-for="(detail, index) in invoice.line_items">
                             <th>{{ detail.name }}</th>
                             <td>{{ detail.qty }}</td>
-                            <td>{{ detail.unit_price }}</td>
-                            <td>{{ detail.discount }}</td>
+                            <td>{{ getCurrencySign() + detail.unit_price }}</td>
+                            <td>{{ getCurrencySign() + detail.discount }}</td>
                             <td>...</td>
-                            <td>{{ detail.tax }}</td>
-                            <td>{{ detail.line_total }}</td>
+                            <td>{{ getCurrencySign() + detail.tax }}</td>
+                            <td>{{ getCurrencySign() + detail.line_total }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="7">
                                 <ul>
-                                    <li><span>Subtotal:</span> {{ getCurrencySign() + content.debit }}</li>
-                                    <li><span>Total:</span> {{ getCurrencySign() + content.debit }}</li>
-                                    <li><span>Total Related Payments:</span> {{ getCurrencySign() + content.debit }}</li>
+                                    <li><span>Subtotal:</span> {{ getCurrencySign() + invoice.debit }}</li>
+                                    <li><span>Total:</span> {{ getCurrencySign() + invoice.debit }}</li>
+                                    <li><span>Total Related Payments:</span> {{ getCurrencySign() + invoice.debit }}</li>
                                 </ul>
                             </td>
                         </tr>
@@ -88,7 +88,33 @@
             </div>
 
         </div>
-        <!-- atttt -->
+        
+        <div class="invoice-attachments d-print-none">
+            <h4>Attachments</h4>
+            <a class="attachment-item" :href="attachment"
+                :key="index" 
+                v-for="(attachment, index) in invoice.attachments" download>
+                <img :src="acct_var.acct_assets + '/images/img-thumb.png'" alt="image name">
+                <div class="attachment-meta">
+                    <span>File</span><br>
+                    <!-- <span class="text-muted">file size</span> -->
+                </div>
+            </a>
+            <!-- <a class="attachment-item" href="#">
+                <img :src="acct_var.acct_assets + '/images/doc-thumb.png'" alt="image name">
+                <div class="attachment-meta">
+                    <span>File name with extension</span><br>
+                    <span class="text-muted">file size</span>
+                </div>
+            </a>
+            <a class="attachment-item" href="#">
+                <img :src="acct_var.acct_assets + '/images/pdf-thumb.png'" alt="image name">
+                <div class="attachment-meta">
+                    <span>File name with extension</span><br>
+                    <span class="text-muted">file size</span>
+                </div>
+            </a> -->
+        </div>
 
     </div>
 </template>
@@ -99,39 +125,16 @@
     import HTTP from 'admin/http';
 
     export default {
-        name: 'SalesSingleContent',
+        name: 'InvoiceSingleContent',
 
         props: {
-            contentType: {
-                type: String
+            invoice: {
+                type: Object
             },
-            content: {
+            company: {
                 type: Object
             }
         },
 
-        data() {
-            return {
-                company: null
-            };
-        },
-
-        created() {
-            this.getCompanyInfo();
-        },
-
-        methods: {
-            getCompanyInfo() {
-                HTTP.get(`/company`).then(response => {
-                    this.company = response.data;
-                }).then( e => {} ).then(() => {
-                    this.isWorking = false;
-                });
-            },
-        }
     }
 </script>
-
-<style scoped>
-
-</style>

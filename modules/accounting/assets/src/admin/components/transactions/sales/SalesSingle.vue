@@ -2,7 +2,7 @@
     <div class="wperp-modal-dialog sales-report">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h4>Invoice</h4>
+                <h4 v-if="null != type">{{ 'payment' == type ? 'Payment' : 'Invoice' }}</h4>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
@@ -16,15 +16,15 @@
                 </div>
             </div>
 
-            <sales-single-content 
-                v-if="null !== invoice"
-                :content="invoice"
-                content-type="Invoice" />
+            <invoice-single-content 
+                v-if="null != invoice && null != company"
+                :invoice="invoice" 
+                :company="company" />
 
-            <sales-single-content 
-                v-if="null !== payment"
-                :content="payment"
-                content-type="Payment" />
+            <payment-single-content 
+                v-if="null != payment && null != company"
+                :payment="payment" 
+                :company="company" />
 
         </div>
     </div>
@@ -32,7 +32,8 @@
 
 <script>
     import HTTP from 'admin/http';
-    import SalesSingleContent from 'admin/components/transactions/sales/SalesSingleContent.vue';
+    import InvoiceSingleContent from 'admin/components/transactions/sales/InvoiceSingleContent.vue';
+    import PaymentSingleContent from 'admin/components/transactions/sales/PaymentSingleContent.vue';
 
     export default {
         name: 'SalesSingle',
@@ -43,12 +44,14 @@
                 invoice  : null,
                 payment  : null,
                 type     : null,
+                company  : null,
                 acct_var : erp_acct_var,
             }
         },
 
         components: {
-            SalesSingleContent
+            InvoiceSingleContent,
+            PaymentSingleContent
         },
 
         created() {
@@ -62,9 +65,19 @@
             } else {
                 this.loadData(params.type);
             }
+
+            this.getCompanyInfo();
         },
 
         methods: {
+            getCompanyInfo() {
+                HTTP.get(`/company`).then(response => {
+                    this.company = response.data;
+                }).then( e => {} ).then(() => {
+                    this.isWorking = false;
+                });
+            },
+
             getSalesType(id) {
                 HTTP.get(`/transactions/type/${id}`).then(response => {
                     this.loadData(response.data);
@@ -97,8 +110,6 @@
                 this.isWorking = true;
 
                 HTTP.get(`/payments/${this.$route.params.id}`).then(response => {
-                    console.log(response.data);
-
                     this.payment = response.data;                    
                 }).then( e => {} ).then(() => {
                     this.isWorking = false;

@@ -344,9 +344,9 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'customer_name'   => $item->customer_name,
             'trn_date'        => $item->trn_date,
             'amount'          => $item->amount,
-            'billing_address' => $item->billing_address,
+            // 'billing_address' => $item->billing_address,
             'line_items'      => $item->line_items,
-            'type'            => $item->type,
+            // 'type'            => $item->type,
             'status'          => $item->status,
         ];
 
