@@ -64,7 +64,7 @@ $settings_url = add_query_arg( [ 'page' => 'erp-settings', 'tab' => 'erp-crm', '
         <input type="hidden" name="type" v-model="feedData.type" value="email">
         <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="save_notes" value="<?php _e( 'Send Email', 'erp' ); ?>">
         <input type="file" name="attatchments[]" id="email-attachment" v-on:change="fileUpload()" multiple>
-        <label for="email-attachment" class="attachments-label" title="Attach File">Attatch File</label>
+        <label for="email-attachment" class="attachments-label" title="Attach File">Attach File</label>
         <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_notes" value="<?php _e( 'Reply Email', 'erp' ); ?>">
         <input type="reset" v-if="!feed" class="button button-default" value="<?php _e( 'Discard', 'erp' ); ?>">
         <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php _e( 'Cancel', 'erp' ); ?></button>
