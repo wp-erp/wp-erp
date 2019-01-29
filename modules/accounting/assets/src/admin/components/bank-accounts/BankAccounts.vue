@@ -4,6 +4,7 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">{{ pageTitle }}</h2>
+                    <combo-box :options="pages" :hasUrl="true" placeholder="New Transaction" />
                 </div>
             </div>
         </div>
@@ -107,13 +108,17 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
+    import HTTP from 'admin/http'
     import Dropdown from 'admin/components/base/Dropdown.vue'
+    import ComboBox from 'admin/components/select/ComboBox.vue'
+
     export default {
-        name: 'bankAccounts',
+        name: 'BankAccounts',
 
         components: {
-            HTTP, Dropdown
+            HTTP,
+            Dropdown,
+            ComboBox
         },
 
         data () {
@@ -122,6 +127,9 @@
                 accounts: [],
                 actions : [
                     { key: 'transfer', label: 'Transfer', iconClass: 'flaticon-sent-mail' },
+                ],
+                pages: [
+                    { namedRoute: 'Transfer', name: 'Transfer Money' }
                 ],
             }
         },
