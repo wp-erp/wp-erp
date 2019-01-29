@@ -355,13 +355,15 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'              => (int) $item->id,
-            'vendor_id'       => (int) $item->vendor_id,
-            'trn_date'        => $item->trn_date,
-            'amount'          => $item->amount,
-            'billing_address' => (int) $item->billing_address,
+            'id'          => (int) $item->id,
+            'voucher_no'  => (int) $item->voucher_no,
+            'vendor_id'   => (int) $item->vendor_id,
+            'vendor_name' => $item->vendor_name,
+            'trn_date'    => $item->trn_date,
+            'amount'      => $item->amount,
+            // 'billing_address' => $item->billing_address,
             'bill_details'    => $item->bill_details,
-            'type'            => $item->type,
+            // 'type'            => $item->type,
             'status'          => $item->status,
         ];
 

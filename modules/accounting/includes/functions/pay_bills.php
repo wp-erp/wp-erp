@@ -50,39 +50,48 @@ function erp_acct_get_pay_bills( $args = [] ) {
 function erp_acct_get_pay_bill( $bill_no ) {
     global $wpdb;
 
-    $sql = "SELECT
+    $sql = $wpdb->prepare("SELECT
 
-    pay_bill.id,
-    pay_bill.voucher_no,
-    pay_bill.trn_date,
-    pay_bill.amount,
-    pay_bill.trn_by,
-    pay_bill.particulars,
-    pay_bill.attachments,
-    pay_bill.status,
-    pay_bill.created_at,
-    pay_bill.created_by,
-    pay_bill.updated_at,
-    pay_bill.updated_by,
+        pay_bill.id,
+        pay_bill.voucher_no,
+        pay_bill.vendor_id,
+        pay_bill.vendor_name,
+        pay_bill.trn_date,
+        pay_bill.amount,
+        pay_bill.trn_by,
+        pay_bill.particulars,
+        pay_bill.attachments,
+        pay_bill.status
 
-    pay_bill_detail.bill_no,
-    pay_bill_detail.amount as pay_bill_detail_amount,
-    
-    ledger_detail.particulars,
-    ledger_detail.debit,
-    ledger_detail.credit
-
-    from {$wpdb->prefix}erp_acct_pay_bill as pay_bill
-
-    LEFT JOIN {$wpdb->prefix}erp_acct_pay_bill_details as pay_bill_detail ON pay_bill.voucher_no = pay_bill_detail.voucher_no
-    LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ledger_detail ON pay_bill.voucher_no = ledger_detail.trn_no
-
-    WHERE pay_bill.voucher_no = {$bill_no}";
+    FROM {$wpdb->prefix}erp_acct_pay_bill AS pay_bill
+    WHERE pay_bill.voucher_no = %d", $bill_no);
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
+    $row['bill_details'] = erp_acct_format_paybill_line_items( $bill_no );
+
     return $row;
 }
+
+/**
+ * Format pay bill line items
+ */
+function erp_acct_format_paybill_line_items($voucher_no) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT
+        pay_bill_detail.id,
+        pay_bill_detail.voucher_no,
+        pay_bill_detail.bill_no,
+        pay_bill_detail.amount
+
+        FROM {$wpdb->prefix}erp_acct_pay_bill AS pay_bill
+        LEFT JOIN {$wpdb->prefix}erp_acct_pay_bill_details as pay_bill_detail ON pay_bill.voucher_no = pay_bill_detail.voucher_no
+        WHERE pay_bill.voucher_no = %d", $voucher_no);
+
+    return $wpdb->get_results($sql, ARRAY_A);
+}
+
 
 /**
  * Insert a pay_bill

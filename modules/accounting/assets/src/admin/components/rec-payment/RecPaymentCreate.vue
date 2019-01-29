@@ -250,7 +250,6 @@
 
             showPaymentModal() {
                 this.getDueInvoices();
-                this.paymentModal = true;
             },
 
             resetData() {

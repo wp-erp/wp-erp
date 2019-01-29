@@ -52,52 +52,54 @@ function erp_acct_get_bills( $args = [] ) {
 function erp_acct_get_bill( $bill_no ) {
     global $wpdb;
 
-    $sql = "SELECT
+    $sql = $wpdb->prepare("SELECT
 
     bill.id,
     bill.voucher_no,
     bill.vendor_id,
     bill.vendor_name,
-    bill.address,
+    bill.address AS billing_address,
     bill.trn_date,
     bill.due_date,
     bill.amount,
     bill.ref,
     bill.particulars,
     bill.status,
-    bill.attachments,
-    bill.created_at,
-    bill.created_by,
-    bill.updated_at,
-    bill.updated_by,
-
-    b_detail.amount,
-
-    ledg.id,
-    ledg.chart_id,
-    ledg.category_id,
-    ledg.name,
-    ledg.code,
-    ledg.system,
-
-    ledg_detail.debit,
-    ledg_detail.credit,
-
-    b_ac_detail.id,
-    b_ac_detail.bill_no
+    bill.attachments
 
     FROM {$wpdb->prefix}erp_acct_bills AS bill
-
-    LEFT JOIN {$wpdb->prefix}erp_acct_bill_details AS b_detail ON bill.voucher_no = b_detail.trn_no
     LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS b_ac_detail ON bill.voucher_no = b_ac_detail.trn_no
-    LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON bill.voucher_no = ledg_detail.trn_no
-    LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledg ON ledg.id = ledg_detail.ledger_id
+    WHERE bill.voucher_no = %d", $bill_no);
 
-    WHERE bill.voucher_no = {$bill_no} AND bill.trn_by_ledger_id IS NULL";
-
+    // error_log(print_r($sql, true));
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
+    $row['bill_details'] = erp_acct_format_bill_line_items( $bill_no );
+
     return $row;
+}
+
+/**
+ * Format bill line items
+ */
+function erp_acct_format_bill_line_items($voucher_no) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT
+        b_detail.id,
+        b_detail.trn_no,
+        b_detail.ledger_id,
+        b_detail.particulars,
+        b_detail.amount,
+
+        ledger.name AS ledger_name
+
+        FROM wp_erp_acct_bills AS bill
+        LEFT JOIN {$wpdb->prefix}erp_acct_bill_details AS b_detail ON bill.voucher_no = b_detail.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledger ON ledger.id = b_detail.ledger_id
+        WHERE bill.voucher_no = %d", $voucher_no);
+
+    return $wpdb->get_results($sql, ARRAY_A);
 }
 
 /**
@@ -151,6 +153,8 @@ function erp_acct_insert_bill( $data ) {
             'updated_by'      => $bill_data['updated_by'],
         ) );
 
+        $bill_no = $wpdb->insert_id;
+
         $items = $bill_data['bill_details'];
 
         foreach ( $items as $key => $item ) {
@@ -169,7 +173,7 @@ function erp_acct_insert_bill( $data ) {
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
-            'bill_no'     => $voucher_no,
+            'bill_no'     => $bill_no,
             'trn_no'      => $voucher_no,
             'trn_date'    => $bill_data['trn_date'],
             'particulars' => $bill_data['remarks'],

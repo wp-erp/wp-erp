@@ -1,22 +1,11 @@
 <template>
     <div class="wperp-container invoice-create">
 
-        <print-preview
-            type="Invoice"
-            :customer="basic_fields"
-            :totalAmount="finalTotalAmount"
-            :transactions="transactionLines"
-            v-if="invoiceModal" />
-
         <!-- Start .header-section -->
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">New Invoice</h2>
-                    <!-- just for showing modal -->
-                    <a href="#" class="wperp-btn btn--primary" v-if="showPrintPreview" @click.prevent="showInvoiceModal">
-                        <span>Print Preview</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -111,8 +100,6 @@
 
         </form>
 
-        <!-- <invoice-modal v-if="invoiceModal" /> -->
-
         <!-- End .wperp-crm-table -->
     </div>
 </template>
@@ -123,7 +110,6 @@ import Datepicker from 'admin/components/base/Datepicker.vue'
 import FileUpload from 'admin/components/base/FileUpload.vue'
 import ComboButton from 'admin/components/select/ComboButton.vue';
 import SubmitButton from 'admin/components/base/SubmitButton.vue'
-import InvoiceModal from 'admin/components/invoice/InvoiceModal.vue'
 import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue'
 import SelectCustomers from 'admin/components/people/SelectCustomers.vue';
 
@@ -139,7 +125,6 @@ export default {
         ComboButton,
         PrintPreview,
         SubmitButton,
-        InvoiceModal,
         InvoiceTrnRow,
         SelectCustomers
     },
@@ -164,7 +149,6 @@ export default {
             transactionLines: [{}],
             finalTotalAmount: 0,
 
-            invoiceModal: false,
             isWorking: false,
 
             reset: false,
@@ -194,10 +178,6 @@ export default {
 
         this.$root.$on('total-updated', amount => {
             this.updateFinalAmount();
-        });
-
-        this.$root.$on('preview-modal-close', () => {
-            this.invoiceModal = false;
         });
 
         this.$root.$on('combo-btn-select', button => {
@@ -305,10 +285,6 @@ export default {
             });
         },
 
-        showInvoiceModal() {
-            this.invoiceModal = true;
-        },
-
         resetFields() {
             this.basic_fields.customer = '';
             this.basic_fields.trans_date = '';
@@ -317,7 +293,6 @@ export default {
             this.attachments = [];
             this.transactionLines = [{}];
             this.finalTotalAmount = 0;
-            this.invoiceModal = false;
             this.isWorking = false;
             this.reset = false;
             this.actionType = null;

@@ -65,7 +65,7 @@
                     <tbody>
                     <tr :key="key" v-for="(line,key) in transactionLines">
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
-                        <td class="col--account"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
+                        <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
                         <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
                         <td class="col--amount" data-colname="Amount">
                             <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
@@ -124,7 +124,6 @@
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import BillModal from 'admin/components/bill/BillModal.vue'
     import SelectPeople from 'admin/components/people/SelectPeople.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
 
@@ -137,7 +136,6 @@
             Datepicker,
             MultiSelect,
             FileUpload,
-            BillModal,
             SubmitButton,
             SelectPeople
         },
@@ -158,7 +156,6 @@
                 attachments: [],
                 totalAmounts:[],
                 finalTotalAmount: 0,
-                billModal: false,
                 particulars: '',
                 isWorking: false,
                 acct_assets: erp_acct_var.acct_assets
@@ -171,10 +168,6 @@
             this.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
-            });
-
-            this.$root.$on('bill-modal-close', () => {
-                this.billModal = false;
             });
         },
 
@@ -193,7 +186,9 @@
             getPeopleAddress() {
                 let people_id = this.basic_fields.user.id;
 
-                HTTP.get(`/customers/${people_id}`).then((response) => {
+                if ( ! people_id ) return;
+
+                HTTP.get(`/customers/${people_id}`).then(response => {
                     // add more info
                     this.basic_fields.billing_address =
                         `Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
@@ -215,8 +210,7 @@
                 this.transactionLines.push({});
             },
 
-
-            SubmitForBill() {
+            SubmitForBill() {                
                 HTTP.post('/bills', {
                     vendor_id: this.basic_fields.user.id,
                     ref: this.basic_fields.trn_ref,
@@ -230,9 +224,8 @@
                     remarks: this.particulars,
                     // trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
-                    console.log(res.data);
                     this.$swal({
-                        position: 'top-end',
+                        position: 'center',
                         type: 'success',
                         title: 'Bill Created!',
                         showConfirmButton: false,
