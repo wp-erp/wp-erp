@@ -337,7 +337,7 @@ function erp_acct_insert_expense_data_into_ledger( $expense_data, $item_data = [
 
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $expense_data['trn_by_ledger_id'],
+        'ledger_id'   => $item_data['ledger_id'],
         'trn_no'      => $expense_data['voucher_no'],
         'particulars' => $expense_data['particulars'],
         'debit'       => $item_data['amount'],
