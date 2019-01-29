@@ -25,7 +25,6 @@ import SalesSingle       from 'admin/components/transactions/sales/SalesSingle.v
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
 import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
 import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
-import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
 import RecordPayTax      from 'admin/components/tax/RecordPayTax.vue';
@@ -274,22 +273,6 @@ export default new Router({
                     path: 'page/:page',
                     name: 'PaginateTaxRates',
                     component: TaxRates,
-                },
-            ]
-        },
-        {
-            path: '/tax-categories',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'TaxCategories',
-                    component: TaxCategories,
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateTaxCategories',
-                    component: TaxCategories,
                 },
             ]
         },
