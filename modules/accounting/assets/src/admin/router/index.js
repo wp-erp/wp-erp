@@ -31,7 +31,6 @@ import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
 import RecordPayTax      from 'admin/components/tax/RecordPayTax.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
-import RecPaymentModal   from 'admin/components/rec-payment/RecPaymentModal.vue';
 import NewTaxRate        from 'admin/components/tax/NewTaxRate.vue';
 import CheckCreate       from 'admin/components/check/CheckCreate.vue';
 
@@ -200,12 +199,6 @@ export default new Router({
             path: '/payments/new',
             name: 'RecPaymentCreate',
             component: RecPaymentCreate
-        },
-        {
-
-            path: '/payments/:id',
-            name: 'SinglePayment',
-            component: RecPaymentModal
         },
         {
             path: '/bills/new',
