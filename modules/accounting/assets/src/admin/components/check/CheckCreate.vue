@@ -39,7 +39,7 @@
                         </div>
                         <div class="wperp-col-sm-4 with-multiselect">
                             <label>From Account</label>
-                            <multi-select v-model="basic_fields.deposit_to" :options="bank_accounts"></multi-select>
+                            <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
 
                     </div>
@@ -161,7 +161,6 @@
                 transactionLines: [{}],
                 selected:[],
                 ledgers: [],
-                bank_accounts: [],
                 pay_methods: [],
                 attachments: [],
                 totalAmounts:[],
@@ -175,8 +174,6 @@
 
         created() {
             this.getLedgers();
-            this.getBankAccounts();
-
             this.$root.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
@@ -189,17 +186,6 @@
                 HTTP.get('ledgers').then((response) => {
                     response.data.forEach(element => {
                         this.ledgers.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
-                });
-            },
-
-            getBankAccounts() {
-                HTTP.get('/accounts/bank-accounts').then((response) => {
-                    response.data.forEach(element => {
-                        this.bank_accounts.push({
                             id: element.id,
                             name: element.name
                         });
