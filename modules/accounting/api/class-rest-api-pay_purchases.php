@@ -308,6 +308,21 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
         }
+        if ( isset( $request['type'] ) ) {
+            $prepared_item['voucher_type'] = $request['type'];
+        }
+        if ( isset( $request['trn_by_ledger_id'] ) ) {
+            $prepared_item['trn_by_ledger_id'] = $request['trn_by_ledger_id'];
+        }
+        if ( isset( $request['check_no'] ) ) {
+            $prepared_item['check_no'] = $request['check_no'];
+        }
+        if ( isset( $request['deposit_to'] ) ) {
+            $prepared_item['deposit_to'] = $request['deposit_to'];
+        }
+        if ( isset( $request['name'] ) ) {
+            $prepared_item['name'] = $request['name'];
+        }
 
         return $prepared_item;
     }
@@ -421,6 +436,22 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'type'        => 'integer',
                             'context'     => [ 'edit' ],
                         ],
+                    ],
+                ],
+                'check_no'   => [
+                    'description' => __( 'Check no for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'name'   => [
+                    'description' => __( 'Check name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
                 'type'       => [
