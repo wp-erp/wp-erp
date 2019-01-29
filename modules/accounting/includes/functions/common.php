@@ -115,14 +115,21 @@ function erp_acct_get_payables_overview() {
 
             //segment by date difference
             switch ( $diff ) {
+                case ( $diff === 0 ):
+                    $data['first'][] = $item_data;
+                    $amount['first'] = $amount['first'] + abs( $item->due );
+                    break;
+
                 case ( $diff <= 30 ):
                     $data['first'][] = $item_data;
                     $amount['first'] = $amount['first'] + abs( $item->due );
                     break;
+
                 case ( $diff <= 60 ):
                     $data['second'][] = $item_data;
                     $amount['second'] = $amount['second'] + abs( $item->due );
                     break;
+
                 case ( $diff <= 90 ):
                     $data['third'][] = $item_data;
                     $amount['third'] = $amount['third'] + abs( $item->due );
