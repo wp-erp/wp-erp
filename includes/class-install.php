@@ -1215,6 +1215,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_items` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `tax_id` int(11) DEFAULT NULL,
+                `component_name` varchar(255) DEFAULT NULL,
                 `agency_id` int(11) DEFAULT NULL,
                 `tax_rate` int(11) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
@@ -1256,6 +1257,20 @@ Company'
                 `amount` decimal(10,2) DEFAULT 0,
                 `voucher_type` varchar(255) DEFAULT NULL,
                 `ledger_id` int(11) DEFAULT NULL,
+                `created_at` date DEFAULT NULL,
+                `created_by` varchar(50) DEFAULT NULL,
+                `updated_at` date DEFAULT NULL,
+                `updated_by` varchar(50) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $collate;",
+
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_details_tax` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `invoice_details_id` int(11) DEFAULT NULL,
+                `agency_id` int(11) DEFAULT NULL,
+                `tax_rate` decimal(10,2) DEFAULT 0,
+                `tax_amount` decimal(10,2) DEFAULT 0,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
