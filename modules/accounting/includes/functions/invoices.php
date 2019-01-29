@@ -64,7 +64,7 @@ function erp_acct_get_all_invoices( $args = [] ) {
 function erp_acct_get_invoice( $invoice_no ) {
     global $wpdb;
 
-    $sql = "Select
+    $sql = $wpdb->prepare("Select
 
     invoice.id,
     invoice.voucher_no,
@@ -86,7 +86,7 @@ function erp_acct_get_invoice( $invoice_no ) {
     
     FROM {$wpdb->prefix}erp_acct_invoices as invoice
     LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.trn_no
-    WHERE invoice.voucher_no = {$invoice_no}";
+    WHERE invoice.voucher_no = %d", $invoice_no);
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 

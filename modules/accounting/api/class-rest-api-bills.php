@@ -179,15 +179,15 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $bill_data =  erp_acct_get_bill( $id );
-        $bill_data['id'] = $id;
+        // $bill_data['id'] = $id;
 
-        $bill_data['created_by'] = $this->get_user( $bill_data['created_by'] );
+        // $bill_data['created_by'] = $this->get_user( $bill_data['created_by'] );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
         $data = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
-        $formatted_items[] = $this->prepare_response_for_collection( $data );
+        $formatted_items = $this->prepare_response_for_collection( $data );
         $response = rest_ensure_response( $formatted_items );
 
         $response->set_status( 200 );
@@ -459,14 +459,15 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'voucher_no'      => (int) $item->voucher_no,
             'vendor_id'       => (int) $item->vendor_id,
+            'vendor_name'     => $item->vendor_name,
             'trn_date'        => $item->trn_date,
             'due_date'        => $item->due_date,
-            'address'         => $item->billing_address,
+            'billing_address' => $item->billing_address,
             'bill_details'    => $item->bill_details,
-            'total'           => (int) $item->amount,
+            'amount'           => (int) $item->amount,
             'due'             => isset( $item->due ) ? $item->due : $item->amount,
             'ref'             => $item->ref,
-            'particulars'     => $item->remarks,
+            'particulars'     => $item->particulars,
             'status'          => $item->status,
             'attachments'     => $item->attachments
         ];

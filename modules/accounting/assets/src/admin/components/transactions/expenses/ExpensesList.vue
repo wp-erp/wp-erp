@@ -22,11 +22,13 @@
                 :actions="actions"
                 @action:click="onActionClick">
                 <template slot="trn_no" slot-scope="data">
-                    <strong v-if="isPayment(data.row)">
-                        #{{ data.row.id }}
+                    <strong v-if="rowTypeIs('bill', data.row)">
+                        <router-link :to="{ name: 'BillSingle', params: { id: data.row.id }}">
+                            #{{ data.row.id }}
+                        </router-link>
                     </strong>
-                    <strong v-else>
-                        <router-link :to="{ name: 'SalesReport', params: { id: data.row.id }}">
+                    <strong v-if="rowTypeIs('pay_bill', data.row)">
+                        <router-link :to="{ name: 'PayBillSingle', params: { id: data.row.id }}">
                             #{{ data.row.id }}
                         </router-link>
                     </strong>
@@ -76,16 +78,16 @@
         data() {
             return {
                 columns: {
-                    'trn_no':        {label: 'Voucher No.'},
-                    'type':          {label: 'Type'},
-                    'ref':           {label: 'Ref'},
+                    'trn_no'     : {label: 'Voucher No.'},
+                    'type'       : {label: 'Type'},
+                    'ref'        : {label: 'Ref'},
                     'vendor_name': {label: 'Vendor'},
-                    'trn_date':      {label: 'Trn Date'},
-                    'due_date':      {label: 'Due Date'},
-                    'due':           {label: 'Due'},
-                    'amount':        {label: 'Total'},
-                    'status':        {label: 'Status'},
-                    'actions':       {label: ''},
+                    'trn_date'   : {label: 'Trn Date'},
+                    'due_date'   : {label: 'Due Date'},
+                    'due'        : {label: 'Due'},
+                    'amount'     : {label: 'Total'},
+                    'status'     : {label: 'Status'},
+                    'actions'    : {label: ''},
 
                 },
                 rows: [],
@@ -181,6 +183,10 @@
 
             isPayment(row) {
                 return row.type === 'pay_bill' ? true : false;
+            },
+
+            rowTypeIs(type, row) {
+                return row.type === type ? true : false;
             }
         },
 

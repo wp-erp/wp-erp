@@ -247,9 +247,8 @@
                     particulars: this.particulars,
                     trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
-                    console.log(res.data);
                     this.$swal({
-                        position: 'top-end',
+                        position: 'center',
                         type: 'success',
                         title: 'Pay-Bill Created!',
                         showConfirmButton: false,

@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-modal-dialog sales-report">
+    <div class="wperp-modal-dialog sales-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
                 <h4 v-if="null != type">{{ 'payment' == type ? 'Payment' : 'Invoice' }}</h4>
@@ -110,7 +110,7 @@
                 this.isWorking = true;
 
                 HTTP.get(`/payments/${this.$route.params.id}`).then(response => {
-                    this.payment = response.data;                    
+                    this.payment = response.data;
                 }).then( e => {} ).then(() => {
                     this.isWorking = false;
                 });
@@ -125,7 +125,7 @@
 </script>
 
 <style lang="less">
-    .sales-report {
+    .sales-single {
         width: 800px;
         margin: 40px 0;
     }

@@ -13,7 +13,9 @@ import ReportsOverview   from 'admin/components/reports/ReportsOverview.vue';
 import ProductCategory   from 'admin/components/product-category/ProductCategory.vue';
 import RecPaymentCreate  from 'admin/components/rec-payment/RecPaymentCreate.vue';
 import BillCreate        from 'admin/components/bill/BillCreate.vue';
+import BillSingle        from 'admin/components/bill/BillSingle.vue';
 import PayBillCreate     from 'admin/components/pay-bill/PayBillCreate.vue';
+import PayBillSingle     from 'admin/components/pay-bill/PayBillSingle.vue';
 import PurchaseCreate    from 'admin/components/purchase/PurchaseCreate.vue';
 import PayPurchaseCreate from 'admin/components/pay-purchase/PayPurchaseCreate.vue';
 import JournalList       from 'admin/components/journal/JournalList.vue';
@@ -201,14 +203,38 @@ export default new Router({
             component: RecPaymentCreate
         },
         {
-            path: '/bills/new',
-            name: 'BillCreate',
-            component: BillCreate
+            path: '/bills',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+
+                    path: 'new',
+                    name: 'BillCreate',
+                    component: BillCreate
+                },
+                {
+                    path: ':id',
+                    name: 'BillSingle',
+                    component: BillSingle,
+                },
+            ]
         },
         {
-            path: '/pay-bills/new',
-            name: 'PayBillCreate',
-            component: PayBillCreate
+            path: '/pay-bills',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+
+                    path: 'new',
+                    name: 'PayBillCreate',
+                    component: PayBillCreate
+                },
+                {
+                    path: ':id',
+                    name: 'PayBillSingle',
+                    component: PayBillSingle,
+                },
+            ]
         },
         {
             path: '/purchases/new',
