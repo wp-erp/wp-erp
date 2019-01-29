@@ -427,7 +427,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     $defaults = [
         'number'      => 20,
         'offset'      => 0,
-        'order'       => 'ASC',
+        'order'       => 'DESC',
         'count'       => false,
         'vendor_id'   => false,
         's'           => '',
@@ -475,7 +475,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS bill_acct_details ON bill_acct_details.purchase_no = bill.id
         {$where} 
         GROUP BY voucher.id
-        ORDER BY CONCAT(bill.trn_date, pay_bill.trn_date) {$args['order']} {$limit}";
+        ORDER BY voucher.id {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         $wpdb->get_results($sql);

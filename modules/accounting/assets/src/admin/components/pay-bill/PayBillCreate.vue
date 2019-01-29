@@ -36,10 +36,16 @@
                             <label>Deposit to</label>
                             <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
-                        <div class="wperp-col-xs-12">
+                        <div class="wperp-col-sm-6">
                             <label>Billing Address</label>
                             <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
+                        <div class="wperp-col-sm-6 with-multiselect">
+                            <label>Payment Method</label>
+                            <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
+                        </div>
+
+                        <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
                     </div>
                 </form>
 
@@ -119,8 +125,10 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import PayBillModal from 'admin/components/pay-bill/PayBillModal.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import SelectPeople from "admin/components/people/SelectPeople.vue";
-    import SelectAccounts from "admin/components/select/SelectAccounts.vue";
+    import SelectPeople from 'admin/components/people/SelectPeople.vue'
+    import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+    import CheckFields from 'admin/components/check/CheckFields.vue'
 
     export default {
         name: 'PayBillCreate',
@@ -133,6 +141,8 @@
             FileUpload,
             PayBillModal,
             SubmitButton,
+            MultiSelect,
+            CheckFields
         },
 
         data() {
@@ -142,13 +152,20 @@
                     trn_ref: '',
                     payment_date: '',
                     deposit_to: '',
-                    billing_address: ''
+                    billing_address: '',
+                    trn_by: ''
+                },
+
+                check_data: {
+                    payer_name: '',
+                    check_no: ''
                 },
 
                 pay_bills: [],
                 attachments: [],
                 dueAmounts: [],
                 totalAmounts:[],
+                pay_methods: [],
                 finalTotalAmount: 0,
                 pay_bill_modal: false,
                 particulars: '',
@@ -158,12 +175,30 @@
         },
 
         created() {
-            this.$root.$on('pay-bill-modal-close', () => {
-                this.pay_bill_modal = false;
+            this.getPayMethods();
+
+            this.$root.$on('remove-row', index => {
+                this.$delete(this.pay_bills, index);
+                this.updateFinalAmount();
             });
         },
 
         methods: {
+            getPayMethods() {
+                HTTP.get('/transactions/payment-methods').then((response) => {
+                    response.data.forEach(element => {
+                        this.pay_methods.push({
+                            id: element.id,
+                            name: element.name
+                        });
+                    });
+                });
+            },
+
+            setCheckFields( check_data ) {
+                this.check_data = check_data;
+            },
+
             getDueBills() {
                 let peopleId = this.basic_fields.people.id,
                     idx = 0,
@@ -199,11 +234,9 @@
             getCustomerAddress() {
                 let people_id = this.basic_fields.people.id;
 
-                HTTP.get(`/customers/${people_id}`).then((response) => {
+                HTTP.get(`/people/${people_id}`).then((response) => {
                     // add more info
-                    this.basic_fields.billing_address =
-                        `Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
-                        City: ${response.data.billing.city}, Country: ${response.data.billing.country}`;
+                    this.basic_fields.billing_address = response.data;
                 });
             },
 
@@ -236,7 +269,7 @@
                 });
 
                 HTTP.post('/pay-bills', {
-                    vendor_id: this.basic_fields.people.id,
+                    people_id: this.basic_fields.people.id,
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trans_date,
                     due_date: this.basic_fields.due_date,
@@ -245,7 +278,10 @@
                     type: 'pay_bill',
                     status: 'paid',
                     particulars: this.particulars,
-                    trn_by: this.basic_fields.deposit_to,
+                    deposit_to: this.basic_fields.deposit_to.id,
+                    trn_by: this.basic_fields.trn_by.id,
+                    check_no: parseInt(this.check_data.check_no),
+                    name: this.check_data.payer_name
                 }).then(res => {
                     this.$swal({
                         position: 'center',
@@ -262,7 +298,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-                } ),then(() => {
+                }).then(() => {
                     this.resetData();
                     this.isWorking = false;
                 });

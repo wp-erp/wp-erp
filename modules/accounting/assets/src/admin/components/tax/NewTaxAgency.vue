@@ -22,7 +22,7 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <submit-button text="Add New Tax Agency" @click.native="addNewTaxAgency" :working="isWorking"></submit-button>
+                            <submit-button text="Add New Tax Agency" @click.native.prevent="addNewTaxAgency" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>

@@ -6,12 +6,6 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Expense</h2>
-
-                    <!-- Print Dialogue -->
-
-                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showExpenseModal">
-                        <span>Print</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -45,14 +39,14 @@
                         </div>
                         <div class="wperp-col-sm-4 with-multiselect">
                             <label>From Account</label>
-                            <multi-select v-model="basic_fields.deposit_to" :options="bank_accounts"></multi-select>
+                            <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
                         <div class="wperp-col-sm-4 with-multiselect">
                             <label>Payment Method</label>
                             <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
                         </div>
 
-                        <check-fields v-if="basic_fields.trn_by.name === 'check'" @updateCheckFields="setCheckFields"></check-fields>
+                        <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
                     </div>
                 </form>
 
@@ -176,7 +170,6 @@
                 transactionLines: [{}],
                 selected:[],
                 ledgers: [],
-                bank_accounts: [],
                 pay_methods: [],
                 attachments: [],
                 totalAmounts:[],
@@ -191,8 +184,6 @@
         created() {
             this.getLedgers();
             this.getPayMethods();
-            this.getBankAccounts();
-
             this.$root.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
@@ -205,17 +196,6 @@
                 HTTP.get('ledgers').then((response) => {
                     response.data.forEach(element => {
                         this.ledgers.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
-                });
-            },
-
-            getBankAccounts() {
-                HTTP.get('/accounts/bank-accounts').then((response) => {
-                    response.data.forEach(element => {
-                        this.bank_accounts.push({
                             id: element.id,
                             name: element.name
                         });
@@ -286,9 +266,12 @@
                     attachments: this.attachments,
                     type: 'expense',
                     status: 4,
-                    remarks: this.particulars,
+                    particulars: this.particulars,
+                    check_no: parseInt(this.check_data.check_no),
+                    name: this.check_data.payer_name
                 }).then(res => {
                     console.log(res.data);
+                    console.log( this.check_data );
                     this.$swal({
                         position: 'center',
                         type: 'success',

@@ -27,7 +27,6 @@ import SalesSingle       from 'admin/components/transactions/sales/SalesSingle.v
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
 import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
 import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
-import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
 import RecordPayTax      from 'admin/components/tax/RecordPayTax.vue';
@@ -52,14 +51,10 @@ export default new Router({
             ]
         },
         {
-            path : '/users',
-            name : 'Customers',
-            component: People,
-        },
-        {
             path : '/inventory',
             name : 'Products',
             component: Products,
+            alias: '/products'
         },
         {
             path: '/customers',
@@ -69,6 +64,7 @@ export default new Router({
                     path : '',
                     name : 'Customers',
                     component: People,
+                    alias: '/users'
                 },
                 {
                     path : 'page/:page',
@@ -188,11 +184,6 @@ export default new Router({
             component: InvoiceCreate
         },
         {
-            path: '/products',
-            name: 'Products',
-            component: Products
-        },
-        {
             path: '/product_categories',
             name: 'ProductCategory',
             component: ProductCategory
@@ -308,22 +299,6 @@ export default new Router({
                     path: 'page/:page',
                     name: 'PaginateTaxRates',
                     component: TaxRates,
-                },
-            ]
-        },
-        {
-            path: '/tax-categories',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'TaxCategories',
-                    component: TaxCategories,
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateTaxCategories',
-                    component: TaxCategories,
                 },
             ]
         },

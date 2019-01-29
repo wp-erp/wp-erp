@@ -349,8 +349,8 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = $request['billing_address'];
         }
-        if ( isset( $request['remarks'] ) ) {
-            $prepared_item['remarks'] = $request['remarks'];
+        if ( isset( $request['particulars'] ) ) {
+            $prepared_item['particulars'] = $request['particulars'];
         }
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];
@@ -360,6 +360,15 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['trn_by_ledger_id'] ) ) {
             $prepared_item['trn_by_ledger_id'] = $request['trn_by_ledger_id'];
+        }
+        if ( isset( $request['name'] ) ) {
+            $prepared_item['name'] = $request['name'];
+        }
+        if ( isset( $request['pay_to'] ) ) {
+            $prepared_item['pay_to'] = $request['pay_to'];
+        }
+        if ( isset( $request['type'] ) ) {
+            $prepared_item['voucher_type'] = $request['type'];
         }
 
         return $prepared_item;
@@ -384,13 +393,12 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'address'         => $item->billing_address,
             'expense_details' => $item->expense_details,
             'total'           => (int) $item->amount,
-            'ref'             => $item->ref,
-            'remarks'         => $item->remarks,
+            'ref'             => isset( $item->ref ) ? $item->ref : $item->check_no,
+            'remarks'         => $item->particulars,
             'status'          => $item->status,
             'attachments'     => $item->attachments,
             'trn_by_ledger_id'=> $item->trn_by,
-            'deposit_to'      => $item->deposit_to,
-            'check_no'        => $item->check_no
+            'deposit_to'      => $item->deposit_to
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -453,7 +461,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                    'required'    => true,
                 ],
                 'address' => [
                     'description' => __( 'List of billing address data.', 'erp' ),
@@ -512,6 +519,14 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'type'        => 'integer',
                             'context'     => [ 'edit' ],
                         ],
+                    ],
+                ],
+                'particulars'       => [
+                    'description' => __( 'Particulars for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
                 'status'       => [
