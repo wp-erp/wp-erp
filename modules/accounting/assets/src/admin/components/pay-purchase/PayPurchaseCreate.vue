@@ -111,10 +111,10 @@
                 </table>
             </div>
         </div>
-
+<!-- 
         <template v-if="pay_bill_modal">
             <pay-bill-modal :basic_fields="basic_fields" :pay_purchases="pay_purchases" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
-        </template>
+        </template> -->
 
     </div>
 </template>
@@ -123,7 +123,7 @@
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import PayBillModal from 'admin/components/pay-bill/PayBillModal.vue'
+    // import PayBillModal from 'admin/components/pay-bill/PayBillModal.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import SelectVendors from 'admin/components/people/SelectVendors.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
@@ -138,7 +138,7 @@
             HTTP,
             Datepicker,
             FileUpload,
-            PayBillModal,
+            // PayBillModal,
             SubmitButton,
             CheckFields
         },
@@ -165,7 +165,7 @@
                 attachments: [],
                 totalAmounts:[],
                 finalTotalAmount: 0,
-                pay_bill_modal: false,
+                // pay_bill_modal: false,
                 particulars: '',
                 isWorking: false,
                 acct_assets: erp_acct_var.acct_assets
@@ -173,9 +173,9 @@
         },
 
         created() {
-            this.$root.$on('pay-bill-modal-close', () => {
-                this.pay_bill_modal = false;
-            });
+            // this.$root.$on('pay-bill-modal-close', () => {
+            //     this.pay_bill_modal = false;
+            // });
 
             this.fetchAccounts();
             this.getPayMethods();
@@ -211,7 +211,7 @@
                     this.attachments = [];
                     this.totalAmounts = [];
                     this.finalTotalAmount = 0;
-                    this.pay_bill_modal = false;
+                    // this.pay_bill_modal = false;
                     this.particulars = '';
                     this.isWorking = false;
             },
@@ -331,7 +331,7 @@
 
             showPaymentModal() {
                 this.getDuePurchases();
-                this.pay_bill_modal = true;
+                // this.pay_bill_modal = true;
             },
 
             remove_item( index ) {
