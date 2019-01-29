@@ -112,10 +112,6 @@
             </div>
         </div>
 
-        <template v-if="pay_bill_modal">
-            <pay-bill-modal :basic_fields="basic_fields" :pay_bills="pay_bills" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
-        </template>
-
     </div>
 </template>
 
@@ -123,7 +119,6 @@
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import PayBillModal from 'admin/components/pay-bill/PayBillModal.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import SelectPeople from 'admin/components/people/SelectPeople.vue'
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
@@ -139,7 +134,6 @@
             HTTP,
             Datepicker,
             FileUpload,
-            PayBillModal,
             SubmitButton,
             MultiSelect,
             CheckFields
@@ -167,7 +161,6 @@
                 totalAmounts:[],
                 pay_methods: [],
                 finalTotalAmount: 0,
-                pay_bill_modal: false,
                 particulars: '',
                 isWorking: false,
                 acct_assets: erp_acct_var.acct_assets
@@ -306,7 +299,6 @@
 
             showPaymentModal() {
                 this.getDueBills();
-                this.pay_bill_modal = true;
             },
 
             resetData() {
