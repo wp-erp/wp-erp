@@ -1,10 +1,10 @@
 import Vue from 'vue'
-// import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 import App from './App.vue'
 import router from './router'
 import VueSweetalert2 from 'vue-sweetalert2'
 import commonMixins from './mixins/common'
+import store from './store/store'
 
 Vue.config.productionTip = false
 
@@ -37,6 +37,7 @@ Vue.directive('click-outside', {
 new Vue({
     el: '#erp-accounting',
     router,
+    store,
     render: h => h(App)
 });
 

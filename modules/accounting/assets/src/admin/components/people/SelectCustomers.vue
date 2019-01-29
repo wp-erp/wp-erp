@@ -9,6 +9,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import PeopleModal from 'admin/components/people/PeopleModal.vue'
@@ -31,35 +33,23 @@
         data() {
             return {
                 selected: [],
-                options: [],
                 showModal: false
             }
         },
 
+        computed: mapState({
+            options: state => state.sales.customers
+        }),
+
         created() {
-            var self = this;
-            this.$root.$on( 'options-query', query => {
-                if ( query ) {
-                    this.getCustomers(query);
-                }
+            this.$store.dispatch('sales/fetchCustomers');
 
-            } );
-
-            this.$root.$on( 'dropdown-open', () => {
-                if ( typeof this.selected.id == 'undefined' ) {
-                    return;
-                }
-
-                this.options = [];
-                this.options.push(this.selected);
-            } );
-
-            this.$on('modal-close', function() {
+            this.$on('modal-close', () => {
                 this.showModal = false;
                 this.people = null;
             });
-            this.$root.$on( 'peopleUpdate', function() {
-                self.showModal = false;
+            this.$root.$on( 'peopleUpdate', () => {
+                this.showModal = false;
             } );
         },
 
@@ -73,25 +63,6 @@
             }
         },
 
-        methods: {
-            getCustomers(query) {
-                HTTP.get('/customers', {
-                    params: {
-                        search: query
-                    }
-                }).then((response) => {
-                    this.options = [];
-                    
-                    response.data.forEach(item => {
-                        this.options.push({
-                            id: item.id,
-                            name: item.first_name + ' ' + item.last_name
-                        });
-                    });
-                });
-            },
-
-        }
     }
 </script>
 
