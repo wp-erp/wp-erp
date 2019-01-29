@@ -321,6 +321,18 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
         }
+        if ( isset( $request['trn_by_ledger_id'] ) ) {
+            $prepared_item['trn_by_ledger_id'] = $request['trn_by_ledger_id'];
+        }
+        if ( isset( $request['check_no'] ) ) {
+            $prepared_item['check_no'] = $request['check_no'];
+        }
+        if ( isset( $request['deposit_to'] ) ) {
+            $prepared_item['deposit_to'] = $request['deposit_to'];
+        }
+        if ( isset( $request['name'] ) ) {
+            $prepared_item['name'] = $request['name'];
+        }
 
         return $prepared_item;
     }
@@ -339,14 +351,12 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'voucher_no'      => (int) $item->voucher_no,
+            //'voucher_no'      => (int) $item->voucher_no,
             'customer_id'     => (int) $item->customer_id,
-            'customer_name'   => $item->customer_name,
+            //'customer_name'   => $item->customer_name,
             'trn_date'        => $item->trn_date,
             'amount'          => $item->amount,
-            // 'billing_address' => $item->billing_address,
             'line_items'      => $item->line_items,
-            // 'type'            => $item->type,
             'status'          => $item->status,
         ];
 
@@ -462,6 +472,22 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                         ]
                     ],
                 ],
+                'check_no'   => [
+                    'description' => __( 'Check no for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'name'   => [
+                    'description' => __( 'Check name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
                 'type'       => [
                     'description' => __( 'Type for the resource.' ),
                     'type'        => 'string',
@@ -469,7 +495,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                    'required'   => true,
                 ],
                 'status'       => [
                     'description' => __( 'Status for the resource.' ),

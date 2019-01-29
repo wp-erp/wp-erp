@@ -207,7 +207,7 @@ function erp_acct_insert_invoice( $data ) {
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-            'invoice_no'  => $invoice_id,
+            'invoice_no'  => $voucher_no,
             'trn_no'      => $voucher_no,
             'trn_date'    => $invoice_data['trn_date'],
             'particulars' => '',
@@ -640,6 +640,11 @@ function erp_acct_get_recievables_overview() {
 
             //segment by date difference
             switch ( $diff ) {
+
+                case ( $diff === 0 ):
+                    $data['first'][] = $item_data;
+                    $amount['first'] = $amount['first'] + $item->due;
+                    break;
                 case ( $diff <= 30 ):
                     $data['first'][] = $item_data;
                     $amount['first'] = $amount['first'] + $item->due;

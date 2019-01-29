@@ -161,6 +161,10 @@ function erp_acct_insert_pay_purchase( $data ) {
 
         erp_acct_insert_people_trn_data( $pay_purchase_data, $pay_purchase_data['vendor_id'], 'debit' );
 
+        if ( isset( $pay_purchase_data['trn_by'] ) && $pay_purchase_data['trn_by'] === '3' ) {
+            erp_acct_insert_check_data ( $pay_purchase_data );
+        }
+
         $wpdb->query( 'COMMIT' );
 
     } catch (Exception $e) {
@@ -293,7 +297,10 @@ function erp_acct_void_pay_purchase( $id ) {
  * @return mixed
  */
 function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
+    $pay_purchase_data = [];
+
     $user_data = erp_get_people($data['vendor_id']);
+    $company = new \WeDevs\ERP\Company();
 
     $pay_purchase_data['voucher_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
     $pay_purchase_data['order_no']         = isset( $data['order_no'] ) ? $data['order_no'] : 1;
@@ -307,6 +314,11 @@ function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
     $pay_purchase_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
     $pay_purchase_data['particulars']      = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $pay_purchase_data['status']           = isset( $data['status'] ) ? $data['status'] : '';
+    $pay_purchase_data['trn_by_ledger_id'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
+    $pay_purchase_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : 0;
+    $pay_purchase_data['pay_to'] = isset( $user_data ) ?  $user_data->first_name . ' ' . $user_data->last_name : '';
+    $pay_purchase_data['name'] = isset( $data['name'] ) ?  $data['name'] : $company->name;
+    $pay_purchase_data['voucher_type'] = isset( $data['voucher_type'] ) ?  $data['voucher_type'] : '';
     $pay_purchase_data['created_at']       = date( "Y-m-d" );
     $pay_purchase_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : get_current_user_id();
     $pay_purchase_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : date( "Y-m-d" );

@@ -39,7 +39,7 @@
                         </div>
                         <div class="wperp-col-sm-4 with-multiselect">
                             <label>From Account</label>
-                            <multi-select v-model="basic_fields.deposit_to" :options="bank_accounts"></multi-select>
+                            <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
 
                     </div>
@@ -161,7 +161,6 @@
                 transactionLines: [{}],
                 selected:[],
                 ledgers: [],
-                bank_accounts: [],
                 pay_methods: [],
                 attachments: [],
                 totalAmounts:[],
@@ -175,8 +174,6 @@
 
         created() {
             this.getLedgers();
-            this.getBankAccounts();
-
             this.$root.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
@@ -189,17 +186,6 @@
                 HTTP.get('ledgers').then((response) => {
                     response.data.forEach(element => {
                         this.ledgers.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
-                });
-            },
-
-            getBankAccounts() {
-                HTTP.get('/accounts/bank-accounts').then((response) => {
-                    response.data.forEach(element => {
-                        this.bank_accounts.push({
                             id: element.id,
                             name: element.name
                         });
@@ -250,16 +236,17 @@
 
                 HTTP.post('/expenses', {
                     people_id: this.basic_fields.people.id,
-                    check_no: this.basic_fields.check_no,
+                    check_no: parseInt(this.basic_fields.check_no),
                     trn_date: this.basic_fields.trn_date,
-                    trn_by: this.basic_fields.trn_by.id,
+                    trn_by: '3',
                     expense_details: this.formatTrnLines(this.transactionLines),
                     deposit_to: this.basic_fields.deposit_to.id,
                     billing_address: this.basic_fields.billing_address,
                     attachments: this.attachments,
                     type: 'check',
                     status: 4,
-                    remarks: this.particulars,
+                    particulars: this.particulars,
+                    name: this.check_data.payer_name
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({

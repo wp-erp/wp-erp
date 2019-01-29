@@ -115,14 +115,21 @@ function erp_acct_get_payables_overview() {
 
             //segment by date difference
             switch ( $diff ) {
+                case ( $diff === 0 ):
+                    $data['first'][] = $item_data;
+                    $amount['first'] = $amount['first'] + abs( $item->due );
+                    break;
+
                 case ( $diff <= 30 ):
                     $data['first'][] = $item_data;
                     $amount['first'] = $amount['first'] + abs( $item->due );
                     break;
+
                 case ( $diff <= 60 ):
                     $data['second'][] = $item_data;
                     $amount['second'] = $amount['second'] + abs( $item->due );
                     break;
+
                 case ( $diff <= 90 ):
                     $data['third'][] = $item_data;
                     $amount['third'] = $amount['third'] + abs( $item->due );
@@ -135,6 +142,56 @@ function erp_acct_get_payables_overview() {
     }
 
     return [ 'data' => $data, 'amount' => $amount ];
+}
+
+/**
+ * Insert check data
+ *
+ * @param array $check_data
+ *
+ * @return void
+ */
+function erp_acct_insert_check_data( $check_data ) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_checks', array(
+        'trn_no'      => $check_data['voucher_no'],
+        'check_no'    => $check_data['check_no'],
+        'voucher_type'=> $check_data['voucher_type'],
+        'amount'      => $check_data['amount'],
+        'name'        => $check_data['name'],
+        'pay_to'      => $check_data['pay_to'],
+        'created_at'  => $check_data['created_at'],
+        'created_by'  => $check_data['created_by'],
+        'updated_at'  => $check_data['updated_at'],
+        'updated_by'  => $check_data['updated_by'],
+    ) );
+}
+
+/**
+ * Update check data
+ *
+ * @param array $check_data
+ * @param $check_no
+ *
+ * @return void
+ */
+function erp_acct_update_check_data( $check_data, $check_no ) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_checks', array(
+        'trn_no'      => $check_data['voucher_no'],
+        'voucher_type'=> $check_data['voucher_type'],
+        'amount'      => $check_data['amount'],
+        'name'        => $check_data['name'],
+        'pay_to'      => $check_data['pay_to'],
+        'created_at'  => $check_data['created_at'],
+        'created_by'  => $check_data['created_by'],
+        'updated_at'  => $check_data['updated_at'],
+        'updated_by'  => $check_data['updated_by'],
+    ), array(
+        'check_no' => $check_no,
+    ) );
 }
 
 /**
@@ -290,4 +347,60 @@ function erp_acct_format_people_address( $address = [] ) {
     }
 
     return $add;
+}
+
+/**
+ * Clear DB for testing
+ */
+function erp_acct_clear_db() {
+    erp_acct_dev_clear_purchases();
+    erp_acct_dev_clear_sales();
+    erp_acct_dev_clear_bills();
+    erp_acct_dev_clear_vouchers();
+    echo "Done";
+}
+
+function erp_acct_dev_clear_purchases() {
+    global $wpdb;
+
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_purchase" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_purchase_details" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_pay_purchase" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_pay_purchase_details" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_purchase_account_details" );
+}
+
+
+function erp_acct_dev_clear_sales() {
+    global $wpdb;
+
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_invoices" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_invoice_details" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_invoice_receipts" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_invoice_receipts_details" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_invoice_account_details" );
+}
+
+function erp_acct_dev_clear_bills() {
+    global $wpdb;
+
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_bills" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_bill_details" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_pay_bill" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_pay_bill_details" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_bill_account_details" );
+
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_expenses" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_expense_details" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_expense_checks" );
+}
+
+function erp_acct_dev_clear_vouchers() {
+    global $wpdb;
+
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_voucher_no" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_ledger_details" );
+    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_transfer_voucher" );
+    $wpdb->insert( "{$wpdb->prefix}erp_acct_ledger_details", array( 'ledger_id' => 3, 'debit' => 500 ));
+    $wpdb->insert( "{$wpdb->prefix}erp_acct_ledger_details", array( 'ledger_id' => 4, 'debit' => 2500 ));
 }

@@ -431,8 +431,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];
         }
-        if ( isset( $request['remarks'] ) ) {
-            $prepared_item['remarks'] = $request['remarks'];
+        if ( isset( $request['particulars'] ) ) {
+            $prepared_item['particulars'] = $request['particulars'];
         }
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = maybe_serialize( $request['attachments'] );

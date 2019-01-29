@@ -36,10 +36,16 @@
                             <label>Deposit to</label>
                             <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
-                        <div class="wperp-col-xs-12">
+                        <div class="wperp-col-sm-6">
                             <label>Billing Address</label>
                             <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
+                        <div class="wperp-col-sm-6 with-multiselect">
+                            <label>Payment Method</label>
+                            <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
+                        </div>
+
+                        <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
                     </div>
                 </form>
 
@@ -115,8 +121,10 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import PrintPreview from 'admin/components/base/PrintPreview.vue';
-    import SelectAccounts from "admin/components/select/SelectAccounts.vue";
+    import PrintPreview from 'admin/components/base/PrintPreview.vue'
+    import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+    import CheckFields from 'admin/components/check/CheckFields.vue'
 
     export default {
         name: 'RecPaymentCreate',
@@ -128,7 +136,13 @@
             FileUpload,
             SubmitButton,
             PrintPreview,
-            SelectCustomers
+            SelectCustomers,
+            MultiSelect,
+            CheckFields
+        },
+
+        created() {
+            this.getPayMethods();
         },
 
         data() {
@@ -136,14 +150,21 @@
                 basic_fields: {
                     customer: '',
                     trn_ref: '',
-                    payment_date: erp_acct_var.current_date,
+                    payment_date: '',
                     deposit_to: '',
-                    billing_address: ''
+                    billing_address: '',
+                    trn_by: ''
+                },
+
+                check_data: {
+                    payer_name: '',
+                    check_no: ''
                 },
 
                 invoices: [],
                 attachments: [],
                 totalAmounts:[],
+                pay_methods: [],
                 finalTotalAmount: 0,
                 particulars: '',
                 isWorking: false,
@@ -153,6 +174,21 @@
         },
 
         methods: {
+            getPayMethods() {
+                HTTP.get('/transactions/payment-methods').then((response) => {
+                    response.data.forEach(element => {
+                        this.pay_methods.push({
+                            id: element.id,
+                            name: element.name
+                        });
+                    });
+                });
+            },
+
+            setCheckFields( check_data ) {
+                this.check_data = check_data;
+            },
+
             getDueInvoices() {
                 let customerId = this.basic_fields.customer.id,
                     idx = 0,
@@ -165,15 +201,13 @@
 
                 HTTP.get(`/invoices/due/${customerId}`).then((response) => {
                     response.data.forEach(element => {
-                        if ( element.due !== null ) {
-                            this.invoices.push({
-                                id: element.id,
-                                invoice_no: element.voucher_no,
-                                due_date: element.due_date,
-                                amount: parseFloat(element.amount),
-                                due: parseFloat(element.due)
-                            });
-                        }
+                        this.invoices.push({
+                            id: element.id,
+                            invoice_no: element.voucher_no,
+                            due_date: element.due_date,
+                            amount: parseFloat(element.amount),
+                            due: parseFloat(element.due)
+                        });
                     });
                 }).then(() => {
                     this.invoices.forEach(element => {
@@ -233,7 +267,10 @@
                     type: 'payment',
                     status: '3',
                     particulars: this.particulars,
-                    trn_by: this.basic_fields.deposit_to.id,
+                    deposit_to: this.basic_fields.deposit_to.id,
+                    trn_by: this.basic_fields.trn_by.id,
+                    check_no: parseInt(this.check_data.check_no),
+                    name: this.check_data.payer_name
                 }).then(res => {
                     this.$swal({
                         position: 'center',
@@ -258,7 +295,7 @@
             },
 
             removeRow(index) {
-                this.$delete(this.transactionLines, index);
+                this.$delete(this.invoices, index);
                 this.updateFinalAmount();
             },
         },
