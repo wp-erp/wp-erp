@@ -50,14 +50,10 @@ export default new Router({
             ]
         },
         {
-            path : '/users',
-            name : 'Customers',
-            component: People,
-        },
-        {
             path : '/inventory',
             name : 'Products',
             component: Products,
+            alias: '/products'
         },
         {
             path: '/customers',
@@ -67,6 +63,7 @@ export default new Router({
                     path : '',
                     name : 'Customers',
                     component: People,
+                    alias: '/users'
                 },
                 {
                     path : 'page/:page',
@@ -184,11 +181,6 @@ export default new Router({
             path: '/invoices/new',
             name: 'InvoiceCreate',
             component: InvoiceCreate
-        },
-        {
-            path: '/products',
-            name: 'Products',
-            component: Products
         },
         {
             path: '/product_categories',
