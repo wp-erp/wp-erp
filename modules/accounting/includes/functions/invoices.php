@@ -640,6 +640,11 @@ function erp_acct_get_recievables_overview() {
 
             //segment by date difference
             switch ( $diff ) {
+
+                case ( $diff === 0 ):
+                    $data['first'][] = $item_data;
+                    $amount['first'] = $amount['first'] + $item->due;
+                    break;
                 case ( $diff <= 30 ):
                     $data['first'][] = $item_data;
                     $amount['first'] = $amount['first'] + $item->due;
