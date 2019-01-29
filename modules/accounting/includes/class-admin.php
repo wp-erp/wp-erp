@@ -86,12 +86,6 @@ class Admin {
             'slug'       => 'journals',
             'position'   => 25
         ] );
-        erp_add_submenu( 'accounting', 'transactions', [
-            'title'      =>  __( 'Transfer Money', 'erp' ),
-            'capability' => $expense,
-            'slug'       => 'transfer/new',
-            'position'   => 25
-        ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Chart of Accounts', 'erp' ),
             'capability' => $account_charts,
