@@ -431,8 +431,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];
         }
-        if ( isset( $request['remarks'] ) ) {
-            $prepared_item['remarks'] = $request['remarks'];
+        if ( isset( $request['particulars'] ) ) {
+            $prepared_item['particulars'] = $request['particulars'];
         }
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = maybe_serialize( $request['attachments'] );
@@ -461,12 +461,12 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor_id'       => (int) $item->vendor_id,
             'trn_date'        => $item->trn_date,
             'due_date'        => $item->due_date,
-            'address'         => $item->billing_address,
-            'bill_details'    => $item->bill_details,
+//            'address'         => $item->billing_address,
+//            'bill_details'    => $item->bill_details,
             'total'           => (int) $item->amount,
             'due'             => isset( $item->due ) ? $item->due : $item->amount,
             'ref'             => $item->ref,
-            'particulars'     => $item->remarks,
+            'particulars'     => $item->particulars,
             'status'          => $item->status,
             'attachments'     => $item->attachments
         ];

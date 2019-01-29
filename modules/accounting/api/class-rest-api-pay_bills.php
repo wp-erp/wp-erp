@@ -305,17 +305,14 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $prepared_item = [];
 
-        if ( isset( $request['vendor_id'] ) ) {
-            $prepared_item['vendor_id'] = $request['vendor_id'];
+        if ( isset( $request['people_id'] ) ) {
+            $prepared_item['people_id'] = $request['people_id'];
         }
         if ( isset( $request['ref'] ) ) {
             $prepared_item['ref'] = $request['ref'];
         }
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] = absint( $request['trn_date'] );
-        }
-        if ( isset( $request['due_date'] ) ) {
-            $prepared_item['due_date'] = absint( $request['due_date'] );
         }
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
@@ -333,10 +330,28 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['trn_by'] = $request['trn_by'];
         }
         if ( isset( $request['type'] ) ) {
-            $prepared_item['type'] = $request['type'];
+            $prepared_item['voucher_type'] = $request['type'];
+        }
+        if ( isset( $request['amount'] ) ) {
+            $prepared_item['amount'] = $request['amount'];
+        }
+        if ( isset( $request['due'] ) ) {
+            $prepared_item['due'] = $request['due'];
         }
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];
+        }
+        if ( isset( $request['trn_by_ledger_id'] ) ) {
+            $prepared_item['trn_by_ledger_id'] = $request['trn_by_ledger_id'];
+        }
+        if ( isset( $request['check_no'] ) ) {
+            $prepared_item['check_no'] = $request['check_no'];
+        }
+        if ( isset( $request['deposit_to'] ) ) {
+            $prepared_item['deposit_to'] = $request['deposit_to'];
+        }
+        if ( isset( $request['name'] ) ) {
+            $prepared_item['name'] = $request['name'];
         }
 
         return $prepared_item;
@@ -356,7 +371,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'vendor_id'       => (int) $item->vendor_id,
+            'vendor_id'       => (int) $item->people_id,
             'trn_date'        => $item->trn_date,
             'amount'          => $item->amount,
             'billing_address' => (int) $item->billing_address,
@@ -392,7 +407,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'vendor_id'   => [
+                'people_id'   => [
                     'description' => __( 'Vendor id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -448,6 +463,22 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'type'        => 'integer',
                             'context'     => [ 'edit' ],
                         ],
+                    ],
+                ],
+                'check_no'   => [
+                    'description' => __( 'Check no for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'name'   => [
+                    'description' => __( 'Check name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
                 'type'       => [
