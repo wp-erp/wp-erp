@@ -138,6 +138,56 @@ function erp_acct_get_payables_overview() {
 }
 
 /**
+ * Insert check data
+ *
+ * @param array $check_data
+ *
+ * @return void
+ */
+function erp_acct_insert_check_data( $check_data ) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_checks', array(
+        'trn_no'      => $check_data['voucher_no'],
+        'check_no'    => $check_data['check_no'],
+        'voucher_type'=> $check_data['voucher_type'],
+        'amount'      => $check_data['amount'],
+        'name'        => $check_data['name'],
+        'pay_to'      => $check_data['pay_to'],
+        'created_at'  => $check_data['created_at'],
+        'created_by'  => $check_data['created_by'],
+        'updated_at'  => $check_data['updated_at'],
+        'updated_by'  => $check_data['updated_by'],
+    ) );
+}
+
+/**
+ * Update check data
+ *
+ * @param array $check_data
+ * @param $check_no
+ *
+ * @return void
+ */
+function erp_acct_update_check_data( $check_data, $check_no ) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_checks', array(
+        'trn_no'      => $check_data['voucher_no'],
+        'voucher_type'=> $check_data['voucher_type'],
+        'amount'      => $check_data['amount'],
+        'name'        => $check_data['name'],
+        'pay_to'      => $check_data['pay_to'],
+        'created_at'  => $check_data['created_at'],
+        'created_by'  => $check_data['created_by'],
+        'updated_at'  => $check_data['updated_at'],
+        'updated_by'  => $check_data['updated_by'],
+    ), array(
+        'check_no' => $check_no,
+    ) );
+}
+
+/**
  * Get people name, email by id
  *
  * @param $people_id
