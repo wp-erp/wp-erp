@@ -6,12 +6,6 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Pay Purchase</h2>
-
-                    <!-- Print Dialogue -->
-
-                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showPaymentModal">
-                        <span>Print</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -42,10 +36,16 @@
                             <label>Transaction From</label>
                             <multi-select :placeholder="`Select Account`" v-model="basic_fields.deposit_to" :options="deposit_accts" />
                         </div>
-                        <div class="wperp-col-xs-12">
+                        <div class="wperp-col-sm-6">
                             <label>Billing Address</label>
                             <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
+                        <div class="wperp-col-sm-6 with-multiselect">
+                            <label>Payment Method</label>
+                            <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
+                        </div>
+
+                        <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
                     </div>
                 </form>
 
@@ -125,8 +125,9 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import PayBillModal from 'admin/components/pay-bill/PayBillModal.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import SelectVendors from "admin/components/people/SelectVendors.vue";
-    import MultiSelect from "admin/components/select/MultiSelect.vue";
+    import SelectVendors from 'admin/components/people/SelectVendors.vue'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+    import CheckFields from 'admin/components/check/CheckFields.vue'
 
     export default {
         name: 'PayPurchaseCreate',
@@ -139,6 +140,7 @@
             FileUpload,
             PayBillModal,
             SubmitButton,
+            CheckFields
         },
 
         data() {
@@ -148,8 +150,16 @@
                     trn_ref: '',
                     payment_date: erp_acct_var.current_date,
                     deposit_to: '',
-                    billing_address: ''
+                    billing_address: '',
+                    trn_by: ''
                 },
+
+                check_data: {
+                    payer_name: '',
+                    check_no: ''
+                },
+
+                pay_methods: [],
                 deposit_accts: [],
                 pay_purchases: [],
                 attachments: [],
@@ -168,9 +178,25 @@
             });
 
             this.fetchAccounts();
+            this.getPayMethods();
         },
 
         methods: {
+            getPayMethods() {
+                HTTP.get('/transactions/payment-methods').then((response) => {
+                    response.data.forEach(element => {
+                        this.pay_methods.push({
+                            id: element.id,
+                            name: element.name
+                        });
+                    });
+                });
+            },
+
+            setCheckFields( check_data ) {
+                this.check_data = check_data;
+            },
+
             resetData() {
 
                     this.basic_fields = {
@@ -270,13 +296,15 @@
                     vendor_id: this.basic_fields.vendor.id,
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.payment_date,
-                    due_date: this.basic_fields.due_date,
                     purchase_details: this.pay_purchases,
                     attachments: this.attachments,
                     type: 'pay_purchase',
                     status: 4,
                     particulars: this.particulars,
-                    trn_by: this.basic_fields.deposit_to.id,
+                    deposit_to: this.basic_fields.deposit_to.id,
+                    trn_by: this.basic_fields.trn_by.id,
+                    check_no: parseInt(this.check_data.check_no),
+                    name: this.check_data.payer_name
                 }).then(res => {
 
                     this.$swal({
@@ -295,7 +323,7 @@
                         timer: 1500
                     });
 
-                } ).then(() => {
+                }).then(() => {
                     this.isWorking = false;
                     this.resetData();
                 });
