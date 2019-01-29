@@ -57,12 +57,8 @@
                             {{ key+1 }}
                         </td>
                         <td class="col--account" data-colname="Account">
-                            <div class="wperp-custom-select">
-                                <select v-model="account_ids[key]" class="wperp-form-field">
-                                    <option value="0">--Select--</option>
-                                    <option value="1">Account Payable</option>
-                                    <option value="2">Rent</option>
-                                </select>
+                            <div class="wperp-custom-select with-multiselect">
+                               <multi-select v-model="account_ids[key]" :options="ledgers"></multi-select>
                             </div>
                         </td>
                         <td class="col--particulars" data-colname="Particulars">
@@ -80,7 +76,7 @@
                     </tr>
                     <tr class="total-amount-row">
                         <td colspan="3" class="pl-10 text-right col--total-amount">
-                            <span>Total Amount <i class="flaticon-arrow-down-sign-to-navigate"></i></span>
+                            <span>Total Amount</span>
                         </td>
                         <td data-colname="Debit"><input type="text" class="text-right" :value="totalDebit" readonly ></td>
                         <td data-colname="Credit"><input type="text" class="text-right" :value="totalCredit" readonly ></td>
@@ -119,11 +115,13 @@
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
 
     export default {
         name: "JournalCreate",
 
         components: {
+            MultiSelect,
             HTTP,
             Datepicker,
             FileUpload,
@@ -143,6 +141,7 @@
                 attachments: [],
                 debitLine:[],
                 creditLine:[],
+                ledgers:[],
                 credit_total: 0,
                 debit_total: 0,
                 finalAmount: 0,
@@ -154,10 +153,22 @@
         },
 
         created() {
+            this.getLedgers();
             this.getNextJournalID();
         },
 
         methods: {
+            getLedgers() {
+                HTTP.get('ledgers').then((response) => {
+                    response.data.forEach(element => {
+                        this.ledgers.push({
+                            id: element.id,
+                            name: element.name
+                        });
+                    });
+                });
+            },
+
             addLine() {
                 this.transactionLines.push({});
             },
@@ -173,7 +184,7 @@
                 }).then(res => {
                     //console.log(res.data);
                     this.$swal({
-                        position: 'top-end',
+                        position: 'center',
                         type: 'success',
                         title: 'Journal Entry Added!',
                         showConfirmButton: false,
