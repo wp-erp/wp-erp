@@ -6,12 +6,6 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Expense</h2>
-
-                    <!-- Print Dialogue -->
-
-                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showExpenseModal">
-                        <span>Print</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -52,7 +46,7 @@
                             <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
                         </div>
 
-                        <check-fields v-if="basic_fields.trn_by.name === 'check'" @updateCheckFields="setCheckFields"></check-fields>
+                        <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
                     </div>
                 </form>
 
@@ -286,9 +280,12 @@
                     attachments: this.attachments,
                     type: 'expense',
                     status: 4,
-                    remarks: this.particulars,
+                    particulars: this.particulars,
+                    check_no: parseInt(this.check_data.check_no),
+                    name: this.check_data.payer_name
                 }).then(res => {
                     console.log(res.data);
+                    console.log( this.check_data );
                     this.$swal({
                         position: 'center',
                         type: 'success',
