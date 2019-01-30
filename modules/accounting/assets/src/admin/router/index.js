@@ -20,12 +20,13 @@ import PurchaseCreate    from 'admin/components/purchase/PurchaseCreate.vue';
 import PayPurchaseCreate from 'admin/components/pay-purchase/PayPurchaseCreate.vue';
 import JournalList       from 'admin/components/journal/JournalList.vue';
 import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
-import JournalSingle      from 'admin/components/journal/JournalSingle.vue';
+import JournalSingle     from 'admin/components/journal/JournalSingle.vue';
 import Transfer          from 'admin/components/transfers/Transfer.vue';
 import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
 import SalesSingle       from 'admin/components/transactions/sales/SalesSingle.vue';
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
 import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
+import ExpenseSingle     from 'admin/components/expense/ExpenseSingle.vue';
 import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
@@ -338,6 +339,23 @@ export default new Router({
             path: '/transfer/new',
             name: 'Transfer',
             component: Transfer
+        },
+        {
+            path: '/expenses',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+
+                    path: 'new',
+                    name: 'ExpenseCreate',
+                    component: ExpenseCreate
+                },
+                {
+                    path: ':id',
+                    name: 'ExpenseSingle',
+                    component: ExpenseSingle,
+                },
+            ]
         },
         {
             path: '/expenses/new',
