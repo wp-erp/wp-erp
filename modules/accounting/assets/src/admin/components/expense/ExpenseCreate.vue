@@ -129,7 +129,6 @@
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import ExpenseModal from 'admin/components/expense/ExpenseModal.vue'
     import SelectPeople from 'admin/components/people/SelectPeople.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
@@ -145,7 +144,6 @@
             Datepicker,
             MultiSelect,
             FileUpload,
-            ExpenseModal,
             SubmitButton,
             SelectPeople,
             CheckFields
