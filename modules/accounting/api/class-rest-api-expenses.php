@@ -164,8 +164,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $data = $this->prepare_item_for_response( $expense_data, $request, $additional_fields );
-        $formatted_items[] = $this->prepare_response_for_collection( $data );
-        $response = rest_ensure_response( $formatted_items );
+        $response = rest_ensure_response( $data );
 
         $response->set_status( 200 );
 
@@ -184,7 +183,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item_amount = []; $item_tax = []; $item_total = []; $additional_fields = [];
 
-        $items = $request['expense_details'];
+        $items = $request['bill_details'];
 
         foreach ( $items as $key => $item ) {
             $item_amount[$key] = $item['amount'];
@@ -225,7 +224,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item_amount = []; $item_tax = []; $item_total = []; $additional_fields = [];
 
-        $items = $request['expense_details'];
+        $items = $request['bill_details'];
 
         foreach ( $items as $key => $item ) {
             $item_amount[$key] = $item['amount'];
@@ -338,13 +337,13 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['attachments'] = $request['attachments'];
         }
         if ( isset( $request['deposit_to'] ) ) {
-            $prepared_item['deposit_to'] = $request['deposit_to'];
+            $prepared_item['trn_by_ledger_id'] = $request['deposit_to'];
         }
         if ( isset( $request['trn_by'] ) ) {
             $prepared_item['trn_by'] = $request['trn_by'];
         }
-        if ( isset( $request['expense_details'] ) ) {
-            $prepared_item['expense_details'] = $request['expense_details'];
+        if ( isset( $request['bill_details'] ) ) {
+            $prepared_item['bill_details'] = $request['bill_details'];
         }
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = $request['billing_address'];
@@ -357,9 +356,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['attachments'] ) ) {
             $prepared_item['attachments'] = $request['attachments'];
-        }
-        if ( isset( $request['trn_by_ledger_id'] ) ) {
-            $prepared_item['trn_by_ledger_id'] = $request['trn_by_ledger_id'];
         }
         if ( isset( $request['name'] ) ) {
             $prepared_item['name'] = $request['name'];
@@ -391,14 +387,14 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'people_id'       => (int) $item->people_id,
             'date'            => $item->trn_date,
             'address'         => $item->billing_address,
-            'expense_details' => $item->expense_details,
+            'bill_details'    => $item->bill_details,
             'total'           => (int) $item->amount,
             'ref'             => isset( $item->ref ) ? $item->ref : $item->check_no,
             'remarks'         => $item->particulars,
             'status'          => $item->status,
             'attachments'     => $item->attachments,
-            'trn_by_ledger_id'=> $item->trn_by,
-            'deposit_to'      => $item->deposit_to
+            'trn_by'          => $item->trn_by,
+            'deposit_to'      => $item->trn_by_ledger_id
         ];
 
         $data = array_merge( $data, $additional_fields );
