@@ -20,7 +20,6 @@
                                     :multiple="false" />
                                     <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
                                 </div>
-                                <p>Categories, unlike tags, can have a hierarchy. You might have a Jazz category, and under that have children categories for Bebop and Big Band. Totally optional.</p>
                             </div>
                             <div class="buttons-wrapper text-right">
                                 <input type="submit" value="Add new category" class="wperp-btn btn--primary" @click.prevent="createCategory"/>

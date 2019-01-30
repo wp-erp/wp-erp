@@ -53,7 +53,7 @@
                             <tr>
                                 <th scope="col" class="column-primary">Component Name</th>
                                 <th scope="col">Agency</th>
-                                <th scope="col">Tax Category</th>
+                                <th scope="col">Category</th>
                                 <th scope="col">Tax Rate</th>
                                 <th scope="col" class="col--actions"></th>
                             </tr>
@@ -66,12 +66,12 @@
                                     <button type="button" class="wperp-toggle-row"
                                             @click.prevent="isRowExpanded = !isRowExpanded"></button>
                                 </td>
-                                <td class="col--agency" data-colname="Agency">
+                                <td class="col--agency with-multiselect" data-colname="Agency">
                                     <multi-select v-model="line.agency_id" :options="agencies"/>
                                     <a href="#" @click.prevent="showAgencyModal = true" role="button"
                                        class="after-select-dropdown">Add Tax Agency</a>
                                 </td>
-                                <td class="col--tax-category" data-colname="Tax Category">
+                                <td class="col--tax-category with-multiselect" data-colname="Tax Category">
                                     <multi-select v-model="line.tax_category" :options="categories"/>
                                 </td>
                                 <td class="col--tax-rate" data-colname="Tax Rate">
@@ -80,6 +80,13 @@
                                 <td class="col--actions delete-row" data-colname="Remove Above Selection">
                                     <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                                 </td>
+                            </tr>
+                            <tr class="total-amount-row">
+                                <td class="text-right pr-0 hide-sm" colspan="3">Total Amount</td>
+                                <td class="text-right" data-colname="Total Rate">
+                                    <input class="text-right" type="text" :value="isNaN(finalTotalAmount) ? 0 : finalTotalAmount" readonly/>
+                                </td>
+                                <td class="text-right"></td>
                             </tr>
                             <tr class="add-new-line" v-if="isTaxComponent">
                                 <td colspan="9" class="text-left">
@@ -134,20 +141,19 @@
                 componentLines: [{}],
                 categories: [{}],
                 agencies: [{}],
-                showCatModal: false,
                 showAgencyModal: false
             }
         },
 
         created() {
-            this.getCategories();
             this.getAgencies();
+            this.getCategories();
 
             this.$on('remove-row', index => {
                 this.$delete(this.componentLines, index);
+                this.updateFinalAmount();
             });
         },
-
 
         methods: {
             getAgencies() {
@@ -162,7 +168,7 @@
             },
 
             getCategories() {
-                HTTP.get('/tax-cats').then((response) => {
+                HTTP.get('/product-cats').then((response) => {
                     response.data.forEach(element => {
                         this.categories.push({
                             id: element.id,
@@ -186,11 +192,21 @@
                         type: 'success',
                         title: 'Tax Agency Created!',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 1000
                     });
                 }).then(() => {
                     this.resetData();
                 });
+            },
+
+            updateFinalAmount() {
+                let finalAmount = 0;
+
+                this.componentLines.forEach(element => {
+                    finalAmount += parseFloat(element.tax_rate);
+                });
+
+                return parseFloat(finalAmount).toFixed(2);
             },
 
             closeModal: function () {
@@ -209,6 +225,19 @@
                 this.$delete(this.componentLines, index);
             },
         },
+
+        computed: {
+            finalTotalAmount() {
+                let amount = this.updateFinalAmount();
+
+                if ( Number.isNaN(amount) ) {
+                    return 0;
+                }
+
+                return amount;
+            },
+        },
+
     }
 </script>
 
