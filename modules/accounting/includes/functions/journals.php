@@ -74,21 +74,18 @@ function erp_acct_get_journal( $journal_no ) {
     journal.created_at,
     journal.created_by,
     journal.updated_at, 
-    journal.updated_by,
-    
-    journal_detail.trn_no,
-    journal_detail.ledger_id,
-    journal_detail.particulars,
-    journal_detail.debit,
-    journal_detail.credit
+    journal.updated_by
     
     FROM {$wpdb->prefix}erp_acct_journals as journal
     LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
     WHERE journal.id = {$journal_no} LIMIT 1";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
+    $rows = $row;
+    $rows['line_items'] = erp_acct_format_journal_data( $row, $journal_no );
 
-    return $row;
+    return $rows;
+
 }
 
 /**
@@ -237,5 +234,35 @@ function erp_acct_get_formatted_journal_data( $data, $voucher_no ) {
     $journal_data['updated_by'] = isset($data['updated_by']) ? $data['updated_by'] : '';
 
     return $journal_data;
+}
+
+function erp_acct_format_journal_data( $item, $journal_no ) {
+
+    global $wpdb;
+
+    $sql = "SELECT
+    journal.id,
+    
+    journal_detail.trn_no,
+    journal_detail.ledger_id,
+    journal_detail.particulars,
+    journal_detail.debit,
+    journal_detail.credit
+    
+    FROM {$wpdb->prefix}erp_acct_journals as journal
+    LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
+    WHERE journal.id = {$journal_no}";
+
+    $rows = $wpdb->get_results( $sql, ARRAY_A );
+    $line_items = [];
+
+    foreach ( $rows as $key => $item ) {
+        $line_items[$key]['ledger_id'] = $item['ledger_id'];
+        $line_items[$key]['particulars'] = $item['particulars'];
+        $line_items[$key]['debit'] = $item['debit'];
+        $line_items[$key]['credit'] = $item['credit'];
+    }
+
+    return $line_items;
 }
 

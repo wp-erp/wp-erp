@@ -234,17 +234,11 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
-        $line_items['trn_no'] = $item->trn_no;
-        $line_items['ledger_id'] = $item->ledger_id;
-        $line_items['particulars'] = isset( $item->particulars ) ? $item->particulars : '';
-        $line_items['debit'] = $item->debit;
-        $line_items['credit'] = $item->credit;
-
         $data = [
             'id'          => $item->id,
             'particulars' => $item->particulars,
             'trn_date'    => $item->trn_date,
-            'line_items'  => $line_items,
+            'line_items'  => $item->line_items,
             'total'       => (float) $item->voucher_amount,
         ];
 
@@ -304,7 +298,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'line_items'  => [
                     'description' => __( 'Items for the resource.' ),
-                    'type'        => 'array',
+                    'type'        => 'object',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
