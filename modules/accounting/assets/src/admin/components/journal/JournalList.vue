@@ -18,7 +18,11 @@
             :current-page="paginationData.currentPage"
             @pagination="goToPage">
             <template slot="l_id" slot-scope="data">
-                <strong><a href="#" @click.prevent="showJournalModal(data.row.l_id)">{{ data.row.l_id }}</a></strong>
+                <strong>
+                    <router-link :to="{ name: 'JournalSingle', params: { id: data.row.l_id }}">
+                        #{{ data.row.l_id }}
+                    </router-link>
+                </strong>
             </template>
 
         </list-table>
