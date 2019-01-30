@@ -70,7 +70,7 @@
                     <tbody>
                     <tr :key="key" v-for="(line,key) in transactionLines">
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
-                        <td class="col--account"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
+                        <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
                         <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
                         <td class="col--amount" data-colname="Amount">
                             <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
@@ -260,7 +260,7 @@
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.trn_date,
                     trn_by: this.basic_fields.trn_by.id,
-                    expense_details: this.formatTrnLines(this.transactionLines),
+                    bill_details: this.formatTrnLines(this.transactionLines),
                     deposit_to: this.basic_fields.deposit_to.id,
                     billing_address: this.basic_fields.billing_address,
                     attachments: this.attachments,
