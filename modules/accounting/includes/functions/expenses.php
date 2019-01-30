@@ -83,11 +83,33 @@ function erp_acct_get_expense( $expense_no ) {
     LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS b_detail ON expense.voucher_no = b_detail.trn_no
     LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON expense.voucher_no = ledg_detail.trn_no
 
-    WHERE expense.voucher_no = {$expense_no} AND expense.trn_by_ledger_id IS NOT NULL";
+    WHERE expense.voucher_no = {$expense_no}";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
+    $row['bill_details'] = erp_acct_format_expense_line_items( $expense_no );
+
     return $row;
+}
+
+/**
+ * Format expense line items
+ */
+function erp_acct_format_expense_line_items( $voucher_no ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT
+        expense_detail.id,
+        expense_detail.ledger_id,
+        expense_detail.trn_no,
+        expense_detail.particulars,
+        expense_detail.amount
+
+        FROM {$wpdb->prefix}erp_acct_expenses AS expense
+        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details as expense_detail ON expense.voucher_no = expense_detail.trn_no
+        WHERE expense.voucher_no = %d", $voucher_no);
+
+    return $wpdb->get_results($sql, ARRAY_A);
 }
 
 /**
@@ -139,7 +161,7 @@ function erp_acct_insert_expense( $data ) {
             'updated_by'      => $expense_data['updated_by'],
         ) );
 
-        $items = $expense_data['expense_details'];
+        $items = $expense_data['bill_details'];
 
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_details', array(
@@ -217,7 +239,7 @@ function erp_acct_update_expense( $data, $expense_id ) {
             'voucher_no'      => $expense_id
         ) );
 
-        $items = $expense_data['expense_details'];
+        $items = $expense_data['bill_details'];
 
         foreach ( $items as $key => $item ) {
             $wpdb->update( $wpdb->prefix . 'erp_acct_expense_details', array(
@@ -308,7 +330,7 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data['ref'] = isset( $data['ref'] ) ? $data['ref'] : '';
     $expense_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : 0;
     $expense_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
-    $expense_data['expense_details'] = isset( $data['expense_details'] ) ? $data['expense_details'] : '';
+    $expense_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $expense_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
     $expense_data['trn_by_ledger_id'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
     $expense_data['trn_by'] = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
