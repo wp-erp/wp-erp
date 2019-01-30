@@ -10,8 +10,7 @@
                 </div>
             </div>
         </div>
-
-        <new-tax-rate v-if="showModal" @close="showModal = false"></new-tax-rate>
+        
 
         <div class="table-container">
             <list-table
@@ -29,15 +28,15 @@
                 @action:click="onActionClick"
                 @bulk:click="onBulkAction">
             </list-table>
-	    </div>
+        </div>
 
     </div>
 </template>
 
 <script>
     import HTTP from 'admin/http'
-    import ListTable     from 'admin/components/list-table/ListTable.vue'
-    import NewTaxRate     from 'admin/components/tax/NewTaxRate.vue'
+    import ListTable from 'admin/components/list-table/ListTable.vue'
+    import NewTaxRate from 'admin/components/tax/NewTaxRate.vue'
 
     export default {
         name: 'TaxRates',
@@ -47,7 +46,7 @@
             NewTaxRate
         },
 
-        data () {
+        data() {
             return {
                 modalParams: null,
                 columns: {
@@ -55,7 +54,7 @@
                     'tax_name': {label: 'Component Name'},
                     'tax_number': {label: 'Tax Number'},
                     'tax_rate': {label: 'Tax Rate'},
-                    'actions': { label: 'Actions' }
+                    'actions': {label: 'Actions'}
                 },
                 rows: [],
                 paginationData: {
@@ -64,9 +63,9 @@
                     perPage: 10,
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
-                actions : [
-                    { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
-                    { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
+                actions: [
+                    {key: 'edit', label: 'Edit', iconClass: 'flaticon-edit'},
+                    {key: 'trash', label: 'Delete', iconClass: 'flaticon-trash'}
                 ],
                 bulkActions: [
                     {
@@ -81,55 +80,43 @@
                 url: '',
                 singleUrl: '',
                 isActiveOptionDropdown: false,
-                showModal: false
             };
         },
 
         created() {
-            this.$on('tax-modal-close', function() {
-                this.showModal = false;
-            });
-
-            this.pageTitle      =   this.$route.name;
-            this.url            =   this.$route.name.toLowerCase();
-
             this.fetchItems();
         },
 
         computed: {
-            row_data(){
+            row_data() {
                 let items = this.rows;
-                items.map( item => {
+                items.map(item => {
                     item.tax_id = item.id;
                     item.tax_name = item.tax_name;
                     item.tax_number = item.tax_number;
                     item.tax_rate = item.tax_rate;
-                } );
+                });
                 return items;
             }
         },
 
         methods: {
 
-            fetchItems(){
+            fetchItems() {
                 this.rows = [];
+
                 HTTP.get('taxes', {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
                     }
-                })
-                    .then( (response) => {
-                        this.rows = response.data;
-                        this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                        this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                    .then( () => {
-                        //ready
-                    } );
+                }).then((response) => {
+                    this.rows = response.data;
+                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                }).catch((error) => {
+                    console.log(error);
+                });
             },
 
             goToPage(page) {
@@ -137,7 +124,7 @@
                 this.paginationData.currentPage = page;
                 this.$router.push({
                     name: 'PaginateTaxRates',
-                    params: { page: page },
+                    params: {page: page},
                     query: queries
                 });
 
@@ -149,22 +136,20 @@
             },
 
             singleTaxRate(tax_id) {
-                this.$router.push({ name: 'SingleTaxRate', params: { id: tax_id } })
+                this.$router.push({name: 'SingleTaxRate', params: {id: tax_id}})
             },
 
             onActionClick(action, row, index) {
-                switch ( action ) {
+                switch (action) {
                     case 'trash':
-                        if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete( this.url + '/' + row.id).then( response => {
+                        if (confirm('Are you sure to delete?')) {
+                            HTTP.delete(this.url + '/' + row.id).then(response => {
                                 this.$delete(this.rows, index);
                             });
                         }
                         break;
 
                     case 'edit':
-                        this.showModal = true;
-                        this.taxes = row;
                         break;
 
                     default :
@@ -173,12 +158,12 @@
             },
 
             onBulkAction(action, items) {
-                if ( 'trash' === action ) {
-                    if ( confirm('Are you sure to delete?') ) {
+                if ('trash' === action) {
+                    if (confirm('Are you sure to delete?')) {
                         HTTP.delete('taxes/delete/' + items.join(',')).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
-                            if ( toggleCheckbox.checked ) {
+                            if (toggleCheckbox.checked) {
                                 // simulate click event to remove checked state
                                 toggleCheckbox.click();
                             }
@@ -189,8 +174,8 @@
                 }
             },
         }
-   	}
+    }
 </script>
 <style lang="less">
-    
+
 </style>

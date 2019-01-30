@@ -69,41 +69,41 @@
 </template>
 
 <script>
-import 'assets/js/plugins/chart.min';
-import 'assets/js/status_chart';
+    import 'assets/js/plugins/chart.min';
+    import 'assets/js/status_chart';
 
-import ComboBox from 'admin/components/select/ComboBox.vue';
-import ExpensesStats from 'admin/components/transactions/expenses/ExpensesStats.vue';
-import ExpensesList from 'admin/components/transactions/expenses/ExpensesList.vue';
-import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
+    import ComboBox from 'admin/components/select/ComboBox.vue';
+    import ExpensesStats from 'admin/components/transactions/expenses/ExpensesStats.vue';
+    import ExpensesList from 'admin/components/transactions/expenses/ExpensesList.vue';
+    import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
 
-export default {
-    name: 'Expenses',
+    export default {
+        name: 'Expenses',
 
-    components: {
-        ComboBox,
-        ExpensesStats,
-        ExpensesList,
-        TransactionsFilter
-    },
+        components: {
+            ComboBox,
+            ExpensesStats,
+            ExpensesList,
+            TransactionsFilter
+        },
 
-    data() {
-        return {
-            pages: [
-                { namedRoute: 'ExpenseCreate', name: 'Create Expense' },
-                { namedRoute: 'CheckCreate', name: 'Create Check' },
-                { namedRoute: 'BillCreate', name: 'Create Bill' },
-                { namedRoute: 'PayBillCreate', name: 'Pay Bill' },
-            ],
-        };
-    },
+        data() {
+            return {
+                pages: [
+                    {namedRoute: 'ExpenseCreate', name: 'Create Expense'},
+                    {namedRoute: 'CheckCreate', name: 'Create Check'},
+                    {namedRoute: 'BillCreate', name: 'Create Bill'},
+                    {namedRoute: 'PayBillCreate', name: 'Pay Bill'},
+                ],
+            };
+        },
 
-    created() {
-        // this.$root.$on('comboSelected', (selected) => {
-        //     console.log(selected);
-        // });
-    }
-};
+        created() {
+            // this.$root.$on('comboSelected', (selected) => {
+            //     console.log(selected);
+            // });
+        }
+    };
 </script>
 
 <style scoped>
