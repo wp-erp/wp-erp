@@ -216,7 +216,7 @@
 
                 for(let idx = 0; idx < this.transactionLines.length; idx++) {
                     let item = {};
-                    item.ledger_id = this.account_ids[idx];
+                    item.ledger_id = this.account_ids[idx].id;
                     item.particulars = this.particulars[idx];
                     item.debit  = this.debitLine[idx];
                     item.credit = this.creditLine[idx];
