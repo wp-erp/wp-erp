@@ -13,7 +13,7 @@
                 tableClass="wperp-table table-striped table-dark widefat table2 transactions-table"
                 action-column="actions"
                 :columns="columns"
-                :rows="rows"
+                :rows="row_items"
                 :total-items="paginationData.totalItems"
                 :total-pages="paginationData.totalPages"
                 :per-page="paginationData.perPage"
@@ -22,40 +22,11 @@
                 :actions="actions"
                 @action:click="onActionClick">
                 <template slot="trn_no" slot-scope="data">
-                    <strong v-if="rowTypeIs('bill', data.row)">
-                        <router-link :to="{ name: 'BillSingle', params: { id: data.row.id }}">
+                    <strong>
+                        <router-link :to="data.row.singleView">
                             #{{ data.row.id }}
                         </router-link>
                     </strong>
-                    <strong v-if="rowTypeIs('pay_bill', data.row)">
-                        <router-link :to="{ name: 'PayBillSingle', params: { id: data.row.id }}">
-                            #{{ data.row.id }}
-                        </router-link>
-                    </strong>
-                </template>
-                <template slot="type" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Pay Bill' : 'Bill' }}
-                </template>
-                <template slot="ref" slot-scope="data">
-                    {{ data.row.ref ? data.row.ref : '-' }}
-                </template>
-                <template slot="vendor_name" slot-scope="data">
-                    {{ data.row.vendor_name }}
-                </template>
-                <template slot="trn_date" slot-scope="data">
-                    {{ isPayment(data.row) ? data.row.pay_bill_trn_date : data.row.bill_trn_date }}
-                </template>
-                <template slot="due_date" slot-scope="data">
-                    {{ isPayment(data.row) ? '-' : data.row.due_date }}
-                </template>
-                <template slot="due" slot-scope="data">
-                    {{ isPayment(data.row) ? '-' : formatAmount(data.row.due) }}
-                </template>
-                <template slot="amount" slot-scope="data">
-                    {{ formatAmount(data.row.amount) }}
-                </template>
-                <template slot="status" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Paid' : data.row.status }}
                 </template>
 
             </list-table>
@@ -88,7 +59,6 @@
                     'amount'     : {label: 'Total'},
                     'status'     : {label: 'Status'},
                     'actions'    : {label: ''},
-
                 },
                 rows: [],
                 paginationData: {
@@ -180,15 +150,58 @@
 
                 this.fetchItems();
             },
-
-            isPayment(row) {
-                return row.type === 'pay_bill' ? true : false;
-            },
-
-            rowTypeIs(type, row) {
-                return row.type === type ? true : false;
-            }
         },
+
+        computed: {
+            row_items() {
+
+                if (!this.rows.length) {
+                    return this.rows;
+                }
+                let temp;
+                let items = this.rows.map( item => {
+                    switch ( item.type ){
+                        case 'pay_bill':
+                            temp = {
+                                'id'         : item.id,
+                                'trn_no'     : item.id,
+                                'type'       : 'Pay Bill',
+                                'ref'        : item.ref ? item.ref : '-',
+                                'vendor_name': item.pay_bill_vendor_name,
+                                'trn_date'   : item.pay_bill_trn_date,
+                                'due_date'   : '-',
+                                'due'        : '-',
+                                'amount'     : this.formatAmount(item.pay_bill_amount),
+                                'status'     : 'Paid',
+                                'singleView' : { name: 'PayBillSingle', params: { id: item.id }}
+                            };
+                            break;
+                        case 'bill':
+                            temp = {
+                                'id'         : item.id,
+                                'trn_no'     : item.id,
+                                'type'       : 'Bill',
+                                'ref'        : item.ref ? item.ref : '-',
+                                'vendor_name': item.vendor_name,
+                                'trn_date'   : item.bill_trn_date,
+                                'due_date'   : item.due_date,
+                                'due'        : this.formatAmount(item.due),
+                                'amount'     : this.formatAmount(item.amount),
+                                'status'     : item.status,
+                                'singleView' : { name: 'BillSingle', params: { id: item.id }}
+                            };
+                            break;
+
+                        default :
+
+                    }
+
+                    return temp;
+                } );
+
+                return items;
+            }
+        }
 
     }
 </script>

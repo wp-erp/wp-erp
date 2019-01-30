@@ -330,6 +330,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         $sql .= " voucher.id,
             voucher.type,
             bill.vendor_name AS vendor_name,
+            pay_bill.vendor_name AS pay_bill_vendor_name,
             bill.trn_date AS bill_trn_date,
             pay_bill.trn_date AS pay_bill_trn_date,
             bill.due_date,
