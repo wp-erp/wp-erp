@@ -1,57 +1,55 @@
 <template>
-  <div class="modal-dialog">
-    <div class="modal">
-      <div class="modal-content">
-        <section :class="['modal-main', { 'has-footer': footer }]">
-          <header class="modal-header">
-            <slot name="header">
-              <h1>{{ title }}</h1>
-            </slot>
+    <div class="modal-dialog">
+        <div class="modal">
+            <div class="modal-content">
+                <section :class="['modal-main', { 'has-footer': footer }]">
+                    <header class="modal-header">
+                        <slot name="header">
+                            <h1>{{ title }}</h1>
+                        </slot>
 
-            <button class="modal-close modal-close-link dashicons dashicons-no-alt"
-                    @click="$emit('close')">
-              <span class="screen-reader-text">{{ 'Close modal panel' }}</span>
-            </button>
-          </header>
-          <div class="modal-body">
-            <slot name="body"/>
-          </div>
-          <footer v-if="footer" class="modal-footer">
-            <div class="inner">
-              <slot name="footer"/>
+                        <button class="modal-close modal-close-link dashicons dashicons-no-alt"
+                                @click="$emit('close')">
+                            <span class="screen-reader-text">{{ 'Close modal panel' }}</span>
+                        </button>
+                    </header>
+                    <div class="modal-body">
+                        <slot name="body"/>
+                    </div>
+                    <footer v-if="footer" class="modal-footer">
+                        <div class="inner">
+                            <slot name="footer"/>
+                        </div>
+                    </footer>
+                </section>
             </div>
-          </footer>
-        </section>
-      </div>
+        </div>
+        <div class="modal-backdrop"/>
     </div>
-    <div class="modal-backdrop"/>
-  </div>
 </template>
 
 <script>
 export default {
 
-  name: 'Modal',
+    name: 'Modal',
 
-  props: {
-    footer: {
-      type: Boolean,
-      required: false,
-      default: true,
+    props: {
+        footer: {
+            type: Boolean,
+            required: false,
+            default: true,
+        },
+
+        title: {
+            type: String,
+            required: true,
+            default: '',
+        },
     },
 
-    title: {
-      type: String,
-      required: true,
-      default: '',
+    data() {
+        return {};
     },
-  },
-
-  data() {
-    return {
-
-    };
-  },
 };
 </script>
 
