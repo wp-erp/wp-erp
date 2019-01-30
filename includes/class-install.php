@@ -1187,17 +1187,6 @@ Company'
             ) $collate;",
 
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_sales_tax_categories` (
-                `tax_id` int(11) NOT NULL AUTO_INCREMENT,
-                `sales_tax_category_id` int(11) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`tax_id`)
-            ) $collate;",
-
-
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_taxes` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `tax_rate_name` varchar(255) DEFAULT NULL,
