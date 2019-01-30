@@ -33,14 +33,12 @@
 <script>
     import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
-    import JournalModal from 'admin/components/journal/JournalModal.vue'
 
     export default {
         name: 'JournalList',
 
         components: {
-            ListTable,
-            JournalModal
+            ListTable
         },
 
         data () {
@@ -63,10 +61,6 @@
             };
         },
         created() {
-            this.$root.$on('close', () => {
-                this.journalModal = false;
-            });
-
             this.fetchItems();
         },
 
@@ -115,15 +109,6 @@
                 });
 
                 this.fetchItems();
-            },
-
-            newJournal() {
-                this.$router.push('journals/new');
-            },
-
-            showJournalModal(journal_id) {
-                this.journalModal = true;
-                this.journal_id = journal_id;
             },
         }
 
