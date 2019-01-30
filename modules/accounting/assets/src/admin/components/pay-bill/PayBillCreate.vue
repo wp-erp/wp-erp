@@ -209,7 +209,7 @@
                                 id: element.id,
                                 voucher_no: element.voucher_no,
                                 due_date: element.due_date,
-                                amount: parseFloat(element.total),
+                                amount: parseFloat(element.amount),
                                 due: parseFloat(element.due)
                             });
                         }
@@ -224,12 +224,14 @@
                 });
             },
 
-            getCustomerAddress() {
+            getPeopleAddress() {
                 let people_id = this.basic_fields.people.id;
 
                 HTTP.get(`/people/${people_id}`).then((response) => {
                     // add more info
-                    this.basic_fields.billing_address = response.data;
+                    this.basic_fields.billing_address =
+                        `Street: ${response.data.street_1} ${response.data.street_2},
+                        City: ${response.data.city}, Country: ${response.data.country}`;
                 });
             },
 
@@ -269,7 +271,7 @@
                     bill_details: this.pay_bills,
                     attachments: this.attachments,
                     type: 'pay_bill',
-                    status: 'paid',
+                    status: 4,
                     particulars: this.particulars,
                     deposit_to: this.basic_fields.deposit_to.id,
                     trn_by: this.basic_fields.trn_by.id,
@@ -316,8 +318,8 @@
                 this.finalTotalAmount = newval;
             },
 
-            'basic_fields.customer'() {
-                this.getCustomerAddress();
+            'basic_fields.people'() {
+                this.getPeopleAddress();
             }
         },
 
