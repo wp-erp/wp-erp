@@ -109,9 +109,10 @@ function erp_acct_insert_tax_rate( $data ) {
 
     foreach ($items as $key => $item) {
         $wpdb->insert($wpdb->prefix . 'erp_acct_tax_items', array(
-            'tax_id'     => $tax_id,
-            'agency_id'  => $item['agency_id'],
-            'tax_rate'   => $item['tax_rate'],
+            'component_name' => $item['component_name'],
+            'tax_id' => $tax_id,
+            'agency_id' => $item['agency_id'],
+            'tax_rate' => $item['tax_rate'],
             'created_at' => $tax_data['created_at'],
             'created_by' => $tax_data['created_by'],
             'updated_at' => $tax_data['updated_at'],
@@ -164,8 +165,9 @@ function erp_acct_update_tax_rate( $data, $id ) {
 
     foreach ($items as $key => $item) {
         $wpdb->update($wpdb->prefix . 'erp_acct_tax_items', array(
-            'agency_id'  => $item['agency_id'],
-            'tax_rate'   => $item['tax_rate'],
+            'component_name' => $item['component_name'],
+            'agency_id' => $item['agency_id'],
+            'tax_rate' => $item['tax_rate'],
             'created_at' => $tax_data['created_at'],
             'created_by' => $tax_data['created_by'],
             'updated_at' => $tax_data['updated_at'],
@@ -363,12 +365,12 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['tax_rate_name'] = isset($data['tax_rate_name']) ? $data['tax_rate_name'] : '';
     $tax_data['tax_number'] = isset($data['tax_number']) ? $data['tax_number'] : '';
     $tax_data['default'] = isset($data['default']) ? $data['default'] : 0;
-    $tax_data['tax_rate'] = isset($data['total_rate']) ? $data['total_rate'] : 0;
+    $tax_data['tax_rate'] = isset($data['tax_rate']) ? $data['tax_rate'] : 0;
     $tax_data['tax_id'] = isset($data['tax_id']) ? $data['tax_id'] : 0;
     $tax_data['tax_category_id'] = isset($data['tax_category_id']) ? $data['tax_category_id'] : 0;
     $tax_data['agency_id'] = isset($data['agency_id']) ? $data['agency_id'] : 0;
     $tax_data['agency_name'] = isset($data['agency_name']) ? $data['agency_name'] : '';
-    $tax_data['tax_components'] = isset($data['tax_components']) ? $data['tax_components'] : '';
+    $tax_data['tax_components'] = isset($data['tax_components']) ? $data['tax_components'] : [];
     $tax_data['created_at'] = date("Y-m-d");
     $tax_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
     $tax_data['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : '';

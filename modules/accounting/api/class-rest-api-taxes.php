@@ -191,7 +191,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             $item_rates[$key] = $item['tax_rate'];
         }
 
-        $tax_data['total_rate'] = array_sum( $item_rates );
+        $tax_data['tax_rate'] = array_sum( $item_rates );
 
         $tax_id = erp_acct_insert_tax_rate( $tax_data );
 
@@ -230,11 +230,12 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             $item_rates[$key] = $item['tax_rate'];
         }
 
-        $tax_data['total_rate'] = array_sum( $item_rates );
+        $tax_data['tax_rate'] = array_sum( $item_rates );
 
         $tax_id = erp_acct_update_tax_rate( $tax_data, $id );
 
         $tax_data['id'] = $tax_id;
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -379,6 +380,12 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['voucher_type'] ) ) {
             $prepared_item['voucher_type'] = $request['voucher_type'];
         }
+        if ( isset( $request['tax_rate'] ) ) {
+            $prepared_item['tax_rate'] = $request['tax_rate'];
+        }
+        if ( isset( $request['is_default'] ) ) {
+            $prepared_item['default'] = $request['is_default'];
+        }
 
         return $prepared_item;
     }
@@ -401,7 +408,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'tax_number'      => $item->tax_number,
             'tax_rate'        => $item->tax_rate,
             'default'         => $item->default,
-            'tax_components'  => $item->tax_components,
+            //'tax_components'  => $item->tax_components,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -496,7 +503,6 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                    'required'    => true,
                 ],
             ],
         ];
