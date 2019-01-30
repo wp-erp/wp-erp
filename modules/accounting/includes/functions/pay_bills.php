@@ -107,6 +107,8 @@ function erp_acct_insert_pay_bill( $data ) {
     $created_by = get_current_user_id();
     $data['created_at'] = date("Y-m-d H:i:s");
     $data['created_by'] = $created_by;
+    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_by'] = $created_by;
     $bill_no = '';
 
     try {
@@ -127,9 +129,13 @@ function erp_acct_insert_pay_bill( $data ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_pay_bill', array(
             'voucher_no'      => $voucher_no,
             'trn_date'        => $pay_bill_data['trn_date'],
+            'vendor_id'       => $pay_bill_data['people_id'],
+            'vendor_name'     => $pay_bill_data['people_name'],
             'amount'          => $pay_bill_data['amount'],
+            'trn_by'          => $pay_bill_data['trn_by'],
             'particulars'     => $pay_bill_data['particulars'],
             'attachments'     => $pay_bill_data['attachments'],
+            'status'          => $pay_bill_data['status'],
             'created_at'      => $pay_bill_data['created_at'],
             'created_by'      => $created_by,
             'updated_at'      => $pay_bill_data['updated_at'],
@@ -152,6 +158,7 @@ function erp_acct_insert_pay_bill( $data ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
                 'bill_no'     => $item['voucher_no'],
                 'trn_no'      => $voucher_no,
+                'trn_date'    => $pay_bill_data['trn_date'],
                 'particulars' => $pay_bill_data['particulars'],
                 'debit'       => $item['amount'],
                 'credit'      => 0,
@@ -324,7 +331,7 @@ function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
     $pay_bill_data['particulars']  = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $pay_bill_data['attachments']  = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $pay_bill_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
-    $pay_bill_data['status']       = isset( $data['status'] ) ? $data['status'] : 1;
+    $pay_bill_data['status']       = isset( $data['status'] ) ? $data['status'] : 4;
     $pay_bill_data['trn_by_ledger_id'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
     $pay_bill_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : 0;
     $pay_bill_data['pay_to'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
@@ -354,8 +361,8 @@ function erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item_data )
         'ledger_id'   => $pay_bill_data['trn_by_ledger_id'],
         'trn_no'      => $pay_bill_data['trn_no'],
         'particulars' => $pay_bill_data['particulars'],
-        'debit'       => $pay_bill_data['amount'],
-        'credit'      => 0,
+        'debit'       => 0,
+        'credit'      => $pay_bill_data['amount'],
         'trn_date'    => $pay_bill_data['trn_date'],
         'created_at'  => $pay_bill_data['created_at'],
         'created_by'  => $pay_bill_data['created_by'],

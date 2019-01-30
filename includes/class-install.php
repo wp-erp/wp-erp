@@ -726,7 +726,6 @@ Company'
                 `ref` varchar(255) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `status` varchar(255) DEFAULT NULL,
-                `trn_by_ledger_id` int(11) DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
