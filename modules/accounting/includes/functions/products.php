@@ -13,14 +13,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_all_products() {
 	global $wpdb;
 
-	return $wpdb->get_results(
-			"SELECT product.*, CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
-			cat.id AS cat_id, cat.name AS cat_name, type.id AS type_id, type.name AS type_name
-			FROM {$wpdb->prefix}erp_acct_products AS product
-			LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
-			LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
-			LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS type ON product.product_type_id = type.id", ARRAY_A
-		);
+	return $wpdb->get_results("SELECT
+		product.id,
+		product.name,
+		product.product_type_id,
+		product.cost_price,
+		product.sale_price,
+
+		people.id AS vendor,
+		CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+
+		cat.id AS category_id,
+		cat.name AS cat_name,
+
+		product_type.name AS product_type_name,
+
+		sale_tax_cat.tax_id,
+
+		tax.tax_rate_name,
+		tax.tax_rate,
+
+		tax_item.agency_id,
+		tax_item.component_name
+
+		FROM wp_erp_acct_products AS product
+		LEFT JOIN wp_erp_peoples AS people ON product.vendor = people.id
+		LEFT JOIN wp_erp_acct_product_categories AS cat ON product.category_id = cat.id
+		LEFT JOIN wp_erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
+		LEFT JOIN wp_erp_acct_tax_sales_tax_categories AS sale_tax_cat ON cat.id = sale_tax_cat.sales_tax_category_id
+		LEFT JOIN wp_erp_acct_taxes AS tax ON sale_tax_cat.tax_id = tax.id
+		LEFT JOIN wp_erp_acct_tax_items AS tax_item ON tax.id = tax_item.tax_id", ARRAY_A);
 }
 
 /**

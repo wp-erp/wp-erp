@@ -185,10 +185,9 @@
                     tax_number: this.tax_number,
                     is_compound: this.is_compound,
                     is_default: this.is_default,
-                    tax_category_id: this.tax_category,
+                    tax_category_id: this.tax_category.id,
                     tax_components: this.formatLineItems()
                 }).then(res => {
-                    console.log(res.data);
                     this.$swal({
                         position: 'center',
                         type: 'success',

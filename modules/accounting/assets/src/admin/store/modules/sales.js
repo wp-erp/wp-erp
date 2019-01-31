@@ -7,23 +7,41 @@ const state = {
 
 // getters
 const getters = {
-    getCustomers: (state, getters, rootState) => {
+    getCustomers: (state) => {
         return state.customers
     }
 }
 
 // actions
 const actions = {
-    fetchCustomers({ state, commit }) {
-        HTTP.get('/customers', { params: { per_page: 10 } }).then(response => {            
-            commit('setCustomers', response.data)
+    fetchCustomers: async({ commit }) => {        
+        let {status, data} = await HTTP.get('/people', {
+            params: { 
+                type: 'customer',
+                per_page: 10,
+                page: 1 // *offset issue
+            }
         })
+
+        if (200 == status) {
+            commit('setCustomers', data)
+        }
     },
+
+    fillCustomers({ state, commit, dispatch }, data) {        
+        commit('setCustomers', data)
+
+        if ( ! state.customers.length ) {            
+            dispatch('fetchCustomers')
+        }
+    }
 }
 
 // mutations
 const mutations = {
-    setCustomers(state, items) {        
+    setCustomers(state, items) {
+        state.customers = []
+
         items.forEach(item => {
             state.customers.push({
                 id  : item.id,
@@ -34,9 +52,9 @@ const mutations = {
 }
 
 export default {
-  namespaced: true,
-  state,
-  getters,
-  actions,
-  mutations
+    namespaced: true,
+    state,
+    getters,
+    actions,
+    mutations
 }

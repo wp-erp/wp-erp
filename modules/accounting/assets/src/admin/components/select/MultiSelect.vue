@@ -1,26 +1,29 @@
 <template>
-    <multiselect
-        :value="value"
-        :options="options"
-        :multiple="multiple"
-        :close-on-select="!multiple"
-        :loading="isLoading"
-        :placeholder="placeholder"
-        label="name"
-        track-by="id"
-        @open="onDropdownOpen"
-        @remove="onRemove"
-        @select="onSelect"
-        @search-change="asyncFind">
-        <template slot="tag" slot-scope="{ option }">
-            <span class="custom__tag">
-                <span>{{ option.name }}</span><span class="custom__remove" @click="onRemove(option)">
-              &#9747;</span>
-            </span>
-        </template>
+  <multiselect
+    :value="value"
+    :options="options"
+    :multiple="multiple"
+    :close-on-select="!multiple"
+    :loading="isLoading"
+    :placeholder="placeholder"
+    label="name"
+    track-by="id"
+    @open="onDropdownOpen"
+    @remove="onRemove"
+    @select="onSelect"
+    @search-change="asyncFind">
 
-        <span slot="noResult">Oops! No elements found.</span>
-    </multiselect>
+    <!-- <template slot="tag" slot-scope="{ option }">
+      <span class="custom__tag">
+        <span>{{ option.name }}</span>
+        <span class="custom__remove" @click.prevent="onRemove(option, true)">
+           &#9747;
+        </span>
+      </span>
+    </template> -->
+
+    <span slot="noResult">Oops! No elements found.</span>
+  </multiselect>
 </template>
 
 <script>

@@ -368,6 +368,9 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['tax_period'] ) ) {
             $prepared_item['tax_period'] = $request['tax_components'];
         }
+        if ( isset( $request['tax_category_id'] ) ) {
+            $prepared_item['tax_category_id'] = $request['tax_category_id'];
+        }
         if ( isset( $request['particulars'] ) ) {
             $prepared_item['particulars'] = $request['particulars'];
         }

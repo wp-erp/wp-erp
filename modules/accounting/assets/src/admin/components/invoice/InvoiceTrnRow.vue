@@ -20,18 +20,11 @@
                 <span class="wperp-addon">%</span>
             </div>
         </td>
-        <td class="col--penholder" data-colname="Tax(%)">
-            <div class="wperp-custom-select">
-                <select name="pen-holder" class="wperp-form-field">
-                    <option value="0">Select</option>
-                    <option value="1">Gov</option>
-                    <option value="2">Private</option>
-                </select>
-                <i class="flaticon-arrow-down-sign-to-navigate"></i>
-            </div>
+        <td class="col--tax-rate" data-colname="Tax Rate(%)">
+            <input type="text" v-model="line.taxRate" class="wperp-form-field" readonly>
         </td>
         <td class="col--tax-amount" data-colname="Tax Amount">
-            <input type="text" v-model="line.taxAmount" @keyup="calculateAmount" class="wperp-form-field">
+            <input type="text" v-model="line.taxAmount" class="wperp-form-field" readonly>
         </td>
         <td class="col--amount" data-colname="Amount">
             <input type="text" v-model="line.totalAmount" class="wperp-form-field" readonly>
@@ -59,10 +52,12 @@
                 type: Object,
                 default: () => {
                     return {
-                        qty: 0,
+                        qty: 1,
                         selectedProduct: [],
                         unitPrice: 0,
                         discount: 0,
+                        agencyId: 0,
+                        taxRate: 0,
                         taxAmount: 0,
                         totalAmount: 0
                     };
@@ -76,17 +71,18 @@
 
         watch: {
             'line.selectedProduct'() {
-                this.setSalePriceAndType();
+                this.setProductInfo();
             }
         },
 
         methods: {
             calculateAmount() {
+            
                 let field = this.line;
 
-                let amount = parseFloat(field.qty) * parseFloat(field.unitPrice);
+                let amount = parseInt(field.qty) * parseFloat(field.unitPrice);
                 let discount = parseFloat(field.discount);
-                let taxAmount = parseFloat(field.taxAmount);
+                let taxAmount = ( amount * parseFloat(field.taxRate) ) / 100;
 
                 field.totalAmount = amount;
 
@@ -105,12 +101,13 @@
                 }
 
                 field.totalAmount = amount.toFixed(2);
+                field.taxAmount = taxAmount.toFixed(2);
 
                 this.$root.$emit('total-updated', field.totalAmount);
                 this.$forceUpdate();
             },
 
-            setSalePriceAndType() {
+            setProductInfo() {                
                 let product_id = this.line.selectedProduct.id;
 
                 if ( ! product_id ) return;
@@ -120,7 +117,9 @@
                 });
 
                 this.line.unitPrice = parseFloat(product.sale_price);
-                this.line.product_type = this.line.selectedProduct.type_name;
+                this.line.product_type_name = this.line.selectedProduct.product_type_name;
+                this.line.agencyId = this.line.selectedProduct.agency_id;
+                this.line.taxRate = this.line.selectedProduct.tax_rate;
             },
 
             removeRow() {

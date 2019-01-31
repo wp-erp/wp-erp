@@ -44,10 +44,17 @@
         created() {
             this.$store.dispatch('sales/fetchCustomers');
 
+            this.$root.$on( 'options-query', query => {
+                if ( query ) {
+                    this.getCustomers(query);
+                }
+            } );
+
             this.$on('modal-close', () => {
                 this.showModal = false;
                 this.people = null;
             });
+
             this.$root.$on( 'peopleUpdate', () => {
                 this.showModal = false;
             } );
@@ -62,6 +69,19 @@
                 this.selected = [];
             }
         },
+
+        methods: {
+            getCustomers(query) {
+                HTTP.get('/people', {
+                    params: {
+                        type: 'customer',
+                        search: query
+                    }
+                }).then((response) => {                    
+                    this.$store.dispatch('sales/fillCustomers', response.data);
+                });
+            },
+        }
 
     }
 </script>
