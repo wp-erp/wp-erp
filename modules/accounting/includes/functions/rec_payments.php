@@ -128,6 +128,8 @@ function erp_acct_insert_payment( $data ) {
             'particulars' => $payment_data['particulars'],
             'amount' => $payment_data['amount'],
             'trn_by' => $payment_data['trn_by'],
+            'attachments' => $payment_data['attachments'],
+            'status' => $payment_data['status'],
             'trn_by_ledger_id' => $payment_data['trn_by_ledger_id'],
             'created_at' => $payment_data['created_at'],
             'created_by' => $payment_data['created_by'],
@@ -351,7 +353,7 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $payment_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : 0;
     $payment_data['pay_to'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
     $payment_data['name'] = isset( $data['name'] ) ?  $data['name'] : $company->name;
-    $payment_data['voucher_type'] = isset( $data['voucher_type'] ) ?  $data['voucher_type'] : '';
+    $payment_data['voucher_type'] = isset( $data['type'] ) ?  $data['type'] : '';
     $payment_data['created_at']  = isset( $data['created_at'] ) ? $data['created_at'] : '';
     $payment_data['created_by']  = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $payment_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
