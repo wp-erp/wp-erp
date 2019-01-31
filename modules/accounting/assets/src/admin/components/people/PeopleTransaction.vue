@@ -119,7 +119,6 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
-                            console.log(row.id);
                             this.$root.$emit( 'delete-transaction', row.id );
                         }
                         break;
@@ -129,8 +128,7 @@
                         this.people = row;
                         break;
                     default :
-
-
+                    break;
                 }
             },
         },
