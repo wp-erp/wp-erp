@@ -3,6 +3,7 @@ import Router            from 'vue-router';
 import People            from 'admin/components/people/People.vue';
 import Products          from 'admin/components/products/Products.vue';
 import Employees         from 'admin/components/people/Employees.vue';
+import EmployeeDetails   from 'admin/components/people/EmployeeDetails.vue';
 import DashBoard         from 'admin/components/dashboard/DashBoard.vue';
 import TrialBalance      from 'admin/components/reports/TrialBalance.vue';
 import PeopleDetails     from 'admin/components/people/PeopleDetails.vue';
@@ -110,10 +111,15 @@ export default new Router({
                     component: Employees,
                 },
                 {
+                    path: 'view/:id',
+                    name: 'EmployeeDetails',
+                    component: EmployeeDetails
+                },
+                {
                     path: 'page/:page',
                     name: 'PaginateEmployees',
                     component: Employees,
-                },
+                }
             ]
         },
         {

@@ -86,7 +86,7 @@
                         start_date: filters.start_date,
                         end_date: filters.end_date
                     }
-                }).then( response => {                    
+                }).then( response => {
                     this.chartPayment.outstanding = response.data.outstanding;
 
                     this.chartPayment.values.push(
