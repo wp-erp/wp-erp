@@ -70,14 +70,14 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_all_people( $request ) {
         $args = [
-            'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number' => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => 'all',
-            's'      => !empty( $request['search'] ) ? $request['search'] : ''
+            'type'   => ! empty( $request['type'] ) ? $request['type'] : 'all',
+            's'      => ! empty( $request['search'] ) ? $request['search'] : ''
         ];
 
         $items       = erp_get_peoples( $args );
-        $total_items = erp_get_peoples( [ 'type' => 'all', 'count' => true ] );
+        $total_items = erp_get_peoples( [ 'type' => $args['type'], 'count' => true ] );
         $total_items = is_array( $total_items ) ? count( $total_items ) : $total_items;
 
         $formatted_items = []; $additional_fields = [];

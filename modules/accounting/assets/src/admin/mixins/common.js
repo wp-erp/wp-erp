@@ -2,7 +2,7 @@ export default {
     methods: {
         formatAmount( val, prefix = false ) {
             let currency = '$';
-            if ( val < 0 ){
+            if ( val < 0 ) {
                 return prefix ? `Cr. ${currency}${Math.abs(val)}` : `${currency}${Math.abs(val)}`;
             }
 

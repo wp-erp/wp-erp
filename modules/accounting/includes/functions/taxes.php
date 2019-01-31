@@ -94,13 +94,13 @@ function erp_acct_insert_tax_rate( $data ) {
 
     $wpdb->insert($wpdb->prefix . 'erp_acct_taxes', array(
         'tax_rate_name' => $tax_data['tax_rate_name'],
-        'tax_number' => $tax_data['tax_number'],
-        'default' => $tax_data['default'],
-        'tax_rate' => $tax_data['tax_rate'],
-        'created_at' => $tax_data['created_at'],
-        'created_by' => $tax_data['created_by'],
-        'updated_at' => $tax_data['updated_at'],
-        'updated_by' => $tax_data['updated_by'],
+        'tax_number'    => $tax_data['tax_number'],
+        'default'       => $tax_data['default'],
+        'tax_rate'      => $tax_data['tax_rate'],
+        'created_at'    => $tax_data['created_at'],
+        'created_by'    => $tax_data['created_by'],
+        'updated_at'    => $tax_data['updated_at'],
+        'updated_by'    => $tax_data['updated_by'],
     ));
 
     $tax_id = $wpdb->insert_id;
@@ -110,23 +110,23 @@ function erp_acct_insert_tax_rate( $data ) {
     foreach ($items as $key => $item) {
         $wpdb->insert($wpdb->prefix . 'erp_acct_tax_items', array(
             'component_name' => $item['component_name'],
-            'tax_id' => $tax_id,
-            'agency_id' => $item['agency_id'],
-            'tax_rate' => $item['tax_rate'],
-            'created_at' => $tax_data['created_at'],
-            'created_by' => $tax_data['created_by'],
-            'updated_at' => $tax_data['updated_at'],
-            'updated_by' => $tax_data['updated_by'],
+            'tax_id'         => $tax_id,
+            'agency_id'      => $item['agency_id'],
+            'tax_rate'       => $item['tax_rate'],
+            'created_at'     => $tax_data['created_at'],
+            'created_by'     => $tax_data['created_by'],
+            'updated_at'     => $tax_data['updated_at'],
+            'updated_by'     => $tax_data['updated_by'],
         ));
     }
 
     $wpdb->insert($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
-        'tax_id' => $tax_id,
+        'tax_id'                => $tax_id,
         'sales_tax_category_id' => $tax_data['tax_category_id'],
-        'created_at' => $tax_data['created_at'],
-        'created_by' => $tax_data['created_by'],
-        'updated_at' => $tax_data['updated_at'],
-        'updated_by' => $tax_data['updated_by'],
+        'created_at'            => $tax_data['created_at'],
+        'created_by'            => $tax_data['created_by'],
+        'updated_at'            => $tax_data['updated_at'],
+        'updated_by'            => $tax_data['updated_by'],
     ));
 
     return $tax_id;

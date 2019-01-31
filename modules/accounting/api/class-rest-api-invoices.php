@@ -216,8 +216,11 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             $sub_total = $value['qty'] * $value['unit_price'];
 
             $item_total += $sub_total;
-            $item_discount_total += ($sub_total * $value['discount']) / 100; // discount value from %
             $item_tax_total += $value['tax'];
+
+            if ( $value['discount'] ) {
+                $item_discount_total += ($sub_total * $value['discount']) / 100; // discount value from %
+            }
         }
 
         $invoice_data['billing_address'] = maybe_serialize( $request['billing_address'] );

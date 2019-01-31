@@ -192,15 +192,8 @@
 
         methods: {
             getProducts() {
-                HTTP.get('/products').then((response) => {
-                    response.data.forEach(element => {
-                        this.products.push({
-                            id: element.id,
-                            name: element.name,
-                            sale_price: element.sale_price,
-                            type_name: element.type_name
-                        });
-                    });
+                HTTP.get('/products').then(response => {
+                    this.products = response.data;
                 });
             },
 
@@ -242,13 +235,14 @@
                 this.transactionLines.forEach(line => {
                     lineItems.push({
                         product_id: line.selectedProduct.id,
-                        product_type: line.selectedProduct.type,
+                        product_type_name: line.selectedProduct.product_type_name,
+                        agency_id: line.agencyId,
                         qty: line.qty,
                         unit_price: line.unitPrice,
+                        tax_rate: line.taxRate,
                         tax: line.taxAmount,
                         discount: line.discount,
-                        item_total: line.totalAmount,
-                        tax_percent: 0
+                        item_total: line.totalAmount
                     });
                 });
 

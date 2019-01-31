@@ -197,17 +197,28 @@ function erp_acct_insert_invoice( $data ) {
                 'unit_price'  => $item['unit_price'],
                 'discount'    => ($sub_total * $item['discount']) / 100, // discount value from %
                 'tax'         => $item['tax'],
-                'tax_percent' => 0, // remove me please
+                'tax_percent' => $item['tax_rate'],
                 'item_total'  => $sub_total,
                 'created_at'  => $invoice_data['created_at'],
                 'created_by'  => $invoice_data['created_by'],
                 'updated_at'  => $invoice_data['updated_at'],
                 'updated_by'  => $invoice_data['updated_by'],
             ) );
+
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
+                'invoice_details_id' => $wpdb->insert_id,
+                'agency_id'          => $item['agency_id'],
+                'tax_rate'           => $item['tax_rate'],
+                'tax_amount'         => $item['tax'],
+                'created_at'         => $invoice_data['created_at'],
+                'created_by'         => $invoice_data['created_by'],
+                'updated_at'         => $invoice_data['updated_at'],
+                'updated_by'         => $invoice_data['updated_by'],
+             ] );
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-            'invoice_no'  => $voucher_no,
+            'invoice_no'  => $invoice_id,
             'trn_no'      => $voucher_no,
             'trn_date'    => $invoice_data['trn_date'],
             'particulars' => '',
