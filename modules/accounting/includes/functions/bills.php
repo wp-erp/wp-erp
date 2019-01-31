@@ -145,7 +145,6 @@ function erp_acct_insert_bill( $data ) {
             'ref'             => $bill_data['ref'],
             'particulars'     => $bill_data['remarks'],
             'status'          => $bill_data['status'],
-            'trn_by_ledger_id'=> $bill_data['trn_by_ledger_id'],
             'attachments'     => $bill_data['attachments'],
             'created_at'      => $bill_data['created_at'],
             'created_by'      => $bill_data['created_by'],
@@ -226,7 +225,6 @@ function erp_acct_update_bill( $data, $bill_id ) {
             'ref'             => $bill_data['ref'],
             'particulars'     => $bill_data['remarks'],
             'status'          => $bill_data['status'],
-            'trn_by_ledger_id'=> $bill_data['trn_by_ledger_id'],
             'attachments'     => $bill_data['attachments'],
             'created_at'      => $bill_data['created_at'],
             'created_by'      => $bill_data['created_by'],
@@ -325,6 +323,7 @@ function erp_acct_void_bill( $id ) {
  */
 function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data = [];
+
     $vendor = erp_get_people( $data['vendor_id'] );
     $bill_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
     $bill_data['vendor_id'] = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
