@@ -1,7 +1,51 @@
 <template>
     <div class="wperp-container">
         <!-- Start .header-section -->
-        <UserBasicInfo :userData="resData"></UserBasicInfo>
+        <!-- <UserBasicInfo :userData="resData"></UserBasicInfo> -->
+        <div class="wperp-panel wperp-panel-default mt-20">
+            <div class="wperp-panel-body wperp-customer-panel">
+            <!-- <people-modal  :people="userData" :title="title" v-if="showModal"></people-modal> -->
+            <!-- edit customers info trigger -->
+            <!-- <span class="edit-badge" data-toggle="wperp-modal" data-target="wperp-edit-customer-modal">
+                <i class="flaticon-edit" @click="showModal = true"></i>
+            </span> -->
+            <div class="wperp-row">
+                <div class="wperp-col-lg-3 wperp-col-md-4 wperp-col-sm-4 wperp-col-xs-12">
+                    <div class="customer-identity">
+                        <img :src="user.avatar_url" :alt=user.name style="border-radius: 100%">
+                        <div class="">
+                            <h3>{{user.first_name}}  {{ user.last_name }}</h3>
+                            <span>{{user.user_email}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="wperp-col-lg-9 wperp-col-md-8 wperp-col-sm-8 wperp-col-xs-12">
+                    <ul class="customer-meta">
+                        <li>
+                            <strong>Phone:</strong>
+                            <span>{{ user.phone }}</span>
+                        </li>
+                        <li>
+                            <strong>Mobile:</strong>
+                            <span>{{ user.mobile }}</span>
+                        </li>
+                        <li>
+                            <strong style="margin-right: 10px">Department:</strong>
+                            <span v-if="user.department">{{ user.department.title }}</span>
+                        </li>
+                        <li>
+                            <strong style="margin-right: 10px">Designation:</strong>
+                            <span v-if="user.designation">{{ user.designation.title }}</span>
+                        </li>
+                        <li>
+                            <strong>Address:</strong>
+                            <span >{{ user.address }} </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
         <!-- End .header-section -->
         <div class="wperp-stats wperp-section">
             <div class="wperp-panel wperp-panel-default">
@@ -18,7 +62,14 @@
                             </pie-chart>
                         </div>
                         <div class="wperp-col-sm-4">
-                            <pie-chart id="status" :title="statusChart.title" :labels="statusChart.labels" :colors="statusChart.colors" :data="statusChart.data"></pie-chart>
+                            <pie-chart
+                                id="status"
+                                :sign="getCurrencySign()"
+                                :title="statusChart.title"
+                                :labels="statusChart.labels"
+                                :colors="statusChart.colors"
+                                :data="statusChart.data">
+                            </pie-chart>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-chart-block">
@@ -41,7 +92,7 @@
     import PeopleTransaction from 'admin/components/people/PeopleTransaction.vue'
 
     export default {
-        name: 'PeopleDetails',
+        name: 'EmployeeDetails',
         components: {
             UserBasicInfo,
             PieChart,
@@ -51,7 +102,7 @@
         data(){
             return {
                 userId : '',
-                resData: {},
+                user: {},
                 userData : {
                     'id': '',
                     'name': '************',
@@ -103,10 +154,10 @@
         methods: {
             fetchItem( id ) {
                 HTTP.get( this.url+'/'+id, {
-                    params: {}
+                    params: { 'include': 'department,designation,reporting_to,avatar' }
                 })
                     .then((response) => {
-                        this.resData = response.data;
+                        this.user = response.data;
                     })
                     .catch((error) => {
                         console.log(error);

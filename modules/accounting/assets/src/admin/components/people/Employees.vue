@@ -2,6 +2,7 @@
     <div class="app-employees">
         <h2 class="add-new-employee">
             <span>Employees</span>
+            <!-- {{data.row.employee}} -->
         </h2>
         <list-table
             tableClass="wp-ListTable widefat fixed employee-list"
@@ -21,7 +22,8 @@
                 <strong><a href="#">{{ data.row.title }}</a></strong>
             </template>
             <template slot="employee" slot-scope="data">
-                <strong><a :href="data.row.user_url">{{data.row.employee}}</a></strong>
+                <router-link :to="{ name: 'EmployeeDetails', params: { id: data.row.id } }">{{data.row.employee}}</router-link>
+                </strong>
             </template>
 
         </list-table>
