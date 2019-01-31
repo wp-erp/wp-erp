@@ -804,6 +804,7 @@ Company'
                 `attachments` varchar(255) DEFAULT NULL,
                 `status` varchar(100) DEFAULT NULL,
                 `trn_by` varchar(255) DEFAULT NULL,
+                `trn_by_ledger_id` int(11) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -983,6 +984,7 @@ Company'
                 `trn_date` date DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,
                 `trn_by` varchar(255) DEFAULT NULL,
+                `trn_by_ledger_id` int(11) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
                 `status` varchar(255) DEFAULT NULL,
@@ -1015,6 +1017,7 @@ Company'
                 `trn_date` date DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,
                 `trn_by` varchar(255) DEFAULT NULL,
+                `trn_by_ledger_id` int(11) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
                 `status` varchar(255) DEFAULT NULL,
@@ -1243,6 +1246,7 @@ Company'
                 `tax_period` date DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,
+                `trn_by_ledger_id` int(11) DEFAULT NULL,
                 `voucher_type` varchar(255) DEFAULT NULL,
                 `ledger_id` int(11) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
@@ -1369,119 +1373,6 @@ Company'
      */
     public function populate_data() {
         global $wpdb;
-
-        // check if people_types exists
-        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_people_types` LIMIT 0, 1" ) ) {
-            $sql = "INSERT INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`)
-                    VALUES (1,'contact'), (2,'company'), (3,'customer'), (4,'vendor'), (5,'employee');";
-
-            $wpdb->query( $sql );
-        }
-
-        $product_types = "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`)
-                    VALUES (1,'Product'), (2,'Service');";
-
-        $wpdb->query( $product_types );
-
-        $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_acct_payment_methods` (`id`, `name`)
-                    VALUES (1,'Cash'), (2,'Bank'), (3,'Check');" );
-
-        $wpdb->query( "INSERT INTO `{$wpdb->prefix}erp_acct_trn_status_types` (`id`, `type_name`)
-                    VALUES (1,'draft'), (2,'awaiting_approval'), (3,'awaiting_payment'), (4,'paid'), (5,'partially_paid'), (6,'approved'), (7,'bounced');" );
-
-//        //Accounting
-//
-//        // check if classes exists
-//        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_chart_classes` LIMIT 0, 1" ) ) {
-//            $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_chart_classes` (`id`, `name`)
-//                    VALUES (1,'Assets'), (2,'Liabilities'), (3,'Expenses'), (4,'Income'), (5,'Equity');";
-//
-//            $wpdb->query( $sql );
-//        }
-//
-//        // check if chart types exists
-//        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_chart_types` LIMIT 0, 1" ) ) {
-//            $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_chart_types` (`id`, `name`, `class_id`)
-//                    VALUES (1,'Current Asset',1), (2,'Fixed Asset',1), (3,'Inventory',1),
-//                        (4,'Non-current Asset',1), (5,'Prepayment',1), (6,'Bank & Cash',1), (7,'Current Liability',2),
-//                        (8,'Liability',2), (9,'Non-current Liability',2), (10,'Depreciation',3),
-//                        (11,'Direct Costs',3), (12,'Expense',3), (13,'Revenue',4), (14,'Sales',4),
-//                        (15,'Other Income',4), (16,'Equity',5);";
-//
-//            $wpdb->query( $sql );
-//        }
-//
-//        // check if ledger exists
-//        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledgers` LIMIT 0, 1" ) ) {
-//
-//            $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_ledgers` (`id`, `chart_id`, `category_id`, `description`, `parent`, `type_id`, `currency`, `tax`, `cash_account`, `reconcile`, `system`, `active`)
-//                        VALUES
-//                        (1, '120',  ,'Accounts Receivable','120', 0,1),
-//                        (2,'140',  ,'Inventory',0,'140',3),
-//                        (3,'150',  ,'Office Equipment',0,2),
-//                        (4,'151',  ,'Less Accumulated Depreciation on Office Equipment',0,2),
-//                        (5,'160',  ,'Computer Equipment',0,2),
-//                        (6,'161',  ,'Less Accumulated Depreciation on Computer Equipment',0,2),
-//                        (7,'090',  ,'Petty Cash',0,6,'',1,1,0,1),
-//                        (8,'200',  ,'Accounts Payable',0,7),
-//                        (9,'205',  ,'Accruals',0,7),
-//                        (10,'210',  ,'Unpaid Expense Claims',0,7),
-//                        (11,'215',  ,'Wages Payable',0,7),
-//                        (12,'216',  ,'Wages Payable - Payroll',0,7),
-//                        (13,'220',  ,'Sales Tax',0,7),
-//                        (14,'230',  ,'Employee Tax Payable',0,7),
-//                        (15,'235',  ,'Employee Benefits Payable',0,7),
-//                        (16,'236',  ,'Employee Deductions payable',0,7),
-//                        (17,'240',  ,'Income Tax Payable',0,7),
-//                        (18,'250',  ,'Suspense',0,7),
-//                        (19,'255',  ,'Historical Adjustments',0,7),
-//                        (20,'260',  ,'Rounding',0,7),
-//                        (21,'835',  ,'Revenue Received in Advance',0,7),
-//                        (22,'855',  ,'Clearing Account',0,7),
-//                        (23,'290',  ,'Loan',0,9),
-//                        (24,'500',  ,'Costs of Goods Sold',0,11),
-//                        (25,'600',  ,'Advertising',0,12),
-//                        (26,'605',  ,'Bank Service Charges',0,12),
-//                        (27,'610',  ,'Janitorial Expenses',0,12),
-//                        (28,'615',  ,'Consulting & Accounting',0,12),
-//                        (29,'620',  ,'Entertainment',0,12),
-//                        (30,'624',  ,'Postage & Delivary',0,12),
-//                        (31,'628',  ,'General Expenses',0,12),
-//                        (32,'632',  ,'Insurance',0,12),
-//                        (33,'636',  ,'Legal Expenses',0,12),
-//                        (34,'640',  ,'Utilities',0,12),
-//                        (35,'644',  ,'Automobile Expenses',0,12),
-//                        (36,'648',  ,'Office Expenses',0,12),
-//                        (37,'652',  ,'Printing & Stationary',0,12),
-//                        (38,'656',  ,'Rent',0,12),
-//                        (39,'660',  ,'Repairs & Maintenance',0,12),
-//                        (40,'664',  ,'Wages & Salaries',0,12),
-//                        (41,'668',  ,'Payroll Tax Expense',0,12),
-//                        (42,'672',  ,'Dues & Subscriptions',0,12),
-//                        (43,'676',  ,'Telephone & Internet',0,12),
-//                        (44,'680',  ,'Travel',0,12),
-//                        (45,'684',  ,'Bad Debts',0,12),
-//                        (46,'700',  ,'Depreciation',0,10),
-//                        (47,'710',  ,'Income Tax Expense',0,12),
-//                        (48,'715',  ,'Employee Benefits Expense',0,12),
-//                        (49,'800',  ,'Interest Expense',0,12),
-//                        (50,'810',  ,'Bank Revaluations',0,12),
-//                        (51,'815',  ,'Unrealized Currency Gains',0,12),
-//                        (52,'820',  ,'Realized Currency Gains',0,12),
-//                        (53,'825',  ,'Sales Discount',0,12),
-//                        (54,'400',  ,'Sales',0,13),
-//                        (55,'460',  ,'Interest Income',0,13),
-//                        (56,'470',  ,'Other Revenue',0,13),
-//                        (57,'475',  ,'Purchase Discount',0,13),
-//                        (58,'300',  ,'Owners Contribution',0,16),
-//                        (59,'310',  ,'Owners Draw',0,16),
-//                        (60,'320',  ,'Retained Earnings',0,16),
-//                        (61,'330',  ,'Common Stock',0,16),
-//                        (62,'092',  ,'Savings Account',0,6,'',1,1,0,1);";
-//
-//            $wpdb->query( $sql );
-//        }
-
 
         // Subscription pages
         $subscription_settings = get_option( 'erp_settings_erp-crm_subscription', [] );
