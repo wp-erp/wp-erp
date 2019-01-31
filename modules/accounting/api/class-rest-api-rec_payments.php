@@ -395,7 +395,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'vendor_id'   => [
+                'customer_id'   => [
                     'description' => __( 'Vendor id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],

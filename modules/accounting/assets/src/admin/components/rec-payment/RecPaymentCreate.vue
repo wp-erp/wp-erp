@@ -265,7 +265,7 @@
                     line_items: this.invoices,
                     attachments: this.attachments,
                     type: 'payment',
-                    status: '3',
+                    status: 3,
                     particulars: this.particulars,
                     deposit_to: this.basic_fields.deposit_to.id,
                     trn_by: this.basic_fields.trn_by.id,
