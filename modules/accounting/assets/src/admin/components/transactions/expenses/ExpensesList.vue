@@ -191,6 +191,21 @@
                                 'singleView' : { name: 'BillSingle', params: { id: item.id }}
                             };
                             break;
+                        case 'expense':
+                            temp = {
+                                'id'         : item.id,
+                                'trn_no'     : item.id,
+                                'type'       : 'Expense',
+                                'ref'        : item.ref ? item.ref : '-',
+                                'vendor_name': item.expense_people_name,
+                                'trn_date'   : item.expense_people_name,
+                                'due_date'   : '-',
+                                'due'        : '-',
+                                'amount'     : this.formatAmount(item.expense_amount),
+                                'status'     : 'Paid',
+                                'singleView' : { name: 'PayBillSingle', params: { id: item.id }}
+                            };
+                            break;
 
                         default :
 

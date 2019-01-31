@@ -310,7 +310,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
 
     $limit = '';
 
-    $where = "WHERE (voucher.type = 'pay_bill' OR voucher.type = 'bill')";
+    $where = "WHERE (voucher.type = 'pay_bill' OR voucher.type = 'bill' OR voucher.type = 'expense')";
 
     if ( ! empty( $args['vendor_id'] ) ) {
         $where .= " AND bill.vendor_id = {$args['vendor_id']} OR pay_bill.vendor_id = {$args['vendor_id']} ";
@@ -331,11 +331,14 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             voucher.type,
             bill.vendor_name AS vendor_name,
             pay_bill.vendor_name AS pay_bill_vendor_name,
+            expense.people_name AS expense_people_name,
             bill.trn_date AS bill_trn_date,
             pay_bill.trn_date AS pay_bill_trn_date,
+            expense.trn_date AS expense_people_name,
             bill.due_date,
             bill.amount,
             pay_bill.amount as pay_bill_amount,
+            expense.amount as expense_amount,
             SUM(bill_acct_details.debit - bill_acct_details.credit) AS due,
             status_type.type_name AS status";
     }
@@ -345,6 +348,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_pay_bill AS pay_bill ON pay_bill.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = bill.status
         LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acct_details ON bill_acct_details.bill_no = bill.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_expenses AS expense ON expense.voucher_no = voucher.id
         {$where} 
         GROUP BY voucher.id
         ORDER BY CONCAT(bill.trn_date, pay_bill.trn_date) {$args['order']} {$limit}";
