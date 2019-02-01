@@ -310,7 +310,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
 
     $limit = '';
 
-    $where = "WHERE (voucher.type = 'pay_bill' OR voucher.type = 'bill' OR voucher.type = 'expense')";
+    $where = "WHERE (voucher.type = 'pay_bill' OR voucher.type = 'bill' OR voucher.type = 'expense' OR voucher.type = 'check' ) ";
 
     if ( ! empty( $args['vendor_id'] ) ) {
         $where .= " AND bill.vendor_id = {$args['vendor_id']} OR pay_bill.vendor_id = {$args['vendor_id']} ";
