@@ -110,13 +110,9 @@
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                })
-                    .catch((error) => {
+                }).catch((error) => {
                         console.log(error);
-                    })
-                    .then( () => {
-                        //ready
-                    } );
+                });
             },
 
             onActionClick(action, row, index) {
@@ -176,6 +172,7 @@
                                 'singleView' : { name: 'PayBillSingle', params: { id: item.id }}
                             };
                             break;
+
                         case 'bill':
                             temp = {
                                 'id'         : item.id,
@@ -191,6 +188,7 @@
                                 'singleView' : { name: 'BillSingle', params: { id: item.id }}
                             };
                             break;
+
                         case 'expense':
                             temp = {
                                 'id'         : item.id,
@@ -207,7 +205,24 @@
                             };
                             break;
 
+                        case 'check':
+                            temp = {
+                                'id'         : item.id,
+                                'trn_no'     : item.id,
+                                'type'       : 'Check',
+                                'ref'        : item.ref ? item.ref : '-',
+                                'vendor_name': item.expense_people_name,
+                                'trn_date'   : item.expense_people_name,
+                                'due_date'   : '-',
+                                'due'        : '-',
+                                'amount'     : this.formatAmount(item.expense_amount),
+                                'status'     : 'Paid',
+                                'singleView' : { name: 'PayBillSingle', params: { id: item.id }}
+                            };
+                            break;
+
                         default :
+                            break;
 
                     }
 
