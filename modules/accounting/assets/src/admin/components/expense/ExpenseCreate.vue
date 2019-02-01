@@ -38,7 +38,7 @@
                             <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                         <div class="wperp-col-sm-4 with-multiselect">
-                            <label>From Account</label>
+                            <label>Transaction From</label>
                             <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
                         <div class="wperp-col-sm-4 with-multiselect">
