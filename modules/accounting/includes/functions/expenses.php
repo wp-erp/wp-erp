@@ -332,7 +332,7 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $expense_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $expense_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
-    $expense_data['trn_by_ledger_id'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
+    $expense_data['trn_by_ledger_id'] = isset( $data['trn_by_ledger_id'] ) ? $data['trn_by_ledger_id'] : null;
     $expense_data['trn_by'] = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
     $expense_data['created_at'] = date("Y-m-d" );
     $expense_data['created_by'] = isset( $data['created_by'] ) ? $data['created_by'] : '';

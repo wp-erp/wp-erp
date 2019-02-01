@@ -24,18 +24,18 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label for="trans_date">Transaction Date<span class="wperp-required-sign">*</span></label>
+                                <label>Transaction Date<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.trans_date" :defaultDate="basic_fields.trans_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label for="due_date">Due Date<span class="wperp-required-sign">*</span></label>
+                                <label>Due Date<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.due_date" :defaultDate="basic_fields.trans_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-xs-12">
-                            <label for="billing_address">Billing Address</label>
+                            <label>Billing Address</label>
                             <textarea v-model.trim="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Submit for approval" @click.native="SubmitForApproval" :working="isWorking"></submit-button>
+                            <submit-button text="Create Purchase" @click.native="SubmitForApproval" :working="isWorking"></submit-button>
                         </td>
                     </tr>
                     </tfoot>

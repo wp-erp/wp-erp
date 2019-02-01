@@ -106,9 +106,9 @@
                                     </div>
                                     <!-- buttons -->
                                     <div class="buttons-wrapper text-right">
+                                        <button  class="wperp-btn btn--default" @click.prevent="$parent.$emit('close')">Cancel</button>
                                         <button v-if="!product" class="wperp-btn btn--primary" @click.prevent="saveProduct">Publish</button>
                                         <button v-else class="wperp-btn btn--primary" @click.prevent="saveProduct">Update</button>
-                                        <button  class="wperp-btn btn--default" @click.prevent="$parent.$emit('close')">Cancel</button>
                                     </div>
                                </form>
                             </div>

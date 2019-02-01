@@ -33,7 +33,7 @@
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
-                            <label>Deposit to</label>
+                            <label>Transaction From</label>
                             <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
                         <div class="wperp-col-sm-6">
