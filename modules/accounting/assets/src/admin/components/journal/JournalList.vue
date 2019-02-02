@@ -78,6 +78,10 @@
         },
 
         methods: {
+            newJournal() {
+                this.$router.push('journals/new');
+            },
+            
             fetchItems(){
                 this.rows = [];
                 HTTP.get('journals', {

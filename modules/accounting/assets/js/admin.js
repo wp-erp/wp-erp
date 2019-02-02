@@ -16410,6 +16410,9 @@ if (false) {(function () {
     }
   },
   methods: {
+    newJournal: function newJournal() {
+      this.$router.push('journals/new');
+    },
     fetchItems: function fetchItems() {
       var _this = this;
 
