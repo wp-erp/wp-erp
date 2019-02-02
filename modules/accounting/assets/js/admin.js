@@ -12587,6 +12587,10 @@ var STATUS_INITIAL = 0,
     }
   },
   methods: {
+    outside: function outside() {
+      this.showMenu = false;
+      this.$root.$emit('combo-btn-close');
+    },
     optionSelected: function optionSelected(option) {
       this.showMenu = false;
       this.$root.$emit('combo-btn-select', option);
@@ -17860,6 +17864,10 @@ if (false) {(function () {
     }
   },
   methods: {
+    outside: function outside() {
+      this.showMenu = false;
+      this.$root.$emit('combo-box-close');
+    },
     updateOption: function updateOption(option) {
       this.selectedOption = option;
       this.showMenu = false;
@@ -26879,7 +26887,17 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "wperp-select-container select-primary combo-btns" },
+    {
+      directives: [
+        {
+          name: "click-outside",
+          rawName: "v-click-outside",
+          value: _vm.outside,
+          expression: "outside"
+        }
+      ],
+      staticClass: "wperp-select-container select-primary combo-btns"
+    },
     [
       _c("div", { staticClass: "wperp-selected-option" }, [
         _c(
@@ -36327,89 +36345,105 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wperp-select-container select-primary" }, [
-    _vm.selectedOption.name !== undefined
-      ? _c(
-          "div",
-          {
-            staticClass: "wperp-selected-option",
-            on: {
-              click: function($event) {
-                _vm.toggleMenu()
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "click-outside",
+          rawName: "v-click-outside",
+          value: _vm.outside,
+          expression: "outside"
+        }
+      ],
+      staticClass: "wperp-select-container select-primary combo-box"
+    },
+    [
+      _vm.selectedOption.name !== undefined
+        ? _c(
+            "div",
+            {
+              staticClass: "wperp-selected-option",
+              on: {
+                click: function($event) {
+                  _vm.toggleMenu()
+                }
               }
-            }
-          },
-          [
-            _vm._v(
-              "\n      \t\t" + _vm._s(_vm.selectedOption.name) + "\n      \t\t"
-            ),
-            _c("span", { staticClass: "caret" })
-          ]
-        )
-      : _vm._e(),
-    _vm._v(" "),
-    _vm.selectedOption.name === undefined
-      ? _c(
-          "div",
-          {
-            staticClass: "wperp-selected-option",
-            on: {
-              click: function($event) {
-                _vm.toggleMenu()
+            },
+            [
+              _vm._v(
+                "\n      \t\t" +
+                  _vm._s(_vm.selectedOption.name) +
+                  "\n      \t\t"
+              ),
+              _c("span", { staticClass: "caret" })
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.selectedOption.name === undefined
+        ? _c(
+            "div",
+            {
+              staticClass: "wperp-selected-option",
+              on: {
+                click: function($event) {
+                  _vm.toggleMenu()
+                }
               }
-            }
-          },
-          [
-            _vm._v(
-              "\n      \t\t" + _vm._s(_vm.placeholderText) + "\n      \t\t"
-            ),
-            _c("span", { staticClass: "caret" })
-          ]
-        )
-      : _vm._e(),
-    _vm._v(" "),
-    _vm.showMenu
-      ? _c(
-          "ul",
-          { staticClass: "wperp-options" },
-          _vm._l(_vm.options, function(option, index) {
-            return _c(
-              "li",
-              { key: index },
-              [
-                _vm.hasUrl
-                  ? _c(
-                      "router-link",
-                      { attrs: { to: { name: option.namedRoute } } },
-                      [_vm._v(_vm._s(option.name))]
-                    )
-                  : _c(
-                      "a",
-                      {
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            _vm.updateOption(option)
+            },
+            [
+              _vm._v(
+                "\n      \t\t" + _vm._s(_vm.placeholderText) + "\n      \t\t"
+              ),
+              _c("span", { staticClass: "caret" })
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.showMenu
+        ? _c(
+            "ul",
+            { staticClass: "wperp-options" },
+            _vm._l(_vm.options, function(option, index) {
+              return _c(
+                "li",
+                { key: index },
+                [
+                  _vm.hasUrl
+                    ? _c(
+                        "router-link",
+                        { attrs: { to: { name: option.namedRoute } } },
+                        [_vm._v(_vm._s(option.name))]
+                      )
+                    : _c(
+                        "a",
+                        {
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              _vm.updateOption(option)
+                            }
                           }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(option.name) +
-                            "\n                "
-                        )
-                      ]
-                    )
-              ],
-              1
-            )
-          }),
-          0
-        )
-      : _vm._e()
-  ])
+                        },
+                        [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(option.name) +
+                              "\n                "
+                          )
+                        ]
+                      )
+                ],
+                1
+              )
+            }),
+            0
+          )
+        : _vm._e()
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

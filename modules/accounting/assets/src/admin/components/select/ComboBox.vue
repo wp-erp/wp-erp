@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-select-container select-primary">
+    <div class="wperp-select-container select-primary combo-box" v-click-outside="outside">
         <div @click="toggleMenu()" class="wperp-selected-option" v-if="selectedOption.name !== undefined">
       		{{ selectedOption.name }}
       		<span class="caret"></span>
@@ -57,6 +57,11 @@
         },
 
         methods: {
+            outside() {
+                this.showMenu = false;
+                this.$root.$emit('combo-box-close');
+            },
+
             updateOption(option) {
                 this.selectedOption = option;
                 this.showMenu = false;
