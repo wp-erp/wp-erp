@@ -1433,7 +1433,7 @@ Company'
             'crm' => [
                 'title'       => __( 'CR Management', 'erp' ),
                 'slug'        => 'erp-crm',
-                'description' => __( 'Client Resource Management', 'erp' ),
+                'description' => __( 'Customer Relationship Management', 'erp' ),
                 'callback'    => '\WeDevs\ERP\CRM\Customer_Relationship',
                 'modules'     => apply_filters( 'erp_crm_modules', [] )
             ],

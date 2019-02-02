@@ -6,9 +6,9 @@ namespace WeDevs\ERP\Accounting;
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * ERP_Accounting class
+ * Accounting class
  *
- * @class ERP_Accounting The class that holds the entire ERP_Accounting plugin
+ * @class Accounting The class that holds the entire Accounting module
  */
 final class Accounting {
 
