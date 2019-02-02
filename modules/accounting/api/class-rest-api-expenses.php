@@ -86,6 +86,17 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/checks' . '/(?P<id>[\d]+)' , [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_check' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/attachments', [
             [
                 'methods'             => WP_REST_Server::CREATABLE,
@@ -156,6 +167,36 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $expense_data =  erp_acct_get_expense( $id );
+        $expense_data['id'] = $id;
+
+        $expense_data['created_by'] = $this->get_user( $expense_data['created_by'] );
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $data = $this->prepare_item_for_response( $expense_data, $request, $additional_fields );
+        $response = rest_ensure_response( $data );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get a check
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_check( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_check_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $expense_data =  erp_acct_get_check( $id );
         $expense_data['id'] = $id;
 
         $expense_data['created_by'] = $this->get_user( $expense_data['created_by'] );

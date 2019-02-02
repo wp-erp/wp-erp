@@ -93,6 +93,83 @@ function erp_acct_get_expense( $expense_no ) {
 }
 
 /**
+ * Get a single check
+ *
+ * @param $expense_no
+ * @return mixed
+ */
+function erp_acct_get_check( $expense_no ) {
+    global $wpdb;
+
+    $sql = "SELECT
+
+    expense.id,
+    expense.voucher_no,
+    expense.people_id,
+    expense.people_name,
+    expense.address,
+    expense.trn_date,
+    expense.amount,
+    expense.ref,
+    expense.particulars,
+    expense.status,
+    expense.trn_by_ledger_id,
+    expense.trn_by,
+    expense.attachments,
+    expense.created_at,
+    expense.created_by,
+    expense.updated_at,
+    expense.updated_by,
+    
+    cheque.name,
+    cheque.check_no,
+    cheque.pay_to,
+    cheque.amount,
+
+    ledg_detail.debit,
+    ledg_detail.credit
+
+    FROM {$wpdb->prefix}erp_acct_expenses AS expense
+
+    LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON expense.voucher_no = cheque.trn_no
+    LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON expense.voucher_no = ledg_detail.trn_no
+
+    WHERE expense.voucher_no = {$expense_no} AND cheque.voucher_type = 'check'";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    $row['bill_details'] = erp_acct_format_check_line_items( $expense_no );
+
+    return $row;
+}
+
+/**
+ * Format check line items
+ */
+function erp_acct_format_check_line_items( $voucher_no ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT
+        expense_detail.id,
+        expense_detail.ledger_id,
+        expense_detail.trn_no,
+        expense_detail.particulars,
+        
+        cheque.name,
+        cheque.check_no,
+        cheque.pay_to,
+        cheque.amount
+
+        FROM {$wpdb->prefix}erp_acct_expenses AS expense
+        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details as expense_detail ON expense.voucher_no = expense_detail.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON expense.voucher_no = cheque.trn_no
+
+        WHERE expense.voucher_no = %d", $voucher_no);
+
+    return $wpdb->get_results($sql, ARRAY_A);
+}
+
+/**
  * Format expense line items
  */
 function erp_acct_format_expense_line_items( $voucher_no ) {

@@ -36,6 +36,7 @@ import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import NewTaxRate        from 'admin/components/tax/NewTaxRate.vue';
 import CheckCreate       from 'admin/components/check/CheckCreate.vue';
+import CheckSingle       from 'admin/components/check/CheckSingle.vue';
 
 Vue.use(Router)
 
@@ -364,14 +365,21 @@ export default new Router({
             ]
         },
         {
-            path: '/expenses/new',
-            name: 'ExpenseCreate',
-            component: ExpenseCreate
-        },
-        {
-            path: '/checks/new',
-            name: 'CheckCreate',
-            component: CheckCreate
+            path: '/checks',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+
+                    path: 'new',
+                    name: 'CheckCreate',
+                    component: CheckCreate
+                },
+                {
+                    path: ':id',
+                    name: 'CheckSingle',
+                    component: CheckSingle,
+                },
+            ]
         },
         {
             path: '/pay-tax',

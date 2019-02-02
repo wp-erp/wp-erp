@@ -201,7 +201,7 @@
                                 'due'        : '-',
                                 'amount'     : this.formatAmount(item.expense_amount),
                                 'status'     : 'Paid',
-                                'singleView' : { name: 'PayBillSingle', params: { id: item.id }}
+                                'singleView' : { name: 'ExpenseSingle', params: { id: item.id }}
                             };
                             break;
 
@@ -217,7 +217,7 @@
                                 'due'        : '-',
                                 'amount'     : this.formatAmount(item.expense_amount),
                                 'status'     : 'Paid',
-                                'singleView' : { name: 'PayBillSingle', params: { id: item.id }}
+                                'singleView' : { name: 'CheckSingle', params: { id: item.id }}
                             };
                             break;
 
