@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-select-container select-primary combo-btns">
+    <div class="wperp-select-container select-primary combo-btns" v-click-outside="outside">
         <div class="wperp-selected-option">
       		<div class="left-part" @click="optionSelected(options[0])">
 				<button class="btn-fake">{{ options[0].text }}</button>
@@ -35,6 +35,11 @@
         },
 
         methods: {
+            outside() {
+                this.showMenu = false;
+                this.$root.$emit('combo-btn-close');
+            },
+
             optionSelected(option) {
                 this.showMenu = false;
                 this.$root.$emit('combo-btn-select', option);
