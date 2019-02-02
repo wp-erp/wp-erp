@@ -349,9 +349,10 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = bill.status
         LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acct_details ON bill_acct_details.bill_no = bill.id
         LEFT JOIN {$wpdb->prefix}erp_acct_expenses AS expense ON expense.voucher_no = voucher.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON cheque.trn_no = voucher.id
         {$where} 
         GROUP BY voucher.id
-        ORDER BY CONCAT(bill.trn_date, pay_bill.trn_date) {$args['order']} {$limit}";
+        ORDER BY voucher.id {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         $wpdb->get_results($sql);

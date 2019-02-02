@@ -350,7 +350,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $transactions = erp_acct_get_expense_transactions( $args );
-        $total_items = erp_acct_get_expense_transactions( [ 'count' => true, 'number' => -1 ] );
+        $total_items  = erp_acct_get_expense_transactions( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $transactions as $transaction ) {
             $data = $this->prepare_item_for_response( $transaction, $request, $additional_fields );

@@ -206,8 +206,13 @@ function erp_acct_insert_expense( $data ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
 
+        $type = 'expense';
+        if ( isset( $data['trn_by'] ) && $data['trn_by'] === '3' ) {
+            $type = 'check';
+        }
+
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-            'type'       => 'expense',
+            'type'       => $type,
             'created_at' => $data['created_at'],
             'created_by' => $data['created_by'],
             'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
