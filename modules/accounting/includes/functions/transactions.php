@@ -488,6 +488,6 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
         return $wpdb->num_rows;
     }
 
-//     error_log(print_r($sql, true));
+    // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }

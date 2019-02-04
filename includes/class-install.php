@@ -756,7 +756,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
+            ) $collate CHARSET=utf8;",
 
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_account_details` (

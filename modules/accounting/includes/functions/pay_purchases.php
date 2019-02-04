@@ -50,33 +50,37 @@ function erp_acct_get_pay_purchases( $args = [] ) {
 function erp_acct_get_pay_purchase( $purchase_no ) {
     global $wpdb;
 
-    $sql = "SELECT
-
-    pay_purchase.id,
-    pay_purchase.voucher_no,
-    pay_purchase.trn_date,
-    pay_purchase.amount,
-    pay_purchase.trn_by,
-    pay_purchase.particulars,
-    pay_purchase.attachments,
-    pay_purchase.status,
-    pay_purchase.created_at,
-    pay_purchase.created_by,
-    pay_purchase.updated_at,
-    pay_purchase.updated_by,
-
-    pay_purchase_detail.purchase_no,
-    pay_purchase_detail.amount as pay_purchase_detail_amount
-
-    from {$wpdb->prefix}erp_acct_pay_purchase as pay_purchase
-
-    LEFT JOIN {$wpdb->prefix}erp_acct_pay_purchase_details as pay_purchase_detail ON pay_purchase.voucher_no = pay_purchase_detail.purchase_no
-
-    WHERE pay_purchase.voucher_no = {$purchase_no}";
+    $sql = $wpdb->prepare("SELECT
+        pay_purchase.voucher_no,
+        pay_purchase.vendor_id,
+        pay_purchase.vendor_name,
+        pay_purchase.trn_date,
+        pay_purchase.amount,
+        pay_purchase.trn_by,
+        pay_purchase.trn_by_ledger_id
+        FROM wp_erp_acct_pay_purchase AS pay_purchase
+        WHERE pay_purchase.voucher_no = %d", $purchase_no);
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
+    $row['bill_details'] = erp_acct_format_pay_purchase_line_items( $purchase_no );
+
     return $row;
+}
+
+/**
+ * Format pay purchase line items
+ */
+function erp_acct_format_pay_purchase_line_items($voucher_no) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT * FROM
+        wp_erp_acct_pay_purchase AS pay_purchase
+        LEFT JOIN wp_erp_acct_pay_purchase_details AS pay_purchase_detail
+        ON pay_purchase.voucher_no = pay_purchase_detail.voucher_no
+        WHERE pay_purchase.voucher_no = %d", $voucher_no);
+
+    return $wpdb->get_results($sql, ARRAY_A);
 }
 
 /**

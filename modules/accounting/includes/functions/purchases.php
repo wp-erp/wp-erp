@@ -50,8 +50,9 @@ function erp_acct_get_purchases( $args = [] ) {
 function erp_acct_get_purchase( $purchase_no ) {
     global $wpdb;
 
-    $sql = "SELECT 
+    $sql = $wpdb->prepare("SELECT 
 
+    purchase.id,
     purchase.voucher_no,
     purchase.vendor_id,
     purchase.trn_date,
@@ -62,37 +63,56 @@ function erp_acct_get_purchase( $purchase_no ) {
     purchase.status,
     purchase.attachments,
     purchase.particulars,
-    purchase.created_at,
-    purchase.created_by,
-    purchase.updated_at,
-    purchase.updated_by,
-    
-    purchase_detail.product_id,
-    purchase_detail.qty,
-    purchase_detail.price,
-    purchase_detail.amount,
     
     purchase_acc_detail.purchase_no,
     purchase_acc_detail.particulars,
     purchase_acc_detail.debit,
-    purchase_acc_detail.credit,
+    purchase_acc_detail.credit
 
-    product.name,
-    product.product_type_id,
-    product.category_id,
-    product.vendor,
-    product.cost_price,
-    product.sale_price
-    
-    FROM {$wpdb->prefix}erp_acct_purchase AS purchase
-    LEFT JOIN {$wpdb->prefix}erp_acct_purchase_details AS purchase_detail ON purchase.voucher_no = purchase_detail.trn_no
-    LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
-    LEFT JOIN {$wpdb->prefix}erp_acct_products AS product ON purchase_detail.product_id = product.id
-    WHERE purchase.voucher_no = {$purchase_no} LIMIT 1";
+    FROM wp_erp_acct_purchase AS purchase
+    LEFT JOIN wp_erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
+    WHERE purchase.voucher_no = %d", $purchase_no);
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
+    $row['line_items'] = erp_acct_format_purchase_line_items( $purchase_no );
+    $row['attachments'] = unserialize( $row['attachments'] );
+    $row['total_due'] = $row['credit'] - $row['debit'];
 
     return $row;
+}
+
+/**
+ * Purchase items detail
+ */
+function erp_acct_format_purchase_line_items($voucher_no) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("	SELECT
+        purchase_detail.product_id,
+        purchase_detail.qty,
+        purchase_detail.price,
+        purchase_detail.amount,
+
+        product.name,
+        product.product_type_id,
+        product.category_id,
+        product.vendor,
+        product.cost_price,
+        product.sale_price
+        
+        FROM wp_erp_acct_purchase AS purchase
+        LEFT JOIN wp_erp_acct_purchase_details AS purchase_detail ON purchase.voucher_no = purchase_detail.trn_no
+        LEFT JOIN wp_erp_acct_products AS product ON purchase_detail.product_id = product.id
+        WHERE purchase.voucher_no = %d", $voucher_no);
+
+    $results = $wpdb->get_results($sql, ARRAY_A);
+
+    // calculate every line total
+    foreach ( $results as $key => $value ) {
+        $results[$key]['line_total'] = $value['amount'];
+    }
+
+    return $results;
 }
 
 /**

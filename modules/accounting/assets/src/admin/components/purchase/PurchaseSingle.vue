@@ -1,8 +1,8 @@
 <template>
-    <div class="wperp-modal-dialog paybill-single">
+    <div class="wperp-modal-dialog purchase-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h4>Pay Bill</h4>
+                <h4>Purchase</h4>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
@@ -33,55 +33,61 @@
                     </div>
 
                     <div class="invoice-body">
-                        <h4>Pay Bill</h4>
-                        <div class="wperp-row" v-if="null != payBill">
+                        <h4>Purchase</h4>
+                        <div class="wperp-row" v-if="null != purchase">
                             <div class="wperp-col-sm-6">
                                 <div class="persons-info">
-                                    <strong>{{ payBill.vendor_name }}</strong><br>
-                                    {{ payBill.billing_address }}
+                                    <strong>{{ purchase.vendor_name }}</strong><br>
+                                    {{ purchase.billing_address }}
                                 </div>
                             </div>
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>Pay Bill No</th>
-                                        <td>#{{ payBill.voucher_no }}</td>
+                                        <th>Purchase No</th>
+                                        <td>#{{ purchase.voucher_no }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Pay Bill Date:</th>
-                                        <td>{{ payBill.trn_date }}</td>
+                                        <th>Purchase Date:</th>
+                                        <td>{{ purchase.date }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Deposit to</th>
-                                        <td>Bank</td>
+                                        <th>Due Date:</th>
+                                        <td>{{ purchase.due_date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Amount Due:</th>
+                                        <td>{{ purchase.due_total }}</td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
                     </div>
 
-                    <div class="wperp-invoice-table" v-if="null != payBill">
+                    <div class="wperp-invoice-table" v-if="null != purchase">
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Bill No</th>
-                                <th>Amount</th>
-                            </tr>
+                                <tr>
+                                    <th>Item name</th>
+                                    <th>Qty</th>
+                                    <th>Unit Price</th>
+                                    <th>Amount</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr :key="index" v-for="(line, index) in payBill.bill_details">
-                                <td>{{ line.id }}</td>
-                                <td>{{ line.bill_no }}</td>
-                                <td>{{ getCurrencySign() + line.amount }}</td>
-                            </tr>
+                                <tr :key="index" v-for="(line, index) in purchase.line_items">
+                                    <td>{{ line.name }}</td>
+                                    <td>{{ line.qty }}</td>
+                                    <td>{{ getCurrencySign() + line.cost_price }}</td>
+                                    <td>{{ getCurrencySign() + line.amount }}</td>
+                                </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ getCurrencySign() + payBill.amount }}</li>
-                                        <li><span>Total:</span> {{ getCurrencySign() + payBill.amount }}</li>
+                                        <li><span>Subtotal:</span> {{ getCurrencySign() + purchase.amount }}</li>
+                                        <li><span>Total:</span> {{ getCurrencySign() + purchase.amount }}</li>
                                     </ul>
                                 </td>
                             </tr>
@@ -124,12 +130,12 @@
     import HTTP from 'admin/http';
 
     export default {
-        name: 'PayBillSingle',
+        name: 'PurchaseSingle',
 
         data() {
             return {
                 company  : null,
-                payBill  : null,
+                purchase: null,
                 isWorking: false,
                 acct_var : erp_acct_var,
             }
@@ -137,7 +143,7 @@
 
         created() {
             this.getCompanyInfo();
-            this.getBill();
+            this.getPurchase();
         },
 
         methods: {
@@ -149,11 +155,11 @@
                 });
             },
 
-            getBill() {
+            getPurchase() {
                 this.isWorking = true;
 
-                HTTP.get(`/pay-bills/${this.$route.params.id}`).then(response => {                    
-                    this.payBill = response.data;
+                HTTP.get(`/purchases/${this.$route.params.id}`).then(response => {                                        
+                    this.purchase = response.data;
                 }).then( e => {} ).then(() => {
                     this.isWorking = false;
                 });
@@ -169,9 +175,8 @@
 
 
 <style lang="less">
-    .paybill-single {
+    .purchase-single {
         width: 800px;
         margin: 40px 0;
     }
 </style>
-
