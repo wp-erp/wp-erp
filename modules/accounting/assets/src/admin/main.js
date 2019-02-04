@@ -5,11 +5,13 @@ import router from './router'
 import VueSweetalert2 from 'vue-sweetalert2'
 import commonMixins from './mixins/common'
 import store from './store/store'
+import Loading from 'vue-loading-overlay';
 
 Vue.config.productionTip = false
 
 Vue.use(VeeValidate);
 Vue.use(VueSweetalert2);
+Vue.use(Loading);
 
 Vue.mixin(commonMixins);
 
