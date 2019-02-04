@@ -92,7 +92,6 @@ function erp_acct_format_paybill_line_items($voucher_no) {
     return $wpdb->get_results($sql, ARRAY_A);
 }
 
-
 /**
  * Insert a pay_bill
  *

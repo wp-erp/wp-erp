@@ -26,7 +26,7 @@
                         #{{ data.row.id }}
                     </strong>
                     <strong v-else>
-                        <router-link :to="{ name: 'PurchaseReport', params: { id: data.row.id }}">
+                        <router-link :to="{ name: 'PurchaseSingle', params: { id: data.row.id }}">
                             #{{ data.row.id }}
                         </router-link>
                     </strong>

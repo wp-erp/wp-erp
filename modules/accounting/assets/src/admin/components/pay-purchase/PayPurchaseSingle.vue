@@ -2,7 +2,7 @@
     <div class="wperp-modal-dialog paybill-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h4>Pay Bill</h4>
+                <h4>Pay Purchase</h4>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
@@ -33,23 +33,23 @@
                     </div>
 
                     <div class="invoice-body">
-                        <h4>Pay Bill</h4>
-                        <div class="wperp-row" v-if="null != payBill">
+                        <h4>Pay Purchase</h4>
+                        <div class="wperp-row" v-if="null != payPurchase">
                             <div class="wperp-col-sm-6">
                                 <div class="persons-info">
-                                    <strong>{{ payBill.vendor_name }}</strong><br>
-                                    {{ payBill.billing_address }}
+                                    <strong>{{ payPurchase.vendor_name }}</strong><br>
+                                    {{ payPurchase.billing_address }}
                                 </div>
                             </div>
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>Pay Bill No</th>
-                                        <td>#{{ payBill.voucher_no }}</td>
+                                        <th>Pay Purchase No</th>
+                                        <td>#{{ payPurchase.voucher_no }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Pay Bill Date:</th>
-                                        <td>{{ payBill.trn_date }}</td>
+                                        <th>Pay Purchase Date:</th>
+                                        <td>{{ payPurchase.trn_date }}</td>
                                     </tr>
                                     <tr>
                                         <th>Deposit to</th>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
 
-                    <div class="wperp-invoice-table" v-if="null != payBill">
+                    <div class="wperp-invoice-table" v-if="null != payPurchase">
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
@@ -70,11 +70,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr :key="index" v-for="(line, index) in payBill.bill_details">
-                                <td>{{ line.id }}</td>
-                                <td>{{ line.bill_no }}</td>
-                                <td>{{ getCurrencySign() + line.amount }}</td>
-                            </tr>
+                                <tr :key="index" v-for="(line, index) in payPurchase.bill_details">
+                                    <td>{{ line.id }}</td>
+                                    <td>{{ line.bill_no }}</td>
+                                    <td>{{ getCurrencySign() + line.amount }}</td>
+                                </tr>
                             </tbody>
                             <tfoot>
                             <tr>

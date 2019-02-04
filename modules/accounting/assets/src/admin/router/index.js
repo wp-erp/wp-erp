@@ -18,6 +18,7 @@ import BillSingle        from 'admin/components/bill/BillSingle.vue';
 import PayBillCreate     from 'admin/components/pay-bill/PayBillCreate.vue';
 import PayBillSingle     from 'admin/components/pay-bill/PayBillSingle.vue';
 import PurchaseCreate    from 'admin/components/purchase/PurchaseCreate.vue';
+import PurchaseSingle       from 'admin/components/purchase/PurchaseSingle.vue';
 import PayPurchaseCreate from 'admin/components/pay-purchase/PayPurchaseCreate.vue';
 import JournalList       from 'admin/components/journal/JournalList.vue';
 import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
@@ -236,9 +237,21 @@ export default new Router({
             ]
         },
         {
-            path: '/purchases/new',
-            name: 'PurchaseCreate',
-            component: PurchaseCreate
+            path: '/purchases',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+
+                    path: 'new',
+                    name: 'PurchaseCreate',
+                    component: PurchaseCreate
+                },
+                {
+                    path: ':id',
+                    name: 'PurchaseSingle',
+                    component: PurchaseSingle,
+                },
+            ]
         },
         {
             path: '/pay-purchase/new',

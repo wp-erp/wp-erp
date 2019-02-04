@@ -6,10 +6,6 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">New Purchase</h2>
-                    <!-- just for showing modal -->
-                    <a href="#" class="wperp-btn btn--primary" @click.prevent="showPurchaseModal">
-                        <span>Print</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -97,8 +93,6 @@
             </div>
         </div>
 
-        <Purchase-modal v-if="PurchaseModal" />
-
         <!-- End .wperp-crm-table -->
     </div>
 </template>
@@ -108,7 +102,6 @@
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import PurchaseModal from 'admin/components/purchase/PurchaseModal.vue'
     import PurchaseRow from 'admin/components/purchase/PurchaseRow.vue'
     import SelectVendors from 'admin/components/people/SelectVendors.vue'
 
@@ -120,7 +113,6 @@
             Datepicker,
             FileUpload,
             SubmitButton,
-            PurchaseModal,
             PurchaseRow,
             SelectVendors
         },
@@ -139,7 +131,6 @@
                 transactionLines: [{}],
                 finalTotalAmount: 0,
 
-                PurchaseModal: false,
                 isWorking: false,
             }
         },
@@ -163,10 +154,6 @@
 
             this.$root.$on('total-updated', amount => {
                 this.updateFinalAmount();
-            });
-
-            this.$root.$on('purchase-modal-close', () => {
-                this.PurchaseModal = false;
             });
         },
 
@@ -285,9 +272,6 @@
 
             },
 
-            showPurchaseModal() {
-                this.PurchaseModal = true;
-            }
         }
 
     }

@@ -217,7 +217,7 @@
             },
 
             fetchAccounts(){
-                HTTP.get('accounts').then( (response) => {
+                HTTP.get('/accounts').then( (response) => {
                     this.deposit_accts = response.data;
                 } );
             },

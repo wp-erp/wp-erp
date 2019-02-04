@@ -149,9 +149,9 @@
                 ],
 
                 buttons: [
-                    {id: 'save', text: 'Save'},
-                    {id: 'save_create', text: 'Save & Create'},
-                    {id: 'save_draft', text: 'Create Draft'},
+                    {id: 'save', text: 'Create Invoice'},
+                    {id: 'send_create', text: 'Create and Send'},
+                    {id: 'save_new', text: 'Create and New'},
                 ],
 
                 products: [],
