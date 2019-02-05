@@ -89,12 +89,13 @@
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
+                    this.$emit('close');
+                    this.$root.$emit('refetch_tax_data');
                 });
             },
 
             resetData() {
                 Object.assign(this.$data, this.$options.data.call(this));
-                this.basic_fields.user = '';
             },
 
         },

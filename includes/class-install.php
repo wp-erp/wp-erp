@@ -1194,6 +1194,7 @@ Company'
                 `tax_rate_name` varchar(255) DEFAULT NULL,
                 `tax_number` varchar(100) DEFAULT NULL,
                 `default` boolean DEFAULT NULL,
+                `tax_rate` int(11) DEFAULT 0,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,

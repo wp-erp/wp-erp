@@ -96,6 +96,7 @@ function erp_acct_insert_tax_rate( $data ) {
         'tax_rate_name' => $tax_data['tax_rate_name'],
         'tax_number'    => $tax_data['tax_number'],
         'default'       => $tax_data['default'],
+        'tax_rate'      => $tax_data['tax_rate'],
         'created_at'    => $tax_data['created_at'],
         'created_by'    => $tax_data['created_by'],
         'updated_at'    => $tax_data['updated_at'],
