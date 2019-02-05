@@ -57,10 +57,10 @@
                     'cat_name': {
                         label: 'Product Category'
                     },
-                    'type_name': {
+                    'product_type_name': {
                         label: 'Product Type'
                     },
-                    'vendor_name': {
+                    'vendor': {
                         label: 'Vendor'
                     },
                     'actions': { label: 'Actions' }
@@ -76,6 +76,7 @@
         },
         methods: {
             getProducts() {
+                this.products = [];
                 HTTP.get('products').then( response => {
                     this.products = response.data;
                 } );

@@ -1,10 +1,10 @@
 <template>
-    <div id="wperp-tax-agency-modal" class="wperp-modal has-form wperp-modal-open" role="dialog">
+    <div id="wperp-tax-category-modal" class="wperp-modal has-form wperp-modal-open" role="dialog">
         <div class="wperp-modal-dialog">
             <div class="wperp-modal-content">
                 <!-- modal body title -->
                 <div class="wperp-modal-header">
-                    <h3>Add Tax Agency</h3>
+                    <h3>Add Tax Category</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
                 <!-- end modal body title -->
@@ -12,9 +12,14 @@
                     <div class="wperp-modal-body">
 
                         <div class="wperp-form-group">
-                            <label>Tax Agency Name</label>
-                            <!--<multi-select v-model="agency" :options="agencies" />-->
-                            <input type="text" v-model="agency" />
+                            <label>Tax Category Name</label>
+                                <!--<multi-select v-model="category" :options="categories" />-->
+                                <input type="text" v-model="category" />
+                        </div>
+
+                        <div class="wperp-form-group mb-0">
+                            <label>Description</label>
+                            <textarea v-model="desc" rows="4" class="wperp-form-field"></textarea>
                         </div>
 
                     </div>
@@ -22,7 +27,7 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <submit-button text="Add New Tax Agency" @click.native.prevent="addNewTaxAgency" :working="isWorking"></submit-button>
+                            <submit-button text="Add New Tax Category" @click.native.prevent="addNewTaxCat" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>
@@ -38,7 +43,7 @@
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
 
     export default {
-        name: 'NewTaxAgency',
+        name: 'NewTaxCategory',
 
         components: {
             HTTP,
@@ -48,14 +53,15 @@
 
         data() {
             return {
-                agencies: [{}],
-                agency: '',
+                categories: [{}],
+                category: '',
+                desc: '',
                 isWorking: false,
             };
         },
 
         created() {
-            // this.getAgencies();
+            // this.getCategories();
         },
 
         methods: {
@@ -63,10 +69,10 @@
                 this.$emit('close');
             },
 
-            getAgencies() {
-                HTTP.get('/tax-agencies').then((response) => {
+            getCategories() {
+                HTTP.get('/tax-cats').then((response) => {
                     response.data.forEach(element => {
-                        this.agencies.push({
+                        this.categories.push({
                             id: element.id,
                             name: element.name
                         });
@@ -74,15 +80,16 @@
                 });
             },
 
-            addNewTaxAgency() {
-                HTTP.post('/tax-agencies', {
-                    agency_name: this.agency,
+            addNewTaxCat() {
+                HTTP.post('/tax-cats', {
+                    name: this.category,
+                    description: this.desc,
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({
                         position: 'center',
                         type: 'success',
-                        title: 'Tax Agency Created!',
+                        title: 'Tax Category Created!',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -99,8 +106,8 @@
             },
 
         },
-    }
+   	}
 </script>
 <style lang="less">
-
+    
 </style>
