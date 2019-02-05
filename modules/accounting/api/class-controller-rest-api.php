@@ -33,6 +33,7 @@ class REST_API {
             '\WeDevs\ERP\Accounting\API\Journals_Controller',
             '\WeDevs\ERP\Accounting\API\Expenses_Controller',
             '\WeDevs\ERP\Accounting\API\Tax_Agencies_Controller',
+            '\WeDevs\ERP\Accounting\API\Tax_Cats_Controller',
             '\WeDevs\ERP\Accounting\API\People_Controller',
             '\WeDevs\ERP\Accounting\API\Reports_Controller'
         ] );

@@ -67,7 +67,7 @@ function erp_acct_get_tax_rate( $tax_no ) {
     tax_item.agency_id
     
     FROM {$wpdb->prefix}erp_acct_taxes AS tax
-    LEFT JOIN {$wpdb->prefix}erp_acct_tax_items AS tax_item ON tax.id = tax_item.tax_id
+    LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
     WHERE tax.id = {$tax_no} LIMIT 1";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
@@ -108,9 +108,10 @@ function erp_acct_insert_tax_rate( $data ) {
     $items = $data['tax_components'];
 
     foreach ($items as $key => $item) {
-        $wpdb->insert($wpdb->prefix . 'erp_acct_tax_items', array(
-            'component_name' => $item['component_name'],
+        $wpdb->insert($wpdb->prefix . 'erp_acct_tax_cat_agency', array(
             'tax_id'         => $tax_id,
+            'component_name' => $item['component_name'],
+            'tax_cat_id'     => $item['tax_category_id'],
             'agency_id'      => $item['agency_id'],
             'tax_rate'       => $item['tax_rate'],
             'created_at'     => $tax_data['created_at'],
@@ -118,16 +119,18 @@ function erp_acct_insert_tax_rate( $data ) {
             'updated_at'     => $tax_data['updated_at'],
             'updated_by'     => $tax_data['updated_by'],
         ));
+
+        $wpdb->insert($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
+            'tax_id'                => $tax_id,
+            'sales_tax_category_id' => $item['tax_category_id'],
+            'tax_rate'              => $item['tax_rate'],
+            'created_at'            => $tax_data['created_at'],
+            'created_by'            => $tax_data['created_by'],
+            'updated_at'            => $tax_data['updated_at'],
+            'updated_by'            => $tax_data['updated_by'],
+        ));
     }
 
-    $wpdb->insert($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
-        'tax_id'                => $tax_id,
-        'sales_tax_category_id' => $tax_data['tax_category_id'],
-        'created_at'            => $tax_data['created_at'],
-        'created_by'            => $tax_data['created_by'],
-        'updated_at'            => $tax_data['updated_at'],
-        'updated_by'            => $tax_data['updated_by'],
-    ));
 
     return $tax_id;
 
@@ -164,10 +167,22 @@ function erp_acct_update_tax_rate( $data, $id ) {
     $items = $data['tax_components'];
 
     foreach ($items as $key => $item) {
-        $wpdb->update($wpdb->prefix . 'erp_acct_tax_items', array(
+        $wpdb->update($wpdb->prefix . 'erp_acct_tax_cat_agency', array(
             'component_name' => $item['component_name'],
-            'agency_id' => $item['agency_id'],
-            'tax_rate' => $item['tax_rate'],
+            'tax_cat_id'     => $item['tax_category_id'],
+            'agency_id'      => $item['agency_id'],
+            'tax_rate'       => $item['tax_rate'],
+            'created_at'     => $tax_data['created_at'],
+            'created_by'     => $tax_data['created_by'],
+            'updated_at'     => $tax_data['updated_at'],
+            'updated_by'     => $tax_data['updated_by'],
+        ), array(
+            'tax_id' => $id
+        ));
+
+        $wpdb->update($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
+            'sales_tax_category_id' => $item['tax_category_id'],
+            'tax_rate'              => $item['tax_rate'],
             'created_at' => $tax_data['created_at'],
             'created_by' => $tax_data['created_by'],
             'updated_at' => $tax_data['updated_at'],
@@ -176,16 +191,6 @@ function erp_acct_update_tax_rate( $data, $id ) {
             'tax_id' => $id
         ));
     }
-
-    $wpdb->update($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
-        'sales_tax_category_id' => $tax_data['tax_category_id'],
-        'created_at' => $tax_data['created_at'],
-        'created_by' => $tax_data['created_by'],
-        'updated_at' => $tax_data['updated_at'],
-        'updated_by' => $tax_data['updated_by'],
-    ), array(
-        'tax_id' => $id
-    ));
 
     return $id;
 
@@ -347,7 +352,7 @@ function erp_acct_format_tax_line_items( $tax = 'all' ) {
     } else {
         $tax_sql = "WHERE tax_id = " .  $tax ;
     }
-    $sql .= "FROM {$wpdb->prefix}erp_acct_tax_items {$tax_sql} ORDER BY tax_id";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_tax_cat_agency {$tax_sql} ORDER BY tax_id";
 
     return $wpdb->get_results( $sql, ARRAY_A );
 }

@@ -14,27 +14,23 @@
             <div class="wperp-panel-body">
                 <form action="" method="post" class="wperp-form">
                     <div class="wperp-row wperp-gutter-20">
-                        <div class="wperp-form-group wperp-col-sm-4">
+                        <div class="wperp-form-group wperp-col-sm-6">
                             <label>Tax Name</label>
                             <div class="wperp-custom-select">
                                 <input type="text" placeholder="Enter Tax Name" v-model="tax_name"
                                        class="wperp-form-field">
                             </div>
                         </div>
-                        <div class="wperp-form-group wperp-col-sm-4">
+                        <div class="wperp-form-group wperp-col-sm-6">
                             <label>Tax Number</label>
                             <input type="text" placeholder="Enter Tax Number" v-model="tax_number"
                                    class="wperp-form-field">
                         </div>
-                        <div class="wperp-form-group wperp-col-sm-4 with-multiselect">
-                            <label>Category</label>
-                            <multi-select v-model="tax_category" :options="categories"/>
-                        </div>
-                        <div class="wperp-col-sm-4">
+                        <div class="wperp-col-sm-6">
                             <div class="form-check">
                                 <label class="form-check-label">
                                     <input type="checkbox" v-model="is_compound" class="form-check-input"
-                                           @change="isTaxComponent = !isTaxComponent">
+                                           @change="isCompoundTax = !isCompoundTax">
                                     <span class="form-check-sign"></span>
                                     <span class="field-label">Is this tax compound?</span>
                                 </label>
@@ -52,11 +48,12 @@
                     </div>
 
                     <div class="table-container mt-20">
-                        <table class="wperp-table wperp-form-table">
+                        <table class="wperp-table wperp-form-table new-journal-form">
                             <thead>
                             <tr>
                                 <th scope="col" class="column-primary">Component Name</th>
                                 <th scope="col">Agency</th>
+                                <th scope="col">Tax Category</th>
                                 <th scope="col">Tax Rate</th>
                                 <th scope="col" class="col--actions"></th>
                             </tr>
@@ -74,6 +71,11 @@
                                     <a href="#" @click.prevent="showAgencyModal = true" role="button"
                                        class="after-select-dropdown">Add Tax Agency</a>
                                 </td>
+                                <td class="col--tax-category with-multiselect" data-colname="Tax Category">
+                                    <multi-select v-model="line.tax_category" :options="categories"/>
+                                    <a href="#" @click.prevent="showCatModal = true" role="button"
+                                       class="after-select-dropdown">Add Tax Category</a>
+                                </td>
                                 <td class="col--tax-rate" data-colname="Tax Rate">
                                     <input type="text" class="wperp-form-field text-right" v-model="line.tax_rate">
                                 </td>
@@ -81,14 +83,7 @@
                                     <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                                 </td>
                             </tr>
-                            <tr class="total-amount-row">
-                                <td class="text-right pr-0 hide-sm" colspan="2">Total Amount</td>
-                                <td class="text-right" data-colname="Total Rate">
-                                    <input class="text-right" type="text" :value="isNaN(finalTotalAmount) ? 0 : finalTotalAmount" readonly/>
-                                </td>
-                                <td class="text-right"></td>
-                            </tr>
-                            <tr class="add-new-line" v-if="isTaxComponent">
+                            <tr class="add-new-line" v-if="isCompoundTax">
                                 <td colspan="9" class="text-left">
                                     <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"
                                             type="button"><i
@@ -100,6 +95,7 @@
                         </table>
                     </div>
 
+                    <new-tax-category v-if="showCatModal" @close="showCatModal = false"/>
                     <new-tax-agency v-if="showAgencyModal" @close="showAgencyModal = false"/>
 
                     <div class="wperp-modal-footer pt-0">
@@ -119,6 +115,7 @@
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import NewTaxAgency from 'admin/components/tax/NewTaxAgency.vue'
+    import NewTaxCategory from 'admin/components/tax/NewTaxCategory.vue'
 
     export default {
         name: "NewTaxRate",
@@ -127,7 +124,8 @@
             HTTP,
             MultiSelect,
             SubmitButton,
-            NewTaxAgency
+            NewTaxAgency,
+            NewTaxCategory
         },
 
         data() {
@@ -135,20 +133,24 @@
                 tax_name: '',
                 tax_number: '',
                 tax_category: '',
-                is_default: 0,
-                is_compound: 0,
-                isTaxComponent: false,
+                is_default: false,
+                is_compound: false,
+                isCompoundTax: false,
                 isRowExpanded: false,
                 componentLines: [{}],
                 categories: [{}],
                 agencies: [{}],
-                showAgencyModal: false
+                showAgencyModal: false,
+                showCatModal: false
             }
         },
 
         created() {
-            this.getAgencies();
-            this.getCategories();
+            this.fetchData();
+
+            this.$root.$on('refetch_tax_data', () => {
+                this.fetchData();
+            });
 
             this.$on('remove-row', index => {
                 this.$delete(this.componentLines, index);
@@ -157,8 +159,14 @@
         },
 
         methods: {
+            fetchData() {
+                this.getAgencies();
+                this.getCategories();
+            },
+
             getAgencies() {
                 HTTP.get('/tax-agencies').then((response) => {
+                    this.agencies = [];
                     response.data.forEach(element => {
                         this.agencies.push({
                             id: element.id,
@@ -169,7 +177,8 @@
             },
 
             getCategories() {
-                HTTP.get('/product-cats').then((response) => {
+                HTTP.get('/tax-cats').then((response) => {
+                    this.categories = [];
                     response.data.forEach(element => {
                         this.categories.push({
                             id: element.id,
@@ -207,6 +216,7 @@
                     let item = {};
                     item.component_name = this.componentLines[idx].component_name;
                     item.agency_id = this.componentLines[idx].agency_id.id;
+                    item.tax_category_id = this.componentLines[idx].tax_category.id;
                     item.tax_rate  = this.componentLines[idx].tax_rate;
 
                     lineItems.push( item );
