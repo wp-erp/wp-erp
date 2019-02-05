@@ -77,7 +77,7 @@
                         type: 'customer',
                         search: query
                     }
-                }).then((response) => {                    
+                }).then(response => {                    
                     this.$store.dispatch('sales/fillCustomers', response.data);
                 });
             },

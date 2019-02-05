@@ -9,6 +9,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import PeopleModal from 'admin/components/people/PeopleModal.vue'
@@ -24,25 +26,29 @@
         data() {
             return {
                 selected: [],
-                options: [],
                 showModal: false,
             }
         },
 
+        computed: mapState({
+            options: state => state.purchase.vendors
+        }),
+
         created() {
-            var self = this;
+            this.$store.dispatch('purchase/fetchVendors');
+
             this.$root.$on( 'options-query', query => {
                 if ( query ) {
                     this.getvendors(query);
                 }
             } );
 
-            this.$on('modal-close', function() {
+            this.$on('modal-close', () => {
                 this.showModal = false;
                 this.people = null;
             });
 
-            this.$root.$on( 'peopleUpdate', function() {
+            this.$root.$on( 'peopleUpdate', () => {
                 self.showModal = false;
             } );
         },
@@ -55,18 +61,13 @@
 
         methods: {
             getvendors(query) {
-                HTTP.get('/vendors', {
+                HTTP.get('/people', {
                     params: {
+                        type: 'vendor',
                         search: query
                     }
-                }).then((response) => {
-                    this.options= [];
-                    response.data.forEach(item => {
-                        this.options.push({
-                            id: item.id,
-                            name: item.first_name + ' ' + item.last_name
-                        });
-                    });
+                }).then(response => {                    
+                    this.$store.dispatch('purchase/fillVendors', response.data);
                 });
             },
 

@@ -16,7 +16,7 @@
                 <form action="#" class="wperp-form" method="post">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
-                            <select-vendors v-model="basic_fields.customer"></select-vendors>
+                            <select-vendors v-model="basic_fields.vendor"></select-vendors>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
@@ -32,7 +32,7 @@
                         </div>
                         <div class="wperp-col-xs-12">
                             <label>Billing Address</label>
-                            <textarea v-model.trim="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
+                            <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                     </div>
                 </form>
@@ -120,7 +120,7 @@
         data() {
             return {
                 basic_fields: {
-                    customer: '',
+                    vendor: '',
                     trans_date: erp_acct_var.current_date,
                     due_date: erp_acct_var.current_date,
                     billing_address: ''
@@ -136,8 +136,8 @@
         },
 
         watch: {
-            'basic_fields.customer'() {
-                this.getCustomerAddress();
+            'basic_fields.vendor'() {
+                this.getvendorAddress();
             }
         },
 
@@ -177,18 +177,19 @@
                 });
             },
 
-            getCustomerAddress() {
-                if ( ! this.basic_fields.customer.hasOwnProperty('id') ){
+            getvendorAddress() {
+                if ( ! this.basic_fields.vendor.hasOwnProperty('id') ){
                     return;
                 }
-                let customer_id = this.basic_fields.customer.id;
 
-                HTTP.get(`/vendors/${customer_id}`).then((response) => {
-                    // add more info
-                    this.basic_fields.billing_address = `
-                    Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
-                    City: ${response.data.billing.city},
-                `;
+                let vendor_id = this.basic_fields.vendor.id;
+
+                HTTP.get(`/people/${vendor_id}`).then(response => {
+                    let billing = response.data;
+
+                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                    this.basic_fields.billing_address = address;
                 });
             },
 
@@ -216,10 +217,7 @@
                         product_type: 'service',
                         qty: line.qty,
                         unit_price: line.unitPrice,
-                        tax: line.taxAmount,
-                        discount: line.discount,
                         item_total: line.totalAmount,
-                        tax_percent: 0
                     });
                 });
 
@@ -227,9 +225,7 @@
             },
 
             SubmitForApproval() {
-
-                if( this.basic_fields.customer.length == 0 ){
-
+                if ( this.basic_fields.vendor.length == 0 ) {
                     this.$swal({
                         position: 'center',
                         type: 'error',
@@ -244,8 +240,8 @@
                 this.isWorking = true;
 
                 HTTP.post('/purchases', {
-                    vendor_id: this.basic_fields.customer.id,
-                    vendor_name: this.basic_fields.customer.name,
+                    vendor_id: this.basic_fields.vendor.id,
+                    vendor_name: this.basic_fields.vendor.name,
                     trn_date: this.basic_fields.trans_date,
                     due_date: this.basic_fields.due_date,
                     billing_address: this.basic_fields.billing_address,
