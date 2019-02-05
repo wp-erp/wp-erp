@@ -96,7 +96,6 @@ function erp_acct_insert_tax_rate( $data ) {
         'tax_rate_name' => $tax_data['tax_rate_name'],
         'tax_number'    => $tax_data['tax_number'],
         'default'       => $tax_data['default'],
-        'tax_rate'      => $tax_data['tax_rate'],
         'created_at'    => $tax_data['created_at'],
         'created_by'    => $tax_data['created_by'],
         'updated_at'    => $tax_data['updated_at'],
@@ -108,9 +107,10 @@ function erp_acct_insert_tax_rate( $data ) {
     $items = $data['tax_components'];
 
     foreach ($items as $key => $item) {
-        $wpdb->insert($wpdb->prefix . 'erp_acct_tax_items', array(
-            'component_name' => $item['component_name'],
+        $wpdb->insert($wpdb->prefix . 'erp_acct_tax_cat_agency', array(
             'tax_id'         => $tax_id,
+            'component_name' => $item['component_name'],
+            'tax_cat_id'     => $item['tax_category_id'],
             'agency_id'      => $item['agency_id'],
             'tax_rate'       => $item['tax_rate'],
             'created_at'     => $tax_data['created_at'],
@@ -118,16 +118,18 @@ function erp_acct_insert_tax_rate( $data ) {
             'updated_at'     => $tax_data['updated_at'],
             'updated_by'     => $tax_data['updated_by'],
         ));
+
+        $wpdb->insert($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
+            'tax_id'                => $tax_id,
+            'sales_tax_category_id' => $item['tax_category_id'],
+            'tax_rate'              => $item['tax_rate'],
+            'created_at'            => $tax_data['created_at'],
+            'created_by'            => $tax_data['created_by'],
+            'updated_at'            => $tax_data['updated_at'],
+            'updated_by'            => $tax_data['updated_by'],
+        ));
     }
 
-    $wpdb->insert($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
-        'tax_id'                => $tax_id,
-        'sales_tax_category_id' => $tax_data['tax_category_id'],
-        'created_at'            => $tax_data['created_at'],
-        'created_by'            => $tax_data['created_by'],
-        'updated_at'            => $tax_data['updated_at'],
-        'updated_by'            => $tax_data['updated_by'],
-    ));
 
     return $tax_id;
 
@@ -164,10 +166,22 @@ function erp_acct_update_tax_rate( $data, $id ) {
     $items = $data['tax_components'];
 
     foreach ($items as $key => $item) {
-        $wpdb->update($wpdb->prefix . 'erp_acct_tax_items', array(
+        $wpdb->update($wpdb->prefix . 'erp_acct_tax_cat_agency', array(
             'component_name' => $item['component_name'],
-            'agency_id' => $item['agency_id'],
-            'tax_rate' => $item['tax_rate'],
+            'tax_cat_id'     => $item['tax_category_id'],
+            'agency_id'      => $item['agency_id'],
+            'tax_rate'       => $item['tax_rate'],
+            'created_at'     => $tax_data['created_at'],
+            'created_by'     => $tax_data['created_by'],
+            'updated_at'     => $tax_data['updated_at'],
+            'updated_by'     => $tax_data['updated_by'],
+        ), array(
+            'tax_id' => $id
+        ));
+
+        $wpdb->update($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
+            'sales_tax_category_id' => $item['tax_category_id'],
+            'tax_rate'              => $item['tax_rate'],
             'created_at' => $tax_data['created_at'],
             'created_by' => $tax_data['created_by'],
             'updated_at' => $tax_data['updated_at'],
@@ -176,16 +190,6 @@ function erp_acct_update_tax_rate( $data, $id ) {
             'tax_id' => $id
         ));
     }
-
-    $wpdb->update($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
-        'sales_tax_category_id' => $tax_data['tax_category_id'],
-        'created_at' => $tax_data['created_at'],
-        'created_by' => $tax_data['created_by'],
-        'updated_at' => $tax_data['updated_at'],
-        'updated_by' => $tax_data['updated_by'],
-    ), array(
-        'tax_id' => $id
-    ));
 
     return $id;
 
