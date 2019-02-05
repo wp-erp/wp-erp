@@ -6,6 +6,7 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import commonMixins from './mixins/common'
 import store from './store/store'
 import Loading from 'vue-loading-overlay';
+import accounting from 'accounting';
 
 Vue.config.productionTip = false
 

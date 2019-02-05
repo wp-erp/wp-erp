@@ -125,12 +125,12 @@ function erp_acct_format_purchase_line_items($voucher_no) {
 function erp_acct_insert_purchase( $data ) {
     global $wpdb;
 
-    $created_by = get_current_user_id();
+    $created_by         = get_current_user_id();
+    $voucher_no         = 0;
     $data['created_at'] = date("Y-m-d H:i:s");
     $data['created_by'] = $created_by;
     $data['updated_at'] = date("Y-m-d H:i:s");
     $data['updated_by'] = $created_by;
-    $voucher_no = 0;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -467,7 +467,7 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
                                 ) as ps
                                 ON purchase.voucher_no = ps.purchase_no
                                 WHERE purchase.vendor_id = %d
-                                ORDER BY %s %s $limit", $args['vendor_id'],$args['orderby'],$args['order']  );
+                                ORDER BY %s %s $limit", $args['vendor_id'], $args['orderby'], $args['order']  );
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $query );

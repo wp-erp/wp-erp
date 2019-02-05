@@ -45,7 +45,7 @@
                             <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
                         </div>
 
-                        <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
+                        <check-fields v-if="basic_fields.trn_by.id === paymentMethods.check" @updateCheckFields="setCheckFields"></check-fields>
                     </div>
                 </form>
 
@@ -76,7 +76,7 @@
                             <input type="number" min="0" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
-                            <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i>Remove</a>
+                            <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
 
@@ -151,7 +151,13 @@
                     payment_date: erp_acct_var.current_date,
                     deposit_to: '',
                     billing_address: '',
-                    trn_by: ''
+                    trn_by: { id: null, name: null }
+                },
+
+                paymentMethods: {
+                    cash: '1',
+                    bank: '2',
+                    check: '3'
                 },
 
                 check_data: {
@@ -173,10 +179,6 @@
         },
 
         created() {
-            // this.$root.$on('pay-bill-modal-close', () => {
-            //     this.pay_bill_modal = false;
-            // });
-
             this.fetchAccounts();
             this.getPayMethods();
         },
@@ -198,22 +200,22 @@
             },
 
             resetData() {
+                this.basic_fields = {
+                    vendor: '',
+                    trn_ref: '',
+                    payment_date: erp_acct_var.current_date,
+                    deposit_to: '',
+                    billing_address: '',
+                    trn_by: { id: null, name: null }
+                };
 
-                    this.basic_fields = {
-                        vendor: '',
-                        trn_ref: '',
-                        payment_date: erp_acct_var.current_date,
-                        deposit_to: '',
-                        billing_address: ''
-                    };
-
-                    this.pay_purchases = [];
-                    this.attachments = [];
-                    this.totalAmounts = [];
-                    this.finalTotalAmount = 0;
-                    // this.pay_bill_modal = false;
-                    this.particulars = '';
-                    this.isWorking = false;
+                this.pay_purchases = [];
+                this.attachments = [];
+                this.totalAmounts = [];
+                this.finalTotalAmount = 0;
+                // this.pay_bill_modal = false;
+                this.particulars = '';
+                this.isWorking = false;
             },
 
             fetchAccounts(){
@@ -232,7 +234,7 @@
                     vendorId = 1;
                 }
                 this.pay_purchases = [];
-                HTTP.get(`/purchases/due/${vendorId}`).then((response) => {
+                HTTP.get(`/purchases/due/${vendorId}`).then(response => {                    
                     response.data.forEach(element => {
                         this.pay_purchases.push({
                             id: element.id,
@@ -253,14 +255,19 @@
             },
 
             getCustomerAddress() {
-                let vendors_id = this.basic_fields.vendor.id;
+                let vendor_id = this.basic_fields.vendor.id;
 
-                HTTP.get(`/vendors/${vendors_id}`).then((response) => {
-                    // add more info
-                    this.basic_fields.billing_address =`
-                        Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
-                        City: ${response.data.billing.city}, Country: ${response.data.billing.country}
-                        `;
+                if (!vendor_id) {
+                    this.basic_fields.billing_address = '';
+                    return;
+                }
+
+                HTTP.get(`/people/${vendor_id}`).then(response => {
+                    let billing = response.data;
+
+                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                    this.basic_fields.billing_address = address;
                 });
             },
 

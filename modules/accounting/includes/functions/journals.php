@@ -142,6 +142,19 @@ function erp_acct_insert_journal( $data ) {
                 'updated_at'  => $journal_data['updated_at'],
                 'updated_by'  => $journal_data['updated_by'],
             ) );
+
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', [
+                'ledger_id'   => $item['ledger_id'],
+                'trn_no'      => $voucher_no,
+                'particulars' => $item['particulars'],
+                'debit'       => $item['debit'],
+                'credit'      => $item['credit'],
+                'trn_date'    => $journal_data['trn_date'],
+                'created_at'  => $journal_data['created_at'],
+                'created_by'  => $journal_data['created_by'],
+                'updated_at'  => $journal_data['updated_at'],
+                'updated_by'  => $journal_data['updated_by']
+             ] );
         }
 
         $wpdb->query( 'COMMIT' );

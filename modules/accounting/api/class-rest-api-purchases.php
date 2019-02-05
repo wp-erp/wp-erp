@@ -180,6 +180,8 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 }
             }
 
+            $item['line_items'] = []; // TEST?
+
             $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
@@ -230,7 +232,8 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_purchase( $request ) {
         $purchase_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['line_items']; $item_total = [];
+        $items = $request['line_items'];
+        $item_total = [];
 
         foreach ( $items as $key => $item ) {
             $item_total[$key] = $item['item_total'];
@@ -241,10 +244,9 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $purchase_id = erp_acct_insert_purchase( $purchase_data );
+        $voucher_no = erp_acct_insert_purchase( $purchase_data );
 
-        $purchase_data['id'] = $purchase_id;
-
+        $purchase_data['voucher_no'] = $voucher_no;
         $purchase_data = $this->prepare_item_for_response( $purchase_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $purchase_data );
@@ -337,9 +339,9 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $prepared_item = [];
 
-        if ( isset( $request['voucher_no'] ) ) {
-            $prepared_item['voucher_no'] = $request['voucher_no'];
-        }
+        // if ( isset( $request['voucher_no'] ) ) {
+        //     $prepared_item['voucher_no'] = $request['voucher_no'];
+        // }
         if ( isset( $request['vendor_id'] ) ) {
             $prepared_item['vendor_id'] = $request['vendor_id'];
         }
@@ -390,17 +392,17 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'          => (int) $item->id,
+            // 'id'          => (int) $item->id,
             'vendor_id'   => (int) $item->vendor_id,
-            'vendor_name' => $item->vendor_name,
             'voucher_no'  => (int) $item->voucher_no,
+            'vendor_name' => $item->vendor_name,
             'date'        => $item->trn_date,
             'due_date'    => $item->due_date,
             'line_items'  => $item->line_items,
             // 'type'        => $item->type,
             'status'      => $item->status,
             'amount'      => $item->amount,
-            'due_total'   => $item->total_due
+            'due_total'   => $item->due
         ];
 
         $data = array_merge( $data, $additional_fields );

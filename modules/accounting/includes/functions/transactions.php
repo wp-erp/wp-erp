@@ -446,10 +446,10 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     $where = "WHERE (voucher.type = 'pay_purchase' OR voucher.type = 'sales_purchase')";
 
     if ( ! empty( $args['vendor_id'] ) ) {
-        $where .= " AND bill.vendor_id = {$args['vendor_id']} OR pay_bill.vendor_id = {$args['vendor_id']} ";
+        $where .= " AND purchase.vendor_id = {$args['vendor_id']} OR pay_purchase.vendor_id = {$args['vendor_id']} ";
     }
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
@@ -462,26 +462,24 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     } else {
         $sql .= " voucher.id,
             voucher.type,
-            bill.vendor_name AS vendor_name,
-            pay_bill.vendor_name AS pay_bill_vendor_name,
-            bill.trn_date AS bill_trn_date,
-            pay_bill.trn_date AS pay_bill_trn_date,
-            bill.due_date,
-            bill.amount,
-            bill.ref,
-            pay_bill.amount as pay_bill_amount,
-            ABS(SUM(bill_acct_details.debit - bill_acct_details.credit)) AS due,
+            purchase.vendor_name AS vendor_name,
+            pay_purchase.vendor_name AS pay_bill_vendor_name,
+            purchase.trn_date AS bill_trn_date,
+            pay_purchase.trn_date AS pay_bill_trn_date,
+            purchase.due_date,
+            purchase.amount,
+            purchase.ref,
+            pay_purchase.amount as pay_bill_amount,
+            ABS(SUM(purchase_acct_details.debit - purchase_acct_details.credit)) AS due,
             status_type.type_name AS status";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
-        LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS bill ON bill.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_pay_purchase AS pay_bill ON pay_bill.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = bill.status
-        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS bill_acct_details ON bill_acct_details.purchase_no = bill.id
-        {$where} 
-        GROUP BY voucher.id
-        ORDER BY voucher.id {$args['order']} {$limit}";
+        LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS purchase ON purchase.voucher_no = voucher.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase ON pay_purchase.voucher_no = voucher.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = purchase.status
+        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acct_details ON purchase_acct_details.purchase_no = purchase.voucher_no
+        {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         $wpdb->get_results($sql);

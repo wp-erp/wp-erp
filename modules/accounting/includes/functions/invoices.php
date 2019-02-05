@@ -432,6 +432,8 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
         'trn_date'    => $invoice_data['trn_date'],
         'created_at'  => $invoice_data['created_at'],
         'created_by'  => $invoice_data['created_by'],
+        'updated_at'  => $invoice_data['updated_at'],
+        'updated_by'  => $invoice_data['updated_by']
     ) );
 
     // Insert tax in ledger_details
@@ -444,6 +446,8 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
         'trn_date'    => $invoice_data['trn_date'],
         'created_at'  => $invoice_data['created_at'],
         'created_by'  => $invoice_data['created_by'],
+        'updated_at'  => $invoice_data['updated_at'],
+        'updated_by'  => $invoice_data['updated_by']
     ) );
 
     // Insert discount in ledger_details
@@ -456,6 +460,8 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
         'trn_date'    => $invoice_data['trn_date'],
         'created_at'  => $invoice_data['created_at'],
         'created_by'  => $invoice_data['created_by'],
+        'updated_at'  => $invoice_data['updated_at'],
+        'updated_by'  => $invoice_data['updated_by']
     ) );
 
 }

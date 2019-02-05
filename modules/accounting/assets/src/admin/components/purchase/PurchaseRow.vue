@@ -54,9 +54,9 @@
         },
 
         watch: {
-            'line.selectedProduct'() {
+            'line.selectedProduct'() {                
                 this.line.qty = 1;
-                this.line.unitPrice = this.line.selectedProduct.unitPrice;
+                this.line.unitPrice = this.line.unitPrice;
                 this.calculateAmount();
             }
         },
