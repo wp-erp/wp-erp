@@ -30,7 +30,7 @@
                             <div class="form-check">
                                 <label class="form-check-label">
                                     <input type="checkbox" v-model="is_compound" class="form-check-input"
-                                           @change="isTaxComponent = !isTaxComponent">
+                                           @change="isCompoundTax = !isCompoundTax">
                                     <span class="form-check-sign"></span>
                                     <span class="field-label">Is this tax compound?</span>
                                 </label>
@@ -67,12 +67,12 @@
                                             @click.prevent="isRowExpanded = !isRowExpanded"></button>
                                 </td>
                                 <td class="col--agency with-multiselect" data-colname="Agency">
-                                    <multi-select @click.prevent="fetchData" v-model="line.agency_id" :options="agencies"/>
+                                    <multi-select v-model="line.agency_id" :options="agencies"/>
                                     <a href="#" @click.prevent="showAgencyModal = true" role="button"
                                        class="after-select-dropdown">Add Tax Agency</a>
                                 </td>
                                 <td class="col--tax-category with-multiselect" data-colname="Tax Category">
-                                    <multi-select @click.prevent="fetchData" v-model="line.tax_category" :options="categories"/>
+                                    <multi-select v-model="line.tax_category" :options="categories"/>
                                     <a href="#" @click.prevent="showCatModal = true" role="button"
                                        class="after-select-dropdown">Add Tax Category</a>
                                 </td>
@@ -83,7 +83,7 @@
                                     <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
                                 </td>
                             </tr>
-                            <tr class="add-new-line" v-if="isTaxComponent">
+                            <tr class="add-new-line" v-if="isCompoundTax">
                                 <td colspan="9" class="text-left">
                                     <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"
                                             type="button"><i
@@ -133,9 +133,9 @@
                 tax_name: '',
                 tax_number: '',
                 tax_category: '',
-                is_default: 0,
-                is_compound: 0,
-                isTaxComponent: false,
+                is_default: false,
+                is_compound: false,
+                isCompoundTax: false,
                 isRowExpanded: false,
                 componentLines: [{}],
                 categories: [{}],
@@ -147,6 +147,10 @@
 
         created() {
             this.fetchData();
+
+            this.$root.$on('refetch_tax_data', () => {
+                this.fetchData();
+            });
 
             this.$on('remove-row', index => {
                 this.$delete(this.componentLines, index);
@@ -162,6 +166,7 @@
 
             getAgencies() {
                 HTTP.get('/tax-agencies').then((response) => {
+                    this.agencies = [];
                     response.data.forEach(element => {
                         this.agencies.push({
                             id: element.id,
@@ -173,6 +178,7 @@
 
             getCategories() {
                 HTTP.get('/tax-cats').then((response) => {
+                    this.categories = [];
                     response.data.forEach(element => {
                         this.categories.push({
                             id: element.id,
@@ -210,6 +216,7 @@
                     let item = {};
                     item.component_name = this.componentLines[idx].component_name;
                     item.agency_id = this.componentLines[idx].agency_id.id;
+                    item.tax_category_id = this.componentLines[idx].tax_category.id;
                     item.tax_rate  = this.componentLines[idx].tax_rate;
 
                     lineItems.push( item );
