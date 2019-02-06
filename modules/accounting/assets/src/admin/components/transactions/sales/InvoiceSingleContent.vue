@@ -94,26 +94,12 @@
             <a class="attachment-item" :href="attachment"
                 :key="index" 
                 v-for="(attachment, index) in invoice.attachments" download>
-                <img :src="acct_var.acct_assets + '/images/img-thumb.png'" alt="image name">
+                <img :src="acct_var.acct_assets + '/images/file-thumb.png'">
                 <div class="attachment-meta">
-                    <span>File</span><br>
+                    <span>{{attachment.substring(attachment.lastIndexOf('/')+1) }}</span><br>
                     <!-- <span class="text-muted">file size</span> -->
                 </div>
             </a>
-            <!-- <a class="attachment-item" href="#">
-                <img :src="acct_var.acct_assets + '/images/doc-thumb.png'" alt="image name">
-                <div class="attachment-meta">
-                    <span>File name with extension</span><br>
-                    <span class="text-muted">file size</span>
-                </div>
-            </a>
-            <a class="attachment-item" href="#">
-                <img :src="acct_var.acct_assets + '/images/pdf-thumb.png'" alt="image name">
-                <div class="attachment-meta">
-                    <span>File name with extension</span><br>
-                    <span class="text-muted">file size</span>
-                </div>
-            </a> -->
         </div>
 
     </div>
@@ -135,6 +121,12 @@
                 type: Object
             }
         },
+
+        data() {
+            return {
+                acct_var: erp_acct_var
+            }
+        }
 
     }
 </script>
