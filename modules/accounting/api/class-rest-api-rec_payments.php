@@ -357,6 +357,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'trn_date'        => $item->trn_date,
             'amount'          => $item->amount,
             'line_items'      => $item->line_items,
+            'attachments'     => maybe_unserialize( $item->attachments ),
             'status'          => $item->status,
         ];
 
