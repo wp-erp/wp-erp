@@ -402,7 +402,8 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             // 'type'        => $item->type,
             'status'      => $item->status,
             'amount'      => $item->amount,
-            'due_total'   => $item->due
+            'due_total'   => $item->due,
+            'attachments' => maybe_unserialize( $item->attachments )
         ];
 
         $data = array_merge( $data, $additional_fields );
