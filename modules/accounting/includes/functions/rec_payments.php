@@ -359,6 +359,8 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $payment_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
     $payment_data['updated_by']  = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
 
+    error_log( print_r( $payment_data, true ) );
+
     return $payment_data;
 }
 
