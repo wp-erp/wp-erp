@@ -76,7 +76,6 @@
 
         <div class="invoice-attachments d-print-none">
             <h4>Attachments</h4>
-            {{payment.attachments}}
             <a class="attachment-item" :href="attachment"
                :key="index"
                v-for="(attachment, index) in payment.attachments" download>
