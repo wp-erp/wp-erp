@@ -97,16 +97,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/attachments', [
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'upload_attachments' ],
-                'args'                => [],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_create_expenses_voucher' );
-                },
-            ],
-        ] );
     }
 
     /**
@@ -326,23 +316,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         return new WP_REST_Response( true, 204 );
     }
 
-
-    /**
-     * Upload attachment for expenses
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Request
-     */
-    public function upload_attachments( $request ) {
-        $movefiles = erp_acct_upload_attachments($_FILES['attachments']);
-
-        $response = rest_ensure_response( $movefiles );
-        $response->set_status( 200 );
-
-        return $response;
-    }
-
     /**
      * Prepare a single item for create or update
      *
@@ -433,7 +406,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'ref'             => isset( $item->ref ) ? $item->ref : $item->check_no,
             'remarks'         => $item->particulars,
             'status'          => $item->status,
-            'attachments'     => $item->attachments,
+            'attachments'     => maybe_unserialize( $item->attachments ),
             'trn_by'          => $item->trn_by,
             'deposit_to'      => $item->trn_by_ledger_id
         ];
