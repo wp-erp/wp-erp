@@ -426,7 +426,7 @@ class Employee {
             return $this;
         }
 
-        do_action( 'erp_hr_employee_update', $this->user_id, wp_parse_args( $this->data, $this->changes ) );
+        do_action( 'erp_hr_employee_update', $this->user_id, wp_parse_args( $this->data, $this->changes ), $this->changes );
 
         if ( ! empty( $this->changes['work'] ) ) {
             $this->erp_user->update( $this->changes['work'] );
