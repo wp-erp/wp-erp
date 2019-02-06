@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-modal-dialog paybill-single">
+    <div class="wperp-modal-dialog paypurchase-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
                 <h4>Pay Purchase</h4>
@@ -65,14 +65,14 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Bill No</th>
+                                <th>Purchase No</th>
                                 <th>Amount</th>
                             </tr>
                             </thead>
                             <tbody>
-                                <tr :key="index" v-for="(line, index) in payPurchase.bill_details">
+                                <tr :key="index" v-for="(line, index) in payPurchase.purchase_details">
                                     <td>{{ line.id }}</td>
-                                    <td>{{ line.bill_no }}</td>
+                                    <td>{{ line.purchase_no }}</td>
                                     <td>{{ getCurrencySign() + line.amount }}</td>
                                 </tr>
                             </tbody>
@@ -80,8 +80,8 @@
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ getCurrencySign() + payBill.amount }}</li>
-                                        <li><span>Total:</span> {{ getCurrencySign() + payBill.amount }}</li>
+                                        <li><span>Subtotal:</span> {{ getCurrencySign() + payPurchase.amount }}</li>
+                                        <li><span>Total:</span> {{ getCurrencySign() + payPurchase.amount }}</li>
                                     </ul>
                                 </td>
                             </tr>
@@ -90,27 +90,16 @@
                     </div>
 
                 </div>
+                
                 <div class="invoice-attachments d-print-none">
                     <h4>Attachments</h4>
-                    <a class="attachment-item" href="#">
-                        <img :src="acct_var.acct_assets + '/images/img-thumb.png'" alt="image name">
+                    <a class="attachment-item" :href="attachment"
+                       :key="index"
+                       v-for="(attachment, index) in payPurchase.attachments" download>
+                        <img :src="acct_var.acct_assets + '/images/file-thumb.png'">
                         <div class="attachment-meta">
-                            <span>File name with extension</span><br>
-                            <span class="text-muted">file size</span>
-                        </div>
-                    </a>
-                    <a class="attachment-item" href="#">
-                        <img :src="acct_var.acct_assets + '/images/doc-thumb.png'" alt="image name">
-                        <div class="attachment-meta">
-                            <span>File name with extension</span><br>
-                            <span class="text-muted">file size</span>
-                        </div>
-                    </a>
-                    <a class="attachment-item" href="#">
-                        <img :src="acct_var.acct_assets + '/images/pdf-thumb.png'" alt="image name">
-                        <div class="attachment-meta">
-                            <span>File name with extension</span><br>
-                            <span class="text-muted">file size</span>
+                            <span>{{attachment.substring(attachment.lastIndexOf('/')+1) }}</span><br>
+                            <!-- <span class="text-muted">file size</span> -->
                         </div>
                     </a>
                 </div>
@@ -124,12 +113,12 @@
     import HTTP from 'admin/http';
 
     export default {
-        name: 'PayBillSingle',
+        name: 'PayPurchaseSingle',
 
         data() {
             return {
                 company  : null,
-                payBill  : null,
+                payPurchase  : {},
                 isWorking: false,
                 acct_var : erp_acct_var,
             }
@@ -137,7 +126,7 @@
 
         created() {
             this.getCompanyInfo();
-            this.getBill();
+            this.getPurchase();
         },
 
         methods: {
@@ -149,11 +138,11 @@
                 });
             },
 
-            getBill() {
+            getPurchase() {
                 this.isWorking = true;
 
-                HTTP.get(`/pay-bills/${this.$route.params.id}`).then(response => {                    
-                    this.payBill = response.data;
+                HTTP.get(`/pay-purchases/${this.$route.params.id}`).then(response => {
+                    this.payPurchase = response.data;
                 }).then( e => {} ).then(() => {
                     this.isWorking = false;
                 });
@@ -169,7 +158,7 @@
 
 
 <style lang="less">
-    .paybill-single {
+    .paypurchase-single {
         width: 800px;
         margin: 40px 0;
     }
