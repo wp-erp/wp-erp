@@ -57,13 +57,14 @@ function erp_acct_get_pay_purchase( $purchase_no ) {
         pay_purchase.trn_date,
         pay_purchase.amount,
         pay_purchase.trn_by,
+        pay_purchase.attachments,
         pay_purchase.trn_by_ledger_id
         FROM wp_erp_acct_pay_purchase AS pay_purchase
         WHERE pay_purchase.voucher_no = %d", $purchase_no);
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
-    $row['bill_details'] = erp_acct_format_pay_purchase_line_items( $purchase_no );
+    $row['purchase_details'] = erp_acct_format_pay_purchase_line_items( $purchase_no );
 
     return $row;
 }
