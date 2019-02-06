@@ -1117,6 +1117,7 @@ Company'
                 `name` varchar(255) DEFAULT NULL,
                 `product_type_id` int(11) DEFAULT NULL,
                 `category_id` int(11) DEFAULT NULL,
+                `tax_cat_id` int(11) DEFAULT NULL,
                 `vendor` int(11) DEFAULT NULL,
                 `cost_price` decimal(10,2) DEFAULT 0,
                 `sale_price` decimal(10,2) DEFAULT 0,
