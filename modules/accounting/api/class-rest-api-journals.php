@@ -214,10 +214,21 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
-        $prepared_item['type']       = 'journal';
-        $prepared_item['trn_date'] = isset( $request['trn_date'] ) ? $request['trn_date'] : '';
-        $prepared_item['particulars']        = isset( $request['particulars'] ) ? sanitize_text_field( $request['particulars'] ) : '';
-        $prepared_item['line_items'] = isset( $request['line_items'] ) ? $request['line_items'] : [];
+        if ( isset( $request['type'] ) ) {
+            $prepared_item['type'] = $request['type'];
+        }
+        if ( isset( $request['trn_date'] ) ) {
+            $prepared_item['date'] = $request['trn_date'];
+        }
+        if ( isset( $request['attachments'] ) ) {
+            $prepared_item['attachments'] = maybe_serialize( $request['attachments'] );
+        }
+        if ( isset( $request['particulars'] ) ) {
+            $prepared_item['particulars'] = $request['particulars'];
+        }
+        if ( isset( $request['line_items'] ) ) {
+            $prepared_item['line_items'] = $request['line_items'];
+        }
 
         return $prepared_item;
     }
@@ -239,6 +250,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
             'particulars' => $item->particulars,
             'trn_date'    => $item->trn_date,
             'line_items'  => $item->line_items,
+            'attachments' => maybe_unserialize( $item->attachments ),
             'total'       => (float) $item->voucher_amount,
         ];
 
@@ -285,7 +297,6 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                    'required'    => true,
                 ],
                 'trn_date'  => [
                     'description' => __( 'Issue date for the resource.' ),
@@ -301,6 +312,11 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'type'        => 'object',
                     'context'     => [ 'edit' ],
                     'required'    => true,
+                ],
+                'attachments'  => [
+                    'description' => __( 'Attachments for the resource.' ),
+                    'type'        => 'object',
+                    'context'     => [ 'edit' ],
                 ],
             ],
         ];
