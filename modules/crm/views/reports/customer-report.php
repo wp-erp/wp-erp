@@ -212,7 +212,6 @@ $reports      = erp_crm_customer_reporting_query( $start, $end, $filter_type );
                     </tr>
                 <?php endforeach;
 
-                
             elseif ( $filter_type === 'group' ) :
 
                 foreach ( $reports as $key => $value ) : ?>

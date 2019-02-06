@@ -306,8 +306,13 @@ function erp_crm_customer_get_status_count( $type = null ) {
                    . " from {$people_tbl}"
                    . " left join {$rel_tbl} on {$people_tbl}.id = {$rel_tbl}.people_id"
                    . " left join {$type_tbl} on {$rel_tbl}.people_types_id = {$type_tbl}.id"
-                   . " WHERE {$type_tbl}.name = %s AND {$rel_tbl}.deleted_at IS NULL"
-                   . " group by life_stage";
+                   . " WHERE {$type_tbl}.name = %s AND {$rel_tbl}.deleted_at IS NULL";
+
+        if ( current_user_can( 'erp_crm_agent' ) ) {
+            $current_user_id = get_current_user_id();
+            $sql .= " AND {$people_tbl}.contact_owner = {$current_user_id}";
+        }
+        $sql    .= " group by life_stage";
         $results = $wpdb->get_results( $wpdb->prepare( $sql, $type ) );
 
         wp_cache_set( $cache_key, $results, 'erp' );
