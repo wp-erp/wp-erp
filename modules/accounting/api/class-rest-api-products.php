@@ -286,12 +286,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             'cost_price'      => $item->cost_price,
             'sale_price'      => $item->sale_price,
             'vendor_name'     => $item->vendor,
-            'cat_name'        => $item->cat_name,
-            'tax_id'          => $item->tax_id,
-            'tax_rate_name'   => $item->tax_rate_name,
-            'tax_rate'        => $item->tax_rate,
-            'agency_id'       => $item->agency_id,
-            'component_name'  => $item->component_name,
+            'cat_name'        => $item->cat_name
         ];
 
         $data = array_merge( $data, $additional_fields );

@@ -133,8 +133,8 @@
         name: 'InvoiceCreate',
 
         components: {
-            MultiSelect,
             HTTP,
+            MultiSelect,
             Datepicker,
             FileUpload,
             ComboButton,
@@ -172,7 +172,7 @@
                 taxRates        : [],
                 taxTotalAmount  : 0,
                 finalTotalAmount: 0,
-                inv_type        : 1,
+                inv_type        : {id: 0, name: 'Invoice'},
                 isWorking       : false,
                 reset           : false,
                 actionType      : null,
