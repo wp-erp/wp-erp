@@ -11,7 +11,7 @@ class Ledger_Map {
         global $wpdb;
 
         $sql = "SELECT slug, id, chart_id, category_id, name, code 
-            FROM {$wpdb->prefix}erp_acct_ledgers WHERE system = 1";
+            FROM {$wpdb->prefix}erp_acct_ledgers";
 
         $this->ledgers = $wpdb->get_results( $sql, OBJECT_K );
     }

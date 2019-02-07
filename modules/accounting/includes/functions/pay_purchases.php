@@ -150,6 +150,7 @@ function erp_acct_insert_pay_purchase( $data ) {
 
             erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $item );
         }
+
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
                 'purchase_no' => $item['voucher_no'],

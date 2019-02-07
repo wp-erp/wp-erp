@@ -365,7 +365,7 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
     global $wpdb;
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
-    $ledger_id = $ledger_map->get_ledger_id_by_slug('purchase');
+    $ledger_id = $ledger_map->get_ledger_id_by_slug('inventory');
 
     if ( !$ledger_id ) {
         return new WP_Error( 505, 'Ledger ID not found for purchase', $purchase_data );

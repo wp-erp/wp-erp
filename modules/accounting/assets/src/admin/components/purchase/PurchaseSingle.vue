@@ -55,10 +55,10 @@
                                         <th>Due Date:</th>
                                         <td>{{ purchase.due_date }}</td>
                                     </tr>
-                                    <tr>
-                                        <th>Amount Due:</th>
-                                        <td>{{ purchase.due_total }}</td>
-                                    </tr>
+<!--                                    <tr>-->
+<!--                                        <th>Amount Due:</th>-->
+<!--                                        <td>{{ purchase.due_total }}</td>-->
+<!--                                    </tr>-->
                                 </table>
                             </div>
                         </div>

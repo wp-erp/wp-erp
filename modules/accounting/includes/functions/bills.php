@@ -168,11 +168,10 @@ function erp_acct_insert_bill( $data ) {
                 'updated_by'  => $bill_data['updated_by'],
             ) );
 
-            erp_acct_insert_bill_data_into_ledger( $bill_data, $item );
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
-            'bill_no'     => $bill_no,
+            'bill_no'     => $voucher_no,
             'trn_no'      => $voucher_no,
             'trn_date'    => $bill_data['trn_date'],
             'particulars' => $bill_data['remarks'],
@@ -183,6 +182,8 @@ function erp_acct_insert_bill( $data ) {
             'updated_at'  => $bill_data['updated_at'],
             'updated_by'  => $bill_data['updated_by'],
         ) );
+
+        erp_acct_insert_bill_data_into_ledger( $bill_data, $item );
 
         $wpdb->query( 'COMMIT' );
 
@@ -249,7 +250,6 @@ function erp_acct_update_bill( $data, $bill_id ) {
                 'trn_no'  => $bill_id
             ));
 
-            erp_acct_update_bill_data_into_ledger( $bill_data, $bill_id, $item );
         }
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
@@ -264,6 +264,8 @@ function erp_acct_update_bill( $data, $bill_id ) {
         ), array(
             'trn_no'     => $bill_id
         ) );
+
+        erp_acct_update_bill_data_into_ledger( $bill_data, $bill_id, $item );
 
         $wpdb->query( 'COMMIT' );
 
@@ -448,18 +450,21 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
     $bill_act_details = "{$wpdb->prefix}erp_acct_bill_account_details";
     $items = $args['count'] ? " COUNT( id ) as total_number " : " * ";
 
-    $query = $wpdb->prepare( "SELECT $items FROM $bills as bill LEFT JOIN
+    $query = $wpdb->prepare( "SELECT $items FROM $bills as bill INNER JOIN
                                 (
                                     SELECT bill_no, ABS(SUM( ba.debit - ba.credit)) as due
                                     FROM $bill_act_details as ba
-                                    GROUP BY ba.bill_no HAVING due > 0
-                                ) as bs ON bill.voucher_no = bs.bill_no
+                                    GROUP BY ba.bill_no 
+                                    HAVING due > 0
+                                ) as bs 
+                                ON bill.voucher_no = bs.bill_no
                                 WHERE bill.vendor_id = %d
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $query );
     }
+
 
     return $wpdb->get_results( $query, ARRAY_A );
 }
