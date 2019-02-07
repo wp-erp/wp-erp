@@ -34,7 +34,7 @@
                         </div>
                         <div class="wperp-col-sm-6">
                             <label>Billing Address</label>
-                            <textarea v-model.trim="basic_fields.billing_address" rows="2" class="wperp-form-field" placeholder="Type here"></textarea>
+                            <textarea v-model="basic_fields.billing_address" rows="2" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                         <div class="wperp-col-sm-6 with-multiselect">
                             <label>Type</label>
@@ -52,26 +52,36 @@
                     <table class="wperp-table wperp-form-table">
                         <thead>
                             <tr>
-                                <td scope="col" class="col--check">Product/Service</td>
-                                <th scope="col" class="column-primary">Qty</th>
+                                <th scope="col">Product/Service</th>
+                                <th scope="col">Qty</th>
                                 <th scope="col">Unit Price</th>
-                                <th scope="col">Discount</th>
-                                <th scope="col">Tax(%)</th>
-                                <th scope="col">Tax Amount</th>
                                 <th scope="col">Amount</th>
+                                <th scope="col">Tax</th>
                                 <th scope="col" class="col--actions"></th>
                             </tr>
                         </thead>
-                        <tbody id="test">
+                        <tbody>
                             <invoice-trn-row
                                 :line="line"
                                 :products="products"
+                                :taxSummary="taxSummary"
                                 :key="index"
                                 v-for="(line, index) in transactionLines"
                             ></invoice-trn-row>
 
+                            <tr class="tax-rate-row">
+                                <td colspan="4" class="text-right with-multiselect">
+                                    <multi-select v-model="taxRate"
+                                        :options="taxRates"
+                                        class="tax-rates"
+                                        placeholder="Select sales tax" />
+                                </td>
+                                <td><input type="text" v-model="taxTotalAmount" readonly></td>
+                                <td></td>
+                            </tr>
+
                             <tr class="total-amount-row">
-                                <td colspan="6" class="text-right">
+                                <td colspan="4" class="text-right">
                                     <span>Total Amount = </span>
                                 </td>
                                 <td><input type="text" v-model="finalTotalAmount" readonly></td>
@@ -154,14 +164,18 @@
                     {id: 'save_new', text: 'Create and New'},
                 ],
 
-                products: [],
-                attachments: [],
-                transactionLines: [{}],
+                taxRate         : null,
+                taxSummary      : null,
+                products        : [],
+                attachments     : [],
+                transactionLines: [{}, {}, {}],
+                taxRates        : [],
+                taxTotalAmount  : 0,
                 finalTotalAmount: 0,
-                inv_type: 1,
-                isWorking: false,
-                reset: false,
-                actionType: null,
+                inv_type        : 1,
+                isWorking       : false,
+                reset           : false,
+                actionType      : null,
             }
         },
 
@@ -170,11 +184,16 @@
                 this.reset = false;
 
                 this.getCustomerAddress();
+            },
+
+            taxRate(newVal) {
+                this.$store.dispatch('sales/setTaxRateID', newVal.id);
             }
         },
 
         created() {
             this.getProducts();
+            this.getTaxRates();
 
             this.$root.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
@@ -200,18 +219,43 @@
             getCustomerAddress() {
                 let customer_id = this.basic_fields.customer.id;
 
-                if (!customer_id) {
+                if ( ! customer_id ) {
                     this.basic_fields.billing_address = '';
                     return;
                 }
 
-                HTTP.get(`/customers/${customer_id}`).then((response) => {
-                    // add more info
-                    this.basic_fields.billing_address = `
-                    Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
-                    City: ${response.data.billing.city},
-                `;
+                HTTP.get(`/people/${customer_id}`).then(response => {
+                    let billing = response.data;
+
+                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                    this.basic_fields.billing_address = address;
                 });
+            },
+
+            getTaxRates() {
+                HTTP.get('/taxes/summary').then(response => {
+                    this.taxSummary = response.data;
+
+                    this.taxRates = this.getUniqueTaxRates(this.taxSummary);
+                });
+            },
+
+            getUniqueTaxRates( taxes ) {
+                return Array.from(new Set(taxes.map(tax => tax.tax_rate_id))).map(tax_rate_id => {
+                    let tax = taxes.find(tax => tax.tax_rate_id === tax_rate_id);
+
+                    if ( tax.default ) {
+                        // set default tax rate name for invoice
+                        this.taxRate = { id: tax_rate_id, name: tax.tax_rate_name };
+                        this.$store.dispatch('sales/setTaxRateID', tax_rate_id);
+                    }
+
+                    return {
+                        id: tax_rate_id,
+                        name: tax.tax_rate_name
+                    };
+                })
             },
 
             addLine() {
@@ -219,14 +263,18 @@
             },
 
             updateFinalAmount() {
+                let taxAmount = 0;
                 let finalAmount = 0;
 
                 this.transactionLines.forEach(element => {
-                    finalAmount += parseFloat(element.totalAmount);
+                    if ( Object.keys(element).length ) {
+                        taxAmount += parseFloat(element.taxAmount);
+                        finalAmount += parseFloat(element.totalAmount);
+                    } 
                 });
 
-                this.finalTotalAmount = finalAmount.toFixed(2);
-
+                this.taxTotalAmount = taxAmount.toFixed(2);
+                this.finalTotalAmount = ( finalAmount + taxAmount ).toFixed(2);
             },
 
             formatLineItems() {
@@ -239,7 +287,6 @@
                         agency_id: line.agencyId,
                         qty: line.qty,
                         unit_price: line.unitPrice,
-                        tax_rate: line.taxRate,
                         tax: line.taxAmount,
                         discount: line.discount,
                         item_total: line.totalAmount
@@ -299,3 +346,12 @@
 
     }
 </script>
+
+<style lang="less">
+    .tax-rate-row {
+        .tax-rates {
+            width: 235px;
+            float: right;
+        }
+    }
+</style>

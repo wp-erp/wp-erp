@@ -99,6 +99,17 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/summary', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_tax_summary' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sale' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -310,9 +321,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response->set_status( 200 );
 
         return $response;
-
     }
-
 
     /**
      * Make a tax payment
@@ -339,6 +348,29 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
+    /**
+     * Tax summary
+     */
+    public function get_tax_summary( $request ) {
+        $formatted_items = [];
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $summary = erp_acct_tax_summary();
+
+        foreach ( $summary as $item ) {
+            $data = $this->prepare_tax_summary_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
 
     /**
      * Prepare a single item for create or update
@@ -446,6 +478,37 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'amount'          => $item->amount,
             'ledger_id'       => $item->ledger_id,
             'voucher_type'    => $item->voucher_type,
+        ];
+
+        $data = array_merge( $data, $additional_fields );
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        $response = $this->add_links( $response, $item, $additional_fields );
+
+        return $response;
+    }
+
+    /**
+     * Prepare tax summary output for response
+     *
+     * @param array $item
+     * @param WP_REST_Request $request Request object.
+     * @param array $additional_fields (optional)
+     *
+     * @return WP_REST_Response $response Response data.
+     */
+    public function prepare_tax_summary_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+
+        $data = [
+            'tax_rate_id'           => (int) $item->tax_rate_id,
+            'default'               => (int) $item->default,
+            'tax_rate_name'         => $item->tax_rate_name,
+            'tax_category_name'     => $item->tax_category_name,
+            'sales_tax_category_id' => $item->sales_tax_category_id,
+            'tax_rate'              => $item->tax_rate
         ];
 
         $data = array_merge( $data, $additional_fields );
