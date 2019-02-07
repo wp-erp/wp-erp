@@ -23,7 +23,9 @@
                 @action:click="onActionClick">
                 <template slot="trn_no" slot-scope="data">
                     <strong v-if="isPayment(data.row)">
-                        #{{ data.row.id }}
+                        <router-link :to="{ name: 'PayPurchaseSingle', params: { id: data.row.id }}">
+                            #{{ data.row.id }}
+                        </router-link>
                     </strong>
                     <strong v-else>
                         <router-link :to="{ name: 'PurchaseSingle', params: { id: data.row.id }}">

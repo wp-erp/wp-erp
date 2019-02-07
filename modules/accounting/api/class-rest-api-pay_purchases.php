@@ -154,9 +154,9 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response( $item );
 
-        error_log( print_r( $response, true ) );
-
         $response->set_status( 200 );
+
+        return $response;
     }
 
     /**
@@ -345,11 +345,10 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor_id'       => (int) $item->vendor_id,
             'trn_date'        => $item->trn_date,
             'trn_by'          => $item->trn_by,
-            'line_items'      => isset( $item->line_items ) ? $item->line_items : [],
             'purchase_details'=> $item->purchase_details,
             'amount'          => (int) $item->amount,
             'ref'             => $item->ref,
-            'attachments'     => $item->attachments,
+            'attachments'     => maybe_unserialize( $item->attachments ),
             'status'          => $item->status,
         ];
 
@@ -406,7 +405,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'line_items' => [
+                'purchase_details' => [
                     'description' => __( 'List of line items data.', 'erp' ),
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],

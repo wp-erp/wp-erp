@@ -74,6 +74,19 @@
 
         </div>
 
+        <div class="invoice-attachments d-print-none">
+            <h4>Attachments</h4>
+            <a class="attachment-item" :href="attachment"
+               :key="index"
+               v-for="(attachment, index) in payment.attachments" download>
+                <img :src="acct_var.acct_assets + '/images/file-thumb.png'">
+                <div class="attachment-meta">
+                    <span>{{attachment.substring(attachment.lastIndexOf('/')+1) }}</span><br>
+                    <!-- <span class="text-muted">file size</span> -->
+                </div>
+            </a>
+        </div>
+
     </div>
 </template>
 
@@ -93,6 +106,12 @@
                 type: Object
             }
         },
+
+        data() {
+            return {
+                acct_var: erp_acct_var
+            }
+        }
 
     }
 </script>

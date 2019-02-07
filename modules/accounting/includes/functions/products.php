@@ -72,6 +72,7 @@ function erp_acct_insert_product( $data ) {
 			'name'            => $product_data['name'],
 			'product_type_id' => $product_data['product_type_id'],
 			'category_id'     => $product_data['category_id'],
+            'tax_cat_id'      => $product_data['tax_cat_id'],
 			'vendor'          => $product_data['vendor'],
 			'cost_price'      => $product_data['cost_price'],
 			'sale_price'      => $product_data['sale_price'],
@@ -115,6 +116,7 @@ function erp_acct_update_product( $data, $id ) {
 			'name'            => $product_data['name'],
 			'product_type_id' => $product_data['product_type_id'],
 			'category_id'     => $product_data['category_id'],
+            'tax_cat_id'      => $product_data['tax_cat_id'],
 			'vendor'          => $product_data['vendor'],
 			'cost_price'      => $product_data['cost_price'],
 			'sale_price'      => $product_data['sale_price'],
@@ -149,6 +151,7 @@ function erp_acct_get_formatted_product_data( $data ) {
 	$product_data['name'] = isset( $data['name'] ) ? $data['name'] : 1;
 	$product_data['product_type_id'] = isset( $data['product_type_id'] ) ? $data['product_type_id'] : 1;
 	$product_data['category_id'] = isset( $data['category_id'] ) ? $data['category_id'] : 0;
+    $product_data['tax_cat_id'] = isset( $data['tax_cat_id'] ) ? $data['tax_cat_id'] : 0;
 	$product_data['vendor']   = isset( $data['vendor'] ) ? $data['vendor'] : '';
 	$product_data['cost_price']   = isset( $data['cost_price'] ) ? $data['cost_price'] : '';
 	$product_data['sale_price']   = isset( $data['sale_price'] ) ? $data['sale_price'] : '';
