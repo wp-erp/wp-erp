@@ -203,7 +203,7 @@
                     response.data.forEach(element => {
                         this.invoices.push({
                             id: element.id,
-                            invoice_no: element.voucher_no,
+                            invoice_no: element.id,
                             due_date: element.due_date,
                             amount: parseFloat(element.amount),
                             due: parseFloat(element.due)

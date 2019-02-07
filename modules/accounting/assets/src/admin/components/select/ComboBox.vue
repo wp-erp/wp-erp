@@ -113,7 +113,6 @@
 		border-radius: 3px;
 		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 		background-clip: padding-box;
-		list-style: none;
 		margin: 6px 0 0;	
 		padding: 5px 0;
 		font-size: 14px;
