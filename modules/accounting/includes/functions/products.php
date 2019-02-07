@@ -19,6 +19,7 @@ function erp_acct_get_all_products() {
 		product.product_type_id,
 		product.cost_price,
 		product.sale_price,
+		product.tax_cat_id,
 
 		people.id AS vendor,
 		CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,

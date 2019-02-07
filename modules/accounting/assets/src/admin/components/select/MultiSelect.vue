@@ -96,7 +96,7 @@
             },
 
             asyncFind: debounce(function (query) {
-                this.isLoading = true;
+                // this.isLoading = true;
                 this.$root.$emit('options-query', query);
             }, 1),
         },

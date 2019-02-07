@@ -392,3 +392,22 @@ function erp_acct_get_formatted_tax_data( $data ) {
 
     return $tax_data;
 }
+
+/**
+ * Tax summary
+ */
+function erp_acct_tax_summary() {
+    global $wpdb;
+
+    return $wpdb->get_results("SELECT
+        tax.id AS tax_rate_id,
+        tax.default,
+        tax.tax_rate_name,
+        tax_category.name AS tax_category_name,
+        sales_tax_category.sales_tax_category_id,
+        sales_tax_category.tax_rate
+        
+        FROM wp_erp_acct_tax_sales_tax_categories AS sales_tax_category
+        LEFT JOIN wp_erp_acct_tax_categories AS tax_category ON tax_category.id = sales_tax_category.sales_tax_category_id
+        LEFT JOIN wp_erp_acct_taxes as tax ON tax.id = sales_tax_category.tax_id", ARRAY_A);
+}

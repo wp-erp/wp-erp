@@ -2,14 +2,15 @@ import HTTP from 'admin/http'
 
 // initial state
 const state = {
-  customers: []
+  customers: [],
+  taxRateID: 0
 }
 
 // getters
 const getters = {
-    getCustomers: (state) => {
-        return state.customers
-    }
+    getCustomers: (state) => state.customers,
+
+    getTaxRateID: (state) => state.taxRateID
 }
 
 // actions
@@ -34,6 +35,10 @@ const actions = {
         if ( ! state.customers.length ) {            
             dispatch('fetchCustomers')
         }
+    },
+
+    setTaxRateID({ state, commit }, data) {
+        commit('setTaxRateID', data)
     }
 }
 
@@ -49,6 +54,10 @@ const mutations = {
             })
         })
     },
+
+    setTaxRateID(state, id) {
+        state.taxRateID = id
+    }
 }
 
 export default {

@@ -1,33 +1,25 @@
 <template>
     <tr>
-        <th scope="row" class="col--check with-multiselect prodcut-select">
+        <th scope="row" class="col--product with-multiselect prodcut-select">
             <multi-select v-model="line.selectedProduct" :options="products" />
         </th>
         <td class="col--qty column-primary">
             <input type="number" :class="{'has-err': errors.first('qty')}"
                 v-validate="'required'"
                 v-model="line.qty"
-                @keyup="calculateAmount"
+                @keyup="respondAtChange"
                 name="qty"
                 class="wperp-form-field" required>
         </td>
         <td class="col--uni_price" data-colname="Unit Price">
-            <input type="text" v-model="line.unitPrice" @keyup="calculateAmount" class="wperp-form-field">
-        </td>
-        <td class="col--discount" data-colname="Discount">
-            <div class="wperp-has-addon">
-                <input type="text" v-model="line.discount" @keyup="calculateAmount" class="wperp-form-field">
-                <span class="wperp-addon">%</span>
-            </div>
-        </td>
-        <td class="col--tax-rate" data-colname="Tax Rate(%)">
-            <input type="text" v-model="line.taxRate" class="wperp-form-field" readonly>
-        </td>
-        <td class="col--tax-amount" data-colname="Tax Amount">
-            <input type="text" v-model="line.taxAmount" class="wperp-form-field" readonly>
+            <input type="number" v-model="line.unitPrice" @keyup="respondAtChange" class="wperp-form-field">
         </td>
         <td class="col--amount" data-colname="Amount">
-            <input type="text" v-model="line.totalAmount" class="wperp-form-field" readonly>
+            <input type="number" v-model="line.totalAmount" class="wperp-form-field" readonly>
+        </td>
+        <td class="col--tax" data-colname="Tax">
+            <input type="checkbox" v-model="line.applyTax" @change="respondAtChange" class="wperp-form-field">
+            <span style="color:blueviolet">{{ line.taxAmount }}</span>
         </td>
         <td class="col--actions delete-row" data-colname="Action">
             <span class="wperp-btn" @click="removeRow"><i class="flaticon-trash"></i></span>
@@ -36,6 +28,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
 
@@ -50,39 +44,88 @@
 
             line: {
                 type: Object,
-                default: () => {
-                    return {
-                        qty: 1,
-                        selectedProduct: [],
-                        unitPrice: 0,
-                        discount: 0,
-                        agencyId: 0,
-                        taxRate: 0,
-                        taxAmount: 0,
-                        totalAmount: 0
-                    };
-                }
-            }
+                default: () => {}
+            },
+
+            taxSummary: {
+                type: Array,
+                default: () => []
+            },
         },
 
         components: {
             MultiSelect
         },
 
-        watch: {
-            'line.selectedProduct'() {
-                this.setProductInfo();
+        data() {
+            return {
+                taxRate: 0,
+                taxAmount: 0,
+                taxCatID: 0
             }
         },
 
-        methods: {
-            calculateAmount() {
+        watch: {
+            'line.selectedProduct'() {
+                this.setProductInfo();
+            },
             
+            taxRateID() {
+                if ( this.line.qty ) {
+                    this.getTaxRate();
+                    this.respondAtChange();
+                }
+            }
+        },
+
+        computed: mapState({
+            taxRateID: state => state.sales.taxRateID
+        }),
+
+        methods: {
+            respondAtChange() {
+                this.calculateTax();
+                this.calculateAmount()
+            },
+
+            getTaxRate() {
+                /**
+                 * |-------------------------------------------------------------------------
+                 * * taxSummary: ( props ) The tax summary result from database
+                 * * tax: Every item in taxSummary ( loop )
+                 * * this.line: Think it is as `product` in every row
+                 * * taxRateID: Selected value from `Tax Rate Dropdown` dropdown
+                 * |-------------------------------------------------------------------------
+                 */
+                let taxInfo = this.taxSummary.find(tax => {
+                    if ( tax.sales_tax_category_id == this.line.taxCatID && tax.tax_rate_id == this.taxRateID ) {
+                        return tax;
+                    }
+                });
+
+                this.taxRate = 0;
+
+                if (taxInfo) {
+                    this.taxRate = parseFloat(taxInfo.tax_rate);
+                }
+            },
+
+            calculateTax() {                
+                let amount = parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
+                let taxAmount = (amount * this.taxRate) / 100;
+
+                this.line.taxAmount = 0;
+
+                if (this.line.applyTax) {
+                    this.line.taxAmount = taxAmount.toFixed(2);
+                }
+            },
+
+            calculateAmount() {
                 let field = this.line;
 
                 let amount = parseInt(field.qty) * parseFloat(field.unitPrice);
                 let discount = parseFloat(field.discount);
-                let taxAmount = ( amount * parseFloat(field.taxRate) ) / 100;
 
                 field.totalAmount = amount;
 
@@ -96,12 +139,7 @@
                     amount = amount - discount;                   
                 }
 
-                if ( taxAmount ) {
-                    amount = amount + taxAmount;
-                }
-
                 field.totalAmount = amount.toFixed(2);
-                field.taxAmount = taxAmount.toFixed(2);
 
                 this.$root.$emit('total-updated', field.totalAmount);
                 this.$forceUpdate();
@@ -116,10 +154,15 @@
                     return element.id == product_id;
                 });
 
+                this.line.qty = 1;
+                this.line.taxCatID = this.line.selectedProduct.tax_cat_id;
+                this.line.applyTax = true;
                 this.line.unitPrice = parseFloat(product.sale_price);
                 this.line.product_type_name = this.line.selectedProduct.product_type_name;
-                this.line.agencyId = this.line.selectedProduct.agency_id;
-                this.line.taxRate = this.line.selectedProduct.tax_rate;
+
+                this.getTaxRate();
+                this.calculateTax();
+                this.calculateAmount();
             },
 
             removeRow() {
@@ -130,23 +173,12 @@
 </script>
 
 <style lang="less">
-    .with-multiselect {
-        &.prodcut-select {
-            .multiselect__tags {
-                min-height: 43px;
-                padding: 3px 30px 0 8px;
-            }
-
-            .multiselect__placeholder {
-                margin: 8px 0;
-            }
-
-            .multiselect__select {
-                height: 41px;
-            }
-
-            .multiselect__single {
-                line-height: 37px;
+    .wperp-form-table {
+        .col--tax {
+            input {
+                width: initial;
+                padding: 0 !important;
+                border-color: rgba(26, 158, 212, 0.45);
             }
         }
     }
