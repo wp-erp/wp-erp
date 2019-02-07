@@ -379,7 +379,8 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             // 'billing_address' => $item->billing_address,
             'bill_details'    => $item->bill_details,
             // 'type'            => $item->type,
-            'status'          => $item->status,
+            'status'       => $item->status,
+            'attachments'  => maybe_unserialize( $item->attachments )
         ];
 
         $data = array_merge( $data, $additional_fields );

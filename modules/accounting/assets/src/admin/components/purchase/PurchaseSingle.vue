@@ -96,27 +96,16 @@
                     </div>
 
                 </div>
+
                 <div class="invoice-attachments d-print-none">
                     <h4>Attachments</h4>
-                    <a class="attachment-item" href="#">
-                        <img :src="acct_var.acct_assets + '/images/img-thumb.png'" alt="image name">
+                    <a class="attachment-item" :href="attachment"
+                       :key="index"
+                       v-for="(attachment, index) in purchase.attachments" download>
+                        <img :src="acct_var.acct_assets + '/images/file-thumb.png'">
                         <div class="attachment-meta">
-                            <span>File name with extension</span><br>
-                            <span class="text-muted">file size</span>
-                        </div>
-                    </a>
-                    <a class="attachment-item" href="#">
-                        <img :src="acct_var.acct_assets + '/images/doc-thumb.png'" alt="image name">
-                        <div class="attachment-meta">
-                            <span>File name with extension</span><br>
-                            <span class="text-muted">file size</span>
-                        </div>
-                    </a>
-                    <a class="attachment-item" href="#">
-                        <img :src="acct_var.acct_assets + '/images/pdf-thumb.png'" alt="image name">
-                        <div class="attachment-meta">
-                            <span>File name with extension</span><br>
-                            <span class="text-muted">file size</span>
+                            <span>{{attachment.substring(attachment.lastIndexOf('/')+1) }}</span><br>
+                            <!-- <span class="text-muted">file size</span> -->
                         </div>
                     </a>
                 </div>
@@ -135,7 +124,7 @@
         data() {
             return {
                 company  : null,
-                purchase: null,
+                purchase : {},
                 isWorking: false,
                 acct_var : erp_acct_var,
             }

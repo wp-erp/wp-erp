@@ -244,6 +244,10 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['category_id'] = $request['category_id']['id'];
         }
 
+        if ( isset( $request['tax_cat_id'] ) ) {
+            $prepared_item['tax_cat_id'] = $request['tax_cat_id']['id'];
+        }
+
         if ( isset( $request['vendor'] ) ) {
             $prepared_item['vendor'] = $request['vendor']['id'];
         }
@@ -276,14 +280,18 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             'name'              => $item->name,
             'product_type_id'   => $item->product_type_id,
             'product_type_name' => $item->product_type_name,
-            'category_id'       => $item->category_id,
-            'vendor'            => $item->vendor,
-            'cost_price'        => $item->cost_price,
-            'sale_price'        => $item->sale_price,
-            'vendor_name'       => $item->vendor,
-            'cat_name'          => $item->cat_name,
-            'tax_cat_id'        => $item->tax_cat_id,
-            'component_name'    => $item->component_name,
+            'category_id'     => $item->category_id,
+            'tax_cat_id'      => $item->tax_cat_id,
+            'vendor'          => $item->vendor,
+            'cost_price'      => $item->cost_price,
+            'sale_price'      => $item->sale_price,
+            'vendor_name'     => $item->vendor,
+            'cat_name'        => $item->cat_name,
+            'tax_id'          => $item->tax_id,
+            'tax_rate_name'   => $item->tax_rate_name,
+            'tax_rate'        => $item->tax_rate,
+            'agency_id'       => $item->agency_id,
+            'component_name'  => $item->component_name,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -341,6 +349,14 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'category_id'   => [
                     'description' => __( 'Category id for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'tax_cat_id'   => [
+                    'description' => __( 'Tax Category id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

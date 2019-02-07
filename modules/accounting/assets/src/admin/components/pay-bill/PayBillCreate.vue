@@ -93,11 +93,11 @@
                             <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
                         </td>
                     </tr>
-                    <tr class="add-attachment-row">
+                    <tr class="add-attachment-row" >
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
                                 <label class="col--attachement">Attachment</label>
-                                <file-upload v-model="attachments" url="/bills/attachments"/>
+                                <file-upload v-model="attachments" url="/invoices/attachments"/>
                             </div>
                         </td>
                     </tr>

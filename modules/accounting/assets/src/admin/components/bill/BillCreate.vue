@@ -222,7 +222,6 @@
                     type: 'bill',
                     status: 2,
                     remarks: this.particulars,
-                    // trn_by: this.basic_fields.deposit_to,
                 }).then(res => {
                     this.$swal({
                         position: 'center',

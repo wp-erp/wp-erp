@@ -435,7 +435,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['particulars'] = $request['particulars'];
         }
         if ( isset( $request['attachments'] ) ) {
-            $prepared_item['attachments'] = maybe_serialize( $request['attachments'] );
+            $prepared_item['attachments'] = $request['attachments'];
         }
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
@@ -464,12 +464,12 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'due_date'        => $item->due_date,
             'billing_address' => $item->billing_address,
             'bill_details'    => $item->bill_details,
-            'amount'           => (int) $item->amount,
+            'amount'          => (int) $item->amount,
             'due'             => isset( $item->due ) ? $item->due : $item->amount,
             'ref'             => $item->ref,
             'particulars'     => $item->particulars,
             'status'          => $item->status,
-            'attachments'     => $item->attachments
+            'attachments'     => maybe_unserialize( $item->attachments )
         ];
 
         $data = array_merge( $data, $additional_fields );
