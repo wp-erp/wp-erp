@@ -403,11 +403,14 @@ function erp_acct_tax_summary() {
         tax.id AS tax_rate_id,
         tax.default,
         tax.tax_rate_name,
-        tax_category.name AS tax_category_name,
+
         sales_tax_category.sales_tax_category_id,
-        sales_tax_category.tax_rate
+        sales_tax_category.tax_rate,
+
+        cat_agency.agency_id
         
-        FROM wp_erp_acct_tax_sales_tax_categories AS sales_tax_category
-        LEFT JOIN wp_erp_acct_tax_categories AS tax_category ON tax_category.id = sales_tax_category.sales_tax_category_id
-        LEFT JOIN wp_erp_acct_taxes as tax ON tax.id = sales_tax_category.tax_id", ARRAY_A);
+        FROM {$wpdb->prefix}erp_acct_tax_sales_tax_categories AS sales_tax_category
+        LEFT JOIN {$wpdb->prefix}erp_acct_tax_categories AS tax_category ON tax_category.id = sales_tax_category.sales_tax_category_id
+        LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS cat_agency ON cat_agency.tax_cat_id = tax_category.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_taxes as tax ON tax.id = sales_tax_category.tax_id", ARRAY_A);
 }

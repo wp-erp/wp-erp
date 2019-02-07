@@ -12,10 +12,10 @@
                 class="wperp-form-field" required>
         </td>
         <td class="col--uni_price" data-colname="Unit Price">
-            <input type="number" v-model="line.unitPrice" @keyup="respondAtChange" class="wperp-form-field">
+            <input type="number" min="0" step="0.01" v-model="line.unitPrice" @keyup="respondAtChange" class="wperp-form-field">
         </td>
         <td class="col--amount" data-colname="Amount">
-            <input type="number" v-model="line.totalAmount" class="wperp-form-field" readonly>
+            <input type="number" min="0" step="0.01" v-model="line.totalAmount" class="wperp-form-field" readonly>
         </td>
         <td class="col--tax" data-colname="Tax">
             <input type="checkbox" v-model="line.applyTax" @change="respondAtChange" class="wperp-form-field">
