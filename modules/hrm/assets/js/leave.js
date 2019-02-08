@@ -32,6 +32,10 @@
 
             $( '.erp-hr-leave-requests' ).on( 'click', '.erp-hr-leave-reject-btn', self, this.leave.reject );
 
+            // Leaave report custom filter
+            $( '#filter_year' ).on( 'change', self, this.customFilterLeaveReport );
+            $( 'input[name="end"], input[name="start"]' ).on( 'change', self, this.checkDateRange );
+
             this.initDateField();
         },
 
@@ -625,6 +629,26 @@
                     alert( error );
                 }
             });
+        },
+        customFilterLeaveReport: function() {
+            if ( 'custom' != this.value ) {
+                $('#custom-input').remove();
+            } else {
+                var element = '<span id="custom-input" style="float:left"><span>From </span><input name="start" class="erp-leave-date-field" type="text">&nbsp;<span>To </span><input name="end" class="erp-leave-date-field" type="text"></span>';
+                $('#custom-date-range').after( element );
+            }
+            Leave.initDateField();
+        },
+        checkDateRange: function() {
+            var new_date = new Date( this.value );
+            var year = new_date.getFullYear();
+            var current_date = new Date();
+            var current_year = current_date.getFullYear();
+
+            if ( year > current_year ) {
+                alert( 'Enter date range between current year' );
+                this.value = "";
+            }
         }
     };
 
