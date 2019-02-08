@@ -69,6 +69,22 @@
                                 v-for="(line, index) in transactionLines"
                             ></invoice-trn-row>
 
+                            <tr class="padded"></tr>
+
+                            <tr class="discount-rate-row">
+                                <td colspan="4" class="text-right with-multiselect">
+                                    <select v-model="discountType">
+                                        <option value="discount-percent">Discount percent</option>
+                                        <option value="discount-value">Discount value</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" v-model="discount"
+                                    :placeholder="discountType">
+                                    <em v-show="'discount-percent' === discountType">%</em>
+                                </td>
+                                <td></td>
+                            </tr>
+
                             <tr class="tax-rate-row">
                                 <td colspan="4" class="text-right with-multiselect">
                                     <multi-select v-model="taxRate"
@@ -119,6 +135,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
@@ -164,6 +182,8 @@
                     {id: 'save_new', text: 'Create and New'},
                 ],
 
+                discountType    : 'discount-percent',
+                discount        : 0,
                 taxRate         : null,
                 taxSummary      : null,
                 products        : [],
@@ -188,8 +208,24 @@
 
             taxRate(newVal) {
                 this.$store.dispatch('sales/setTaxRateID', newVal.id);
+            },
+
+            discount() {                
+                this.discountChanged();
+            },
+
+            discountType() {
+                this.discountChanged();
+            },
+
+            invoiceTotalAmount() {                
+                this.discountChanged();
             }
         },
+
+        computed: mapState({
+            invoiceTotalAmount: state => state.sales.invoiceTotalAmount
+        }),
 
         created() {
             this.getProducts();
@@ -233,6 +269,16 @@
                 });
             },
 
+            discountChanged() {
+                let discount = this.discount;                
+
+                if ( 'discount-percent' === this.discountType ) {
+                    discount = ( this.invoiceTotalAmount * discount ) / 100;
+                }
+
+                this.$store.dispatch('sales/setDiscount', discount);
+            },
+
             getTaxRates() {
                 HTTP.get('/taxes/summary').then(response => {
                     this.taxSummary = response.data;
@@ -264,17 +310,23 @@
 
             updateFinalAmount() {
                 let taxAmount = 0;
-                let finalAmount = 0;
+                let totalDiscount = 0;
+                let totalAmount = 0;
 
                 this.transactionLines.forEach(element => {
-                    if ( Object.keys(element).length ) {
-                        taxAmount += parseFloat(element.taxAmount);
-                        finalAmount += parseFloat(element.totalAmount);
+                    if ( element.qty ) {
+                        taxAmount     += parseFloat(element.taxAmount);
+                        totalDiscount += parseFloat(element.discount);
+                        totalAmount   += parseFloat(element.amount);
                     } 
                 });
 
+                this.$store.dispatch('sales/setInvoiceTotalAmount', totalAmount);
+
+                let finalAmount = (totalAmount - totalDiscount) + taxAmount;
+
                 this.taxTotalAmount = taxAmount.toFixed(2);
-                this.finalTotalAmount = ( finalAmount + taxAmount ).toFixed(2);
+                this.finalTotalAmount = finalAmount.toFixed(2);
             },
 
             formatLineItems() {
@@ -289,7 +341,7 @@
                         unit_price: line.unitPrice,
                         tax: line.taxAmount,
                         discount: line.discount,
-                        item_total: line.totalAmount
+                        item_total: line.amount
                     });
                 });
 
@@ -348,6 +400,21 @@
 </script>
 
 <style lang="less">
+    tr.padded {
+        height: 50px;
+    }
+
+    .discount-rate-row {
+        select {
+            width: 235px;
+            height: 34px;
+        }
+
+        input {
+            width: 130px !important;
+        }
+    }
+
     .tax-rate-row {
         .tax-rates {
             width: 235px;

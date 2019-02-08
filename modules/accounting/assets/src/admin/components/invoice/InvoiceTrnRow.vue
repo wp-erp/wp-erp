@@ -15,11 +15,13 @@
             <input type="number" min="0" step="0.01" v-model="line.unitPrice" @keyup="respondAtChange" class="wperp-form-field">
         </td>
         <td class="col--amount" data-colname="Amount">
-            <input type="number" min="0" step="0.01" v-model="line.totalAmount" class="wperp-form-field" readonly>
+            <input type="number" min="0" step="0.01" v-model="line.amount" class="wperp-form-field" readonly>
         </td>
         <td class="col--tax" data-colname="Tax">
             <input type="checkbox" v-model="line.applyTax" @change="respondAtChange" class="wperp-form-field">
-            <span style="color:blueviolet">{{ line.taxAmount }}</span>
+
+            <span style="color:blueviolet" v-text="line.taxAmount"></span>
+            <span style="color:#f44336" v-text="line.discount"></span>
         </td>
         <td class="col--actions delete-row" data-colname="Action">
             <span class="wperp-btn" @click="removeRow"><i class="flaticon-trash"></i></span>
@@ -71,21 +73,50 @@
             },
             
             taxRateID() {
-                if ( this.line.qty ) {
+                // if ( this.line.qty ) {
                     this.getTaxRate();
                     this.respondAtChange();
-                }
+                // }
+            },
+
+            discount() {
+                this.respondAtChange();
+            },
+
+            invoiceTotalAmount() {
+                this.calculateDiscount();
             }
         },
 
         computed: mapState({
-            taxRateID: state => state.sales.taxRateID
+            taxRateID: state => state.sales.taxRateID,
+            discount: state => state.sales.discount,
+            invoiceTotalAmount: state => state.sales.invoiceTotalAmount
         }),
 
         methods: {
             respondAtChange() {
                 this.calculateTax();
-                this.calculateAmount()
+                this.calculateAmount();
+                this.calculateDiscount();
+            },
+
+            getAmount() {
+                // Reset Amount
+                if ( ! this.line.qty ) {
+                    this.line.qty = 0;
+                }
+
+                if ( ! this.line.qty || ! this.line.unitPrice ) {                    
+                    this.line.discount = 0;
+                    this.line.taxAmount = 0;
+                    this.line.amount = 0;
+
+                    return false;
+                }
+
+                // Set Amount
+                return parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
             },
 
             getTaxRate() {
@@ -110,38 +141,40 @@
                 }
             },
 
-            calculateTax() {                
-                let amount = parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
+            calculateDiscount() {
+                let amount = this.getAmount();
+
+                if ( ! amount ) return;
+
+                let discount = (this.discount * amount) / this.invoiceTotalAmount;
+
+                this.line.discount = discount.toFixed(2);
+            },
+
+            calculateTax() {
+                let amount = this.getAmount();
+
+                if ( ! amount ) return;
+
                 let taxAmount = (amount * this.taxRate) / 100;
 
                 this.line.taxAmount = 0;
 
+                // If tax checkbox is checked
                 if (this.line.applyTax) {
                     this.line.taxAmount = taxAmount.toFixed(2);
                 }
             },
 
             calculateAmount() {
-                let field = this.line;
+                let amount = this.getAmount();
 
-                let amount = parseInt(field.qty) * parseFloat(field.unitPrice);
-                let discount = parseFloat(field.discount);
+                if ( ! amount ) return;
 
-                field.totalAmount = amount;
-
-                if ( isNaN(amount) ) {
-                    field.totalAmount = 0;
-                    return;
-                }
-
-                if ( discount ) {
-                    discount = (amount * discount) / 100;
-                    amount = amount - discount;                   
-                }
-
-                field.totalAmount = amount.toFixed(2);
-
-                this.$root.$emit('total-updated', field.totalAmount);
+                this.line.amount = amount;
+                
+                // Send amount to parent for total calculation
+                this.$root.$emit('total-updated', amount);
                 this.$forceUpdate();
             },
 
@@ -150,6 +183,7 @@
 
                 if ( ! product_id ) return;
 
+                // Get full selected product object by selected product ID
                 let product = this.products.find(element => {
                     return element.id == product_id;
                 });
@@ -161,8 +195,7 @@
                 this.line.product_type_name = this.line.selectedProduct.product_type_name;
 
                 this.getTaxRate();
-                this.calculateTax();
-                this.calculateAmount();
+                this.respondAtChange();
             },
 
             removeRow() {
