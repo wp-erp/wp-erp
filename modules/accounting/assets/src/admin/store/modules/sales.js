@@ -2,15 +2,18 @@ import HTTP from 'admin/http'
 
 // initial state
 const state = {
-  customers: [],
-  taxRateID: 0
+  customers         : [],
+  taxRateID         : 0,
+  discount          : 0,
+  invoiceTotalAmount: 0
 }
 
 // getters
 const getters = {
     getCustomers: (state) => state.customers,
-
-    getTaxRateID: (state) => state.taxRateID
+    getTaxRateID: (state) => state.taxRateID,
+    getDiscount: (state) => state.discount,
+    getInvoiceTotalAmount: (state) => state.invoiceTotalAmount
 }
 
 // actions
@@ -37,8 +40,16 @@ const actions = {
         }
     },
 
-    setTaxRateID({ state, commit }, data) {
+    setTaxRateID({ commit }, data) {
         commit('setTaxRateID', data)
+    },
+
+    setDiscount({ commit }, data) {
+        commit('setDiscount', data)
+    },
+
+    setInvoiceTotalAmount({ commit }, data) {
+        commit('setInvoiceTotalAmount', data)
     }
 }
 
@@ -57,6 +68,14 @@ const mutations = {
 
     setTaxRateID(state, id) {
         state.taxRateID = id
+    },
+
+    setDiscount(state, amount) {
+        state.discount = amount
+    },
+
+    setInvoiceTotalAmount(state, amount) {
+        state.invoiceTotalAmount = amount
     }
 }
 

@@ -418,9 +418,9 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
 
-    $sales_ledger_id = $ledger_map->get_ledger_id_by_slug('sales');
-    $sales_tax_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_tax');
-    $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discount');
+    $sales_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_revenue');
+    $sales_tax_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_tax_payable');
+    $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discounts');
 
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
@@ -575,7 +575,7 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
                                     GROUP BY ia.invoice_no
                                     HAVING due > 0
                                 ) as invs
-                                ON invoice.voucher_no = invs.invoice_no
+                                ON invoice.id = invs.invoice_no
                                 WHERE invoice.customer_id = %d
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
