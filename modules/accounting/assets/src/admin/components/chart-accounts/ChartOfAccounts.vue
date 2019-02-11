@@ -6,7 +6,6 @@
                     <h2 class="content-header__title">
                         Chart of Accounts
                         <router-link class="wperp-btn btn--primary" :to="{ name: 'AddChartAccounts'}">Add New</router-link>
-                        <button class="test-seed" @click="testSeed">Test Seed</button>
                     </h2>
                 </div>
             </div>
@@ -23,7 +22,7 @@
                     :actions="actions"
                     :rows="ledgers[parseInt(chart.id)]"
                     @action:click="onActionClick">
-                    <template slot="name" slot-scope="data">
+                    <template slot="ledger_name" slot-scope="data">
                         <strong>{{ data.row.name }}</strong>
                     </template>
                     <template slot="row-actions" slot-scope="data" v-if="data.row.system != null">
@@ -111,18 +110,6 @@
 
                 }
             },
-
-            testSeed() {
-                HTTP.post('/ledgers/chart/seed').then( response => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Success!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                });
-            }
 
         }
     }
