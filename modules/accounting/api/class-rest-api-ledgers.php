@@ -28,17 +28,6 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/chart/seed', [
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'seed_chart_accounts' ],
-                // 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_create_account' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
@@ -149,103 +138,6 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         ] );
     }
 
-    /**
-     * Test seed
-     *  -- REMOVE LATER
-     */
-    public function seed_chart_accounts( $request ) {
-        global $wpdb;
-
-        $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}erp_acct_chart_of_accounts");
-        $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}erp_acct_ledgers");
-        $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}erp_acct_ledger_categories");
-
-        $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_chart_of_accounts (`name`) VALUES ('Asset'), ('Liability'), ('Income'), ('Expense'), ('Equity'), ('Asset & Liability'), ('Bank')");
-
-        $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_ledgers (`chart_id`, `category_id`, `name`, `slug`, `code`, `system`) VALUES
-        (3,	NULL, 'Chair', NULL, 200, NULL),
-        (3, 3, 'Salary', NULL, 202, NULL),
-        (7, 2, 'Cash In Hand', 'cash_hand', 300, 1),
-        (7, NULL, 'Cash At Bank', 'cash_bank', 205, NULL),
-        (3, NULL, 'Sales', 'sales', 208, 1),
-        (5, NULL, 'Managing Director', NULL, 299, 1),
-        (6, NULL, 'Sales Tax', 'sales_tax', 287, 1),
-        (3, 4, 'Sales Discount', 'sales_discount', 103, 1),
-        (4, NULL, 'Purchase', 'purchase', 302, 1),
-        (7, NULL, 'A/C 80034', NULL, 211, NULL),
-        (4, NULL, 'CASH Operating', NULL, 1010, NULL),
-        (2, NULL, 'Debitors', NULL, 1022, 1),
-        (1, NULL, 'Trade Notes Receivable', NULL, 987, NULL),
-        (2, NULL, 'Unbilled Cost & Fees', NULL, 553, 1),
-        (1, NULL, 'Machinery & Equipment', NULL, 473, 1),
-        (3, 7, 'Computer Equipment', NULL, 763, 1),
-        (3, NULL, 'Furniture & Fixtures', NULL, 394, NULL),
-        (2, NULL, 'DEPR Vehicles', NULL, 229, NULL),
-        (7, NULL, 'Organization Costs', NULL, 837, 1)");
-
-        $wpdb->query("INSERT INTO {$wpdb->prefix}erp_acct_ledger_categories (`name`, `parent_id`, `system`) VALUES
-        ('Furniture', NULL, NULL),
-        ('AB Bank', NULL, NULL),
-        ('AB Bank Mirpur', '2', NULL),
-        ('Accounts Receivable', NULL, NULL),
-        ('Inventory', NULL, NULL),
-        ('Office Equipment', NULL, NULL),
-        ('Depreciation on Office Equipment', NULL, NULL),
-        ('Computer Equipment', NULL, 1),
-        ('Depreciation on Computer Equipment', '5', NULL),
-        ('Petty Cash', NULL, NULL),
-        ('Accounts Payable', NULL, 1),
-        ('Accrualsooos', NULL, NULL),
-        ('Unpaid Expense Claims', NULL, NULL),
-        ('Wages Payable', NULL, NULL),
-        ('Wages Payable - Payroll', '5', 1),
-        ('Sales Tax', NULL, NULL),
-        ('Employee Tax Payable', NULL, NULL),
-        ('Employee Benefits Payable', '7', NULL),
-        ('Employee Deductions payable', NULL, NULL),
-        ('Income Tax Payable', '2', 1),
-        ('Suspense', NULL, NULL),
-        ('Historical Adjustments', '25', 1),
-        ('Rounding', NULL, NULL),
-        ('Revenue Received in Advance', NULL, 1),
-        ('Clearing Account', '2', NULL),
-        ('Loan', NULL, NULL),
-        ('Costs of Goods Sold', NULL, NULL),
-        ('Advertising', '6', NULL),
-        ('Bank Service Charges', NULL, 1),
-        ('Consulting & Accounting', '25', NULL),
-        ('Entertainment', '25', NULL),
-        ('Postage & Delivary', NULL, NULL),
-        ('General Expenses', NULL, NULL),
-        ('Insurance', '5', 1),
-        ('Legal Expenses', NULL, NULL),
-        ('Utilities', NULL, 1),
-        ('Automobile Expenses', NULL, NULL),
-        ('Office Expenses', NULL, NULL),
-        ('Printing & Stationary', '5', NULL),
-        ('Rent', NULL, 1),
-        ('Repairs & Maintenance', NULL, NULL),
-        ('Wages & Salaries', NULL, NULL),
-        ('Payroll Tax Expense', NULL, NULL),
-        ('Dues & Subscriptions', NULL, NULL),
-        ('Telephone & Internet', NULL, NULL),
-        ('Travel', NULL, NULL),
-        ('Bad Debts', NULL, NULL),
-        ('Depreciation', NULL, NULL),
-        ('Income Tax Expense', NULL, NULL),
-        ('Employee Benefits Expense', NULL, NULL),
-        ('Interest Expense', NULL, NULL),
-        ('Bank Revaluations', NULL, NULL),
-        ('Direct Expense', NULL, 1),
-        ('Indirect Expense', NULL, 1)
-        ");
-
-        $response = rest_ensure_response( true );
-
-        $response->set_status( 200 );
-
-        return $response;
-    }
 
     /**
      * Get all the ledgers of a particular chart_id
@@ -288,28 +180,19 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_ledger_accounts_by_chart( $request ) {
-        global $wpdb; $chart_ids = [];
+        $id = $request['chart_id'];
 
-        $chart_of_accs = $wpdb->get_results( 'SELECT `id` FROM `chart_of_accounts`', ARRAY_N );
 
-        foreach ( $chart_of_accs as $chart_of_acc ) {
-            $chart_ids[] = $chart_of_acc[0];
-        }
-
-        if ( empty( $request['chart_id'] ) || ( isset ( $request['chart_id'] ) && !in_array( $request['chart_id'], $chart_ids ) ) ) {
+        if ( empty( $id ) ) {
             return new WP_Error( 'rest_empty_chart_id', __( 'Chart ID is Empty.' ), [ 'status' => 400 ] );
         }
 
-        $items = $wpdb->get_results( "SELECT * FROM ledgers WHERE chart_id ={$request['chart_id']} ORDER BY category_id ASC" );
+        $items = erp_acct_get_ledgers_by_chart_id( $id );
 
-        $result = array_map( function( $item ) {
-            $item->id       = (int) $item->id;
-            $item->category_id = (int) $item->category_id;
+        $response = rest_ensure_response( $items );
+        $response->set_status( 200 );
 
-            return $item;
-        }, $items );
-
-        return new WP_REST_Response( $result );
+        return $response;
     }
 
     /**
