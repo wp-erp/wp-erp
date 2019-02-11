@@ -31,16 +31,21 @@ import Sales             from 'admin/components/transactions/sales/Sales.vue';
 import Expenses          from 'admin/components/transactions/expenses/Expenses.vue';
 import ExpenseSingle     from 'admin/components/expense/ExpenseSingle.vue';
 import Purchases         from 'admin/components/transactions/purchases/Purchases.vue';
-import TaxRates          from 'admin/components/tax/TaxRates.vue';
-import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
+import NewTaxAgency      from 'admin/components/tax/NewTaxAgency.vue';
+import NewTaxCategory    from 'admin/components/tax/NewTaxCategory.vue';
+import NewTaxRate        from 'admin/components/tax/NewTaxRate.vue';
+import NewTaxRateName    from 'admin/components/tax/NewTaxRateName.vue';
 import RecordPayTax      from 'admin/components/tax/RecordPayTax.vue';
+import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
+import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
+import TaxRateNames      from 'admin/components/tax/TaxRateNames.vue';
+import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
-import NewTaxRate        from 'admin/components/tax/NewTaxRate.vue';
 import CheckCreate       from 'admin/components/check/CheckCreate.vue';
 import CheckSingle       from 'admin/components/check/CheckSingle.vue';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
     routes: [
@@ -320,7 +325,7 @@ export default new Router({
                     component: TaxRates,
                 },
                 {
-                    path: '/taxes/new',
+                    path: 'new-tax',
                     name: 'NewTaxRate',
                     component: NewTaxRate,
                 },
@@ -329,21 +334,50 @@ export default new Router({
                     name: 'PaginateTaxRates',
                     component: TaxRates,
                 },
-            ]
-        },
-        {
-            path: '/tax-agencies',
-            component: { render (c) { return c('router-view') } },
-            children: [
                 {
-                    path: '',
+                    path: 'rate-names',
+                    name: 'TaxRateNames',
+                    component: TaxRateNames,
+                },
+                {
+                    path: 'rate-names/page/:page',
+                    name: 'PaginateTaxRateNames',
+                    component: TaxRateNames,
+                },
+                {
+                    path: 'agencies',
                     name: 'TaxAgencies',
                     component: TaxAgencies,
                 },
                 {
-                    path: 'page/:page',
+                    path: 'agencies/page/:page',
                     name: 'PaginateTaxAgencies',
                     component: TaxAgencies,
+                },
+                {
+                    path: 'categories',
+                    name: 'TaxCategories',
+                    component: TaxCategories,
+                },
+                {
+                    path: 'categories/page/:page',
+                    name: 'PaginateTaxCategories',
+                    component: TaxCategories,
+                },
+                {
+                    path: 'new-rate-name',
+                    name: 'NewTaxRateName',
+                    component: NewTaxRateName,
+                },
+                {
+                    path: 'new-agency',
+                    name: 'NewTaxAgency',
+                    component: NewTaxAgency,
+                },
+                {
+                    path: 'new-tax-cat',
+                    name: 'NewTaxCategory',
+                    component: NewTaxCategory,
                 },
             ]
         },
