@@ -79,7 +79,8 @@
                 url: '',
                 singleUrl: '',
                 isActiveOptionDropdown: false,
-            };
+                singleTaxRateModal: false,
+            }
         },
 
         created() {
@@ -92,8 +93,6 @@
                 items.map(item => {
                     item.tax_id = item.id;
                     item.tax_name = item.tax_rate_name;
-                    item.tax_number = item.tax_number;
-                    item.default = item.default;
                 });
                 return items;
             }
@@ -177,7 +176,7 @@
 </script>
 <style lang="less">
     .erp-acct-tax-menus {
-        margin-left: 700px;
+        margin-left: 600px;
     }
     .combo-box {
         margin-right: 10px !important;

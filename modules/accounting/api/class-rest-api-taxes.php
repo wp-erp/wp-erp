@@ -443,7 +443,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'tax_number'      => $item->tax_number,
             'tax_rate'        => $item->tax_rate,
             'default'         => $item->default,
-            //'tax_components'  => $item->tax_components,
+            'tax_components'  => $item->tax_components,
         ];
 
         $data = array_merge( $data, $additional_fields );

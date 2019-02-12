@@ -16,32 +16,17 @@
                     <div class="wperp-row wperp-gutter-20">
                         <div class="wperp-form-group wperp-col-sm-6">
                             <label>Tax Name</label>
-                            <div class="wperp-custom-select">
-                                <input type="text" placeholder="Enter Tax Name" v-model="tax_name"
-                                       class="wperp-form-field">
+                            <div class="wperp-custom-select with-multiselect">
+                                <multi-select v-model="tax_name" :options="rate_names"/>
                             </div>
                         </div>
                         <div class="wperp-form-group wperp-col-sm-6">
-                            <label>Tax Number</label>
-                            <input type="text" placeholder="Enter Tax Number" v-model="tax_number"
-                                   class="wperp-form-field">
-                        </div>
-                        <div class="wperp-col-sm-6">
                             <div class="form-check">
                                 <label class="form-check-label">
                                     <input type="checkbox" v-model="is_compound" class="form-check-input"
                                            @change="isCompoundTax = !isCompoundTax">
                                     <span class="form-check-sign"></span>
                                     <span class="field-label">Is this tax compound?</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="wperp-col-sm-6">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input type="checkbox" v-model="is_default" class="form-check-input">
-                                    <span class="form-check-sign"></span>
-                                    <span class="field-label">Is this tax default?</span>
                                 </label>
                             </div>
                         </div>
@@ -95,6 +80,7 @@
                         </table>
                     </div>
 
+                    <new-tax-rate-name v-if="showRateNameModal" @close="showRateNameModal = false"/>
                     <new-tax-category v-if="showCatModal" @close="showCatModal = false"/>
                     <new-tax-agency v-if="showAgencyModal" @close="showAgencyModal = false"/>
 
@@ -116,6 +102,7 @@
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import NewTaxAgency from 'admin/components/tax/NewTaxAgency.vue'
     import NewTaxCategory from 'admin/components/tax/NewTaxCategory.vue'
+    import NewTaxRateName from 'admin/components/tax/NewTaxRateName.vue'
 
     export default {
         name: "NewTaxRate",
@@ -125,21 +112,22 @@
             MultiSelect,
             SubmitButton,
             NewTaxAgency,
-            NewTaxCategory
+            NewTaxCategory,
+            NewTaxRateName
         },
 
         data() {
             return {
                 tax_name: '',
-                tax_number: '',
                 tax_category: '',
-                is_default: false,
                 is_compound: false,
                 isCompoundTax: false,
                 isRowExpanded: false,
                 componentLines: [{}],
+                rate_names: [{}],
                 categories: [{}],
                 agencies: [{}],
+                showRateNameModal: false,
                 showAgencyModal: false,
                 showCatModal: false
             }
@@ -160,8 +148,21 @@
 
         methods: {
             fetchData() {
+                this.getRateNames();
                 this.getAgencies();
                 this.getCategories();
+            },
+
+            getRateNames() {
+                HTTP.get('/tax-rate-names').then((response) => {
+                    this.agencies = [];
+                    response.data.forEach(element => {
+                        this.rate_names.push({
+                            id: element.id,
+                            name: element.tax_rate_name
+                        });
+                    });
+                });
             },
 
             getAgencies() {
@@ -191,9 +192,7 @@
             addNewTaxRate() {
                 HTTP.post('/taxes', {
                     tax_rate_name: this.tax_name,
-                    tax_number: this.tax_number,
                     is_compound: this.is_compound,
-                    is_default: this.is_default,
                     tax_category_id: this.tax_category.id,
                     tax_components: this.formatLineItems()
                 }).then(res => {
