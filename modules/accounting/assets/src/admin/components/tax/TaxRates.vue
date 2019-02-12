@@ -7,6 +7,16 @@
                     <a class="wperp-btn btn--primary" @click.prevent="newTaxRate">
                         <span>Add Tax Rate</span>
                     </a>
+                    <div class="erp-acct-tax-menus">
+                        <combo-box
+                            :options="new_entities"
+                            placeholder="New Tax Entity" />
+
+                        <combo-box
+                            :options="entity_lists"
+                            :hasUrl="true"
+                            placeholder="Tax Entity Lists" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -27,23 +37,45 @@
                 :bulk-actions="bulkActions"
                 @action:click="onActionClick"
                 @bulk:click="onBulkAction">
+
+                <template slot="tax_id" slot-scope="data">
+                    <strong>
+                        <a href="#" @click.prevent="showTaxRateModal(data.row.tax_id)"> #{{ data.row.tax_id }}</a>
+                    </strong>
+                </template>
             </list-table>
+
+            <single-tax-rate-modal v-if="singleTaxRateModal" :tax_id="tax_rate_id" @close="singleTaxRateModal = false" />
         </div>
 
+        <new-tax-rate-name v-if="taxrateModal" @close="taxrateModal = false"/>
+        <new-tax-category v-if="taxcatModal" @close="taxcatModal = false"/>
+        <new-tax-agency v-if="taxagencyModal" @close="taxagencyModal = false"/>
     </div>
 </template>
 
 <script>
     import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
+    import ComboBox from 'admin/components/select/ComboBox.vue'
     import NewTaxRate from 'admin/components/tax/NewTaxRate.vue'
+    import NewTaxRateName from 'admin/components/tax/NewTaxRateName.vue'
+    import NewTaxCategory from 'admin/components/tax/NewTaxCategory.vue'
+    import NewTaxAgency from 'admin/components/tax/NewTaxAgency.vue'
+    import SingleTaxRateModal from 'admin/components/tax/SingleTaxRateModal.vue'
+
 
     export default {
         name: 'TaxRates',
 
         components: {
             ListTable,
-            NewTaxRate
+            ComboBox,
+            NewTaxRate,
+            NewTaxRateName,
+            NewTaxCategory,
+            NewTaxAgency,
+            SingleTaxRateModal
         },
 
         data() {
@@ -74,17 +106,47 @@
                         iconClass: 'flaticon-trash'
                     }
                 ],
+                new_entities: [
+                    {namedRoute: 'NewTaxRateName', name: 'New Tax Rate Name'},
+                    {namedRoute: 'NewTaxCategory', name: 'New Tax Category'},
+                    {namedRoute: 'NewTaxAgency', name: 'New Tax Agency'},
+                ],
+                entity_lists: [
+                    {namedRoute: 'TaxRateNames', name: 'Tax Rate Names'},
+                    {namedRoute: 'TaxCategories', name: 'Tax Categories'},
+                    {namedRoute: 'TaxAgencies', name: 'Tax Agencies'},
+                ],
                 taxes: [{}],
                 buttonTitle: '',
                 pageTitle: '',
                 url: '',
                 singleUrl: '',
                 isActiveOptionDropdown: false,
+                singleTaxRateModal: false,
+                taxrateModal: false,
+                taxcatModal: false,
+                taxagencyModal: false
             };
         },
 
         created() {
             this.fetchItems();
+
+            this.$root.$on('comboSelected', (data) => {
+                switch (data.namedRoute) {
+                    case 'NewTaxRateName':
+                        this.taxrateModal = true;
+                        break;
+                    case 'NewTaxCategory':
+                        this.taxcatModal = true;
+                        break;
+                    case 'NewTaxAgency':
+                        this.taxagencyModal = true;
+                        break;
+                    default:
+                        break;
+                }
+            } );
         },
 
         computed: {
@@ -92,9 +154,6 @@
                 let items = this.rows;
                 items.map(item => {
                     item.tax_id = item.id;
-                    item.tax_name = item.tax_name;
-                    item.tax_number = item.tax_number;
-                    item.tax_rate = item.tax_rate;
                 });
                 return items;
             }
@@ -119,6 +178,11 @@
                 });
             },
 
+            showTaxRateModal( rate_id ) {
+                this.singleTaxRateModal = true;
+                this.tax_rate_id = rate_id;
+            },
+
             goToPage(page) {
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
@@ -132,7 +196,7 @@
             },
 
             newTaxRate() {
-                this.$router.push('taxes/new');
+                this.$router.push('taxes/new-tax');
             },
 
             singleTaxRate(tax_id) {
