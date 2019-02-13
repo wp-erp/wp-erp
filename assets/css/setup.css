@@ -82,7 +82,7 @@ body {
 .erp-setup-content .form-table td .description {
   line-height: 1.5em;
   display: block;
-  margin-top: .25em;
+  margin-top: 0.25em;
   color: #999;
   font-style: italic;
 }
@@ -91,7 +91,7 @@ body {
   width: auto;
   box-sizing: inherit;
   padding: inherit;
-  margin: 0 .5em 0 0;
+  margin: 0 0.5em 0 0;
   box-shadow: none;
 }
 .erp-setup-content .form-table .section_title td {
@@ -121,12 +121,15 @@ body {
 }
 .erp-setup-content .final-step h2 {
   float: left;
-  width: 50%;
+  width: 36%;
   text-align: right;
   margin-right: 20px;
 }
 .erp-setup-content .final-step a {
   float: left;
+}
+.erp-setup-content .final-step .btn-add-employees {
+  margin-right: 10px;
 }
 .erp-setup-content .two-col {
   overflow: hidden;
@@ -155,9 +158,9 @@ body {
 .erp-setup-content .erp-setup-actions .button {
   float: right;
   font-size: 1.25em;
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   line-height: 1em;
-  margin-right: .5em;
+  margin-right: 0.5em;
   height: auto;
 }
 .erp-setup-content .erp-setup-actions .button-primary {
@@ -298,4 +301,17 @@ body {
 }
 .form-table .switch-input:checked + .switch-label .toggle--off {
   display: none;
+}
+.plugin-install-info {
+  display: block;
+  text-align: center;
+  color: #999;
+  line-height: 1.5em;
+  margin-bottom: 15px;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.plugin-install-info .plugin-install-info-list-item a {
+  font-style: italic;
 }
