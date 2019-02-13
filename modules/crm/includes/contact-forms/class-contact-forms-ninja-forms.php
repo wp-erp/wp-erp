@@ -147,7 +147,6 @@ class Ninja_Forms {
             $sub = $nf->form()->get_sub( $sub_id );
 
             $formData = stripslashes( $_POST['formData'] );
-            $formData = str_replace( '\"' , '"', $formData);
             $formData = json_decode( $formData, true );
 
             $form_id = $formData['id'];
