@@ -454,6 +454,11 @@ class Setup_Wizard {
                 var erpModulePm       = jQuery('#erp_module_pm');
                 var pluginInstallInfo = jQuery('.plugin-install-info');
 
+                <?php if ( 'no' == $include_pm ) : ?>
+                    pluginInstallInfo.css('display', 'none');
+                <?php endif; ?>
+
+                // toggle project manager on/off
                 erpModulePm.on('click', function(e) {
                     if ( erpModulePm.is(':checked') ) {
                         pluginInstallInfo.css('display', 'block');
@@ -900,7 +905,12 @@ class Setup_Wizard {
             // Activate this thing.
 			if ( $activate ) {
 				try {
-					$result = activate_plugin( $installed ? $installed_plugins[ $plugin_file ] : $plugin_slug . '/' . $plugin_file );
+                    $result = activate_plugin( $installed ? $installed_plugins[ $plugin_file ] : $plugin_slug . '/' . $plugin_file );
+                    
+                    // Remove redirection after activate `WP Project Manager`
+                    add_filter( 'pm_welcome_page_redirect', function($transient) {
+                        return false;
+                    } );
 
 					if ( is_wp_error( $result ) ) {
 						throw new \Exception( $result->get_error_message() );
