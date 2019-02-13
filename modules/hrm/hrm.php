@@ -208,7 +208,7 @@ class Human_Resource {
             'empty_entitlement_text' => sprintf( '<span>%s <a href="%s" title="%s">%s</a></span>', __( 'Please create entitlement first', 'erp' ), add_query_arg( [
                 'page'          => 'erp-hr',
                 'section'       => 'leave',
-                'sub-section'   => 'assignment'
+                'sub-section'   => 'leave-entitlements&tab=assignment'
             ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
         ) );
 
