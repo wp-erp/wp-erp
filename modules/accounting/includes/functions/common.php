@@ -334,7 +334,7 @@ function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
 }
 
 /**
- *
+ * Format people address
  */
 function erp_acct_format_people_address( $address = [] ) {
     $add = '';
@@ -350,57 +350,61 @@ function erp_acct_format_people_address( $address = [] ) {
 }
 
 /**
- * Clear DB for testing
+ * Get Accounting Quick Access Menus
+ *
+ * @return array
  */
-function erp_acct_clear_db() {
-    erp_acct_dev_clear_purchases();
-    erp_acct_dev_clear_sales();
-    erp_acct_dev_clear_bills();
-    erp_acct_dev_clear_vouchers();
-    echo "Done";
-}
-
-function erp_acct_dev_clear_purchases() {
-    global $wpdb;
-
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_purchase" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_purchase_details" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_pay_purchase" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_pay_purchase_details" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_purchase_account_details" );
-}
-
-
-function erp_acct_dev_clear_sales() {
-    global $wpdb;
-
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_invoices" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_invoice_details" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_invoice_receipts" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_invoice_receipts_details" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_invoice_account_details" );
-}
-
-function erp_acct_dev_clear_bills() {
-    global $wpdb;
-
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_bills" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_bill_details" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_pay_bill" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_pay_bill_details" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_bill_account_details" );
-
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_expenses" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_expense_details" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_expense_checks" );
-}
-
-function erp_acct_dev_clear_vouchers() {
-    global $wpdb;
-
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_voucher_no" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_ledger_details" );
-    $wpdb->query( "Truncate Table {$wpdb->prefix}erp_acct_transfer_voucher" );
-    $wpdb->insert( "{$wpdb->prefix}erp_acct_ledger_details", array( 'ledger_id' => 3, 'debit' => 500 ));
-    $wpdb->insert( "{$wpdb->prefix}erp_acct_ledger_details", array( 'ledger_id' => 4, 'debit' => 2500 ));
+function erp_acct_quick_access_menu() {
+    return [
+        'invoice' => [
+            'title' => 'Invoice',
+            'slug'  => 'invoice',
+            'url'   => 'invoices/new'
+        ],
+        "rec_payment" => [
+            'title' => 'Receive Payment',
+            'slug'  => 'payment',
+            'url'   => 'payments/new'
+        ],
+        "bill" => [
+            'title' => 'Bill',
+            'slug'  => 'bill',
+            'url'   => 'bills/new'
+        ],
+        "pay_bill" => [
+            'title' => 'Pay Bill',
+            'slug'  => 'pay_bill',
+            'url'   => 'pay-bills/new'
+        ],
+        "purchase" => [
+            'title' => 'Purchase',
+            'slug'  => 'purchase',
+            'url'   => 'purchases/new'
+        ],
+        "pay_purchase" => [
+            'title' => 'Pay Purchase',
+            'slug'  => 'pay_purchase',
+            'url'   => 'pay-purchases/new'
+        ],
+        "expense" => [
+            'title' => 'Expense',
+            'slug'  => 'expense',
+            'url'   => 'expenses/new'
+        ],
+        "check" => [
+            'title' => 'Check',
+            'slug'  => 'check',
+            'url'   => 'checks/new'
+        ],
+        "journal" => [
+            'title' => 'Journal',
+            'slug'  => 'journal',
+            'url'   => 'journals/new'
+        ],
+        "tax_rate" => [
+            'title' => 'Tax Rate',
+            'slug'  => 'taxes',
+            'url'   => 'taxes/new-tax'
+        ]
+    ];
 }
