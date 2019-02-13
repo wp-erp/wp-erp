@@ -98,6 +98,10 @@ function erp_get_peoples( $args = [] ) {
         if( !empty($contact_owner) ){
             $sql['where'][] = "AND people.contact_owner='$contact_owner'";
         }
+        if ( current_user_can( 'erp_crm_agent' ) ) {
+            $current_user_id = get_current_user_id();
+            $sql['where'][] = "AND people.contact_owner='$current_user_id'";
+        }
 
         if(!empty($tags)){
 
