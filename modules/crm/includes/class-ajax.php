@@ -283,6 +283,7 @@ class Ajax_Handler {
     public function create_customer() {
         $this->verify_nonce( 'wp-erp-crm-customer-nonce' );
 
+        $current_user_id = get_current_user_id();
         $posted = array_map( 'strip_tags_deep', $_POST );
         $data   = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
@@ -290,7 +291,7 @@ class Ajax_Handler {
             $this->send_error( __( 'You don\'t have any permission to add new contact', 'erp' ) );
         }
 
-        if ( $data['id'] && ! current_user_can( 'erp_crm_edit_contact', $data['id'] ) ) {
+        if ( $data['id'] && ! current_user_can( 'erp_crm_edit_contact', $data['id'] ) && $current_user_id != $data['contact_owner'] ) {
             $this->send_error( __( 'You don\'t have any permission to edit this contact', 'erp' ) );
         }
 
@@ -359,7 +360,7 @@ class Ajax_Handler {
                 $ids[] = $contact_id;
             }
         } else {
-            if ( ! current_user_can( 'erp_crm_delete_contact', $customer_id, $hard ) ) {
+            if ( ! current_user_can( 'erp_crm_delete_contact', $customer_id, $hard ) && ! current_user_can( 'erp_crm_agent' )  ) {
                 $this->send_error( __( 'You don\'t have any permission to delete this contact', 'erp' ) );
             }
             $ids[] = $customer_id;

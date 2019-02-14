@@ -3,7 +3,7 @@
 
     <?php
         $employees    = new \WeDevs\ERP\HRM\Models\Employee();
-        $emp_all      = $employees->get();
+        $emp_all      = $employees->where( 'status', 'active' )->get();
         $emp_all_data = get_employee_breakdown_by_age( $emp_all );
         $departments  = erp_hr_get_departments();
         $index        = 0;
@@ -14,7 +14,7 @@
 
             array_push( $yaxis_ticks, [$index, $department->title]);
 
-            $emp_by_dept      = $employees->where( 'department', $department->id )->get();
+            $emp_by_dept      = $employees->where( array( 'department' => $department->id, 'status' => 'active' ) )->get();
             $emp_by_dept_data = get_employee_breakdown_by_age( $emp_by_dept );
 
             $_under18[]       = [$emp_by_dept_data['_under_18'], $index];
@@ -34,20 +34,20 @@
         <?php
             echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Age Breakdown Chart', 'erp' ), function() {
         ?>
-            <div id="emp-age-breakdown-chart" style="width:800px;height:400px;"></div>
+            <div id="emp-age-breakdown-chart" class="erp-report-chart"></div>
         <?php
             } );
 
             echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart-o"></i> Employee Age Breakdown by Department', 'erp' ), function() {
         ?>
-            <div id="emp-age-breakdown-by-department" style="width:800px;height:400px;"></div>
+            <div id="emp-age-breakdown-by-department" class="erp-report-chart"></div>
         <?php
             } );
         ?>
         </div>
     </div>
 
-        <table class="widefat striped">
+        <table class="widefat striped erp-report-chart">
             <thead>
                 <tr>
                     <th><?php _e( 'Department', 'erp' ); ?></th>
