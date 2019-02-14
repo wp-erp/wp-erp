@@ -906,11 +906,9 @@ class Setup_Wizard {
 			if ( $activate ) {
 				try {
                     $result = activate_plugin( $installed ? $installed_plugins[ $plugin_file ] : $plugin_slug . '/' . $plugin_file );
-                    
-                    // Remove redirection after activate `WP Project Manager`
-                    add_filter( 'pm_welcome_page_redirect', function($transient) {
-                        return false;
-                    } );
+
+                    // Stop page redirection after project manager activated via erp setup-wizard
+                    delete_transient( '_pm_setup_page_redirect' );
 
 					if ( is_wp_error( $result ) ) {
 						throw new \Exception( $result->get_error_message() );
