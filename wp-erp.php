@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.4.1
+ * Version: 1.4.2
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.4.1';
+    public $version = '1.4.2';
 
     /**
      * Minimum PHP version required
@@ -281,6 +281,9 @@ final class WeDevs_ERP {
 
         // Add plugin action links
         add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), [ $this, 'plugin_action_links' ] );
+
+        // Admin footer text
+        add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 10, 1 );
     }
 
     /**
@@ -341,6 +344,25 @@ final class WeDevs_ERP {
                 new $module['callback']( $this );
             }
         }
+    }
+
+    /**
+     * Admin footer text
+     *
+     * @since 1.4.2
+     * @param  string $text
+     * @return string
+     */
+    public function admin_footer_text( $text ) {
+        $page = isset( $_GET['page'] ) ? wp_unslash( $_GET['page'] ) : '';
+        $page = substr( $page, 0, 3 );
+
+        if ( $page === 'erp' ) {
+            $text = sprintf( __( 'If you like WPERP please leave us a <a href="%s" target="_blank" style="text-decoration:none">★★★★★</a> rating. Thanking you from the team of WPERP in advance!' ),
+                __( 'https://wordpress.org/support/plugin/erp/reviews/?filter=5' ) );
+        }
+
+        return $text;
     }
 } // WeDevs_ERP
 

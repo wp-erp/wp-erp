@@ -2992,7 +2992,7 @@ table.audit-log-table th.col-date {
 .ui-widget-overlay {
   z-index: 159999;
   background: #000;
-  opacity: .7;
+  opacity: 0.7;
 }
 .erp-modal {
   background: #fff;
@@ -3144,7 +3144,7 @@ table.audit-log-table th.col-date {
   height: auto;
 }
 .erp-modal p {
-  font-size: 1.10em;
+  font-size: 1.1em;
 }
 .erp-modal footer {
   position: absolute;
@@ -3182,7 +3182,7 @@ table.audit-log-table th.col-date {
   bottom: 0;
   min-height: 360px;
   background: #000;
-  opacity: .7;
+  opacity: 0.7;
   display: none;
 }
 form.erp-form ol.erp-form-fields,
@@ -3391,7 +3391,7 @@ ul.edit-address li.city-wrap span {
   text-decoration: none;
   border: none;
   line-height: 2;
-  padding: .2em;
+  padding: 0.2em;
 }
 .erp-settings .erp-nav-tab-active {
   color: #000;
@@ -3549,7 +3549,7 @@ trix-editor ul {
   opacity: 1;
 }
 .wp-admin #toast-container > :hover {
-  opacity: .9;
+  opacity: 0.9;
 }
 .erp-info-box {
   display: flex;
@@ -3640,20 +3640,20 @@ trix-editor ul {
 }
 .erp-table caption {
   font-size: 1.5em;
-  margin: .5em 0 .75em;
+  margin: 0.5em 0 0.75em;
 }
 .erp-table tr {
   border: 1px solid #ddd;
-  padding: .35em;
+  padding: 0.35em;
 }
 .erp-table th,
 .erp-table td {
-  padding: .625em;
+  padding: 0.625em;
   text-align: center;
 }
 .erp-table th {
-  font-size: .85em;
-  letter-spacing: .1em;
+  font-size: 0.85em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 /*----------------------------------------
@@ -3965,7 +3965,7 @@ div.erp-nav-container .erp-nav-dropdown {
   border: 1px solid #DDDDDD;
   border-radius: 3px;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.09);
-  transition: all .2s;
+  transition: all 0.2s;
   padding: 5px 0;
   margin-top: 2px;
   min-width: 160px;

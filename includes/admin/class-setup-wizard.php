@@ -398,6 +398,22 @@ class Setup_Wizard {
     public function setup_step_module() {
         $modules            = wperp()->modules->get_query_modules();
         $all_active_modules = wperp()->modules->get_active_modules();
+
+        // Add `WP Project Manager` plugin as a module
+        $modules['pm'] = [
+            'title'       => 'WP Project Manager',
+            'slug'        => 'wp-project-manager',
+            'description' => 'Project, Task Management & Team Collaboration Software'
+        ];
+
+        // Should `WP Project Manager` plugin installs by default?
+        $include_pm = get_option( 'include_project_manager' );
+
+        if ( false ==  $include_pm || 'yes' == $include_pm ) {
+            $all_active_modules['pm'] = [
+                'slug' => 'wp-project-manager'
+            ];
+        }
         ?>
 
         <h1><?php _e( 'Active Modules', 'erp' ); ?></h1>
@@ -424,6 +440,34 @@ class Setup_Wizard {
                 <?php } ?>
             </table>
 
+            <span class="plugin-install-info">
+                <span class="plugin-install-info-label">The following plugin will be installed and activated for you:</span>
+                <br>
+                <span class="plugin-install-info-list">
+                    <span class="plugin-install-info-list-item">
+                        <a href="https://wordpress.org/plugins/wedevs-project-manager/" target="_blank">WP Project Manager</a>
+                    </span>
+                </span>
+            </span>
+
+            <script type="text/javascript">
+                var erpModulePm       = jQuery('#erp_module_pm');
+                var pluginInstallInfo = jQuery('.plugin-install-info');
+
+                <?php if ( 'no' == $include_pm ) : ?>
+                    pluginInstallInfo.css('display', 'none');
+                <?php endif; ?>
+
+                // toggle project manager on/off
+                erpModulePm.on('click', function(e) {
+                    if ( erpModulePm.is(':checked') ) {
+                        pluginInstallInfo.css('display', 'block');
+                    } else {
+                        pluginInstallInfo.css('display', 'none');
+                    }
+                });
+            </script>
+
             <?php $this->next_step_buttons(); ?>
         </form>
         <?php
@@ -432,12 +476,31 @@ class Setup_Wizard {
     /**
      * Module setup step save
      * @since 1.3.4
+     * 
+     * Add project manager plugin
+     * @since 1.4.2
      */
     public function setup_step_module_save() {
         check_admin_referer( 'erp-setup' );
 
-        $all_modules = wperp()->modules->get_modules();
-        $modules     = array_map( 'sanitize_text_field', wp_unslash( $_POST['modules'] ) );
+        $all_modules   = wperp()->modules->get_modules();
+        $modules       = array_map( 'sanitize_text_field', wp_unslash( $_POST['modules'] ) );
+        $pm_module_add = 'no';
+        
+        // if `WP Project Manager` plugin needs to be installed
+        if ( in_array( 'pm', $modules ) ) {
+            $pm_plugin_id = 'wedevs-project-manager';
+            $pm_plugin    = [
+                'name'      => __( 'WP Project Manager', 'erp' ),
+                'repo-slug' => 'wedevs-project-manager',
+                'file'      => 'cpm.php',
+            ];
+            $pm_module_add = 'yes';
+
+            $this->background_installer( $pm_plugin_id, $pm_plugin );
+        }
+
+        update_option( 'include_project_manager', $pm_module_add );
 
         foreach ( $all_modules as $key => $module ) {
             if ( ! in_array( $key, $modules ) ) {
@@ -717,22 +780,150 @@ class Setup_Wizard {
                         $is_hrm_activated = erp_is_module_active( 'hrm' );
 
                         if ( $is_hrm_activated ) : ?>
-                            <a class="button button-primary button-large"
+                            <a class="button button-primary button-large btn-add-employees"
                                 href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr&section=employee' ) ); ?>">
                                 <?php _e( 'Add your employees!', 'erp' ); ?>
                             </a>
-                        <?php else: ?>
-                            <a class="button button-primary button-large"
-                                href="<?php echo esc_url( admin_url() ); ?>">
-                                <?php _e( 'Go to Dashboard!', 'erp' ); ?>
-                            </a>
-                        <?php endif;
-                    ?>
+                        <?php endif; ?>
+
+                        <a class="button button-primary button-large"
+                            href="<?php echo esc_url( admin_url( 'admin.php?page=erp' ) ); ?>">
+                            <?php _e( 'Go to ERP Dashboard!', 'erp' ); ?>
+                        </a>
                 </div>
             </div>
         </div>
         <?php
     }
+
+    /**
+	 * Install a plugin from .org in the background via a cron job (used by
+	 * installer - opt in).
+	 *
+	 * @param string $plugin_to_install_id Plugin ID.
+	 * @param array  $plugin_to_install Plugin information.
+	 *
+	 * @throws Exception If unable to proceed with plugin installation.
+	 * @since  1.4.2
+	 */
+	private function background_installer( $plugin_to_install_id, $plugin_to_install ) {
+		if ( ! empty( $plugin_to_install['repo-slug'] ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+			WP_Filesystem();
+
+			$skin              = new \Automatic_Upgrader_Skin();
+			$upgrader          = new \WP_Upgrader( $skin );
+			$installed_plugins = array_reduce( array_keys( get_plugins() ), array( $this, 'associate_plugin_file' ), array() );
+			$plugin_slug       = $plugin_to_install['repo-slug'];
+			$plugin_file       = isset( $plugin_to_install['file'] ) ? $plugin_to_install['file'] : $plugin_slug . '.php';
+			$installed         = false;
+			$activate          = false;
+
+			// See if the plugin is installed already.
+			if ( isset( $installed_plugins[ $plugin_file ] ) ) {
+				$installed = true;
+				$activate  = ! is_plugin_active( $installed_plugins[ $plugin_file ] );
+			}
+
+			// Install this thing!
+			if ( ! $installed ) {
+				// Suppress feedback.
+				ob_start();
+
+				try {
+					$plugin_information = plugins_api(
+						'plugin_information',
+						array(
+							'slug'   => $plugin_slug,
+							'fields' => array(
+								'short_description' => false,
+								'sections'          => false,
+								'requires'          => false,
+								'rating'            => false,
+								'ratings'           => false,
+								'downloaded'        => false,
+								'last_updated'      => false,
+								'added'             => false,
+								'tags'              => false,
+								'homepage'          => false,
+								'donate_link'       => false,
+								'author_profile'    => false,
+								'author'            => false,
+							),
+						)
+					);
+
+					if ( is_wp_error( $plugin_information ) ) {
+						throw new \Exception( $plugin_information->get_error_message() );
+					}
+
+					$package  = $plugin_information->download_link;
+					$download = $upgrader->download_package( $package );
+
+					if ( is_wp_error( $download ) ) {
+						throw new \Exception( $download->get_error_message() );
+					}
+
+					$working_dir = $upgrader->unpack_package( $download, true );
+
+					if ( is_wp_error( $working_dir ) ) {
+						throw new \Exception( $working_dir->get_error_message() );
+					}
+
+					$result = $upgrader->install_package(
+						array(
+							'source'                      => $working_dir,
+							'destination'                 => WP_PLUGIN_DIR,
+							'clear_destination'           => false,
+							'abort_if_destination_exists' => false,
+							'clear_working'               => true,
+							'hook_extra'                  => array(
+								'type'   => 'plugin',
+								'action' => 'install',
+							),
+						)
+					);
+
+					if ( is_wp_error( $result ) ) {
+						throw new \Exception( $result->get_error_message() );
+					}
+
+					$activate = true;
+
+				} catch ( Exception $e ) {}
+
+				// Discard feedback.
+				ob_end_clean();
+			}
+
+			wp_clean_plugins_cache();
+
+            // Activate this thing.
+			if ( $activate ) {
+				try {
+                    $result = activate_plugin( $installed ? $installed_plugins[ $plugin_file ] : $plugin_slug . '/' . $plugin_file );
+
+                    // Stop page redirection after project manager activated via erp setup-wizard
+                    delete_transient( '_pm_setup_page_redirect' );
+
+					if ( is_wp_error( $result ) ) {
+						throw new \Exception( $result->get_error_message() );
+					}
+				} catch ( Exception $e ) {}
+			}
+		}
+    }
+    
+    private function associate_plugin_file( $plugins, $key ) {
+		$path                 = explode( '/', $key );
+		$filename             = end( $path );
+		$plugins[ $filename ] = $key;
+		return $plugins;
+	}
 }
 
 return new Setup_Wizard();
