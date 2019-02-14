@@ -13,6 +13,9 @@
 
         <div class="wperp-panel wperp-panel-default pb-0">
             <div class="wperp-panel-body">
+
+                <show-errors :error_msgs="form_errors" ></show-errors>
+
                 <form action="#" class="wperp-form" method="post">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-6">
@@ -99,7 +102,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Create Journal" @click.native="SubmitForJournalCreate" :working="isWorking"></submit-button>
+                            <submit-button text="Create Journal" @click.native="SubmitForJournalCreate"></submit-button>
                         </td>
                     </tr>
                     </tfoot>
@@ -116,6 +119,7 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: "JournalCreate",
@@ -126,6 +130,7 @@
             Datepicker,
             FileUpload,
             SubmitButton,
+            ShowErrors
         },
 
         data() {
@@ -134,6 +139,8 @@
                     journal_no: '',
                     trn_date: '',
                 },
+
+                form_errors: [],
 
                 journal_id: 0,
                 account_ids: [],
@@ -174,6 +181,11 @@
             },
 
             SubmitForJournalCreate() {
+                let validation = this.validateForm();
+
+                if ( !validation ) {
+                    return;
+                }
 
                 HTTP.post('/journals', {
                     trn_date: this.basic_fields.trans_date,
@@ -193,6 +205,16 @@
                 }).then(() => {
                     this.isWorking = false;
                 });
+            },
+
+            validateForm() {
+                if ( !this.basic_fields.payment_date ) {
+                    this.form_errors.push('Transaction Date is required.');
+                }
+
+                if ( ! this.isWorking ) {
+                    this.form_errors.push('Debit and Credit must be Equal.');
+                }
             },
 
             calculateAmount(key) {

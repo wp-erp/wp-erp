@@ -13,6 +13,9 @@
 
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
+
+                <show-errors :error_msgs="form_errors" ></show-errors>
+
                 <form action="" class="wperp-form" method="post">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-3">
@@ -126,7 +129,7 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import SelectPeople from 'admin/components/people/SelectPeople.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
-
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: 'BillCreate',
@@ -137,7 +140,8 @@
             MultiSelect,
             FileUpload,
             SubmitButton,
-            SelectPeople
+            SelectPeople,
+            ShowErrors
         },
 
         data() {
@@ -145,10 +149,12 @@
                 basic_fields: {
                     user: '',
                     trn_ref: '',
-                    trn_date: erp_acct_var.current_date,
-                    due_date: erp_acct_var.current_date,
+                    trn_date: '',
+                    due_date: '',
                     billing_address: ''
                 },
+
+                form_errors: [],
 
                 transactionLines: [{}],
                 selected:[],
@@ -210,7 +216,13 @@
                 this.transactionLines.push({});
             },
 
-            SubmitForBill() {                
+            SubmitForBill() {
+                this.validateForm();
+
+                if ( this.form_errors.length ) {
+                    return;
+                }
+
                 HTTP.post('/bills', {
                     vendor_id: this.basic_fields.user.id,
                     ref: this.basic_fields.trn_ref,
@@ -236,9 +248,29 @@
                 });
             },
 
+            validateForm() {
+                if ( !this.basic_fields.user.hasOwnProperty('id') ) {
+                    this.form_errors.push('People Name is required.');
+                }
+
+                if ( !this.basic_fields.trn_ref ) {
+                    this.form_errors.push('Transaction Reference is required.');
+                }
+
+                if ( !this.basic_fields.trn_date ) {
+                    this.form_errors.push('Transaction Date is required.');
+                }
+
+                if ( !this.basic_fields.due_date ) {
+                    this.form_errors.push('Due Date is required.');
+                }
+            },
+
             formatTrnLines( trl_lines ) {
                 trl_lines.forEach(element => {
-                    element.ledger_id = element.ledger_id.id;
+                    if ( element.length ) {
+                        element.ledger_id = element.ledger_id.id;
+                    }
                 });
 
                 return trl_lines;

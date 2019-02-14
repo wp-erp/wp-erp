@@ -13,6 +13,9 @@
 
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
+
+                <show-errors :error_msgs="form_errors" ></show-errors>
+
                 <form action="" class="wperp-form" method="post">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-3">
@@ -124,6 +127,7 @@
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import CheckFields from 'admin/components/check/CheckFields.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: 'PayBillCreate',
@@ -136,7 +140,8 @@
             FileUpload,
             SubmitButton,
             MultiSelect,
-            CheckFields
+            CheckFields,
+            ShowErrors
         },
 
         data() {
@@ -154,6 +159,8 @@
                     payer_name: '',
                     check_no: ''
                 },
+
+                form_errors: [],
 
                 pay_bills: [],
                 attachments: [],
@@ -196,11 +203,6 @@
                 let peopleId = this.basic_fields.people.id,
                     idx = 0,
                     finalAmount = 0;
-
-                // for modal test. remove later
-                if ( undefined === peopleId ) {
-                    peopleId = 1;
-                }
 
                 HTTP.get(`/bills/due/${peopleId}`).then((response) => {
                     response.data.forEach(element => {
@@ -246,16 +248,9 @@
             },
 
             SubmitForPayment() {
+                this.validateForm();
 
-                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
-                    this.$swal({
-                        position: 'center',
-                        type: 'info',
-                        title: 'Please Select an Account',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-
+                if ( this.form_errors.length ) {
                     return;
                 }
 
@@ -297,6 +292,28 @@
                     this.resetData();
                     this.isWorking = false;
                 });
+            },
+
+            validateForm() {
+                if ( !this.basic_fields.people.hasOwnProperty('id') ) {
+                    this.form_errors.push('People Name is required.');
+                }
+
+                if ( !this.basic_fields.trn_ref ) {
+                    this.form_errors.push('Transaction Reference is required.');
+                }
+
+                if ( !this.basic_fields.payment_date ) {
+                    this.form_errors.push('Transaction Date is required.');
+                }
+
+                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
+                    this.form_errors.push('Transaction Account is required.');
+                }
+
+                if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
+                    this.form_errors.push('Payment Method is required.');
+                }
             },
 
             showPaymentModal() {
