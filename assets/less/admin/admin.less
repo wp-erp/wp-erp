@@ -2178,7 +2178,7 @@ div.erp-nav-container {
         display: none;
         position: absolute;
         top: 100%;
-        right: 0;
+        left: 0;
         z-index: 99;
         animation: nav-secondary 0.2s;
         background: #FFFFFF;
@@ -2186,7 +2186,7 @@ div.erp-nav-container {
         border: 1px solid #DDDDDD;
         border-radius: 3px;
         box-shadow: 0 4px 10px 0 rgba(0,0,0,0.09);
-        min-width: 180px;
+        min-width: 140px;
 
         > li {
             //padding: 3px 15px;
@@ -2296,4 +2296,34 @@ div.erp-nav-container {
 
 #adminmenu .wp-submenu li a:empty {
     display: none !important;
+}
+.erp-report-chart {
+    min-width:330px;
+    height: 400px;
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (max-width : 640px) {
+    .erp .erp-single-container {
+        .erp-area-left {
+            float: none;
+            min-width: 295px;
+            width: 98%;
+            margin: 5px;
+            margin-right: 22px;
+
+            .erp-profile-top .erp-avatar {
+                float: none;
+                margin-bottom: 10px;
+            }
+        }
+        .erp-area-right {
+            float: none;
+            width: 100%;
+        }
+    }
+    .hrm-dashboard .badge-container .badge-wrap {
+        width: 100%;
+        margin-top: 15px;
+        text-align: center;
+    }
 }

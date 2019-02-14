@@ -183,6 +183,7 @@ class Customer_Relationship {
                 'customer_social_title'  => __( 'Customer Social Profile', 'erp' ),
                 'customer_assign_group'  => __( 'Add to Contact groups', 'erp' ),
             ),
+            'asset_url'                   => WPERP_ASSETS,
             'add_submit'                  => __( 'Add New', 'erp' ),
             'update_submit'               => __( 'Update', 'erp' ),
             'save_submit'                 => __( 'Save', 'erp' ),

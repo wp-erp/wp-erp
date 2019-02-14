@@ -1,7 +1,7 @@
 <?php
 global $wpdb;
 
-$all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees" );
+$all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active' ORDER BY hiring_date DESC" );
 $date_format = get_option( 'date_format' );
 ?>
 <div class="wrap">

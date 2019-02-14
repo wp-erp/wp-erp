@@ -43,6 +43,8 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? $_GET['filter_employment_type'] : '';
         $selected_time         = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : date( 'Y' );
         $current_year          = date( 'Y' );
+        $date_range_start      = isset( $_REQUEST['start'] ) ? $_REQUEST['start'] : '';
+        $date_range_end        = isset( $_REQUEST['end'] ) ? $_REQUEST['end'] : '';
         ?>
         <div class="actions alignleft">
             <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Designation', 'erp' ) ?></label>
@@ -51,11 +53,17 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
                 for ( $i = 0; $i <= 5; $i ++ ) {
                     $year = $current_year - $i;
                     echo sprintf( "<option value='%s'%s>%s</option>\n", $year, selected( $selected_time, $year, false ), $year );
-
                 }
+                $selected = ( $selected_time == 'custom' ) ? 'selected' : '';
                 ?>
+                <option value="custom" <?php echo $selected; ?>><?php _e( 'Custom', 'erp' ); ?></option>
             </select>
-
+            <span id="custom-date-range"></span>
+            <?php if( $selected ) :?>
+                <span id="custom-input" style="float:left">
+                    <span>From </span><input name="start" class="erp-leave-date-field" type="text" value="<?php echo $date_range_start; ?>">&nbsp;<span>To </span><input name="end" class="erp-leave-date-field" type="text" value="<?php echo $date_range_end; ?>">
+                </span>
+            <?php endif ?>
             <select name="filter_designation" id="filter_designation">
                 <?php echo erp_hr_get_designation_dropdown( $selected_desingnation ); ?>
             </select>
@@ -177,8 +185,18 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $selected_department   = ( isset( $_GET['filter_department'] ) ) ? $_GET['filter_department'] : 0;
         $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? $_GET['filter_employment_type'] : '';
         $selected_time         = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : date( 'Y' );
+        $start_date            = $selected_time . '-01-01';
+        $end_date              = $selected_time . '-12-31';
 
-        $query = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->select( 'user_id' );
+        if ( isset( $_REQUEST['start'] ) ) {
+            $start_date = $_REQUEST['start'];
+        }
+
+        if ( isset( $_REQUEST['end'] ) ) {
+            $end_date = $_REQUEST['end'];
+        }
+
+        $query = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->select( 'user_id' )->orderBy( 'hiring_date', 'desc' );
 
         if ( $selected_department && '-1' != $selected_department ) {
             $query->where( 'department', intval( $selected_department ) );
@@ -195,10 +213,8 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $total_count = $query->count();
 
         $employees_obj = $query->skip( $offset )->take( $per_page )->get()->toArray();
-
         $employees = wp_list_pluck( $employees_obj, 'user_id' );
-        $reports   = erp_get_leave_report( $employees, $selected_time . '-01-01', $selected_time . '-12-31' );
-
+        $reports   = erp_get_leave_report( $employees, $start_date, $end_date );
         $this->reports = $reports;
         $this->items   = $employees;
         $this->set_pagination_args( array(

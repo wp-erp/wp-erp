@@ -1691,7 +1691,6 @@ function get_entitlement_financial_years() {
  */
 function erp_get_leave_report( array $employees, $start_date = null, $end_date = null ) {
     $year_dates = erp_get_financial_year_dates( date( 'Y-m-d' ) );
-
     if ( ! $start_date ) {
         $start_date = $year_dates['start'];
     }
@@ -1707,8 +1706,11 @@ function erp_get_leave_report( array $employees, $start_date = null, $end_date =
                                                    ->whereDate( 'end_date', '<=', $end_date );
                                              },
                                              'entitlements'   => function ( $q ) use ( $start_date, $end_date ) {
-                                                 $q->whereDate( 'from_date', '>=', $start_date )
-                                                   ->whereDate( 'to_date', '<=', $end_date )
+                                                $entitlement_start_date = date('Y', strtotime( $start_date ) ) . '-01-01';
+                                                $entitlement_end_date   = date('Y', strtotime( $end_date ) ) . '-12-31';
+
+                                                $q->whereDate( 'from_date', '>=', $entitlement_start_date )
+                                                   ->whereDate( 'to_date', '<=', $entitlement_end_date )
                                                    ->JoinWithPolicy();
                                              }
                                          ] )

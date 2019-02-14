@@ -127,10 +127,10 @@ function erp_hr_get_gender_count( $department = null ) {
     global $wpdb;
 
     if ( null == $department ) {
-        $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees" );
+        $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
 
     } else {
-        $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE department = $department" );
+        $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE department = $department AND status = 'active'" );
     }
 
     if ( $all_user_id ) {
@@ -173,7 +173,7 @@ function erp_hr_get_age_breakdown_data() {
 
     foreach( $departments as $department ) {
 
-        $emp_by_dept      = $employees->where( 'department', $department->id )->get();
+        $emp_by_dept      = $employees->where( [ 'department' => $department->id, 'status' => 'active' ] )->get();
         $emp_by_dept_data = get_employee_breakdown_by_age( $emp_by_dept );
 
         $tot_under18  += $emp_by_dept_data['_under_18'];

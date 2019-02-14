@@ -404,9 +404,9 @@ class Employees_Controller extends REST_Controller {
 
     /**
      * Upload employee photo
-     * 
+     *
      * @param  \WP_REST_Request $request
-     * @return array         
+     * @return array
      */
     public function upload_photo( \WP_REST_Request $request ) {
         $file = isset( $_FILES['image'] ) ? $_FILES['image'] : array();
@@ -418,10 +418,10 @@ class Employees_Controller extends REST_Controller {
         require_once( ABSPATH . 'wp-admin/includes/image.php' );
         require_once( ABSPATH . 'wp-admin/includes/file.php' );
         require_once( ABSPATH . 'wp-admin/includes/media.php' );
-        
+
         $attachment_id =  media_handle_upload( 'image', 0 );
 
-        $response = array( 
+        $response = array(
             'photo_id'  => $attachment_id
         );
         return $response ;
@@ -429,8 +429,8 @@ class Employees_Controller extends REST_Controller {
 
     /**
      * Update Photo
-     * 
-     * @param  \WP_REST_Request $request 
+     *
+     * @param  \WP_REST_Request $request
      * @return bool
      */
     public function update_photo( \WP_REST_Request $request ) {
@@ -439,7 +439,7 @@ class Employees_Controller extends REST_Controller {
 
         update_user_meta( $user_id, 'photo_id', $photo_id );
     }
-    
+
     /**
      * Get a collection of employees
      *
@@ -448,6 +448,7 @@ class Employees_Controller extends REST_Controller {
      * @return mixed|object|\WP_REST_Response
      */
     public function get_employees( \WP_REST_Request $request ) {
+
         $args = [
             'number'      => $request['per_page'],
             'offset'      => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -455,9 +456,9 @@ class Employees_Controller extends REST_Controller {
             'department'  => ( $request['department'] ) ? $request['department'] : '-1',
             'designation' => ( $request['designation'] ) ? $request['designation'] : '-1',
             'location'    => ( $request['location'] ) ? $request['location'] : '-1',
+            'type'        => ( $request['type'] ) ? $request['type'] : '-1',
             's'           => ( $request['s'] ) ? $request['s'] : '',
         ];
-
 
         $items = erp_hr_get_employees( $args );
 
@@ -1211,6 +1212,15 @@ class Employees_Controller extends REST_Controller {
                 'status'       => 0
             )
         );
+
+        if ( ! is_wp_error( $request_id ) ) {
+            // notification email
+            $emailer = wperp()->emailer->get_email( 'New_Leave_Request' );
+
+            if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
+                $emailer->trigger( $request_id );
+            }
+        }
 
         $response = rest_ensure_response( $request_id );
         $response->set_status( 201 );
