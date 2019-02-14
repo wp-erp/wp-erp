@@ -358,7 +358,7 @@ final class WeDevs_ERP {
         $page = substr( $page, 0, 3 );
 
         if ( $page === 'erp' ) {
-            $text = sprintf( __( 'If you like WPERP please leave us a <a href="%s" style="text-decoration:none">★★★★★</a> rating. A huge thank you from WPERP in advance!' ),
+            $text = sprintf( __( 'If you like WPERP please leave us a <a href="%s" target="_blank" style="text-decoration:none">★★★★★</a> rating. Thanking you from the team of WPERP in advance!' ),
                 __( 'https://wordpress.org/support/plugin/erp/reviews/?filter=5' ) );
         }
 
