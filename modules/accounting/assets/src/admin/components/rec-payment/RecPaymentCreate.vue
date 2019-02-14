@@ -13,6 +13,9 @@
 
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
+
+                <show-errors :error_msgs="form_errors" ></show-errors>
+
                 <form action="" class="wperp-form" method="post">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-3">
@@ -33,7 +36,7 @@
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
-                            <label>Deposit to</label>
+                            <label>Deposit to<span class="wperp-required-sign">*</span></label>
                             <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
                         </div>
                         <div class="wperp-col-sm-6">
@@ -41,7 +44,7 @@
                             <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                         <div class="wperp-col-sm-6 with-multiselect">
-                            <label>Payment Method</label>
+                            <label>Payment Method<span class="wperp-required-sign">*</span></label>
                             <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
                         </div>
 
@@ -125,6 +128,7 @@
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import CheckFields from 'admin/components/check/CheckFields.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: 'RecPaymentCreate',
@@ -138,7 +142,8 @@
             PrintPreview,
             SelectCustomers,
             MultiSelect,
-            CheckFields
+            CheckFields,
+            ShowErrors
         },
 
         created() {
@@ -160,6 +165,8 @@
                     payer_name: '',
                     check_no: ''
                 },
+
+                form_errors: [],
 
                 invoices: [],
                 attachments: [],
@@ -193,11 +200,6 @@
                 let customerId = this.basic_fields.customer.id,
                     idx = 0,
                     finalAmount = 0;
-
-                // for modal test. remove later
-                if ( undefined === customerId ) {
-                    customerId = 1;
-                }
 
                 HTTP.get(`/invoices/due/${customerId}`).then((response) => {
                     response.data.forEach(element => {
@@ -241,16 +243,9 @@
             },
 
             SubmitForPayment() {
+                this.validateForm();
 
-                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
-                    this.$swal({
-                        position: 'center',
-                        type: 'info',
-                        title: 'Please Select an Account',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-
+                if ( this.form_errors.length ) {
                     return;
                 }
 
@@ -285,13 +280,34 @@
                 });
             },
 
+            validateForm() {
+                if ( !this.basic_fields.customer.hasOwnProperty('id') ) {
+                    this.form_errors.push('Customer Name is required.');
+                }
+
+                if ( !this.basic_fields.trn_ref ) {
+                    this.form_errors.push('Transaction Reference is required.');
+                }
+
+                if ( !this.basic_fields.payment_date ) {
+                    this.form_errors.push('Transaction Date is required.');
+                }
+
+                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
+                    this.form_errors.push('Deposit Account is required.');
+                }
+
+                if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
+                    this.form_errors.push('Payment Method is required.');
+                }
+            },
+
             showPaymentModal() {
                 this.getDueInvoices();
             },
 
             resetData() {
                 Object.assign(this.$data, this.$options.data.call(this));
-                this.basic_fields.customer.id = '';
             },
 
             removeRow(index) {

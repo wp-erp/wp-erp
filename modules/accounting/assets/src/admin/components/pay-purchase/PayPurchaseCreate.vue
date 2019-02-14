@@ -13,6 +13,9 @@
 
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
+
+                <show-errors :error_msgs="form_errors" ></show-errors>
+
                 <form action="" class="wperp-form" method="post">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-3">
@@ -33,7 +36,7 @@
                             </div>
                         </div>
                         <div class="wperp-col-sm-3 with-multiselect">
-                            <label>Transaction From</label>
+                            <label>Transaction From<span class="wperp-required-sign">*</span></label>
                             <multi-select :placeholder="`Select Account`" v-model="basic_fields.deposit_to" :options="deposit_accts" />
                         </div>
                         <div class="wperp-col-sm-6">
@@ -41,7 +44,7 @@
                             <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                         <div class="wperp-col-sm-6 with-multiselect">
-                            <label>Payment Method</label>
+                            <label>Payment Method<span class="wperp-required-sign">*</span></label>
                             <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
                         </div>
 
@@ -52,7 +55,7 @@
             </div>
         </div>
 
-        <div class="wperp-table-responsive" v-if="pay_purchases.length">
+        <div class="wperp-table-responsive">
             <!-- Start .wperp-crm-table -->
             <div class="table-container">
                 <table class="wperp-table wperp-form-table">
@@ -111,10 +114,6 @@
                 </table>
             </div>
         </div>
-<!-- 
-        <template v-if="pay_bill_modal">
-            <pay-bill-modal :basic_fields="basic_fields" :pay_purchases="pay_purchases" :attachments="attachments" :finalTotalAmount="finalTotalAmount" :assets_url="acct_assets" />
-        </template> -->
 
     </div>
 </template>
@@ -123,11 +122,11 @@
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    // import PayBillModal from 'admin/components/pay-bill/PayBillModal.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import SelectVendors from 'admin/components/people/SelectVendors.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import CheckFields from 'admin/components/check/CheckFields.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: 'PayPurchaseCreate',
@@ -138,9 +137,9 @@
             HTTP,
             Datepicker,
             FileUpload,
-            // PayBillModal,
             SubmitButton,
-            CheckFields
+            CheckFields,
+            ShowErrors
         },
 
         data() {
@@ -165,13 +164,14 @@
                     check_no: ''
                 },
 
+                form_errors: [],
+
                 pay_methods: [],
                 deposit_accts: [],
                 pay_purchases: [],
                 attachments: [],
                 totalAmounts:[],
                 finalTotalAmount: 0,
-                // pay_bill_modal: false,
                 particulars: '',
                 isWorking: false,
                 acct_assets: erp_acct_var.acct_assets
@@ -203,7 +203,7 @@
                 this.basic_fields = {
                     vendor: '',
                     trn_ref: '',
-                    payment_date: erp_acct_var.current_date,
+                    payment_date: '',
                     deposit_to: '',
                     billing_address: '',
                     trn_by: { id: null, name: null }
@@ -213,7 +213,6 @@
                 this.attachments = [];
                 this.totalAmounts = [];
                 this.finalTotalAmount = 0;
-                // this.pay_bill_modal = false;
                 this.particulars = '';
                 this.isWorking = false;
             },
@@ -229,10 +228,6 @@
                     idx = 0,
                     finalAmount = 0;
 
-                // for modal test. remove later
-                if ( undefined === vendorId ) {
-                    vendorId = 1;
-                }
                 this.pay_purchases = [];
                 HTTP.get(`/purchases/due/${vendorId}`).then(response => {                    
                     response.data.forEach(element => {
@@ -287,15 +282,9 @@
                     element['line_total'] = parseFloat( this.totalAmounts[index] );
                 });
 
-                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
-                    this.$swal({
-                        position: 'center',
-                        type: 'info',
-                        title: 'Please Select an Account',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                this.validateForm();
 
+                if ( this.form_errors.length ) {
                     return;
                 }
 
@@ -336,9 +325,30 @@
                 });
             },
 
+            validateForm() {
+                if ( !this.basic_fields.vendor.hasOwnProperty('id') ) {
+                    this.form_errors.push('Vendor Name is required.');
+                }
+
+                if ( !this.basic_fields.trn_ref ) {
+                    this.form_errors.push('Transaction Reference is required.');
+                }
+
+                if ( !this.basic_fields.payment_date ) {
+                    this.form_errors.push('Transaction Date is required.');
+                }
+
+                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
+                    this.form_errors.push('Transaction Account is required.');
+                }
+
+                if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
+                    this.form_errors.push('Payment Method is required.');
+                }
+            },
+
             showPaymentModal() {
                 this.getDuePurchases();
-                // this.pay_bill_modal = true;
             },
 
             remove_item( index ) {

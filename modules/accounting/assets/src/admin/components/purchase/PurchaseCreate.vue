@@ -13,6 +13,9 @@
 
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
+
+                <show-errors :error_msgs="form_errors" ></show-errors>
+
                 <form action="#" class="wperp-form" method="post">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
@@ -104,6 +107,7 @@
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import PurchaseRow from 'admin/components/purchase/PurchaseRow.vue'
     import SelectVendors from 'admin/components/people/SelectVendors.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: 'PurchaseCreate',
@@ -114,17 +118,20 @@
             FileUpload,
             SubmitButton,
             PurchaseRow,
-            SelectVendors
+            SelectVendors,
+            ShowErrors
         },
 
         data() {
             return {
                 basic_fields: {
                     vendor: '',
-                    trans_date: erp_acct_var.current_date,
-                    due_date: erp_acct_var.current_date,
+                    trans_date: '',
+                    due_date: '',
                     billing_address: ''
                 },
+
+                form_errors: [],
 
                 products: [],
                 attachments: [],
@@ -225,19 +232,11 @@
             },
 
             SubmitForApproval() {
-                if ( this.basic_fields.vendor.length == 0 ) {
-                    this.$swal({
-                        position: 'center',
-                        type: 'error',
-                        title: 'Select a Vendor',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                this.validateForm();
 
+                if ( this.form_errors.length ) {
                     return;
                 }
-
-                this.isWorking = true;
 
                 HTTP.post('/purchases', {
                     vendor_id: this.basic_fields.vendor.id,
@@ -266,6 +265,24 @@
 
                 });
 
+            },
+
+            validateForm() {
+                if ( !this.basic_fields.vendor.hasOwnProperty('id') ) {
+                    this.form_errors.push('Vendor Name is required.');
+                }
+
+                if ( !this.basic_fields.trn_ref ) {
+                    this.form_errors.push('Transaction Reference is required.');
+                }
+
+                if ( !this.basic_fields.trans_date ) {
+                    this.form_errors.push('Transaction Date is required.');
+                }
+
+                if ( !this.basic_fields.due_date ) {
+                    this.form_errors.push('Due Date is required.');
+                }
             },
 
         }
