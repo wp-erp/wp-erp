@@ -205,32 +205,30 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_invoice( $request ) {
         $invoice_data = $this->prepare_item_for_database( $request );
 
-        $item_total = 0;
+        $item_total          = 0;
         $item_discount_total = 0;
-        $item_tax_total = 0;
-        $additional_fields = [];
+        $item_tax_total      = 0;
+        $additional_fields   = [];
 
         $items = $request['line_items'];
 
         foreach ($items as $key => $value) {
             $sub_total = $value['qty'] * $value['unit_price'];
 
-            $item_total += $sub_total;
-            $item_tax_total += $value['tax'];
-
-            if ( $value['discount'] ) {
-                $item_discount_total += ($sub_total * $value['discount']) / 100; // discount value from %
-            }
+            $item_total          += $sub_total;
+            $item_tax_total      += $value['tax'];
+            $item_discount_total += $value['discount'];
         }
 
         $invoice_data['billing_address'] = maybe_serialize( $request['billing_address'] );
-        $invoice_data['discount'] = $item_discount_total;
-        $invoice_data['tax'] = $item_tax_total;
-        $invoice_data['tax_percent'] = 0; // remove me please...
-        $invoice_data['amount'] = $item_total;
-        $invoice_data['attachments'] = maybe_serialize( $request['attachments'] );
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
+        $invoice_data['discount']        = $item_discount_total;
+        $invoice_data['discount_type']   = $request['discount_type'];
+        $invoice_data['tax_rate_id']     = $request['tax_rate_id'];
+        $invoice_data['tax']             = $item_tax_total;
+        $invoice_data['amount']          = $item_total;
+        $invoice_data['attachments']     = maybe_serialize( $request['attachments'] );
+        $additional_fields['namespace']  = $this->namespace;
+        $additional_fields['rest_base']  = $this->rest_base;
 
         $invoice_id = erp_acct_insert_invoice( $invoice_data );
 
@@ -259,35 +257,39 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         $invoice_data = $this->prepare_item_for_database( $request );
 
-        $item_total = []; $item_subtotal = []; $item_tax_total = []; $item_discount_total = []; $additional_fields = [];
+        $item_total          = 0;
+        $item_discount_total = 0;
+        $item_tax_total      = 0;
+        $additional_fields   = [];
 
         $items = $request['line_items'];
 
-        foreach ( $items as $key=>$item ) {
-            $item_subtotal[$key] = $item['qty'] * $item['unit_price'];
-            $item_tax_total[$key] = $item_subtotal[$key] * ($item['tax_percent'] / 100);
-            $item_discount_total[$key] = $item['discount'] * $item['qty'];
-            $item_total[$key] = $item_subtotal[$key] + $item_tax_total[$key] - $item_discount_total[$key];
+        foreach ($items as $key => $value) {
+            $sub_total = $value['qty'] * $value['unit_price'];
 
+            $item_total          += $sub_total;
+            $item_tax_total      += $value['tax'];
+            $item_discount_total += $value['discount'];
         }
 
         $invoice_data['billing_address'] = maybe_serialize( $request['billing_address'] );
-        $invoice_data['subtotal'] = array_sum( $item_subtotal );
-        $invoice_data['discount'] = array_sum( $item_tax_total );
-        $invoice_data['tax'] = array_sum( $item_discount_total );
-        $invoice_data['amount'] = array_sum( $item_total );
-        $invoice_data['attachments'] = maybe_serialize( $request['attachments'] );
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
+        $invoice_data['discount']        = $item_discount_total;
+        $invoice_data['discount_type']   = $request['discount_type'];
+        $invoice_data['tax_rate_id']     = $request['tax_rate_id'];
+        $invoice_data['tax']             = $item_tax_total;
+        $invoice_data['amount']          = $item_total;
+        $invoice_data['attachments']     = maybe_serialize( $request['attachments'] );
+        $additional_fields['namespace']  = $this->namespace;
+        $additional_fields['rest_base']  = $this->rest_base;
 
         $invoice_id = erp_acct_update_invoice( $invoice_data, $id );
 
         $invoice_data['id'] = $invoice_id;
 
-        $invoice_response = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
+        $invoice_data = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
 
-        $response = rest_ensure_response( $invoice_response );
-        $response->set_status( 200 );
+        $response = rest_ensure_response( $invoice_data );
+        $response->set_status( 201 );
 
         return $response;
     }
@@ -437,6 +439,12 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
+        }
+        if ( isset( $request['discount_type'] ) ) {
+            $prepared_item['discount_type'] = $request['discount_type'];
+        }
+        if ( isset( $request['tax_rate_id'] ) ) {
+            $prepared_item['tax_rate_id'] = $request['tax_rate_id'];
         }
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];

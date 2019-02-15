@@ -222,11 +222,17 @@
             getCustomerAddress() {
                 let customer_id = this.basic_fields.customer.id;
 
-                HTTP.get(`/customers/${customer_id}`).then((response) => {
-                    // add more info
-                    this.basic_fields.billing_address =
-                        `Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
-                        City: ${response.data.billing.city}, Country: ${response.data.billing.country}`;
+                if ( ! customer_id ) {
+                    this.basic_fields.billing_address = '';
+                    return;
+                }
+
+                HTTP.get(`/people/${customer_id}`).then(response => {
+                    let billing = response.data;
+
+                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                    this.basic_fields.billing_address = address;
                 });
             },
 

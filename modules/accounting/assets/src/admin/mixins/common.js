@@ -11,6 +11,16 @@ export default {
 
         getCurrencySign() {
             return '$';
+        },
+
+        showAlert(type, message) {
+            this.$swal({
+                position         : 'center',
+                type             : type,
+                title            : message,
+                showConfirmButton: false,
+                timer            : 1500
+            });
         }
     }
 }

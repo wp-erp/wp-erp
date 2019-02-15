@@ -836,6 +836,8 @@ Company'
                 `billing_address` varchar(255) DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,
                 `discount` decimal(10,2) DEFAULT 0,
+                `discount_type` varchar(255) DEFAULT NULL,
+                `tax_rate_id` int(11) DEFAULT NULL,
                 `tax` decimal(10,2) DEFAULT 0,
                 `estimate` boolean DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,

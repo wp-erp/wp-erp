@@ -184,9 +184,20 @@ export default new Router({
             component: BankAccounts
         },
         {
-            path: '/invoices/new',
-            name: 'InvoiceCreate',
-            component: InvoiceCreate
+            path: '/invoices',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: 'new',
+                    name: 'InvoiceCreate',
+                    component: InvoiceCreate,
+                },
+                {
+                    path: ':id/edit',
+                    name: 'InvoiceEdit',
+                    component: InvoiceCreate,
+                },
+            ]
         },
         {
             path: '/product_categories',
