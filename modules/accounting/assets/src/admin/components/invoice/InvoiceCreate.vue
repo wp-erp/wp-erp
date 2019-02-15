@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">New Invoice</h2>
+                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} Invoice</h2>
                 </div>
             </div>
         </div>
@@ -23,7 +23,7 @@
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label>Transaction Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.trans_date"></datepicker>
+                                <datepicker v-model="basic_fields.trn_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
@@ -108,7 +108,19 @@
                                     <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
                                 </td>
                             </tr>
-                            <tr class="add-attachment-row" >
+                            <tr>
+                                <td>
+                                    <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
+                                        <img :src="erp_acct_assets + '/images/file-thumb.png'">
+                                        <span class="remove-file" @click="removeFile(index)">&#10007;</span>
+
+                                        <div class="attachment-meta">
+                                            <h3>{{ getFileName(file) }}</h3>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="add-attachment-row">
                                 <td colspan="9" style="text-align: left;">
                                     <div class="attachment-container">
                                         <label class="col--attachement">Attachment</label>
@@ -120,7 +132,8 @@
                         <tfoot>
                             <tr>
                                 <td colspan="9" style="text-align: right;">
-                                    <combo-button :options="buttons" />
+                                    <combo-button v-if="editMode" :options="updateButtons" />
+                                    <combo-button v-else :options="createButtons" />
                                 </td>
                             </tr>
                         </tfoot>
@@ -165,9 +178,9 @@
         data() {
             return {
                 basic_fields: {
-                    customer: '',
-                    trans_date: erp_acct_var.current_date,
-                    due_date: erp_acct_var.current_date,
+                    customer       : '',
+                    trn_date       : '',
+                    due_date       : '',
                     billing_address: ''
                 },
 
@@ -176,23 +189,33 @@
                     {id: 1, name: 'Estimate'}
                 ],
 
-                buttons: [
+                createButtons: [
                     {id: 'save', text: 'Create Invoice'},
                     {id: 'send_create', text: 'Create and Send'},
-                    {id: 'save_new', text: 'Create and New'},
+                    {id: 'new_create', text: 'Create and New'},
                 ],
 
+                updateButtons: [
+                    {id: 'update', text: 'Update Invoice'},
+                    {id: 'send_update', text: 'Update and Send'},
+                    {id: 'new_update', text: 'Update and New'},
+                ],
+
+                editMode        : false,
+                voucherNo       : 0,
                 discountType    : 'discount-percent',
                 discount        : 0,
+                status          : 2,
                 taxRate         : null,
                 taxSummary      : null,
                 products        : [],
                 attachments     : [],
-                transactionLines: [{}, {}, {}],
+                transactionLines: [],
                 taxRates        : [],
                 taxTotalAmount  : 0,
                 finalTotalAmount: 0,
                 inv_type        : {id: 0, name: 'Invoice'},
+                erp_acct_assets : erp_acct_var.acct_assets,
                 isWorking       : false,
                 reset           : false,
                 actionType      : null,
@@ -228,8 +251,7 @@
         }),
 
         created() {
-            this.getProducts();
-            this.getTaxRates();
+            this.prepareDataLoad();
 
             this.$root.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
@@ -246,6 +268,76 @@
         },
 
         methods: {
+            async prepareDataLoad() {
+                /**
+                 * ----------------------------------------------
+                 * check if editing
+                 * -----------------------------------------------
+                 */
+                if ( this.$route.params.id ) {
+                    this.editMode = true;
+                    this.voucherNo = this.$route.params.id;
+
+                    // load products and taxes, before invoice load
+                    let [request1, request2] = await Promise.all([
+                        HTTP.get('/products'),
+                        HTTP.get('/taxes/summary')
+                    ]);
+                    let request3 = await HTTP.get(`/invoices/${this.$route.params.id}`);
+
+                    if ( ! request3.data.line_items.length ) {
+                        this.$swal({
+                            position         : 'center',
+                            type             : 'error',
+                            title            : 'Invoice does not exists!',
+                            showConfirmButton: false,
+                            timer            : 1500
+                        });
+
+                        return;
+                    }
+
+                    this.products = request1.data;
+                    this.taxRates = this.getUniqueTaxRates(request2.data);
+                    this.setDataForEdit( request3.data );
+
+                } else {
+                    /**
+                     * ----------------------------------------------
+                     * create a new invoice
+                     * -----------------------------------------------
+                     */
+                    this.getProducts();
+                    this.getTaxRates();
+
+                    this.basic_fields.trn_date = erp_acct_var.current_date;
+                    this.basic_fields.due_date = erp_acct_var.current_date;
+                    this.transactionLines.push({}, {}, {});
+                }
+            },
+
+            setDataForEdit(invoice) {                
+                this.basic_fields.customer        = { id: parseInt(invoice.customer_id), name: invoice.customer_name };
+                this.basic_fields.billing_address = invoice.billing_address;
+                this.basic_fields.trn_date        = invoice.trn_date;
+                this.basic_fields.due_date        = invoice.due_date;
+                this.discount                     = invoice.discount;
+                this.status                       = invoice.status;
+                this.transactionLines             = invoice.line_items;
+                this.taxTotalAmount               = invoice.tax;
+                this.finalTotalAmount             = invoice.debit;
+                this.attachments                  = invoice.attachments;
+
+                this.taxRate = { 
+                    id: parseInt(invoice.tax_rate_id),
+                    name: this.getTaxRateNameByID(invoice.tax_rate_id)
+                };
+
+                if ( '1' == invoice.estimate ) {
+                    this.inv_type = { id: 1, name: 'Estimate' };
+                }
+            },
+
             getProducts() {
                 HTTP.get('/products').then(response => {
                     this.products = response.data;
@@ -287,6 +379,15 @@
                 });
             },
 
+            getTaxRateNameByID(id) {
+                // Array.find()
+                let taxRate = this.taxRates.find( rate => {
+                    return rate.id == id;
+                } );
+                
+                return taxRate.name;
+            },
+
             getUniqueTaxRates( taxes ) {
                 return Array.from(new Set(taxes.map(tax => tax.tax_rate_id))).map(tax_rate_id => {
                     let tax = taxes.find(tax => tax.tax_rate_id === tax_rate_id);
@@ -309,9 +410,9 @@
             },
 
             updateFinalAmount() {
-                let taxAmount = 0;
+                let taxAmount     = 0;
                 let totalDiscount = 0;
-                let totalAmount = 0;
+                let totalAmount   = 0;
 
                 this.transactionLines.forEach(element => {
                     if ( element.qty ) {
@@ -325,7 +426,7 @@
 
                 let finalAmount = (totalAmount - totalDiscount) + taxAmount;
 
-                this.taxTotalAmount = taxAmount.toFixed(2);
+                this.taxTotalAmount   = taxAmount.toFixed(2);
                 this.finalTotalAmount = finalAmount.toFixed(2);
             },
 
@@ -334,65 +435,94 @@
 
                 this.transactionLines.forEach(line => {
                     lineItems.push({
-                        product_id: line.selectedProduct.id,
+                        product_id       : line.selectedProduct.id,
                         product_type_name: line.selectedProduct.product_type_name,
-                        agency_id: line.agencyId,
-                        qty: line.qty,
-                        unit_price: line.unitPrice,
-                        tax: line.taxAmount,
-                        discount: line.discount,
-                        item_total: line.amount
+                        agency_id        : line.agencyId,
+                        qty              : line.qty,
+                        unit_price       : line.unitPrice,
+                        tax              : line.taxAmount,
+                        tax_rate         : line.taxRate,
+                        discount         : line.discount,
+                        item_total       : line.amount
                     });
                 });
 
                 return lineItems;
             },
 
-            submitInvoiceForm() {
-                this.isWorking = true;
+            updateInvoice(requestData) {
+                HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
+                    showAlert('success', 'Invoice Updated!');
+                }).then(() => {
+                    this.isWorking = false;
+                    this.reset = true;
 
-                HTTP.post('/invoices', {
-                    customer_id: this.basic_fields.customer.id,
-                    date: this.basic_fields.trans_date,
-                    due_date: this.basic_fields.due_date,
-                    billing_address: this.basic_fields.billing_address,
-                    line_items: this.formatLineItems(),
-                    attachments: this.attachments,
-                    type: 'invoice',
-                    status: '1',
-                    estimate: this.inv_type.id,
-                }).then(res => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Invoice Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    if ('update' == this.actionType) {
+                        this.$router.push({name: 'Sales'});
+                    } else if ('new_update' == this.actionType) {
+                        this.resetFields();
+                    }
+                });
+            },
+
+            createInvoice(requestData) {
+                HTTP.post('/invoices', requestData).then(res => {
+                    showAlert('success', 'Invoice Created!');
                 }).then(() => {
                     this.isWorking = false;
                     this.reset = true;
 
                     if ('save' == this.actionType) {
                         this.$router.push({name: 'Sales'});
-                    } else if ('save_create' == this.actionType) {
+                    } else if ('new_create' == this.actionType) {
                         this.resetFields();
                     }
-
                 });
             },
 
+            submitInvoiceForm() {                
+                this.isWorking = true;
+
+                let requestData = {
+                    customer_id    : this.basic_fields.customer.id,
+                    date           : this.basic_fields.trn_date,
+                    due_date       : this.basic_fields.due_date,
+                    billing_address: this.basic_fields.billing_address,
+                    discount_type  : this.discountType,
+                    tax_rate_id    : this.taxRates.id,
+                    line_items     : this.formatLineItems(),
+                    attachments    : this.attachments,
+                    type           : 'invoice',
+                    status         : this.status,
+                    estimate       : this.inv_type.id
+                };
+
+                if ( this.editMode ) {
+                    this.updateInvoice(requestData);
+                } else {
+                    this.createInvoice(requestData);
+                }
+            },
+
+            getFileName(path) {
+                return path.replace(/^.*[\\\/]/, '');
+            },
+
+            removeFile(index) {
+                this.$delete(this.attachments, index);
+            },
+
             resetFields() {
-                this.basic_fields.customer = '';
-                this.basic_fields.trans_date = '';
-                this.basic_fields.due_date = '';
+                this.basic_fields.customer        = '';
+                this.basic_fields.trn_date        = erp_acct_var.current_date;
+                this.basic_fields.due_date        = erp_acct_var.current_date;
                 this.basic_fields.billing_address = '';
-                this.attachments = [];
-                this.transactionLines = [{}];
-                this.finalTotalAmount = 0;
-                this.isWorking = false;
-                this.reset = false;
-                this.actionType = null;
+                this.attachments                  = [];
+                this.transactionLines             = [];
+                this.finalTotalAmount             = 0;
+                this.isWorking                    = false;
+                this.reset                        = false;
+                this.actionType                   = null;
             }
         }
 
@@ -419,6 +549,40 @@
         .tax-rates {
             width: 235px;
             float: right;
+        }
+    }
+
+    .attachment-item {
+        box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.3);
+        padding: 3px;
+        position: relative;
+        height: 58px;
+        margin: 10px 0;
+
+        .remove-file {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 13px;
+            color: #fff;
+            cursor: pointer;
+            background: #f44336;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+        }
+
+        img {
+            float: left;
+        }
+    }
+
+    .attachment-meta {
+        h3 {
+            margin-left: 50px;
+            text-align: left;
+            line-height: 2;
         }
     }
 </style>

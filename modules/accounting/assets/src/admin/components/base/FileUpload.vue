@@ -35,9 +35,19 @@
         },
 
         props: {
+            value: {
+                type: Array
+            },
+
             url: {
                 type: String,
                 required: true
+            }
+        },
+
+        watch: {
+            value(newVal) {
+                this.uploadedFiles = this.value;
             }
         },
 

@@ -22,7 +22,7 @@
                         <div class="wperp-col-sm-6 wperp-col-xs-12" >
                             <!-- Start .invoice-own-section -->
                             <div class="invoice-own-section wperp-panel wperp-panel-default">
-                                <div class="wperp-panel-heading wperp-bg-white"><h4>Acounts Receivable</h4></div>
+                                <div class="wperp-panel-heading wperp-bg-white"><h4>Invoice payable to you</h4></div>
                                 <div class="wperp-panel-body pb-0">
                                     <ul class="wperp-list-unstyled list-table-content" v-if="Object.values(to_receive).length">
                                         <li>
@@ -49,7 +49,7 @@
                         <div class="wperp-col-sm-6 wperp-col-xs-12 ">
                             <!-- Start .invoice-own-section -->
                             <div class="invoice-own-section wperp-panel wperp-panel-default">
-                                <div class="wperp-panel-heading wperp-bg-white"><h4>Accounts Payable</h4></div>
+                                <div class="wperp-panel-heading wperp-bg-white"><h4>Bills you need to pay</h4></div>
                                 <div class="wperp-panel-body pb-0">
                                     <ul class="wperp-list-unstyled list-table-content"  v-if="Object.values(to_pay).length">
                                         <li>

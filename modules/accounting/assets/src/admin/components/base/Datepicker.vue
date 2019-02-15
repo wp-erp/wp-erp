@@ -30,7 +30,11 @@
             Calendar
         },
 
-        props: { defaultDate : String },
+        props: {
+            value: {
+                type: String
+            }
+        },
 
         data() {
             return {
@@ -44,8 +48,19 @@
             }
         },
 
+        watch: {
+            value(newVal) {
+                if ( ! newVal ) {
+                    this.selectedDate = this.getCurrentDate();
+                } else {
+                    this.selectedDate = newVal;
+                }
+
+                this.$emit('input', this.selectedDate);
+            }
+        },
+
         created() {
-            this.selectedDate = this.getCurrentDate();
             this.$emit('input', this.selectedDate);
         },
 

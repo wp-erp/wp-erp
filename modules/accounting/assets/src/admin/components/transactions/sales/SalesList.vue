@@ -96,6 +96,7 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions : [
+                    { key: 'edit', label: 'Edit' },
                     { key: 'trash', label: 'Delete' }
                 ]
             };
@@ -148,7 +149,6 @@
             },
 
             onActionClick(action, row, index) {
-
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
@@ -159,7 +159,10 @@
                         break;
 
                     case 'edit':
-                        //TODO
+                        if ( 'sales_invoice' == row.type ) {
+                            this.$router.push({ name: 'InvoiceEdit', params: { id: row.id } })
+                        }
+                        
                         break;
 
                     default :
