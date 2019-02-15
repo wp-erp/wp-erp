@@ -24,13 +24,13 @@
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label>Transaction Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.trans_date" :defaultDate="basic_fields.trans_date"></datepicker>
+                                <datepicker v-model="basic_fields.trans_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label>Due Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.due_date" :defaultDate="basic_fields.trans_date"></datepicker>
+                                <datepicker v-model="basic_fields.due_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-xs-12">

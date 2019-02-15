@@ -36,7 +36,7 @@
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                 <label for="transfer_date">Transfer Date</label>
-                                <datepicker id="transfer_date" name="transfer_date" v-model="transferdate" :defaultDate="transferdate"></datepicker>
+                                <datepicker id="transfer_date" name="transfer_date" v-model="transferdate"></datepicker>
                             </div>
                             <div class="wperp-col-xs-12 wperp-form-group">
                                 <label for="transfer_memo">Memo</label>

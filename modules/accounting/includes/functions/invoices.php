@@ -75,6 +75,8 @@ function erp_acct_get_invoice( $invoice_no ) {
     invoice.billing_address,
     invoice.amount,
     invoice.discount,
+    invoice.discount_type,
+    invoice.tax_rate_id,
     invoice.tax,
     invoice.estimate,
     invoice.attachments,
@@ -144,7 +146,7 @@ function erp_acct_insert_invoice( $data ) {
     global $wpdb;
 
     $created_by = get_current_user_id();
-    $data['created_at'] = date("Y-m-d H:i:s");
+    $data['created_at'] = date('Y-m-d H:i:s');
     $data['created_by'] = $created_by;
 
     try {
@@ -172,6 +174,8 @@ function erp_acct_insert_invoice( $data ) {
             'billing_address' => $invoice_data['billing_address'],
             'amount'          => $invoice_data['amount'],
             'discount'        => $invoice_data['discount'],
+            'discount_type'   => $invoice_data['discount_type'],
+            'tax_rate_id'     => $invoice_data['tax_rate_id'],
             'tax'             => $invoice_data['tax'],
             'estimate'        => $invoice_data['estimate'],
             'attachments'     => $invoice_data['attachments'],
@@ -180,7 +184,7 @@ function erp_acct_insert_invoice( $data ) {
             'created_at'      => $invoice_data['created_at'],
             'created_by'      => $invoice_data['created_by'],
             'updated_at'      => $invoice_data['updated_at'],
-            'updated_by'      => $invoice_data['updated_by'],
+            'updated_by'      => $invoice_data['updated_by']
         ) );
 
         $invoice_id = $wpdb->insert_id;
@@ -195,7 +199,7 @@ function erp_acct_insert_invoice( $data ) {
                 'product_id'  => $item['product_id'],
                 'qty'         => $item['qty'],
                 'unit_price'  => $item['unit_price'],
-                'discount'    => ($sub_total * $item['discount']) / 100, // discount value from %
+                'discount'    => $item['discount'],
                 'tax'         => $item['tax'],
                 'tax_percent' => $item['tax_rate'],
                 'item_total'  => $sub_total,
@@ -259,9 +263,12 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
 
+        // remove prev data...
+
         $invoice_data = erp_acct_get_formatted_invoice_data( $data, $invoice_no );
 
-        $wpdb->update( $wpdb->prefix . 'erp_acct_invoices', array(
+        $wpdb->update( $wpdb->prefix . 'erp_acct_invoices', [
+            'voucher_no'      => $invoice_data['voucher_no'],
             'customer_id'     => $invoice_data['customer_id'],
             'customer_name'   => $invoice_data['customer_name'],
             'trn_date'        => $invoice_data['trn_date'],
@@ -269,6 +276,8 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
             'billing_address' => $invoice_data['billing_address'],
             'amount'          => $invoice_data['amount'],
             'discount'        => $invoice_data['discount'],
+            'discount_type'   => $invoice_data['discount_type'],
+            'tax_rate_id'     => $invoice_data['tax_rate_id'],
             'tax'             => $invoice_data['tax'],
             'estimate'        => $invoice_data['estimate'],
             'attachments'     => $invoice_data['attachments'],
@@ -277,10 +286,8 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
             'created_at'      => $invoice_data['created_at'],
             'created_by'      => $invoice_data['created_by'],
             'updated_at'      => $invoice_data['updated_at'],
-            'updated_by'      => $invoice_data['updated_by'],
-        ), array(
-            'voucher_no' => $invoice_no,
-        ) );
+            'updated_by'      => $invoice_data['updated_by']
+        ], [ 'voucher_no' => $invoice_no, ] );
 
         $items = $invoice_data['line_items'];
 
@@ -349,6 +356,8 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['billing_address'] = isset( $data['billing_address'] ) ? maybe_serialize( $data['billing_address'] ) : '';
     $invoice_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
     $invoice_data['discount'] = isset( $data['discount'] ) ? $data['discount'] : 0;
+    $invoice_data['discount_type'] = isset( $data['discount_type'] ) ? $data['discount_type'] : 0;
+    $invoice_data['tax_rate_id'] = isset( $data['tax_rate_id'] ) ? $data['tax_rate_id'] : 0;
     $invoice_data['line_items'] = isset( $data['line_items'] ) ? $data['line_items'] : array();
     $invoice_data['trn_by'] = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
     $invoice_data['tax'] = isset( $data['tax'] ) ? $data['tax'] : 0;
