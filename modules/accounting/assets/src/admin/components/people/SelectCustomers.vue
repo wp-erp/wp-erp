@@ -24,6 +24,11 @@
         },
 
         props: {
+            value: {
+                type: [String, Object, Array],
+                default: ''
+            },
+
             reset: {
                 type: Boolean,
                 default: false
@@ -32,8 +37,22 @@
 
         data() {
             return {
-                selected: [],
+                selected: null,
                 showModal: false
+            }
+        },
+
+        watch: {
+            value(newVal) {
+                this.selected = newVal;
+            },
+
+            selected() {
+                this.$emit('input', this.selected);
+            },
+
+            reset() {
+                this.selected = [];
             }
         },
 
@@ -41,7 +60,7 @@
             options: state => state.sales.customers
         }),
 
-        created() {
+        created() {            
             this.$store.dispatch('sales/fetchCustomers');
 
             this.$root.$on( 'options-query', query => {
@@ -58,16 +77,6 @@
             this.$root.$on( 'peopleUpdate', () => {
                 this.showModal = false;
             } );
-        },
-
-        watch: {
-            selected() {
-                this.$emit('input', this.selected);
-            },
-
-            reset() {
-                this.selected = [];
-            }
         },
 
         methods: {

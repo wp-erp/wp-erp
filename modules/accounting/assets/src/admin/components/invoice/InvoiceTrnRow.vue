@@ -61,9 +61,9 @@
 
         data() {
             return {
-                taxRate: 0,
+                taxRate  : 0,
                 taxAmount: 0,
-                taxCatID: 0
+                taxCatID : 0
             }
         },
 
@@ -73,10 +73,8 @@
             },
             
             taxRateID() {
-                // if ( this.line.qty ) {
-                    this.getTaxRate();
-                    this.respondAtChange();
-                // }
+                this.getTaxRate();
+                this.respondAtChange();
             },
 
             discount() {
@@ -89,12 +87,28 @@
         },
 
         computed: mapState({
-            taxRateID: state => state.sales.taxRateID,
-            discount: state => state.sales.discount,
+            taxRateID         : state => state.sales.taxRateID,
+            discount          : state => state.sales.discount,
             invoiceTotalAmount: state => state.sales.invoiceTotalAmount
         }),
 
+        created() {
+            // check if editing
+            if ( this.$route.params.id ) {
+                this.prepareRowEdit(this.line);
+            }
+        },
+
         methods: {
+            prepareRowEdit(row) {
+                // format invoice data which comes from database, to mactch with line items
+                row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
+                row.unitPrice       = parseFloat(row.cost_price);
+                row.applyTax        = true;
+                row.taxAmount       = row.tax;
+                row.amount          = row.line_total;
+            },
+
             respondAtChange() {
                 this.calculateTax();
                 this.calculateAmount();
@@ -102,15 +116,15 @@
             },
 
             getAmount() {
-                // Reset Amount
+                // lots of reset
                 if ( ! this.line.qty ) {
                     this.line.qty = 0;
                 }
 
                 if ( ! this.line.qty || ! this.line.unitPrice ) {                    
-                    this.line.discount = 0;
+                    this.line.discount  = 0;
                     this.line.taxAmount = 0;
-                    this.line.amount = 0;
+                    this.line.amount    = 0;
 
                     return false;
                 }
@@ -138,12 +152,14 @@
 
                 if (taxInfo) {
                     this.taxRate = parseFloat(taxInfo.tax_rate);
+                    this.line.agencyId = taxInfo.agency_id;
                 }
+
+                this.line.taxRate = this.taxRate;
             },
 
             calculateDiscount() {
                 let amount = this.getAmount();
-
                 if ( ! amount ) return;
 
                 let discount = (this.discount * amount) / this.invoiceTotalAmount;
@@ -153,7 +169,6 @@
 
             calculateTax() {
                 let amount = this.getAmount();
-
                 if ( ! amount ) return;
 
                 let taxAmount = (amount * this.taxRate) / 100;
@@ -168,14 +183,13 @@
 
             calculateAmount() {
                 let amount = this.getAmount();
-
                 if ( ! amount ) return;
 
                 this.line.amount = amount;
-                
+
                 // Send amount to parent for total calculation
                 this.$root.$emit('total-updated', amount);
-                this.$forceUpdate();
+                this.$forceUpdate(); // why? should use computed? or vue.set()?
             },
 
             setProductInfo() {                

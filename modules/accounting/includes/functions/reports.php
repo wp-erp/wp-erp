@@ -49,11 +49,11 @@ function erp_acct_get_trial_balance() {
     // All DB results are inside `rows` key
     $results['rows'] = $wpdb->get_results($sql, ARRAY_A);
     $results['rows'][] = [
-        'name' => 'Account Payable',
+        'name' => 'Accounts Payable',
         'balance' => erp_acct_get_account_payable()
     ];
     $results['rows'][] = [
-        'name' => 'Account Receivable',
+        'name' => 'Accounts Receivable',
         'balance' => erp_acct_get_account_receivable()
     ];
 
