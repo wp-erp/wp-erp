@@ -577,7 +577,7 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
     $invoice_act_details = "{$wpdb->prefix}erp_acct_invoice_account_details";
     $items = $args['count'] ? " COUNT( id ) as total_number " : " id, voucher_no, due_date, (amount + tax - discount) as amount, invs.due as due ";
 
-    $query = $wpdb->prepare( "SELECT $items FROM $invoices as invoice LEFT JOIN
+    $query = $wpdb->prepare( "SELECT $items FROM $invoices as invoice INNER JOIN
                                 (
                                     SELECT invoice_no, SUM( ia.debit - ia.credit) as due
                                     FROM $invoice_act_details as ia
