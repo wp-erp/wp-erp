@@ -1,30 +1,22 @@
 <template>
-    <div class="modal-dialog">
-        <div class="modal">
-            <div class="modal-content">
-                <section :class="['modal-main', { 'has-footer': footer }]">
-                    <header class="modal-header">
-                        <slot name="header">
-                            <h1>{{ title }}</h1>
-                        </slot>
-
-                        <button class="modal-close modal-close-link dashicons dashicons-no-alt"
-                                @click="$emit('close')">
-                            <span class="screen-reader-text">{{ 'Close modal panel' }}</span>
-                        </button>
-                    </header>
-                    <div class="modal-body">
-                        <slot name="body"/>
-                    </div>
-                    <footer v-if="footer" class="modal-footer">
-                        <div class="inner">
-                            <slot name="footer"/>
-                        </div>
-                    </footer>
-                </section>
+    <div :class="['wperp-modal', 'wperp-modal-open', hasForm ? 'wperp-has-form' : ''] ">
+        <div class="wperp-modal-dialog">
+            <div class="wperp-modal-content">
+                <div class="wperp-modal-header">
+                    <slot v-if="header" name="header">
+                        <h3>{{ title }}</h3>
+                    </slot>
+                    <span @click="$emit('close')" class="modal-close"><i class="flaticon-close"></i></span>
+                </div>
+                <div class="wperp-modal-body">
+                    <slot name="body"/>
+                </div>
+                <div v-if="footer" class="wperp-modal-footer">
+                    <slot name="footer"/>
+                </div>
             </div>
         </div>
-        <div class="modal-backdrop"/>
+        <!-- <div class="modal-backdrop"></div> -->
     </div>
 </template>
 
@@ -34,22 +26,37 @@ export default {
     name: 'Modal',
 
     props: {
+        header: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+
         footer: {
             type: Boolean,
             required: false,
-            default: true,
+            default: false,
         },
 
         title: {
             type: String,
-            required: true,
+            required: false,
             default: '',
         },
+
+        hasForm: {
+            type: Boolean,
+            required: false,
+            default: false
+        }
+
+
     },
 
     data() {
         return {};
     },
+
 };
 </script>
 
