@@ -8,8 +8,8 @@
                         <div class="wperp-modal-header">
                             <h3 v-if="!people">{{ title }}</h3>
                             <h3 v-else>Update {{ title }}</h3>
-                            <!-- <span class="modal-close">
-                                <i class="flaticon-close" @click="$parent.$emit('modal-close')"></i></span> -->
+                            <span class="modal-close">
+                                <i class="flaticon-close" @click="$emit('close')"></i></span>
                         </div>
                         <ul class="errors" v-if="error_message.length">
                             <li v-for="(error, index) in error_message" :key="index">* {{ error }}</li>
@@ -101,7 +101,8 @@
                                 <div class="form-check">
                                     <label class="form-check-label mb-0" for="show_more">
                                         <input class="form-check-input" name="show_more" id="show_more" type="checkbox" @click="showDetails">
-                                        <span class="form-check-sign"></span> <span class="label-text">Show More</span>
+                                        <span class="form-check-sign"></span> 
+                                        <span class="field-label">Show More</span>
                                     </label>
                                 </div>
 

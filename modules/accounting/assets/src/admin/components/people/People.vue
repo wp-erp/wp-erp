@@ -4,7 +4,7 @@
             <span>{{ pageTitle }}</span>
             <a href="" id="erp-customer-new" @click.prevent="showModal = true">+ Add New {{ buttonTitle }}</a>
         </h2>
-        <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle"></people-modal>
+        <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false"></people-modal>
         <list-table
             tableClass="wperp-table table-striped table-dark"
             action-column="actions"
