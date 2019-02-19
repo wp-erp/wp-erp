@@ -177,7 +177,7 @@ class Employee_List_Table extends \WP_List_Table {
         if ( $data_hard ) {
             $actions['restore'] = sprintf( '<a href="%s" class="submitrestore" data-id="%d" title="%s">%s</a>', $delete_url, $employee->get_user_id(),  __( 'Restore this item', 'erp' ), __( 'Restore', 'erp' ) );
         }
-
+        $actions = apply_filters( 'erp_employee_row_actions', $actions, $employee->get_user_id() );
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $employee->get_full_name(), $this->row_actions( $actions ), erp_hr_url_single_employee( $employee->get_user_id() ), $employee->get_avatar() );
     }
 
