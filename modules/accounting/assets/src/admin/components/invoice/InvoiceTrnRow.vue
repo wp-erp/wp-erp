@@ -96,17 +96,19 @@
             // check if editing
             if ( this.$route.params.id ) {
                 this.prepareRowEdit(this.line);
+                this.getTaxRate();
             }
         },
 
         methods: {
-            prepareRowEdit(row) {
+            prepareRowEdit(row) {                
                 // format invoice data which comes from database, to mactch with line items
                 row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
-                row.unitPrice       = parseFloat(row.cost_price);
-                row.applyTax        = true;
-                row.taxAmount       = row.tax;
-                row.amount          = row.line_total;
+                row.taxCatID  = row.tax_cat_id;
+                row.unitPrice = parseFloat(row.cost_price);
+                row.applyTax  = true;
+                row.taxAmount = row.tax;
+                row.amount    = row.line_total;
             },
 
             respondAtChange() {
@@ -121,7 +123,7 @@
                     this.line.qty = 0;
                 }
 
-                if ( ! this.line.qty || ! this.line.unitPrice ) {                    
+                if ( ! this.line.qty || ! this.line.unitPrice ) {
                     this.line.discount  = 0;
                     this.line.taxAmount = 0;
                     this.line.amount    = 0;
@@ -192,7 +194,7 @@
                 this.$forceUpdate(); // why? should use computed? or vue.set()?
             },
 
-            setProductInfo() {                
+            setProductInfo() {
                 let product_id = this.line.selectedProduct.id;
 
                 if ( ! product_id ) return;
@@ -202,11 +204,11 @@
                     return element.id == product_id;
                 });
 
-                this.line.qty = 1;
-                this.line.taxCatID = this.line.selectedProduct.tax_cat_id;
-                this.line.applyTax = true;
-                this.line.unitPrice = parseFloat(product.sale_price);
-                this.line.product_type_name = this.line.selectedProduct.product_type_name;
+                this.line.qty               = 1;
+                this.line.taxCatID          = product.tax_cat_id;
+                this.line.applyTax          = true;
+                this.line.unitPrice         = parseFloat(product.sale_price);
+                this.line.product_type_name = product.product_type_name;
 
                 this.getTaxRate();
                 this.respondAtChange();

@@ -34,7 +34,7 @@
                         </div>
                         <div class="wperp-col-sm-6">
                             <label>Billing Address</label>
-                            <textarea v-model="basic_fields.billing_address" rows="2" class="wperp-form-field" placeholder="Type here"></textarea>
+                            <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                         <div class="wperp-col-sm-6 with-multiselect">
                             <label>Type</label>
@@ -47,7 +47,7 @@
         </div>
 
             <div class="wperp-table-responsive">
-                <!-- Start .wperp-crm-table -->
+                <!-- Start Invoice Items Table -->
                 <div class="table-container">
                     <table class="wperp-table wperp-form-table">
                         <thead>
@@ -60,7 +60,7 @@
                                 <th scope="col" class="col--actions"></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="null != taxSummary">
                             <invoice-trn-row
                                 :line="line"
                                 :products="products"
@@ -205,7 +205,7 @@
                 voucherNo       : 0,
                 discountType    : 'discount-percent',
                 discount        : 0,
-                status          : 2,
+                status          : 'awaiting_approval',
                 taxRate         : null,
                 taxSummary      : null,
                 products        : [],
@@ -233,7 +233,7 @@
                 this.$store.dispatch('sales/setTaxRateID', newVal.id);
             },
 
-            discount() {                
+            discount() {
                 this.discountChanged();
             },
 
@@ -241,7 +241,7 @@
                 this.discountChanged();
             },
 
-            invoiceTotalAmount() {                
+            invoiceTotalAmount() {
                 this.discountChanged();
             }
         },
@@ -278,7 +278,12 @@
                     this.editMode = true;
                     this.voucherNo = this.$route.params.id;
 
-                    // load products and taxes, before invoice load
+                    /**
+                     * Duplicates of
+                     *? this.getProducts()
+                     *? this.getTaxRates()
+                     * load products and taxes, before invoice load
+                     */
                     let [request1, request2] = await Promise.all([
                         HTTP.get('/products'),
                         HTTP.get('/taxes/summary')
@@ -286,19 +291,18 @@
                     let request3 = await HTTP.get(`/invoices/${this.$route.params.id}`);
 
                     if ( ! request3.data.line_items.length ) {
-                        this.$swal({
-                            position         : 'center',
-                            type             : 'error',
-                            title            : 'Invoice does not exists!',
-                            showConfirmButton: false,
-                            timer            : 1500
-                        });
-
+                        this.showAlert('error', 'Invoice does not exists!');
                         return;
                     }
 
-                    this.products = request1.data;
-                    this.taxRates = this.getUniqueTaxRates(request2.data);
+                    if ( 'awaiting_approval' != request3.data.status ) {
+                        this.showAlert('error', 'Can\'t edit');
+                        return;
+                    }
+
+                    this.products   = request1.data;
+                    this.taxSummary = request2.data;
+                    this.taxRates   = this.getUniqueTaxRates(request2.data);
                     this.setDataForEdit( request3.data );
 
                 } else {
@@ -316,19 +320,24 @@
                 }
             },
 
-            setDataForEdit(invoice) {                
+            setDataForEdit(invoice) {
                 this.basic_fields.customer        = { id: parseInt(invoice.customer_id), name: invoice.customer_name };
                 this.basic_fields.billing_address = invoice.billing_address;
                 this.basic_fields.trn_date        = invoice.trn_date;
                 this.basic_fields.due_date        = invoice.due_date;
-                this.discount                     = invoice.discount;
                 this.status                       = invoice.status;
                 this.transactionLines             = invoice.line_items;
                 this.taxTotalAmount               = invoice.tax;
                 this.finalTotalAmount             = invoice.debit;
                 this.attachments                  = invoice.attachments;
 
-                this.taxRate = { 
+                if ( 'discount-percent' == invoice.discount_type ) {
+                    this.discount = ( parseFloat(invoice.discount) * 100 ) / parseFloat(invoice.amount);
+                } else {
+                    this.discount = invoice.discount;
+                }
+
+                this.taxRate = {
                     id: parseInt(invoice.tax_rate_id),
                     name: this.getTaxRateNameByID(invoice.tax_rate_id)
                 };
@@ -362,7 +371,7 @@
             },
 
             discountChanged() {
-                let discount = this.discount;                
+                let discount = this.discount;
 
                 if ( 'discount-percent' === this.discountType ) {
                     discount = ( this.invoiceTotalAmount * discount ) / 100;
@@ -384,7 +393,7 @@
                 let taxRate = this.taxRates.find( rate => {
                     return rate.id == id;
                 } );
-                
+
                 return taxRate.name;
             },
 
@@ -419,7 +428,7 @@
                         taxAmount     += parseFloat(element.taxAmount);
                         totalDiscount += parseFloat(element.discount);
                         totalAmount   += parseFloat(element.amount);
-                    } 
+                    }
                 });
 
                 this.$store.dispatch('sales/setInvoiceTotalAmount', totalAmount);
@@ -452,7 +461,7 @@
 
             updateInvoice(requestData) {
                 HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
-                    showAlert('success', 'Invoice Updated!');
+                    this.showAlert('success', 'Invoice Updated!');
                 }).then(() => {
                     this.isWorking = false;
                     this.reset = true;
@@ -467,7 +476,7 @@
 
             createInvoice(requestData) {
                 HTTP.post('/invoices', requestData).then(res => {
-                    showAlert('success', 'Invoice Created!');
+                    this.showAlert('success', 'Invoice Created!');
                 }).then(() => {
                     this.isWorking = false;
                     this.reset = true;
@@ -480,7 +489,7 @@
                 });
             },
 
-            submitInvoiceForm() {                
+            submitInvoiceForm() {
                 this.isWorking = true;
 
                 let requestData = {
@@ -489,7 +498,7 @@
                     due_date       : this.basic_fields.due_date,
                     billing_address: this.basic_fields.billing_address,
                     discount_type  : this.discountType,
-                    tax_rate_id    : this.taxRates.id,
+                    tax_rate_id    : this.taxRate.id,
                     line_items     : this.formatLineItems(),
                     attachments    : this.attachments,
                     type           : 'invoice',
@@ -502,10 +511,6 @@
                 } else {
                     this.createInvoice(requestData);
                 }
-            },
-
-            getFileName(path) {
-                return path.replace(/^.*[\\\/]/, '');
             },
 
             removeFile(index) {

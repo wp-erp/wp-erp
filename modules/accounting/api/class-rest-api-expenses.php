@@ -397,18 +397,20 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'              => (int) $item->id,
-            'people_id'       => (int) $item->people_id,
-            'date'            => $item->trn_date,
-            'address'         => $item->billing_address,
-            'bill_details'    => $item->bill_details,
-            'total'           => (int) $item->amount,
-            'ref'             => isset( $item->ref ) ? $item->ref : $item->check_no,
-            'remarks'         => $item->particulars,
-            'status'          => $item->status,
-            'attachments'     => maybe_unserialize( $item->attachments ),
-            'trn_by'          => $item->trn_by,
-            'deposit_to'      => $item->trn_by_ledger_id
+            'id'           => (int) $item->id,
+            'people_id'    => (int) $item->people_id,
+            'people_name'  => $item->people_name,
+            'date'         => $item->trn_date,
+            'address'      => $item->address,
+            'bill_details' => $item->bill_details,
+            'total'        => (int) $item->amount,
+            'ref'          => isset( $item->ref ) ? $item->ref : $item->check_no,
+            'remarks'      => $item->particulars,
+            'status'       => $item->status,
+            'attachments'  => maybe_unserialize( $item->attachments ),
+            'particulars'  => $item->particulars,
+            'trn_by'       => $item->trn_by,
+            'deposit_to'   => $item->trn_by_ledger_id
         ];
 
         $data = array_merge( $data, $additional_fields );

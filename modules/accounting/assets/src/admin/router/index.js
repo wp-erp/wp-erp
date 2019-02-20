@@ -263,6 +263,11 @@ export default new Router({
                     name: 'PurchaseSingle',
                     component: PurchaseSingle,
                 },
+                {
+                    path: ':id/edit',
+                    name: 'PurchaseEdit',
+                    component: PurchaseCreate,
+                },
             ]
         },
         {
@@ -427,6 +432,11 @@ export default new Router({
                     path: ':id',
                     name: 'ExpenseSingle',
                     component: ExpenseSingle,
+                },
+                {
+                    path: ':id/edit',
+                    name: 'ExpenseEdit',
+                    component: ExpenseCreate,
                 },
             ]
         },

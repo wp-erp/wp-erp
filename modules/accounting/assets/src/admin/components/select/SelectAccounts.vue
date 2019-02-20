@@ -1,22 +1,52 @@
 <template>
     <div class="with-multiselect">
-        <multi-select :placeholder="`Select Account`" v-model="selectedAccount" :options="accounts" />
+        <multi-select placeholder="Select Account" v-model="selectedAccount" :options="accounts" />
     </div>
 </template>
 
 <script>
-    import MultiSelect from "admin/components/select/MultiSelect.vue";
     import HTTP from 'admin/http'
+    import MultiSelect from "admin/components/select/MultiSelect.vue";
+
     export default {
 
-        name: "SelectAccounts",
+        name: 'SelectAccounts',
 
-        components: { MultiSelect, HTTP },
+        components: {
+            MultiSelect
+        },
 
-        data(){
+        props: {
+            value: {
+                type: [String, Object, Array],
+                default: ''
+            },
+
+            reset: {
+                type: Boolean,
+                default: false
+            }
+        },
+
+        data() {
             return {
-                selectedAccount: '',
-                accounts:[]
+                selectedAccount: null,
+                accounts       : []
+            }
+        },
+
+        watch: {
+            value(newVal) {
+                let val = this.accounts.find(account => newVal.id === account.id);
+                this.selectedAccount = val;
+            },
+
+            selected() {
+                this.$emit('input', this.selectedAccount);
+            },
+
+            reset() {
+                this.selectedAccount = [];
             }
         },
 
@@ -26,15 +56,9 @@
 
         methods: {
             fetchAccounts(){
-                HTTP.get('accounts').then( (response) => {
+                HTTP.get('accounts').then(response => {
                     this.accounts = response.data;
                 } );
-            },
-        },
-
-        watch: {
-            selectedAccount() {
-                this.$emit('input', this.selectedAccount);
             },
         }
     }

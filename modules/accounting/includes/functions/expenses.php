@@ -71,19 +71,9 @@ function erp_acct_get_expense( $expense_no ) {
     expense.created_at,
     expense.created_by,
     expense.updated_at,
-    expense.updated_by,
+    expense.updated_by
 
-    b_detail.amount,
-
-    ledg_detail.debit,
-    ledg_detail.credit
-
-    FROM {$wpdb->prefix}erp_acct_expenses AS expense
-
-    LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS b_detail ON expense.voucher_no = b_detail.trn_no
-    LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON expense.voucher_no = ledg_detail.trn_no
-
-    WHERE expense.voucher_no = {$expense_no}";
+    FROM {$wpdb->prefix}erp_acct_expenses AS expense WHERE expense.voucher_no = {$expense_no}";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -120,7 +110,7 @@ function erp_acct_get_check( $expense_no ) {
     expense.created_by,
     expense.updated_at,
     expense.updated_by,
-    
+
     cheque.name,
     cheque.check_no,
     cheque.pay_to,
@@ -154,7 +144,7 @@ function erp_acct_format_check_line_items( $voucher_no ) {
         expense_detail.ledger_id,
         expense_detail.trn_no,
         expense_detail.particulars,
-        
+
         cheque.name,
         cheque.check_no,
         cheque.pay_to,
@@ -178,12 +168,14 @@ function erp_acct_format_expense_line_items( $voucher_no ) {
     $sql = $wpdb->prepare("SELECT
         expense_detail.id,
         expense_detail.ledger_id,
+        ledger.name AS ledger_name,
         expense_detail.trn_no,
         expense_detail.particulars,
         expense_detail.amount
 
         FROM {$wpdb->prefix}erp_acct_expenses AS expense
-        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details as expense_detail ON expense.voucher_no = expense_detail.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS expense_detail ON expense.voucher_no = expense_detail.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledger ON expense_detail.ledger_id = ledger.id
         WHERE expense.voucher_no = %d", $voucher_no);
 
     return $wpdb->get_results($sql, ARRAY_A);
@@ -292,7 +284,7 @@ function erp_acct_update_expense( $data, $expense_id ) {
     global $wpdb;
 
     $updated_by = get_current_user_id();
-    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_at'] = date('Y-m-d H:i:s');
     $data['updated_by'] = $updated_by;
 
     try {
@@ -309,22 +301,32 @@ function erp_acct_update_expense( $data, $expense_id ) {
             'ref'             => $expense_data['ref'],
             'check_no'        => $expense_data['check_no'],
             'particulars'     => $expense_data['particulars'],
-            'status'          => $expense_data['status'],
             'trn_by'          => $expense_data['trn_by'],
             'trn_by_ledger_id'=> $expense_data['trn_by_ledger_id'],
             'attachments'     => $expense_data['attachments'],
-            'created_at'      => $expense_data['created_at'],
-            'created_by'      => $expense_data['created_by'],
             'updated_at'      => $expense_data['updated_at'],
             'updated_by'      => $expense_data['updated_by'],
         ), array(
             'voucher_no'      => $expense_id
         ) );
 
+        /**
+         *? We can't update `expense_details` directly
+         *? suppose there were 5 detail rows previously
+         *? but on update there may be 2 detail rows
+         *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
+         *? so, remove previous rows and insert new rows
+         */
+        $prev_detail_ids = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}erp_acct_expense_details WHERE trn_no = {$expense_id}");
+        $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
+
+        $wpdb->delete( $wpdb->prefix . 'erp_acct_expense_details', [ 'trn_no' => $expense_id ] );
+
+
         $items = $expense_data['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $wpdb->update( $wpdb->prefix . 'erp_acct_expense_details', array(
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_details', array(
                 'ledger_id'   => $item['ledger_id'],
                 'particulars' => $item['remarks'],
                 'amount'      => $item['amount'],
@@ -332,13 +334,10 @@ function erp_acct_update_expense( $data, $expense_id ) {
                 'created_by'  => $expense_data['created_by'],
                 'updated_at'  => $expense_data['updated_at'],
                 'updated_by'  => $expense_data['updated_by'],
-            ), array(
-                'trn_no'  => $expense_id
             ));
 
             erp_acct_update_expense_data_into_ledger( $expense_data, $expense_id, $item );
         }
-
 
         $wpdb->query( 'COMMIT' );
 

@@ -126,11 +126,12 @@ function erp_acct_format_invoice_line_items($voucher_no) {
         product.category_id,
         product.vendor,
         product.cost_price,
-        product.sale_price
+        product.sale_price,
+        product.tax_cat_id
 
         FROM wp_erp_acct_invoices as invoice
-        LEFT JOIN wp_erp_acct_invoice_details as inv_detail ON invoice.voucher_no = inv_detail.trn_no
-        LEFT JOIN wp_erp_acct_products as product ON inv_detail.product_id = product.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_invoice_details as inv_detail ON invoice.voucher_no = inv_detail.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_products as product ON inv_detail.product_id = product.id
         WHERE invoice.voucher_no = %d", $voucher_no);
 
     return $wpdb->get_results($sql, ARRAY_A);
@@ -156,9 +157,7 @@ function erp_acct_insert_invoice( $data ) {
             'type'        => 'sales_invoice',
             'currency'    => '',
             'created_at'  => $data['created_at'],
-            'created_by'  => $data['created_by'],
-            'updated_at'  => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
-            'updated_by'  => isset( $data['updated_by'] ) ? $data['updated_by'] : ''
+            'created_by'  => $data['created_by']
         ) );
 
         $voucher_no = $wpdb->insert_id;
@@ -182,12 +181,8 @@ function erp_acct_insert_invoice( $data ) {
             'status'          => $invoice_data['status'],
             'particulars'     => $invoice_data['particulars'],
             'created_at'      => $invoice_data['created_at'],
-            'created_by'      => $invoice_data['created_by'],
-            'updated_at'      => $invoice_data['updated_at'],
-            'updated_by'      => $invoice_data['updated_by']
+            'created_by'      => $invoice_data['created_by']
         ) );
-
-        $invoice_id = $wpdb->insert_id;
 
         $items = $invoice_data['line_items'];
 
@@ -204,9 +199,7 @@ function erp_acct_insert_invoice( $data ) {
                 'tax_percent' => $item['tax_rate'],
                 'item_total'  => $sub_total,
                 'created_at'  => $invoice_data['created_at'],
-                'created_by'  => $invoice_data['created_by'],
-                'updated_at'  => $invoice_data['updated_at'],
-                'updated_by'  => $invoice_data['updated_by'],
+                'created_by'  => $invoice_data['created_by']
             ) );
 
             $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
@@ -215,23 +208,19 @@ function erp_acct_insert_invoice( $data ) {
                 'tax_rate'           => $item['tax_rate'],
                 'tax_amount'         => $item['tax'],
                 'created_at'         => $invoice_data['created_at'],
-                'created_by'         => $invoice_data['created_by'],
-                'updated_at'         => $invoice_data['updated_at'],
-                'updated_by'         => $invoice_data['updated_by'],
+                'created_by'         => $invoice_data['created_by']
              ] );
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-            'invoice_no'  => $invoice_id,
+            'invoice_no'  => $voucher_no,
             'trn_no'      => $voucher_no,
             'trn_date'    => $invoice_data['trn_date'],
             'particulars' => '',
             'debit'       => ($invoice_data['amount'] + $invoice_data['tax']) - $invoice_data['discount'],
-            'credit'      => 0,
+            'credit'      => 0.00,
             'created_at'  => $invoice_data['created_at'],
-            'created_by'  => $invoice_data['created_by'],
-            'updated_at'  => $invoice_data['updated_at'],
-            'updated_by'  => $invoice_data['updated_by'],
+            'created_by'  => $invoice_data['created_by']
         ) );
 
         erp_acct_insert_invoice_data_into_ledger( $invoice_data );
@@ -263,12 +252,9 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
 
-        // remove prev data...
-
         $invoice_data = erp_acct_get_formatted_invoice_data( $data, $invoice_no );
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_invoices', [
-            'voucher_no'      => $invoice_data['voucher_no'],
             'customer_id'     => $invoice_data['customer_id'],
             'customer_name'   => $invoice_data['customer_name'],
             'trn_date'        => $invoice_data['trn_date'],
@@ -283,43 +269,60 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
             'attachments'     => $invoice_data['attachments'],
             'status'          => $invoice_data['status'],
             'particulars'     => $invoice_data['particulars'],
-            'created_at'      => $invoice_data['created_at'],
-            'created_by'      => $invoice_data['created_by'],
             'updated_at'      => $invoice_data['updated_at'],
             'updated_by'      => $invoice_data['updated_by']
-        ], [ 'voucher_no' => $invoice_no, ] );
+        ], [ 'voucher_no' => $invoice_no ] );
+
+        /**
+         *? We can't update `invoice_details` directly
+         *? suppose there were 5 detail rows previously
+         *? but on update there may be 2 detail rows
+         *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
+         *? so, remove previous rows and insert new rows
+         */
+        $prev_detail_ids = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}erp_acct_invoice_details WHERE trn_no = {$invoice_no}");
+        $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
+
+        // order matter
+        $wpdb->query("DELETE FROM {$wpdb->prefix}erp_acct_invoice_details_tax WHERE invoice_details_id IN($prev_detail_ids)");
+        $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_details', [ 'trn_no' => $invoice_no ] );
 
         $items = $invoice_data['line_items'];
 
         foreach ( $items as $key => $item ) {
-            $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_details', array(
+            $sub_total = $item['qty'] * $item['unit_price'];
+
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details', array(
+                'trn_no'      => $invoice_no,
                 'product_id'  => $item['product_id'],
                 'qty'         => $item['qty'],
                 'unit_price'  => $item['unit_price'],
                 'discount'    => $item['discount'],
                 'tax'         => $item['tax'],
-                'tax_percent' => $item['tax_percent'],
-                'item_total'  => $item['item_total'],
-                'created_at'  => $invoice_data['created_at'],
-                'created_by'  => $invoice_data['created_by'],
+                'tax_percent' => $item['tax_rate'],
+                'item_total'  => $sub_total,
                 'updated_at'  => $invoice_data['updated_at'],
                 'updated_by'  => $invoice_data['updated_by'],
-            ), array(
-                'trn_no' => $invoice_no,
             ) );
+
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
+                'invoice_details_id' => $wpdb->insert_id,
+                'agency_id'          => $item['agency_id'],
+                'tax_rate'           => $item['tax_rate'],
+                'tax_amount'         => $item['tax'],
+                'updated_at'         => $invoice_data['updated_at'],
+                'updated_by'         => $invoice_data['updated_by'],
+             ] );
         }
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-            'trn_no'      => $invoice_no,
             'particulars' => $invoice_data['particulars'],
             'debit'       => $invoice_data['amount'],
-            'credit'      => 0,
-            'created_at'  => $invoice_data['created_at'],
-            'created_by'  => $invoice_data['created_by'],
             'updated_at'  => $invoice_data['updated_at'],
             'updated_by'  => $invoice_data['updated_by'],
         ), array(
-            'invoice_no' => $invoice_no,
+            'trn_no' => $invoice_no,
+            'credit' => 0.00
         ) );
 
         erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no );
@@ -332,7 +335,6 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
     }
 
     return $invoice_no;
-
 }
 
 /**
@@ -365,10 +367,10 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
     $invoice_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $invoice_data['estimate'] = isset( $data['estimate'] ) ? $data['estimate'] : 1;
-    $invoice_data['created_at'] = isset( $data['created_at'] ) ? $data['created_at'] : '';
-    $invoice_data['created_by'] = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $invoice_data['updated_at'] = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
-    $invoice_data['updated_by'] = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $invoice_data['created_at'] = isset( $data['created_at'] ) ? $data['created_at'] : null;
+    $invoice_data['created_by'] = isset( $data['created_by'] ) ? $data['created_by'] : null;
+    $invoice_data['updated_at'] = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
+    $invoice_data['updated_by'] = isset( $data['updated_by'] ) ? $data['updated_by'] : null;
 
     return $invoice_data;
 }
@@ -472,7 +474,6 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
         'updated_at'  => $invoice_data['updated_at'],
         'updated_by'  => $invoice_data['updated_by']
     ) );
-
 }
 
 /**
@@ -485,53 +486,32 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
 function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
     global $wpdb;
 
-    $ledger_map = WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
-
-    $sales_ledger_id = $ledger_map->get_ledger_id_by_slug('sales');
-    $sales_tax_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_tax');
-    $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discount');
-
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $sales_ledger_id,
         'particulars' => $invoice_data['particulars'],
-        'debit'       => 0,
         'credit'      => $invoice_data['amount'],
         'trn_date'    => $invoice_data['trn_date'],
         'updated_at'  => $invoice_data['updated_at'],
-        'updated_by'  => $invoice_data['updated_by'],
-    ), array(
-        'trn_no' => $invoice_no,
-    ) );
+        'updated_by'  => $invoice_data['updated_by']
+    ), [ 'trn_no' => $invoice_no ] );
 
     // Update tax in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $sales_tax_ledger_id,
-        'trn_no'      => $invoice_data['voucher_no'],
-        'particulars'     => $invoice_data['particulars'],
-        'debit'       => 0,
+        'particulars' => $invoice_data['particulars'],
         'credit'      => $invoice_data['tax'],
         'trn_date'    => $invoice_data['trn_date'],
         'updated_at'  => $invoice_data['updated_at'],
-        'updated_by'  => $invoice_data['updated_by'],
-    ), array(
-        'trn_no' => $invoice_no,
-    ) );
+        'updated_by'  => $invoice_data['updated_by']
+    ), [ 'trn_no' => $invoice_no ] );
 
     // Update discount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $sales_discount_ledger_id,
-        'trn_no'      => $invoice_data['voucher_no'],
         'particulars' => $invoice_data['particulars'],
-        'debit'       => $invoice_data['tax'],
-        'credit'      => 0,
+        'debit'       => $invoice_data['discount'],
         'trn_date'    => $invoice_data['trn_date'],
         'updated_at'  => $invoice_data['updated_at'],
-        'updated_by'  => $invoice_data['updated_by'],
-    ), array(
-        'trn_no' => $invoice_no,
-    ) );
-
+        'updated_by'  => $invoice_data['updated_by']
+    ), [ 'trn_no' => $invoice_no ] );
 }
 
 /**

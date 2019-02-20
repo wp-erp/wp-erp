@@ -23,10 +23,36 @@
             PeopleModal
         },
 
+        props: {
+            value: {
+                type: [String, Object, Array],
+                default: ''
+            },
+
+            reset: {
+                type: Boolean,
+                default: false
+            }
+        },
+
         data() {
             return {
-                selected: [],
+                selected: null,
                 showModal: false,
+            }
+        },
+
+        watch: {
+            value(newVal) {
+                this.selected = newVal;
+            },
+
+            selected() {
+                this.$emit('input', this.selected);
+            },
+
+            reset() {
+                this.selected = [];
             }
         },
 
@@ -53,12 +79,6 @@
             } );
         },
 
-        watch: {
-            selected() {
-                this.$emit('input', this.selected);
-            }
-        },
-
         methods: {
             getvendors(query) {
                 HTTP.get('/people', {
@@ -66,7 +86,7 @@
                         type: 'vendor',
                         search: query
                     }
-                }).then(response => {                    
+                }).then(response => {
                     this.$store.dispatch('purchase/fillVendors', response.data);
                 });
             },
