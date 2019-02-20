@@ -9,12 +9,24 @@
                         &nbsp; Print
                     </a>
                     <!-- todo: more action has some dropdown and will implement later please consider as planning -->
-                    <a href="#" class="wperp-btn btn--default">
-                        <i class="flaticon-settings-work-tool"></i>
-                        &nbsp; More Action
-                    </a>
+                    <dropdown>
+                        <template slot="button">
+                            <a href="#" class="wperp-btn btn--default">
+                                <i class="flaticon-settings-work-tool"></i>
+                                &nbsp; More Action
+                            </a>
+                        </template>
+                        <template slot="dropdown">
+                            <ul role="menu">
+                                <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
+                            </ul>
+                        </template>
+                    </dropdown>
                 </div>
             </div>
+
+            <send-mail v-if="showModal" :data="print_data" :type="type"/>
+
             <div class="wperp-modal-body">
                 <div class="wperp-invoice-panel">
                     <div class="invoice-header" v-if="null != company">
@@ -111,9 +123,17 @@
 
 <script>
     import HTTP from 'admin/http';
+    import SendMail from 'admin/components/email/SendMail.vue';
+    import Dropdown from 'admin/components/base/Dropdown.vue';
 
     export default {
         name: 'PayPurchaseSingle',
+
+        components: {
+            HTTP,
+            SendMail,
+            Dropdown
+        },
 
         data() {
             return {
@@ -121,12 +141,19 @@
                 payPurchase  : {},
                 isWorking: false,
                 acct_var : erp_acct_var,
+                print_data : null,
+                type       : 'pay_purchase',
+                showModal  : false
             }
         },
 
         created() {
             this.getCompanyInfo();
             this.getPurchase();
+
+            this.$root.$on( 'close', () => {
+                this.showModal = false;
+            })
         },
 
         methods: {
@@ -144,6 +171,7 @@
                 HTTP.get(`/pay-purchases/${this.$route.params.id}`).then(response => {
                     this.payPurchase = response.data;
                 }).then( e => {} ).then(() => {
+                    this.print_data = this.purchase;
                     this.isWorking = false;
                 });
             },

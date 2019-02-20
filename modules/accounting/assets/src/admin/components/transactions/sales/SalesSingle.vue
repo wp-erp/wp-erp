@@ -9,10 +9,20 @@
                         &nbsp; Print
                     </a>
                     <!-- todo: more action has some dropdown and will implement later please consider as planning -->
-                    <a href="#" class="wperp-btn btn--default">
-                        <i class="flaticon-settings-work-tool"></i>
-                        &nbsp; More Action
-                    </a>
+                    
+                    <dropdown>
+                        <template slot="button">
+                            <a href="#" class="wperp-btn btn--default">
+                                <i class="flaticon-settings-work-tool"></i>
+                                &nbsp; More Action
+                            </a>
+                        </template>
+                        <template slot="dropdown">
+                            <ul role="menu">
+                                <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
+                            </ul>
+                        </template>
+                    </dropdown>
                 </div>
             </div>
 
@@ -26,6 +36,8 @@
                 :payment="payment" 
                 :company="company" />
 
+            <send-mail v-if="showModal" :data="print_data" :type="type"/>
+
         </div>
     </div>
 </template>
@@ -34,6 +46,8 @@
     import HTTP from 'admin/http';
     import InvoiceSingleContent from 'admin/components/transactions/sales/InvoiceSingleContent.vue';
     import PaymentSingleContent from 'admin/components/transactions/sales/PaymentSingleContent.vue';
+    import SendMail from 'admin/components/email/SendMail.vue';
+    import Dropdown from 'admin/components/base/Dropdown.vue';
 
     export default {
         name: 'SalesSingle',
@@ -46,18 +60,23 @@
                 type     : null,
                 company  : null,
                 acct_var : erp_acct_var,
+                showModal: false,
+                print_data: null
+
             }
         },
 
         components: {
             InvoiceSingleContent,
-            PaymentSingleContent
+            PaymentSingleContent,
+            SendMail,
+            Dropdown
         },
 
         created() {
             /* If this page load directly, 
             then we don't have the type or type is `undefined`
-            thats why wee need to load the type from database */
+            thats why we need to load the type from database */
             let params = this.$route.params;
 
             if ( typeof params.type === 'undefined' ) {
@@ -67,6 +86,10 @@
             }
 
             this.getCompanyInfo();
+
+            this.$root.$on( 'close', () => {
+                this.showModal = false;
+            })
         },
 
         methods: {
@@ -102,6 +125,7 @@
                 HTTP.get(`/invoices/${this.$route.params.id}`).then(response => {                    
                     this.invoice = response.data;
                 }).then( e => {} ).then(() => {
+                    this.print_data = this.invoice;
                     this.isWorking = false;
                 });
             },
@@ -112,22 +136,63 @@
                 HTTP.get(`/payments/${this.$route.params.id}`).then(response => {
                     this.payment = response.data;
                 }).then( e => {} ).then(() => {
+                    this.print_data = this.payment;
                     this.isWorking = false;
                 });
             },
 
             printPopup() {
                 window.print();
-            }
+            },
         },
 
     }
 </script>
 
 <style lang="less">
+    .wperp-email-multiselect {
+        .multiselect__content-wrapper {
+            display: none !important;
+            height: 0 !important;
+            visibility: hidden;
+        }  
+        .multiselect__tags {
+            font-size: 12px;
+            padding-left: 15px;
+            border-radius: 3px;
+            input {
+                max-height: 30px;
+                font-size: 12px;
+            }
+        } 
+        .multiselect__tag-icon {
+            line-height: 18px;
+        }
+        .multiselect {
+            input.multiselect__input {
+                display: none;
+            }
+            &.multiselect--active input.multiselect__input {
+                display: block;
+                width: 100% !important;
+            }
+        }
+    }
+
+
     .sales-single {
-        width: 800px;
+        max-width: 800px;
         margin: 40px 0;
+        .wperp-modal-footer {
+            border-top: 1px solid #e2e2e2;
+        }
+        .wperp-modal-header {
+            border-bottom: 1px solid #e2e2e2;
+        }
+        .wperp-form-field, input:not(.wperp-btn) {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+        }
     }
 
     @media print {

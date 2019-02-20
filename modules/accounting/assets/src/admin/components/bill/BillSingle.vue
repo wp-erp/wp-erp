@@ -9,12 +9,24 @@
                         &nbsp; Print
                     </a>
                     <!-- todo: more action has some dropdown and will implement later please consider as planning -->
-                    <a href="#" class="wperp-btn btn--default">
-                        <i class="flaticon-settings-work-tool"></i>
-                        &nbsp; More Action
-                    </a>
+                    <dropdown>
+                        <template slot="button">
+                            <a href="#" class="wperp-btn btn--default">
+                                <i class="flaticon-settings-work-tool"></i>
+                                &nbsp; More Action
+                            </a>
+                        </template>
+                        <template slot="dropdown">
+                            <ul role="menu">
+                                <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
+                            </ul>
+                        </template>
+                    </dropdown>
                 </div>
             </div>
+
+            <send-mail v-if="showModal" :data="print_data" :type="type"/>
+
             <div class="wperp-modal-body">
                 <div class="wperp-invoice-panel">
                     <div class="invoice-header" v-if="null != company">
@@ -52,12 +64,12 @@
                                         <td>{{ bill.trn_date }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Amount Due:</th>
-                                        <td>{{ getCurrencySign() + bill.due }}</td>
-                                    </tr>
-                                    <tr>
                                         <th>Due Date:</th>
                                         <td>{{ bill.due_date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Amount Due:</th>
+                                        <td>{{ getCurrencySign() + bill.due }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -117,22 +129,37 @@
 
 <script>
     import HTTP from 'admin/http';
+    import SendMail from 'admin/components/email/SendMail.vue';
+    import Dropdown from 'admin/components/base/Dropdown.vue';
 
     export default {
         name: 'BillSingle',
 
+        components: {
+            HTTP,
+            SendMail,
+            Dropdown
+        },
+
         data() {
             return {
-                company  : null,
-                bill     : {},
-                isWorking: false,
-                acct_var : erp_acct_var,
+                company    : null,
+                bill       : {},
+                isWorking  : false,
+                acct_var   : erp_acct_var,
+                print_data : null,
+                type       : 'bill',
+                showModal  : false
             }
         },
 
         created() {
             this.getCompanyInfo();
             this.getBill();
+
+            this.$root.$on( 'close', () => {
+                this.showModal = false;
+            })
         },
 
         methods: {
@@ -150,6 +177,7 @@
                 HTTP.get(`/bills/${this.$route.params.id}`).then(response => {
                     this.bill = response.data;
                 }).then( e => {} ).then(() => {
+                    this.print_data = this.bill;
                     this.isWorking = false;
                 });
             },

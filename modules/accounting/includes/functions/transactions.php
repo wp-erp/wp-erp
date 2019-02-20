@@ -489,3 +489,187 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
+
+/**
+ * Generate and send pdf
+ *
+ * @param $request
+ * @param string $output_method
+ *
+ * @return boolean
+ */
+function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' ) {
+
+    $type       = isset( $request['type'] ) ? $request['type'] : '';
+    $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : [];
+    $subject    = isset( $request['subject'] ) ? $request['subject'] : '';
+    $body       = isset( $request['message'] ) ? $request['message'] : '';
+    $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
+
+    $company = new \WeDevs\ERP\Company();
+    $theme_color = '#9e9e9e';
+    $transaction = (object)$request['trn_data'];
+
+    $user = new \WeDevs\ERP\People(intval($transaction->customer_id));
+
+    if (!defined('WPERP_PDF_VERSION')) {
+        wp_die(__('ERP PDF extension is not installed. Please install the extension for PDF support', 'erp'));
+    }
+
+    //Create a new instance
+    $trn_pdf = new \WeDevs\ERP_PDF\PDF_Invoicer("A4", "$", "en");
+
+    //Set theme color
+    $trn_pdf->set_theme_color($theme_color);
+
+    //Set your logo
+    $logo_id = (int)$company->logo;
+
+    if ($logo_id) {
+        $image = wp_get_attachment_image_src($logo_id, 'medium');
+        $url = $image[0];
+        $trn_pdf->set_logo($url);
+    }
+
+    //Set type
+    $trn_pdf->set_type(__('PAYMENT', 'erp'));
+
+    // Set barcode
+    if ($transaction->id) {
+        $trn_pdf->set_barcode($transaction->id);
+    }
+
+    // Set reference
+    if ($transaction->id) {
+        $trn_pdf->set_reference($transaction->id, __('Transaction Number', 'erp'));
+    }
+
+    // Set Issue Date
+    if ($transaction->trn_date) {
+        $trn_pdf->set_reference(erp_format_date($transaction->trn_date), __('Transaction Date', 'erp'));
+    }
+
+
+    // Set from Address
+    $from_address = explode('<br/>', $company->get_formatted_address());
+    array_unshift($from_address, $company->name);
+
+    $trn_pdf->set_from_title(__('FROM', 'erp'));
+    $trn_pdf->set_from($from_address);
+
+    // Set to Address
+    $to_address = explode(PHP_EOL, $transaction->billing_address);
+    array_unshift($to_address, $user->get_full_name());
+
+    $trn_pdf->set_to_title(__('TO', 'erp'));
+    $trn_pdf->set_to_address($to_address);
+
+    /* Customize columns based on transaction type */
+    if ( 'sales_invoice' == $type ) {
+        // Set Column Headers
+        $trn_pdf->set_table_headers([__('PRODUCT', 'erp'), __('QUANTITY', 'erp'), __('UNIT PRICE', 'erp'), __('DISCOUNT', 'erp'), __('TAX AMOUNT', 'erp'), __('AMOUNT', 'erp')]);
+        $trn_pdf->set_first_column_width(60);
+
+        // Add Table Items
+        foreach ($transaction->line_items as $line) {
+            $trn_pdf->add_item([$line['name'], $line['qty'], $line['unit_price'],$line['discount'],$line['tax'], $line['line_total']]);
+        }
+
+        $trn_pdf->add_badge(__('PAID', 'erp'));
+    }
+
+    if ( 'payment' == $type ) {
+        // Set Column Headers
+        $trn_pdf->set_table_headers([__('INNVOICE NO', 'erp'), __('AMOUNT', 'erp')]);
+        $trn_pdf->set_first_column_width(60);
+
+        // Add Table Items
+        foreach ($transaction->line_items as $line) {
+            $trn_pdf->add_item([$line['invoice_no'], $line['amount']]);
+        }
+
+        $trn_pdf->add_badge(__('PENDING', 'erp'));
+    }
+
+    if ( 'bill' == $type ) {
+        // Set Column Headers
+        $trn_pdf->set_table_headers([__('BILL NO', 'erp'), __('BILL DATE', 'erp'), __('DUE DATE', 'erp'), __('AMOUNT', 'erp')]);
+        $trn_pdf->set_first_column_width(60);
+
+        // Add Table Items
+        foreach ($transaction->line_items as $line) {
+            $trn_pdf->add_item([$line['id'], $transaction->trn_date, $transaction->due_date, $line['amount']]);
+        }
+
+        $trn_pdf->add_badge(__('PENDING', 'erp'));
+    }
+
+    if ( 'pay_bill' == $type ) {
+        // Set Column Headers
+        $trn_pdf->set_table_headers([__('BILL NO', 'erp'), __('AMOUNT', 'erp')]);
+        $trn_pdf->set_first_column_width(60);
+
+        // Add Table Items
+        foreach ($transaction->line_items as $line) {
+            $trn_pdf->add_item([$line['bill_no'], $line['amount']]);
+        }
+
+        $trn_pdf->add_badge(__('PAID', 'erp'));
+    }
+
+    if ( 'purchase' == $type ) {
+        // Set Column Headers
+        $trn_pdf->set_table_headers([__('PRODUCT', 'erp'), __('QUANTITY', 'erp'), __('COST PRICE', 'erp'), __('AMOUNT', 'erp')]);
+        $trn_pdf->set_first_column_width(60);
+
+        // Add Table Items
+        foreach ($transaction->line_items as $line) {
+            $trn_pdf->add_item([$line['name'], $line['qty'], $line['cost_price'], $line['amount']]);
+        }
+
+        $trn_pdf->add_badge(__('PENDING', 'erp'));
+    }
+
+    if ( 'pay_purchase' == $type ) {
+        // Set Column Headers
+        $trn_pdf->set_table_headers([__('PURCHASE NO', 'erp'), __('AMOUNT', 'erp')]);
+        $trn_pdf->set_first_column_width(60);
+
+        // Add Table Items
+        foreach ($transaction->line_items as $line) {
+            $trn_pdf->add_item([$line['purchase_no'], $line['amount']]);
+        }
+
+        $trn_pdf->add_badge(__('PAID', 'erp'));
+    }
+
+    if ( 'expense' == $type  || 'check' == $type ) {
+        // Set Column Headers
+        $trn_pdf->set_table_headers([__('EXPENSE NO', 'erp'), __('EXPENSE DATE', 'erp'), __('AMOUNT', 'erp')]);
+        $trn_pdf->set_first_column_width(60);
+
+        // Add Table Items
+        foreach ($transaction->line_items as $line) {
+            $trn_pdf->add_item([$line['voucher_no'], $line['trn_date'], $line['amount']]);
+        }
+
+        $trn_pdf->add_badge(__('PAID', 'erp'));
+    }
+
+
+    $trn_pdf->add_total(__('SUB TOTAL', 'erp'), $transaction->amount);
+    $trn_pdf->add_total(__('TOTAL', 'erp'), $transaction->amount, true);
+
+    //Add Badge
+
+    $file_name = sprintf('%s_%s.pdf', $transaction->voucher_no, date('d-m-Y'));
+    $trn_pdf->render($file_name, $output_method);
+    $trn_email  = new \WeDevs\ERP\Accounting\INCLUDES\Send_Email();
+    $file_name  = $attach_pdf ? $file_name : '';
+
+    $result = $trn_email->trigger( $receiver, $subject, $body, $file_name );
+
+    unlink( $file_name );
+
+    return $result;
+}
