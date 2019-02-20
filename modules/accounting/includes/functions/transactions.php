@@ -60,8 +60,8 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS invoice_receipt ON invoice_receipt.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = invoice.status
-        LEFT JOIN wp_erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.slug = invoice.status
+        LEFT JOIN wp_erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
         {$where} GROUP BY voucher.id ORDER BY CONCAT(invoice.trn_date, invoice_receipt.trn_date) {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
@@ -87,8 +87,8 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
 
     $sql = "SELECT COUNT(invoice.status) AS sub_total, status_type.type_name
             FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
-            LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.status = status_type.id {$where} 
-            GROUP BY status_type.id ORDER BY status_type.type_name ASC";
+            LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.status = status_type.slug {$where} 
+            GROUP BY status_type.id HAVING COUNT(invoice.status) > 0 ORDER BY status_type.type_name ASC";
 
     // error_log(print_r($sql, true));
     return $wpdb->get_results($sql, ARRAY_A);

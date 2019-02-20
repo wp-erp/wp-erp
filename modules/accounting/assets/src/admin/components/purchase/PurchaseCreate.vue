@@ -11,91 +11,107 @@
         </div>
         <!-- End .header-section -->
 
-        <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
-            <div class="wperp-panel-body">
+        <form action="" method="post" @submit.prevent="SubmitForApproval">
 
-                <show-errors :error_msgs="form_errors" ></show-errors>
+            <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
+                <div class="wperp-panel-body">
 
-                <form action="#" class="wperp-form" method="post">
-                    <div class="wperp-row">
-                        <div class="wperp-col-sm-4">
-                            <select-vendors v-model="basic_fields.vendor"></select-vendors>
-                        </div>
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <label>Transaction Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.trans_date"></datepicker>
+                    <show-errors :error_msgs="form_errors" ></show-errors>
+
+                    <form action="#" class="wperp-form" method="post">
+                        <div class="wperp-row">
+                            <div class="wperp-col-sm-4">
+                                <select-vendors v-model="basic_fields.vendor"></select-vendors>
+                            </div>
+                            <div class="wperp-col-sm-4">
+                                <div class="wperp-form-group">
+                                    <label>Transaction Date<span class="wperp-required-sign">*</span></label>
+                                    <datepicker v-model="basic_fields.trn_date"></datepicker>
+                                </div>
+                            </div>
+                            <div class="wperp-col-sm-4">
+                                <div class="wperp-form-group">
+                                    <label>Due Date<span class="wperp-required-sign">*</span></label>
+                                    <datepicker v-model="basic_fields.due_date"></datepicker>
+                                </div>
+                            </div>
+                            <div class="wperp-col-xs-12">
+                                <label>Billing Address</label>
+                                <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <label>Due Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.due_date"></datepicker>
-                            </div>
-                        </div>
-                        <div class="wperp-col-xs-12">
-                            <label>Billing Address</label>
-                            <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
-                        </div>
-                    </div>
-                </form>
+                    </form>
 
+                </div>
             </div>
-        </div>
 
-        <div class="wperp-table-responsive">
-            <!-- Start .wperp-crm-table -->
-            <div class="table-container">
-                <table class="wperp-table wperp-form-table">
-                    <thead>
-                    <tr>
-                        <td scope="col" class="col--check">Product/Service</td>
-                        <th scope="col" class="column-primary">Qty</th>
-                        <th scope="col">Unit Price</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col" class="col--actions"></th>
-                    </tr>
-                    </thead>
-                    <tbody id="test">
-                    <purchase-row
-                        :line="line"
-                        :products="products"
-                        :key="index"
-                        v-for="(line, index) in transactionLines"
-                    ></purchase-row>
+            <div class="wperp-table-responsive">
+                <!-- Start .wperp-crm-table -->
+                <div class="table-container">
+                    <table class="wperp-table wperp-form-table">
+                        <thead>
+                        <tr>
+                            <td scope="col" class="col--check">Product/Service</td>
+                            <th scope="col" class="column-primary">Qty</th>
+                            <th scope="col">Unit Price</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col" class="col--actions"></th>
+                        </tr>
+                        </thead>
+                        <tbody id="test">
+                        <purchase-row
+                            :line="line"
+                            :products="products"
+                            :key="index"
+                            v-for="(line, index) in transactionLines"
+                        ></purchase-row>
 
-                    <tr class="total-amount-row">
-                        <td colspan="3" class="text-right">
-                            <span>Total Amount = </span>
-                        </td>
-                        <td><input type="text" v-model="finalTotalAmount" readonly></td>
-                        <td></td>
-                    </tr>
-                    <tr class="add-new-line">
-                        <td colspan="9" style="text-align: left;">
-                            <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
-                        </td>
-                    </tr>
-                    <tr class="add-attachment-row" >
-                        <td colspan="9" style="text-align: left;">
-                            <div class="attachment-container">
-                                <label class="col--attachement">Attachment</label>
-                                <file-upload v-model="attachments" url="/invoices/attachments"/>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td colspan="9" style="text-align: right;">
-                            <submit-button text="Create Purchase" @click.native="SubmitForApproval" :working="isWorking"></submit-button>
-                        </td>
-                    </tr>
-                    </tfoot>
-                </table>
+                        <tr class="total-amount-row">
+                            <td colspan="3" class="text-right">
+                                <span>Total Amount = </span>
+                            </td>
+                            <td><input type="text" v-model="finalTotalAmount" readonly></td>
+                            <td></td>
+                        </tr>
+                        <tr class="add-new-line">
+                            <td colspan="9" style="text-align: left;">
+                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
+                                    <img :src="erp_acct_assets + '/images/file-thumb.png'">
+                                    <span class="remove-file" @click="removeFile(index)">&#10007;</span>
+
+                                    <div class="attachment-meta">
+                                        <h3>{{ getFileName(file) }}</h3>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="add-attachment-row" >
+                            <td colspan="9" style="text-align: left;">
+                                <div class="attachment-container">
+                                    <label class="col--attachement">Attachment</label>
+                                    <file-upload v-model="attachments" url="/invoices/attachments"/>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="9" style="text-align: right;">
+                                <combo-button v-if="editMode" :options="updateButtons" />
+                                <combo-button v-else :options="createButtons" />
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
-        </div>
 
+        </form>
         <!-- End .wperp-crm-table -->
     </div>
 </template>
@@ -104,7 +120,7 @@
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import ComboButton from 'admin/components/select/ComboButton.vue';
     import PurchaseRow from 'admin/components/purchase/PurchaseRow.vue'
     import SelectVendors from 'admin/components/people/SelectVendors.vue'
     import ShowErrors from 'admin/components/base/ShowErrors.vue'
@@ -116,7 +132,7 @@
             HTTP,
             Datepicker,
             FileUpload,
-            SubmitButton,
+            ComboButton,
             PurchaseRow,
             SelectVendors,
             ShowErrors
@@ -126,19 +142,32 @@
             return {
                 basic_fields: {
                     vendor: '',
-                    trans_date: '',
+                    trn_date: '',
                     due_date: '',
                     billing_address: ''
                 },
 
-                form_errors: [],
+                createButtons: [
+                    {id: 'save', text: 'Create Purchase'},
+                    {id: 'send_create', text: 'Create and Send'},
+                    {id: 'new_create', text: 'Create and New'},
+                ],
 
-                products: [],
-                attachments: [],
-                transactionLines: [{}],
+                updateButtons: [
+                    {id: 'update', text: 'Update Purchase'},
+                    {id: 'send_update', text: 'Update and Send'},
+                    {id: 'new_update', text: 'Update and New'},
+                ],
+
+                form_errors     : [],
+                editMode        : false,
+                voucherNo       : 0,
+                products        : [],
+                attachments     : [],
+                transactionLines: [],
                 finalTotalAmount: 0,
-
-                isWorking: false,
+                erp_acct_assets : erp_acct_var.acct_assets,
+                isWorking       : false,
             }
         },
 
@@ -149,7 +178,7 @@
         },
 
         created() {
-            this.getProducts();
+            this.prepareDataLoad();
 
             this.$root.$on('remove-row', index => {
                 if ( this.transactionLines.length < 2 ) {
@@ -166,6 +195,42 @@
 
         methods: {
 
+            async prepareDataLoad() {
+                /**
+                 * ----------------------------------------------
+                 * check if editing
+                 * -----------------------------------------------
+                 */
+                if ( this.$route.params.id ) {
+                    this.editMode = true;
+                    this.voucherNo = this.$route.params.id;
+
+                    let response = await HTTP.get(`/purchases/${this.$route.params.id}`);
+                    this.setDataForEdit( response.data );
+                } else {
+                    /**
+                     * ----------------------------------------------
+                     * create a new purchase
+                     * -----------------------------------------------
+                     */
+                    this.getProducts();
+
+                    this.basic_fields.trn_date = erp_acct_var.current_date;
+                    this.basic_fields.due_date = erp_acct_var.current_date;
+                    this.transactionLines.push({}, {}, {});
+                }
+            },
+
+            setDataForEdit(purchase) {
+                this.basic_fields.vendor          = { id: parseInt(purchase.vendor_id), name: purchase.vendor_name };
+                this.basic_fields.billing_address = purchase.billing_address;
+                this.basic_fields.trn_date        = purchase.trn_date;
+                this.basic_fields.due_date        = purchase.due_date;
+                this.status                       = purchase.status;
+                this.transactionLines             = purchase.line_items;
+                this.attachments                  = purchase.attachments;
+            },
+
             resetData() {
                 Object.assign(this.$data, this.$options.data.call(this));
                 this.getProducts();
@@ -173,6 +238,7 @@
 
             getProducts() {
                 this.products = [];
+
                 HTTP.get('/products').then((response) => {
                     response.data.forEach(element => {
                         this.products.push({
@@ -185,11 +251,12 @@
             },
 
             getvendorAddress() {
-                if ( ! this.basic_fields.vendor.hasOwnProperty('id') ){
+                let vendor_id = this.basic_fields.vendor.id;
+
+                if ( ! vendor_id ) {
+                    this.basic_fields.billing_address = '';
                     return;
                 }
-
-                let vendor_id = this.basic_fields.vendor.id;
 
                 HTTP.get(`/people/${vendor_id}`).then(response => {
                     let billing = response.data;
@@ -208,11 +275,12 @@
                 let finalAmount = 0;
 
                 this.transactionLines.forEach(element => {
-                    finalAmount += parseFloat(element.totalAmount);
+                    if ( element.qty ) {
+                        finalAmount += parseFloat(element.amount);
+                    }
                 });
 
                 this.finalTotalAmount = finalAmount.toFixed(2);
-
             },
 
             formatLineItems() {
@@ -224,11 +292,41 @@
                         product_type: 'service',
                         qty: line.qty,
                         unit_price: line.unitPrice,
-                        item_total: line.totalAmount,
+                        item_total: line.amount,
                     });
                 });
 
                 return lineItems;
+            },
+
+            updatePurchase(requestData) {
+                HTTP.put(`/purchases/${this.voucherNo}`, requestData).then(res => {
+                    this.showAlert('success', 'Purchase Updated!');
+                }).then(() => {
+                    this.isWorking = false;
+                    this.reset = true;
+
+                    if ('update' == this.actionType) {
+                        this.$router.push({name: 'Purchase'});
+                    } else if ('new_update' == this.actionType) {
+                        this.resetFields();
+                    }
+                });
+            },
+
+            createPurchase(requestData) {
+                HTTP.post('/purchases', requestData).then(res => {
+                    this.showAlert('success', 'Purchase Created!');
+                }).then(() => {
+                    this.isWorking = false;
+                    this.reset = true;
+
+                    if ('save' == this.actionType) {
+                        this.$router.push({name: 'Purchase'});
+                    } else if ('new_create' == this.actionType) {
+                        this.resetFields();
+                    }
+                });
             },
 
             SubmitForApproval() {
@@ -238,33 +336,25 @@
                     return;
                 }
 
-                HTTP.post('/purchases', {
-                    vendor_id: this.basic_fields.vendor.id,
-                    vendor_name: this.basic_fields.vendor.name,
-                    trn_date: this.basic_fields.trans_date,
-                    due_date: this.basic_fields.due_date,
+                this.isWorking = true;
+
+                let requestData = {
+                    vendor_id      : this.basic_fields.vendor.id,
+                    vendor_name    : this.basic_fields.vendor.name,
+                    trn_date       : this.basic_fields.trn_date,
+                    due_date       : this.basic_fields.due_date,
                     billing_address: this.basic_fields.billing_address,
-                    line_items: this.formatLineItems(),
-                    attachments: this.attachments,
-                    type: 'purchase',
-                    status: 3,
-                    // trn_by: 'cash',
-                    // ref : ' ',
-                    // particulars: ''
-                }).then(res => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Purchase Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }).then(() => {
-                    this.isWorking = false;
-                    this.resetData();
+                    line_items     : this.formatLineItems(),
+                    attachments    : this.attachments,
+                    type           : 'purchase',
+                    status         : 3
+                };
 
-                });
-
+                if ( this.editMode ) {
+                    this.updatePurchase(requestData);
+                } else {
+                    this.createPurchase(requestData);
+                }
             },
 
             validateForm() {
@@ -272,11 +362,7 @@
                     this.form_errors.push('Vendor Name is required.');
                 }
 
-                if ( !this.basic_fields.trn_ref ) {
-                    this.form_errors.push('Transaction Reference is required.');
-                }
-
-                if ( !this.basic_fields.trans_date ) {
+                if ( !this.basic_fields.trn_date ) {
                     this.form_errors.push('Transaction Date is required.');
                 }
 

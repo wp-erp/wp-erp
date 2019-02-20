@@ -124,7 +124,7 @@
         },
 
         methods: {
-            fetchItems(filters = {}) {                
+            fetchItems(filters = {}) {
                 this.rows = [];
 
                 HTTP.get('/transactions/sales', {
@@ -134,18 +134,12 @@
                         start_date: filters.start_date,
                         end_date: filters.end_date
                     }
-                }).then( (response) => {                    
+                }).then( (response) => {    
                     this.rows = response.data;
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-                .then( () => {
-                    //ready
-                } );
+                });
             },
 
             onActionClick(action, row, index) {

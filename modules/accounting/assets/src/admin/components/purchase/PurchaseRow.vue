@@ -15,7 +15,7 @@
             <input min="0" type="number" v-model="line.unitPrice" @keyup="calculateAmount" class="wperp-form-field">
         </td>
         <td class="col--amount" data-colname="Amount">
-            <input type="number" v-model="line.totalAmount" class="wperp-form-field" readonly>
+            <input type="number" min="0" step="0.01" v-model="line.amount" class="wperp-form-field" readonly>
         </td>
         <td class="col--actions delete-row" data-colname="Action">
             <span class="wperp-btn" @click="removeRow"><i class="flaticon-trash"></i></span>
@@ -38,14 +38,7 @@
 
             line: {
                 type: Object,
-                default: () => {
-                    return {
-                        qty: 0,
-                        selectedProduct: [],
-                        unitPrice: 0,
-                        totalAmount: 0
-                    };
-                }
+                default: () => {}
             }
         },
 
@@ -54,30 +47,50 @@
         },
 
         watch: {
-            'line.selectedProduct'() {                
+            'line.selectedProduct'(newVal) {
                 this.line.qty = 1;
-                this.line.unitPrice = this.line.unitPrice;
+                this.line.unitPrice = newVal.unitPrice;
                 this.calculateAmount();
             }
         },
 
+        created() {
+            // check if editing
+            if ( this.$route.params.id ) {
+                this.prepareRowEdit(this.line);
+            }
+        },
+
         methods: {
-            calculateAmount() {
-                let field = this.line;
+            prepareRowEdit(row) {
+                row.unitPrice = row.cost_price;
+                this.calculateAmount();
+            },
 
-                let amount = parseFloat(field.qty) * parseFloat(field.unitPrice);
-
-                field.totalAmount = amount;
-
-                if ( isNaN(amount) ) {
-                    field.totalAmount = 0;
-                    return;
+            getAmount() {
+                if ( ! this.line.qty ) {
+                    this.line.qty = 0;
                 }
 
-                field.totalAmount = amount.toFixed(2);
+                if ( ! this.line.qty || ! this.line.unitPrice ) {
+                    this.line.amount = 0;
 
-                this.$root.$emit('total-updated', field.totalAmount);
-                this.$forceUpdate();
+                    return false;
+                }
+
+                // Set Amount
+                return parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
+            },
+
+            calculateAmount() {
+                let amount = this.getAmount();
+                if ( ! amount ) return;
+
+                this.line.amount = amount.toFixed(2);
+
+                // Send amount to parent for total calculation
+                this.$root.$emit('total-updated', this.line.amount);
+                this.$forceUpdate(); // why? should use computed? or vue.set()?
             },
 
             removeRow() {

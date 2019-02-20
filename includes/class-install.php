@@ -950,7 +950,7 @@ Company'
             ) $collate;",
 
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_transfer_voucher`(
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_transfer_voucher` (
                 `id` int(11) NOT NULL AUTO_INCREMENT, 
                 `voucher_no` int(11) DEFAULT NULL, 
                 `trn_date` date DEFAULT NULL, 

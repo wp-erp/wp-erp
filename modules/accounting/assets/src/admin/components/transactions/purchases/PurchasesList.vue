@@ -98,6 +98,7 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions : [
+                    { key: 'edit', label: 'Edit' },
                     { key: 'trash', label: 'Delete' }
                 ]
             };
@@ -140,13 +141,7 @@
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                    .then( () => {
-                        //ready
-                    } );
+                });
             },
 
             onActionClick(action, row, index) {
@@ -161,7 +156,10 @@
                         break;
 
                     case 'edit':
-                        //TODO
+                        if ( 'sales_purchase' == row.type ) {
+                            this.$router.push({ name: 'PurchaseEdit', params: { id: row.id } })
+                        }
+
                         break;
 
                     default :

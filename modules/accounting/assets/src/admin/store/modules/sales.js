@@ -10,17 +10,17 @@ const state = {
 
 // getters
 const getters = {
-    getCustomers: (state) => state.customers,
-    getTaxRateID: (state) => state.taxRateID,
-    getDiscount: (state) => state.discount,
+    getCustomers         : (state) => state.customers,
+    getTaxRateID         : (state) => state.taxRateID,
+    getDiscount          : (state) => state.discount,
     getInvoiceTotalAmount: (state) => state.invoiceTotalAmount
 }
 
 // actions
 const actions = {
-    fetchCustomers: async({ commit }) => {        
+    fetchCustomers: async({ commit }) => {
         let {status, data} = await HTTP.get('/people', {
-            params: { 
+            params: {
                 type: 'customer',
                 per_page: 10,
                 page: 1 // *offset issue
@@ -32,10 +32,10 @@ const actions = {
         }
     },
 
-    fillCustomers({ state, commit, dispatch }, data) {        
+    fillCustomers({ state, commit, dispatch }, data) {
         commit('setCustomers', data)
 
-        if ( ! state.customers.length ) {            
+        if ( ! state.customers.length ) {
             dispatch('fetchCustomers')
         }
     },
