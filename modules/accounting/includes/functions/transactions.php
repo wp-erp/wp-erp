@@ -572,12 +572,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
         // Add Table Items
         foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['name']]);
-            $trn_pdf->add_item([$line['qty']]);
-            $trn_pdf->add_item([$line['unit_price']]);
-            $trn_pdf->add_item([$line['discount']]);
-            $trn_pdf->add_item([$line['tax']]);
-            $trn_pdf->add_item([$line['line_total']]);
+            $trn_pdf->add_item([$line['name'], $line['qty'], $line['unit_price'],$line['discount'],$line['tax'], $line['line_total']]);
         }
 
         $trn_pdf->add_badge(__('PAID', 'erp'));
@@ -603,10 +598,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
         // Add Table Items
         foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['voucher_no']]);
-            $trn_pdf->add_item([$line['trn_date']]);
-            $trn_pdf->add_item([$line['due_date']]);
-            $trn_pdf->add_item([$line['due']]);
+            $trn_pdf->add_item([$line['id'], $transaction->trn_date, $transaction->due_date, $line['amount']]);
         }
 
         $trn_pdf->add_badge(__('PENDING', 'erp'));
@@ -619,8 +611,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
         // Add Table Items
         foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['bill_no']]);
-            $trn_pdf->add_item([$line['amount']]);
+            $trn_pdf->add_item([$line['bill_no'], $line['amount']]);
         }
 
         $trn_pdf->add_badge(__('PAID', 'erp'));
@@ -633,10 +624,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
         // Add Table Items
         foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['name']]);
-            $trn_pdf->add_item([$line['qty']]);
-            $trn_pdf->add_item([$line['cost_price']]);
-            $trn_pdf->add_item([$line['amount']]);
+            $trn_pdf->add_item([$line['name'], $line['qty'], $line['cost_price'], $line['amount']]);
         }
 
         $trn_pdf->add_badge(__('PENDING', 'erp'));
@@ -649,8 +637,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
         // Add Table Items
         foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['purchase_no']]);
-            $trn_pdf->add_item([$line['amount']]);
+            $trn_pdf->add_item([$line['purchase_no'], $line['amount']]);
         }
 
         $trn_pdf->add_badge(__('PAID', 'erp'));
@@ -663,9 +650,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
         // Add Table Items
         foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['voucher_no']]);
-            $trn_pdf->add_item([$line['trn_date']]);
-            $trn_pdf->add_item([$line['amount']]);
+            $trn_pdf->add_item([$line['voucher_no'], $line['trn_date'], $line['amount']]);
         }
 
         $trn_pdf->add_badge(__('PAID', 'erp'));
@@ -677,7 +662,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
     //Add Badge
 
-    $file_name = sprintf('%s_%s.pdf', $transaction->id, date('d-m-Y'));
+    $file_name = sprintf('%s_%s.pdf', $transaction->voucher_no, date('d-m-Y'));
     $trn_pdf->render($file_name, $output_method);
     $trn_email  = new \WeDevs\ERP\Accounting\INCLUDES\Send_Email();
     $file_name  = $attach_pdf ? $file_name : '';

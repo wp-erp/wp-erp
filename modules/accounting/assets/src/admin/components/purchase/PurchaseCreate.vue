@@ -272,9 +272,6 @@
                     this.form_errors.push('Vendor Name is required.');
                 }
 
-                if ( !this.basic_fields.trn_ref ) {
-                    this.form_errors.push('Transaction Reference is required.');
-                }
 
                 if ( !this.basic_fields.trans_date ) {
                     this.form_errors.push('Transaction Date is required.');
