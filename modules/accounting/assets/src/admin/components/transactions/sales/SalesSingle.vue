@@ -36,71 +36,7 @@
                 :payment="payment" 
                 :company="company" />
 
-            <modal
-                v-if="showModal" 
-                @close="showModal = false" 
-                :title="'Send Mail'"
-                :footer="true"
-                :hasForm="true"
-                :header="true"
-                >
-                <!-- <h2 slot="header">Send an Email</h2> -->
-                <template slot="body">
-                    <div class="wperp-form-group wperp-row">
-                        <div class="wperp-col-sm-3 wperp-col-xs-12">
-                            <label for="to">To <span class="wperp-required-sign">*</span></label>
-                        </div>
-                        <div class="wperp-col-sm-9 wperp-col-xs-12 wperp-email-multiselect">
-                            <multiselect 
-                                v-model="value" 
-                                tag-placeholder="Add this Email" 
-                                placeholder="Click to Add Email Address" 
-                                label="name" 
-                                track-by="code" 
-                                :options="options" 
-                                :multiple="true" 
-                                :taggable="true" 
-                                @tag="addEmail">
-                            </multiselect>
-                        </div>
-                    </div>
-                    <div class="wperp-form-group wperp-row">
-                        <div class="wperp-col-sm-3 wperp-col-xs-12">
-                            <label for="subject">Subject <span class="wperp-required-sign">*</span></label>
-                        </div>
-                        <div class="wperp-col-sm-9 wperp-col-xs-12">
-                            <input type="text" name="subject" id="subject" class="wperp-form-field" placeholder="Enter Subject Here" />
-                        </div>
-                    </div>
-                    <div class="wperp-form-group wperp-row">
-                        <div class="wperp-col-sm-3 wperp-col-xs-12">
-                            <label for="message">Message <span class="wperp-required-sign">*</span></label>
-                        </div>
-                        <div class="wperp-col-sm-9 wperp-col-xs-12">
-                            <textarea name="message" id="message" class="wperp-form-field" placeholder="Enter Your Message Here" rows="4"></textarea>
-                        </div>
-                    </div>
-                    <div class="wperp-row">
-                        <div class="wperp-col-sm-3 wperp-col-xs-12">
-                            <label for="attachment">Attachment <span class="wperp-required-sign">*</span></label>
-                        </div>
-                        <div class="wperp-col-sm-9 wperp-col-xs-12">
-                            <div class="form-check">
-                                <label class="form-check-label mb-0" for="attachment">
-                                <input class="form-check-input" name="attachment" id="attachment" type="checkbox">
-                                <span class="form-check-sign"></span> <span class="field-label">Attach the invoice as PDF</span>
-                            </label>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-                <template slot="footer">
-                    <div class="buttons-wrapper text-right">
-                        <button class="wperp-btn btn--default" @click="showModal = false">Cancel</button>
-                        <button class="wperp-btn btn--primary" type="submit">Send</button>
-                    </div>
-                </template>
-            </modal>
+            <send-mail v-if="showModal" :data="print_data" :type="type"/>
 
         </div>
     </div>
@@ -110,9 +46,8 @@
     import HTTP from 'admin/http';
     import InvoiceSingleContent from 'admin/components/transactions/sales/InvoiceSingleContent.vue';
     import PaymentSingleContent from 'admin/components/transactions/sales/PaymentSingleContent.vue';
+    import SendMail from 'admin/components/email/SendMail.vue';
     import Dropdown from 'admin/components/base/Dropdown.vue';
-    import Modal from 'admin/components/modal/Modal.vue';
-    import Multiselect from 'vue-multiselect';
 
     export default {
         name: 'SalesSingle',
@@ -126,8 +61,7 @@
                 company  : null,
                 acct_var : erp_acct_var,
                 showModal: false,
-                value: [],
-                options: [],
+                print_data: null
 
             }
         },
@@ -135,15 +69,14 @@
         components: {
             InvoiceSingleContent,
             PaymentSingleContent,
-            Dropdown,
-            Modal,
-            Multiselect
+            SendMail,
+            Dropdown
         },
 
         created() {
             /* If this page load directly, 
             then we don't have the type or type is `undefined`
-            thats why wee need to load the type from database */
+            thats why we need to load the type from database */
             let params = this.$route.params;
 
             if ( typeof params.type === 'undefined' ) {
@@ -153,6 +86,10 @@
             }
 
             this.getCompanyInfo();
+
+            this.$root.$on( 'close', () => {
+                this.showModal = false;
+            })
         },
 
         methods: {
@@ -188,6 +125,7 @@
                 HTTP.get(`/invoices/${this.$route.params.id}`).then(response => {                    
                     this.invoice = response.data;
                 }).then( e => {} ).then(() => {
+                    this.print_data = this.invoice;
                     this.isWorking = false;
                 });
             },
@@ -198,6 +136,7 @@
                 HTTP.get(`/payments/${this.$route.params.id}`).then(response => {
                     this.payment = response.data;
                 }).then( e => {} ).then(() => {
+                    this.print_data = this.payment;
                     this.isWorking = false;
                 });
             },
@@ -205,14 +144,6 @@
             printPopup() {
                 window.print();
             },
-
-            addEmail (newEmail) {
-              const email = {
-                name: newEmail,
-                code: newEmail.substring(0, 2) + Math.floor((Math.random() * 10000000))
-              } 
-              this.value.push(email)
-            }
         },
 
     }
