@@ -172,6 +172,17 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/send-pdf' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'send_as_pdf' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -480,6 +491,33 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response = rest_ensure_response( $data );
 
         $response = $this->add_links( $response, $item, $additional_fields );
+
+        return $response;
+    }
+
+    /**
+     * Send mail with attachment
+     *
+     * @param $request
+     * @return array|mixed|object
+     */
+    public function send_as_pdf( $request ) {
+
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $response = array(
+            'status' => 304,
+            'message' => 'There was an error sending mail!'
+        );
+
+        if ( erp_acct_send_email_with_pdf_attached( $request, 'F' ) ) {
+            $response['status'] = 200;
+            $response['message'] = 'mail Sent successfully.';
+        }
 
         return $response;
     }
