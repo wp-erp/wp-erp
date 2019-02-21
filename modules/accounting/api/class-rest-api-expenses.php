@@ -398,6 +398,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'           => (int) $item->id,
+            'voucher_no'   => (int) $item->voucher_no,
             'people_id'    => (int) $item->people_id,
             'people_name'  => $item->people_name,
             'date'         => $item->trn_date,

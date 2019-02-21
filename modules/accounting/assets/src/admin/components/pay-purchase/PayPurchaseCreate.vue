@@ -217,7 +217,7 @@
                 this.isWorking = false;
             },
 
-            fetchAccounts(){
+            fetchAccounts() {
                 HTTP.get('/accounts').then( (response) => {
                     this.deposit_accts = response.data;
                 } );

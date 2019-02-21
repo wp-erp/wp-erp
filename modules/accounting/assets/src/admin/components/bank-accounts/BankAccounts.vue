@@ -16,42 +16,6 @@
                     <tbody>
                         <!-- keep this empty row if possible -->
                         <tr></tr>
-                        <!--<tr>-->
-                            <!--<td class="col&#45;&#45;account-infos">-->
-                                <!--&lt;!&ndash; account name &ndash;&gt;-->
-                                <!--<div class="account-name">-->
-                                    <!--<h4>Checking Account</h4>-->
-                                <!--</div>-->
-                                <!--&lt;!&ndash; account number &ndash;&gt;-->
-                                <!--<div class="account-number-info">-->
-                                    <!--<span class="account-number-label">Account Number:</span>-->
-                                    <!--<span class="account-number">258446798123435</span>-->
-                                <!--</div>-->
-                                <!--&lt;!&ndash; account balance info &ndash;&gt;-->
-                                <!--<div class="account-balance-info">-->
-                                    <!--&lt;!&ndash; available balance &ndash;&gt;-->
-                                    <!--<div class="available-balance">-->
-                                        <!--<span class="account-balance-label">Available Balance:</span>-->
-                                        <!--<strong class="account-balance">$258446798123435</strong>-->
-                                    <!--</div>-->
-                                    <!--&lt;!&ndash; current balance &ndash;&gt;-->
-                                    <!--<div class="current-balance">-->
-                                        <!--<span class="account-balance-label">Current Balance:</span>-->
-                                        <!--<strong class="account-balance">$258446798123435</strong>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</td>-->
-                            <!--&lt;!&ndash; actions column &ndash;&gt;-->
-                            <!--<td class="col&#45;&#45;actions">-->
-                                <!--<div class="wperp-has-dropdown dropdown right&#45;&#45;middle">-->
-                                    <!--<a href="#" class="dropdown-trigger"><i class="flaticon-menu"></i></a>-->
-                                    <!--<ul class="dropdown-menu" role="menu">-->
-                                        <!--<li><a href="#"><i class="flaticon-edit"></i>View/Edit</a></li>-->
-                                        <!--<li><a href="#"><i class="flaticon-trash"></i>Delete</a></li>-->
-                                    <!--</ul>-->
-                                <!--</div>-->
-                            <!--</td>-->
-                        <!--</tr>-->
                         <tr v-for="account in accounts">
                             <td class="col--account-infos">
                                 <!-- account name -->
@@ -71,11 +35,6 @@
                                         <strong class="account-balance">{{transformBalance(account.balance)}}</strong>
                                     </div>
 
-                                    <!-- current balance -->
-                                    <!--<div class="current-balance">-->
-                                        <!--<span class="account-balance-label">Current Balance:</span>-->
-                                        <!--<strong class="account-balance">$258446798123435</strong>-->
-                                    <!--</div>-->
                                 </div>
                             </td>
                             <!-- actions column -->

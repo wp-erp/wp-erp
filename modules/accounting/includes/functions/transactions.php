@@ -510,10 +510,21 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
     $theme_color = '#9e9e9e';
     $transaction = (object)$request['trn_data'];
 
-    $user = new \WeDevs\ERP\People(intval($transaction->customer_id));
+    $user_id = '';
+
+    if ( !empty( $transaction->customer_id ) ) {
+        $user_id = $transaction->customer_id;
+    }
+    if ( !empty( $transaction->vendor_id ) ) {
+        $user_id = $transaction->vendor_id;
+    }
+    if ( !empty( $transaction->people_id ) ) {
+        $user_id = $transaction->people_id;
+    }
+    $user = new \WeDevs\ERP\People( intval( $user_id ) );
 
     if (!defined('WPERP_PDF_VERSION')) {
-        wp_die(__('ERP PDF extension is not installed. Please install the extension for PDF support', 'erp'));
+        wp_die( __('ERP PDF extension is not installed. Please install the extension for PDF support', 'erp') );
     }
 
     //Create a new instance
@@ -532,21 +543,21 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
     }
 
     //Set type
-    $trn_pdf->set_type(__('PAYMENT', 'erp'));
+    $trn_pdf->set_type( $transaction->type );
 
     // Set barcode
-    if ($transaction->id) {
-        $trn_pdf->set_barcode($transaction->id);
+    if ( $transaction->voucher_no ) {
+        $trn_pdf->set_barcode( $transaction->voucher_no );
     }
 
     // Set reference
-    if ($transaction->id) {
-        $trn_pdf->set_reference($transaction->id, __('Transaction Number', 'erp'));
+    if ( $transaction->voucher_no ) {
+        $trn_pdf->set_reference( $transaction->voucher_no, __( 'Transaction Number', 'erp' ) );
     }
 
     // Set Issue Date
     if ($transaction->trn_date) {
-        $trn_pdf->set_reference(erp_format_date($transaction->trn_date), __('Transaction Date', 'erp'));
+        $trn_pdf->set_reference( erp_format_date( $transaction->trn_date ), __( 'Transaction Date', 'erp' ) );
     }
 
 
@@ -554,14 +565,15 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
     $from_address = explode('<br/>', $company->get_formatted_address());
     array_unshift($from_address, $company->name);
 
-    $trn_pdf->set_from_title(__('FROM', 'erp'));
-    $trn_pdf->set_from($from_address);
+    $trn_pdf->set_from_title( __( 'FROM', 'erp' ) );
+    $trn_pdf->set_from( $from_address );
 
     // Set to Address
-    $to_address = explode(PHP_EOL, $transaction->billing_address);
-    array_unshift($to_address, $user->get_full_name());
+    $use_address = !empty( $transaction->billing_address ) ? $transaction->billing_address :
+    $to_address = explode(PHP_EOL, $transaction->billing_address );
+    array_unshift($to_address, $user->get_full_name() );
 
-    $trn_pdf->set_to_title(__('TO', 'erp'));
+    $trn_pdf->set_to_title( __( 'TO', 'erp' ) );
     $trn_pdf->set_to_address($to_address);
 
     /* Customize columns based on transaction type */

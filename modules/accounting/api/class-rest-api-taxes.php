@@ -412,6 +412,9 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['ledger_id'] ) ) {
             $prepared_item['ledger_id'] = $request['ledger_id'];
         }
+        if ( isset( $request['agency_id'] ) ) {
+            $prepared_item['agency_id'] = $request['agency_id'];
+        }
         if ( isset( $request['voucher_type'] ) ) {
             $prepared_item['voucher_type'] = $request['voucher_type'];
         }
@@ -471,7 +474,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'              => (int) $item->id,
             'voucher_no'      => $item->voucher_no,
-            'agency_id'       => $item->agency_id,
+            'agency_id'       => erp_acct_get_tax_agency_name_id( $item->agency_id ),
             'trn_date'        => $item->trn_date,
             'tax_period'      => $item->tax_period,
             'particulars'     => $item->particulars,

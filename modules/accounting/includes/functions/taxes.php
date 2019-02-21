@@ -284,7 +284,7 @@ function erp_acct_insert_tax_pay_data_into_ledger( $payment_data ) {
 
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => 501, // @TODO change later
+        'ledger_id'   => $payment_data['ledger_id'], // @TODO change later
         'trn_no'      => $payment_data['voucher_no'],
         'particulars' => $payment_data['particulars'],
         'debit'       => 0,
@@ -297,7 +297,7 @@ function erp_acct_insert_tax_pay_data_into_ledger( $payment_data ) {
     ) );
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => 502, // @TODO change later
+        'ledger_id'   => $payment_data['ledger_id'], // @TODO change later
         'trn_no'      => $payment_data['voucher_no'],
         'particulars' => $payment_data['particulars'],
         'debit'       => $payment_data['amount'],
