@@ -17,17 +17,13 @@
 	            <form action="#" class="wperp-form" method="post">
 	                <div class="wperp-row wperp-gutter-20">
 	                    <div class="wperp-col-sm-6 wperp-col-xs-12">
-	                        <div class="wperp-form-group">
-	                            <label>Account</label>
-	                            <!--<div class="wperp-custom-select">-->
-                                    <!---->
-	                                <!--<i class="flaticon-arrow-down-sign-to-navigate"></i>-->
-	                            <!--</div>-->
-                                <div class="wperp-multi-select"><multi-select v-model="ledger" :options="ledgers" /></div>
-	                        </div>
+                            <div class="wperp-col-sm-6 with-multiselect">
+                                <label>From Account<span class="wperp-required-sign">*</span></label>
+                                <multi-select :placeholder="`Select Account`" v-model="ledger" :options="ledgers" />
+                            </div>
 	                    </div>
 	                    <div class="wperp-col-sm-6 wperp-col-xs-12">
-	                        <div class="wperp-form-group">
+	                        <div class="wperp-form-group with-multiselect">
 	                            <label>Payment To</label>
                                 <multi-select v-model="agency" :options="agencies" />
 	                        </div>
@@ -71,7 +67,7 @@
 	                    </div>
 	                    <div class="wperp-col-xs-12">
 	                    	<div class="wperp-form-group text-right mt-10 mb-0">
-                                <submit-button text="Pay Tax" @click.native="SubmitForTaxPay" :working="isWorking"></submit-button>
+                                <submit-button text="Pay Tax" @click.native.prevent="SubmitForTaxPay" :working="isWorking"></submit-button>
                             </div>
 	                    </div>
 	                </div>
@@ -89,6 +85,7 @@
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
 
     export default {
         name: 'RecordPayTax',
@@ -96,8 +93,8 @@
         components: {
             Datepicker,
             MultiSelect,
-            MultiSelect,
             SubmitButton,
+            SelectAccounts
         },
 
         data () {
@@ -116,26 +113,26 @@
         },
 
         created() {
-            this.getLedgersAgencies();
+            this.getAgencies();
+            this.fetchAccounts();
         },
 
         methods: {
-            getLedgersAgencies() {
-                this.ledgers = [
-                    { id: 501, name: "Ledger 1" },
-                    { id: 502, name: "Ledger 2" },
-                ];
-
-                this.agencies = [
-                    { id: 101, name: "NBR" },
-                    { id: 102, name: "BOE" },
-                ]
+            fetchAccounts() {
+                HTTP.get('/accounts').then( (response) => {
+                    this.ledgers = response.data;
+                } );
+            },
+            getAgencies() {
+                HTTP.get('/tax-agencies').then( (response) => {
+                    this.agencies = response.data;
+                } );
             },
 
             SubmitForTaxPay() {
                 HTTP.post('/taxes/pay-tax', {
-                    ledger_id: this.ledger,
-                    agency_id: this.agency,
+                    ledger_id: this.ledger.id,
+                    agency_id: this.agency.id,
                     trn_date: this.trn_date,
                     tax_period: this.tax_period,
                     particulars: this.particulars,
@@ -144,7 +141,7 @@
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({
-                        position: 'top-end',
+                        position: 'center',
                         type: 'success',
                         title: 'Tax Paid!',
                         showConfirmButton: false,

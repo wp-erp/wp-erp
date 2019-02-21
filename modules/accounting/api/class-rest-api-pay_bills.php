@@ -376,9 +376,9 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor_name' => $item->vendor_name,
             'trn_date'    => $item->trn_date,
             'amount'      => $item->amount,
-            // 'billing_address' => $item->billing_address,
+            'billing_address' => $item->billing_address,
             'bill_details'    => $item->bill_details,
-            // 'type'            => $item->type,
+            'type'            => $item->type,
             'status'       => $item->status,
             'attachments'  => maybe_unserialize( $item->attachments )
         ];

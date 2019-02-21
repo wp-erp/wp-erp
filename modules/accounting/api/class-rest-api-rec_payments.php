@@ -348,14 +348,14 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            //'voucher_no'      => (int) $item->voucher_no,
+            'voucher_no'      => (int) $item->voucher_no,
             'customer_id'     => (int) $item->customer_id,
-            //'customer_name'   => $item->customer_name,
             'trn_date'        => $item->trn_date,
             'amount'          => $item->amount,
             'line_items'      => $item->line_items,
             'attachments'     => maybe_unserialize( $item->attachments ),
             'status'          => $item->status,
+            'type'            => $item->type,
         ];
 
         $data = array_merge( $data, $additional_fields );

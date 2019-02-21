@@ -261,7 +261,7 @@
                 HTTP.post('/pay-bills', {
                     people_id: this.basic_fields.people.id,
                     ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.trans_date,
+                    trn_date: this.basic_fields.payment_date,
                     due_date: this.basic_fields.due_date,
                     bill_details: this.pay_bills,
                     attachments: this.attachments,

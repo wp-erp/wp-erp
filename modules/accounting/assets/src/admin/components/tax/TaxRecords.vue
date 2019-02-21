@@ -34,8 +34,8 @@
 
 <script>
     import HTTP from 'admin/http'
-    import ListTable     from 'admin/components/list-table/ListTable.vue'
-    import NewTaxRate     from 'admin/components/tax/NewTaxRate.vue'
+    import ListTable from 'admin/components/list-table/ListTable.vue'
+    import NewTaxRate from 'admin/components/tax/NewTaxRate.vue'
 
     export default {
         name: 'TaxRecords',

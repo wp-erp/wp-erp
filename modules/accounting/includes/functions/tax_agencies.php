@@ -53,7 +53,7 @@ function erp_acct_get_tax_agency( $tax_no ) {
     global $wpdb;
 
     $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_tax_agencies
-    WHERE tax.id = {$tax_no} LIMIT 1";
+    WHERE id = {$tax_no} LIMIT 1";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -133,5 +133,24 @@ function erp_acct_delete_tax_agency( $id ) {
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agencies', array( 'id' => $id ) );
 
     return $id;
+}
+
+/**
+ * Get an single tax agency name
+ *
+ * @param $tax_no
+ *
+ * @return mixed
+ */
+
+function erp_acct_get_tax_agency_name_id( $agency_id ) {
+    global $wpdb;
+
+    $sql = "SELECT name FROM {$wpdb->prefix}erp_acct_tax_agencies
+    WHERE id = {$agency_id} LIMIT 1";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $row['name'];
 }
 

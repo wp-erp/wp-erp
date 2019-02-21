@@ -85,7 +85,6 @@
                     'tax_id': {label: 'ID'},
                     'tax_name': {label: 'Component Name'},
                     'tax_number': {label: 'Tax Number'},
-                    'tax_rate': {label: 'Tax Rate'},
                     'actions': {label: 'Actions'}
                 },
                 rows: [],
@@ -164,7 +163,7 @@
             fetchItems() {
                 this.rows = [];
 
-                HTTP.get('taxes', {
+                HTTP.get('/taxes', {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,

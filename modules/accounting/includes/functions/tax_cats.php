@@ -53,7 +53,7 @@ function erp_acct_get_tax_cat( $tax_no ) {
     global $wpdb;
 
     $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_tax_categories
-    WHERE tax.id = {$tax_no} LIMIT 1";
+    WHERE id = {$tax_no} LIMIT 1";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 

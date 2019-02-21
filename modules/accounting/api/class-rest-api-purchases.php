@@ -392,14 +392,14 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            // 'id'          => (int) $item->id,
+            'id'          => (int) $item->id,
             'vendor_id'   => (int) $item->vendor_id,
             'voucher_no'  => (int) $item->voucher_no,
             'vendor_name' => $item->vendor_name,
             'date'        => $item->trn_date,
             'due_date'    => $item->due_date,
             'line_items'  => $item->line_items,
-            // 'type'        => $item->type,
+            'type'        => $item->type,
             'status'      => $item->status,
             'amount'      => $item->amount,
             'due_total'   => empty($item->total_due) ? erp_acct_get_purchase_due($item->voucher_no) : $item->total_due,
