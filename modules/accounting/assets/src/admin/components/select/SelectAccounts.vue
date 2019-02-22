@@ -41,7 +41,7 @@
                 this.selectedAccount = val;
             },
 
-            selected() {
+            selectedAccount() {
                 this.$emit('input', this.selectedAccount);
             },
 

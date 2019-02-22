@@ -135,7 +135,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'] 
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
         ];
 
         $formatted_items = [];
@@ -252,9 +252,16 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function update_invoice( $request ) {
         $id = (int) $request['id'];
 
+        error_log(print_r($request, true)); die;
+
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
+
+        if ( 'awaiting_approval' !== $request['status'] ) {
+            return new WP_Error( 'rest_invoice_invalid_status', __( 'Invalid status for update.' ), [ 'status' => 403 ] );
+        }
+
         $invoice_data = $this->prepare_item_for_database( $request );
 
         $item_total          = 0;
