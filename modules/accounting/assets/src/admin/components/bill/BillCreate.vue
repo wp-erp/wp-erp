@@ -43,7 +43,7 @@
                         </div>
                         <div class="wperp-col-xs-12">
                             <label>Billing Address</label>
-                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
+                            <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                     </div>
                 </form>
@@ -192,13 +192,17 @@
             getPeopleAddress() {
                 let people_id = this.basic_fields.user.id;
 
-                if ( ! people_id ) return;
+                if ( ! people_id ) {
+                    this.basic_fields.billing_address = '';
+                    return;
+                }
 
-                HTTP.get(`/customers/${people_id}`).then(response => {
-                    // add more info
-                    this.basic_fields.billing_address =
-                        `Street: ${response.data.billing.street_1} ${response.data.billing.street_2},
-                        City: ${response.data.billing.city}, Country: ${response.data.billing.country}`;
+                HTTP.get(`/people/${people_id}`).then(response => {
+                    let billing = response.data;
+
+                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                    this.basic_fields.billing_address = address;
                 });
             },
 

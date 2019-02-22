@@ -178,7 +178,10 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $payment_id = erp_acct_insert_payment( $payment_data );
 
+        //? Do we need duplicate?
         $payment_data['id'] = $payment_id;
+        $payment_data['voucher_no'] = $payment_id;
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 

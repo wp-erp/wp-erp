@@ -71,7 +71,7 @@
             'line.selectedProduct'() {
                 this.setProductInfo();
             },
-            
+
             taxRateID() {
                 this.getTaxRate();
                 this.respondAtChange();
@@ -101,7 +101,7 @@
         },
 
         methods: {
-            prepareRowEdit(row) {                
+            prepareRowEdit(row) {
                 // format invoice data which comes from database, to mactch with line items
                 row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
                 row.taxCatID  = row.tax_cat_id;
@@ -112,9 +112,9 @@
             },
 
             respondAtChange() {
+                this.calculateDiscount();
                 this.calculateTax();
                 this.calculateAmount();
-                this.calculateDiscount();
             },
 
             getAmount() {
@@ -154,7 +154,6 @@
 
                 if (taxInfo) {
                     this.taxRate = parseFloat(taxInfo.tax_rate);
-                    this.line.agencyId = taxInfo.agency_id;
                 }
 
                 this.line.taxRate = this.taxRate;
@@ -173,7 +172,7 @@
                 let amount = this.getAmount();
                 if ( ! amount ) return;
 
-                let taxAmount = (amount * this.taxRate) / 100;
+                let taxAmount = ( ( amount - this.discount ) * this.taxRate) / 100;
 
                 this.line.taxAmount = 0;
 

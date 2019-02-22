@@ -202,14 +202,21 @@ function erp_acct_insert_invoice( $data ) {
                 'created_by'  => $invoice_data['created_by']
             ) );
 
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
-                'invoice_details_id' => $wpdb->insert_id,
-                'agency_id'          => $item['agency_id'],
-                'tax_rate'           => $item['tax_rate'],
-                'tax_amount'         => $item['tax'],
-                'created_at'         => $invoice_data['created_at'],
-                'created_by'         => $invoice_data['created_by']
-             ] );
+            // calculate tax for every related agency
+            $tax_rate_agency = get_tax_rate_with_agency($invoice_data['tax_rate_id'], $item['tax_cat_id']);
+
+            foreach ( $tax_rate_agency as $rate_agency ) {
+                $tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
+
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
+                    'invoice_details_id' => $wpdb->insert_id,
+                    'agency_id'          => $rate_agency['agency_id'],
+                    'tax_rate'           => $rate_agency['tax_rate'],
+                    'tax_amount'         => $tax_amount,
+                    'created_at'         => $invoice_data['created_at'],
+                    'created_by'         => $invoice_data['created_by']
+                 ] );
+            }
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
@@ -217,7 +224,7 @@ function erp_acct_insert_invoice( $data ) {
             'trn_no'      => $voucher_no,
             'trn_date'    => $invoice_data['trn_date'],
             'particulars' => '',
-            'debit'       => ($invoice_data['amount'] + $invoice_data['tax']) - $invoice_data['discount'],
+            'debit'       => ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'],
             'credit'      => 0.00,
             'created_at'  => $invoice_data['created_at'],
             'created_by'  => $invoice_data['created_by']
@@ -317,7 +324,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
             'particulars' => $invoice_data['particulars'],
-            'debit'       => ($invoice_data['amount'] + $invoice_data['tax']) - $invoice_data['discount'],
+            'debit'       => ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'],
             'updated_at'  => $invoice_data['updated_at'],
             'updated_by'  => $invoice_data['updated_by'],
         ), array(
@@ -416,6 +423,19 @@ function erp_acct_void_invoice( $invoice_no ) {
     );
 }
 
+/**
+ * Tax category with agency
+ */
+function get_tax_rate_with_agency($tax_id, $tax_cat_id) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare(
+        "SELECT agency_id, tax_rate FROM {$wpdb->prefix}erp_acct_tax_cat_agency where tax_id = %d and tax_cat_id = %d",
+        absint( $tax_id ), absint( $tax_cat_id )
+    );
+
+    return $wpdb->get_results($sql, ARRAY_A);
+}
 
 /**
  * Insert invoice/s data into ledger
@@ -564,7 +584,7 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
                                     GROUP BY ia.invoice_no
                                     HAVING due > 0
                                 ) as invs
-                                ON invoice.id = invs.invoice_no
+                                ON invoice.voucher_no = invs.invoice_no
                                 WHERE invoice.customer_id = %d
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
@@ -572,6 +592,7 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
         return $wpdb->get_var( $query );
     }
 
+    // error_log(print_r($query, true));
     return $wpdb->get_results( $query, ARRAY_A );
 }
 
