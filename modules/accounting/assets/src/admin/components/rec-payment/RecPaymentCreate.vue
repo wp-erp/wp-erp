@@ -20,7 +20,8 @@
                     <div class="wperp-row">
                         <div class="wperp-col-sm-3">
                             <div class="wperp-form-group">
-                                <select-customers @input="getDueInvoices" v-model="basic_fields.customer"></select-customers>
+                                <!-- @input="getDueInvoices"  -->
+                                <select-customers v-model="basic_fields.customer"></select-customers>
                             </div>
                         </div>
                         <div class="wperp-col-sm-3">
@@ -197,15 +198,21 @@
             },
 
             getDueInvoices() {
+                this.invoices = [];
+
                 let customerId = this.basic_fields.customer.id,
                     idx = 0,
                     finalAmount = 0;
+
+                if ( ! customerId ) {
+                    return;
+                }
 
                 HTTP.get(`/invoices/due/${customerId}`).then((response) => {
                     response.data.forEach(element => {
                         this.invoices.push({
                             id: element.id,
-                            invoice_no: element.id,
+                            invoice_no: element.voucher_no,
                             due_date: element.due_date,
                             amount: parseFloat(element.amount),
                             due: parseFloat(element.due)
@@ -330,6 +337,7 @@
             'basic_fields.customer'() {
                 this.showPrintPreview = true;
                 this.getCustomerAddress();
+                this.getDueInvoices();
             }
         },
 

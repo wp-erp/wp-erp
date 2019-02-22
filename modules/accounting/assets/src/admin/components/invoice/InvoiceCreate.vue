@@ -443,17 +443,19 @@
                 var lineItems = [];
 
                 this.transactionLines.forEach(line => {
-                    lineItems.push({
-                        product_id       : line.selectedProduct.id,
-                        product_type_name: line.selectedProduct.product_type_name,
-                        agency_id        : line.agencyId,
-                        qty              : line.qty,
-                        unit_price       : line.unitPrice,
-                        tax              : line.taxAmount,
-                        tax_rate         : line.taxRate,
-                        discount         : line.discount,
-                        item_total       : line.amount
-                    });
+                    if ( line.qty ) {
+                        lineItems.push({
+                            product_id       : line.selectedProduct.id,
+                            product_type_name: line.selectedProduct.product_type_name,
+                            tax_cat_id       : line.taxCatID,
+                            qty              : line.qty,
+                            unit_price       : line.unitPrice,
+                            tax              : line.taxAmount,
+                            tax_rate         : line.taxRate,
+                            discount         : line.discount,
+                            item_total       : line.amount
+                        });
+                    }
                 });
 
                 return lineItems;

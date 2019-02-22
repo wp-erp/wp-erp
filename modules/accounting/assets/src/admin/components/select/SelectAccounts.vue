@@ -55,8 +55,8 @@
         },
 
         methods: {
-            fetchAccounts(){
-                HTTP.get('accounts').then(response => {
+            fetchAccounts() {
+                HTTP.get('/accounts').then(response => {
                     this.accounts = response.data;
                 } );
             },
