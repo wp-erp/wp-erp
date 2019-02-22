@@ -43,7 +43,7 @@ function erp_acct_get_all_invoices( $args = [] ) {
         $sql .= " invoice.*, SUM(ledger_detail.credit) - SUM(ledger_detail.debit) as due";
     }
 
-    $sql .= " FROM {$wpdb->prefix}erp_acct_invoices AS invoice LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail"; 
+    $sql .= " FROM {$wpdb->prefix}erp_acct_invoices AS invoice LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail";
     $sql .= " ON invoice.voucher_no = ledger_detail.trn_no {$where} GROUP BY invoice.voucher_no ORDER BY invoice.{$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
@@ -80,12 +80,12 @@ function erp_acct_get_invoice( $invoice_no ) {
     invoice.tax,
     invoice.estimate,
     invoice.attachments,
-    invoice.status, 
+    invoice.status,
     invoice.particulars,
-    
+
     inv_acc_detail.debit,
     inv_acc_detail.credit
-    
+
     FROM {$wpdb->prefix}erp_acct_invoices as invoice
     LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.trn_no
     WHERE invoice.voucher_no = %d", $invoice_no);
@@ -112,13 +112,13 @@ function erp_acct_get_invoice( $invoice_no ) {
 function erp_acct_format_invoice_line_items($voucher_no) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("SELECT 
+    $sql = $wpdb->prepare("SELECT
         inv_detail.product_id,
         inv_detail.qty,
         inv_detail.unit_price,
         inv_detail.discount,
         inv_detail.tax,
-        inv_detail.item_total, 
+        inv_detail.item_total,
         inv_detail.tax_percent,
 
         product.name,
@@ -317,7 +317,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
             'particulars' => $invoice_data['particulars'],
-            'debit'       => $invoice_data['amount'],
+            'debit'       => ($invoice_data['amount'] + $invoice_data['tax']) - $invoice_data['discount'],
             'updated_at'  => $invoice_data['updated_at'],
             'updated_by'  => $invoice_data['updated_by'],
         ), array(
@@ -608,9 +608,9 @@ function erp_acct_get_recievables( $from, $to ) {
     $invoices_acct_details = $wpdb->prefix . 'erp_acct_invoice_account_details';
 
     $query = $wpdb->prepare( "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
-                              FROM $invoices 
-                              LEFT JOIN $invoices_acct_details as ad 
-                              ON ad.invoice_no = voucher_no  where due_date 
+                              FROM $invoices
+                              LEFT JOIN $invoices_acct_details as ad
+                              ON ad.invoice_no = voucher_no  where due_date
                               BETWEEN %s and %s
                               Group BY voucher_no Having due > 0 ", $from_date, $to_date );
 

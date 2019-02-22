@@ -87,7 +87,7 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
 
     $sql = "SELECT COUNT(invoice.status) AS sub_total, status_type.type_name
             FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
-            LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.status = status_type.slug {$where} 
+            LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.status = status_type.slug {$where}
             GROUP BY status_type.id HAVING COUNT(invoice.status) > 0 ORDER BY status_type.type_name ASC";
 
     // error_log(print_r($sql, true));
@@ -268,8 +268,8 @@ function erp_acct_get_expense_chart_status( $args = [] ) {
 
     $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
             FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
-            LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.status = status_type.id {$where} 
-            GROUP BY status_type.id 
+            LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.status = status_type.id {$where}
+            GROUP BY status_type.id
             HAVING sub_total > 0
             ORDER BY status_type.type_name ASC";
 
@@ -350,7 +350,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acct_details ON bill_acct_details.bill_no = bill.id
         LEFT JOIN {$wpdb->prefix}erp_acct_expenses AS expense ON expense.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON cheque.trn_no = voucher.id
-        {$where} 
+        {$where}
         GROUP BY voucher.id
         ORDER BY voucher.id {$args['order']} {$limit}";
 
@@ -410,8 +410,8 @@ function erp_acct_get_purchase_chart_status( $args = [] ) {
 
     $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
             FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
-            LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS bill ON bill.status = status_type.id {$where} 
-            GROUP BY status_type.id 
+            LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS bill ON bill.status = status_type.id {$where}
+            GROUP BY status_type.id
             HAVING sub_total > 0
             ORDER BY status_type.type_name ASC";
 
