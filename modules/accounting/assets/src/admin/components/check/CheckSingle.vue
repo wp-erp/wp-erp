@@ -57,15 +57,11 @@
                                 <table class="invoice-info">
                                     <tr>
                                         <th>Check No</th>
-                                        <td>#{{ expense_data.id }}</td>
+                                        <td>#{{ expense_data.check_no }}</td>
                                     </tr>
                                     <tr>
                                         <th>Check Date:</th>
                                         <td>{{ expense_data.trn_date }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Due Date:</th>
-                                        <td>{{ expense_data.due_date }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -76,7 +72,6 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>Account</th>
                                 <th>Voucher No</th>
                                 <th>Particulars</th>
                                 <th>Amount</th>
@@ -84,8 +79,7 @@
                             </thead>
                             <tbody>
                             <tr :key="index" v-for="(line, index) in expense_data.bill_details">
-                                <td>{{ line.ledger_id}}</td>
-                                <td>{{ line.trn_no }}</td>
+                                <td>{{ line.voucher_no }}</td>
                                 <td>{{ line.particulars }}</td>
                                 <td>{{ getCurrencySign() + line.amount }}</td>
                             </tr>

@@ -140,10 +140,12 @@ function erp_acct_format_check_line_items( $voucher_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare("SELECT
-        expense_detail.id,
-        expense_detail.ledger_id,
-        expense_detail.trn_no,
-        expense_detail.particulars,
+        expense.id,
+        expense.voucher_no,
+        expense.status,
+        expense.trn_by,
+        expense.trn_date,
+        expense.particulars,
 
         cheque.name,
         cheque.check_no,
@@ -151,10 +153,9 @@ function erp_acct_format_check_line_items( $voucher_no ) {
         cheque.amount
 
         FROM {$wpdb->prefix}erp_acct_expenses AS expense
-        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details as expense_detail ON expense.voucher_no = expense_detail.trn_no
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON expense.voucher_no = cheque.trn_no
 
-        WHERE expense.voucher_no = %d", $voucher_no);
+        WHERE expense.voucher_no = %d AND cheque.voucher_type = 'check'", $voucher_no);
 
     return $wpdb->get_results($sql, ARRAY_A);
 }
