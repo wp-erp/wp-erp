@@ -542,21 +542,27 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
         $trn_pdf->set_logo($url);
     }
 
+    if ( !empty( $transaction->voucher_no ) ) {
+        $trn_id = $transaction->voucher_no;
+    } elseif ( !empty( $transaction->trn_no ) ) {
+        $trn_id = $transaction->trn_no;
+    }
+
     //Set type
-    $trn_pdf->set_type( $transaction->type );
+    $trn_pdf->set_type( erp_acct_get_trn_type_by_voucher_no( $trn_id ) );
 
     // Set barcode
-    if ( $transaction->voucher_no ) {
-        $trn_pdf->set_barcode( $transaction->voucher_no );
+    if ( $trn_id ) {
+        $trn_pdf->set_barcode( $trn_id );
     }
 
     // Set reference
-    if ( $transaction->voucher_no ) {
-        $trn_pdf->set_reference( $transaction->voucher_no, __( 'Transaction Number', 'erp' ) );
+    if ( $trn_id ) {
+        $trn_pdf->set_reference( $trn_id, __( 'Transaction Number', 'erp' ) );
     }
 
     // Set Issue Date
-    if ($transaction->trn_date) {
+    if ( $transaction->trn_date ) {
         $trn_pdf->set_reference( erp_format_date( $transaction->trn_date ), __( 'Transaction Date', 'erp' ) );
     }
 
@@ -569,8 +575,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
     $trn_pdf->set_from( $from_address );
 
     // Set to Address
-    $use_address = !empty( $transaction->billing_address ) ? $transaction->billing_address :
-    $to_address = explode(PHP_EOL, $transaction->billing_address );
+    $to_address = array_values( erp_acct_get_people_address( $user_id ) );
     array_unshift($to_address, $user->get_full_name() );
 
     $trn_pdf->set_to_title( __( 'TO', 'erp' ) );
@@ -579,102 +584,106 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
     /* Customize columns based on transaction type */
     if ( 'sales_invoice' == $type ) {
         // Set Column Headers
-        $trn_pdf->set_table_headers([__('PRODUCT', 'erp'), __('QUANTITY', 'erp'), __('UNIT PRICE', 'erp'), __('DISCOUNT', 'erp'), __('TAX AMOUNT', 'erp'), __('AMOUNT', 'erp')]);
-        $trn_pdf->set_first_column_width(60);
-
+        $trn_pdf->set_table_headers( [__('PRODUCT', 'erp'), __('QUANTITY', 'erp'), __('UNIT PRICE', 'erp'), __('DISCOUNT', 'erp'), __('TAX AMOUNT', 'erp'), __('AMOUNT', 'erp')] );
         // Add Table Items
-        foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['name'], $line['qty'], $line['unit_price'],$line['discount'],$line['tax'], $line['line_total']]);
+        foreach ( $transaction->line_items as $line ) {
+            $trn_pdf->add_item( [$line['name'], $line['qty'], $line['unit_price'], $line['discount'], $line['tax'],  $line['line_total']] );
         }
 
-        $trn_pdf->add_badge(__('PAID', 'erp'));
+        $trn_pdf->add_badge(__('PENDING', 'erp'));
+        $trn_pdf->add_total( __( 'DUE', 'erp' ), $transaction->due );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
 
     if ( 'payment' == $type ) {
         // Set Column Headers
-        $trn_pdf->set_table_headers([__('INNVOICE NO', 'erp'), __('AMOUNT', 'erp')]);
-        $trn_pdf->set_first_column_width(60);
+        $trn_pdf->set_table_headers([__('INNVOICE NO', 'erp'), __( 'DUE DATE', 'erp' ),__('AMOUNT', 'erp')]);
 
         // Add Table Items
-        foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['invoice_no'], $line['amount']]);
+        foreach ( $transaction->line_items as $line ) {
+            $trn_pdf->add_item( [$line['invoice_no'], $line['due_date'], $line['amount']] );
         }
 
-        $trn_pdf->add_badge(__('PENDING', 'erp'));
+        $trn_pdf->add_badge(__('PAID', 'erp'));
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
 
     if ( 'bill' == $type ) {
         // Set Column Headers
         $trn_pdf->set_table_headers([__('BILL NO', 'erp'), __('BILL DATE', 'erp'), __('DUE DATE', 'erp'), __('AMOUNT', 'erp')]);
-        $trn_pdf->set_first_column_width(60);
 
         // Add Table Items
-        foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['id'], $transaction->trn_date, $transaction->due_date, $line['amount']]);
+        foreach ( $transaction->bill_details as $line ) {
+            $trn_pdf->add_item( [$line['id'], $transaction->trn_date, $transaction->due_date, $line['amount']] );
         }
 
         $trn_pdf->add_badge(__('PENDING', 'erp'));
+        $trn_pdf->add_total( __( 'DUE', 'erp' ), $transaction->due );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
 
     if ( 'pay_bill' == $type ) {
         // Set Column Headers
-        $trn_pdf->set_table_headers([__('BILL NO', 'erp'), __('AMOUNT', 'erp')]);
-        $trn_pdf->set_first_column_width(60);
+        $trn_pdf->set_table_headers( [__('BILL NO', 'erp'), __( 'DUE DATE', 'erp' ), __('AMOUNT', 'erp')] );
 
         // Add Table Items
-        foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['bill_no'], $line['amount']]);
+        foreach ($transaction->bill_details as $line) {
+            $trn_pdf->add_item( [$line['bill_no'], $line['due_date'], $line['amount']] );
         }
 
-        $trn_pdf->add_badge(__('PAID', 'erp'));
+        $trn_pdf->add_badge( __('PAID', 'erp') );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
 
     if ( 'purchase' == $type ) {
         // Set Column Headers
         $trn_pdf->set_table_headers([__('PRODUCT', 'erp'), __('QUANTITY', 'erp'), __('COST PRICE', 'erp'), __('AMOUNT', 'erp')]);
-        $trn_pdf->set_first_column_width(60);
 
         // Add Table Items
         foreach ($transaction->line_items as $line) {
             $trn_pdf->add_item([$line['name'], $line['qty'], $line['cost_price'], $line['amount']]);
         }
 
-        $trn_pdf->add_badge(__('PENDING', 'erp'));
+        $trn_pdf->add_badge( __('PENDING', 'erp') );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
 
     if ( 'pay_purchase' == $type ) {
         // Set Column Headers
-        $trn_pdf->set_table_headers([__('PURCHASE NO', 'erp'), __('AMOUNT', 'erp')]);
-        $trn_pdf->set_first_column_width(60);
+        $trn_pdf->set_table_headers( [__('PURCHASE NO', 'erp'), __( 'DUE DATE', 'erp' ), __('AMOUNT', 'erp')] );
 
         // Add Table Items
-        foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['purchase_no'], $line['amount']]);
+        foreach ($transaction->purchase_details as $line) {
+            $trn_pdf->add_item([$line['purchase_no'], $line['due_date'], $line['amount']]);
         }
 
-        $trn_pdf->add_badge(__('PAID', 'erp'));
+        $trn_pdf->add_badge( __('PAID', 'erp') );
+        $trn_pdf->add_total( __( 'DUE', 'erp' ), $transaction->due );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
 
     if ( 'expense' == $type  || 'check' == $type ) {
         // Set Column Headers
         $trn_pdf->set_table_headers([__('EXPENSE NO', 'erp'), __('EXPENSE DATE', 'erp'), __('AMOUNT', 'erp')]);
-        $trn_pdf->set_first_column_width(60);
 
         // Add Table Items
         foreach ($transaction->line_items as $line) {
-            $trn_pdf->add_item([$line['voucher_no'], $line['trn_date'], $line['amount']]);
+            $trn_pdf->add_item([$line['trn_no'], $line['_date'], $line['amount']]);
         }
 
-        $trn_pdf->add_badge(__('PAID', 'erp'));
+        $trn_pdf->add_badge( __('PAID', 'erp') );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
 
 
-    $trn_pdf->add_total(__('SUB TOTAL', 'erp'), $transaction->amount);
-    $trn_pdf->add_total(__('TOTAL', 'erp'), $transaction->amount, true);
-
-    //Add Badge
-
-    $file_name = sprintf('%s_%s.pdf', $transaction->voucher_no, date('d-m-Y'));
+    $file_name = sprintf('%s_%s.pdf', $trn_id, date('d-m-Y'));
     $trn_pdf->render($file_name, $output_method);
     $trn_email  = new \WeDevs\ERP\Accounting\INCLUDES\Send_Email();
     $file_name  = $attach_pdf ? $file_name : '';

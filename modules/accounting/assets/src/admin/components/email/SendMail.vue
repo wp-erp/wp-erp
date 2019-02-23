@@ -49,7 +49,7 @@
                     <div class="form-check">
                         <label class="form-check-label mb-0">
                             <input class="form-check-input" v-model="attachment" type="checkbox">
-                            <span class="form-check-sign"></span> <span class="field-label">Attach the invoice as PDF</span>
+                            <span class="form-check-sign"></span> <span class="field-label">Attach as PDF</span>
                         </label>
                     </div>
                 </div>
@@ -120,7 +120,7 @@
                     this.$swal({
                         position: 'center',
                         type: 'success',
-                        title: 'Pdf Generated!',
+                        title: 'Mail Sent!',
                         showConfirmButton: false,
                         timer: 1000
                     });

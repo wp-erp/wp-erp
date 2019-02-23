@@ -252,8 +252,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function update_invoice( $request ) {
         $id = (int) $request['id'];
 
-        error_log(print_r($request, true)); die;
-
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
