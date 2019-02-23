@@ -333,21 +333,6 @@ function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
     return $row;
 }
 
-/**
- * Format people address
- */
-function erp_acct_format_people_address( $address = [] ) {
-    $add = '';
-
-    $keys = array_keys( $address );
-    $values = array_values( $address );
-
-    for ( $idx = 0; $idx < count( $address ); $idx++ ) {
-        $add .= $keys[$idx] . ': ' . $values[$idx] . '; ';
-    }
-
-    return $add;
-}
 
 /**
  * Get Accounting Quick Access Menus
@@ -408,3 +393,19 @@ function erp_acct_quick_access_menu() {
         ]
     ];
 }
+
+/**
+ * Get check transaction type by voucher_no
+ *
+ * @param $trn_id
+ *
+ * @return array
+ */
+function erp_acct_get_trn_type_by_voucher_no( $voucher_no ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT type FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = {$voucher_no} LIMIT 1" );
+
+    return $row->type;
+}
+

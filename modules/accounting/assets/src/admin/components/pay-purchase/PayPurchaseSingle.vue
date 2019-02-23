@@ -171,7 +171,7 @@
                 HTTP.get(`/pay-purchases/${this.$route.params.id}`).then(response => {
                     this.payPurchase = response.data;
                 }).then( e => {} ).then(() => {
-                    this.print_data = this.purchase;
+                    this.print_data = this.payPurchase;
                     this.isWorking = false;
                 });
             },

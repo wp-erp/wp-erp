@@ -169,3 +169,45 @@ function erp_acct_update_people_trn_data( $trn_data, $people_id, $voucher_type )
     ) );
 
 }
+
+/**
+ * Get address of a people
+ *
+ * @param $people_id
+ * @return mixed
+ */
+function erp_acct_get_people_address( $people_id ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT
+
+        street_1,
+        street_2,
+        city,
+        state,
+        postal_code,
+        country
+
+    FROM {$wpdb->prefix}erp_peoples
+    WHERE id = %d", $people_id);
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $row;
+}
+
+/**
+ * Format people address
+ */
+function erp_acct_format_people_address( $address = [] ) {
+    $add = '';
+
+    $keys = array_keys( $address );
+    $values = array_values( $address );
+
+    for ( $idx = 0; $idx < count( $address ); $idx++ ) {
+        $add .= $keys[$idx] . ': ' . $values[$idx] . '; ';
+    }
+
+    return $add;
+}
