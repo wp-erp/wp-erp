@@ -668,7 +668,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
 
-    if ( 'expense' == $type  || 'check' == $type ) {
+    if ( 'expense' == $type ) {
         // Set Column Headers
         $trn_pdf->set_table_headers([__('EXPENSE NO', 'erp'), __('EXPENSE DATE', 'erp'), __('AMOUNT', 'erp')]);
 
@@ -680,6 +680,20 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
         $trn_pdf->add_badge( __('PAID', 'erp') );
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
+    }
+
+    if ( 'check' == $type ) {
+        // Set Column Headers
+        $trn_pdf->set_table_headers([__('CHECK NO', 'erp'), __('CHECK DATE', 'erp'), __('PAY TO', 'erp'),  __('AMOUNT', 'erp')]);
+
+        // Add Table Items
+        foreach ($transaction->bill_details as $line) {
+            $trn_pdf->add_item([$line['check_no'], $line['trn_date'], $line['pay_to'], $line['amount']]);
+        }
+
+        $trn_pdf->add_badge( __('PAID', 'erp') );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->total );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->total );
     }
 
 
