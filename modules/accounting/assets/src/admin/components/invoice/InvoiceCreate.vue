@@ -157,7 +157,6 @@
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue'
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
-    import PrintPreview from 'admin/components/base/PrintPreview.vue';
     import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
     export default {
@@ -169,7 +168,6 @@
             Datepicker,
             FileUpload,
             ComboButton,
-            PrintPreview,
             SubmitButton,
             InvoiceTrnRow,
             SelectCustomers
