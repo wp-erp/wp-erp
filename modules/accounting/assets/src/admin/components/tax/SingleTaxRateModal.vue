@@ -12,13 +12,17 @@
                     <table class="wperp-table wperp-form-table invoice-table">
                         <thead>
                         <tr>
+                            <th>Component</th>
                             <th>Agency</th>
+                            <th>Tax Category</th>
                             <th>Tax Rate</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr :key="index" v-for="(component, index) in tax_rate.tax_components">
-                            <td>{{ component.agency_id }}</td>
+                            <td>{{ component.component_name }}</td>
+                            <td>{{ component.agency_name }}</td>
+                            <td>{{ component.tax_cat_name }}</td>
                             <td>{{ component.tax_rate }}</td>
                         </tr>
                         </tbody>
@@ -71,8 +75,6 @@
                 HTTP.get(`/taxes/${taxid}`).then((response) => {
                    this.tax_rate = response.data;
                 });
-
-                console.log( this.tax_rate );
             },
 
             UpdateTaxRateName() {

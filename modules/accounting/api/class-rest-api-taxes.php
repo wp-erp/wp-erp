@@ -382,8 +382,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
-        if ( isset( $request['tax_rate_name'] ) ) {
-            $prepared_item['tax_rate_name'] = $request['tax_rate_name'];
+        if ( isset( $request['tax_rate_id'] ) ) {
+            $prepared_item['tax_rate_id'] = $request['tax_rate_id'];
         }
         if ( isset( $request['tax_number'] ) ) {
             $prepared_item['tax_number'] = $request['tax_number'];

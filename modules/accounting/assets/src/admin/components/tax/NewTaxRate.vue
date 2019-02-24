@@ -148,24 +148,20 @@
 
         methods: {
             fetchData() {
-                this.getRateNames();
-                this.getAgencies();
-                this.getCategories();
-            },
-
-            getRateNames() {
                 HTTP.get('/tax-rate-names').then((response) => {
-                    this.agencies = [];
+                    this.rate_names = [];
                     response.data.forEach(element => {
                         this.rate_names.push({
                             id: element.id,
                             name: element.tax_rate_name
                         });
                     });
+                }).catch((error) => {
+                    console.log(error);
+                }).then(() => {
+                    //ready
                 });
-            },
 
-            getAgencies() {
                 HTTP.get('/tax-agencies').then((response) => {
                     this.agencies = [];
                     response.data.forEach(element => {
@@ -174,10 +170,12 @@
                             name: element.name
                         });
                     });
+                }).catch((error) => {
+                    console.log(error);
+                }).then(() => {
+                    //ready
                 });
-            },
 
-            getCategories() {
                 HTTP.get('/tax-cats').then((response) => {
                     this.categories = [];
                     response.data.forEach(element => {
@@ -186,12 +184,16 @@
                             name: element.name
                         });
                     });
+                }).catch((error) => {
+                    console.log(error);
+                }).then(() => {
+                    //ready
                 });
             },
 
             addNewTaxRate() {
                 HTTP.post('/taxes', {
-                    tax_rate_name: this.tax_name,
+                    tax_rate_id: this.tax_name.id,
                     is_compound: this.is_compound,
                     tax_category_id: this.tax_category.id,
                     tax_components: this.formatLineItems()
