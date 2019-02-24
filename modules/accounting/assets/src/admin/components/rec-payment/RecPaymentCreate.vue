@@ -125,7 +125,6 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import PrintPreview from 'admin/components/base/PrintPreview.vue'
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import CheckFields from 'admin/components/check/CheckFields.vue'
@@ -140,7 +139,6 @@
             Datepicker,
             FileUpload,
             SubmitButton,
-            PrintPreview,
             SelectCustomers,
             MultiSelect,
             CheckFields,
@@ -177,7 +175,6 @@
                 particulars: '',
                 isWorking: false,
                 acct_assets: erp_acct_var.acct_assets,
-                showPrintPreview: false,
             }
         },
 
@@ -335,7 +332,6 @@
             },
 
             'basic_fields.customer'() {
-                this.showPrintPreview = true;
                 this.getCustomerAddress();
                 this.getDueInvoices();
             }
