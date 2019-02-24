@@ -88,7 +88,6 @@
 <script>
 
     import Dropdown from 'admin/components/base/Dropdown.vue'
-    import MetaBox from 'admin/components/wp/MetaBox.vue'
     import Accounts from 'admin/components/dashboard/Accounts.vue'
     import HTTP from 'admin/http';
     import Chart from "admin/components/dashboard/Chart.vue";
@@ -99,7 +98,6 @@
         components: {
             Chart,
             Accounts,
-            MetaBox,
             Dropdown,
             HTTP
         },
