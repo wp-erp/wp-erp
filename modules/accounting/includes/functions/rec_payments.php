@@ -448,7 +448,6 @@ function erp_acct_get_invoice_due( $invoice_no ) {
  * @return mixed
  */
 function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
-    
     global $wpdb;
 
 	// Insert amount in ledger_details

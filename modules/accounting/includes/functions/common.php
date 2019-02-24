@@ -266,7 +266,7 @@ function erp_acct_get_tax_agency_by_id( $agency_id ) {
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_tax_agencies WHERE id = {$agency_id} LIMIT 1" );
 
-    return $row;
+    return $row->name;
 }
 
 /**
@@ -281,7 +281,7 @@ function erp_acct_get_tax_category_by_id( $cat_id ) {
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_tax_categories WHERE id = {$cat_id} LIMIT 1" );
 
-    return $row;
+    return $row->name;
 }
 
 /**

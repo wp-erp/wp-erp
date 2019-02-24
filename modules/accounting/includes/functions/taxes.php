@@ -63,7 +63,9 @@ function erp_acct_get_tax_rate( $tax_no ) {
     tax.updated_by,
     
     tax_item.tax_id,
-    tax_item.agency_id
+    tax_item.component_name,
+    tax_item.agency_id,
+    tax_item.tax_cat_id
     
     FROM {$wpdb->prefix}erp_acct_taxes AS tax
     LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
@@ -72,6 +74,11 @@ function erp_acct_get_tax_rate( $tax_no ) {
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
     $row['tax_components'] = erp_acct_format_tax_line_items( $tax_no );
+
+    for( $i = 0; $i < count( $row['tax_components'] ); $i++ ) {
+        $row['tax_components'][$i]['agency_name'] = erp_acct_get_tax_agency_by_id( $row['tax_components'][$i]['agency_id'] );
+        $row['tax_components'][$i]['tax_cat_name'] = erp_acct_get_tax_category_by_id( $row['tax_components'][$i]['tax_cat_id'] );
+    }
 
     return $row;
 }
@@ -91,7 +98,7 @@ function erp_acct_insert_tax_rate( $data ) {
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
-    $tax_id = $tax_data['tax_rate_name'];
+    $tax_id = $tax_data['tax_rate_id'];
 
     $items = $data['tax_components'];
 
@@ -320,7 +327,7 @@ function erp_acct_insert_tax_pay_data_into_ledger( $payment_data ) {
 function erp_acct_format_tax_line_items( $tax = 'all' ) {
     global $wpdb;
 
-    $sql = "SELECT id, tax_id, agency_id, tax_rate ";
+    $sql = "SELECT id, tax_id, component_name, agency_id, tax_cat_id, tax_rate ";
 
     if ( $tax == 'all' ) {
         $tax_sql = '';
@@ -329,7 +336,9 @@ function erp_acct_format_tax_line_items( $tax = 'all' ) {
     }
     $sql .= "FROM {$wpdb->prefix}erp_acct_tax_cat_agency {$tax_sql} ORDER BY tax_id";
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    $results = $wpdb->get_results( $sql, ARRAY_A );
+
+    return $results;
 }
 
 /**
@@ -342,7 +351,7 @@ function erp_acct_format_tax_line_items( $tax = 'all' ) {
 function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data = [];
 
-    $tax_data['tax_rate_name'] = isset($data['tax_rate_name']) ? $data['tax_rate_name'] : '';
+    $tax_data['tax_rate_id'] = isset($data['tax_rate_id']) ? $data['tax_rate_id'] : '';
     $tax_data['tax_number'] = isset($data['tax_number']) ? $data['tax_number'] : '';
     $tax_data['default'] = isset($data['default']) ? $data['default'] : 0;
     $tax_data['tax_rate'] = isset($data['tax_rate']) ? $data['tax_rate'] : 0;
@@ -350,6 +359,7 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['tax_category_id'] = isset($data['tax_category_id']) ? $data['tax_category_id'] : 0;
     $tax_data['agency_id'] = isset($data['agency_id']) ? $data['agency_id'] : 0;
     $tax_data['agency_name'] = isset($data['agency_name']) ? $data['agency_name'] : '';
+    $tax_data['tax_cat_name'] = isset($data['tax_cat_name']) ? $data['tax_cat_name'] : '';
     $tax_data['tax_components'] = isset($data['tax_components']) ? $data['tax_components'] : [];
     $tax_data['created_at'] = date("Y-m-d");
     $tax_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
