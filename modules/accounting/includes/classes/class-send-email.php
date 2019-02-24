@@ -14,7 +14,7 @@ class Send_Email extends Email {
 
         $results = [];
         foreach ( $receiver_emails as $email ) {
-            $results[] = $this->send( $email['name'], $subject, $body, '', $attachement );
+            $results[] = $this->send( $email, $subject, $body, '', $attachement );
         }
 
         if ( in_array( false, $results ) ) {

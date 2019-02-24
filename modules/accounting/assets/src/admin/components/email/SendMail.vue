@@ -11,19 +11,7 @@
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
                     <label>To <span class="wperp-required-sign">*</span></label>
                 </div>
-                <div class="wperp-col-sm-9 wperp-col-xs-12 wperp-email-multiselect">
-                    <multiselect
-                        v-model="emails"
-                        tag-placeholder="Add this Email"
-                        placeholder="Click to Add Email Address"
-                        label="name"
-                        track-by="code"
-                        :options="options"
-                        :multiple="true"
-                        :taggable="true"
-                        @tag="addEmail">
-                    </multiselect>
-                </div>
+                <input-tag placeholder="Add Emails" v-model="emails" validate="email"></input-tag>
             </div>
             <div class="wperp-form-group wperp-row">
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
@@ -68,7 +56,7 @@
     import HTTP from 'admin/http';
     import Dropdown from 'admin/components/base/Dropdown.vue';
     import Modal from 'admin/components/modal/Modal.vue';
-    import Multiselect from 'vue-multiselect';
+    import InputTag from 'vue-input-tag'
 
     export default {
         name: "SendMail",
@@ -77,7 +65,7 @@
             HTTP,
             Dropdown,
             Modal,
-            Multiselect
+            InputTag
         },
 
         props: {
