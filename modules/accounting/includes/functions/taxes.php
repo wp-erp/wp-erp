@@ -102,6 +102,16 @@ function erp_acct_insert_tax_rate( $data ) {
 
     $items = $data['tax_components'];
 
+    $wpdb->insert($wpdb->prefix . 'erp_acct_taxes', array(
+        'tax_rate_name' => $tax_data['tax_rate_id'],
+        'tax_number'    => $tax_data['tax_number'],
+        'default'       => $tax_data['default'],
+        'created_at'    => $tax_data['created_at'],
+        'created_by'    => $tax_data['created_by'],
+        'updated_at'    => $tax_data['updated_at'],
+        'updated_by'    => $tax_data['updated_by'],
+    ));
+
     foreach ($items as $key => $item) {
         $wpdb->insert($wpdb->prefix . 'erp_acct_tax_cat_agency', array(
             'tax_id'         => $tax_id,
@@ -145,6 +155,18 @@ function erp_acct_update_tax_rate( $data, $id ) {
     $data['updated_by'] = $updated_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
+
+    $wpdb->update($wpdb->prefix . 'erp_acct_taxes', array(
+        'tax_rate_name' => $tax_data['tax_rate_id'],
+        'tax_number' => $tax_data['tax_number'],
+        'default' => $tax_data['default'],
+        'created_at' => $tax_data['created_at'],
+        'created_by' => $tax_data['created_by'],
+        'updated_at' => $tax_data['updated_at'],
+        'updated_by' => $tax_data['updated_by'],
+    ), array(
+        'id' => $id
+    ));
 
     $items = $data['tax_components'];
 
@@ -351,7 +373,7 @@ function erp_acct_format_tax_line_items( $tax = 'all' ) {
 function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data = [];
 
-    $tax_data['tax_rate_id'] = isset($data['tax_rate_id']) ? $data['tax_rate_id'] : '';
+    $tax_data['tax_rate_id'] = isset($data['tax_rate_name']) ? $data['tax_rate_name'] : '';
     $tax_data['tax_number'] = isset($data['tax_number']) ? $data['tax_number'] : '';
     $tax_data['default'] = isset($data['default']) ? $data['default'] : 0;
     $tax_data['tax_rate'] = isset($data['tax_rate']) ? $data['tax_rate'] : 0;
