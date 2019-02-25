@@ -11,34 +11,34 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 function erp_acct_get_all_tax_rate_names( $args = [] ) {
-        global $wpdb;
-    
-        $defaults = [
-            'number'     => 20,
-            'offset'     => 0,
-            'orderby'    => 'id',
-            'order'      => 'DESC',
-            'count'      => false,
-            's'          => '',
-        ];
-    
-        $args = wp_parse_args( $args, $defaults );
-    
-        $limit = '';
-    
-        if ( $args['number'] != '-1' ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
-        }
-    
-        $sql = "SELECT";
-        $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
-        $sql .= "FROM {$wpdb->prefix}erp_acct_taxes ORDER BY {$args['orderby']} {$args['order']} {$limit}";
-    
-        if ( $args['count'] ) {
-            return $wpdb->get_var($sql);
-        }
-    
-        return $wpdb->get_results( $sql, ARRAY_A );
+    global $wpdb;
+
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_tax_rate_names ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
+
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**
@@ -52,7 +52,7 @@ function erp_acct_get_all_tax_rate_names( $args = [] ) {
 function erp_acct_get_tax_rate_name( $tax_no ) {
     global $wpdb;
 
-    $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_taxes
+    $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_tax_rate_names
     WHERE id = {$tax_no} LIMIT 1";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
@@ -73,12 +73,10 @@ function erp_acct_insert_tax_rate_name( $data ) {
     $data['created_at'] = date("Y-m-d H:i:s");
     $data['created_by'] = $created_by;
 
-    $tax_data = erp_acct_get_formatted_tax_data( $data );
+    $tax_data = erp_acct_get_formatted_tax_rate_name_data( $data );
 
-    $wpdb->insert($wpdb->prefix . 'erp_acct_taxes', array(
-        'tax_rate_name' => $tax_data['tax_rate_name'],
-        'tax_number'    => $tax_data['tax_number'],
-        'default'       => $tax_data['default'],
+    $wpdb->insert($wpdb->prefix . 'erp_acct_tax_rate_names', array(
+        'name'          => $tax_data['name'],
         'created_at'    => $tax_data['created_at'],
         'created_by'    => $tax_data['created_by'],
         'updated_at'    => $tax_data['updated_at'],
@@ -104,12 +102,10 @@ function erp_acct_update_tax_rate_name( $data, $id ) {
     $data['updated_at'] = date("Y-m-d H:i:s");
     $data['updated_by'] = $updated_by;
 
-    $tax_data = erp_acct_get_formatted_tax_data( $data );
+    $tax_data = erp_acct_get_formatted_tax_rate_name_data( $data );
 
-    $wpdb->update($wpdb->prefix . 'erp_acct_taxes', array(
-        'tax_rate_name' => $tax_data['tax_rate_name'],
-        'tax_number' => $tax_data['tax_number'],
-        'default' => $tax_data['default'],
+    $wpdb->update($wpdb->prefix . 'erp_acct_tax_rate_names', array(
+        'name'       => $tax_data['name'],
         'created_at' => $tax_data['created_at'],
         'created_by' => $tax_data['created_by'],
         'updated_at' => $tax_data['updated_at'],
@@ -133,8 +129,28 @@ function erp_acct_update_tax_rate_name( $data, $id ) {
 function erp_acct_delete_tax_rate_name( $id ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', array( 'id' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_rate_names', array( 'id' => $id ) );
 
     return $id;
+}
+
+
+/**
+ * Get formatted tax rate name data
+ *
+ * @param $data
+ *
+ * @return mixed
+ */
+function erp_acct_get_formatted_tax_rate_name_data( $data ) {
+    $tax_data = [];
+
+    $tax_data['name'] = isset($data['name']) ? $data['name'] : '';
+    $tax_data['created_at'] = date("Y-m-d");
+    $tax_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
+    $tax_data['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : '';
+    $tax_data['updated_by'] = isset($data['updated_by']) ? $data['updated_by'] : '';
+
+    return $tax_data;
 }
 
