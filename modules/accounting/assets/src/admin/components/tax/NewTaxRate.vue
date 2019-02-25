@@ -23,7 +23,7 @@
                         <div class="wperp-col-sm-6">
                             <div class="wperp-form-group">
                                 <label>Tax Number</label>
-                                <input type="text" v-model="tax_number" class="wperp-form-field" placeholder="Enter Tax umber">
+                                <input type="text" v-model="tax_number" class="wperp-form-field" placeholder="Enter Tax Number">
                             </div>
                         </div>
                         <div class="wperp-form-group wperp-col-sm-6">
@@ -189,8 +189,6 @@
                     });
                 }).catch((error) => {
                     console.log(error);
-                }).then(() => {
-                    //ready
                 });
 
                 HTTP.get('/tax-cats').then((response) => {
@@ -203,8 +201,6 @@
                     });
                 }).catch((error) => {
                     console.log(error);
-                }).then(() => {
-                    //ready
                 });
             },
 

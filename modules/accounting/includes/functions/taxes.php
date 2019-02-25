@@ -98,8 +98,6 @@ function erp_acct_insert_tax_rate( $data ) {
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
-    $tax_id = $tax_data['tax_rate_id'];
-
     $items = $data['tax_components'];
 
     $wpdb->insert($wpdb->prefix . 'erp_acct_taxes', array(
@@ -111,6 +109,8 @@ function erp_acct_insert_tax_rate( $data ) {
         'updated_at'    => $tax_data['updated_at'],
         'updated_by'    => $tax_data['updated_by'],
     ));
+
+    $tax_id = $wpdb->insert_id;
 
     foreach ($items as $key => $item) {
         $wpdb->insert($wpdb->prefix . 'erp_acct_tax_cat_agency', array(
@@ -173,7 +173,7 @@ function erp_acct_update_tax_rate( $data, $id ) {
     foreach ($items as $key => $item) {
         $wpdb->update($wpdb->prefix . 'erp_acct_tax_cat_agency', array(
             'component_name' => $item['component_name'],
-            'tax_cat_id'     => $item['tax_category_id'],
+            'tax_cat_id'     => $item['tax_cat_id'],
             'agency_id'      => $item['agency_id'],
             'tax_rate'       => $item['tax_rate'],
             'created_at'     => $tax_data['created_at'],
@@ -185,7 +185,7 @@ function erp_acct_update_tax_rate( $data, $id ) {
         ));
 
         $wpdb->update($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
-            'sales_tax_category_id' => $item['tax_category_id'],
+            'sales_tax_category_id' => $item['tax_cat_id'],
             'tax_rate'              => $item['tax_rate'],
             'created_at' => $tax_data['created_at'],
             'created_by' => $tax_data['created_by'],
