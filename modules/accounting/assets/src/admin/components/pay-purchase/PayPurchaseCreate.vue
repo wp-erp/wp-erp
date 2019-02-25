@@ -326,6 +326,8 @@
             },
 
             validateForm() {
+                this.form_errors = [];
+
                 if ( !this.basic_fields.vendor.hasOwnProperty('id') ) {
                     this.form_errors.push('Vendor Name is required.');
                 }

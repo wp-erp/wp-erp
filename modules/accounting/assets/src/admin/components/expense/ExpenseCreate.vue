@@ -419,6 +419,8 @@
             },
 
             validateForm() {
+                this.form_errors = [];
+
                 if ( !this.basic_fields.people.hasOwnProperty('id') ) {
                     this.form_errors.push('People Name is required.');
                 }

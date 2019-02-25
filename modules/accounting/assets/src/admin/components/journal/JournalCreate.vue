@@ -208,6 +208,8 @@
             },
 
             validateForm() {
+                this.form_errors = [];
+
                 if ( !this.basic_fields.payment_date ) {
                     this.form_errors.push('Transaction Date is required.');
                 }

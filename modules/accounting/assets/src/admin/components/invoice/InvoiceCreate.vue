@@ -14,6 +14,9 @@
         <form action="" method="post" @submit.prevent="submitInvoiceForm">
 
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
+
+            <show-errors :error_msgs="form_errors" ></show-errors>
+
             <div class="wperp-panel-body">
                 <!-- <form action="#" class="wperp-form" method="post"> -->
                     <div class="wperp-row">
@@ -37,7 +40,7 @@
                             <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                         <div class="wperp-col-sm-6 with-multiselect">
-                            <label>Type</label>
+                            <label>Invoice Type<span class="wperp-required-sign">*</span></label>
                             <multi-select v-model="inv_type" :options="inv_types"></multi-select>
                         </div>
                     </div>
@@ -153,11 +156,12 @@
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import ComboButton from 'admin/components/select/ComboButton.vue';
+    import ComboButton from 'admin/components/select/ComboButton.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue'
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue';
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: 'InvoiceCreate',
@@ -170,7 +174,8 @@
             ComboButton,
             SubmitButton,
             InvoiceTrnRow,
-            SelectCustomers
+            SelectCustomers,
+            ShowErrors
         },
 
         data() {
@@ -217,6 +222,7 @@
                 isWorking       : false,
                 reset           : false,
                 actionType      : null,
+                form_errors     : [],
             }
         },
 
@@ -490,6 +496,8 @@
             },
 
             submitInvoiceForm() {
+                this.validateForm();
+
                 this.isWorking = true;
 
                 let requestData = {
@@ -528,6 +536,27 @@
                 this.isWorking                    = false;
                 this.reset                        = false;
                 this.actionType                   = null;
+            },
+
+            validateForm() {
+                this.form_errors = [];
+
+                if (!this.basic_fields.customer.hasOwnProperty('id')) {
+                    this.form_errors.push('Customer Name is required.');
+                }
+
+                if (!this.basic_fields.trn_date) {
+                    this.form_errors.push('Transaction Date is required.');
+                }
+
+                if (!this.basic_fields.due_date) {
+                    this.form_errors.push('Due Date is required.');
+
+                }
+
+                if (!this.estimate) {
+                    this.form_errors.push('Invoice Type is required.');
+                }
             }
         }
 

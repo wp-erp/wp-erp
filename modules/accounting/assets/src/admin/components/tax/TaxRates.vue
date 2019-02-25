@@ -83,7 +83,7 @@
                 modalParams: null,
                 columns: {
                     'tax_id': {label: 'ID'},
-                    'tax_name': {label: 'Component Name'},
+                    'tax_name': {label: 'Tax Name'},
                     'tax_number': {label: 'Tax Number'},
                     'actions': {label: 'Actions'}
                 },
