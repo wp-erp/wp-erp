@@ -44,6 +44,7 @@ import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import CheckCreate       from 'admin/components/check/CheckCreate.vue';
 import CheckSingle       from 'admin/components/check/CheckSingle.vue';
+import SingleTaxRate     from 'admin/components/tax/SingleTaxRate.vue';
 
 Vue.use(Router);
 
@@ -339,6 +340,16 @@ export default new Router({
                     path: '',
                     name: 'TaxRates',
                     component: TaxRates,
+                },
+                {
+                    path: ':id',
+                    name: 'SingleTaxRate',
+                    component: SingleTaxRate,
+                },
+                {
+                    path: ':id/edit',
+                    name: 'EditSingleTaxRate',
+                    component: SingleTaxRate,
                 },
                 {
                     path: 'new-tax',
