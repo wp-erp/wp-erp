@@ -18,35 +18,35 @@
 
                 <form action="" class="wperp-form" method="post">
                     <div class="wperp-row">
-                        <div class="wperp-col-sm-3">
+                        <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <!-- @input="getDueInvoices"  -->
                                 <select-customers v-model="basic_fields.customer"></select-customers>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-3">
+                        <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label>Reference<span class="wperp-required-sign">*</span></label>
                                 <input type="text" v-model="basic_fields.trn_ref"/>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-3">
+                        <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label>Payment Date<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.payment_date"></datepicker>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-3">
-                            <label>Deposit to<span class="wperp-required-sign">*</span></label>
-                            <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
-                        </div>
-                        <div class="wperp-col-sm-6">
-                            <label>Billing Address</label>
-                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
-                        </div>
-                        <div class="wperp-col-sm-6 with-multiselect">
+                        <div class="wperp-col-sm-4 with-multiselect">
                             <label>Payment Method<span class="wperp-required-sign">*</span></label>
                             <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
+                        </div>
+                        <div class="wperp-col-sm-4">
+                            <label>Deposit to<span class="wperp-required-sign">*</span></label>
+                            <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
+                        </div>
+                        <div class="wperp-col-sm-4">
+                            <label>Billing Address</label>
+                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
 
                         <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
@@ -174,6 +174,7 @@
                 finalTotalAmount: 0,
                 particulars: '',
                 isWorking: false,
+                accts_by_chart: [],
                 acct_assets: erp_acct_var.acct_assets,
             }
         },
@@ -290,6 +291,19 @@
                 });
             },
 
+            changeAccounts() {
+                if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
+                    HTTP.get(`/ledgers/7/accounts`).then((response) => {
+                        this.accts_by_chart = response.data;
+                    });
+                } else {
+                    this.accts_by_chart = [{
+                        id: 1,
+                        name: 'Cash'
+                    }];
+                }
+            },
+
             validateForm() {
                 this.form_errors = [];
 
@@ -336,7 +350,12 @@
             'basic_fields.customer'() {
                 this.getCustomerAddress();
                 this.getDueInvoices();
+            },
+
+            'basic_fields.trn_by'() {
+                this.changeAccounts();
             }
+
         },
 
     }
