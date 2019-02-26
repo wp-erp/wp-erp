@@ -212,17 +212,18 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         foreach ( $items as $key => $item ) {
             $item_total[$key] = $item['amount'];
         }
+
         $bill_data['attachments']     = maybe_serialize( $bill_data['attachments'] );
         $bill_data['billing_address'] = isset( $bill_data['billing_address'] ) ? maybe_serialize( $bill_data['billing_address'] ) : '';
         $bill_data['amount']          = array_sum( $item_total );
 
-        $bill_id = erp_acct_insert_bill( $bill_data );
+        $bill = erp_acct_insert_bill( $bill_data );
 
-        $bill_data['voucher_no'] = $bill_id;
+        // $bill_data['voucher_no'] = $bill_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $bill_data = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
+        $bill_data = $this->prepare_item_for_response( $bill, $request, $additional_fields );
 
         $response = rest_ensure_response( $bill_data );
         $response->set_status( 201 );
@@ -258,13 +259,13 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $bill_data['billing_address'] = isset( $bill_data['billing_address'] ) ? maybe_serialize( $bill_data['billing_address'] ) : '';
         $bill_data['amount']          = array_sum( $item_total );
 
-        $bill_id = erp_acct_update_bill( $bill_data, $id );
+        $bill = erp_acct_update_bill( $bill_data, $id );
 
-        $bill_data['voucher_no'] = $bill_id;
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
+        // $bill_data['voucher_no'] = $bill_id;
+        $additional_fields['namespace']  = $this->namespace;
+        $additional_fields['rest_base']  = $this->rest_base;
 
-        $bill_data = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
+        $bill_data = $this->prepare_item_for_response( $bill, $request, $additional_fields );
 
         $response = rest_ensure_response( $bill_data );
         $response->set_status( 200 );

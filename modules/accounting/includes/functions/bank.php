@@ -159,7 +159,7 @@ function erp_acct_perform_transfer( $item ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
             'ledger_id'   => $item['from_account_id'],
             'trn_no'      => $voucher_no,
-            'particulars' => $item['remarks'],
+            'particulars' => $item['particulars'],
             'debit'       => 0,
             'credit'      => $item['amount'],
             'trn_date'    => $item['date'],
@@ -172,7 +172,7 @@ function erp_acct_perform_transfer( $item ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
             'ledger_id'   => $item['to_account_id'],
             'trn_no'      => $voucher_no,
-            'particulars' => $item['remarks'],
+            'particulars' => $item['particulars'],
             'debit'       => $item['amount'],
             'credit'      => 0,
             'trn_date'    => $item['date'],
@@ -228,10 +228,10 @@ function erp_acct_get_transfer_accounts( $show_balance = false ) {
 
     $sub_query = $wpdb->prepare( "Select id FROM $ledgers WHERE chart_id = %d", $chart_id );
     $ledger_details = $wpdb->prefix.'erp_acct_ledger_details';
-    $query = "Select ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance 
+    $query = "Select ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance
               From $ledger_details as ld
               LEFT JOIN $ledgers as l ON l.id = ld.ledger_id
-              Where ld.ledger_id IN ($sub_query) 
+              Where ld.ledger_id IN ($sub_query)
               Group BY ld.ledger_id";
     $results = $wpdb->get_results( $query, ARRAY_A );
 

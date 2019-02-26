@@ -132,6 +132,10 @@
                             this.$router.push({ name: 'ExpenseEdit', params: { id: row.id } })
                         }
 
+                        if ( 'Bill' == row.type ) {
+                            this.$router.push({ name: 'BillEdit', params: { id: row.id } })
+                        }
+
                         break;
 
                     default :

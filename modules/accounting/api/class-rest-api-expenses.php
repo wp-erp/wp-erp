@@ -406,7 +406,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'bill_details' => $item->bill_details,
             'total'        => (int) $item->amount,
             'ref'          => isset( $item->ref ) ? $item->ref : $item->check_no,
-            'remarks'      => $item->particulars,
+            'particulars'      => $item->particulars,
             'status'       => $item->status,
             'attachments'  => maybe_unserialize( $item->attachments ),
             'particulars'  => $item->particulars,
