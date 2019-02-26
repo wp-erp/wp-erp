@@ -362,7 +362,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $summary = erp_acct_tax_summary();
 
         foreach ( $summary as $item ) {
-            $data = $this->prepare_tax_summary_response( $item, $request, $additional_fields );
+            // $data = $this->prepare_tax_summary_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -443,12 +443,12 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'tax_name_id'     => $item->tax_rate_name,
-            'tax_name'        => erp_acct_get_tax_rate_name_by_id( $item->tax_rate_name),
+            'tax_name_id'     => $item->tax_rate_id,
+            'tax_name'        => erp_acct_get_tax_rate_name_by_id( $item->tax_rate_id ),
             'tax_number'      => $item->tax_number,
-            'tax_rate'        => $item->tax_rate,
+            'tax_rate'        => ! empty($item->tax_rate) ? $item->tax_rate : '',
             'default'         => $item->default,
-            'tax_components'  => $item->tax_components,
+            'tax_components'  => ! empty($item->tax_components) ? $item->tax_components : '',
         ];
 
         $data = array_merge( $data, $additional_fields );

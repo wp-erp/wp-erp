@@ -56,14 +56,26 @@
             }
         },
 
-        watch: {
-            'tax_component.agency'(newVal) {
-                this.tax_component.agency = newVal;
-            },
+        created() {
+            this.setAgency();
+            this.setCategory();
         },
 
-        created() {
-        },
+        methods: {
+            setAgency() {
+                let agency_id   = parseInt(this.tax_component.agency_id);
+                let agency_name = this.tax_component.agency_name;
+
+                this.tax_component.agency = { id: agency_id, name: agency_name };
+            },
+
+            setCategory() {
+                let tax_cat_id   = parseInt(this.tax_component.tax_cat_id);
+                let tax_cat_name = this.tax_component.tax_cat_name;
+
+                this.tax_component.category = { id: tax_cat_id, name: tax_cat_name };
+            }
+        }
 
     };
 </script>
