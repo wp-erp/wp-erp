@@ -177,7 +177,7 @@
             },
 
             removeCategory(node) {
-                if ( confirm('Are you sure to remove this category?') ) {                    
+                if ( confirm('Are you sure to remove this category?') ) {
                     HTTP.delete(`/ledgers/categories/${node.id}`).then(response => {
                         this.$swal({
                             position: 'center',
@@ -212,7 +212,7 @@
                 }).catch((err) => {
                     // Error message
                     this.error = err.response.data.message;
-                    
+
                 }).then(() => {
                     this.ledgFields.chart_id = null;
                     this.ledgFields.category_id = null;
@@ -232,6 +232,7 @@
             padding: 0;
             border: 0;
             box-shadow: none;
+            height: auto;
         }
     }
 

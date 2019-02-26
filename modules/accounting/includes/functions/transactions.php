@@ -300,7 +300,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
     $defaults = [
         'number'      => 20,
         'offset'      => 0,
-        'order'       => 'ASC',
+        'order'       => 'DESC',
         'count'       => false,
         'vendor_id'   => false,
         's'           => '',
@@ -347,7 +347,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_pay_bill AS pay_bill ON pay_bill.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = bill.status
-        LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acct_details ON bill_acct_details.bill_no = bill.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acct_details ON bill_acct_details.bill_no = bill.voucher_no
         LEFT JOIN {$wpdb->prefix}erp_acct_expenses AS expense ON expense.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON cheque.trn_no = voucher.id
         {$where}
@@ -359,7 +359,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         return $wpdb->num_rows;
     }
 
-//     error_log(print_r($sql, true));
+    // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 

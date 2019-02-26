@@ -74,7 +74,7 @@
                     return acc;
                 }, {})
             },
-                
+
             fetchChartAccounts() {
                 this.chartAccounts = [];
 
@@ -140,12 +140,6 @@
                     text-align: right;
                 }
             }
-        }
-
-        .test-seed {
-            font-size: 14px;
-            cursor: pointer;
-            margin-left: 20px;
         }
     }
 </style>
