@@ -53,9 +53,9 @@ function erp_acct_get_payables( $from, $to ) {
     $purchase_acct_details = $wpdb->prefix . 'erp_acct_purchase_account_details';
 
     $purchase_query = $wpdb->prepare( "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
-                              FROM $purchases 
-                              LEFT JOIN $purchase_acct_details as ad 
-                              ON ad.purchase_no = voucher_no  where due_date 
+                              FROM $purchases
+                              LEFT JOIN $purchase_acct_details as ad
+                              ON ad.purchase_no = voucher_no  where due_date
                               BETWEEN %s and %s
                               Group BY voucher_no Having due < 0 ", $from_date, $to_date );
 
@@ -64,9 +64,9 @@ function erp_acct_get_payables( $from, $to ) {
     $bills = $wpdb->prefix . 'erp_acct_bills';
     $bill_acct_details = $wpdb->prefix . 'erp_acct_bill_account_details';
     $bills_query = $wpdb->prepare( "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
-                              FROM $bills 
-                              LEFT JOIN $bill_acct_details as ad 
-                              ON ad.bill_no = voucher_no  where due_date 
+                              FROM $bills
+                              LEFT JOIN $bill_acct_details as ad
+                              ON ad.bill_no = voucher_no  where due_date
                               BETWEEN %s and %s
                               Group BY voucher_no Having due < 0 ", $from_date, $to_date );
 
@@ -404,7 +404,7 @@ function erp_acct_quick_access_menu() {
         "tax_rate" => [
             'title' => 'Tax Rate',
             'slug'  => 'taxes',
-            'url'   => 'taxes/new-tax'
+            'url'   => 'taxes/new'
         ]
     ];
 }

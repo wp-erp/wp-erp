@@ -77,44 +77,26 @@
             fetchData() {
                 let taxid = this.$route.params.id;
 
-                HTTP.get(`/taxes/${taxid}`).then((response) => {
+                HTTP.get(`/taxes/${taxid}`).then(response => {
                     this.tax_rate = response.data;
                 }).catch((error) => {
                     console.log(error);
                 });
 
-                HTTP.get('/tax-rate-names').then((response) => {
-                    this.rate_names = [];
-                    response.data.forEach(element => {
-                        this.rate_names.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+                HTTP.get('/tax-rate-names').then(response => {
+                    this.rate_names = response.data;
                 }).catch((error) => {
                     console.log(error);
                 });
 
-                HTTP.get('/tax-agencies').then((response) => {
-                    this.agencies = [];
-                    response.data.forEach(element => {
-                        this.agencies.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+                HTTP.get('/tax-agencies').then(response => {
+                    this.agencies = response.data;
                 }).catch((error) => {
                     console.log(error);
                 });
 
-                HTTP.get('/tax-cats').then((response) => {
-                    this.categories = [];
-                    response.data.forEach(element => {
-                        this.categories.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+                HTTP.get('/tax-cats').then(response => {
+                    this.categories = response.data;
                 }).catch((error) => {
                     console.log(error);
                 });
@@ -129,14 +111,7 @@
                     default: this.tax_rate.is_default,
                     tax_components: this.tax_rate.tax_components
                 }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Rate Updated!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.showAlert('success', 'Tax Rate Updated!');
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;

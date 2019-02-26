@@ -195,7 +195,7 @@
             },
 
             newTaxRate() {
-                this.$router.push('taxes/new-tax');
+                this.$router.push('taxes/new');
             },
 
             singleTaxRate(tax_id) {

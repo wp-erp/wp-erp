@@ -17,7 +17,7 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
         'number'     => 20,
         'offset'     => 0,
         'orderby'    => 'id',
-        'order'      => 'DESC',
+        'order'      => 'ASC',
         'count'      => false,
         's'          => '',
     ];
@@ -55,7 +55,8 @@ function erp_acct_get_tax_rate( $tax_no ) {
 
     $sql = "SELECT
 
-    tax.tax_rate_name,
+    tax.id,
+    tax.tax_rate_id,
     tax.tax_number,
     tax.default,
     tax.created_at,
@@ -77,6 +78,9 @@ function erp_acct_get_tax_rate( $tax_no ) {
     $row['tax_components'] = erp_acct_format_tax_line_items( $tax_no );
 
     for( $i = 0; $i < count( $row['tax_components'] ); $i++ ) {
+        $row['tax_components'][$i]['agency'] = null; // we'll fill that later from VUE
+        $row['tax_components'][$i]['category'] = null; // we'll fill that later from VUE
+
         $row['tax_components'][$i]['agency_name'] = erp_acct_get_tax_agency_by_id( $row['tax_components'][$i]['agency_id'] );
         $row['tax_components'][$i]['tax_cat_name'] = erp_acct_get_tax_category_by_id( $row['tax_components'][$i]['tax_cat_id'] );
     }
@@ -407,10 +411,10 @@ function erp_acct_get_formatted_tax_data( $data ) {
 function erp_acct_tax_summary() {
     global $wpdb;
 
-    return $wpdb->get_results("SELECT
+    $sql = "SELECT
         tax.id AS tax_rate_id,
         tax.default,
-        tax.tax_rate_name,
+        rate_name.name,
 
         sales_tax_category.sales_tax_category_id,
         sales_tax_category.tax_rate,
@@ -420,5 +424,8 @@ function erp_acct_tax_summary() {
         FROM {$wpdb->prefix}erp_acct_tax_sales_tax_categories AS sales_tax_category
         LEFT JOIN {$wpdb->prefix}erp_acct_tax_categories AS tax_category ON tax_category.id = sales_tax_category.sales_tax_category_id
         LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS cat_agency ON cat_agency.tax_cat_id = tax_category.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_taxes as tax ON tax.id = sales_tax_category.tax_id", ARRAY_A);
+        LEFT JOIN {$wpdb->prefix}erp_acct_taxes AS tax ON tax.id = sales_tax_category.tax_id
+        LEFT JOIN {$wpdb->prefix}erp_acct_tax_rate_names AS rate_name ON rate_name.id = tax.tax_rate_id";
+
+    return $wpdb->get_results( $sql, ARRAY_A);
 }
