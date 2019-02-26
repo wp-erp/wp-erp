@@ -229,6 +229,11 @@ export default new Router({
                     name: 'BillSingle',
                     component: BillSingle,
                 },
+                {
+                    path: ':id/edit',
+                    name: 'BillEdit',
+                    component: BillCreate,
+                },
             ]
         },
         {

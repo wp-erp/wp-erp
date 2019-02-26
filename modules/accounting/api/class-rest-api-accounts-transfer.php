@@ -262,7 +262,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $prepared_item['from_account_id'] = isset( $request['from_account_id'] ) ? intval( $request['from_account_id'] ) : 0;
         $prepared_item['to_account_id']   = isset( $request['to_account_id'] ) ?intval( $request['to_account_id'] ) : 0;
         $prepared_item['amount']          = isset( $request['amount'] ) ? floatval( $request['amount'] ) : 0;
-        $prepared_item['remarks']         = isset( $request['remarks'] ) ? sanitize_text_field( $request['remarks'] ) : '';
+        $prepared_item['particulars']     = isset( $request['particulars'] ) ? sanitize_text_field( $request['particulars'] ) : '';
 
         return $prepared_item;
     }
@@ -399,8 +399,8 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
-                'remarks'            => [
-                    'description' => __( 'Remarks for the resource.' ),
+                'particulars'            => [
+                    'description' => __( 'Particulars for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

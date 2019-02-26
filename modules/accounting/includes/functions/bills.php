@@ -112,10 +112,10 @@ function erp_acct_insert_bill( $data ) {
     global $wpdb;
 
     $created_by = get_current_user_id();
-    $data['created_at'] = date("Y-m-d H:i:s");
+    $data['created_at'] = date('Y-m-d H:i:s');
     $data['created_by'] = $created_by;
 
-    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_at'] = date('Y-m-d H:i:s');
     $data['updated_by'] = $created_by;
 
     try {
@@ -143,44 +143,35 @@ function erp_acct_insert_bill( $data ) {
             'due_date'        => $bill_data['due_date'],
             'amount'          => $bill_data['amount'],
             'ref'             => $bill_data['ref'],
-            'particulars'     => $bill_data['remarks'],
+            'particulars'     => $bill_data['particulars'],
             'status'          => $bill_data['status'],
             'attachments'     => $bill_data['attachments'],
             'created_at'      => $bill_data['created_at'],
-            'created_by'      => $bill_data['created_by'],
-            'updated_at'      => $bill_data['updated_at'],
-            'updated_by'      => $bill_data['updated_by'],
+            'created_by'      => $bill_data['created_by']
         ) );
-
-        $bill_no = $wpdb->insert_id;
 
         $items = $bill_data['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', array(
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', [
                 'trn_no'      => $voucher_no,
-                'ledger_id'   => $item['ledger_id'],
+                'ledger_id'   => $item['ledger_id']['id'],
                 'particulars' => isset( $item['description'] ) ? $item['description'] : '',
                 'amount'      => $item['amount'],
                 'created_at'  => $bill_data['created_at'],
-                'created_by'  => $bill_data['created_by'],
-                'updated_at'  => $bill_data['updated_at'],
-                'updated_by'  => $bill_data['updated_by'],
-            ) );
-
+                'created_by'  => $bill_data['created_by']
+             ] );
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
             'bill_no'     => $voucher_no,
             'trn_no'      => $voucher_no,
             'trn_date'    => $bill_data['trn_date'],
-            'particulars' => $bill_data['remarks'],
+            'particulars' => $bill_data['particulars'],
             'debit'       => 0,
             'credit'      => $bill_data['amount'],
             'created_at'  => $bill_data['created_at'],
-            'created_by'  => $bill_data['created_by'],
-            'updated_at'  => $bill_data['updated_at'],
-            'updated_by'  => $bill_data['updated_by'],
+            'created_by'  => $bill_data['created_by']
         ) );
 
         erp_acct_insert_bill_data_into_ledger( $bill_data, $item );
@@ -192,7 +183,7 @@ function erp_acct_insert_bill( $data ) {
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
 
-    return $voucher_no;
+    return erp_acct_get_bill($voucher_no);
 
 }
 
@@ -224,41 +215,42 @@ function erp_acct_update_bill( $data, $bill_id ) {
             'due_date'        => $bill_data['due_date'],
             'amount'          => $bill_data['amount'],
             'ref'             => $bill_data['ref'],
-            'particulars'     => $bill_data['remarks'],
-            'status'          => $bill_data['status'],
+            'particulars'     => $bill_data['particulars'],
             'attachments'     => $bill_data['attachments'],
-            'created_at'      => $bill_data['created_at'],
-            'created_by'      => $bill_data['created_by'],
             'updated_at'      => $bill_data['updated_at'],
             'updated_by'      => $bill_data['updated_by'],
         ), array(
             'voucher_no'      => $bill_id
         ) );
 
+        /**
+         *? We can't update `expense_details` directly
+         *? suppose there were 5 detail rows previously
+         *? but on update there may be 2 detail rows
+         *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
+         *? so, remove previous rows and insert new rows
+         */
+        $prev_detail_ids = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}erp_acct_bill_details WHERE trn_no = {$bill_id}", ARRAY_A);
+        $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
+
+        $wpdb->delete( $wpdb->prefix . 'erp_acct_bill_details', [ 'trn_no' => $bill_id ] );
+
         $items = $bill_data['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $wpdb->update( $wpdb->prefix . 'erp_acct_bill_details', array(
-                'ledger_id'   => $item['ledger_id'],
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', [
+                'trn_no'      => $voucher_no,
+                'ledger_id'   => $item['ledger_id']['id'],
                 'particulars' => isset( $item['description'] ) ? $item['description'] : '',
                 'amount'      => $item['amount'],
                 'created_at'  => $bill_data['created_at'],
-                'created_by'  => $bill_data['created_by'],
-                'updated_at'  => $bill_data['updated_at'],
-                'updated_by'  => $bill_data['updated_by'],
-            ), array(
-                'trn_no'  => $bill_id
-            ));
-
+                'created_by'  => $bill_data['created_by']
+            ] );
         }
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
-            'bill_no'     => $bill_id,
-            'particulars' => $bill_data['remarks'],
-            'debit'       => 0,
+            'particulars' => $bill_data['particulars'],
             'credit'      => $bill_data['amount'],
-            'created_at'  => $bill_data['created_at'],
-            'created_by'  => $bill_data['created_by'],
             'updated_at'  => $bill_data['updated_at'],
             'updated_by'  => $bill_data['updated_by'],
         ), array(
@@ -274,8 +266,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
 
-    return $bill_id;
-
+    return erp_acct_get_bill($bill_id);
 }
 
 /**
@@ -338,7 +329,7 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['due'] = isset( $data['due'] ) ? $data['due'] : 0;
     $bill_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $bill_data['ref'] = isset( $data['ref'] ) ? $data['ref'] : '';
-    $bill_data['remarks'] = isset( $data['remarks'] ) ? $data['remarks'] : '';
+    $bill_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $bill_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $bill_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
     $bill_data['trn_by_ledger_id'] = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
@@ -363,16 +354,14 @@ function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
 
     // Insert items amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $item_data['ledger_id'],
+        'ledger_id'   => $item_data['ledger_id']['id'],
         'trn_no'      => $bill_data['voucher_no'],
-        'particulars' => $bill_data['remarks'],
+        'particulars' => $bill_data['particulars'],
         'debit'       => $item_data['amount'],
         'credit'      => 0,
         'trn_date'    => $bill_data['trn_date'],
         'created_at'  => $bill_data['created_at'],
-        'created_by'  => $bill_data['created_by'],
-        'updated_at'  => $bill_data['updated_at'],
-        'updated_by'  => $bill_data['updated_by'],
+        'created_by'  => $bill_data['created_by']
     ) );
 
 }
@@ -382,7 +371,7 @@ function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
  * Update bill/s data into ledger
  *
  * @param array $bill_data
- * * @param array $bill_no
+ * @param array $bill_no
  * @param array $item_data
  *
  * @return mixed
@@ -392,13 +381,9 @@ function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data
 
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $item_data['ledger_id'],
-        'particulars' => $bill_data['remarks'],
+        'particulars' => $bill_data['particulars'],
         'debit'       => $item_data['amount'],
-        'credit'      => 0,
         'trn_date'    => $bill_data['trn_date'],
-        'created_at'  => $bill_data['created_at'],
-        'created_by'  => $bill_data['created_by'],
         'updated_at'  => $bill_data['updated_at'],
         'updated_by'  => $bill_data['updated_by'],
     ), array(
@@ -454,9 +439,9 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
                                 (
                                     SELECT bill_no, ABS(SUM( ba.debit - ba.credit)) as due
                                     FROM $bill_act_details as ba
-                                    GROUP BY ba.bill_no 
+                                    GROUP BY ba.bill_no
                                     HAVING due > 0
-                                ) as bs 
+                                ) as bs
                                 ON bill.voucher_no = bs.bill_no
                                 WHERE bill.vendor_id = %d
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );

@@ -287,7 +287,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
          *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
          *? so, remove previous rows and insert new rows
          */
-        $prev_detail_ids = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}erp_acct_invoice_details WHERE trn_no = {$invoice_no}");
+        $prev_detail_ids = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}erp_acct_invoice_details WHERE trn_no = {$invoice_no}", ARRAY_A);
         $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
 
         // order matter

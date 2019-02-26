@@ -269,8 +269,11 @@ function erp_acct_insert_expense( $data ) {
         return new WP_error( 'expense-exception', $e->getMessage() );
     }
 
-    return $voucher_no;
+    if ( 'check' === $type ) {
+        return erp_acct_get_check($voucher_no);
+    }
 
+    return erp_acct_get_expense($voucher_no);
 }
 
 /**
@@ -318,18 +321,17 @@ function erp_acct_update_expense( $data, $expense_id ) {
          *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
          *? so, remove previous rows and insert new rows
          */
-        $prev_detail_ids = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}erp_acct_expense_details WHERE trn_no = {$expense_id}");
+        $prev_detail_ids = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}erp_acct_expense_details WHERE trn_no = {$expense_id}", ARRAY_A);
         $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
 
         $wpdb->delete( $wpdb->prefix . 'erp_acct_expense_details', [ 'trn_no' => $expense_id ] );
-
 
         $items = $expense_data['bill_details'];
 
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_details', array(
                 'ledger_id'   => $item['ledger_id'],
-                'particulars' => $item['remarks'],
+                'particulars' => $item['particulars'],
                 'amount'      => $item['amount'],
                 'created_at'  => $expense_data['created_at'],
                 'created_by'  => $expense_data['created_by'],
