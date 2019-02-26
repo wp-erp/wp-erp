@@ -38,15 +38,14 @@
                             </div>
 
                         </div>
+                        <div class="wperp-col-sm-4 with-multiselect">
+                            <label>From Account<span class="wperp-required-sign">*</span></label>
+                            <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
+                        </div>
                         <div class="wperp-col-sm-4">
                             <label>Billing Address</label>
                             <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
-                        <div class="wperp-col-sm-4 with-multiselect">
-                            <label>From Account<span class="wperp-required-sign">*</span></label>
-                            <select-accounts v-model="basic_fields.deposit_to"></select-accounts>
-                        </div>
-
                     </div>
                 </form>
 
@@ -204,6 +203,7 @@
                 billModal       : false,
                 particulars     : '',
                 isWorking       : false,
+                accts_by_chart: [],
                 erp_acct_assets : erp_acct_var.acct_assets
             }
         },
@@ -356,6 +356,19 @@
                 }
             },
 
+            changeAccounts() {
+                if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
+                    HTTP.get(`/ledgers/7/accounts`).then((response) => {
+                        this.accts_by_chart = response.data;
+                    });
+                } else {
+                    this.accts_by_chart = [{
+                        id: 1,
+                        name: 'Cash'
+                    }];
+                }
+            },
+
             validateForm() {
                 this.form_errors = [];
 
@@ -404,6 +417,10 @@
 
             'basic_fields.people'() {
                 this.getPeopleAddress();
+            },
+
+            'basic_fields.trn_by'() {
+                this.changeAccounts();
             }
         },
 

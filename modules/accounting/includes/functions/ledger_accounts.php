@@ -115,7 +115,7 @@ function erp_acct_delete_ledger_category( $id ) {
 function erp_acct_get_ledgers_by_chart_id( $chart_id ) {
     global $wpdb;
 
-    $charts = $wpdb->get_results("SELECT id, name AS label FROM {$wpdb->prefix}erp_acct_ledgers WHERE chart_id = {$chart_id} ", ARRAY_A);
+    $charts = $wpdb->get_results("SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE chart_id = {$chart_id} ", ARRAY_A);
 
     return $charts;
 }
