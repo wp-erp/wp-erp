@@ -257,14 +257,8 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
-        if ( isset( $request['tax_rate_name'] ) ) {
-            $prepared_item['tax_rate_name'] = $request['tax_rate_name'];
-        }
-        if ( isset( $request['tax_number'] ) ) {
-            $prepared_item['tax_number'] = $request['tax_number'];
-        }
-        if ( isset( $request['is_default'] ) ) {
-            $prepared_item['default'] = $request['is_default'];
+        if ( isset( $request['name'] ) ) {
+            $prepared_item['name'] = $request['name'];
         }
 
         return $prepared_item;
@@ -308,16 +302,8 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'tax_rate_name'  => [
+                'name'  => [
                     'description' => __( 'Tax Category name for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'tax_number'  => [
-                    'description' => __( 'Tax Category Description for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

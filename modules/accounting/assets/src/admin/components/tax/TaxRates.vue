@@ -20,7 +20,6 @@
                 </div>
             </div>
         </div>
-        
 
         <div class="table-container">
             <list-table
@@ -83,7 +82,7 @@
                 modalParams: null,
                 columns: {
                     'tax_id': {label: 'ID'},
-                    'tax_name': {label: 'Component Name'},
+                    'tax_name': {label: 'Tax Name'},
                     'tax_number': {label: 'Tax Number'},
                     'actions': {label: 'Actions'}
                 },
@@ -120,6 +119,7 @@
                 pageTitle: '',
                 url: '',
                 singleUrl: '',
+                tax_rate: null,
                 isActiveOptionDropdown: false,
                 singleTaxRateModal: false,
                 taxrateModal: false,
@@ -206,13 +206,14 @@
                 switch (action) {
                     case 'trash':
                         if (confirm('Are you sure to delete?')) {
-                            HTTP.delete(this.url + '/' + row.id).then(response => {
+                            HTTP.delete('/taxes/' + row.id).then(response => {
                                 this.$delete(this.rows, index);
                             });
                         }
                         break;
 
                     case 'edit':
+                        this.$router.push({name: 'EditSingleTaxRate', params: {id: row.id}});
                         break;
 
                     default :

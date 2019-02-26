@@ -154,6 +154,7 @@
                 default: {}
             }
         },
+
         data() {
             return {
                 error_msg: [],
@@ -173,6 +174,7 @@
                 productType: [],
             }
         },
+
         created() {
             if (this.product) {
                 let product = this.product;
@@ -187,6 +189,7 @@
             }
             this.loaded();
         },
+
         methods: {
             saveProduct() {
                 if (!this.checkForm()) {
@@ -207,7 +210,7 @@
                     vendor: this.ProductFields.vendor,
                     cost_price: this.ProductFields.costPrice,
                     sale_price: this.ProductFields.salePrice,
-                }
+                };
                 HTTP[type](url, data).then(response => {
                     this.$parent.$emit('close');
                     this.$parent.getProducts();
@@ -222,12 +225,14 @@
                     });
                 });
             },
+
             loaded() {
                 this.getVendors();
                 this.getCategories();
                 this.getTaxCategories();
                 this.getProductTypes();
             },
+
             getVendors() {
                 HTTP.get('vendors').then(response => {
                     if (response.data) {
@@ -239,21 +244,25 @@
                     }
                 })
             },
+
             getCategories() {
                 HTTP.get('product-cats').then(response => {
                     this.categories = response.data;
                 })
             },
+
             getTaxCategories() {
                 HTTP.get('tax-cats').then(response => {
                     this.tax_cats = response.data;
                 })
             },
+
             getProductTypes() {
                 HTTP.get('products/types').then(response => {
                     this.productType = response.data;
                 })
             },
+
             resetForm() {
                 this.ProductFields.id = null;
                 this.ProductFields.name = '';
@@ -263,6 +272,7 @@
                 this.ProductFields.costPrice = '';
                 this.ProductFields.salePrice = '';
             },
+
             checkForm() {
                 this.error_msg = [];
 

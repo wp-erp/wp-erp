@@ -193,6 +193,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function create_tax_rate( $request ) {
+        $item_rates = [];
 
         $tax_data = $this->prepare_item_for_database( $request );
 
@@ -227,7 +228,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function update_tax_rate( $request ) {
-        $id = (int) $request['id'];
+        $id = (int) $request['id']; $item_rates = [];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
@@ -235,7 +236,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['tax_components'];
+        $items = $tax_data['tax_components'];
 
         foreach ( $items as $key => $item ) {
             $item_rates[$key] = $item['tax_rate'];
@@ -382,8 +383,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
-        if ( isset( $request['tax_rate_id'] ) ) {
-            $prepared_item['tax_rate_id'] = $request['tax_rate_id'];
+        if ( isset( $request['tax_rate_name'] ) ) {
+            $prepared_item['tax_rate_name'] = $request['tax_rate_name'];
         }
         if ( isset( $request['tax_number'] ) ) {
             $prepared_item['tax_number'] = $request['tax_number'];
@@ -442,7 +443,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'tax_name'        => $item->tax_rate_name,
+            'tax_name_id'     => $item->tax_rate_name,
+            'tax_name'        => erp_acct_get_tax_rate_name_by_id( $item->tax_rate_name),
             'tax_number'      => $item->tax_number,
             'tax_rate'        => $item->tax_rate,
             'default'         => $item->default,
@@ -450,6 +452,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         ];
 
         $data = array_merge( $data, $additional_fields );
+
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
@@ -542,8 +545,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'readonly'    => true,
                 ],
                 'tax_rate_name'  => [
-                    'description' => __( 'Tax Rate name for the resource.' ),
-                    'type'        => 'string',
+                    'description' => __( 'Tax Rate name id for the resource.' ),
+                    'type'        => 'integer',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
@@ -560,14 +563,6 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'is_compound'       => [
                     'description' => __( 'Tax type for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'tax_components'       => [
-                    'description' => __( 'Tax components for the resource.' ),
-                    'type'        => 'object',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
