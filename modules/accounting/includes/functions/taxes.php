@@ -106,7 +106,7 @@ function erp_acct_insert_tax_rate( $data ) {
     $items = $data['tax_components'];
 
     $wpdb->insert($wpdb->prefix . 'erp_acct_taxes', array(
-        'tax_rate_name' => $tax_data['tax_rate_id'],
+        'tax_rate_id'   => $tax_data['tax_rate_id'],
         'tax_number'    => $tax_data['tax_number'],
         'default'       => $tax_data['default'],
         'created_at'    => $tax_data['created_at'],

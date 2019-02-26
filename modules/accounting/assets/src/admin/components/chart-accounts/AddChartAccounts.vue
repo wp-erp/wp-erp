@@ -232,7 +232,7 @@
             padding: 0;
             border: 0;
             box-shadow: none;
-            height: auto;
+            height: auto !important;
         }
     }
 

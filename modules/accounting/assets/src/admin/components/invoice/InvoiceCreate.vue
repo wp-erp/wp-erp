@@ -167,7 +167,6 @@
         name: 'InvoiceCreate',
 
         components: {
-            HTTP,
             MultiSelect,
             Datepicker,
             FileUpload,
@@ -430,7 +429,7 @@
                 this.transactionLines.forEach(element => {
                     if ( element.qty ) {
                         taxAmount     += parseFloat(element.taxAmount);
-                        totalDiscount += parseFloat(element.discount);
+                        totalDiscount += isNaN( element.discount ) ? 0.00 : parseFloat(element.discount);
                         totalAmount   += parseFloat(element.amount);
                     }
                 });

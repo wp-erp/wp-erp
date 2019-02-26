@@ -73,10 +73,10 @@
                         <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
                         <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
+                            <input type="number" min="0" step="0.01" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
                         <td class="col--total" style="text-align: center" data-colname="Total">
-                            <input type="text" :value="line.amount" readonly disabled/>
+                            <input type="number" :value="line.amount" readonly disabled/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -165,11 +165,11 @@
         data() {
             return {
                 basic_fields: {
-                    people: '',
-                    check_no: '',
-                    trn_date: '',
-                    deposit_to: '',
-                    trn_by: '',
+                    people         : '',
+                    check_no       : '',
+                    trn_date       : '',
+                    deposit_to     : '',
+                    trn_by         : '',
                     billing_address: ''
                 },
 
@@ -233,15 +233,10 @@
                      *? this.getLedgers()
                      */
                     let request1 = await HTTP.get('/ledgers');
-                    let request2 = await HTTP.get(`/expenses/${this.$route.params.id}`);
+                    let request2 = await HTTP.get(`/expenses/checks/${this.$route.params.id}`);
 
                     if ( ! request2.data.bill_details.length ) {
                         this.showAlert('error', 'Check does not exists!');
-                        return;
-                    }
-
-                    if ( 'awaiting_approval' != request2.data.status ) {
-                        this.showAlert('error', 'Can\'t edit');
                         return;
                     }
 
@@ -262,6 +257,30 @@
                 }
             },
 
+            setDataForEdit(check) {
+                this.basic_fields.people          = { id: parseInt(check.people_id), name: check.people_name };
+                this.basic_fields.deposit_to      = { id: parseInt(check.deposit_to) };
+                this.basic_fields.trn_by          = this.pay_methods.find(method => method.id === check.trn_by);
+                this.basic_fields.billing_address = check.address;
+                this.basic_fields.trn_date        = check.trn_date;
+                this.basic_fields.check_no        = check.ref;
+                this.status                       = check.status;
+                this.particulars                  = check.particulars;
+                this.attachments                  = check.attachments;
+
+                // format transaction lines
+                check.bill_details.forEach(detail => {
+                    this.transactionLines.push({
+                        id         : detail.id,
+                        ledger_id  : { id: detail.ledger_id, name: detail.ledger_name },
+                        description: detail.particulars,
+                        amount     : detail.amount
+                    });
+                });
+
+                this.updateFinalAmount();
+            },
+
             getLedgers() {
                 HTTP.get('ledgers').then((response) => {
                     this.ledgers = response.data;
@@ -273,11 +292,19 @@
             },
 
             getPeopleAddress() {
-                let user_id = this.basic_fields.people.id;
+                let people_id = this.basic_fields.people.id;
 
-                HTTP.get(`/people/${user_id}/address`).then((response) => {
-                    // add more info
-                    this.basic_fields.billing_address = response.data;
+                if ( ! people_id ) {
+                    this.basic_fields.billing_address = '';
+                    return;
+                }
+
+                HTTP.get(`/people/${people_id}`).then(response => {
+                    let billing = response.data;
+
+                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                    this.basic_fields.billing_address = address;
                 });
             },
 
@@ -339,7 +366,7 @@
                     check_no: parseInt(this.basic_fields.check_no),
                     trn_date: this.basic_fields.trn_date,
                     trn_by: '3',
-                    expense_details: this.formatTrnLines(this.transactionLines),
+                    bill_details: this.formatTrnLines(this.transactionLines),
                     deposit_to: this.basic_fields.deposit_to.id,
                     billing_address: this.basic_fields.billing_address,
                     attachments: this.attachments,
