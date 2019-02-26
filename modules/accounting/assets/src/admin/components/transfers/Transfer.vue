@@ -40,7 +40,7 @@
                             </div>
                             <div class="wperp-col-xs-12 wperp-form-group">
                                 <label for="transfer_memo">Memo</label>
-                                <textarea name="transfer_memo" id="transfer_memo" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="remarks"></textarea>
+                                <textarea name="transfer_memo" id="transfer_memo" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="particulars"></textarea>
                             </div>
                             <!--<div class="wperp-col-xs-12">-->
                                 <!--<div class="attachment-container">-->
@@ -90,7 +90,7 @@
                 fa: [],
                 ta: [],
                 transferdate: erp_acct_var.current_date,
-                remarks : '',
+                particulars : '',
                 amount: '',
 
             };
@@ -125,7 +125,7 @@
                     from_account_id : this.transferFrom.id,
                     to_account_id : this.transferTo.id,
                     amount : this.amount,
-                    remarks : this.remarks,
+                    particulars : this.particulars,
                 } ).then( res => {
                     this.$swal({
                         position: 'center',
@@ -153,7 +153,7 @@
                 this.transferTo = { balance : 0 };
                 this.accounts = [];
                 this.transferdate = erp_acct_var.current_date;
-                this.remarks = '';
+                this.particulars = '';
                 this.amount = '';
             },
         },

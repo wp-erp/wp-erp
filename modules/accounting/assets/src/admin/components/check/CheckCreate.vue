@@ -11,6 +11,8 @@
         </div>
         <!-- End .header-section -->
 
+        <form action="" method="post" @submit.prevent="submitCheckForm">
+
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
 
@@ -99,7 +101,18 @@
                             <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
                         </td>
                     </tr>
-                    </tbody>
+                    <tr>
+                        <td>
+                            <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
+                                <img :src="erp_acct_assets + '/images/file-thumb.png'">
+                                <span class="remove-file" @click="removeFile(index)">&#10007;</span>
+
+                                <div class="attachment-meta">
+                                    <h3>{{ getFileName(file) }}</h3>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                     <tr class="add-attachment-row">
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
@@ -108,10 +121,12 @@
                             </div>
                         </td>
                     </tr>
+                    </tbody>
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Add New Check" @click.native="SubmitForCheck" :working="isWorking"></submit-button>
+                            <combo-button v-if="editMode" :options="updateButtons" />
+                            <combo-button v-else :options="createButtons" />
                         </td>
                     </tr>
                     </tfoot>
@@ -119,6 +134,7 @@
             </div>
         </div>
 
+        </form>
     </div>
 </template>
 
@@ -128,7 +144,7 @@
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import SelectPeople from 'admin/components/people/SelectPeople.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import ComboButton from 'admin/components/select/ComboButton.vue';
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
     import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
@@ -141,7 +157,7 @@
             Datepicker,
             MultiSelect,
             FileUpload,
-            SubmitButton,
+            ComboButton,
             SelectPeople,
             ShowErrors
         },
@@ -164,38 +180,91 @@
 
                 form_errors: [],
 
-                transactionLines: [{}],
-                selected:[],
-                ledgers: [],
-                pay_methods: [],
-                attachments: [],
-                totalAmounts:[],
+                createButtons: [
+                    {id: 'save', text: 'Create Check'},
+                    {id: 'send_create', text: 'Create and Send'},
+                    {id: 'new_create', text: 'Create and New'},
+                ],
+
+                updateButtons: [
+                    {id: 'update', text: 'Update Check'},
+                    {id: 'send_update', text: 'Update and Send'},
+                    {id: 'new_update', text: 'Update and New'},
+                ],
+
+                editMode        : false,
+                voucherNo       : 0,
+                transactionLines: [],
+                selected        : [],
+                ledgers         : [],
+                pay_methods     : [],
+                attachments     : [],
+                totalAmounts    : [],
                 finalTotalAmount: 0,
-                billModal: false,
-                particulars: '',
-                isWorking: false,
-                acct_assets: erp_acct_var.acct_assets
+                billModal       : false,
+                particulars     : '',
+                isWorking       : false,
+                erp_acct_assets : erp_acct_var.acct_assets
             }
         },
 
         created() {
-            this.getLedgers();
+            this.prepareDataLoad();
+
             this.$root.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
             });
-
         },
 
         methods: {
+            async prepareDataLoad() {
+                /**
+                 * ----------------------------------------------
+                 * check if editing
+                 * -----------------------------------------------
+                 */
+                if ( this.$route.params.id ) {
+                    this.editMode = true;
+                    this.voucherNo = this.$route.params.id;
+
+                    /**
+                     * Duplicates of
+                     *? this.getLedgers()
+                     */
+                    let request1 = await HTTP.get('/ledgers');
+                    let request2 = await HTTP.get(`/expenses/${this.$route.params.id}`);
+
+                    if ( ! request2.data.bill_details.length ) {
+                        this.showAlert('error', 'Check does not exists!');
+                        return;
+                    }
+
+                    if ( 'awaiting_approval' != request2.data.status ) {
+                        this.showAlert('error', 'Can\'t edit');
+                        return;
+                    }
+
+                    this.ledgers   = request1.data;
+                    this.setDataForEdit( request2.data );
+
+                } else {
+                    /**
+                     * ----------------------------------------------
+                     * create a new check
+                     * -----------------------------------------------
+                     */
+                    this.getLedgers();
+
+                    this.basic_fields.trn_date = erp_acct_var.current_date;
+                    this.basic_fields.due_date = erp_acct_var.current_date;
+                    this.transactionLines.push({}, {}, {});
+                }
+            },
+
             getLedgers() {
                 HTTP.get('ledgers').then((response) => {
-                    response.data.forEach(element => {
-                        this.ledgers.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+                    this.ledgers = response.data;
                 });
             },
 
@@ -227,14 +296,44 @@
             },
 
 
-            SubmitForCheck() {
+            updateCheck(requestData) {
+                HTTP.put(`/expenses/${this.voucherNo}`, requestData).then(res => {
+                    this.showAlert('success', 'Check Updated!');
+                }).then(() => {
+                    this.isWorking = false;
+                    this.reset = true;
+
+                    if ('update' == this.actionType) {
+                        this.$router.push({name: 'Expense'});
+                    } else if ('new_update' == this.actionType) {
+                        this.resetFields();
+                    }
+                });
+            },
+
+            createCheck(requestData) {
+                HTTP.post('/expenses', requestData).then(res => {
+                    this.showAlert('success', 'Check Created!');
+                }).then(() => {
+                    this.isWorking = false;
+                    this.reset = true;
+
+                    if ('save' == this.actionType) {
+                        this.$router.push({name: 'Expense'});
+                    } else if ('new_create' == this.actionType) {
+                        this.resetFields();
+                    }
+                });
+            },
+
+            submitCheckForm() {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
                     return;
                 }
 
-                HTTP.post('/expenses', {
+                let requestData = {
                     people_id: this.basic_fields.people.id,
                     check_no: parseInt(this.basic_fields.check_no),
                     trn_date: this.basic_fields.trn_date,
@@ -244,31 +343,16 @@
                     billing_address: this.basic_fields.billing_address,
                     attachments: this.attachments,
                     type: 'check',
-                    status: 4,
+                    status: 'paid',
                     particulars: this.particulars,
                     name: this.check_data.payer_name
-                }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Check Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }).catch( error => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'error',
-                        title: 'Something went Wrong!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                } )
-                .then(() => {
-                    this.resetData();
-                    this.isWorking = false;
-                });
+                };
+
+                if ( this.editMode ) {
+                    this.updateCheck(requestData);
+                } else {
+                    this.createCheck(requestData);
+                }
             },
 
             validateForm() {
