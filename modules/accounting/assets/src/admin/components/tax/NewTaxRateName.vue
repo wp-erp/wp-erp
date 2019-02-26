@@ -16,21 +16,6 @@
                             <input type="text" v-model="rate_name" />
                         </div>
 
-                        <div class="wperp-form-group">
-                            <label>Tax Number</label>
-                            <input type="text" v-model="rate_number" />
-                        </div>
-
-                        <div class="wperp-col-sm-6">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input type="checkbox" v-model="is_default" class="form-check-input">
-                                    <span class="form-check-sign"></span>
-                                    <span class="field-label">Is this tax default?</span>
-                                </label>
-                            </div>
-                        </div>
-
                     </div>
 
                     <div class="wperp-modal-footer pt-0">
@@ -64,14 +49,8 @@
             return {
                 rate_names: [{}],
                 rate_name: '',
-                rate_number: '',
-                is_default: 0,
                 isWorking: false,
             };
-        },
-
-        created() {
-            // this.getAgencies();
         },
 
         methods: {
@@ -79,22 +58,9 @@
                 this.$emit('close');
             },
 
-            getAgencies() {
-                HTTP.get('/tax-agencies').then((response) => {
-                    response.data.forEach(element => {
-                        this.agencies.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
-                });
-            },
-
             addNewTaxRateName() {
                 HTTP.post('/tax-rate-names', {
-                    tax_rate_name: this.rate_name,
-                    tax_number: this.rate_number,
-                    is_default: this.is_default,
+                    name: this.rate_name,
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({

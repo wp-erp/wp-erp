@@ -1,32 +1,29 @@
 <template>
-    <div id="wperp-tax-rate-modal" class="wperp-modal has-form wperp-modal-open" role="dialog">
-        <div class="wperp-modal-dialog">
-            <div class="wperp-modal-content">
-                <!-- modal body title -->
-                <div class="wperp-modal-header">
-                    <h3 v-if="tax_update"><multi-select type="text" v-model="tax_rate.tax_name" :options="rate_names"/></h3>
-                    <h3 v-else>{{tax_rate.tax_name}}</h3>
-                    <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
+    <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
+        <div class="wperp-panel-body">
+
+            <div class="wperp-modal-header with-multiselect">
+                <h3 v-if="tax_update"><multi-select type="text" v-model="tax_rate.tax_name" :options="rate_names"/></h3>
+                <h3 v-else>{{tax_rate.tax_name}}</h3>
+            </div>
+
+            <div class="wperp-invoice-table">
+                <div class="wperp-panel-body">
+                    <tax-rate-row
+                        :key="index"
+                        :tax_component="component"
+                        v-for="(component, index) in tax_rate.tax_components"
+                        :agencies="agencies"
+                        :categories="categories"
+                        :is_update="tax_update"
+                    />
+                </div>
+                <div class="wperp-col-sm-12">
+                    <div class="wperp-form-group text-right mt-10 mb-0">
+                        <submit-button v-if="tax_update" text="Update Tax Rate" @click.native.prevent="UpdateTaxRate"></submit-button>
+                    </div>
                 </div>
 
-                <div class="wperp-invoice-table">
-                    <div class="wperp-panel-body">
-                        <tax-rate-row
-                            :key="index"
-                            :tax_component="component"
-                            v-for="(component, index) in tax_rate.tax_components"
-                            :agencies="agencies"
-                            :categories="categories"
-                            :is_update="tax_update"
-                        />
-                    </div>
-                    <div class="wperp-col-sm-12">
-                        <div class="wperp-form-group text-right mt-10 mb-0">
-                            <submit-button v-if="tax_update" text="Update Tax Rate" @click.native.prevent="UpdateTaxRate"></submit-button>
-                        </div>
-                    </div>
-
-                </div>
             </div>
         </div>
     </div>
@@ -40,7 +37,7 @@
     import TaxRateRow from 'admin/components/tax/TaxRateRow.vue'
 
     export default {
-        name: 'SingleTaxRateModal',
+        name: 'SingleTaxRate',
 
         components: {
             HTTP,
@@ -53,7 +50,6 @@
             tax_id: {
                 type: [ Number, String ]
             },
-            tax_update: Boolean
         },
 
         data() {
@@ -65,6 +61,7 @@
                 rate_names: [],
                 agencies: [],
                 categories: [],
+                tax_update: true
             };
         },
 
@@ -78,7 +75,7 @@
             },
 
             fetchData() {
-                let taxid = this.tax_id;
+                let taxid = this.$route.params.id;
 
                 HTTP.get(`/taxes/${taxid}`).then((response) => {
                     this.tax_rate = response.data;
@@ -124,11 +121,13 @@
             },
 
             UpdateTaxRate() {
-                HTTP.put(`/taxes/${this.tax_id}`, {
-                    tax_rate_name: this.tax_id,
+                let tax_id = this.$route.params.id;
+
+                HTTP.put(`/taxes/${tax_id}`, {
+                    tax_rate_name: tax_id,
                     tax_number: this.tax_rate.tax_number,
                     default: this.tax_rate.is_default,
-                    tax_components: this.formatLineItems(this.tax_rate.tax_components)
+                    tax_components: this.tax_rate.tax_components
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({
@@ -171,7 +170,4 @@
     }
 </script>
 <style lang="less">
-    .wperp-modal-dialog {
-        max-width: 1000px !important;
-    }
 </style>

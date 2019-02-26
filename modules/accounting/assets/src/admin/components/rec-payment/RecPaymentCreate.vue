@@ -291,6 +291,8 @@
             },
 
             validateForm() {
+                this.form_errors = [];
+
                 if ( !this.basic_fields.customer.hasOwnProperty('id') ) {
                     this.form_errors.push('Customer Name is required.');
                 }

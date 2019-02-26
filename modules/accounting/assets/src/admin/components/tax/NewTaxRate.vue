@@ -20,6 +20,21 @@
                                 <multi-select v-model="tax_name" :options="rate_names"/>
                             </div>
                         </div>
+                        <div class="wperp-col-sm-6">
+                            <div class="wperp-form-group">
+                                <label>Tax Number</label>
+                                <input type="text" v-model="tax_number" class="wperp-form-field" placeholder="Enter Tax Number">
+                            </div>
+                        </div>
+                        <div class="wperp-form-group wperp-col-sm-6">
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" v-model="is_default" class="form-check-input">
+                                    <span class="form-check-sign"></span>
+                                    <span class="field-label">Is this tax default?</span>
+                                </label>
+                            </div>
+                        </div>
                         <div class="wperp-form-group wperp-col-sm-6">
                             <div class="form-check">
                                 <label class="form-check-label">
@@ -119,8 +134,10 @@
         data() {
             return {
                 tax_name: '',
+                tax_number: '',
                 tax_category: '',
                 is_compound: false,
+                is_default: false,
                 isCompoundTax: false,
                 isRowExpanded: false,
                 componentLines: [{}],
@@ -153,7 +170,7 @@
                     response.data.forEach(element => {
                         this.rate_names.push({
                             id: element.id,
-                            name: element.tax_rate_name
+                            name: element.name
                         });
                     });
                 }).catch((error) => {
@@ -172,8 +189,6 @@
                     });
                 }).catch((error) => {
                     console.log(error);
-                }).then(() => {
-                    //ready
                 });
 
                 HTTP.get('/tax-cats').then((response) => {
@@ -186,16 +201,15 @@
                     });
                 }).catch((error) => {
                     console.log(error);
-                }).then(() => {
-                    //ready
                 });
             },
 
             addNewTaxRate() {
                 HTTP.post('/taxes', {
-                    tax_rate_id: this.tax_name.id,
+                    tax_rate_name: this.tax_name.id,
+                    tax_number: this.tax_number,
+                    default: this.is_default,
                     is_compound: this.is_compound,
-                    tax_category_id: this.tax_category.id,
                     tax_components: this.formatLineItems()
                 }).then(res => {
                     this.$swal({

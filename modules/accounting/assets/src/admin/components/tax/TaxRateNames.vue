@@ -51,8 +51,6 @@
                 columns: {
                     'tax_id': {label: 'ID'},
                     'tax_name': {label: 'Rate Name'},
-                    'tax_number': {label: 'Tax Number'},
-                    'default': {label: 'Default'},
                     'actions': {label: 'Actions'}
                 },
                 rows: [],
@@ -92,7 +90,7 @@
                 let items = this.rows;
                 items.map(item => {
                     item.tax_id = item.id;
-                    item.tax_name = item.tax_rate_name;
+                    item.tax_name = item.name;
                 });
                 return items;
             }
@@ -127,10 +125,6 @@
                 });
 
                 this.fetchItems();
-            },
-
-            newTaxRate() {
-                this.$router.push('taxes/new-tax');
             },
 
             singleTaxRate(tax_id) {

@@ -200,6 +200,8 @@
             },
 
             getDueBills() {
+                this.pay_bills = [];
+
                 let peopleId = this.basic_fields.people.id,
                     idx = 0,
                     finalAmount = 0;
@@ -295,6 +297,8 @@
             },
 
             validateForm() {
+                this.form_errors = [];
+
                 if ( !this.basic_fields.people.hasOwnProperty('id') ) {
                     this.form_errors.push('People Name is required.');
                 }
