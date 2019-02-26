@@ -342,6 +342,11 @@ export default new Router({
                     component: TaxRates,
                 },
                 {
+                    path: 'new-tax',
+                    name: 'NewTaxRate',
+                    component: NewTaxRate,
+                },
+                {
                     path: ':id',
                     name: 'SingleTaxRate',
                     component: SingleTaxRate,
@@ -350,11 +355,6 @@ export default new Router({
                     path: ':id/edit',
                     name: 'EditSingleTaxRate',
                     component: SingleTaxRate,
-                },
-                {
-                    path: 'new-tax',
-                    name: 'NewTaxRate',
-                    component: NewTaxRate,
                 },
                 {
                     path: 'page/:page',
