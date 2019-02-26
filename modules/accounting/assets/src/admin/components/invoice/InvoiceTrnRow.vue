@@ -205,9 +205,12 @@
 
                 this.line.qty               = 1;
                 this.line.taxCatID          = product.tax_cat_id;
-                this.line.applyTax          = true;
                 this.line.unitPrice         = parseFloat(product.sale_price);
                 this.line.product_type_name = product.product_type_name;
+
+                if ( product.tax_cat_id ) {
+                    this.line.applyTax = true;
+                }
 
                 this.getTaxRate();
                 this.respondAtChange();

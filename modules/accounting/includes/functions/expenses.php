@@ -100,7 +100,6 @@ function erp_acct_get_check( $expense_no ) {
     expense.address,
     expense.trn_date,
     expense.amount,
-    expense.ref,
     expense.particulars,
     expense.status,
     expense.trn_by_ledger_id,
@@ -145,7 +144,11 @@ function erp_acct_format_check_line_items( $voucher_no ) {
         expense.status,
         expense.trn_by,
         expense.trn_date,
-        expense.particulars,
+
+        expense_detail.ledger_id,
+        expense_detail.particulars,
+
+        ledger.name AS ledger_name,
 
         cheque.name,
         cheque.check_no,
@@ -154,6 +157,8 @@ function erp_acct_format_check_line_items( $voucher_no ) {
 
         FROM {$wpdb->prefix}erp_acct_expenses AS expense
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON expense.voucher_no = cheque.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS expense_detail ON expense_detail.trn_no = cheque.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledger ON expense_detail.ledger_id = ledger.id
 
         WHERE expense.voucher_no = %d AND cheque.voucher_type = 'check'", $voucher_no);
 

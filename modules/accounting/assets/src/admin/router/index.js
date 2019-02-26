@@ -471,6 +471,11 @@ export default new Router({
                     name: 'CheckSingle',
                     component: CheckSingle,
                 },
+                {
+                    path: ':id/edit',
+                    name: 'CheckEdit',
+                    component: CheckCreate,
+                },
             ]
         },
         {

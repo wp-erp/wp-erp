@@ -362,7 +362,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $summary = erp_acct_tax_summary();
 
         foreach ( $summary as $item ) {
-            // $data = $this->prepare_tax_summary_response( $item, $request, $additional_fields );
+            $data = $this->prepare_tax_summary_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -511,7 +511,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'tax_rate_id'           => (int) $item->tax_rate_id,
             'default'               => (int) $item->default,
-            'tax_rate_name'         => $item->tax_rate_name,
+            'tax_rate_name'         => $item->name,
             'agency_id'             => $item->agency_id,
             'sales_tax_category_id' => $item->sales_tax_category_id,
             'tax_rate'              => $item->tax_rate
@@ -544,7 +544,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'tax_rate_name'  => [
+                'tax_rate_id'  => [
                     'description' => __( 'Tax Rate name id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
