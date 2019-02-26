@@ -11,34 +11,35 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 
 function erp_acct_get_all_tax_rates( $args = [] ) {
-        global $wpdb;
-    
-        $defaults = [
-            'number'     => 20,
-            'offset'     => 0,
-            'orderby'    => 'id',
-            'order'      => 'DESC',
-            'count'      => false,
-            's'          => '',
-        ];
-    
-        $args = wp_parse_args( $args, $defaults );
-    
-        $limit = '';
-    
-        if ( $args['number'] != '-1' ) {
-            $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
-        }
-    
-        $sql = "SELECT";
-        $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
-        $sql .= "FROM {$wpdb->prefix}erp_acct_taxes ORDER BY {$args['orderby']} {$args['order']} {$limit}";
-    
-        if ( $args['count'] ) {
-            return $wpdb->get_var($sql);
-        }
-    
-        return $wpdb->get_results( $sql, ARRAY_A );
+    global $wpdb;
+
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_taxes ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
+
+    // error_log(print_r($sql, true));
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**
@@ -61,12 +62,12 @@ function erp_acct_get_tax_rate( $tax_no ) {
     tax.created_by,
     tax.updated_at,
     tax.updated_by,
-    
+
     tax_item.tax_id,
     tax_item.component_name,
     tax_item.agency_id,
     tax_item.tax_cat_id
-    
+
     FROM {$wpdb->prefix}erp_acct_taxes AS tax
     LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
     WHERE tax.id = {$tax_no} LIMIT 1";
@@ -415,7 +416,7 @@ function erp_acct_tax_summary() {
         sales_tax_category.tax_rate,
 
         cat_agency.agency_id
-        
+
         FROM {$wpdb->prefix}erp_acct_tax_sales_tax_categories AS sales_tax_category
         LEFT JOIN {$wpdb->prefix}erp_acct_tax_categories AS tax_category ON tax_category.id = sales_tax_category.sales_tax_category_id
         LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS cat_agency ON cat_agency.tax_cat_id = tax_category.id
