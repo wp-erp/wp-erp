@@ -1212,7 +1212,7 @@ Company'
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_taxes` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                `tax_rate_name` varchar(255) DEFAULT NULL,
+                `tax_rate_id` int(11) DEFAULT NULL,
                 `tax_number` varchar(100) DEFAULT NULL,
                 `default` boolean DEFAULT NULL,
                 `created_at` date DEFAULT NULL,

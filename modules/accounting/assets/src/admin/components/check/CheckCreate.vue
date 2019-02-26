@@ -285,7 +285,9 @@
                 let finalAmount = 0;
 
                 this.transactionLines.forEach(element => {
-                    finalAmount += parseFloat(element.amount);
+                    if ( element.amount ) {
+                        finalAmount += parseFloat(element.amount);
+                    }
                 });
 
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
@@ -294,7 +296,6 @@
             addLine() {
                 this.transactionLines.push({});
             },
-
 
             updateCheck(requestData) {
                 HTTP.put(`/expenses/${this.voucherNo}`, requestData).then(res => {
@@ -386,7 +387,9 @@
 
             formatTrnLines( trl_lines ) {
                 trl_lines.forEach(element => {
-                    element.ledger_id = element.ledger_id.id;
+                    if ( element.amount ) {
+                        element.ledger_id = element.ledger_id.id;
+                    }
                 });
 
                 return trl_lines;
