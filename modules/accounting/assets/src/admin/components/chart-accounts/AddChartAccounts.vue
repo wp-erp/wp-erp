@@ -230,6 +230,7 @@
                     this.showAlert('success', 'Created !');
                 }).then(() => {
                     this.resetFields();
+                    this.$store.dispatch( 'spinner/setSpinner', true );
                 });
             },
 
@@ -238,10 +239,13 @@
                     this.showAlert('success', 'Updated !');
                 }).then(() => {
                     this.resetFields();
+                    this.$store.dispatch( 'spinner/setSpinner', true );
                 });
             },
 
             saveAccount() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 this.error         = false;
                 this.isChartAdding = true;
 

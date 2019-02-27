@@ -72,6 +72,7 @@
             };
         },
         created() {
+            this.$store.dispatch( 'spinner/setSpinner', true );
             this.$on('modal-close', function() {
                 this.showModal = false;
             });
@@ -105,6 +106,7 @@
                         this.rows = response.data;
                         this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                         this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                        this.$store.dispatch( 'spinner/setSpinner', false );
                     })
                     .catch((error) => {
                         console.log(error);

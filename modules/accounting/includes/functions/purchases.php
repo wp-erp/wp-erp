@@ -202,7 +202,7 @@ function erp_acct_insert_purchase( $data ) {
         return new WP_error( 'purchase-exception', $e->getMessage() );
     }
 
-    return $purchase_no;
+    return erp_acct_get_purchase( $purchase_no );
 
 }
 
@@ -284,7 +284,7 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
         return new WP_error( 'purchase-exception', $e->getMessage() );
     }
 
-    return $purchase_id;
+    return erp_acct_get_purchase( $purchase_id );
 
 }
 

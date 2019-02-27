@@ -464,7 +464,9 @@
             },
 
             updateInvoice(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Invoice Updated!');
                 }).then(() => {
                     this.isWorking = false;
@@ -479,7 +481,9 @@
             },
 
             createInvoice(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/invoices', requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Invoice Created!');
                 }).then(() => {
                     this.isWorking = false;
@@ -557,11 +561,6 @@
 
                 if (!this.basic_fields.due_date) {
                     this.form_errors.push('Due Date is required.');
-
-                }
-
-                if (!this.estimate) {
-                    this.form_errors.push('Invoice Type is required.');
                 }
             }
         }

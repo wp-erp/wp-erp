@@ -195,6 +195,8 @@
                 if (!this.checkForm()) {
                     return false;
                 }
+
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 if (!this.product) {
                     var type = 'post';
                     var url = 'products';
@@ -215,14 +217,8 @@
                     this.$parent.$emit('close');
                     this.$parent.getProducts();
                     this.resetForm();
-                }).then(() => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Product Created!',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert('success', 'Product Created!');
                 });
             },
 

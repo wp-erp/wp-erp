@@ -203,6 +203,7 @@
             },
 
             addNewTaxRate() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/taxes', {
                     tax_rate_name: this.tax_name.id,
                     tax_number: this.tax_number,
@@ -210,13 +211,8 @@
                     is_compound: this.is_compound,
                     tax_components: this.formatLineItems()
                 }).then(res => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Rate Created!',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success',  'Tax Rate Created!' );
                 }).then(() => {
                     this.resetData();
                 });

@@ -94,6 +94,7 @@
         },
 
         created() {
+            this.$store.dispatch( 'spinner/setSpinner', true );
             this.getCategories();
             this.$on( 'close', function() {
                 this.showModal = false;
@@ -109,6 +110,7 @@
                             let object = { id: category.id, name: category.name, isEdit: false };
                             this.categories.push( object );
                         }
+                        this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
                     .catch( (error) => {
 
@@ -148,6 +150,8 @@
                     this.error = true;
                     return;
                 }
+
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 var data = {
                     name: this.categoryName,
                     parent: this.parentCategory
@@ -157,6 +161,7 @@
                         this.categories.push( response.data );
                         this.categoryName = '';
                         this.parentCategory = 0;
+                        this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
                     .catch( ( error ) => {
 
@@ -165,10 +170,12 @@
             updateCategory( row ) {
                 var categoryName = document.getElementById('cat-'+row.id).value;
                 var categoryId   = row.id;
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put( 'product-cats/' + categoryId, { name: categoryName } )
                     .then( (response) => {
                         row.isEdit = false;
                         row.name = categoryName;
+                        this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
             },
 

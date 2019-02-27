@@ -129,6 +129,7 @@
         },
 
         created() {
+            this.$store.dispatch( 'spinner/setSpinner', true );
             this.fetchItems();
 
             this.$root.$on('comboSelected', (data) => {
@@ -172,6 +173,7 @@
                     this.rows = response.data;
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch((error) => {
                     console.log(error);
                 });
@@ -201,8 +203,11 @@
                 switch (action) {
                     case 'trash':
                         if (confirm('Are you sure to delete?')) {
+                            this.$store.dispatch( 'spinner/setSpinner', true );
                             HTTP.delete('/taxes/' + row.id).then(response => {
                                 this.$delete(this.rows, index);
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                                this.showAlert( 'success', 'Deleted' );
                             });
                         }
                         break;
@@ -224,6 +229,7 @@
             onBulkAction(action, items) {
                 if ('trash' === action) {
                     if (confirm('Are you sure to delete?')) {
+                        this.$store.dispatch( 'spinner/setSpinner', true );
                         HTTP.delete('taxes/delete/' + items.join(',')).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
@@ -233,6 +239,7 @@
                             }
 
                             this.fetchItems();
+                            this.$store.dispatch( 'spinner/setSpinner', false );
                         });
                     }
                 }

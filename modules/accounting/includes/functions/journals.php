@@ -93,7 +93,7 @@ function erp_acct_get_journal( $journal_no ) {
  * Insert journal data
  *
  * @param $data
- * @return int
+ * @return mixed
  */
 function erp_acct_insert_journal( $data ) {
     global $wpdb;
@@ -166,7 +166,7 @@ function erp_acct_insert_journal( $data ) {
         return new WP_error( 'journal-exception', $e->getMessage() );
     }
 
-    return $voucher_no;
+    return erp_acct_get_journal( $voucher_no );
 
 }
 
@@ -225,7 +225,7 @@ function erp_acct_update_journal( $data, $journal_no ) {
         return new WP_error( 'journal-exception', $e->getMessage() );
     }
 
-    return $journal_no;
+    return erp_acct_get_journal( $journal_no );
 
 }
 

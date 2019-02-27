@@ -161,6 +161,8 @@ function erp_acct_insert_bill( $data ) {
                 'created_at'  => $bill_data['created_at'],
                 'created_by'  => $bill_data['created_by']
              ] );
+
+            erp_acct_insert_bill_data_into_ledger( $bill_data, $item );
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
@@ -174,7 +176,7 @@ function erp_acct_insert_bill( $data ) {
             'created_by'  => $bill_data['created_by']
         ) );
 
-        erp_acct_insert_bill_data_into_ledger( $bill_data, $item );
+
 
         $wpdb->query( 'COMMIT' );
 
@@ -183,7 +185,7 @@ function erp_acct_insert_bill( $data ) {
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_bill($voucher_no);
+    return erp_acct_get_bill( $voucher_no );
 
 }
 
@@ -266,7 +268,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_bill($bill_id);
+    return erp_acct_get_bill( $bill_id );
 }
 
 /**

@@ -77,11 +77,12 @@
 
             fetchChartAccounts() {
                 this.chartAccounts = [];
-
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get('/ledgers/accounts').then( response => {
                     this.chartAccounts = response.data;
 
                     this.fetchLedgers();
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 });
             },
 
