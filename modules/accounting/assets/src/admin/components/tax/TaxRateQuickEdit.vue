@@ -78,7 +78,6 @@
             },
 
             fetchData() {
-                console.log( this.tax_id );
                 let taxid = this.tax_id;
 
                 HTTP.get(`/taxes/${taxid}`).then((response) => {
@@ -112,7 +111,6 @@
             },
 
             formatLineItems(componentLines) {
-                console.log( componentLines );
                 var lineItems = [];
 
                 for(let idx = 0; idx < componentLines.length; idx++) {
