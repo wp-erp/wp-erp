@@ -369,6 +369,10 @@
                 if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
                     this.form_errors.push('Payment Method is required.');
                 }
+
+                window.setInterval(() => {
+                    window.scrollTo(0, 0)
+                }, 30)
             },
 
             showPaymentModal() {

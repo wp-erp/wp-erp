@@ -414,6 +414,10 @@
                 if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
                     this.form_errors.push('Transaction Account is required.');
                 }
+
+                window.setInterval(() => {
+                    window.scrollTo(0, 0)
+                }, 30)
             },
 
             resetData() {
