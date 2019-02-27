@@ -106,7 +106,6 @@ function erp_acct_update_tax_agency( $data, $id ) {
 
     $wpdb->update($wpdb->prefix . 'erp_acct_tax_agencies', array(
         'name'       => $tax_data['agency_name'],
-        'description'=> $tax_data['description'],
         'created_at' => $tax_data['created_at'],
         'created_by' => $tax_data['created_by'],
         'updated_at' => $tax_data['updated_at'],

@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <new-tax-agency v-if="showModal" @close="showModal = false"></new-tax-agency>
+        <new-tax-agency v-if="showModal" :agency_id="agency_id" :is_update="is_update" @close="showModal = false"></new-tax-agency>
 
         <div class="table-container">
             <list-table
@@ -79,7 +79,9 @@
                 pageTitle: '',
                 url: '',
                 singleUrl: '',
-                isActiveOptionDropdown: false
+                isActiveOptionDropdown: false,
+                agency_id: null,
+                is_update: false
             };
         },
 
@@ -144,7 +146,7 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete( this.url + '/' + row.id).then( response => {
+                            HTTP.delete( 'tax-agencies' + '/' + row.id).then( response => {
                                 this.$delete(this.rows, index);
                             });
                         }
@@ -152,7 +154,9 @@
 
                     case 'edit':
                         this.showModal = true;
-                        this.tax_agencies = row;
+                        this.agency_id = row.id;
+                        this.is_update = true;
+                        this.fetchItems();
                         break;
 
                     default :

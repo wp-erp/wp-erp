@@ -75,6 +75,32 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/quick-edit', [
+
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'quick_edit_tax_rate' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-edit', [
+
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'line_edit_tax_rate' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/tax-records', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -221,7 +247,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Update an tax
+     * Update a tax rate
      *
      * @param WP_REST_Request $request
      *
@@ -252,6 +278,68 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $tax_data = $this->prepare_item_for_response( $tax_data, $request, $additional_fields );
+
+        $response = rest_ensure_response( $tax_data );
+        $response->set_status( 201 );
+
+        return $response;
+    }
+
+    /**
+     * Quick Edit a tax rate
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function quick_edit_tax_rate( $request ) {
+        $id = (int) $request['id']; $item_rates = [];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $tax_data = $this->prepare_item_for_database( $request );
+
+        $tax_data['tax_rate'] = array_sum( $item_rates );
+
+        $tax_id = erp_acct_quick_edit_tax_rate( $tax_data, $id );
+
+        $tax_data['id'] = $tax_id;
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $tax_data = $this->prepare_item_for_response( $tax_data, $request, $additional_fields );
+
+        $response = rest_ensure_response( $tax_data );
+        $response->set_status( 201 );
+
+        return $response;
+    }
+
+    /**
+     * Update component of a tax rate
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function line_edit_tax_rate( $request ) {
+        $id = (int) $request['id']; $item_rates = [];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $tax_data = $this->prepare_line_item_for_database( $request );
+
+        $line_id = erp_acct_edit_tax_rate_line( $tax_data );
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $tax_data = $this->prepare_tax_line_for_response( $tax_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $tax_data );
         $response->set_status( 201 );
@@ -430,6 +518,41 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
+     * Prepare a line item of a single tax rate create or update
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return array $prepared_item
+     */
+    protected function prepare_line_item_for_database( $request ) {
+        $prepared_item = [];
+
+        if ( isset( $request['tax_id'] ) ) {
+            $prepared_item['tax_id'] = $request['tax_id'];
+        }
+        if ( isset( $request['db_id'] ) ) {
+            $prepared_item['db_id'] = $request['db_id'];
+        }
+        if ( isset( $request['row_id'] ) ) {
+            $prepared_item['row_id'] = $request['row_id'];
+        }
+        if ( isset( $request['component_name'] ) ) {
+            $prepared_item['component_name'] = $request['component_name'];
+        }
+        if ( isset( $request['agency_id'] ) ) {
+            $prepared_item['agency_id'] = $request['agency_id'];
+        }
+        if ( isset( $request['tax_cat_id'] ) ) {
+            $prepared_item['tax_cat_id'] = $request['tax_cat_id'];
+        }
+        if ( isset( $request['tax_rate'] ) ) {
+            $prepared_item['tax_rate'] = $request['tax_rate'];
+        }
+
+        return $prepared_item;
+    }
+
+    /**
      * Prepare a single tax rate output for response
      *
      * @param array $item
@@ -444,7 +567,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'              => (int) $item->id,
             'tax_name_id'     => $item->tax_rate_id,
-            'tax_name'        => erp_acct_get_tax_rate_name_by_id( $item->tax_rate_id ),
+            'tax_name'        => erp_acct_get_tax_rate_name_by_id( $item->id ),
             'tax_number'      => $item->tax_number,
             'tax_rate'        => ! empty($item->tax_rate) ? $item->tax_rate : '',
             'default'         => $item->default,
@@ -452,6 +575,28 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         ];
 
         $data = array_merge( $data, $additional_fields );
+
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        $response = $this->add_links( $response, $item, $additional_fields );
+
+        return $response;
+    }
+
+    /**
+     * Prepare a tax rate line item output for response
+     *
+     * @param array $item
+     * @param WP_REST_Request $request Request object.
+     * @param array $additional_fields (optional)
+     *
+     * @return WP_REST_Response $response Response data.
+     */
+    public function prepare_tax_line_for_response( $item, $request, $additional_fields = [] ) {
+
+        $data = array_merge( $item, $additional_fields );
 
 
         // Wrap the data in a response object

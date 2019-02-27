@@ -21,7 +21,8 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <submit-button text="Add New" @click.native.prevent="addNewTaxRateName" :working="isWorking"></submit-button>
+                            <submit-button v-if="is_update" text="Update" @click.native.prevent="updateTaxRateName" :working="isWorking"></submit-button>
+                            <submit-button v-else text="Add New" @click.native.prevent="addNewTaxRateName" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>
@@ -45,6 +46,16 @@
             SubmitButton
         },
 
+        props: {
+            rate_name_id: {
+                type: [ Number, String ]
+            },
+            is_update: {
+                type: Boolean,
+                default: false
+            }
+        },
+
         data() {
             return {
                 rate_names: [{}],
@@ -53,9 +64,21 @@
             };
         },
 
+        created() {
+            if ( this.is_update ) {
+                this.getRateName();
+            }
+        },
+
         methods: {
             closeModal() {
                 this.$emit('close');
+            },
+
+            getRateName() {
+                HTTP.get(`/tax-rate-names/${this.rate_name_id}`).then((response) => {
+                    this.rate_name = response.data.name;
+                });
             },
 
             addNewTaxRateName() {
@@ -69,6 +92,26 @@
                         title: 'Tax Rate Name Created!',
                         showConfirmButton: false,
                         timer: 1500
+                    });
+                }).then(() => {
+                    this.resetData();
+                    this.isWorking = false;
+                    this.$emit('close');
+                    this.$root.$emit('refetch_tax_data');
+                });
+            },
+
+            updateTaxRateName() {
+                HTTP.put(`/tax-rate-names/${this.rate_name_id}`, {
+                    name: this.rate_name,
+                }).then(res => {
+                    console.log(res.data);
+                    this.$swal({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Tax Rate Name Update!',
+                        showConfirmButton: false,
+                        timer: 1000
                     });
                 }).then(() => {
                     this.resetData();

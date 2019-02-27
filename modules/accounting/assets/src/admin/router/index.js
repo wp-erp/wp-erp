@@ -368,28 +368,8 @@ export default new Router({
                     component: NewTaxRate,
                 },
                 {
-                    path: ':id',
-                    name: 'SingleTaxRate',
-                    component: SingleTaxRate,
-                },
-                {
-                    path: ':id/edit',
-                    name: 'EditSingleTaxRate',
-                    component: SingleTaxRate,
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateTaxRates',
-                    component: TaxRates,
-                },
-                {
                     path: 'rate-names',
                     name: 'TaxRateNames',
-                    component: TaxRateNames,
-                },
-                {
-                    path: 'rate-names/page/:page',
-                    name: 'PaginateTaxRateNames',
                     component: TaxRateNames,
                 },
                 {
@@ -398,18 +378,8 @@ export default new Router({
                     component: TaxAgencies,
                 },
                 {
-                    path: 'agencies/page/:page',
-                    name: 'PaginateTaxAgencies',
-                    component: TaxAgencies,
-                },
-                {
                     path: 'categories',
                     name: 'TaxCategories',
-                    component: TaxCategories,
-                },
-                {
-                    path: 'categories/page/:page',
-                    name: 'PaginateTaxCategories',
                     component: TaxCategories,
                 },
                 {
@@ -426,6 +396,36 @@ export default new Router({
                     path: 'new-tax-cat',
                     name: 'NewTaxCategory',
                     component: NewTaxCategory,
+                },
+                {
+                    path: ':id',
+                    name: 'SingleTaxRate',
+                    component: SingleTaxRate,
+                },
+                {
+                    path: ':id/edit',
+                    name: 'EditSingleTaxRate',
+                    component: SingleTaxRate,
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateTaxRates',
+                    component: TaxRates,
+                },
+                {
+                    path: 'rate-names/page/:page',
+                    name: 'PaginateTaxRateNames',
+                    component: TaxRateNames,
+                },
+                {
+                    path: 'categories/page/:page',
+                    name: 'PaginateTaxCategories',
+                    component: TaxCategories,
+                },
+                {
+                    path: 'agencies/page/:page',
+                    name: 'PaginateTaxAgencies',
+                    component: TaxAgencies,
                 },
             ]
         },

@@ -211,13 +211,12 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $results = $wpdb->get_results( 'SELECT * FROM `ledgers` WHERE `id`=' . $id . ' ORDER BY `category_id` ASC' );
+        $result = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = {$id}" );
 
-        $item     = $this->prepare_item_for_response( $results[0], $request );
-        $response = rest_ensure_response( $item );
+        // $item     = $this->prepare_item_for_response( $results, $request );
+        $response = rest_ensure_response( $result );
 
         return $response;
-
     }
 
     /**

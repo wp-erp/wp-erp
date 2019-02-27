@@ -3,11 +3,15 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Tax Rates</h2>
+                    <h2 class="content-header__title">Tax Rate Names</h2>
+                    <a class="wperp-btn btn--primary" @click.prevent="showModal = true">
+                        <span>Add Tax Rate Name</span>
+                    </a>
                 </div>
             </div>
         </div>
 
+        <new-tax-rate-name v-if="showModal" :rate_name_id="rate_name_id" :is_update="is_update" @close="showModal = false"></new-tax-rate-name>
 
         <div class="table-container">
             <list-table
@@ -33,16 +37,14 @@
 <script>
     import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
-    import NewTaxRate from 'admin/components/tax/NewTaxRate.vue'
-    import ComboBox from 'admin/components/select/ComboBox.vue'
+    import NewTaxRateName from 'admin/components/tax/NewTaxRateName.vue'
 
     export default {
         name: 'TaxRateNames',
 
         components: {
+            NewTaxRateName,
             ListTable,
-            NewTaxRate,
-            ComboBox
         },
 
         data() {
@@ -78,6 +80,9 @@
                 singleUrl: '',
                 isActiveOptionDropdown: false,
                 singleTaxRateModal: false,
+                showModal: false,
+                rate_name_id: null,
+                is_update: false
             }
         },
 
@@ -135,13 +140,17 @@
                 switch (action) {
                     case 'trash':
                         if (confirm('Are you sure to delete?')) {
-                            HTTP.delete(this.url + '/' + row.id).then(response => {
+                            HTTP.delete('tax-rate-names' + '/' + row.id).then(response => {
                                 this.$delete(this.rows, index);
                             });
                         }
                         break;
 
                     case 'edit':
+                        this.showModal = true;
+                        this.rate_name_id = row.id;
+                        this.is_update = true;
+                        this.fetchItems();
                         break;
 
                     default :
@@ -152,7 +161,7 @@
             onBulkAction(action, items) {
                 if ('trash' === action) {
                     if (confirm('Are you sure to delete?')) {
-                        HTTP.delete('taxes/delete/' + items.join(',')).then(response => {
+                        HTTP.delete('tax-rate-names/delete/' + items.join(',')).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
                             if (toggleCheckbox.checked) {
