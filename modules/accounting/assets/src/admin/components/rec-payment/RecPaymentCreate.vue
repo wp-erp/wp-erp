@@ -46,7 +46,7 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <label>Billing Address</label>
-                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
+                            <textarea v-model.trim="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
 
                         <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
@@ -97,6 +97,18 @@
                             <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
+                                <img :src="erp_acct_assets + '/images/file-thumb.png'">
+                                <span class="remove-file" @click="removeFile(index)">&#10007;</span>
+
+                                <div class="attachment-meta">
+                                    <h3>{{ getFileName(file) }}</h3>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                     <tr class="add-attachment-row">
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
@@ -135,7 +147,6 @@
 
         components: {
             SelectAccounts,
-            HTTP,
             Datepicker,
             FileUpload,
             SubmitButton,
@@ -146,48 +157,86 @@
         },
 
         created() {
-            this.getPayMethods();
+            this.prepareDataLoad();
         },
 
         data() {
             return {
                 basic_fields: {
-                    customer: '',
-                    trn_ref: '',
-                    payment_date: '',
-                    deposit_to: '',
+                    customer       : '',
+                    trn_ref        : '',
+                    payment_date   : '',
+                    deposit_to     : '',
                     billing_address: '',
-                    trn_by: ''
+                    trn_by         : ''
                 },
 
                 check_data: {
                     payer_name: '',
-                    check_no: ''
+                    check_no  : ''
                 },
 
                 form_errors: [],
 
-                invoices: [],
-                attachments: [],
-                totalAmounts:[],
-                pay_methods: [],
+                editMode        : false,
+                voucherNo       : 0,
+                invoices        : [],
+                attachments     : [],
+                totalAmounts    : [],
+                pay_methods     : [],
                 finalTotalAmount: 0,
-                particulars: '',
-                isWorking: false,
-                accts_by_chart: [],
-                acct_assets: erp_acct_var.acct_assets,
+                particulars     : '',
+                isWorking       : false,
+                accts_by_chart  : [],
+                erp_acct_assets : erp_acct_var.acct_assets,
             }
         },
 
         methods: {
+            async prepareDataLoad() {
+                /**
+                 * ----------------------------------------------
+                 * check if editing
+                 * -----------------------------------------------
+                 */
+                if ( this.$route.params.id ) {
+                    this.editMode = true;
+                    this.voucherNo = this.$route.params.id;
+
+                    /**
+                     * Duplicates of
+                     *? this.getPayMethods()
+                     */
+                    let request1 = await HTTP.get('/transactions/payment-methods');
+                    let request2 = await HTTP.get(`/invoices/${this.$route.params.id}`);
+
+                    if ( ! request2.data.line_items.length ) {
+                        this.showAlert('error', 'Invoice does not exists!');
+                        return;
+                    }
+
+                    if ( 'awaiting_approval' != request3.data.status ) {
+                        this.showAlert('error', 'Can\'t edit');
+                        return;
+                    }
+
+                    this.pay_methods = request1.data;
+                    this.setDataForEdit( request2.data );
+                } else {
+                    /**
+                     * ----------------------------------------------
+                     * create a new Receive Payment
+                     * -----------------------------------------------
+                     */
+                    this.getPayMethods();
+
+                    this.basic_fields.payment_date = erp_acct_var.current_date;
+                }
+            },
+
             getPayMethods() {
-                HTTP.get('/transactions/payment-methods').then((response) => {
-                    response.data.forEach(element => {
-                        this.pay_methods.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+                HTTP.get('/transactions/payment-methods').then(response => {
+                    this.pay_methods = response.data;
                 });
             },
 
@@ -198,15 +247,15 @@
             getDueInvoices() {
                 this.invoices = [];
 
-                let customerId = this.basic_fields.customer.id,
-                    idx = 0,
+                let customerId  = this.basic_fields.customer.id,
+                    idx         = 0,
                     finalAmount = 0;
 
                 if ( ! customerId ) {
                     return;
                 }
 
-                HTTP.get(`/invoices/due/${customerId}`).then((response) => {
+                HTTP.get(`/invoices/due/${customerId}`).then(response => {
                     response.data.forEach(element => {
                         this.invoices.push({
                             id: element.id,
@@ -257,6 +306,10 @@
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
                     return;
                 }
 
@@ -271,20 +324,14 @@
                     line_items: this.invoices,
                     attachments: this.attachments,
                     type: 'payment',
-                    status: 3,
+                    status: 'paid',
                     particulars: this.particulars,
                     deposit_to: this.basic_fields.deposit_to.id,
                     trn_by: this.basic_fields.trn_by.id,
                     check_no: parseInt(this.check_data.check_no),
                     name: this.check_data.payer_name
                 }).then(res => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Payment Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.showAlert('success', 'Payment Created!');
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;

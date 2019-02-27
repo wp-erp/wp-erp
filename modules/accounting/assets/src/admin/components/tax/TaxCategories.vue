@@ -87,12 +87,9 @@
         },
 
         created() {
-            this.$on('tax-modal-close', function() {
-                this.showModal = false;
+            this.$root.$on('refetch_tax_data',() => {
+                this.fetchItems();
             });
-
-            this.pageTitle      =   this.$route.name;
-            this.url            =   this.$route.name.toLowerCase();
 
             this.fetchItems();
         },
@@ -113,24 +110,21 @@
             fetchItems() {
                 this.rows = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('tax-cats', {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
                     }
+                }).then( (response) => {
+                    this.rows = response.data;
+                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 })
-                    .then( (response) => {
-                        this.rows = response.data;
-                        this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                        this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                        this.$store.dispatch( 'spinner/setSpinner', false );
-                    })
-                    .catch((error) => {
-                        this.$store.dispatch( 'spinner/setSpinner', false );
-                    })
-                    .then( () => {
-                        //ready
-                    } );
+                .catch((error) => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                });
             },
 
             goToPage(page) {
@@ -140,6 +134,10 @@
                     name: 'PaginateTaxCategories',
                     params: { page: page },
                     query: queries
+                });
+
+                this.$root.$on('refetch_tax_data',() => {
+                    this.fetchItems();
                 });
 
                 this.fetchItems();

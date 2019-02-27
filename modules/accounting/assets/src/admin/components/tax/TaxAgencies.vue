@@ -93,6 +93,10 @@
             this.pageTitle      =   this.$route.name;
             this.url            =   this.$route.name.toLowerCase();
 
+            this.$root.$on('refetch_tax_data',() => {
+                this.fetchItems();
+            });
+
             this.fetchItems();
         },
 

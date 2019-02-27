@@ -399,6 +399,10 @@
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
                     return;
                 }
 

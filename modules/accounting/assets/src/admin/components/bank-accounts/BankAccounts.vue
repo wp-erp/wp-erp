@@ -32,7 +32,8 @@
                                     <!-- available balance -->
                                     <div class="available-balance">
                                         <span class="account-balance-label">Available Balance:</span>
-                                        <strong class="account-balance">{{transformBalance(account.balance)}}</strong>
+                                        <strong v-if="undefined === account.balance" class="account-balance">{{transformBalance(0)}}</strong>
+                                        <strong v-else class="account-balance">{{transformBalance(account.balance)}}</strong>
                                     </div>
 
                                 </div>
@@ -98,15 +99,18 @@
         },
 
         methods: {
-            fetchAccounts(){
+            fetchAccounts() {
                 this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get('accounts').then( (response) => {
+                HTTP.get('/accounts/bank-accounts').then( (response) => {
                     this.accounts = response.data;
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
 
             transformBalance( val ){
+                if ( 'undefined' === val ) {
+                    val = 0;
+                }
                 let currency = '$';
                 if ( val < 0 ){
                     return `Cr. ${currency} ${Math.abs(val)}`;

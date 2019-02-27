@@ -104,7 +104,7 @@
                         break;
 
                     case 'edit':
-                        this.$router.push({name: 'AddChartAccounts', params: { row: row } });
+                        this.$router.push({name: 'ChartAccountsEdit', params: { id: row.id } });
                         break;
 
                     default :

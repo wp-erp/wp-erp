@@ -18,7 +18,6 @@
             <show-errors :error_msgs="form_errors" ></show-errors>
 
             <div class="wperp-panel-body">
-                <!-- <form action="#" class="wperp-form" method="post"> -->
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
                             <select-customers :reset="reset" v-model="basic_fields.customer"></select-customers>
@@ -167,7 +166,6 @@
         name: 'InvoiceCreate',
 
         components: {
-            HTTP,
             MultiSelect,
             Datepicker,
             FileUpload,
@@ -430,7 +428,7 @@
                 this.transactionLines.forEach(element => {
                     if ( element.qty ) {
                         taxAmount     += parseFloat(element.taxAmount);
-                        totalDiscount += parseFloat(element.discount);
+                        totalDiscount += isNaN( element.discount ) ? 0.00 : parseFloat(element.discount);
                         totalAmount   += parseFloat(element.amount);
                     }
                 });
@@ -501,6 +499,14 @@
 
             submitInvoiceForm() {
                 this.validateForm();
+
+                if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
+                    return;
+                }
 
                 this.isWorking = true;
 

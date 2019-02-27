@@ -78,13 +78,12 @@
             },
 
             fetchData() {
-                console.log( this.tax_id );
                 let taxid = this.tax_id;
 
                 HTTP.get(`/taxes/${taxid}`).then((response) => {
                     this.tax_rate = response.data;
                     this.tax_number = this.tax_rate.tax_number;
-                    this.is_default = this.tax_rate.default;
+                    this.is_default = parseInt(this.tax_rate.default);
                 }).catch((error) => {
                     console.log(error);
                 });
@@ -107,7 +106,6 @@
             },
 
             formatLineItems(componentLines) {
-                console.log( componentLines );
                 var lineItems = [];
 
                 for(let idx = 0; idx < componentLines.length; idx++) {

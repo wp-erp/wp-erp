@@ -10,7 +10,37 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_banks() {
+function erp_acct_get_banks( $show_balance = false ) {
+    global $wpdb;
+    $chart_id = 7;
+
+    $ledgers = $wpdb->prefix.'erp_acct_ledgers';
+
+    if ( !$show_balance ) {
+        $query = $wpdb->prepare( "SELECT * FROM $ledgers WHERE chart_id = %d", $chart_id );
+        $results = $wpdb->get_results( $query, ARRAY_A );
+        return $results;
+    }
+
+    $sub_query = $wpdb->prepare( "SELECT id FROM $ledgers WHERE chart_id = %d", $chart_id );
+    $ledger_details = $wpdb->prefix.'erp_acct_ledger_details';
+    $query = "Select ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance
+              From $ledger_details as ld
+              LEFT JOIN $ledgers as l ON l.id = ld.ledger_id
+              Where ld.ledger_id IN ($sub_query)
+              Group BY ld.ledger_id";
+    $results = $wpdb->get_results( $query, ARRAY_A );
+
+    return $results;
+}
+
+/**
+ * Get all accounts to show in dashboard
+ *
+ * @param $data
+ * @return mixed
+ */
+function erp_acct_get_dashboard() {
     global $wpdb;
 
     $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_cash_at_banks", ARRAY_A );

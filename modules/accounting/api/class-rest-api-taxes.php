@@ -510,8 +510,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['tax_rate'] ) ) {
             $prepared_item['tax_rate'] = $request['tax_rate'];
         }
-        if ( isset( $request['is_default'] ) ) {
-            $prepared_item['default'] = $request['is_default'];
+        if ( isset( $request['default'] ) ) {
+            $prepared_item['default'] = $request['default'];
         }
 
         return $prepared_item;
@@ -567,7 +567,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'              => (int) $item->id,
             'tax_name_id'     => $item->tax_rate_id,
-            'tax_name'        => erp_acct_get_tax_rate_name_by_id( $item->id ),
+            'tax_name'        => $item->name,
             'tax_number'      => $item->tax_number,
             'tax_rate'        => ! empty($item->tax_rate) ? $item->tax_rate : '',
             'default'         => $item->default,
@@ -656,8 +656,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'tax_rate_id'           => (int) $item->tax_rate_id,
             'default'               => (int) $item->default,
-            'tax_rate_name'         => $item->tax_rate_name,
-            'agency_id'             => $item->agency_id,
+            'tax_rate_name'         => $item->name,
             'sales_tax_category_id' => $item->sales_tax_category_id,
             'tax_rate'              => $item->tax_rate
         ];
@@ -689,7 +688,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'tax_rate_name'  => [
+                'tax_rate_id'  => [
                     'description' => __( 'Tax Rate name id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],

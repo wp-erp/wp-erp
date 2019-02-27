@@ -100,7 +100,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/categories', [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/categories/(?P<chart_id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_ledger_categories' ],
@@ -211,13 +211,12 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $results = $wpdb->get_results( 'SELECT * FROM `ledgers` WHERE `id`=' . $id . ' ORDER BY `category_id` ASC' );
+        $result = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = {$id}" );
 
-        $item     = $this->prepare_item_for_response( $results[0], $request );
-        $response = rest_ensure_response( $item );
+        // $item     = $this->prepare_item_for_response( $results, $request );
+        $response = rest_ensure_response( $result );
 
         return $response;
-
     }
 
     /**
@@ -337,7 +336,9 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_ERROR|WP_REST_REQUEST
      */
     public function get_ledger_categories( $request ) {
-        $categories = erp_acct_get_ledger_categories();
+        $chart_id = absint( $request['chart_id'] );
+
+        $categories = erp_acct_get_ledger_categories( $chart_id );
 
         $response = rest_ensure_response( $categories );
 

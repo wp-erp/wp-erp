@@ -4,7 +4,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Create New Account</h2>
+                    <h2 class="content-header__title">{{ editMode ? 'Update' : 'Create New' }} Account</h2>
                 </div>
             </div>
         </div>
@@ -35,14 +35,14 @@
                     <label slot="option-label" slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" :class="labelClassName">
                         {{ node.label }}
                         <span v-if="shouldShowCount" :class="countClassName">({{ count }})</span>
-                        <span class="list-actions" v-if="node.raw.system == null">
+                        <!-- <span class="list-actions" v-if="node.raw.system == null">
                             <strong class="edit" @click.prevent="editCategory(node)">&#9998;</strong>
                             <strong class="remove" @click.prevent="removeCategory(node)">&cross;</strong>
-                        </span>
+                        </span> -->
                     </label>
                 </treeselect>
 
-                <a href="#" @click.prevent="categoryAddModal" role="button" class="after-select-dropdown">Add new category</a>
+                <!-- <a href="#" @click.prevent="categoryAddModal" role="button" class="after-select-dropdown">Add new category</a> -->
             </div>
 
             <div class="form-row">
@@ -58,7 +58,7 @@
             </div>
 
             <button class="wperp-btn btn--primary" type="submit">
-                {{ isChartAdding ? 'Saving...': 'Save' }}
+                {{ isChartAdding ? ( editMode ? 'Updating...' : 'Saving...' ) : ( editMode ? 'Update' : 'Save' ) }}
             </button>
         </form>
 
@@ -79,22 +79,24 @@
         data() {
             return {
                 chartAccounts: [],
-                categories: [],
-                catAddModal: false,
+                categories   : [],
+                catAddModal  : false,
 
                 ledgFields: {
-                    chart_id: null,
-                    category_id: null,
-                    account_name: '',
-                    code: ''
+                    chart_id    : null,
+                    category_id : null,
+                    name: '',
+                    code        : ''
                 },
 
                 catData: {
                     title: 'Add New',
-                    node: null
+                    node : null
                 },
 
-                error: false,
+                ledgerID     : 0,
+                editMode     : false,
+                error        : false,
                 isChartAdding: false,
             };
         },
@@ -105,8 +107,7 @@
         },
 
         created() {
-            this.fetchChartAccounts();
-            this.fetchLedgerCategories();
+            this.prepareDataLoad();
 
             this.$root.$on('cat-modal-close', () => {
                 this.catAddModal = false;
@@ -118,19 +119,57 @@
                 this.catData.title = 'Add New';
                 this.catData.node = null;
 
-                this.$swal({
-                    position: 'center',
-                    type: 'success',
-                    title: 'Successful!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                this.showAlert('success', 'Successful !');
 
                 this.fetchLedgerCategories();
             });
         },
 
         methods: {
+            async prepareDataLoad() {
+                /**
+                 * ----------------------------------------------
+                 * check if editing
+                 * -----------------------------------------------
+                 */
+                if ( this.$route.params.id ) {
+                    this.editMode = true;
+                    this.ledgerID = this.$route.params.id;
+
+                    /**
+                     * Duplicates of
+                     *? this.fetchChartAccounts()
+                     *? this.fetchLedgerCategories()
+                     * load accounts and categories, before ledger load
+                     */
+                    let [request1, request2] = await Promise.all([
+                        HTTP.get('/ledgers/accounts'),
+                        HTTP.get(`/ledgers/${this.$route.params.id}`)
+                    ]);
+                    let request3 = await HTTP.get(`/ledgers/categories/${request2.data.chart_id}`);
+
+                    this.chartAccounts = request1.data;
+                    this.setDataForEdit( request2.data );
+                    this.categories = this.buildTree( request3.data );
+
+                } else {
+                    /**
+                     * ----------------------------------------------
+                     * create a new ledger
+                     * -----------------------------------------------
+                     */
+                    this.fetchChartAccounts();
+                    this.fetchLedgerCategories();
+                }
+            },
+
+            setDataForEdit(ledger) {
+                this.ledgFields.chart_id    = ledger.chart_id;
+                this.ledgFields.name        = ledger.name;
+                this.ledgFields.category_id = ledger.category_id;
+                this.ledgFields.code        = ledger.code;
+            },
+
             categoryAddModal() {
                 this.catAddModal = true;
             },
@@ -162,7 +201,7 @@
             },
 
             fetchLedgerCategories() {
-                HTTP.get('/ledgers/categories').then( response => {
+                HTTP.get(`/ledgers/categories/${this.ledgFields.chart_id}`).then( response => {
                     if ( ! response.data ) return;
 
                     this.categories = this.buildTree( response.data );
@@ -179,13 +218,7 @@
             removeCategory(node) {
                 if ( confirm('Are you sure to remove this category?') ) {
                     HTTP.delete(`/ledgers/categories/${node.id}`).then(response => {
-                        this.$swal({
-                            position: 'center',
-                            type: 'error',
-                            title: 'Category Removed!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                        this.showAlert('error', 'Category Removed!');
 
                         this.fetchLedgerCategories();
                     });
@@ -227,7 +260,7 @@
             padding: 0;
             border: 0;
             box-shadow: none;
-            height: auto;
+            height: auto !important;
         }
     }
 

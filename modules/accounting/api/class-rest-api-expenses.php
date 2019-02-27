@@ -223,13 +223,14 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $expense_data['attachments']     = maybe_serialize( $request['attachments'] );
         $expense_data['amount']          = array_sum( $item_total );
 
-        $expense_id = erp_acct_insert_expense( $expense_data );
+        $expense = erp_acct_insert_expense( $expense_data );
 
-        $expense_data['id'] = $expense_id;
+        // $expense_data['id'] = $expense_id;
+        // $expense_data['voucher_no'] = $expense_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $expense_data = $this->prepare_item_for_response( $expense_data, $request, $additional_fields );
+        $expense_data = $this->prepare_item_for_response( $expense, $request, $additional_fields );
 
         $response = rest_ensure_response( $expense_data );
         $response->set_status( 201 );
@@ -405,8 +406,8 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'address'      => $item->address,
             'bill_details' => $item->bill_details,
             'total'        => (int) $item->amount,
-            'ref'          => isset( $item->ref ) ? $item->ref : $item->check_no,
-            'particulars'      => $item->particulars,
+            'ref'          => ! empty( $item->ref ) ? $item->ref : $item->check_no,
+            'particulars'  => $item->particulars,
             'status'       => $item->status,
             'attachments'  => maybe_unserialize( $item->attachments ),
             'particulars'  => $item->particulars,
