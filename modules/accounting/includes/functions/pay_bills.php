@@ -184,7 +184,7 @@ function erp_acct_insert_pay_bill( $data ) {
         return new WP_error( 'pay-bill-exception', $e->getMessage() );
     }
 
-    return $bill_no;
+    return erp_acct_get_pay_bill( $bill_no );
 
 }
 
@@ -264,7 +264,7 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
 
-    return $pay_bill_id;
+    return erp_acct_get_pay_bill( $pay_bill_id );
 
 }
 

@@ -61,7 +61,7 @@
                 <table class="wperp-table wperp-form-table">
                     <thead>
                     <tr>
-                        <th scope="col" class="col--id column-primary">Bill ID</th>
+                        <th scope="col" class="col--id column-primary">Purchase ID</th>
                         <th scope="col">Due Date</th>
                         <th scope="col">Total</th>
                         <th scope="col">Due</th>
@@ -232,7 +232,7 @@
                             voucher_no: element.voucher_no,
                             due_date: element.due_date,
                             total: parseFloat(element.amount),
-                            due: parseFloat(element.due_total)
+                            due: parseFloat(element.due)
                         });
                     });
                 }).then(() => {

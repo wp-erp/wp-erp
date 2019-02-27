@@ -557,11 +557,6 @@
 
                 if (!this.basic_fields.due_date) {
                     this.form_errors.push('Due Date is required.');
-
-                }
-
-                if (!this.estimate) {
-                    this.form_errors.push('Invoice Type is required.');
                 }
             }
         }

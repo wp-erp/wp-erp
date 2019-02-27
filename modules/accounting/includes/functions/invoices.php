@@ -239,7 +239,7 @@ function erp_acct_insert_invoice( $data ) {
         return new WP_error( 'invoice-exception', $e->getMessage() );
     }
 
-    return $voucher_no;
+    return erp_acct_get_invoice( $voucher_no );
 
 }
 
@@ -341,7 +341,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
         return new WP_error( 'invoice-exception', $e->getMessage() );
     }
 
-    return $invoice_no;
+    return erp_acct_get_invoice( $invoice_no );
 }
 
 /**
