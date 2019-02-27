@@ -8,9 +8,9 @@
                         <span>Add Tax Rate</span>
                     </a>
                     <div class="erp-acct-tax-menus">
-                        <combo-box
-                            :options="new_entities"
-                            placeholder="New Tax Entity" />
+                        <!--<combo-box-->
+                            <!--:options="new_entities"-->
+                            <!--placeholder="New Tax Entity" />-->
 
                         <combo-box
                             :options="entity_lists"
@@ -80,7 +80,6 @@
             return {
                 modalParams: null,
                 columns: {
-                    'tax_id': {label: 'ID'},
                     'tax_name': {label: 'Tax Name'},
                     'tax_number': {label: 'Tax Number'},
                     'actions': {label: 'Actions'}

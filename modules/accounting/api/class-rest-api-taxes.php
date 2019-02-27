@@ -510,8 +510,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['tax_rate'] ) ) {
             $prepared_item['tax_rate'] = $request['tax_rate'];
         }
-        if ( isset( $request['is_default'] ) ) {
-            $prepared_item['default'] = $request['is_default'];
+        if ( isset( $request['default'] ) ) {
+            $prepared_item['default'] = $request['default'];
         }
 
         return $prepared_item;
@@ -567,7 +567,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'              => (int) $item->id,
             'tax_name_id'     => $item->tax_rate_id,
-            'tax_name'        => erp_acct_get_tax_rate_name_by_id( $item->id ),
+            'tax_name'        => $item->name,
             'tax_number'      => $item->tax_number,
             'tax_rate'        => ! empty($item->tax_rate) ? $item->tax_rate : '',
             'default'         => $item->default,
