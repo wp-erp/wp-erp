@@ -184,6 +184,10 @@
                 let validation = this.validateForm();
 
                 if ( !validation ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
                     return;
                 }
 
@@ -217,10 +221,6 @@
                 if ( ! this.isWorking ) {
                     this.form_errors.push('Debit and Credit must be Equal.');
                 }
-
-                window.setInterval(() => {
-                    window.scrollTo(0, 0)
-                }, 30)
             },
 
             calculateAmount(key) {
