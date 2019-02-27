@@ -4,10 +4,6 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Record Sales Tax Payment</h2>
-                    <a href="invoice.html" id="erp-customer-new" class="wperp-btn btn--primary" data-modal="wperp-modal-content" @click.prevent="showModal = true">
-                        <i class="flaticon-add-plus-button"></i>
-                        <span>Pay Tax</span>
-                    </a>
                 </div>
             </div>
         </div>

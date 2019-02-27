@@ -402,9 +402,9 @@ function erp_acct_quick_access_menu() {
             'url'   => 'journals/new'
         ],
         "tax_rate" => [
-            'title' => 'Tax Rate',
-            'slug'  => 'taxes',
-            'url'   => 'taxes/new'
+            'title' => 'Tax Payment',
+            'slug'  => 'pay_tax',
+            'url'   => 'pay-tax'
         ]
     ];
 }
