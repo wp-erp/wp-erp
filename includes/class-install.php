@@ -859,12 +859,7 @@ Company'
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
-
-                PRIMARY KEY (`id`),
-                KEY (voucher_no),
-                CONSTRAINT `fk_invoices_voucher_no`
-                FOREIGN KEY (voucher_no)
-                REFERENCES `{$wpdb->prefix}erp_acct_voucher_no` (id)
+                PRIMARY KEY (`id`)
             ) $collate;",
 
 

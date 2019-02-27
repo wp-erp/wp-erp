@@ -275,7 +275,7 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
             'trn_no'     => $purchase_id
         ) );
 
-        erp_acct_update_purchase_data_into_ledger( $purchase_data );
+        erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_id );
 
         $wpdb->query( 'COMMIT' );
 
