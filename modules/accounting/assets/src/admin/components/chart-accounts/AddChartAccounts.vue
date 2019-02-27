@@ -228,14 +228,15 @@
             saveAccount() {
                 this.error = false;
                 this.isChartAdding = true;
-
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/ledgers', {
                     chart_id: this.ledgFields.chart_id,
                     category_id: this.ledgFields.category_id,
                     name: this.ledgFields.name,
                     code: this.ledgFields.code
                 }).then(response => {
-                    this.showAlert('success', 'Success!');
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Created !' );
                 }).catch((err) => {
                     // Error message
                     this.error = err.response.data.message;

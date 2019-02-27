@@ -121,6 +121,7 @@
         },
 
        created(){
+            this.$store.dispatch( 'spinner/setSpinner', true );
             this.fetchReceivables();
             this.fetchPayables();
        },
@@ -139,7 +140,7 @@
                 let total = amounts.reduce( ( amount, item ) => {
                     return amount + parseFloat(item);
                 }, 0 );
-
+                this.$store.dispatch( 'spinner/setSpinner', false );
                 return this.formatAmount(total);
             },
         },

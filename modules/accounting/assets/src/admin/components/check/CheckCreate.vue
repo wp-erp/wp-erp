@@ -325,7 +325,9 @@
             },
 
             updateCheck(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/expenses/${this.voucherNo}`, requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Check Updated!');
                 }).then(() => {
                     this.isWorking = false;
@@ -340,7 +342,9 @@
             },
 
             createCheck(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/expenses', requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Check Created!');
                 }).then(() => {
                     this.isWorking = false;

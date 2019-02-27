@@ -82,6 +82,7 @@
                 this.products = [];
                 HTTP.get('products').then( response => {
                     this.products = response.data;
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
             createProduct() {
@@ -117,6 +118,7 @@
 
         },
         created() {
+            this.$store.dispatch( 'spinner/setSpinner', true );
             this.getProducts();
             this.$on( 'close', function() {
                 this.showModal = false;

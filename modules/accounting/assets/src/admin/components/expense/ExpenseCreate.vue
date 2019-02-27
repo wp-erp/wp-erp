@@ -362,7 +362,9 @@
             },
 
             updateExpense(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/expenses/${this.voucherNo}`, requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Expense Updated!');
                 }).then(() => {
                     this.isWorking = false;
@@ -377,7 +379,9 @@
             },
 
             createExpense(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/expenses', requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Expense Created!');
                 }).then(() => {
                     this.isWorking = false;

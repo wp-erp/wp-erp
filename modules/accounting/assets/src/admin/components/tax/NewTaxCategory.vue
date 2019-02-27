@@ -89,18 +89,13 @@
             },
 
             addNewTaxCat() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/tax-cats', {
                     name: this.category,
                     description: this.desc,
                 }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Category Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Tax Category Created!' );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
@@ -110,18 +105,13 @@
             },
 
             updateTaxCat() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/tax-cats/${this.cat_id}`, {
                     name: this.category,
                     description: this.desc,
                 }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Category Updated!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Tax Category Updated!' );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
@@ -138,5 +128,5 @@
    	}
 </script>
 <style lang="less">
-    
+
 </style>

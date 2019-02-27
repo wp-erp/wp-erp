@@ -61,6 +61,7 @@
             };
         },
         created() {
+            this.$store.dispatch( 'spinner/setSpinner', true );
             this.fetchItems();
         },
 
@@ -81,7 +82,7 @@
             newJournal() {
                 this.$router.push('journals/new');
             },
-            
+
             fetchItems(){
                 this.rows = [];
                 HTTP.get('journals', {
@@ -94,6 +95,7 @@
                         this.rows = response.data;
                         this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                         this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                        this.$store.dispatch( 'spinner/setSpinner', false );
                     })
                     .catch((error) => {
                         console.log(error);
