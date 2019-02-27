@@ -112,7 +112,7 @@
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
-                    this.$emit('close');
+                    this.$emit('line_close');
                     this.$root.$emit('refetch_tax_data');
                 });
             },

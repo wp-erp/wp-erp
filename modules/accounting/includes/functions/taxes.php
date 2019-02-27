@@ -270,7 +270,7 @@ function erp_acct_edit_tax_rate_line( $data ) {
         'updated_at'     => $tax_data['updated_at'],
         'updated_by'     => $tax_data['updated_by'],
     ), array(
-        'tax_id' => $tax_data['db_id']
+        'id' => $tax_data['db_id']
     ));
 
     return $tax_data['db_id'];
