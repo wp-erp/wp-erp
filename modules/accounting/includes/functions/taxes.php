@@ -232,6 +232,11 @@ function erp_acct_quick_edit_tax_rate( $data, $id ) {
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
+    if ( !empty( $tax_data['default'] ) && $tax_data['default'] == 1  ) {
+        $sql = "UPDATE " . $wpdb->prefix . "erp_acct_taxes" . " SET `default`=0";
+        $results = $wpdb->get_results( $sql );
+    }
+
     $wpdb->update($wpdb->prefix . 'erp_acct_taxes', array(
         'tax_number' => $tax_data['tax_number'],
         'default'    => $tax_data['default'],
@@ -270,7 +275,7 @@ function erp_acct_edit_tax_rate_line( $data ) {
         'updated_at'     => $tax_data['updated_at'],
         'updated_by'     => $tax_data['updated_by'],
     ), array(
-        'tax_id' => $tax_data['db_id']
+        'id' => $tax_data['db_id']
     ));
 
     return $tax_data['db_id'];

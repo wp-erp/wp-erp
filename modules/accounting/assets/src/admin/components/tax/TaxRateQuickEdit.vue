@@ -83,7 +83,7 @@
                 HTTP.get(`/taxes/${taxid}`).then((response) => {
                     this.tax_rate = response.data;
                     this.tax_number = this.tax_rate.tax_number;
-                    this.is_default = this.tax_rate.default;
+                    this.is_default = parseInt(this.tax_rate.default);
                 }).catch((error) => {
                     console.log(error);
                 });

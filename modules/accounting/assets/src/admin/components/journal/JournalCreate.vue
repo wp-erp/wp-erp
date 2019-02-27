@@ -184,6 +184,10 @@
                 let validation = this.validateForm();
 
                 if ( !validation ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
                     return;
                 }
 
