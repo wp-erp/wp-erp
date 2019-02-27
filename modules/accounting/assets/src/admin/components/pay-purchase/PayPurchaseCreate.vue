@@ -18,34 +18,34 @@
 
                 <form action="" class="wperp-form" method="post">
                     <div class="wperp-row">
-                        <div class="wperp-col-sm-3">
+                        <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <select-vendors @input="getDuePurchases" v-model="basic_fields.vendor"></select-vendors>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-3">
+                        <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label>Reference<span class="wperp-required-sign">*</span></label>
                                 <input type="text" v-model="basic_fields.trn_ref"/>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-3">
+                        <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label>Payment Date<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.payment_date"></datepicker>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-3 with-multiselect">
-                            <label>Transaction From<span class="wperp-required-sign">*</span></label>
-                            <multi-select :placeholder="`Select Account`" v-model="basic_fields.deposit_to" :options="deposit_accts" />
-                        </div>
-                        <div class="wperp-col-sm-6">
-                            <label>Billing Address</label>
-                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
-                        </div>
-                        <div class="wperp-col-sm-6 with-multiselect">
+                        <div class="wperp-col-sm-4 with-multiselect">
                             <label>Payment Method<span class="wperp-required-sign">*</span></label>
                             <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
+                        </div>
+                        <div class="wperp-col-sm-4 with-multiselect">
+                            <label>Transaction From<span class="wperp-required-sign">*</span></label>
+                            <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
+                        </div>
+                        <div class="wperp-col-sm-4">
+                            <label>Billing Address</label>
+                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
 
                         <check-fields v-if="basic_fields.trn_by.id === paymentMethods.check" @updateCheckFields="setCheckFields"></check-fields>
@@ -127,6 +127,7 @@
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import CheckFields from 'admin/components/check/CheckFields.vue'
     import ShowErrors from 'admin/components/base/ShowErrors.vue'
+    import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
 
     export default {
         name: 'PayPurchaseCreate',
@@ -139,6 +140,7 @@
             FileUpload,
             SubmitButton,
             CheckFields,
+            SelectAccounts,
             ShowErrors
         },
 
@@ -174,12 +176,12 @@
                 finalTotalAmount: 0,
                 particulars: '',
                 isWorking: false,
+                accts_by_chart: [],
                 acct_assets: erp_acct_var.acct_assets
             }
         },
 
         created() {
-            this.fetchAccounts();
             this.getPayMethods();
         },
 
@@ -215,12 +217,6 @@
                 this.finalTotalAmount = 0;
                 this.particulars = '';
                 this.isWorking = false;
-            },
-
-            fetchAccounts() {
-                HTTP.get('/accounts').then( (response) => {
-                    this.deposit_accts = response.data;
-                } );
             },
 
             getDuePurchases() {
@@ -325,6 +321,19 @@
                 });
             },
 
+            changeAccounts() {
+                if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
+                    HTTP.get(`/ledgers/7/accounts`).then((response) => {
+                        this.accts_by_chart = response.data;
+                    });
+                } else {
+                    this.accts_by_chart = [{
+                        id: 1,
+                        name: 'Cash'
+                    }];
+                }
+            },
+
             validateForm() {
                 this.form_errors = [];
 
@@ -367,6 +376,10 @@
 
             'basic_fields.vendor'() {
                 this.getCustomerAddress();
+            },
+
+            'basic_fields.trn_by'() {
+                this.changeAccounts();
             }
         },
 

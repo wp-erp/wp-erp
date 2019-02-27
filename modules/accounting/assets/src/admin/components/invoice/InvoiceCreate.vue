@@ -18,7 +18,6 @@
             <show-errors :error_msgs="form_errors" ></show-errors>
 
             <div class="wperp-panel-body">
-                <!-- <form action="#" class="wperp-form" method="post"> -->
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
                             <select-customers :reset="reset" v-model="basic_fields.customer"></select-customers>

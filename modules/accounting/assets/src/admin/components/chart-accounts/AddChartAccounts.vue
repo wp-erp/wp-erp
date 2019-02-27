@@ -79,22 +79,24 @@
         data() {
             return {
                 chartAccounts: [],
-                categories: [],
-                catAddModal: false,
+                categories   : [],
+                catAddModal  : false,
 
                 ledgFields: {
-                    chart_id: null,
-                    category_id: null,
+                    chart_id    : null,
+                    category_id : null,
                     account_name: '',
-                    code: ''
+                    code        : ''
                 },
 
                 catData: {
                     title: 'Add New',
-                    node: null
+                    node : null
                 },
 
-                error: false,
+                editMode     : false,
+                voucherNo    : 0,
+                error        : false,
                 isChartAdding: false,
             };
         },
@@ -105,8 +107,7 @@
         },
 
         created() {
-            this.fetchChartAccounts();
-            this.fetchLedgerCategories();
+            this.prepareDataLoad();
 
             this.$root.$on('cat-modal-close', () => {
                 this.catAddModal = false;
@@ -118,19 +119,55 @@
                 this.catData.title = 'Add New';
                 this.catData.node = null;
 
-                this.$swal({
-                    position: 'center',
-                    type: 'success',
-                    title: 'Successful!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                this.showAlert('success', 'Successful !');
 
                 this.fetchLedgerCategories();
             });
         },
 
         methods: {
+            async prepareDataLoad() {
+                /**
+                 * ----------------------------------------------
+                 * check if editing
+                 * -----------------------------------------------
+                 */
+                if ( this.$route.params.id ) {
+                    this.editMode = true;
+                    this.voucherNo = this.$route.params.id;
+
+                    /**
+                     * Duplicates of
+                     *? this.fetchChartAccounts()
+                     *? this.fetchLedgerCategories()
+                     * load accounts and categories, before ledger load
+                     */
+                    let [request1, request2] = await Promise.all([
+                        HTTP.get('/ledgers/accounts'),
+                        HTTP.get('/ledgers/categories')
+                    ]);
+                    let request3 = await HTTP.get(`/ledgers/${this.$route.params.id}`);
+
+                    this.chartAccounts = request1.data;
+                    this.categories = this.buildTree( request2.data );
+
+                    this.setDataForEdit( request3.data );
+
+                } else {
+                    /**
+                     * ----------------------------------------------
+                     * create a new ledger
+                     * -----------------------------------------------
+                     */
+                    this.fetchChartAccounts();
+                    this.fetchLedgerCategories();
+                }
+            },
+
+            setDataForEdit(ledger) {
+                console.log(ledger);
+            },
+
             categoryAddModal() {
                 this.catAddModal = true;
             },
@@ -179,13 +216,7 @@
             removeCategory(node) {
                 if ( confirm('Are you sure to remove this category?') ) {
                     HTTP.delete(`/ledgers/categories/${node.id}`).then(response => {
-                        this.$swal({
-                            position: 'center',
-                            type: 'error',
-                            title: 'Category Removed!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                        this.showAlert('error', 'Category Removed!');
 
                         this.fetchLedgerCategories();
                     });
@@ -202,13 +233,7 @@
                     name: this.ledgFields.name,
                     code: this.ledgFields.code
                 }).then(response => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Success!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.showAlert('success', 'Success!');
                 }).catch((err) => {
                     // Error message
                     this.error = err.response.data.message;

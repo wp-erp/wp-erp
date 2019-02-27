@@ -22,6 +22,10 @@
                 default: ''
             },
 
+            override_accts: {
+                type: Array
+            },
+
             reset: {
                 type: Boolean,
                 default: false
@@ -45,13 +49,21 @@
                 this.$emit('input', this.selectedAccount);
             },
 
+            override_accts() {
+                this.accounts = this.override_accts;
+            },
+
             reset() {
                 this.selectedAccount = [];
             }
         },
 
         created() {
-            this.fetchAccounts();
+            if (this.override_accts && this.override_accts.length) {
+                this.accounts = this.override_accts;
+            } else {
+                this.fetchAccounts();
+            }
         },
 
         methods: {
