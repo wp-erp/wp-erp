@@ -27,7 +27,8 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <submit-button text="Add New Tax Category" @click.native.prevent="addNewTaxCat" :working="isWorking"></submit-button>
+                            <submit-button v-if="is_update" text="Update Tax Category" @click.native.prevent="updateTaxCat" :working="isWorking"></submit-button>
+                            <submit-button v-else text="Add New Tax Category" @click.native.prevent="addNewTaxCat" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>
@@ -51,17 +52,28 @@
             SubmitButton
         },
 
+        props: {
+            cat_id: {
+                type: [ Number, String ]
+            },
+            is_update: {
+                type: Boolean
+            }
+        },
+
         data() {
             return {
-                categories: [{}],
-                category: '',
-                desc: '',
+                categories: [],
+                category: null,
+                desc: null,
                 isWorking: false,
             };
         },
 
         created() {
-            // this.getCategories();
+            if ( this.is_update ) {
+                this.getCategory();
+            }
         },
 
         methods: {
@@ -69,14 +81,10 @@
                 this.$emit('close');
             },
 
-            getCategories() {
-                HTTP.get('/tax-cats').then((response) => {
-                    response.data.forEach(element => {
-                        this.categories.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+            getCategory() {
+                HTTP.get(`/tax-cats/${this.cat_id}`).then((response) => {
+                    this.category = response.data.name;
+                    this.desc = response.data.description;
                 });
             },
 
@@ -90,6 +98,27 @@
                         position: 'center',
                         type: 'success',
                         title: 'Tax Category Created!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }).then(() => {
+                    this.resetData();
+                    this.isWorking = false;
+                    this.$emit('close');
+                    this.$root.$emit('refetch_tax_data');
+                });
+            },
+
+            updateTaxCat() {
+                HTTP.put(`/tax-cats/${this.cat_id}`, {
+                    name: this.category,
+                    description: this.desc,
+                }).then(res => {
+                    console.log(res.data);
+                    this.$swal({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Tax Category Updated!',
                         showConfirmButton: false,
                         timer: 1500
                     });
