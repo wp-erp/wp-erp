@@ -902,6 +902,7 @@ Company'
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
                 `slug` varchar(255) DEFAULT NULL,
+                `chart_id` int(11) DEFAULT NULL,
                 `parent_id` int(11) DEFAULT NULL,
                 `system` tinyint(1) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
