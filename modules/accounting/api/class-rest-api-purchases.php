@@ -402,7 +402,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'        => $item->type,
             'status'      => $item->status,
             'amount'      => $item->amount,
-            'due_total'   => empty($item->total_due) ? erp_acct_get_purchase_due($item->voucher_no) : $item->total_due,
+            'due'         => empty($item->due) ? erp_acct_get_purchase_due($item->voucher_no) : $item->due,
             'attachments' => maybe_unserialize( $item->attachments )
         ];
 

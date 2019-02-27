@@ -62,7 +62,10 @@
         },
 
         computed: {
-            totalAmount(){
+            totalAmount() {
+                if ( typeof this.accounts === "object" && null === this.accounts ) {
+                    return;
+                }
                 let total = this.accounts.reduce( ( amount, item ) => {
                                 return amount + parseFloat(item.balance);
                             }, 0 );

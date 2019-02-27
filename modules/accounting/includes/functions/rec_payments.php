@@ -165,7 +165,7 @@ function erp_acct_insert_payment( $data ) {
 
     erp_acct_change_invoice_status( $voucher_no );
 
-	return $voucher_no;
+	return erp_acct_get_payment( $voucher_no );
 }
 
 /**
@@ -272,7 +272,7 @@ function erp_acct_update_payment( $data, $voucher_no ) {
 
     erp_acct_change_invoice_status( $voucher_no );
 
-    return $voucher_no;
+    return erp_acct_get_payment( $voucher_no );
 
 }
 
