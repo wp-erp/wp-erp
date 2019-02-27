@@ -71,7 +71,7 @@ function erp_acct_get_tax_rate( $tax_no ) {
 
     FROM {$wpdb->prefix}erp_acct_taxes AS tax
     LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
-    
+
     WHERE tax.id = {$tax_no} LIMIT 1";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
@@ -477,7 +477,6 @@ function erp_acct_get_formatted_tax_data( $data ) {
     return $tax_data;
 }
 
-
 /**
  * Get formatted tax data
  *
@@ -500,6 +499,7 @@ function erp_acct_get_formatted_tax_line_data( $data ) {
 
     return $tax_data;
 }
+
 /**
  * Tax summary
  */
@@ -512,15 +512,15 @@ function erp_acct_tax_summary() {
         rate_name.name,
 
         sales_tax_category.sales_tax_category_id,
-        sales_tax_category.tax_rate,
-
-        cat_agency.agency_id
+        sales_tax_category.tax_rate
 
         FROM {$wpdb->prefix}erp_acct_tax_sales_tax_categories AS sales_tax_category
         LEFT JOIN {$wpdb->prefix}erp_acct_tax_categories AS tax_category ON tax_category.id = sales_tax_category.sales_tax_category_id
         LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS cat_agency ON cat_agency.tax_cat_id = tax_category.id
         LEFT JOIN {$wpdb->prefix}erp_acct_taxes AS tax ON tax.id = sales_tax_category.tax_id
-        LEFT JOIN {$wpdb->prefix}erp_acct_tax_rate_names AS rate_name ON rate_name.id = tax.tax_rate_id";
+        LEFT JOIN {$wpdb->prefix}erp_acct_tax_rate_names AS rate_name ON rate_name.id = tax.tax_rate_id
+
+        GROUP BY tax_rate_id, sales_tax_category_id";
 
     return $wpdb->get_results( $sql, ARRAY_A);
 }

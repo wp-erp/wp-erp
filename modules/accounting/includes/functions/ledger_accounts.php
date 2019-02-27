@@ -35,10 +35,12 @@ function erp_acct_get_chart_count() {
  * Get ledger categories
  */
 
-function erp_acct_get_ledger_categories() {
+function erp_acct_get_ledger_categories($chart_id) {
     global $wpdb;
 
-    return $wpdb->get_results("SELECT id, name AS label, parent_id, system FROM {$wpdb->prefix}erp_acct_ledger_categories");
+    $sql = "SELECT id, name AS label, chart_id, parent_id, system FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE chart_id = {$chart_id}";
+
+    return $wpdb->get_results($sql, ARRAY_A);
 }
 
 /**
@@ -71,14 +73,14 @@ function erp_acct_update_ledger_category( $args ) {
     $exist = $wpdb->get_var("SELECT name FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE name = '{$args['name']}' AND id <> {$args['id']}");
 
     if ( ! $exist ) {
-        return $wpdb->update( 
+        return $wpdb->update(
             "{$wpdb->prefix}erp_acct_ledger_categories",
             [
                 'name' => $args['name'],
                 'parent_id' => ! empty($args['parent']) ? $args['parent'] : null
             ],
             [ 'id' => $args['id'] ],
-            [ '%s', '%d'], 
+            [ '%s', '%d'],
             [ '%d' ]
         );
     }
@@ -96,8 +98,8 @@ function erp_acct_delete_ledger_category( $id ) {
 
     $parent_id = $wpdb->get_var("SELECT parent_id FROM {$table} WHERE id = {$id}");
 
-    $wpdb->update( 
-        $table, 
+    $wpdb->update(
+        $table,
         [ 'parent_id' => $parent_id ],
         [ 'parent_id' => $id ],
         [ '%s' ],

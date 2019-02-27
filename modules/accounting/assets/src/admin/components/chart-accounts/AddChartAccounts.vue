@@ -4,7 +4,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Create New Account</h2>
+                    <h2 class="content-header__title">{{ editMode ? 'Update' : 'Create New' }} Account</h2>
                 </div>
             </div>
         </div>
@@ -35,14 +35,14 @@
                     <label slot="option-label" slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" :class="labelClassName">
                         {{ node.label }}
                         <span v-if="shouldShowCount" :class="countClassName">({{ count }})</span>
-                        <span class="list-actions" v-if="node.raw.system == null">
+                        <!-- <span class="list-actions" v-if="node.raw.system == null">
                             <strong class="edit" @click.prevent="editCategory(node)">&#9998;</strong>
                             <strong class="remove" @click.prevent="removeCategory(node)">&cross;</strong>
-                        </span>
+                        </span> -->
                     </label>
                 </treeselect>
 
-                <a href="#" @click.prevent="categoryAddModal" role="button" class="after-select-dropdown">Add new category</a>
+                <!-- <a href="#" @click.prevent="categoryAddModal" role="button" class="after-select-dropdown">Add new category</a> -->
             </div>
 
             <div class="form-row">
@@ -144,14 +144,13 @@
                      */
                     let [request1, request2] = await Promise.all([
                         HTTP.get('/ledgers/accounts'),
-                        HTTP.get('/ledgers/categories')
+                        HTTP.get(`/ledgers/${this.$route.params.id}`)
                     ]);
-                    let request3 = await HTTP.get(`/ledgers/${this.$route.params.id}`);
+                    let request3 = await HTTP.get(`/ledgers/categories/${request2.data.chart_id}`);
 
                     this.chartAccounts = request1.data;
-                    this.categories = this.buildTree( request2.data );
-
-                    this.setDataForEdit( request3.data );
+                    this.setDataForEdit( request2.data );
+                    this.categories = this.buildTree( request3.data );
 
                 } else {
                     /**
@@ -165,9 +164,10 @@
             },
 
             setDataForEdit(ledger) {
-                this.ledgFields.chart_id = ledger.chart_id;
-                this.ledgFields.name     = ledger.name;
-                this.ledgFields.code     = ledger.code;
+                this.ledgFields.chart_id    = ledger.chart_id;
+                this.ledgFields.name        = ledger.name;
+                this.ledgFields.category_id = ledger.category_id;
+                this.ledgFields.code        = ledger.code;
             },
 
             categoryAddModal() {
@@ -201,7 +201,7 @@
             },
 
             fetchLedgerCategories() {
-                HTTP.get('/ledgers/categories').then( response => {
+                HTTP.get(`/ledgers/categories/${this.ledgFields.chart_id}`).then( response => {
                     if ( ! response.data ) return;
 
                     this.categories = this.buildTree( response.data );
