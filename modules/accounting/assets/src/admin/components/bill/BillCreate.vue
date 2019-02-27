@@ -348,6 +348,10 @@
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
                     return;
                 }
 
@@ -389,10 +393,6 @@
                 if ( !this.basic_fields.due_date ) {
                     this.form_errors.push('Due Date is required.');
                 }
-
-                window.setInterval(() => {
-                    window.scrollTo(0, 0)
-                }, 30)
             },
 
             formatTrnLines( trl_lines ) {

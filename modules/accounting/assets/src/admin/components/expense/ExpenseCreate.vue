@@ -395,6 +395,10 @@
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
                     return;
                 }
 
@@ -458,10 +462,6 @@
                 if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
                     this.form_errors.push('Payment Method is required.');
                 }
-
-                window.setInterval(() => {
-                    window.scrollTo(0, 0)
-                }, 30)
             },
 
             resetData() {
