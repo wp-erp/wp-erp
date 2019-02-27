@@ -16,7 +16,7 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
     $defaults = [
         'number'     => 20,
         'offset'     => 0,
-        'orderby'    => 'id',
+        'orderby'    => 'tax.id',
         'order'      => 'ASC',
         'count'      => false,
         's'          => '',
@@ -31,14 +31,14 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
     }
 
     $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
-    $sql .= "FROM {$wpdb->prefix}erp_acct_taxes ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $args['count'] ? " COUNT( tax.id ) as total_number " : " tax.*, tax_rate_name.name ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_taxes as tax
+    LEFT JOIN {$wpdb->prefix}erp_acct_tax_rate_names AS tax_rate_name ON tax.tax_rate_id = tax_rate_name.id ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         return $wpdb->get_var($sql);
     }
 
-    // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
@@ -71,6 +71,7 @@ function erp_acct_get_tax_rate( $tax_no ) {
 
     FROM {$wpdb->prefix}erp_acct_taxes AS tax
     LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS tax_item ON tax.id = tax_item.tax_id
+    
     WHERE tax.id = {$tax_no} LIMIT 1";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
@@ -104,6 +105,11 @@ function erp_acct_insert_tax_rate( $data ) {
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
     $items = $data['tax_components'];
+
+    if ( !empty( $tax_data['default'] ) && $tax_data['default'] ) {
+        $sql = "UPDATE " . $wpdb->prefix . "erp_acct_taxes" . " SET `default`=0";
+        $results = $wpdb->get_results( $sql );
+    }
 
     $wpdb->insert($wpdb->prefix . 'erp_acct_taxes', array(
         'tax_rate_id'   => $tax_data['tax_rate_id'],
@@ -164,7 +170,7 @@ function erp_acct_update_tax_rate( $data, $id ) {
     $wpdb->update($wpdb->prefix . 'erp_acct_taxes', array(
         'tax_rate_id' => $tax_data['tax_rate_id'],
         'tax_number' => $tax_data['tax_number'],
-        'default' => $tax_data['default'],
+        'default'    => $tax_data['default'],
         'created_at' => $tax_data['created_at'],
         'created_by' => $tax_data['created_by'],
         'updated_at' => $tax_data['updated_at'],
@@ -172,6 +178,11 @@ function erp_acct_update_tax_rate( $data, $id ) {
     ), array(
         'id' => $id
     ));
+
+    if ( !empty( $tax_data['default'] ) && $tax_data['default'] ) {
+        $sql = "UPDATE " . $wpdb->prefix . "erp_acct_taxes" . " SET `default`=0";
+        $results = $wpdb->get_results( $sql );
+    }
 
     $items = $data['tax_components'];
 
