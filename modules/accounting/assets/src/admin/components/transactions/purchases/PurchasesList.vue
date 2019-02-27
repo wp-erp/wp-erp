@@ -105,6 +105,7 @@
         },
 
         created() {
+            this.$store.dispatch( 'spinner/setSpinner', true );
             this.$root.$on('transactions-filter', filters => {
                 this.$router.push({ path: '/transactions/purchases', query: { start: filters.start_date, end: filters.end_date } });
                 this.fetchItems(filters);
@@ -141,6 +142,7 @@
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 });
             },
 

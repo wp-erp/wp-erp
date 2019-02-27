@@ -74,7 +74,7 @@
                             <input type="text" @keyup="calculateAmount(key)" v-model="creditLine[key]" class="wperp-form-field text-right">
                         </td>
                         <td class="col--actions delete-row" data-colname="Remove Selection">
-                            <a href="#"><i class="flaticon-trash"></i></a>
+                            <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
                     <tr class="total-amount-row">
@@ -144,7 +144,7 @@
 
                 journal_id: 0,
                 account_ids: [],
-                transactionLines: [{}],
+                transactionLines: [{},{}],
                 attachments: [],
                 debitLine:[],
                 creditLine:[],
@@ -177,13 +177,17 @@
             },
 
             addLine() {
-                this.transactionLines.push({});
+                this.transactionLines.push({},{});
+            },
+
+            remove_item( index ) {
+                this.$delete( this.ledgers, index );
             },
 
             SubmitForJournalCreate() {
                 let validation = this.validateForm();
 
-                if ( !validation ) {
+                if ( this.form_errors.length ) {
                     window.scrollTo({
                         top: 10,
                         behavior: 'smooth'
@@ -192,7 +196,7 @@
                 }
 
                 HTTP.post('/journals', {
-                    trn_date: this.basic_fields.trans_date,
+                    trn_date: this.basic_fields.trn_date,
                     line_items: this.formatLineItems(),
                     attachments: this.attachments,
                     type: 'journal',
@@ -214,11 +218,11 @@
             validateForm() {
                 this.form_errors = [];
 
-                if ( !this.basic_fields.payment_date ) {
+                if ( !this.basic_fields.trn_date ) {
                     this.form_errors.push('Transaction Date is required.');
                 }
 
-                if ( ! this.isWorking ) {
+                if ( this.isWorking ) {
                     this.form_errors.push('Debit and Credit must be Equal.');
                 }
             },
@@ -264,7 +268,7 @@
         },
 
         computed: {
-            totalDebit(key) {
+            totalDebit() {
                 return this.debit_total = this.debitLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
             },
             totalCredit() {

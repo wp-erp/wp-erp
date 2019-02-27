@@ -92,6 +92,7 @@
             },
 
             UpdateTaxRate() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/taxes/${this.component_line.tax_id}/line-edit`, {
                     db_id: this.component_line.db_id,
                     tax_id: this.component_line.tax_id,
@@ -101,14 +102,8 @@
                     tax_cat_id: this.component_line.category.id,
                     tax_rate: this.component_line.tax_rate,
                 }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Rate Updated!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Tax Rate Updated!' );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;

@@ -70,7 +70,7 @@
                     <tr :key="key" v-for="(line,key) in transactionLines">
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
                         <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
-                        <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
+                        <td class="col--particulars"><textarea v-model="line.particulars" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
                         <td class="col--amount" data-colname="Amount">
                             <input type="number" min="0" step="0.01" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
@@ -273,7 +273,7 @@
                     this.transactionLines.push({
                         id         : detail.id,
                         ledger_id  : { id: detail.ledger_id, name: detail.ledger_name },
-                        description: detail.particulars,
+                        particulars: detail.particulars,
                         amount     : detail.amount
                     });
                 });
@@ -325,7 +325,9 @@
             },
 
             updateCheck(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/expenses/${this.voucherNo}`, requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Check Updated!');
                 }).then(() => {
                     this.isWorking = false;
@@ -340,7 +342,9 @@
             },
 
             createCheck(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/expenses', requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Check Created!');
                 }).then(() => {
                     this.isWorking = false;

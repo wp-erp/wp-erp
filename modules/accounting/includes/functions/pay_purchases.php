@@ -178,7 +178,7 @@ function erp_acct_insert_pay_purchase( $data ) {
         return new WP_error( 'pay-purchase-exception', $e->getMessage() );
     }
 
-    return $purchase_no;
+    return erp_acct_get_pay_purchase( $purchase_no );
 
 }
 
@@ -253,7 +253,7 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
         return new WP_error( 'pay-purchase-exception', $e->getMessage() );
     }
 
-    return $pay_purchase_id;
+    return erp_acct_get_pay_purchase( $pay_purchase_id );
 
 }
 
