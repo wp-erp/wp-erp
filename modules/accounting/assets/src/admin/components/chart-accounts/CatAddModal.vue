@@ -69,7 +69,7 @@
                 type: Object
             }
         },
-        
+
         components: {
             Treeselect
         },
@@ -97,6 +97,7 @@
                 // Optimize later
                 if ( this.catData.node ) {
                     // Updating
+                    this.$store.dispatch( 'spinner/setSpinner', true );
                     HTTP.put(`/ledgers/categories/${this.catData.node.id}`, {
                         parent: this.parent,
                         name: this.category
@@ -105,12 +106,13 @@
                         this.category = '';
 
                         this.$root.$emit('category-created');
+                        this.$store.dispatch( 'spinner/setSpinner', false );
                     }).catch((err) => {
                         this.category = '';
                         this.isCatSaving = false;
                         // Error message
                         this.error = err.response.data.message;
-                        
+
                     }).then(() => {
                         this.isCatSaving = false;
                     });
@@ -129,7 +131,7 @@
                         this.isCatSaving = false;
                         // Error message
                         this.error = err.response.data.message;
-                        
+
                     }).then(() => {
                         this.isCatSaving = false;
                     });

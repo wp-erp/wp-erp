@@ -109,6 +109,8 @@
         methods: {
             fetchItems() {
                 this.rows = [];
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('tax-cats', {
                     params: {
                         per_page: this.paginationData.perPage,
@@ -118,8 +120,10 @@
                     this.rows = response.data;
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                }).catch((error) => {
-                    console.log(error);
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                })
+                .catch((error) => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 });
             },
 
@@ -148,8 +152,11 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
+                            this.$store.dispatch( 'spinner/setSpinner', true );
                             HTTP.delete( 'tax-cats' + '/' + row.id).then( response => {
                                 this.$delete(this.rows, index);
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                                this.showAlert( 'success', 'Deleted !' );
                             });
                         }
                         break;
@@ -169,6 +176,7 @@
             onBulkAction(action, items) {
                 if ( 'trash' === action ) {
                     if ( confirm('Are you sure to delete?') ) {
+                        this.$store.dispatch( 'spinner/setSpinner', true );
                         HTTP.delete('tax-cats/delete/' + items.join(',')).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
@@ -178,6 +186,8 @@
                             }
 
                             this.fetchItems();
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                            this.showAlert( 'success', 'Deleted !' );
                         });
                     }
                 }

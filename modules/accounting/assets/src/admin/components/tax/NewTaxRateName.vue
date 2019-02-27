@@ -82,17 +82,12 @@
             },
 
             addNewTaxRateName() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/tax-rate-names', {
                     name: this.rate_name,
                 }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Rate Name Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Tax Rate Name Created!' );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;

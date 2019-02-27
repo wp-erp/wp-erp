@@ -120,6 +120,7 @@
             },
 
             submitTransfer(){
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post( '/accounts/transfer', {
                     date : this.transferdate,
                     from_account_id : this.transferFrom.id,
@@ -127,24 +128,14 @@
                     amount : this.amount,
                     particulars : this.particulars,
                 } ).then( res => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Transfer Successful!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Transfer Successful!' );
                     this.fetchAccounts();
                     this.resetData();
                 } ).catch( err => {
                     let msg = err.response.data.message;
-                    this.$swal({
-                        position: 'center',
-                        type: 'error',
-                        title: msg,
-                        showConfirmButton: true,
-                        timer: 0
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'error', msg );
                 } );
             },
 

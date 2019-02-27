@@ -111,7 +111,7 @@
                 this.rows = [];
 
                 this.tax_id = this.$route.params.id;
-
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get(`/taxes/${this.tax_id}`, {
                     params: {
                         per_page: this.paginationData.perPage,
@@ -122,8 +122,10 @@
                     this.rows = response.data.tax_components;
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch((error) => {
                     console.log(error);
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 });
             },
 
@@ -143,8 +145,11 @@
                 switch (action) {
                     case 'trash':
                         if (confirm('Are you sure to delete?')) {
+                            this.$store.dispatch( 'spinner/setSpinner', true );
                             HTTP.delete(this.url + '/' + row.id).then(response => {
                                 this.$delete(this.rows, index);
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                                this.showAlert( 'success', 'Deleted !' );
                             });
                         }
                         break;

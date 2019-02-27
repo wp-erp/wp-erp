@@ -82,17 +82,12 @@
             },
 
             addNewTaxAgency() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/tax-agencies', {
                     agency_name: this.agency,
                 }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Agency Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Tax Agency Created!' );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
@@ -102,17 +97,12 @@
             },
 
             UpdateTaxAgency() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/tax-agencies/${this.agency_id}`, {
                     agency_name: this.agency,
                 }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Agency Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Tax Agency Created!' );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
