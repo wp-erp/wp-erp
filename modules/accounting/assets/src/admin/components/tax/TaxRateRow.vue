@@ -2,47 +2,59 @@
     <div class="wperp-row">
         <div class="wperp-col-sm-3 wperp-col-xs-12">
             <label>Component</label>
-            <template v-if="is_update"><input type="text" v-model="tax_component.component_name"/></template>
-            <template v-else>{{tax_component.component_name}}</template>
+            <template v-if="is_update"><input type="text" v-model="component_line.component_name"/></template>
+            <template v-else>{{component_line.component_name}}</template>
         </div>
         <div class="wperp-col-sm-3 wperp-col-xs-12 with-multiselect">
             <label>Agency</label>
             <template v-if="is_update">
             <multi-select
-                v-model="tax_component.agency"
+                v-model="component_line.agency"
                 :options="agencies"/>
             </template>
-            <template v-else>{{tax_component.agency_name}}</template>
+            <template v-else>{{component_line.agency_name}}</template>
         </div>
         <div class="wperp-col-sm-3 wperp-col-xs-12 with-multiselect">
             <label>Tax Category</label>
             <template v-if="is_update">
                 <multi-select
-                v-model="tax_component.category"
+                v-model="component_line.category"
                 :options="categories"/>
             </template>
-            <template v-else>{{tax_component.tax_cat_name}}</template>
+            <template v-else>{{component_line.tax_cat_name}}</template>
         </div>
         <div class="wperp-col-sm-3 wperp-col-xs-12">
             <label>Tax Rate</label>
-            <template v-if="is_update"><input type="text" v-model="tax_component.tax_rate"/></template>
-            <template v-else>{{tax_component.tax_rate}}</template>
+            <template v-if="is_update"><input type="text" v-model="component_line.tax_rate"/></template>
+            <template v-else>{{component_line.tax_rate}}</template>
+        </div>
+
+        <div class="wperp-col-sm-12">
+            <div class="wperp-form-group text-right mt-10 mb-0">
+                <submit-button v-if="is_update" text="Update Tax Rate" @click.native.prevent="UpdateTaxRate"></submit-button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
+    import SubmitButton from 'admin/components/base/SubmitButton.vue'
 
     export default {
         name: 'TaxRateRow',
 
         components: {
-            MultiSelect
+            MultiSelect,
+            SubmitButton
         },
 
         props: {
-            tax_component: {
+            index: {
+                type: [Number, String]
+            },
+            component_line: {
                 type: Object
             },
             agencies: {
@@ -51,9 +63,6 @@
             categories: {
                 type: Array
             },
-            is_update: {
-                type: Boolean
-            }
         },
 
         created() {
@@ -61,20 +70,57 @@
             this.setCategory();
         },
 
+        data() {
+            return {
+                is_update: true
+            }
+        },
+
         methods: {
             setAgency() {
-                let agency_id   = parseInt(this.tax_component.agency_id);
-                let agency_name = this.tax_component.agency_name;
+                let agency_id   = parseInt(this.component_line.agency_id);
+                let agency_name = this.component_line.agency_name;
 
-                this.tax_component.agency = { id: agency_id, name: agency_name };
+                this.component_line.agency = { id: agency_id, name: agency_name };
             },
 
             setCategory() {
-                let tax_cat_id   = parseInt(this.tax_component.tax_cat_id);
-                let tax_cat_name = this.tax_component.tax_cat_name;
+                let tax_cat_id   = parseInt(this.component_line.tax_cat_id);
+                let tax_cat_name = this.component_line.tax_cat_name;
 
-                this.tax_component.category = { id: tax_cat_id, name: tax_cat_name };
-            }
+                this.component_line.category = { id: tax_cat_id, name: tax_cat_name };
+            },
+
+            UpdateTaxRate() {
+                HTTP.put(`/taxes/${this.component_line.tax_id}/line-edit`, {
+                    db_id: this.component_line.db_id,
+                    tax_id: this.component_line.tax_id,
+                    row_id: parseInt(this.index),
+                    component_name: this.component_line.component_name,
+                    agency_id: this.component_line.agency.id,
+                    tax_cat_id: this.component_line.category.id,
+                    tax_rate: this.component_line.tax_rate,
+                }).then(res => {
+                    console.log(res.data);
+                    this.$swal({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Tax Rate Updated!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }).then(() => {
+                    this.resetData();
+                    this.isWorking = false;
+                    this.$emit('close');
+                    this.$root.$emit('refetch_tax_data');
+                });
+            },
+
+            resetData() {
+                Object.assign(this.$data, this.$options.data.call(this));
+            },
+
         }
 
     };

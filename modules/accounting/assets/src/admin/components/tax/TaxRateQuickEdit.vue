@@ -4,25 +4,29 @@
             <div class="wperp-modal-content">
                 <!-- modal body title -->
                 <div class="wperp-modal-header">
-                    <h3 v-if="tax_update"><multi-select type="text" v-model="tax_rate.tax_name" :options="rate_names"/></h3>
-                    <h3 v-else>{{tax_rate.tax_name}}</h3>
+                    <h3>{{tax_rate.tax_name}}</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
 
                 <div class="wperp-invoice-table">
-                    <div class="wperp-panel-body">
-                        <tax-rate-row
-                            :key="index"
-                            :tax_component="component"
-                            v-for="(component, index) in tax_rate.tax_components"
-                            :agencies="agencies"
-                            :categories="categories"
-                            :is_update="tax_update"
-                        />
+                    <div class="wperp-col-sm-12">
+                        <label> Tax Number </label>
+                        <input type="text" value="0" v-model="tax_number"/>
                     </div>
+
+                    <div class="wperp-form-group wperp-col-sm-12">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" v-model="is_default" class="form-check-input">
+                                <span class="form-check-sign"></span>
+                                <span class="field-label">Is this tax default?</span>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="wperp-col-sm-12">
                         <div class="wperp-form-group text-right mt-10 mb-0">
-                            <submit-button v-if="tax_update" text="Update Tax Rate" @click.native.prevent="UpdateTaxRate"></submit-button>
+                            <submit-button text="Update Tax Rate" @click.native.prevent="UpdateTaxRate"></submit-button>
                         </div>
                     </div>
 
@@ -40,7 +44,7 @@
     import TaxRateRow from 'admin/components/tax/TaxRateRow.vue'
 
     export default {
-        name: 'SingleTaxRateModal',
+        name: 'TaxRateQuickEdit',
 
         components: {
             HTTP,
@@ -58,13 +62,9 @@
 
         data() {
             return {
+                tax_number: null,
+                is_default: null,
                 tax_rate: {},
-                agency: '',
-                category: '',
-                isWorking: false,
-                rate_names: [],
-                agencies: [],
-                categories: [],
             };
         },
 
@@ -78,57 +78,22 @@
             },
 
             fetchData() {
+                console.log( this.tax_id );
                 let taxid = this.tax_id;
 
                 HTTP.get(`/taxes/${taxid}`).then((response) => {
                     this.tax_rate = response.data;
-                }).catch((error) => {
-                    console.log(error);
-                });
-
-                HTTP.get('/tax-rate-names').then((response) => {
-                    this.rate_names = [];
-                    response.data.forEach(element => {
-                        this.rate_names.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
-                }).catch((error) => {
-                    console.log(error);
-                });
-
-                HTTP.get('/tax-agencies').then((response) => {
-                    this.agencies = [];
-                    response.data.forEach(element => {
-                        this.agencies.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
-                }).catch((error) => {
-                    console.log(error);
-                });
-
-                HTTP.get('/tax-cats').then((response) => {
-                    this.categories = [];
-                    response.data.forEach(element => {
-                        this.categories.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+                    this.tax_number = this.tax_rate.tax_number;
+                    this.is_default = this.tax_rate.default;
                 }).catch((error) => {
                     console.log(error);
                 });
             },
 
             UpdateTaxRate() {
-                HTTP.put(`/taxes/${this.tax_id}`, {
-                    tax_rate_name: this.tax_id,
-                    tax_number: this.tax_rate.tax_number,
-                    default: this.tax_rate.is_default,
-                    tax_components: this.formatLineItems(this.tax_rate.tax_components)
+                HTTP.put(`/taxes/${this.tax_id}/quick-edit`, {
+                    tax_number: this.tax_number,
+                    default: this.is_default,
                 }).then(res => {
                     console.log(res.data);
                     this.$swal({
@@ -171,7 +136,4 @@
     }
 </script>
 <style lang="less">
-    .wperp-modal-dialog {
-        max-width: 1000px !important;
-    }
 </style>

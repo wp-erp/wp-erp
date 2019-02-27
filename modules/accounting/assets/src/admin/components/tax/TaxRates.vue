@@ -39,12 +39,12 @@
 
                 <template slot="tax_id" slot-scope="data">
                     <strong>
-                        <a href="#" @click.prevent="showTaxRateModal(data.row.tax_id)"> #{{ data.row.tax_id }}</a>
+                        <a href="#" @click.prevent="singleTaxRate(data.row.tax_id)"> #{{ data.row.tax_id }}</a>
                     </strong>
                 </template>
             </list-table>
 
-            <single-tax-rate-modal v-if="singleTaxRateModal" :tax_id="tax_rate_id" @close="singleTaxRateModal = false" />
+            <tax-rate-quick-edit v-if="taxRateQuickEditModal" :tax_id="tax_rate_id" @close="taxRateQuickEditModal = false" > </tax-rate-quick-edit>
         </div>
 
         <new-tax-rate-name v-if="taxrateModal" @close="taxrateModal = false"/>
@@ -61,8 +61,7 @@
     import NewTaxRateName from 'admin/components/tax/NewTaxRateName.vue'
     import NewTaxCategory from 'admin/components/tax/NewTaxCategory.vue'
     import NewTaxAgency from 'admin/components/tax/NewTaxAgency.vue'
-    import SingleTaxRateModal from 'admin/components/tax/SingleTaxRateModal.vue'
-
+    import TaxRateQuickEdit from 'admin/components/tax/TaxRateQuickEdit.vue'
 
     export default {
         name: 'TaxRates',
@@ -74,7 +73,7 @@
             NewTaxRateName,
             NewTaxCategory,
             NewTaxAgency,
-            SingleTaxRateModal
+            TaxRateQuickEdit
         },
 
         data() {
@@ -94,6 +93,7 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions: [
+                    {key: 'quick_edit', label: 'Quick Edit', iconClass: 'flaticon-edit'},
                     {key: 'edit', label: 'Edit', iconClass: 'flaticon-edit'},
                     {key: 'trash', label: 'Delete', iconClass: 'flaticon-trash'}
                 ],
@@ -121,7 +121,8 @@
                 singleUrl: '',
                 tax_rate: null,
                 isActiveOptionDropdown: false,
-                singleTaxRateModal: false,
+                tax_rate_id: null,
+                taxRateQuickEditModal: false,
                 taxrateModal: false,
                 taxcatModal: false,
                 taxagencyModal: false
@@ -177,11 +178,6 @@
                 });
             },
 
-            showTaxRateModal( rate_id ) {
-                this.singleTaxRateModal = true;
-                this.tax_rate_id = rate_id;
-            },
-
             goToPage(page) {
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
@@ -210,6 +206,11 @@
                                 this.$delete(this.rows, index);
                             });
                         }
+                        break;
+
+                    case 'quick_edit':
+                        this.taxRateQuickEditModal = true;
+                        this.tax_rate_id = row.id;
                         break;
 
                     case 'edit':

@@ -57,6 +57,9 @@
                     'cat_name': {
                         label: 'Product Category'
                     },
+                    'tax_cat_name': {
+                        label: 'Tax Category'
+                    },
                     'product_type_name': {
                         label: 'Product Type'
                     },
@@ -90,7 +93,7 @@
                     this.product = row;
                 } else if ( 'trash' == action ) {
                     if ( confirm( 'Are sure want to Delete ?' ) ) {
-                        HTTP.delete( 'products/' + row.id ).then( response => {
+                        HTTP.delete( 'products/' + row.id ).then(response => {
                             this.$delete( this.products, index );
                             this.getProducts();
                         } );
