@@ -87,6 +87,9 @@
         },
 
         created() {
+            this.$root.$on('refetch_tax_data',() => {
+                this.fetchItems();
+            });
             this.fetchItems();
         },
 

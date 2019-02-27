@@ -87,12 +87,9 @@
         },
 
         created() {
-            this.$on('tax-modal-close', function() {
-                this.showModal = false;
+            this.$root.$on('refetch_tax_data',() => {
+                this.fetchItems();
             });
-
-            this.pageTitle      =   this.$route.name;
-            this.url            =   this.$route.name.toLowerCase();
 
             this.fetchItems();
         },
@@ -117,18 +114,13 @@
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
                     }
-                })
-                    .then( (response) => {
-                        this.rows = response.data;
-                        this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                        this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                    .then( () => {
-                        //ready
-                    } );
+                }).then( (response) => {
+                    this.rows = response.data;
+                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                }).catch((error) => {
+                    console.log(error);
+                });
             },
 
             goToPage(page) {
@@ -138,6 +130,10 @@
                     name: 'PaginateTaxCategories',
                     params: { page: page },
                     query: queries
+                });
+
+                this.$root.$on('refetch_tax_data',() => {
+                    this.fetchItems();
                 });
 
                 this.fetchItems();

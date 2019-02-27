@@ -175,8 +175,6 @@
                     });
                 }).catch((error) => {
                     console.log(error);
-                }).then(() => {
-                    //ready
                 });
 
                 HTTP.get('/tax-agencies').then((response) => {
