@@ -15,30 +15,12 @@
                         <a href="#" class="title">{{item.name}}</a>
                     </div>
                     <div class="right">
-                        <span class="price">{{formatAmount(item.balance)}}</span>
+                        <span v-if="undefined === item.balance" class="price">{{formatAmount(0)}}</span>
+                        <span v-else class="price">{{formatAmount(item.balance)}}</span>
                         <i class="flaticon-trash"></i>
                     </div>
                 </li>
             </ul>
-
-            <!--<dropdown placement="bottom-start">-->
-                <!--<template slot="button">-->
-                    <!--<a href="#" class="dropdown-trigger wperp-btn btn&#45;&#45;default">-->
-                        <!--<i class="flaticon-add-plus-button"></i>-->
-                        <!--<span>Add New</span>-->
-                    <!--</a>-->
-                <!--</template>-->
-                <!--<template slot="dropdown">-->
-                    <!--<ul slot="action-items" role="menu">-->
-                        <!--<li><a href="#">Master Card</a></li>-->
-                        <!--<li><a href="#">Paypal Account</a></li>-->
-                        <!--<li><a href="#">Skrill</a></li>-->
-                        <!--<li><a href="#">Payza Account</a></li>-->
-                        <!--<li><a href="#">Master Card</a></li>-->
-                    <!--</ul>-->
-                <!--</template>-->
-            <!--</dropdown>-->
-
         </div>
         <div class="wperp-panel-footer mt-50">
             <div class="bank-accounts-total">
@@ -53,6 +35,7 @@
 <script>
     import HTTP from 'admin/http';
     import Dropdown from 'admin/components/base/Dropdown.vue'
+
     export default {
         name: "Accounts",
         components : {
@@ -68,7 +51,7 @@
 
         methods: {
             fetchAccounts(){
-                HTTP.get('accounts').then( (response) => {
+                HTTP.get('/accounts/bank-accounts').then( (response) => {
                     this.accounts = response.data;
                 } );
             },
@@ -79,11 +62,14 @@
         },
 
         computed: {
-
             totalAmount(){
                 let total = this.accounts.reduce( ( amount, item ) => {
                                 return amount + parseFloat(item.balance);
                             }, 0 );
+
+                if ( isNaN( parseFloat(total) )) {
+                    total = 0;
+                }
 
                 return this.formatAmount(total);
             }
