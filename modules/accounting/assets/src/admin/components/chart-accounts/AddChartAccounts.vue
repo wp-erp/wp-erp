@@ -225,29 +225,49 @@
                 }
             },
 
+            createLedger(requestData) {
+                HTTP.post('/ledgers', requestData).then(res => {
+                    this.showAlert('success', 'Created !');
+                }).then(() => {
+                    this.resetFields();
+                });
+            },
+
+            updateteLedger(requestData) {
+                HTTP.put(`/ledgers/${this.ledgerID}`, requestData).then(res => {
+                    this.showAlert('success', 'Updated !');
+                }).then(() => {
+                    this.resetFields();
+                });
+            },
+
             saveAccount() {
-                this.error = false;
+                this.error         = false;
                 this.isChartAdding = true;
 
-                HTTP.post('/ledgers', {
-                    chart_id: this.ledgFields.chart_id,
+                let requestData = {
+                    chart_id   : this.ledgFields.chart_id,
                     category_id: this.ledgFields.category_id,
-                    name: this.ledgFields.name,
-                    code: this.ledgFields.code
-                }).then(response => {
-                    this.showAlert('success', 'Success!');
-                }).catch((err) => {
-                    // Error message
-                    this.error = err.response.data.message;
+                    name       : this.ledgFields.name,
+                    code       : this.ledgFields.code
+                };
 
-                }).then(() => {
-                    this.ledgFields.chart_id = null;
-                    this.ledgFields.category_id = null;
-                    this.ledgFields.name = '';
-                    this.ledgFields.code = '';
-                    this.isChartAdding = false;
-                });
+                if ( this.editMode ) {
+                    this.updateteLedger(requestData);
+                } else {
+                    this.createLedger(requestData);
+                }
+            },
+
+            resetFields() {
+                this.ledgFields.chart_id    = null;
+                this.ledgFields.category_id = null;
+                this.ledgFields.name        = '';
+                this.ledgFields.code        = '';
+                this.isChartAdding          = false;
             }
+
+
         }
     }
 </script>
