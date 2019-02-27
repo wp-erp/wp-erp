@@ -215,7 +215,7 @@
                 particulars     : '',
                 isWorking       : false,
                 accts_by_chart: [],
-                acct_assets     : erp_acct_var.acct_assets
+                erp_acct_assets : erp_acct_var.acct_assets
             }
         },
 
