@@ -58,7 +58,7 @@
             </div>
 
             <button class="wperp-btn btn--primary" type="submit">
-                {{ isChartAdding ? 'Saving...': 'Save' }}
+                {{ isChartAdding ? ( editMode ? 'Updating...' : 'Saving...' ) : ( editMode ? 'Update' : 'Save' ) }}
             </button>
         </form>
 
@@ -85,7 +85,7 @@
                 ledgFields: {
                     chart_id    : null,
                     category_id : null,
-                    account_name: '',
+                    name: '',
                     code        : ''
                 },
 
@@ -94,8 +94,8 @@
                     node : null
                 },
 
+                ledgerID     : 0,
                 editMode     : false,
-                voucherNo    : 0,
                 error        : false,
                 isChartAdding: false,
             };
@@ -134,7 +134,7 @@
                  */
                 if ( this.$route.params.id ) {
                     this.editMode = true;
-                    this.voucherNo = this.$route.params.id;
+                    this.ledgerID = this.$route.params.id;
 
                     /**
                      * Duplicates of
@@ -165,7 +165,9 @@
             },
 
             setDataForEdit(ledger) {
-                console.log(ledger);
+                this.ledgFields.chart_id = ledger.chart_id;
+                this.ledgFields.name     = ledger.name;
+                this.ledgFields.code     = ledger.code;
             },
 
             categoryAddModal() {

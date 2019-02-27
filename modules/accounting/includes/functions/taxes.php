@@ -162,7 +162,7 @@ function erp_acct_update_tax_rate( $data, $id ) {
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
     $wpdb->update($wpdb->prefix . 'erp_acct_taxes', array(
-        'tax_rate_name' => $tax_data['tax_rate_id'],
+        'tax_rate_id' => $tax_data['tax_rate_id'],
         'tax_number' => $tax_data['tax_number'],
         'default' => $tax_data['default'],
         'created_at' => $tax_data['created_at'],
@@ -205,6 +205,67 @@ function erp_acct_update_tax_rate( $data, $id ) {
 
 }
 
+
+/**
+ * Update tax data
+ *
+ * @param $data
+ * @return int
+ */
+function erp_acct_quick_edit_tax_rate( $data, $id ) {
+    global $wpdb;
+
+    $updated_by = get_current_user_id();
+    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_by'] = $updated_by;
+
+    $tax_data = erp_acct_get_formatted_tax_data( $data );
+
+    $wpdb->update($wpdb->prefix . 'erp_acct_taxes', array(
+        'tax_number' => $tax_data['tax_number'],
+        'default'    => $tax_data['default'],
+        'updated_at' => $tax_data['updated_at'],
+        'updated_by' => $tax_data['updated_by'],
+    ), array(
+        'id' => $id
+    ));
+
+    return $id;
+
+}
+
+/**
+ * Update line item of a tax rate
+ *
+ * @param $data
+ * @return int
+ */
+function erp_acct_edit_tax_rate_line( $data ) {
+    global $wpdb;
+
+    $updated_by = get_current_user_id();
+    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_by'] = $updated_by;
+
+    $tax_data = erp_acct_get_formatted_tax_line_data( $data );
+
+    $wpdb->update($wpdb->prefix . 'erp_acct_tax_cat_agency', array(
+        'component_name' => $tax_data['component_name'],
+        'tax_cat_id'     => $tax_data['tax_cat_id'],
+        'agency_id'      => $tax_data['agency_id'],
+        'tax_rate'       => $tax_data['tax_rate'],
+        'created_at'     => $tax_data['created_at'],
+        'created_by'     => $tax_data['created_by'],
+        'updated_at'     => $tax_data['updated_at'],
+        'updated_by'     => $tax_data['updated_by'],
+    ), array(
+        'tax_id' => $tax_data['db_id']
+    ));
+
+    return $tax_data['db_id'];
+
+}
+
 /**
  * Delete an tax
  *
@@ -216,7 +277,7 @@ function erp_acct_update_tax_rate( $data, $id ) {
 function erp_acct_delete_tax_rate( $tax_no ) {
     global $wpdb;
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', array( 'tax_number' => $tax_no ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', array( 'id' => $tax_no ) );
 
     return $tax_no;
 }
@@ -285,11 +346,11 @@ function erp_acct_pay_tax( $data ) {
 
     $wpdb->insert($wpdb->prefix . 'erp_acct_tax_pay', array(
         'voucher_no' => $voucher_no,
-        'agency_id' => $tax_data['agency_id'],
-        'trn_date'  => $tax_data['trn_date'],
+        'agency_id'  => $tax_data['agency_id'],
+        'trn_date'   => $tax_data['trn_date'],
         'tax_period' => $tax_data['tax_period'],
         'particulars' => $tax_data['particulars'],
-        'amount' => $tax_data['amount'],
+        'amount'    => $tax_data['amount'],
         'ledger_id' => $tax_data['ledger_id'],
         'voucher_type' => $tax_data['voucher_type'],
         'created_at' => $tax_data['created_at'],
@@ -354,7 +415,7 @@ function erp_acct_insert_tax_pay_data_into_ledger( $payment_data ) {
 function erp_acct_format_tax_line_items( $tax = 'all' ) {
     global $wpdb;
 
-    $sql = "SELECT id, tax_id, component_name, agency_id, tax_cat_id, tax_rate ";
+    $sql = "SELECT id as db_id, tax_id, component_name, agency_id, tax_cat_id, tax_rate ";
 
     if ( $tax == 'all' ) {
         $tax_sql = '';
@@ -405,6 +466,29 @@ function erp_acct_get_formatted_tax_data( $data ) {
     return $tax_data;
 }
 
+
+/**
+ * Get formatted tax data
+ *
+ * @param $data
+ * @param $voucher_no
+ * @return mixed
+ */
+function erp_acct_get_formatted_tax_line_data( $data ) {
+    $tax_data = [];
+
+    $tax_data['tax_id'] = isset($data['tax_id']) ? $data['tax_id'] : '';
+    $tax_data['db_id'] = isset($data['db_id']) ? $data['db_id'] : '';
+    $tax_data['rate_id'] = isset($data['rate_id']) ? $data['rate_id'] : '';
+    $tax_data['component_name'] = isset($data['component_name']) ? $data['component_name'] : '';
+    $tax_data['agency_id'] = isset($data['agency_id']) ? $data['agency_id'] : 0;
+    $tax_data['tax_cat_id'] = isset($data['tax_cat_id']) ? $data['tax_cat_id'] : 0;
+    $tax_data['tax_rate'] = isset($data['tax_rate']) ? $data['tax_rate'] : 0;
+    $tax_data['created_at'] = isset($data['created_at']) ? $data['created_at'] : '';
+    $tax_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
+
+    return $tax_data;
+}
 /**
  * Tax summary
  */

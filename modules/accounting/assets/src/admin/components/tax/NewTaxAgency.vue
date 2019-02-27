@@ -22,7 +22,8 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <submit-button text="Add New Tax Agency" @click.native.prevent="addNewTaxAgency" :working="isWorking"></submit-button>
+                            <submit-button v-if="is_update" text="Update Tax Agency" @click.native.prevent="UpdateTaxAgency" :working="isWorking"></submit-button>
+                            <submit-button v-else text="Add New Tax Agency" @click.native.prevent="addNewTaxAgency" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>
@@ -46,16 +47,27 @@
             SubmitButton
         },
 
+        props: {
+            agency_id: {
+                type: [ Number, String ]
+            },
+            is_update: {
+                type: Boolean
+            }
+        },
+
         data() {
             return {
-                agencies: [{}],
-                agency: '',
+                agencies: [],
+                agency: null,
                 isWorking: false,
             };
         },
 
         created() {
-            // this.getAgencies();
+            if ( this.is_update ) {
+                this.getAgency();
+            }
         },
 
         methods: {
@@ -63,19 +75,34 @@
                 this.$emit('close');
             },
 
-            getAgencies() {
-                HTTP.get('/tax-agencies').then((response) => {
-                    response.data.forEach(element => {
-                        this.agencies.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+            getAgency() {
+                HTTP.get(`/tax-agencies/${this.agency_id}`).then((response) => {
+                    this.agency = response.data.name;
                 });
             },
 
             addNewTaxAgency() {
                 HTTP.post('/tax-agencies', {
+                    agency_name: this.agency,
+                }).then(res => {
+                    console.log(res.data);
+                    this.$swal({
+                        position: 'center',
+                        type: 'success',
+                        title: 'Tax Agency Created!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }).then(() => {
+                    this.resetData();
+                    this.isWorking = false;
+                    this.$emit('close');
+                    this.$root.$emit('refetch_tax_data');
+                });
+            },
+
+            UpdateTaxAgency() {
+                HTTP.put(`/tax-agencies/${this.agency_id}`, {
                     agency_name: this.agency,
                 }).then(res => {
                     console.log(res.data);
