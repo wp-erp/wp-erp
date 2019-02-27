@@ -23,7 +23,7 @@
                 @action:click="onActionClick">
                 <template slot="trn_no" slot-scope="data">
                     <strong>
-                        <router-link :to="{ name: 'SalesSingle', params: { 
+                        <router-link :to="{ name: 'SalesSingle', params: {
                             id: data.row.id,
                             type: isPayment(data.row) ? 'payment' : 'sales_invoice'
                         }}">
@@ -86,14 +86,14 @@
                     'amount':        {label: 'Total'},
                     'status':        {label: 'Status'},
                     'actions':       {label: ''},
-                    
+
                 },
                 rows: [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
-                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
+                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 actions : [
                     { key: 'edit', label: 'Edit' },
@@ -109,11 +109,11 @@
             });
 
             let filters = {};
-            
+
             // Get start & end date from url on page load
             if ( this.$route.query.start && this.$route.query.end ) {
                 filters.start_date = this.$route.query.start;
-                filters.end_date = this.$route.query.end;
+                filters.end_date   = this.$route.query.end;
             }
 
             this.fetchItems(filters);
@@ -134,7 +134,7 @@
                         start_date: filters.start_date,
                         end_date: filters.end_date
                     }
-                }).then( (response) => {    
+                }).then( (response) => {
                     this.rows = response.data;
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
@@ -156,7 +156,10 @@
                         if ( 'sales_invoice' == row.type ) {
                             this.$router.push({ name: 'InvoiceEdit', params: { id: row.id } })
                         }
-                        
+
+                        if ( 'payment' == row.type ) {
+                            this.$router.push({ name: 'RecPaymentEdit', params: { id: row.id } })
+                        }
                         break;
 
                     default :

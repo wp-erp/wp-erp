@@ -182,6 +182,11 @@ export default new Router({
                     name: 'AddChartAccounts',
                     component: AddChartAccounts,
                 },
+                {
+                    path: ':id/edit',
+                    name: 'ChartAccountsEdit',
+                    component: AddChartAccounts,
+                },
             ]
         },
         {
@@ -211,9 +216,20 @@ export default new Router({
             component: ProductCategory
         },
         {
-            path: '/payments/new',
-            name: 'RecPaymentCreate',
-            component: RecPaymentCreate
+            path: '/payments',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: 'new',
+                    name: 'RecPaymentCreate',
+                    component: RecPaymentCreate,
+                },
+                {
+                    path: ':id/edit',
+                    name: 'RecPaymentEdit',
+                    component: RecPaymentCreate,
+                },
+            ]
         },
         {
             path: '/bills',

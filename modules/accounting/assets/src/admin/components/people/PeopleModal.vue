@@ -73,7 +73,7 @@
                                             <input type="text" v-model="peopleFields.city" id="city" class="wperp-form-field" placeholder="City/Town">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="country">Country</label>
+                                            <label>Country</label>
                                             <div class="with-multiselect">
                                                 <multi-select
                                                 v-model="peopleFields.country"
@@ -82,7 +82,7 @@
                                             </div>
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="state">Province/State</label>
+                                            <label>Province/State</label>
                                             <div class="with-multiselect">
                                                 <multi-select
                                                 v-model="peopleFields.state"
@@ -111,9 +111,9 @@
                             <div class="wperp-modal-footer pt-0">
                                 <!-- buttons -->
                                 <div class="buttons-wrapper text-right">
+                                    <button class="wperp-btn btn--default modal-close" @click="$parent.$emit('modal-close')" type="reset">Cancel</button>
                                     <button v-if="!people" class="wperp-btn btn--primary" type="submit" @click.prevent="saveCustomer">Add New</button>
                                     <button v-else class="wperp-btn btn--primary" type="submit" @click.prevent="saveCustomer">Update</button>
-                                    <button class="wperp-btn btn--default modal-close" @click="$parent.$emit('modal-close')" type="reset">Cancel</button>
                                 </div>
                             </div>
                         </form>
