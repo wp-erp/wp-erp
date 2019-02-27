@@ -6,7 +6,7 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Sales Transactions</h2>
-                    <combo-box 
+                    <combo-box
                         :options="pages"
                         :hasUrl="true"
                         placeholder="New Transaction" />

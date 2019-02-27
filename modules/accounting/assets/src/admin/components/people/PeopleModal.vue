@@ -101,7 +101,7 @@
                                 <div class="form-check">
                                     <label class="form-check-label mb-0" for="show_more">
                                         <input class="form-check-input" name="show_more" id="show_more" type="checkbox" @click="showDetails">
-                                        <span class="form-check-sign"></span> 
+                                        <span class="form-check-sign"></span>
                                         <span class="field-label">Show More</span>
                                     </label>
                                 </div>
@@ -176,6 +176,7 @@
                     return false;
                 }
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 if ( !this.people ) {
                     var url = this.url;
                     var type = 'post';
@@ -183,9 +184,12 @@
                     var url = this.url + '/' + this.peopleFields.id;
                     var type = 'put';
                 }
+                var message = ( type == 'post' ) ? 'Created' : 'Updated';
                 HTTP[type]( url, this.peopleFields ).then( response => {
                     this.$root.$emit('peopleUpdate');
                     this.resetForm();
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert('success', message);
                 } );
             },
             checkForm() {

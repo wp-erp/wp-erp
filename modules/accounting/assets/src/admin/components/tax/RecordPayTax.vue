@@ -72,7 +72,7 @@
 	                    </div>
 	                </div>
 	            </form>
-	            
+
 	        </div>
 	    </div>
 
@@ -130,6 +130,7 @@
             },
 
             SubmitForTaxPay() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/taxes/pay-tax', {
                     ledger_id: this.ledger.id,
                     agency_id: this.agency.id,
@@ -139,14 +140,8 @@
                     voucher_type: this.voucher_type,
                     amount: parseFloat(this.tax_amount),
                 }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Paid!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Tax Paid!' );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;

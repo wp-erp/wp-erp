@@ -261,7 +261,7 @@
                 this.pay_bills.forEach( (element,index) => {
                     element['amount'] = parseFloat( this.totalAmounts[index] );
                 });
-
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/pay-bills', {
                     people_id: this.basic_fields.people.id,
                     ref: this.basic_fields.trn_ref,
@@ -277,13 +277,8 @@
                     check_no: parseInt(this.check_data.check_no),
                     name: this.check_data.payer_name
                 }).then(res => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Pay-Bill Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Pay-Bill Created!' );
                 }).catch( error => {
                     this.$swal({
                         position: 'center',

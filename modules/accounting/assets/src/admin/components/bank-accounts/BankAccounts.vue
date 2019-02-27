@@ -99,8 +99,10 @@
 
         methods: {
             fetchAccounts(){
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get('accounts').then( (response) => {
                     this.accounts = response.data;
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
 

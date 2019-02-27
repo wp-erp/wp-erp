@@ -315,7 +315,9 @@
             },
 
             updateBill(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/bills/${this.voucherNo}`, requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Bill Updated!');
                 }).then(() => {
                     this.isWorking = false;
@@ -330,7 +332,9 @@
             },
 
             createBill(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/bills', requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Bill Created!');
                 }).then(() => {
                     this.isWorking = false;

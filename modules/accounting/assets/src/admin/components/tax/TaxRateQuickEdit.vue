@@ -91,18 +91,13 @@
             },
 
             UpdateTaxRate() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/taxes/${this.tax_id}/quick-edit`, {
                     tax_number: this.tax_number,
                     default: this.is_default,
                 }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Rate Updated!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Tax Rate Updated!' );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
