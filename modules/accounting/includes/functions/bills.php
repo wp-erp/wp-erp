@@ -320,6 +320,7 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data = [];
 
     $vendor = erp_get_people( $data['vendor_id'] );
+
     $bill_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
     $bill_data['vendor_id'] = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 1;
     $bill_data['vendor_name'] = isset( $vendor ) ?  $vendor->first_name . ' ' . $vendor->last_name : '';

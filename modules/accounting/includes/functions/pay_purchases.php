@@ -51,12 +51,15 @@ function erp_acct_get_pay_purchase( $purchase_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare("SELECT
+        pay_purchase.id,
         pay_purchase.voucher_no,
         pay_purchase.vendor_id,
         pay_purchase.vendor_name,
         pay_purchase.trn_date,
         pay_purchase.amount,
         pay_purchase.trn_by,
+        pay_purchase.status,
+        pay_purchase.particulars,
         pay_purchase.attachments,
         pay_purchase.trn_by_ledger_id
         FROM wp_erp_acct_pay_purchase AS pay_purchase
@@ -115,7 +118,6 @@ function erp_acct_insert_pay_purchase( $data ) {
         ) );
 
         $voucher_no = $wpdb->insert_id;
-        $purchase_no = $voucher_no;
 
         $pay_purchase_data = erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no );
 
@@ -178,7 +180,7 @@ function erp_acct_insert_pay_purchase( $data ) {
         return new WP_error( 'pay-purchase-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_pay_purchase( $purchase_no );
+    return erp_acct_get_pay_purchase( $voucher_no );
 
 }
 

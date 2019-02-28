@@ -184,7 +184,7 @@ function erp_acct_insert_pay_bill( $data ) {
         return new WP_error( 'pay-bill-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_pay_bill( $bill_no );
+    return erp_acct_get_pay_bill( $voucher_no );
 
 }
 

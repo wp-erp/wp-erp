@@ -368,7 +368,7 @@
                     attachments: this.attachments,
                     billing_address: this.basic_fields.billing_address,
                     type: 'bill',
-                    status: 'awaiting_approval',
+                    status: 3,
                     particulars: this.particulars
                 };
 
