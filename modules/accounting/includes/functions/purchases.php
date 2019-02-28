@@ -482,6 +482,8 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
 function erp_acct_get_purchase_due( $purchase_no ) {
     global $wpdb;
 
-    return $wpdb->get_var( "SELECT purchase_no, SUM( debit - credit) as due FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE purchase_no = {$purchase_no} GROUP BY purchase_no" );
+    $result = $wpdb->get_row( "SELECT purchase_no, SUM( debit - credit) as due FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE purchase_no = {$purchase_no} GROUP BY purchase_no", ARRAY_A );
+
+    return $result['due'];
 }
 
