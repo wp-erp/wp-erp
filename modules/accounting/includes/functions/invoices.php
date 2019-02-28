@@ -694,4 +694,17 @@ function erp_acct_get_recievables_overview() {
     return [ 'data' => $data, 'amount' => $amount ];
 }
 
+/**
+ * Get due of an invoice
+ *
+ * @param $invoice_no
+ * @return int
+ */
+function erp_acct_get_invoice_due( $invoice_no ) {
+    global $wpdb;
 
+    $result = $wpdb->get_row( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = {$invoice_no} GROUP BY ia.invoice_no", ARRAY_A );
+
+
+    return $result['due'];
+}
