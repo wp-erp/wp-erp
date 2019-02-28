@@ -225,8 +225,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $expense = erp_acct_insert_expense( $expense_data );
 
-        // $expense_data['id'] = $expense_id;
-        // $expense_data['voucher_no'] = $expense_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
