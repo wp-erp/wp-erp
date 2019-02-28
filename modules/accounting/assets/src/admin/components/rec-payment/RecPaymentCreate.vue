@@ -11,6 +11,8 @@
         </div>
         <!-- End .header-section -->
 
+        <form action="" method="post" @submit.prevent="SubmitForPayment">
+
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
 
@@ -120,13 +122,15 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Receive Payment" @click.native="SubmitForPayment" :working="isWorking"></submit-button>
+                            <submit-button text="Receive Payment"></submit-button>
                         </td>
                     </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
+
+        </form>
 
     </div>
 </template>
@@ -258,11 +262,11 @@
                 HTTP.get(`/invoices/due/${customerId}`).then(response => {
                     response.data.forEach(element => {
                         this.invoices.push({
-                            id: element.id,
+                            id        : element.id,
                             invoice_no: element.voucher_no,
-                            due_date: element.due_date,
-                            amount: parseFloat(element.amount),
-                            due: parseFloat(element.due)
+                            due_date  : element.due_date,
+                            amount    : parseFloat(element.amount),
+                            due       : parseFloat(element.due)
                         });
                     });
                 }).then(() => {
@@ -319,17 +323,17 @@
 
                 HTTP.post('/payments', {
                     customer_id: this.basic_fields.customer.id,
-                    ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.payment_date,
-                    line_items: this.invoices,
+                    ref        : this.basic_fields.trn_ref,
+                    trn_date   : this.basic_fields.payment_date,
+                    line_items : this.invoices,
                     attachments: this.attachments,
-                    type: 'payment',
-                    status: 'paid',
+                    type       : 'payment',
+                    status     : 'paid',
                     particulars: this.particulars,
-                    deposit_to: this.basic_fields.deposit_to.id,
-                    trn_by: this.basic_fields.trn_by.id,
-                    check_no: parseInt(this.check_data.check_no),
-                    name: this.check_data.payer_name
+                    deposit_to : this.basic_fields.deposit_to.id,
+                    trn_by     : this.basic_fields.trn_by.id,
+                    check_no   : parseInt(this.check_data.check_no),
+                    name       : this.check_data.payer_name
                 }).then(res => {
                     this.showAlert('success', 'Payment Created!');
                 }).then(() => {

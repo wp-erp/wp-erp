@@ -122,3 +122,47 @@ function erp_acct_get_ledgers_by_chart_id( $chart_id ) {
     return $charts;
 }
 
+
+
+
+
+/**============
+ * Ledger CRUD
+ ===============*/
+
+function erp_acct_get_ledger( $id ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = %d", $id);
+
+    return $wpdb->get_row( $sql );
+}
+
+function erp_acct_insert_ledger( $item ) {
+    global $wpdb;
+
+    $wpdb->insert( "{$wpdb->prefix}erp_acct_ledgers", [
+        'chart_id'    => $item['chart_id'],
+        'category_id' => $item['category_id'],
+        'name'        => $item['name'],
+        'slug'        => slugify($item['name']),
+        'code'        => $item['code']
+     ] );
+
+     return erp_acct_get_ledger( $wpdb->insert_id );
+}
+
+function erp_acct_update_ledger( $item, $id ) {
+    global $wpdb;
+
+    $wpdb->update( "{$wpdb->prefix}erp_acct_ledgers", [
+        'chart_id'      => $item['chart_id'],
+        'category_id'   => $item['category_id'],
+        'name'          => $item['name'],
+        'slug'        => slugify($item['name']),
+        'code'          => $item['code']
+        ], [ 'id' => $id ]
+    );
+
+    return erp_acct_get_ledger( $id );
+}
