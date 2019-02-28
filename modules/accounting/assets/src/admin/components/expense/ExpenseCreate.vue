@@ -395,7 +395,7 @@
                 });
             },
 
-            SubmitForExpense() {
+            SubmitForExpense(event) {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -429,6 +429,8 @@
                 } else {
                     this.createExpense(requestData);
                 }
+
+                event.target.reset();
             },
 
             changeAccounts() {
