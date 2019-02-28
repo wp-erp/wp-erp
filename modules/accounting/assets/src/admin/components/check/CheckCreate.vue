@@ -358,7 +358,7 @@
                 });
             },
 
-            submitCheckForm() {
+            submitCheckForm(event) {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -389,6 +389,8 @@
                 } else {
                     this.createCheck(requestData);
                 }
+
+                event.target.reset();
             },
 
             changeAccounts() {

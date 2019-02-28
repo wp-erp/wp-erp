@@ -274,8 +274,7 @@
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
             },
 
-            SubmitForPayment() {
-
+            SubmitForPayment(event) {
                 this.pay_purchases.forEach( (element,index) => {
                     element['line_total'] = parseFloat( this.totalAmounts[index] );
                 });
@@ -320,11 +319,12 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-
                 }).then(() => {
                     this.isWorking = false;
                     this.resetData();
                 });
+
+                event.target.reset();
             },
 
             changeAccounts() {
