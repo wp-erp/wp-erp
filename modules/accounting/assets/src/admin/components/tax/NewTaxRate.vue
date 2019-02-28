@@ -202,8 +202,9 @@
                 });
             },
 
-            addNewTaxRate() {
+            addNewTaxRate(event) {
                 this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.post('/taxes', {
                     tax_rate_name: this.tax_name.id,
                     tax_number: this.tax_number,
@@ -216,6 +217,8 @@
                 }).then(() => {
                     this.resetData();
                 });
+
+                event.target.reset();
             },
 
             formatLineItems() {
