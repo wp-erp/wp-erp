@@ -169,6 +169,7 @@ function erp_acct_insert_pay_bill( $data ) {
 
             erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item );
 
+            erp_acct_change_bill_status( $item['voucher_no'] );
         }
 
         erp_acct_insert_people_trn_data( $pay_bill_data, $pay_bill_data['people_id'], 'debit' );
@@ -253,6 +254,8 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
             ) );
 
             erp_acct_update_bill_data_into_ledger( $pay_bill_data, $pay_bill_id, $item );
+
+            erp_acct_change_bill_status( $item['voucher_no'] );
         }
 
         erp_acct_update_people_trn_data( $pay_bill_data, $pay_bill_data['people_id'], 'debit' );
@@ -411,5 +414,29 @@ function erp_acct_get_pay_bill_count() {
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_pay_bill" );
 
     return $row->count;
+}
+
+/**
+ * Update bill status after a payment
+ *
+ * @param $bill_no
+ * @param $due
+ * @return int
+ */
+function erp_acct_change_bill_status( $bill_no ) {
+    global $wpdb;
+
+    $due = erp_acct_get_bill_due( $bill_no );
+
+    if ( $due == 0 ) {
+
+        $wpdb->update($wpdb->prefix . 'erp_acct_bills',
+            array(
+                'status' => 4,
+            ),
+            array( 'voucher_no' => $bill_no )
+        );
+    }
+
 }
 

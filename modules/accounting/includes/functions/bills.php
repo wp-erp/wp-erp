@@ -176,8 +176,6 @@ function erp_acct_insert_bill( $data ) {
             'created_by'  => $bill_data['created_by']
         ) );
 
-
-
         $wpdb->query( 'COMMIT' );
 
     } catch (Exception $e) {
@@ -241,7 +239,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
 
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', [
-                'trn_no'      => $voucher_no,
+                'trn_no'      => $bill_id,
                 'ledger_id'   => $item['ledger_id']['id'],
                 'particulars' => isset( $item['description'] ) ? $item['description'] : '',
                 'amount'      => $item['amount'],
