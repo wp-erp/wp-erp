@@ -18,7 +18,7 @@
 
                     <show-errors :error_msgs="form_errors" ></show-errors>
 
-                    <form action="#" class="wperp-form" method="post">
+                    <!-- <form action="#" class="wperp-form" method="post"> -->
                         <div class="wperp-row">
                             <div class="wperp-col-sm-4">
                                 <select-vendors v-model="basic_fields.vendor"></select-vendors>
@@ -40,7 +40,7 @@
                                 <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                             </div>
                         </div>
-                    </form>
+                    <!-- </form> -->
 
                 </div>
             </div>
@@ -307,7 +307,7 @@
                     this.reset = true;
 
                     if ('update' == this.actionType) {
-                        this.$router.push({name: 'Purchase'});
+                        this.$router.push({name: 'Purchases'});
                     } else if ('new_update' == this.actionType) {
                         this.resetFields();
                     }
@@ -322,7 +322,7 @@
                     this.reset = true;
 
                     if ('save' == this.actionType) {
-                        this.$router.push({name: 'Purchase'});
+                        this.$router.push({name: 'Purchases'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
                     }

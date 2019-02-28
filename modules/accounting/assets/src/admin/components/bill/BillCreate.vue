@@ -324,7 +324,7 @@
                     this.reset = true;
 
                     if ('update' == this.actionType) {
-                        this.$router.push({name: 'Bill'});
+                        this.$router.push({name: 'Expenses'});
                     } else if ('new_update' == this.actionType) {
                         this.resetFields();
                     }
@@ -341,7 +341,7 @@
                     this.reset = true;
 
                     if ('save' == this.actionType) {
-                        this.$router.push({name: 'Bill'});
+                        this.$router.push({name: 'Expenses'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
                     }

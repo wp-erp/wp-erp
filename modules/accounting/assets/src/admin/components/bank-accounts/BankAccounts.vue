@@ -16,7 +16,7 @@
                     <tbody>
                         <!-- keep this empty row if possible -->
                         <tr></tr>
-                        <tr v-for="account in accounts">
+                        <tr :key="index" v-for="(account, index) in accounts">
                             <td class="col--account-infos">
                                 <!-- account name -->
                                 <div class="account-name">

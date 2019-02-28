@@ -11,110 +11,112 @@
         </div>
         <!-- End .header-section -->
 
-        <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
-            <div class="wperp-panel-body">
+        <form action="" method="post" @submit.prevent="SubmitForPayment">
 
-                <show-errors :error_msgs="form_errors" ></show-errors>
+            <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
+                <div class="wperp-panel-body">
 
-                <form action="" class="wperp-form" method="post">
-                    <div class="wperp-row">
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <select-vendors @input="getDuePurchases" v-model="basic_fields.vendor"></select-vendors>
+                    <show-errors :error_msgs="form_errors" ></show-errors>
+
+                    <!-- <form action="" class="wperp-form" method="post"> -->
+                        <div class="wperp-row">
+                            <div class="wperp-col-sm-4">
+                                <div class="wperp-form-group">
+                                    <select-vendors @input="getDuePurchases" v-model="basic_fields.vendor"></select-vendors>
+                                </div>
                             </div>
-                        </div>
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <label>Reference<span class="wperp-required-sign">*</span></label>
-                                <input type="text" v-model="basic_fields.trn_ref"/>
+                            <div class="wperp-col-sm-4">
+                                <div class="wperp-form-group">
+                                    <label>Reference<span class="wperp-required-sign">*</span></label>
+                                    <input type="text" v-model="basic_fields.trn_ref"/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <label>Payment Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.payment_date"></datepicker>
+                            <div class="wperp-col-sm-4">
+                                <div class="wperp-form-group">
+                                    <label>Payment Date<span class="wperp-required-sign">*</span></label>
+                                    <datepicker v-model="basic_fields.payment_date"></datepicker>
+                                </div>
                             </div>
-                        </div>
-                        <div class="wperp-col-sm-4 with-multiselect">
-                            <label>Payment Method<span class="wperp-required-sign">*</span></label>
-                            <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
-                        </div>
-                        <div class="wperp-col-sm-4 with-multiselect">
-                            <label>Transaction From<span class="wperp-required-sign">*</span></label>
-                            <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
-                        </div>
-                        <div class="wperp-col-sm-4">
-                            <label>Billing Address</label>
-                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
-                        </div>
+                            <div class="wperp-col-sm-4 with-multiselect">
+                                <label>Payment Method<span class="wperp-required-sign">*</span></label>
+                                <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
+                            </div>
+                            <div class="wperp-col-sm-4 with-multiselect">
+                                <label>Transaction From<span class="wperp-required-sign">*</span></label>
+                                <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
+                            </div>
+                            <div class="wperp-col-sm-4">
+                                <label>Billing Address</label>
+                                <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
+                            </div>
 
-                        <check-fields v-if="basic_fields.trn_by.id === paymentMethods.check" @updateCheckFields="setCheckFields"></check-fields>
-                    </div>
-                </form>
+                            <check-fields v-if="basic_fields.trn_by.id === paymentMethods.check" @updateCheckFields="setCheckFields"></check-fields>
+                        </div>
+                    <!-- </form> -->
 
+                </div>
             </div>
-        </div>
 
-        <div class="wperp-table-responsive">
-            <!-- Start .wperp-crm-table -->
-            <div class="table-container">
-                <table class="wperp-table wperp-form-table">
-                    <thead>
-                    <tr>
-                        <th scope="col" class="col--id column-primary">Purchase ID</th>
-                        <th scope="col">Due Date</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Due</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col" class="col--actions"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr :key="key" v-for="(item,key) in pay_purchases">
-                        <td scope="row" class="col--id column-primary">{{key+1}}</td>
-                        <td class="col--due-date" data-colname="Due Date">{{item.due_date}}</td>
-                        <td class="col--total" data-colname="Total">{{item.total}}</td>
-                        <td class="col--due" data-colname="Due">{{item.due}}</td>
-                        <td class="col--amount" data-colname="Amount">
-                            <input type="number" min="0" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
-                        </td>
-                        <td class="delete-row" data-colname="Remove Above Selection">
-                            <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
-                        </td>
-                    </tr>
+            <div class="wperp-table-responsive">
+                <!-- Start .wperp-crm-table -->
+                <div class="table-container">
+                    <table class="wperp-table wperp-form-table">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="col--id column-primary">Purchase ID</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Due</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col" class="col--actions"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr :key="key" v-for="(item,key) in pay_purchases">
+                            <td scope="row" class="col--id column-primary">{{key+1}}</td>
+                            <td class="col--due-date" data-colname="Due Date">{{item.due_date}}</td>
+                            <td class="col--total" data-colname="Total">{{item.total}}</td>
+                            <td class="col--due" data-colname="Due">{{item.due}}</td>
+                            <td class="col--amount" data-colname="Amount">
+                                <input type="number" min="0" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
+                            </td>
+                            <td class="delete-row" data-colname="Remove Above Selection">
+                                <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
+                            </td>
+                        </tr>
 
-                    <tr class="total-amount-row">
-                        <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
-                        <td class="text-right" data-colname="Total Amount">
-                            <input type="text" class="text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
-                        <td class="text-right"></td>
-                    </tr>
-                    </tbody>
-                    <tr class="wperp-form-group">
-                        <td colspan="9" style="text-align: left;">
-                            <label>Particulars</label>
-                            <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
-                        </td>
-                    </tr>
-                    <tr class="add-attachment-row">
-                        <td colspan="9" style="text-align: left;">
-                            <div class="attachment-container">
-                                <label class="col--attachement">Attachment</label>
-                                <file-upload v-model="attachments" url="/invoices/attachments"/>
-                            </div>
-                        </td>
-                    </tr>
-                    <tfoot>
-                    <tr>
-                        <td colspan="9" style="text-align: right;">
-                            <submit-button text="Pay Purchase" @click.native="SubmitForPayment" :working="isWorking"></submit-button>
-                        </td>
-                    </tr>
-                    </tfoot>
-                </table>
+                        <tr class="total-amount-row">
+                            <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
+                            <td class="text-right" data-colname="Total Amount">
+                                <input type="text" class="text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        </tbody>
+                        <tr class="wperp-form-group">
+                            <td colspan="9" style="text-align: left;">
+                                <label>Particulars</label>
+                                <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                            </td>
+                        </tr>
+                        <tr class="add-attachment-row">
+                            <td colspan="9" style="text-align: left;">
+                                <div class="attachment-container">
+                                    <label class="col--attachement">Attachment</label>
+                                    <file-upload v-model="attachments" url="/invoices/attachments"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tfoot>
+                        <tr>
+                            <td colspan="9" style="text-align: right;">
+                                <submit-button text="Pay Purchase"></submit-button>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
-        </div>
-
+        </form>
     </div>
 </template>
 
@@ -225,7 +227,7 @@
                     finalAmount = 0;
 
                 this.pay_purchases = [];
-                HTTP.get(`/purchases/due/${vendorId}`).then(response => {                    
+                HTTP.get(`/purchases/due/${vendorId}`).then(response => {
                     response.data.forEach(element => {
                         this.pay_purchases.push({
                             id: element.id,

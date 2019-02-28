@@ -58,11 +58,11 @@
             </div>
 
             <button class="wperp-btn btn--primary" type="submit">
-                {{ isChartAdding ? ( editMode ? 'Updating...' : 'Saving...' ) : ( editMode ? 'Update' : 'Save' ) }}
+                {{ editMode ? 'Update' : 'Save' }}
             </button>
         </form>
 
-        <cat-add-modal v-if="catAddModal" :categories="categories" :catData="catData" />
+        <!-- <cat-add-modal v-if="catAddModal" :categories="categories" :catData="catData" /> -->
 
     </div>
 </template>
@@ -106,23 +106,29 @@
             CatAddModal,
         },
 
+        watch: {
+            'ledgFields.chart_id'() {
+                this.fetchLedgerCategories();
+            }
+        },
+
         created() {
             this.prepareDataLoad();
 
-            this.$root.$on('cat-modal-close', () => {
-                this.catAddModal = false;
-            });
+            // this.$root.$on('cat-modal-close', () => {
+            //     this.catAddModal = false;
+            // });
 
-            this.$root.$on('category-created', () => {
-                this.catAddModal = false;
+            // this.$root.$on('category-created', () => {
+            //     this.catAddModal = false;
 
-                this.catData.title = 'Add New';
-                this.catData.node = null;
+            //     this.catData.title = 'Add New';
+            //     this.catData.node = null;
 
-                this.showAlert('success', 'Successful !');
+            //     this.showAlert('success', 'Successful !');
 
-                this.fetchLedgerCategories();
-            });
+            //     this.fetchLedgerCategories();
+            // });
         },
 
         methods: {
@@ -201,6 +207,8 @@
             },
 
             fetchLedgerCategories() {
+                if ( ! this.ledgFields.chart_id ) return;
+
                 HTTP.get(`/ledgers/categories/${this.ledgFields.chart_id}`).then( response => {
                     if ( ! response.data ) return;
 
@@ -230,7 +238,6 @@
                     this.showAlert('success', 'Created !');
                 }).then(() => {
                     this.resetFields();
-                    this.$store.dispatch( 'spinner/setSpinner', true );
                 });
             },
 
@@ -239,7 +246,7 @@
                     this.showAlert('success', 'Updated !');
                 }).then(() => {
                     this.resetFields();
-                    this.$store.dispatch( 'spinner/setSpinner', true );
+                    this.$router.push({name: 'ChartOfAccounts'});
                 });
             },
 
@@ -269,6 +276,8 @@
                 this.ledgFields.name        = '';
                 this.ledgFields.code        = '';
                 this.isChartAdding          = false;
+
+                this.$store.dispatch( 'spinner/setSpinner', false );
             }
 
 

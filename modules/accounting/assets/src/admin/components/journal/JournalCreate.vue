@@ -11,12 +11,14 @@
         </div>
         <!-- End .header-section -->
 
+        <form action="" method="post" @submit.prevent="SubmitForJournalCreate">
+
         <div class="wperp-panel wperp-panel-default pb-0">
             <div class="wperp-panel-body">
 
                 <show-errors :error_msgs="form_errors" ></show-errors>
 
-                <form action="#" class="wperp-form" method="post">
+                <!-- <form action="#" class="wperp-form" method="post"> -->
                     <div class="wperp-row">
                         <div class="wperp-col-sm-6">
                             <div class="wperp-form-group">
@@ -35,7 +37,7 @@
                             <textarea v-model="journal_parti" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
                         </div>
                     </div>
-                </form>
+                <!-- </form> -->
 
             </div>
         </div>
@@ -102,7 +104,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Create Journal" @click.native="SubmitForJournalCreate"></submit-button>
+                            <submit-button text="Create Journal"></submit-button>
                         </td>
                     </tr>
                     </tfoot>
@@ -110,6 +112,7 @@
             </div>
         </div>
 
+        </form>
         <!-- End .wperp-crm-table -->
     </div>
 </template>
