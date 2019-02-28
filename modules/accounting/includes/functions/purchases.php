@@ -84,10 +84,10 @@ function erp_acct_get_purchase( $purchase_no ) {
 /**
  * Purchase items detail
  */
-function erp_acct_format_purchase_line_items($voucher_no) {
+function erp_acct_format_purchase_line_items( $voucher_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("	SELECT
+    $sql = $wpdb->prepare("SELECT
         purchase_detail.product_id,
         purchase_detail.qty,
         purchase_detail.price,

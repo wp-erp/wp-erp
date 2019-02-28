@@ -148,6 +148,7 @@ function erp_acct_insert_payment( $data ) {
 	        $payment_data['amount'] = $total;
 
 	        erp_acct_insert_payment_line_items( $payment_data, $item, $voucher_no );
+            erp_acct_change_invoice_status( $payment_data['invoice_no'] );
 	    }
 
         erp_acct_insert_people_trn_data( $payment_data, $payment_data['customer_id'], 'credit' );
@@ -162,8 +163,6 @@ function erp_acct_insert_payment( $data ) {
 		$wpdb->query( 'ROLLBACK' );
 		return new WP_error( 'payment-exception', $e->getMessage() );
 	}
-
-    erp_acct_change_invoice_status( $voucher_no );
 
 	return erp_acct_get_payment( $voucher_no );
 }
@@ -218,7 +217,7 @@ function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
  *
  * @param $data
  * @param $invoice_no
- * @return int
+ * @return mixed
  */
 function erp_acct_update_payment( $data, $voucher_no ) {
 	global $wpdb;
@@ -417,7 +416,7 @@ function erp_acct_change_invoice_status( $invoice_no ) {
 
         $wpdb->update($wpdb->prefix . 'erp_acct_invoices',
             array(
-                'status' => 'paid',
+                'status' => 4,
             ),
             array( 'voucher_no' => $invoice_no )
         );

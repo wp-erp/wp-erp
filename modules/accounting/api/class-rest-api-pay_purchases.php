@@ -178,9 +178,8 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $pay_purchase_data['amount'] = array_sum( $item_total );
 
-        $pay_purchase_id = erp_acct_insert_pay_purchase( $pay_purchase_data );
+        $pay_purchase_data = erp_acct_insert_pay_purchase( $pay_purchase_data );
 
-        $pay_purchase_data['id'] = $pay_purchase_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -347,8 +346,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'trn_by'          => $item->trn_by,
             'purchase_details'=> $item->purchase_details,
             'amount'          => (int) $item->amount,
-            'due'             => (int) $item->due,
-            'ref'             => $item->ref,
+            'particulars'     => $item->particulars,
             'attachments'     => maybe_unserialize( $item->attachments ),
             'status'          => $item->status,
         ];
