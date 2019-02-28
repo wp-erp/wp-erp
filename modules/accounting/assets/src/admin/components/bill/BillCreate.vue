@@ -348,7 +348,7 @@
                 });
             },
 
-            submitBillForm() {
+            submitBillForm(event) {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -377,6 +377,8 @@
                 } else {
                     this.createBill(requestData);
                 }
+
+                event.target.reset();
             },
 
             validateForm() {
