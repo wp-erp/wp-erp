@@ -206,7 +206,7 @@
                 voucherNo       : 0,
                 discountType    : 'discount-percent',
                 discount        : 0,
-                status          : 'awaiting_approval',
+                status          : 2,
                 taxRate         : null,
                 taxSummary      : null,
                 products        : [],
@@ -520,7 +520,7 @@
                     line_items     : this.formatLineItems(),
                     attachments    : this.attachments,
                     type           : 'invoice',
-                    status         : this.status,
+                    status         : parseInt(this.status),
                     estimate       : this.inv_type.id
                 };
 

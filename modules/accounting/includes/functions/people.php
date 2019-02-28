@@ -178,6 +178,7 @@ function erp_acct_update_people_trn_data( $trn_data, $people_id, $voucher_type )
  */
 function erp_acct_get_people_address( $people_id ) {
     global $wpdb;
+    $row = [];
 
     $sql = $wpdb->prepare("SELECT
 
