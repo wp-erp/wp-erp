@@ -251,7 +251,7 @@
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
             },
 
-            SubmitForPayment() {
+            SubmitForPayment(event) {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -295,6 +295,8 @@
                     this.resetData();
                     this.isWorking = false;
                 });
+
+                event.target.reset();
             },
 
             changeAccounts() {
