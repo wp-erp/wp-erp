@@ -160,10 +160,6 @@
             ShowErrors
         },
 
-        created() {
-            this.prepareDataLoad();
-        },
-
         data() {
             return {
                 basic_fields: {
@@ -193,6 +189,36 @@
                 isWorking       : false,
                 accts_by_chart  : [],
                 erp_acct_assets : erp_acct_var.acct_assets,
+            }
+        },
+
+        watch: {
+            finalTotalAmount( newval ) {
+                this.finalTotalAmount = newval;
+            },
+
+            'basic_fields.customer'() {
+                this.getCustomerAddress();
+                this.getDueInvoices();
+            },
+
+            'basic_fields.trn_by'() {
+                this.changeAccounts();
+            }
+
+        },
+
+        created() {
+            this.prepareDataLoad();
+        },
+
+        mounted() {
+            // `receive payment` request from invoice list row action
+            if ( this.$route.params.customer_id ) {
+                this.basic_fields.customer  = {
+                    id  : parseInt(this.$route.params.customer_id),
+                    name: this.$route.params.customer_name
+                };
             }
         },
 
@@ -232,9 +258,9 @@
                      * create a new Receive Payment
                      * -----------------------------------------------
                      */
-                    this.getPayMethods();
-
                     this.basic_fields.payment_date = erp_acct_var.current_date;
+
+                    this.getPayMethods();
                 }
             },
 
@@ -393,22 +419,6 @@
                 this.$delete(this.invoices, index);
                 this.updateFinalAmount();
             },
-        },
-
-        watch: {
-            finalTotalAmount( newval ) {
-                this.finalTotalAmount = newval;
-            },
-
-            'basic_fields.customer'() {
-                this.getCustomerAddress();
-                this.getDueInvoices();
-            },
-
-            'basic_fields.trn_by'() {
-                this.changeAccounts();
-            }
-
         },
 
     }

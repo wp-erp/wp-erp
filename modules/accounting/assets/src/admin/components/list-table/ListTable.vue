@@ -127,11 +127,13 @@
 						<td v-for="(value, key) in columns" :key="key" :data-colname="ucFirst(key)"
 							:class="['column', key, (value.isColPrimary) ? 'column-primary' : '', (actionColumn === key && hasActions) ? 'col--actions': '', { 'selected': checkedItems.includes(row[index]) }]">
 							<slot :name="key" :row="row">
-								{{ row[key] }}
+                                <template v-if="'actions' !== key">
+                                    {{ row[key] }}
+                                </template>
 							</slot>
 							<button v-if="value.isColPrimary" type="button" class="wperp-toggle-row" @click.prevent="toggleRow(row)"><span class="screen-reader-text">Show more details</span></button>
 
-							<div v-if="actionColumn === key && hasActions" class="row-actions">
+							<div v-if="actionColumn === key" class="row-actions">
 								<slot :row="row" name="row-actions">
 									<dropdown placement="left-start">
 										<template slot="button">
@@ -139,9 +141,11 @@
 										</template>
 										<template slot="dropdown">
 											<ul slot="action-items" role="menu">
-												<li v-for="action in actions" :key="action.key" :class="action.key">
-													<a href="#" @click.prevent="actionClicked(action.key, row, i)"><i :class="action.iconClass"></i>{{ action.label }}</a>
-												</li>
+												<slot :row="row" name="action-list">
+                                                    <li v-for="action in actions" :key="action.key" :class="action.key">
+                                                        <a href="#" @click.prevent="actionClicked(action.key, row, i)"><i :class="action.iconClass"></i>{{ action.label }}</a>
+                                                    </li>
+                                                </slot>
 											</ul>
 										</template>
 									</dropdown>
@@ -298,8 +302,6 @@ data() {
 },
 
 computed: {
-
-
 
 	hasActions() {
 		return this.actions.length > 0;
