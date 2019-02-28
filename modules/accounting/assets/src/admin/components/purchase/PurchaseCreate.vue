@@ -329,7 +329,7 @@
                 });
             },
 
-            SubmitForApproval() {
+            SubmitForApproval(event) {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -359,6 +359,8 @@
                 } else {
                     this.createPurchase(requestData);
                 }
+
+                event.target.reset();
             },
 
             validateForm() {

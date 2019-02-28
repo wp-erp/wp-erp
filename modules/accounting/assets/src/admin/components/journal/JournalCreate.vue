@@ -187,8 +187,8 @@
                 this.$delete( this.ledgers, index );
             },
 
-            SubmitForJournalCreate() {
-                let validation = this.validateForm();
+            SubmitForJournalCreate(event) {
+                this.validateForm();
 
                 if ( this.form_errors.length ) {
                     window.scrollTo({
@@ -216,6 +216,8 @@
                 }).then(() => {
                     this.isWorking = false;
                 });
+
+                event.target.reset();
             },
 
             validateForm() {
