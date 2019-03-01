@@ -45,7 +45,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_payment' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
@@ -72,7 +72,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_payment' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void', [
@@ -84,6 +84,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_payment' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
     }
 
@@ -176,11 +177,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $payment_data['amount'] = array_sum( $item_total );
 
-        $payment_id = erp_acct_insert_payment( $payment_data );
-
-        //? Do we need duplicate?
-        $payment_data['id'] = $payment_id;
-        $payment_data['voucher_no'] = $payment_id;
+        $payment_data = erp_acct_insert_payment( $payment_data );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -217,9 +214,9 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $payment_data['amount'] = array_sum( $item_total );
 
-        $payment_id = erp_acct_update_payment( $payment_data, $id );
+        $payment_data = erp_acct_update_payment( $payment_data, $id );
 
-        $payment_data['id'] = $payment_id; $additional_fields = [];
+        $additional_fields = [];
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -358,7 +355,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'line_items'      => $item->line_items,
             'attachments'     => maybe_unserialize( $item->attachments ),
             'status'          => $item->status,
-            'type'            => $item->type,
+            'type'            => !empty( $item->type ) ? $item->type : 'payment',
         ];
 
         $data = array_merge( $data, $additional_fields );

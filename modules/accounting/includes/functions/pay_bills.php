@@ -169,6 +169,7 @@ function erp_acct_insert_pay_bill( $data ) {
 
             erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item );
 
+            erp_acct_change_bill_status( $item['voucher_no'] );
         }
 
         erp_acct_insert_people_trn_data( $pay_bill_data, $pay_bill_data['people_id'], 'debit' );
@@ -184,7 +185,7 @@ function erp_acct_insert_pay_bill( $data ) {
         return new WP_error( 'pay-bill-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_pay_bill( $bill_no );
+    return erp_acct_get_pay_bill( $voucher_no );
 
 }
 
@@ -253,6 +254,8 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
             ) );
 
             erp_acct_update_bill_data_into_ledger( $pay_bill_data, $pay_bill_id, $item );
+
+            erp_acct_change_bill_status( $item['voucher_no'] );
         }
 
         erp_acct_update_people_trn_data( $pay_bill_data, $pay_bill_data['people_id'], 'debit' );
@@ -316,12 +319,12 @@ function erp_acct_void_pay_bill( $id ) {
 function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
     $pay_bill_data = [];
 
-    $user_info = erp_get_people( $data['people_id'] );
+    $user_info = erp_get_people( $data['vendor_id'] );
     $company = new \WeDevs\ERP\Company();
 
     $pay_bill_data['voucher_no']   = ! empty( $voucher_no ) ? $voucher_no : 0;
     $pay_bill_data['trn_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $pay_bill_data['people_id'] = isset( $data['people_id'] ) ? $data['people_id'] : null;
+    $pay_bill_data['vendor_id'] = isset( $data['vendor_id'] ) ? $data['vendor_id'] : null;
     $pay_bill_data['people_name'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
     $pay_bill_data['trn_date']     = isset( $data['date'] ) ? $data['date'] : date( "Y-m-d" );
     $pay_bill_data['amount']       = isset( $data['amount'] ) ? $data['amount'] : 0;
@@ -411,5 +414,29 @@ function erp_acct_get_pay_bill_count() {
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_pay_bill" );
 
     return $row->count;
+}
+
+/**
+ * Update bill status after a payment
+ *
+ * @param $bill_no
+ * @param $due
+ * @return int
+ */
+function erp_acct_change_bill_status( $bill_no ) {
+    global $wpdb;
+
+    $due = erp_acct_get_bill_due( $bill_no );
+
+    if ( $due == 0 ) {
+
+        $wpdb->update($wpdb->prefix . 'erp_acct_bills',
+            array(
+                'status' => 4,
+            ),
+            array( 'voucher_no' => $bill_no )
+        );
+    }
+
 }
 

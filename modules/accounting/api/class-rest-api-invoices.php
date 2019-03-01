@@ -45,7 +45,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
-            //'schema' => [ $this, 'get_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
@@ -106,7 +106,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
-            //'schema' => [ $this, 'get_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/overview-receivable', [
@@ -118,7 +118,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
-            //'schema' => [ $this, 'get_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
     }

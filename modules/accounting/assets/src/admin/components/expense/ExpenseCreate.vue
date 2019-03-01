@@ -395,7 +395,7 @@
                 });
             },
 
-            SubmitForExpense() {
+            SubmitForExpense(event) {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -418,7 +418,7 @@
                     billing_address: this.basic_fields.billing_address,
                     attachments: this.attachments,
                     type: 'expense',
-                    status: 'paid',
+                    status: 4,
                     particulars: this.particulars,
                     check_no: parseInt(this.check_data.check_no),
                     name: this.check_data.payer_name
@@ -429,6 +429,8 @@
                 } else {
                     this.createExpense(requestData);
                 }
+
+                event.target.reset();
             },
 
             changeAccounts() {

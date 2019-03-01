@@ -11,6 +11,8 @@
         </div>
         <!-- End .header-section -->
 
+        <form action="" method="post" @submit.prevent="SubmitForPayment">
+
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
 
@@ -120,13 +122,15 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Receive Payment" @click.native="SubmitForPayment" :working="isWorking"></submit-button>
+                            <submit-button text="Receive Payment"></submit-button>
                         </td>
                     </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
+
+        </form>
 
     </div>
 </template>
@@ -154,10 +158,6 @@
             MultiSelect,
             CheckFields,
             ShowErrors
-        },
-
-        created() {
-            this.prepareDataLoad();
         },
 
         data() {
@@ -189,6 +189,36 @@
                 isWorking       : false,
                 accts_by_chart  : [],
                 erp_acct_assets : erp_acct_var.acct_assets,
+            }
+        },
+
+        watch: {
+            finalTotalAmount( newval ) {
+                this.finalTotalAmount = newval;
+            },
+
+            'basic_fields.customer'() {
+                this.getCustomerAddress();
+                this.getDueInvoices();
+            },
+
+            'basic_fields.trn_by'() {
+                this.changeAccounts();
+            }
+
+        },
+
+        created() {
+            this.prepareDataLoad();
+        },
+
+        mounted() {
+            // `receive payment` request from invoice list row action
+            if ( this.$route.params.customer_id ) {
+                this.basic_fields.customer  = {
+                    id  : parseInt(this.$route.params.customer_id),
+                    name: this.$route.params.customer_name
+                };
             }
         },
 
@@ -228,9 +258,9 @@
                      * create a new Receive Payment
                      * -----------------------------------------------
                      */
-                    this.getPayMethods();
-
                     this.basic_fields.payment_date = erp_acct_var.current_date;
+
+                    this.getPayMethods();
                 }
             },
 
@@ -258,11 +288,11 @@
                 HTTP.get(`/invoices/due/${customerId}`).then(response => {
                     response.data.forEach(element => {
                         this.invoices.push({
-                            id: element.id,
+                            id        : element.id,
                             invoice_no: element.voucher_no,
-                            due_date: element.due_date,
-                            amount: parseFloat(element.amount),
-                            due: parseFloat(element.due)
+                            due_date  : element.due_date,
+                            amount    : parseFloat(element.amount),
+                            due       : parseFloat(element.due)
                         });
                     });
                 }).then(() => {
@@ -302,7 +332,7 @@
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
             },
 
-            SubmitForPayment() {
+            SubmitForPayment(event) {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -316,26 +346,31 @@
                 this.invoices.forEach( (element,index) => {
                     element['line_total'] = parseFloat( this.totalAmounts[index] );
                 });
-
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/payments', {
                     customer_id: this.basic_fields.customer.id,
-                    ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.payment_date,
-                    line_items: this.invoices,
+                    ref        : this.basic_fields.trn_ref,
+                    trn_date   : this.basic_fields.payment_date,
+                    line_items : this.invoices,
                     attachments: this.attachments,
-                    type: 'payment',
-                    status: 'paid',
+                    type       : 'payment',
+                    status     : 4,
                     particulars: this.particulars,
-                    deposit_to: this.basic_fields.deposit_to.id,
-                    trn_by: this.basic_fields.trn_by.id,
-                    check_no: parseInt(this.check_data.check_no),
-                    name: this.check_data.payer_name
+                    deposit_to : this.basic_fields.deposit_to.id,
+                    trn_by     : this.basic_fields.trn_by.id,
+                    check_no   : parseInt(this.check_data.check_no),
+                    name       : this.check_data.payer_name
                 }).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Payment Created!');
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
-                });
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
+
+                event.target.reset();
             },
 
             changeAccounts() {
@@ -387,22 +422,6 @@
                 this.$delete(this.invoices, index);
                 this.updateFinalAmount();
             },
-        },
-
-        watch: {
-            finalTotalAmount( newval ) {
-                this.finalTotalAmount = newval;
-            },
-
-            'basic_fields.customer'() {
-                this.getCustomerAddress();
-                this.getDueInvoices();
-            },
-
-            'basic_fields.trn_by'() {
-                this.changeAccounts();
-            }
-
         },
 
     }

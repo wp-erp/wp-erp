@@ -358,7 +358,7 @@
                 });
             },
 
-            submitCheckForm() {
+            submitCheckForm(event) {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -379,7 +379,7 @@
                     billing_address: this.basic_fields.billing_address,
                     attachments: this.attachments,
                     type: 'check',
-                    status: 'paid',
+                    status: 4,
                     particulars: this.particulars,
                     name: this.check_data.payer_name
                 };
@@ -389,6 +389,8 @@
                 } else {
                     this.createCheck(requestData);
                 }
+
+                event.target.reset();
             },
 
             changeAccounts() {

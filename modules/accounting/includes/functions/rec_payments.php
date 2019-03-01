@@ -148,6 +148,8 @@ function erp_acct_insert_payment( $data ) {
 	        $payment_data['amount'] = $total;
 
 	        erp_acct_insert_payment_line_items( $payment_data, $item, $voucher_no );
+
+            erp_acct_change_invoice_status( $item['invoice_no'] );
 	    }
 
         erp_acct_insert_people_trn_data( $payment_data, $payment_data['customer_id'], 'credit' );
@@ -162,8 +164,6 @@ function erp_acct_insert_payment( $data ) {
 		$wpdb->query( 'ROLLBACK' );
 		return new WP_error( 'payment-exception', $e->getMessage() );
 	}
-
-    erp_acct_change_invoice_status( $voucher_no );
 
 	return erp_acct_get_payment( $voucher_no );
 }
@@ -218,7 +218,7 @@ function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
  *
  * @param $data
  * @param $invoice_no
- * @return int
+ * @return mixed
  */
 function erp_acct_update_payment( $data, $voucher_no ) {
 	global $wpdb;
@@ -257,20 +257,22 @@ function erp_acct_update_payment( $data, $voucher_no ) {
 	        $payment_data['amount'] = $total;
 
 	        erp_acct_update_payment_line_items( $payment_data, $voucher_no, $invoice_no[$key] );
+
+            erp_acct_change_invoice_status( $item['invoice_no'] );
 	    }
 
         if ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === '3' ) {
             erp_acct_insert_check_data ( $payment_data );
         }
 
-		$wpdb->query( 'COMMIT' );
+        erp_acct_insert_people_trn_data( $payment_data, $payment_data['customer_id'], 'credit' );
+
+        $wpdb->query( 'COMMIT' );
 
 	} catch (Exception $e) {
 		$wpdb->query( 'ROLLBACK' );
 		return new WP_error( 'payment-exception', $e->getMessage() );
 	}
-
-    erp_acct_change_invoice_status( $voucher_no );
 
     return erp_acct_get_payment( $voucher_no );
 
@@ -314,7 +316,6 @@ function erp_acct_update_payment_line_items( $data, $invoice_no, $voucher_no ) {
         'invoice_no' => $invoice_no,
     ) );
 
-    erp_acct_change_invoice_status( $invoice_no );
 	erp_acct_insert_payment_data_into_ledger( $payment_data );
 
     return $voucher_no;
@@ -402,7 +403,7 @@ function erp_acct_void_payment( $id ) {
 }
 
 /**
- * Update payment status after a transaction
+ * Update invoice status after a payment
  *
  * @param $invoice_no
  * @param $due
@@ -417,27 +418,12 @@ function erp_acct_change_invoice_status( $invoice_no ) {
 
         $wpdb->update($wpdb->prefix . 'erp_acct_invoices',
             array(
-                'status' => 'paid',
+                'status' => 4,
             ),
             array( 'voucher_no' => $invoice_no )
         );
     }
 
-}
-
-/**
- * Get due of an invoice
- *
- * @param $invoice_no
- * @return int
- */
-function erp_acct_get_invoice_due( $invoice_no ) {
-    global $wpdb;
-
-    $result = $wpdb->get_row( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = {$invoice_no} GROUP BY ia.invoice_no", ARRAY_A );
-
-
-    return $result['due'];
 }
 
 /**

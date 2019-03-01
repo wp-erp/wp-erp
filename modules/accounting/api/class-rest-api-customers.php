@@ -74,7 +74,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_delete_customer' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
@@ -88,7 +88,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_delete_customer' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions', [
@@ -100,6 +100,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_view_customer' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions/filter', [
             [
@@ -110,6 +111,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_view_customer' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/country', [
@@ -120,7 +122,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_customer' );
                 },
-            ]
+            ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
     }
 

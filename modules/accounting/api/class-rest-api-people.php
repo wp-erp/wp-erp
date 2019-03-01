@@ -36,7 +36,8 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
-            ]
+            ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' , [
@@ -47,7 +48,8 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
-            ]
+            ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/address' , [
@@ -58,7 +60,8 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
-            ]
+            ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
     }

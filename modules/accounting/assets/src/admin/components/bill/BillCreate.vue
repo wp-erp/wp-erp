@@ -75,7 +75,7 @@
                                 <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
                             </td>
                             <td class="col--total" style="text-align: center" data-colname="Total">
-                                <input type="text" :value="line.amount" readonly disabled/>
+                                <input type="text" class="text-right" :value="line.amount" readonly disabled/>
                             </td>
                             <td class="delete-row" data-colname="Remove Above Selection">
                                 <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -324,7 +324,7 @@
                     this.reset = true;
 
                     if ('update' == this.actionType) {
-                        this.$router.push({name: 'Bill'});
+                        this.$router.push({name: 'Expenses'});
                     } else if ('new_update' == this.actionType) {
                         this.resetFields();
                     }
@@ -341,14 +341,14 @@
                     this.reset = true;
 
                     if ('save' == this.actionType) {
-                        this.$router.push({name: 'Bill'});
+                        this.$router.push({name: 'Expenses'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
                     }
                 });
             },
 
-            submitBillForm() {
+            submitBillForm(event) {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -368,7 +368,7 @@
                     attachments: this.attachments,
                     billing_address: this.basic_fields.billing_address,
                     type: 'bill',
-                    status: 'awaiting_approval',
+                    status: 3,
                     particulars: this.particulars
                 };
 
@@ -377,6 +377,8 @@
                 } else {
                     this.createBill(requestData);
                 }
+
+                event.target.reset();
             },
 
             validateForm() {

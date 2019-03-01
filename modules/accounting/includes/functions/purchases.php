@@ -84,10 +84,10 @@ function erp_acct_get_purchase( $purchase_no ) {
 /**
  * Purchase items detail
  */
-function erp_acct_format_purchase_line_items($voucher_no) {
+function erp_acct_format_purchase_line_items( $voucher_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("	SELECT
+    $sql = $wpdb->prepare("SELECT
         purchase_detail.product_id,
         purchase_detail.qty,
         purchase_detail.price,
@@ -482,6 +482,8 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
 function erp_acct_get_purchase_due( $purchase_no ) {
     global $wpdb;
 
-    return $wpdb->get_var( "SELECT purchase_no, SUM( debit - credit) as due FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE purchase_no = {$purchase_no} GROUP BY purchase_no" );
+    $result = $wpdb->get_row( "SELECT purchase_no, SUM( debit - credit) as due FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE purchase_no = {$purchase_no} GROUP BY purchase_no", ARRAY_A );
+
+    return $result['due'];
 }
 

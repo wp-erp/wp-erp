@@ -33,7 +33,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_view_bank_accounts' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
@@ -54,6 +54,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_bank_transfer' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/transfer', [
@@ -65,6 +66,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_bank_transfer' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/list', [
@@ -76,6 +78,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_bank_transfer' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/bank-accounts', [
@@ -87,6 +90,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_bank_transfer' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
     }
 

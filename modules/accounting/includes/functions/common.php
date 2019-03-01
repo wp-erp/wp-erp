@@ -424,3 +424,13 @@ function erp_acct_get_trn_type_by_voucher_no( $voucher_no ) {
     return $row->type;
 }
 
+/**
+ * Change a string to slug
+ */
+function slugify($str) {
+    // replace non letter or digits by _
+    $str = preg_replace('~[^\pL\d]+~u', '_', $str);
+
+    return strtolower($str);
+}
+

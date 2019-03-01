@@ -45,7 +45,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
@@ -72,7 +72,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/due' . '/(?P<id>[\d]+)', [
@@ -84,6 +84,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void', [
@@ -95,6 +96,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_publish_expenses_voucher' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/attachments', [
@@ -106,6 +108,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/overview-payable', [
@@ -117,7 +120,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
-            //'schema' => [ $this, 'get_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
     }
 
@@ -464,10 +467,10 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor_name'     => $item->vendor_name,
             'trn_date'        => $item->trn_date,
             'due_date'        => $item->due_date,
-            'billing_address' => $item->billing_address,
-            'bill_details'    => $item->bill_details,
+            'billing_address' => !empty( $item->billing_address ) ? $item->billing_address : erp_acct_get_people_address( $item->vendor_id ),
+            'bill_details'    => !empty( $item->bill_details ) ? $item->bill_details : [],
             'amount'          => (int) $item->amount,
-            'due'             => isset( $item->due ) ? $item->due : $item->amount,
+            'due'             => !empty( $item->due ) ? $item->due : $item->amount,
             'ref'             => $item->ref,
             'particulars'     => $item->particulars,
             'status'          => $item->status,

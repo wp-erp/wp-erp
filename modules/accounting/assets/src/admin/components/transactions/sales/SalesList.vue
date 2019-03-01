@@ -18,8 +18,8 @@
                 :total-pages="paginationData.totalPages"
                 :per-page="paginationData.perPage"
                 :current-page="paginationData.currentPage"
+                :actions="[]"
                 @pagination="goToPage"
-                :actions="actions"
                 @action:click="onActionClick">
                 <template slot="trn_no" slot-scope="data">
                     <strong>
@@ -56,6 +56,14 @@
                     {{ isPayment(data.row) ? 'Received' : data.row.status }}
                 </template>
 
+                <!-- custom row actions -->
+                <template slot="action-list" slot-scope="data">
+                    <li v-for="(action, index) in data.row.actions" :key="action.key" :class="action.key">
+                        <a href="#" @click.prevent="onActionClick(action.key, data.row, index)">
+                            <i :class="action.iconClass"></i>{{ action.label }}
+                        </a>
+                    </li>
+                </template>
             </list-table>
 
         </div>
@@ -76,16 +84,16 @@
         data() {
             return {
                 columns: {
-                    'trn_no':        {label: 'Voucher No.'},
-                    'type':          {label: 'Type'},
-                    'ref':           {label: 'Ref'},
+                    'trn_no'       : {label: 'Voucher No.'},
+                    'type'         : {label: 'Type'},
+                    'ref'          : {label: 'Ref'},
                     'customer_name': {label: 'Customer'},
-                    'trn_date':      {label: 'Trn Date'},
-                    'due_date':      {label: 'Due Date'},
-                    'due':           {label: 'Due'},
-                    'amount':        {label: 'Total'},
-                    'status':        {label: 'Status'},
-                    'actions':       {label: ''},
+                    'trn_date'     : {label: 'Trn Date'},
+                    'due_date'     : {label: 'Due Date'},
+                    'due'          : {label: 'Due'},
+                    'amount'       : {label: 'Total'},
+                    'status'       : {label: 'Status'},
+                    'actions'      : {label: ''},
 
                 },
                 rows: [],
@@ -94,11 +102,7 @@
                     totalPages : 0,
                     perPage    : 10,
                     currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
-                },
-                actions : [
-                    { key: 'edit', label: 'Edit' },
-                    { key: 'trash', label: 'Delete' }
-                ]
+                }
             };
         },
 
@@ -135,8 +139,22 @@
                         start_date: filters.start_date,
                         end_date: filters.end_date
                     }
-                }).then( (response) => {
-                    this.rows = response.data;
+                }).then(response => {
+                    let mappedData = response.data.map(item => {
+                        if ( 'sales_invoice' === item.type && 'Awaiting Approval' === item.status ) {
+                            item['actions'] = [
+                                { key: 'edit', label: 'Edit' },
+                                { key: 'receive', label: 'Receive Payment' },
+                                // { key: 'trash', label: 'Delete' }
+                            ];
+                        } else {
+                            item['actions'] = [];
+                        }
+
+                        return item;
+                    });
+
+                    this.rows = mappedData;
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
@@ -165,6 +183,13 @@
                         if ( 'payment' == row.type ) {
                             this.$router.push({ name: 'RecPaymentEdit', params: { id: row.id } })
                         }
+                        break;
+
+                    case 'receive':
+                        this.$router.push({ name: 'RecPaymentCreate', params: {
+                            customer_id  : row.inv_cus_id,
+                            customer_name: row.inv_cus_name,
+                        } });
                         break;
 
                     default :

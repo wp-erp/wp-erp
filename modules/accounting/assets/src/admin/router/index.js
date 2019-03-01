@@ -163,7 +163,7 @@ export default new Router({
                 },
                 {
                     path: 'purchases',
-                    name: 'purchases',
+                    name: 'Purchases',
                     component: Purchases,
                 },
             ]

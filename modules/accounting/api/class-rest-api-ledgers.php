@@ -46,7 +46,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_account' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
@@ -75,7 +75,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_delete_account' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<chart_id>[\d]+)' . '/accounts', [
@@ -87,6 +87,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_view_account_lists' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/accounts', [
@@ -98,6 +99,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_view_account_lists' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/categories/(?P<chart_id>[\d]+)', [
@@ -116,7 +118,8 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_account' );
                 },
-            ]
+            ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/categories/(?P<id>[\d]+)', [
@@ -135,6 +138,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_delete_account' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
     }
 
@@ -211,10 +215,10 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_ledger_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $result = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = {$id}" );
+        $item     = erp_acct_get_ledger($id);
 
-        // $item     = $this->prepare_item_for_response( $results, $request );
-        $response = rest_ensure_response( $result );
+        $result   = $this->prepare_item_for_response( $item, $request );
+        $response = rest_ensure_response( $item );
 
         return $response;
     }
@@ -237,20 +241,13 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
 
-        $result = $wpdb->insert( "{$wpdb->prefix}erp_acct_ledgers", [
-            'chart_id'      => $item['chart_id'],
-            'category_id'   => $item['category_id'],
-            'name'          => $item['name'],
-            'code'          => $item['code']
-         ] );
-
-         $id = $wpdb->insert_id;
+        $result = erp_acct_insert_ledger( $item );
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( (object) $result, $request );
+        $response = $this->prepare_item_for_response( $result, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 200 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        //$response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $result['id'] ) ) );
 
         return $response;
     }
@@ -273,16 +270,10 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
 
-        $wpdb->update( 'ledgers', array(
-            'chart_id'      => $item['chart_id'],
-            'category_id'   => $item['category_id'],
-            'name'          => $item['name'],
-            'code'          => $item['code'],
-            'system'        => $item['system']), array( 'id' => $id )
-        );
+        $result = erp_acct_update_ledger($item, $id);
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( (object) $item, $request );
+        $response = $this->prepare_item_for_response( $result, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -443,6 +434,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'chart_id'    => $item->chart_id,
             'category_id' => $item->category_id,
             'name'        => $item->name,
+            'slug'        => $item->slug,
             'code'        => $item->code,
             'system'      => $item->system
         ];
@@ -452,7 +444,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
 
-        $response = $this->add_links( $response, $item );
+        // $response = $this->add_links( $response, $item );
 
         return $response;
     }

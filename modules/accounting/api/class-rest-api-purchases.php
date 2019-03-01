@@ -45,7 +45,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
@@ -72,7 +72,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void', [
@@ -84,6 +84,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_publish_expenses_voucher' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/due' . '/(?P<id>[\d]+)', [
@@ -95,6 +96,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
     }
 
@@ -244,9 +246,8 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $voucher_no = erp_acct_insert_purchase( $purchase_data );
+        $purchase_data = erp_acct_insert_purchase( $purchase_data );
 
-        $purchase_data['voucher_no'] = $voucher_no;
         $purchase_data = $this->prepare_item_for_response( $purchase_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $purchase_data );
@@ -399,7 +400,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'date'        => $item->trn_date,
             'due_date'    => $item->due_date,
             'line_items'  => $item->line_items,
-            'type'        => $item->type,
+            'type'        => !empty( $item->type ) ? $item->type : 'purchase',
             'status'      => $item->status,
             'amount'      => $item->amount,
             'due'         => empty($item->due) ? erp_acct_get_purchase_due($item->voucher_no) : $item->due,

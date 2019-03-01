@@ -9,7 +9,7 @@
                         </ul>
                         <!-- modal body title -->
                         <!-- add new product form -->
-                        <form action="" method="post" class="add-product-form wperp-form-horizontal">
+                        <form action="" method="post" @submit.prevent="saveProduct" class="add-product-form wperp-form-horizontal">
                             <!-- product name field -->
                             <div class="wperp-form-group">
                                 <input type="text" class="wperp-form-field" placeholder="Enter Product Name Here"
@@ -119,13 +119,9 @@
                             </div>
                             <!-- buttons -->
                             <div class="buttons-wrapper text-right">
-                                <button class="wperp-btn btn--default" @click.prevent="$parent.$emit('close')">Cancel
-                                </button>
-                                <button v-if="!product" class="wperp-btn btn--primary" @click.prevent="saveProduct">
-                                    Publish
-                                </button>
-                                <button v-else class="wperp-btn btn--primary" @click.prevent="saveProduct">Update
-                                </button>
+                                <button class="wperp-btn btn--default" @click.prevent="$parent.$emit('close')">Cancel</button>
+                                <button v-if="!product" class="wperp-btn btn--primary">Publish</button>
+                                <button v-else class="wperp-btn btn--primary">Update</button>
                             </div>
                         </form>
                     </div>

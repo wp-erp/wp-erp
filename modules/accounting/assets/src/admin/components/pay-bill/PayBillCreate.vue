@@ -11,12 +11,14 @@
         </div>
         <!-- End .header-section -->
 
+        <form action="" method="post" @submit.prevent="SubmitForPayment">
+
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
 
                 <show-errors :error_msgs="form_errors" ></show-errors>
 
-                <form action="" class="wperp-form" method="post">
+                <!-- <form action="" class="wperp-form" method="post"> -->
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
@@ -51,7 +53,7 @@
 
                         <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
                     </div>
-                </form>
+                <!-- </form> -->
 
             </div>
         </div>
@@ -62,7 +64,7 @@
                 <table class="wperp-table wperp-form-table">
                     <thead>
                     <tr>
-                        <th scope="col" class="col--id column-primary">Bill ID</th>
+                        <th scope="col" class="col--id column-primary">Bill No</th>
                         <th scope="col">Due Date</th>
                         <th scope="col">Total</th>
                         <th scope="col">Due</th>
@@ -72,11 +74,11 @@
                     </thead>
                     <tbody>
                     <tr :key="key" v-for="(pay_bill,key) in pay_bills">
-                        <td scope="row" class="col--id column-primary">{{key+1}}</td>
+                        <td scope="row" class="col--id column-primary">{{pay_bill.voucher_no}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{pay_bill.due_date}}</td>
                         <td class="col--total" data-colname="Total">{{pay_bill.amount}}</td>
                         <td class="col--due" data-colname="Due">{{pay_bill.due}}</td>
-                        <td class="col--amount" data-colname="Amount">
+                        <td class="col--amount text-right" data-colname="Amount">
                             <input type="text" min="0" :max="pay_bill.due" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
@@ -108,7 +110,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Pay Bill" @click.native="SubmitForPayment" :working="isWorking"></submit-button>
+                            <submit-button text="Pay Bill"></submit-button>
                         </td>
                     </tr>
                     </tfoot>
@@ -116,6 +118,7 @@
             </div>
         </div>
 
+        </form>
     </div>
 </template>
 
@@ -150,7 +153,7 @@
                 basic_fields: {
                     people: '',
                     trn_ref: '',
-                    payment_date: '',
+                    payment_date: erp_acct_var.current_date,
                     deposit_to: '',
                     billing_address: '',
                     trn_by: ''
@@ -251,7 +254,7 @@
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
             },
 
-            SubmitForPayment() {
+            SubmitForPayment(event) {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -267,7 +270,7 @@
                 });
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/pay-bills', {
-                    people_id: this.basic_fields.people.id,
+                    vendor_id: this.basic_fields.people.id,
                     ref: this.basic_fields.trn_ref,
                     trn_date: this.basic_fields.payment_date,
                     due_date: this.basic_fields.due_date,
@@ -295,6 +298,8 @@
                     this.resetData();
                     this.isWorking = false;
                 });
+
+                event.target.reset();
             },
 
             changeAccounts() {

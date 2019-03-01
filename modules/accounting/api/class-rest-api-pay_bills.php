@@ -45,7 +45,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
@@ -72,7 +72,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
-            'schema' => [ $this, 'get_public_item_schema' ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void', [
@@ -84,6 +84,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_publish_expenses_voucher' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/attachments', [
@@ -95,6 +96,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
+            'schema' => [ $this, 'get_item_schema' ]
         ] );
     }
 
@@ -186,16 +188,15 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $pay_bill_data['amount'] = array_sum( $item_total );
 
-        $pay_bill_id = erp_acct_insert_pay_bill( $pay_bill_data );
+        $pay_bill_data = erp_acct_insert_pay_bill( $pay_bill_data );
 
-        $pay_bill_data['id'] = $pay_bill_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
         $pay_bill_data = $this->prepare_item_for_response( $pay_bill_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $pay_bill_data );
-        
+
         $response->set_status( 201 );
 
         return $response;
@@ -234,7 +235,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $pay_bill_response = $this->prepare_item_for_response( $pay_bill_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $pay_bill_response );
-        
+
         $response->set_status( 200 );
 
         return $response;
@@ -305,8 +306,8 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $prepared_item = [];
 
-        if ( isset( $request['people_id'] ) ) {
-            $prepared_item['people_id'] = $request['people_id'];
+        if ( isset( $request['vendor_id'] ) ) {
+            $prepared_item['vendor_id'] = $request['vendor_id'];
         }
         if ( isset( $request['ref'] ) ) {
             $prepared_item['ref'] = $request['ref'];
@@ -370,17 +371,17 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'          => (int) $item->id,
-            'voucher_no'  => (int) $item->voucher_no,
-            'vendor_id'   => (int) $item->vendor_id,
-            'vendor_name' => $item->vendor_name,
-            'trn_date'    => $item->trn_date,
-            'amount'      => $item->amount,
-            'billing_address' => $item->billing_address,
-            'bill_details'    => $item->bill_details,
-            'type'            => $item->type,
-            'status'       => $item->status,
-            'attachments'  => maybe_unserialize( $item->attachments )
+            'id'              => (int) $item->id,
+            'voucher_no'      => (int) $item->voucher_no,
+            'vendor_id'       => (int) $item->vendor_id,
+            'trn_date'        => $item->trn_date,
+            'amount'          => $item->amount,
+            'billing_address' => !empty( $item->billing_address ) ? $item->billing_address : erp_acct_get_people_address( $item->vendor_id ),
+            'bill_details'    => !empty( $item->bill_details ) ? $item->bill_details : [],
+            'type'            => !empty( $item->type ) ? $item->type : 'pay_bill',
+            'status'          => $item->status,
+            'particulars'     => $item->particulars,
+            'attachments'     => maybe_unserialize( $item->attachments )
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -410,7 +411,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'people_id'   => [
+                'vendor_id'   => [
                     'description' => __( 'Vendor id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],

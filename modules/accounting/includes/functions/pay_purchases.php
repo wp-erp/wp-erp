@@ -51,12 +51,15 @@ function erp_acct_get_pay_purchase( $purchase_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare("SELECT
+        pay_purchase.id,
         pay_purchase.voucher_no,
         pay_purchase.vendor_id,
         pay_purchase.vendor_name,
         pay_purchase.trn_date,
         pay_purchase.amount,
         pay_purchase.trn_by,
+        pay_purchase.status,
+        pay_purchase.particulars,
         pay_purchase.attachments,
         pay_purchase.trn_by_ledger_id
         FROM wp_erp_acct_pay_purchase AS pay_purchase
@@ -115,7 +118,6 @@ function erp_acct_insert_pay_purchase( $data ) {
         ) );
 
         $voucher_no = $wpdb->insert_id;
-        $purchase_no = $voucher_no;
 
         $pay_purchase_data = erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no );
 
@@ -163,6 +165,8 @@ function erp_acct_insert_pay_purchase( $data ) {
                 'updated_at'  => $pay_purchase_data['updated_at'],
                 'updated_by'  => $pay_purchase_data['updated_by'],
             ) );
+
+            erp_acct_change_purchase_status( $item['voucher_no'] );
         }
 
         erp_acct_insert_people_trn_data( $pay_purchase_data, $pay_purchase_data['vendor_id'], 'debit' );
@@ -178,7 +182,7 @@ function erp_acct_insert_pay_purchase( $data ) {
         return new WP_error( 'pay-purchase-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_pay_purchase( $purchase_no );
+    return erp_acct_get_pay_purchase( $voucher_no );
 
 }
 
@@ -218,7 +222,7 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
 
         foreach ( $items as $key => $item ) {
             $wpdb->update( $wpdb->prefix . 'erp_acct_pay_purchase_details', array(
-                'purchase_no' => $item['id'],
+                'purchase_no' => $item['voucher_no'],
                 'amount'      => $item['amount'],
                 'created_at'  => $pay_purchase_data['created_at'],
                 'created_by'  => $created_by,
@@ -244,6 +248,8 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
             ), array(
                 'purchase_no' => $item['voucher_no'],
             ));
+
+            erp_acct_change_purchase_status( $item['voucher_no'] );
         }
 
         $wpdb->query( 'COMMIT' );
@@ -400,4 +406,32 @@ function erp_acct_get_pay_purchase_count() {
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_pay_purchase" );
 
     return $row->count;
+}
+
+/**
+ * Update purchase status after a payment
+ *
+ * @param $purchase_no
+ * @param $due
+ * @return int
+ */
+function erp_acct_change_purchase_status( $purchase_no ) {
+    global $wpdb;
+
+    $due = erp_acct_get_purchase_due( $purchase_no );
+
+    error_log( print_r( "due " . $due, true ) );
+
+    if ( $due == 0 ) {
+
+        error_log( print_r( "update " . $purchase_no, true ) );
+
+        $wpdb->update($wpdb->prefix . 'erp_acct_purchase',
+            array(
+                'status' => 4,
+            ),
+            array( 'voucher_no' => $purchase_no )
+        );
+    }
+
 }
