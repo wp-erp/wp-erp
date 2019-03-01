@@ -120,7 +120,15 @@
             },
 
             actionClicked( action, acct_id ) {
+                switch ( action ) {
+                    case 'transfer':
+                        this.$router.push( 'transfer/new' );
+                        break;
 
+                    default :
+                        break;
+
+                }
             }
 
         }
