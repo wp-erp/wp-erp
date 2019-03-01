@@ -10,19 +10,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_banks( $show_balance = false ) {
+function erp_acct_get_banks( $show_balance = false, $with_cash = false ) {
     global $wpdb;
     $chart_id = 7;
 
     $ledgers = $wpdb->prefix.'erp_acct_ledgers';
 
+    $cash_ledger = '';
+    if ( $with_cash ) {
+        $cash_ledger = " OR slug = 'cash' ";
+    }
+
     if ( !$show_balance ) {
-        $query = $wpdb->prepare( "SELECT * FROM $ledgers WHERE chart_id = %d", $chart_id );
+        $query = $wpdb->prepare( "SELECT * FROM $ledgers WHERE chart_id = %d" . $cash_ledger, $chart_id );
         $results = $wpdb->get_results( $query, ARRAY_A );
         return $results;
     }
 
-    $sub_query = $wpdb->prepare( "SELECT id FROM $ledgers WHERE chart_id = %d", $chart_id );
+    $sub_query = $wpdb->prepare( "SELECT id FROM $ledgers WHERE chart_id = %d" . $cash_ledger, $chart_id );
     $ledger_details = $wpdb->prefix.'erp_acct_ledger_details';
     $query = "Select ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance
               From $ledger_details as ld
@@ -237,18 +242,14 @@ function erp_acct_perform_transfer( $item ) {
  * Get transferrable accounts
  */
 function erp_acct_get_transfer_accounts( $show_balance = false ) {
+    /*
     global $wpdb;
 
-    $ledgers = $wpdb->prefix.'erp_acct_ledgers';
-
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
-    $ledger_details = $ledger_map->get_ledger_details_by_slug( 'cash' );
+    $cash_ledger = $ledger_map->get_ledger_details_by_slug( 'cash' );
 
-    if ( !$ledger_details ) {
-        return new WP_Error( 505, 'Ledger ID not found for cash', '' );
-    }
-
-    $chart_id = $ledger_details->chart_id;
+    $ledgers = $wpdb->prefix.'erp_acct_ledgers';
+    $chart_id = $cash_ledger->chart_id;
 
     if ( !$show_balance ) {
         $query = $wpdb->prepare( "Select * FROM $ledgers WHERE chart_id = %d", $chart_id );
@@ -257,13 +258,15 @@ function erp_acct_get_transfer_accounts( $show_balance = false ) {
     }
 
     $sub_query = $wpdb->prepare( "Select id FROM $ledgers WHERE chart_id = %d", $chart_id );
-    $ledger_details = $wpdb->prefix.'erp_acct_ledger_details';
+    $cash_ledger = $wpdb->prefix.'erp_acct_ledger_details';
     $query = "Select ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance
-              From $ledger_details as ld
+              From $cash_ledger as ld
               LEFT JOIN $ledgers as l ON l.id = ld.ledger_id
               Where ld.ledger_id IN ($sub_query)
               Group BY ld.ledger_id";
-    $results = $wpdb->get_results( $query, ARRAY_A );
+    */
+
+    $results = erp_acct_get_banks( true, true );
 
     return $results;
 }
