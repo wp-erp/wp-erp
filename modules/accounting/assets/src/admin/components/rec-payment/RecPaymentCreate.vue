@@ -346,7 +346,7 @@
                 this.invoices.forEach( (element,index) => {
                     element['line_total'] = parseFloat( this.totalAmounts[index] );
                 });
-
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/payments', {
                     customer_id: this.basic_fields.customer.id,
                     ref        : this.basic_fields.trn_ref,
@@ -361,10 +361,13 @@
                     check_no   : parseInt(this.check_data.check_no),
                     name       : this.check_data.payer_name
                 }).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Payment Created!');
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 });
 
                 event.target.reset();
@@ -381,6 +384,7 @@
                         name: 'Cash'
                     }];
                 }
+                this.$root.$emit('account-changed');
             },
 
             validateForm() {
