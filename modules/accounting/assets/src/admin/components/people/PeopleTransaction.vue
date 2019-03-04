@@ -53,6 +53,7 @@
                     :columns="columns"
                     :rows="rows"
                     :actions="actions"
+                    :showCb="false"
                     @action:click="onActionClick"
                     >
                 </list-table>
@@ -62,7 +63,6 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import Datepicker from 'admin/components/base/Datepicker.vue';
 
@@ -84,13 +84,13 @@
                     }
                 ],
                 columns: {
-                    'voucher_no': { label: 'Voucher No' },
-                    'amount': { label: 'Amount' },
                     'trn_date': { label: 'Transaction Date' },
-                    'trn_by': { label: 'Transaction By' },
+                    'created_at': { label: 'Created At' },
+                    'voucher_no': { label: 'Voucher No' },
                     'particulars': { label: 'Particulars' },
-                    'voucher_type': { label: 'Voucher Type' },
-                    'actions': { label: '' }
+                    'debit': { label: 'Debit' },
+                    'credit': { label: 'Credit' },
+                    'balance': { label: 'Balance' },
                 },
                 actions : [
                     { key: 'edit', label: 'Edit' },
@@ -132,9 +132,7 @@
                 }
             },
         },
-        created() {
 
-        }
     }
 </script>
 

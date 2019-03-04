@@ -324,7 +324,9 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_transactions( $request ) {
         $id = (int) $request['id'];
 
-        $transactions = erp_acct_get_people_transactions( $id );
+        $args['people_id'] = $id;
+
+        $transactions = erp_acct_get_people_transactions( $args );
 
         return new WP_REST_Response( $transactions, 200 );
     }
@@ -354,10 +356,11 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $start_date = $request['start_date'];
         $end_date   = $request['end_date'];
         $args       = [
+            'people_id'  => $id,
             'start_date' => $start_date,
             'end_date'   => $end_date
         ];
-        $transactions   =   erp_people_filter_transaction( $id, $args );
+        $transactions   =   erp_acct_get_people_transactions( $args );
         $response       =   rest_ensure_response( $transactions );
 
         return $response;
