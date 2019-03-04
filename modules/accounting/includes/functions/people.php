@@ -107,68 +107,68 @@ function erp_people_filter_transaction( $people_id, $args = [] ) {
     $start_date = isset( $args['start_date'] ) ? $args['start_date'] : '';
     $end_date = isset( $args['end_date'] ) ? $args['start_date'] : '';
 
-    $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_people_trn WHERE trn_date >= '{$start_date}' AND trn_date <= '{$end_date}' AND people_id = {$people_id}", ARRAY_A );
+    $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_people_details WHERE trn_date >= '{$start_date}' AND trn_date <= '{$end_date}' AND people_id = {$people_id}", ARRAY_A );
     return $rows;
 }
 
-/**
- * Insert transaction data of a people
- *
- * @param $trn_data
- * @param $people_id
- * @param $voucher_type
- *
- * @return mixed
- */
-
-function erp_acct_insert_people_trn_data( $trn_data, $people_id, $voucher_type ) {
-    global $wpdb;
-
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_trn', array(
-        'people_id'    => $people_id,
-        'voucher_no'   => $trn_data['voucher_no'],
-        'amount'       => $trn_data['amount'],
-        'trn_date'     => $trn_data['trn_date'],
-        'trn_by'       => $trn_data['trn_by'],
-        'particulars'  => $trn_data['particulars'],
-        'voucher_type' => $voucher_type,
-        'created_at'   => $trn_data['created_at'],
-        'created_by'   => $trn_data['created_by'],
-        'updated_at'   => $trn_data['updated_at'],
-        'updated_by'   => $trn_data['updated_by'],
-    ) );
-
-}
-
-/**
- * Update transaction data of a people
- *
- * @param $trn_data
- * @param $people_id
- * @param $voucher_type
- *
- * @return mixed
- */
-
-function erp_acct_update_people_trn_data( $trn_data, $people_id, $voucher_type ) {
-    global $wpdb;
-
-    $wpdb->update( $wpdb->prefix . 'erp_acct_people_trn', array(
-        'people_id'    => $people_id,
-        'amount'       => $trn_data['amount'],
-        'trn_date'     => $trn_data['trn_date'],
-        'trn_by'       => $trn_data['trn_by'],
-        'particulars'  => $trn_data['particulars'],
-        'voucher_type' => $voucher_type,
-        'created_at'   => $trn_data['created_at'],
-        'created_by'   => $trn_data['created_by'],
-        'updated_at'   => $trn_data['updated_at'],
-        'updated_by'   => $trn_data['updated_by'],
-    ), array(
-        'voucher_no'      => $trn_data['voucher_no']
-    ) );
-
-}
+///**
+// * Insert transaction data of a people
+// *
+// * @param $trn_data
+// * @param $people_id
+// * @param $voucher_type
+// *
+// * @return mixed
+// */
+//
+//function erp_acct_insert_people_trn_data( $trn_data, $people_id, $voucher_type ) {
+//    global $wpdb;
+//
+//    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_trn', array(
+//        'people_id'    => $people_id,
+//        'voucher_no'   => $trn_data['voucher_no'],
+//        'amount'       => $trn_data['amount'],
+//        'trn_date'     => $trn_data['trn_date'],
+//        'trn_by'       => $trn_data['trn_by'],
+//        'particulars'  => $trn_data['particulars'],
+//        'voucher_type' => $voucher_type,
+//        'created_at'   => $trn_data['created_at'],
+//        'created_by'   => $trn_data['created_by'],
+//        'updated_at'   => $trn_data['updated_at'],
+//        'updated_by'   => $trn_data['updated_by'],
+//    ) );
+//
+//}
+//
+///**
+// * Update transaction data of a people
+// *
+// * @param $trn_data
+// * @param $people_id
+// * @param $voucher_type
+// *
+// * @return mixed
+// */
+//
+//function erp_acct_update_people_trn_data( $trn_data, $people_id, $voucher_type ) {
+//    global $wpdb;
+//
+//    $wpdb->update( $wpdb->prefix . 'erp_acct_people_trn', array(
+//        'people_id'    => $people_id,
+//        'amount'       => $trn_data['amount'],
+//        'trn_date'     => $trn_data['trn_date'],
+//        'trn_by'       => $trn_data['trn_by'],
+//        'particulars'  => $trn_data['particulars'],
+//        'voucher_type' => $voucher_type,
+//        'created_at'   => $trn_data['created_at'],
+//        'created_by'   => $trn_data['created_by'],
+//        'updated_at'   => $trn_data['updated_at'],
+//        'updated_by'   => $trn_data['updated_by'],
+//    ), array(
+//        'voucher_no'      => $trn_data['voucher_no']
+//    ) );
+//
+//}
 
 /**
  * Get address of a people
@@ -240,7 +240,14 @@ function erp_acct_get_people_transactions( $args = [] ) {
         $where .= " AND people.people_id = {$args['people_id']} ";
     }
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= " AND ledger.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    } else {
+        $args['start_date'] = date('Y-m-d', strtotime('first day of this month') );
+        $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
+        $where .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+    if ( empty( $args['end_date'] ) ) {
+        $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
@@ -252,28 +259,117 @@ function erp_acct_get_people_transactions( $args = [] ) {
         $sql .= " COUNT( DISTINCT people.voucher_no ) AS total_number";
     } else {
         $sql .= "
-            voucher.id,
+            voucher.id as voucher_no,
             people.people_id,
-            people.amount,
-            people.voucher_no,
+            people.trn_no,
             people.trn_date,
-
-            ledger.ledger_id,
-            ledger.particulars,
-            ledger.debit,
-            ledger.credit";
+            people.debit,
+            people.credit,
+            people.particulars,
+            people.created_at";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
-        INNER JOIN {$wpdb->prefix}erp_acct_people_trn AS people ON voucher.id = people.voucher_no
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger ON people.voucher_no = ledger.trn_no
-        {$where} ORDER BY CONCAT(people.trn_date, ledger.trn_date) {$args['order']} {$limit}";
+        INNER JOIN {$wpdb->prefix}erp_acct_people_details AS people ON voucher.id = people.trn_no
+        {$where} ORDER BY people.trn_date {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         $wpdb->get_results($sql);
         return $wpdb->num_rows;
     }
 
+    $results =  $wpdb->get_results( $sql, ARRAY_A );
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    $temp = '';
+    $total = $o_balance = erp_acct_get_people_opening_balance( $args );
+    $dr_total = $cr_total = 0;
+    if ( $o_balance > 0 ) {
+        $dr_total = (float)$o_balance;
+        $temp = $o_balance . ' Dr';
+    } else {
+        $cr_total = (float)$o_balance;
+        $temp = $o_balance . ' Cr';
+    }
+
+    array_unshift( $results, [
+        "voucher_no" => null,
+        "particulars" => "Opening Balance",
+        "people_id" => null,
+        "trn_no" => null,
+        "trn_date" => null,
+        "created_at" => null,
+        "debit" => null,
+        "credit" => null,
+        "balance" => $o_balance
+    ]);
+
+    for ( $idx = 0; $idx < count( $results ) ; $idx++) {
+        if( $idx == 0 ) {
+            continue;
+        }
+        $dr_total += (float)$results[$idx]['debit'];
+        $cr_total += (float)$results[$idx]['credit'];
+        $balance = (float)$results[$idx-1]['balance'] + (float)$results[$idx]['debit'] - (float)$results[$idx]['credit'] ;
+        if ( $balance >= 0) {
+            $results[$idx]['balance'] = (float) $balance . ' Dr';
+        } else {
+            $results[$idx]['balance'] = (float) $balance . ' Cr';
+        }
+        $total = $balance;
+    }
+
+    $results[0]['balance'] = $temp;
+
+    array_push( $results, [
+        "voucher_no" => null,
+        "particulars" => 'Total',
+        "people_id" => null,
+        "trn_no" => null,
+        "trn_date" => null,
+        "created_at" => null,
+        "debit" => $dr_total,
+        "credit" => $cr_total,
+        "balance" => null
+    ]);
+
+    return $results;
+}
+
+/**
+ * Get opening balance
+ *
+ * @param array $args
+ *
+ * @return mixed
+ */
+function erp_acct_get_people_opening_balance( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'      => 20,
+        'offset'      => 0,
+        'order'       => 'ASC',
+        'count'       => false,
+        's'           => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $where = '';
+
+    if ( ! empty( $args['people_id'] ) ) {
+        $where .= " WHERE people_id = {$args['people_id']} ";
+    }
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= " AND trn_date < '{$args['start_date']}'";
+    } else {
+        $args['start_date'] = date('Y-m-d', strtotime('first day of january this year') );
+        $where .= " AND trn_date < '{$args['start_date']}'";
+    }
+
+    $sql = "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_people_details {$where}";
+
+    $result =  $wpdb->get_row( $sql, ARRAY_A );
+
+    return isset( $result['opening_balance'] ) ? $result['opening_balance'] : 0;
 }

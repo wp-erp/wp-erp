@@ -136,7 +136,7 @@ function erp_acct_insert_purchase( $data ) {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-            'type'       => 'sales_purchase',
+            'type'       => 'purchase',
             'created_at' => $data['created_at'],
             'created_by' => $created_by,
             'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',

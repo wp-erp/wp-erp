@@ -158,7 +158,7 @@
                         break;
 
                     case 'edit':
-                        if ( 'sales_purchase' == row.type ) {
+                        if ( 'purchase' == row.type ) {
                             this.$router.push({ name: 'PurchaseEdit', params: { id: row.id } })
                         }
 

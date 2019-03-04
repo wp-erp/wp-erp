@@ -293,8 +293,9 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_transactions( $request ) {
         $id = (int) $request['id'];
+        $args['people_id'] = $id;
 
-        $transactions = erp_acct_get_people_transactions( $id );
+        $transactions = erp_acct_get_people_transactions( $args );
 
         return new WP_REST_Response( $transactions, 200 );
     }
