@@ -169,7 +169,7 @@ function erp_acct_insert_pay_purchase( $data ) {
             erp_acct_change_purchase_status( $item['voucher_no'] );
         }
 
-        erp_acct_insert_people_trn_data( $pay_purchase_data, $pay_purchase_data['vendor_id'], 'debit' );
+        erp_acct_insert_pay_purchase_data_people_details( $pay_purchase_data );
 
         if ( isset( $pay_purchase_data['trn_by'] ) && $pay_purchase_data['trn_by'] === '3' ) {
             erp_acct_insert_check_data ( $pay_purchase_data );
@@ -251,6 +251,8 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
 
             erp_acct_change_purchase_status( $item['voucher_no'] );
         }
+
+        erp_acct_update_pay_purchase_data_people_details( $pay_purchase_data, $pay_purchase_id );
 
         $wpdb->query( 'COMMIT' );
 
@@ -352,7 +354,7 @@ function erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $ite
 
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $pay_purchase_data['trn_by'],
+        'ledger_id'   => $pay_purchase_data['trn_by_ledger_id'],
         'trn_no'      => $pay_purchase_data['voucher_no'],
         'particulars' => $pay_purchase_data['particulars'],
         'debit'       => 0,
@@ -380,10 +382,10 @@ function erp_acct_update_pay_purchase_data_into_ledger( $pay_purchase_data, $pay
 
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => 605, // change later
+        'ledger_id'   => $pay_purchase_data['trn_by_ledger_id'],
         'particulars' => $pay_purchase_data['particulars'],
-        'debit'       => $item_data['line_total'],
-        'credit'      => 0,
+        'debit'       => 0,
+        'credit'      => $item_data['line_total'],
         'trn_date'    => $pay_purchase_data['trn_date'],
         'created_at'  => $pay_purchase_data['created_at'],
         'created_by'  => $pay_purchase_data['created_by'],
@@ -434,4 +436,55 @@ function erp_acct_change_purchase_status( $purchase_no ) {
         );
     }
 
+}
+
+
+/**
+ * Insert pay_purchase data in people details
+ *
+ * @param $pay_purchase_data
+ *
+ */
+function erp_acct_insert_pay_purchase_data_people_details( $pay_purchase_data ) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
+        'people_id'   => $pay_purchase_data['vendor_id'],
+        'trn_no'      => $pay_purchase_data['voucher_no'],
+        'particulars' => $pay_purchase_data['particulars'],
+        'debit'       => $pay_purchase_data['amount'],
+        'credit'      => 0,
+        'voucher_type'=> $pay_purchase_data['type'],
+        'trn_date'    => $pay_purchase_data['trn_date'],
+        'created_at'  => $pay_purchase_data['created_at'],
+        'created_by'  => $pay_purchase_data['created_by'],
+        'updated_at'  => $pay_purchase_data['updated_at'],
+        'updated_by'  => $pay_purchase_data['updated_by']
+    ) );
+}
+
+/**
+ * Update pay_purchase data in people details
+ *
+ * @param $pay_purchase_data
+ * @param $pay_purchase_no
+ *
+ */
+function erp_acct_update_pay_purchase_data_people_details( $pay_purchase_data, $pay_purchase_no ) {
+    global $wpdb;
+
+    $wpdb->update( $wpdb->prefix . 'erp_acct_people_details', array(
+        'people_id'   => $pay_purchase_data['vendor_id'],
+        'particulars' => $pay_purchase_data['particulars'],
+        'debit'       => $pay_purchase_data['amount'],
+        'credit'      => 0,
+        'voucher_type'=> $pay_purchase_data['type'],
+        'trn_date'    => $pay_purchase_data['trn_date'],
+        'created_at'  => $pay_purchase_data['created_at'],
+        'created_by'  => $pay_purchase_data['created_by'],
+        'updated_at'  => $pay_purchase_data['updated_at'],
+        'updated_by'  => $pay_purchase_data['updated_by']
+    ), array(
+        'trn_no' => $pay_purchase_no
+    ));
 }

@@ -82,18 +82,18 @@ function erp_acct_add_employee_as_people( $data ) {
     return $people_id;
 }
 
-/**
- * Get transactions of a people
- *
- * @return mixed
- */
-
-function erp_acct_get_people_transactions( $people_id ) {
-    global $wpdb;
-
-    $row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_people_trn WHERE people_id = {$people_id}", ARRAY_A );
-    return $row;
-}
+///**
+// * Get transactions of a people
+// *
+// * @return mixed
+// */
+//
+//function erp_acct_get_people_transactions( $people_id ) {
+//    global $wpdb;
+//
+//    $row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_people_trn WHERE people_id = {$people_id}", ARRAY_A );
+//    return $row;
+//}
 
 /**
  * Get transaction by date
@@ -211,4 +211,69 @@ function erp_acct_format_people_address( $address = [] ) {
     }
 
     return $add;
+}
+
+/**
+ * Get all transactions
+ *
+ * @return mixed
+ */
+
+function erp_acct_get_people_transactions( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'      => 20,
+        'offset'      => 0,
+        'order'       => 'ASC',
+        'count'       => false,
+        's'           => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    $where = '';
+
+    if ( ! empty( $args['people_id'] ) ) {
+        $where .= " AND people.people_id = {$args['people_id']} ";
+    }
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= " AND ledger.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = "SELECT";
+
+    if ( $args['count'] ) {
+        $sql .= " COUNT( DISTINCT people.voucher_no ) AS total_number";
+    } else {
+        $sql .= "
+            voucher.id,
+            people.people_id,
+            people.amount,
+            people.voucher_no,
+            people.trn_date,
+
+            ledger.ledger_id,
+            ledger.particulars,
+            ledger.debit,
+            ledger.credit";
+    }
+
+    $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
+        INNER JOIN {$wpdb->prefix}erp_acct_people_trn AS people ON voucher.id = people.voucher_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger ON people.voucher_no = ledger.trn_no
+        {$where} ORDER BY CONCAT(people.trn_date, ledger.trn_date) {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        $wpdb->get_results($sql);
+        return $wpdb->num_rows;
+    }
+
+
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
