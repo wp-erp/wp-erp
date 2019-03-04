@@ -1063,31 +1063,33 @@ Company'
                 `people_id` varchar(255) DEFAULT NULL,
                 `trn_no` int(11) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
-                `debit` date DEFAULT NULL,
-                `credit` date DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) $collate;",
-
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_trn` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `people_id` int(11) DEFAULT NULL,
-                `voucher_no` int(11) DEFAULT NULL,
-                `amount` decimal(10,2) DEFAULT 0,
-                `trn_date` date DEFAULT NULL,
-                `trn_by` int(11) DEFAULT NULL,
-                `particulars` varchar(255) DEFAULT NULL,
+                `debit` decimal(10,2) DEFAULT 0,
+                `credit` decimal(10,2) DEFAULT 0,
                 `voucher_type` varchar(255) DEFAULT NULL,
+                `trn_date` date DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) $collate;",
+
+
+//            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_trn` (
+//                `id` int(11) NOT NULL AUTO_INCREMENT,
+//                `people_id` int(11) DEFAULT NULL,
+//                `voucher_no` int(11) DEFAULT NULL,
+//                `amount` decimal(10,2) DEFAULT 0,
+//                `trn_date` date DEFAULT NULL,
+//                `trn_by` int(11) DEFAULT NULL,
+//                `particulars` varchar(255) DEFAULT NULL,
+//                `voucher_type` varchar(255) DEFAULT NULL,
+//                `created_at` date DEFAULT NULL,
+//                `created_by` varchar(50) DEFAULT NULL,
+//                `updated_at` date DEFAULT NULL,
+//                `updated_by` varchar(50) DEFAULT NULL,
+//                PRIMARY KEY (`id`)
+//            ) $collate;",
 
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_categories` (
