@@ -184,54 +184,9 @@ function erp_acct_insert_invoice( $data ) {
             'created_by'      => $invoice_data['created_by']
         ) );
 
-        $items = $invoice_data['line_items'];
-
-        foreach ( $items as $key => $item ) {
-            $sub_total = $item['qty'] * $item['unit_price'];
-
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details', array(
-                'trn_no'      => $voucher_no,
-                'product_id'  => $item['product_id'],
-                'qty'         => $item['qty'],
-                'unit_price'  => $item['unit_price'],
-                'discount'    => $item['discount'],
-                'tax'         => $item['tax'],
-                'tax_percent' => $item['tax_rate'],
-                'item_total'  => $sub_total,
-                'created_at'  => $invoice_data['created_at'],
-                'created_by'  => $invoice_data['created_by']
-            ) );
-
-            // calculate tax for every related agency
-            $tax_rate_agency = get_tax_rate_with_agency($invoice_data['tax_rate_id'], $item['tax_cat_id']);
-
-            foreach ( $tax_rate_agency as $rate_agency ) {
-                $tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
-
-                $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
-                    'invoice_details_id' => $wpdb->insert_id,
-                    'agency_id'          => $rate_agency['agency_id'],
-                    'tax_rate'           => $rate_agency['tax_rate'],
-                    'tax_amount'         => $tax_amount,
-                    'created_at'         => $invoice_data['created_at'],
-                    'created_by'         => $invoice_data['created_by']
-                 ] );
-            }
-        }
-
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-            'invoice_no'  => $voucher_no,
-            'trn_no'      => $voucher_no,
-            'trn_date'    => $invoice_data['trn_date'],
-            'particulars' => '',
-            'debit'       => ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'],
-            'credit'      => 0.00,
-            'created_at'  => $invoice_data['created_at'],
-            'created_by'  => $invoice_data['created_by']
-        ) );
-
+        erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no );
+        erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no );
         erp_acct_insert_invoice_data_into_ledger( $invoice_data );
-
         erp_acct_insert_invoice_data_people_details( $invoice_data );
 
         $wpdb->query( 'COMMIT' );
@@ -245,6 +200,114 @@ function erp_acct_insert_invoice( $data ) {
 }
 
 /**
+ * Insert line items and details on invoice create
+ *
+ * @param array $invoice_data
+ * @param int $voucher_no
+ *
+ * @return void
+ */
+function erp_acct_insert_invoice_details_and_tax($invoice_data, $voucher_no) {
+    global $wpdb;
+
+    $tax_agency_details = [];
+
+    $items = $invoice_data['line_items'];
+
+    foreach ( $items as $key => $item ) {
+        $sub_total = $item['qty'] * $item['unit_price'];
+
+        // insert into invoice details
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details', array(
+            'trn_no'      => $voucher_no,
+            'product_id'  => $item['product_id'],
+            'qty'         => $item['qty'],
+            'unit_price'  => $item['unit_price'],
+            'discount'    => $item['discount'],
+            'tax'         => $item['tax'],
+            'tax_percent' => $item['tax_rate'],
+            'item_total'  => $sub_total,
+            'created_at'  => $invoice_data['created_at'],
+            'created_by'  => $invoice_data['created_by']
+        ) );
+
+        // calculate tax for every related agency
+        $tax_rate_agency = get_tax_rate_with_agency($invoice_data['tax_rate_id'], $item['tax_cat_id']);
+
+        foreach ( $tax_rate_agency as $rate_agency ) {
+            /*==== calculate tax amount ====*/
+            $tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
+
+            /*==== Rough paper ====*/
+            // $arr = [
+            //     2 => 40,
+            //     3 => 50
+            // ];
+            // if ( array_key_exists(1, $arr) ) {
+            //     $arr[1] += 10;
+            // } else {
+            //     $arr[1] = 4;
+            // }
+            // var_dump( $arr );
+
+            if ( array_key_exists( $rate_agency['agency_id'], $tax_agency_details ) ) {
+                $tax_agency_details[ $rate_agency['agency_id'] ] += $tax_amount;
+            } else {
+                $tax_agency_details[ $rate_agency['agency_id'] ] = $tax_amount;
+            }
+
+            /*==== insert into invoice details tax ====*/
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
+                'invoice_details_id' => $wpdb->insert_id,
+                'agency_id'          => $rate_agency['agency_id'],
+                'tax_rate'           => $rate_agency['tax_rate'],
+                'tax_amount'         => $tax_amount,
+                'created_at'         => $invoice_data['created_at'],
+                'created_by'         => $invoice_data['created_by']
+             ] );
+        }
+    }
+
+    // insert data into wp_erp_acct_tax_agency_details
+    foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_agency_details', [
+            'agency_id'   => $agency_id,
+            'trn_no'      => $voucher_no,
+            'trn_date'    => $invoice_data['trn_date'],
+            'particulars' => 'sales',
+            'debit'       => 0,
+            'credit'      => $tax_agency_detail,
+            'created_at'  => $invoice_data['created_at'],
+            'created_by'  => $invoice_data['created_by']
+         ] );
+    }
+
+}
+
+/**
+ * Insert invoice account details
+ *
+ * @param array $invoice_data
+ * @param int $voucher_no
+ *
+ * @return void
+ */
+function erp_acct_insert_invoice_account_details($invoice_data, $voucher_no) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
+        'invoice_no'  => $voucher_no,
+        'trn_no'      => $voucher_no,
+        'trn_date'    => $invoice_data['trn_date'],
+        'particulars' => '',
+        'debit'       => ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'],
+        'credit'      => 0.00,
+        'created_at'  => $invoice_data['created_at'],
+        'created_by'  => $invoice_data['created_by']
+    ) );
+}
+
+/**
  * Update invoice data
  *
  * @param $data
@@ -254,7 +317,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
     global $wpdb;
 
     $updated_by = get_current_user_id();
-    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_at'] = date('Y-m-d H:i:s');
     $data['updated_by'] = $updated_by;
 
     try {
@@ -294,41 +357,9 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
         // order matter
         $wpdb->query("DELETE FROM {$wpdb->prefix}erp_acct_invoice_details_tax WHERE invoice_details_id IN($prev_detail_ids)");
         $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_details', [ 'trn_no' => $invoice_no ] );
+        $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agency_details', [ 'trn_no' => $invoice_no ] );
 
-        $items = $invoice_data['line_items'];
-
-        foreach ( $items as $key => $item ) {
-            $sub_total = $item['qty'] * $item['unit_price'];
-
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details', array(
-                'trn_no'      => $invoice_no,
-                'product_id'  => $item['product_id'],
-                'qty'         => $item['qty'],
-                'unit_price'  => $item['unit_price'],
-                'discount'    => $item['discount'],
-                'tax'         => $item['tax'],
-                'tax_percent' => $item['tax_rate'],
-                'item_total'  => $sub_total,
-                'updated_at'  => $invoice_data['updated_at'],
-                'updated_by'  => $invoice_data['updated_by'],
-            ) );
-
-            // calculate tax for every related agency
-            $tax_rate_agency = get_tax_rate_with_agency($invoice_data['tax_rate_id'], $item['tax_cat_id']);
-
-            foreach ( $tax_rate_agency as $rate_agency ) {
-                $tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
-
-                $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
-                    'invoice_details_id' => $wpdb->insert_id,
-                    'agency_id'          => $rate_agency['agency_id'],
-                    'tax_rate'           => $rate_agency['tax_rate'],
-                    'tax_amount'         => $tax_amount,
-                    'created_at'         => $invoice_data['created_at'],
-                    'created_by'         => $invoice_data['created_by']
-                 ] );
-            }
-        }
+        erp_acct_insert_invoice_details_and_tax( $invoice_data, $invoice_no );
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
             'particulars' => $invoice_data['particulars'],
@@ -460,10 +491,9 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
 
     $sales_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_revenue');
-    $sales_tax_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_tax_payable');
     $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discounts');
 
-    // Insert amount in ledger_details
+    // insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $sales_ledger_id,
         'trn_no'      => $invoice_data['voucher_no'],
@@ -477,21 +507,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
         'updated_by'  => $invoice_data['updated_by']
     ) );
 
-    // Insert tax in ledger_details
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $sales_tax_ledger_id,
-        'trn_no'      => $invoice_data['voucher_no'],
-        'particulars' => $invoice_data['particulars'],
-        'debit'       => 0,
-        'credit'      => $invoice_data['tax'],
-        'trn_date'    => $invoice_data['trn_date'],
-        'created_at'  => $invoice_data['created_at'],
-        'created_by'  => $invoice_data['created_by'],
-        'updated_at'  => $invoice_data['updated_at'],
-        'updated_by'  => $invoice_data['updated_by']
-    ) );
-
-    // Insert discount in ledger_details
+    // insert discount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $sales_discount_ledger_id,
         'trn_no'      => $invoice_data['voucher_no'],
@@ -520,17 +536,6 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'particulars' => $invoice_data['particulars'],
         'credit'      => $invoice_data['amount'],
-        'trn_date'    => $invoice_data['trn_date'],
-        'updated_at'  => $invoice_data['updated_at'],
-        'updated_by'  => $invoice_data['updated_by']
-    ), array(
-        'trn_no' => $invoice_no
-    ));
-
-    // Update tax in ledger_details
-    $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'particulars' => $invoice_data['particulars'],
-        'credit'      => $invoice_data['tax'],
         'trn_date'    => $invoice_data['trn_date'],
         'updated_at'  => $invoice_data['updated_at'],
         'updated_by'  => $invoice_data['updated_by']

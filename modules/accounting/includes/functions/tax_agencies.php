@@ -12,32 +12,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function erp_acct_get_all_tax_agencies( $args = [] ) {
         global $wpdb;
-    
+
         $defaults = [
             'number'     => 20,
             'offset'     => 0,
             'orderby'    => 'id',
-            'order'      => 'DESC',
+            'order'      => 'ASC',
             'count'      => false,
             's'          => '',
         ];
-    
+
         $args = wp_parse_args( $args, $defaults );
-    
+
         $limit = '';
-    
+
         if ( $args['number'] != '-1' ) {
             $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
         }
-    
+
         $sql = "SELECT";
         $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
         $sql .= "FROM {$wpdb->prefix}erp_acct_tax_agencies ORDER BY {$args['orderby']} {$args['order']} {$limit}";
-    
+
         if ( $args['count'] ) {
             return $wpdb->get_var($sql);
         }
-    
+
         return $wpdb->get_results( $sql, ARRAY_A );
 }
 
@@ -125,7 +125,6 @@ function erp_acct_update_tax_agency( $data, $id ) {
  *
  * @return int
  */
-
 function erp_acct_delete_tax_agency( $id ) {
     global $wpdb;
 
@@ -141,7 +140,6 @@ function erp_acct_delete_tax_agency( $id ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_tax_agency_name_id( $agency_id ) {
     global $wpdb;
 
@@ -153,3 +151,16 @@ function erp_acct_get_tax_agency_name_id( $agency_id ) {
     return $row['name'];
 }
 
+/**
+ * Get agency due amount
+ *
+ * @param int $agency_id
+ * @return mixed
+ */
+function erp_acct_get_agency_due( $agency_id ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT SUM( credit - debit ) as tax_due From {$wpdb->prefix}erp_acct_tax_agency_details WHERE agency_id = %d", $agency_id);
+
+    return $wpdb->get_var( $sql );
+}

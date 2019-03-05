@@ -426,6 +426,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_data['id'] = $tax_id;
 
+        $tax_data['voucher_no'] = $tax_id; // do we need it?
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -486,8 +488,8 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] = $request['trn_date'];
         }
-        if ( isset( $request['tax_period'] ) ) {
-            $prepared_item['tax_period'] = $request['tax_components'];
+        if ( isset( $request['trn_by'] ) ) {
+            $prepared_item['trn_by'] = $request['trn_by'];
         }
         if ( isset( $request['tax_category_id'] ) ) {
             $prepared_item['tax_category_id'] = $request['tax_category_id'];
@@ -620,15 +622,15 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'              => (int) $item->id,
-            'voucher_no'      => $item->voucher_no,
-            'agency_id'       => erp_acct_get_tax_agency_name_id( $item->agency_id ),
-            'trn_date'        => $item->trn_date,
-            'tax_period'      => $item->tax_period,
-            'particulars'     => $item->particulars,
-            'amount'          => $item->amount,
-            'ledger_id'       => $item->ledger_id,
-            'voucher_type'    => $item->voucher_type,
+            'id'           => (int) $item->id,
+            'voucher_no'   => $item->voucher_no,
+            'agency_id'    => erp_acct_get_tax_agency_name_id( $item->agency_id ),
+            'trn_date'     => $item->trn_date,
+            'particulars'  => $item->particulars,
+            'amount'       => $item->amount,
+            'trn_by'       => $item->trn_by,
+            'ledger_id'    => $item->ledger_id,
+            'voucher_type' => $item->voucher_type,
         ];
 
         $data = array_merge( $data, $additional_fields );
