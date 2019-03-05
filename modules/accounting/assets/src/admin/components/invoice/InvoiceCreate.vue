@@ -20,7 +20,7 @@
             <div class="wperp-panel-body">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
-                            <select-customers :reset="reset" v-model="basic_fields.customer"></select-customers>
+                            <select-customers v-model="basic_fields.customer"></select-customers>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
@@ -192,13 +192,13 @@
 
                 createButtons: [
                     {id: 'save', text: 'Create Invoice'},
-                    {id: 'send_create', text: 'Create and Send'},
+                    // {id: 'send_create', text: 'Create and Send'},
                     {id: 'new_create', text: 'Create and New'},
                 ],
 
                 updateButtons: [
                     {id: 'update', text: 'Update Invoice'},
-                    {id: 'send_update', text: 'Update and Send'},
+                    // {id: 'send_update', text: 'Update and Send'},
                     {id: 'new_update', text: 'Update and New'},
                 ],
 
@@ -217,8 +217,6 @@
                 finalTotalAmount: 0,
                 inv_type        : {id: 0, name: 'Invoice'},
                 erp_acct_assets : erp_acct_var.acct_assets,
-                isWorking       : false,
-                reset           : false,
                 actionType      : null,
                 form_errors     : [],
             }
@@ -226,8 +224,6 @@
 
         watch: {
             'basic_fields.customer'() {
-                this.reset = false;
-
                 this.getCustomerAddress();
             },
 
@@ -297,7 +293,7 @@
                         return;
                     }
 
-                    if ( 'awaiting_approval' != request3.data.status ) {
+                    if ( parseInt(request3.data.status) !== this.status ) {
                         this.showAlert('error', 'Can\'t edit');
                         return;
                     }
@@ -469,9 +465,6 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Invoice Updated!');
                 }).then(() => {
-                    this.isWorking = false;
-                    this.reset = true;
-
                     if ('update' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_update' == this.actionType) {
@@ -486,9 +479,6 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Invoice Created!');
                 }).then(() => {
-                    this.isWorking = false;
-                    this.reset = true;
-
                     if ('save' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_create' == this.actionType) {
@@ -536,15 +526,17 @@
             },
 
             resetFields() {
-                this.basic_fields.customer        = '';
+                this.basic_fields.customer        = { id: null, name: null} ;
                 this.basic_fields.trn_date        = erp_acct_var.current_date;
                 this.basic_fields.due_date        = erp_acct_var.current_date;
                 this.basic_fields.billing_address = '';
                 this.attachments                  = [];
-                this.transactionLines             = [];
+                this.transactionLines             = [{}];
+                this.discountType                 = 'discount-percent';
+                this.discount                     = 0;
+                this.taxTotalAmount               = 0;
                 this.finalTotalAmount             = 0;
                 this.isWorking                    = false;
-                this.reset                        = false;
                 this.actionType                   = null;
             },
 

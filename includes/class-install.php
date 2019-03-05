@@ -1168,6 +1168,7 @@ Company'
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `purchase_no` int(11) DEFAULT NULL,
                 `trn_no` int(11) DEFAULT NULL,
+                `trn_date` date DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `debit` decimal(10,2) DEFAULT 0,
                 `credit` decimal(10,2) DEFAULT 0,

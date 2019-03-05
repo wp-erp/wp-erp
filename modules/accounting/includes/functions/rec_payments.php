@@ -70,7 +70,7 @@ function erp_acct_get_payment( $invoice_no ) {
 
     pay_inv_detail.invoice_no,
     pay_inv_detail.amount as pay_inv_detail_amount,
-    
+
     ledger_detail.particulars,
     ledger_detail.debit,
     ledger_detail.credit
@@ -353,9 +353,9 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $payment_data['pay_to'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
     $payment_data['name'] = isset( $data['name'] ) ?  $data['name'] : $company->name;
     $payment_data['voucher_type'] = isset( $data['type'] ) ?  $data['type'] : '';
-    $payment_data['created_at']  = isset( $data['created_at'] ) ? $data['created_at'] : '';
+    $payment_data['created_at']  = isset( $data['created_at'] ) ? $data['created_at'] : null;
     $payment_data['created_by']  = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $payment_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
+    $payment_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
     $payment_data['updated_by']  = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
 
     return $payment_data;

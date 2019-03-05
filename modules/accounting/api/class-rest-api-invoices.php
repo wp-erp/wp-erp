@@ -256,7 +256,8 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        if ( 'awaiting_approval' !== $request['status'] ) {
+        $awaiting_approval = 2;
+        if ( $awaiting_approval !== $request['status'] ) {
             return new WP_Error( 'rest_invoice_invalid_status', __( 'Invalid status for update.' ), [ 'status' => 403 ] );
         }
 

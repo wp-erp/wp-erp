@@ -173,13 +173,13 @@
 
                 createButtons: [
                     {id: 'save', text: 'Create Bill'},
-                    {id: 'send_create', text: 'Create and Send'},
+                    // {id: 'send_create', text: 'Create and Send'},
                     {id: 'new_create', text: 'Create and New'},
                 ],
 
                 updateButtons: [
                     {id: 'update', text: 'Update Bill'},
-                    {id: 'send_update', text: 'Update and Send'},
+                    // {id: 'send_update', text: 'Update and Send'},
                     {id: 'new_update', text: 'Update and New'},
                 ],
 
@@ -189,10 +189,9 @@
                 selected        : [],
                 ledgers         : [],
                 attachments     : [],
-                totalAmounts    : [],
+                totalAmounts    : 0,
                 finalTotalAmount: 0,
                 particulars     : '',
-                isWorking       : false,
                 erp_acct_assets : erp_acct_var.acct_assets
             }
         },
@@ -221,7 +220,9 @@
                      * Duplicates of
                      *? this.getLedgers()
                      */
-                    let request1 = await HTTP.get('/ledgers');
+                    let expense_chart_id = 5;
+
+                    let request1 = await HTTP.get(`/ledgers/${expense_chart_id}/accounts`);
                     let request2 = await HTTP.get(`/bills/${this.$route.params.id}`);
 
                     if ( ! request2.data.bill_details.length ) {
@@ -229,10 +230,10 @@
                         return;
                     }
 
-                    if ( 'awaiting_approval' != request2.data.status ) {
-                        this.showAlert('error', 'Can\'t edit');
-                        return;
-                    }
+                    // if ( 'awaiting_approval' != request2.data.status ) {
+                    //     this.showAlert('error', 'Can\'t edit');
+                    //     return;
+                    // }
 
                     this.ledgers   = request1.data;
                     this.setDataForEdit( request2.data );
@@ -276,7 +277,9 @@
             },
 
             getLedgers() {
-                HTTP.get('/ledgers').then((response) => {
+                let expense_chart_id = 5;
+
+                HTTP.get(`/ledgers/${expense_chart_id}/accounts`).then(response => {
                     this.ledgers = response.data;
                 });
             },
@@ -320,7 +323,6 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Bill Updated!');
                 }).then(() => {
-                    this.isWorking = false;
                     this.reset = true;
 
                     if ('update' == this.actionType) {
@@ -337,7 +339,6 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Bill Created!');
                 }).then(() => {
-                    this.isWorking = false;
                     this.reset = true;
 
                     if ('save' == this.actionType) {
@@ -360,16 +361,16 @@
                 }
 
                 let requestData = {
-                    vendor_id: this.basic_fields.user.id,
-                    ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.trn_date,
-                    due_date: this.basic_fields.due_date,
-                    bill_details: this.formatTrnLines(this.transactionLines),
-                    attachments: this.attachments,
+                    vendor_id      : this.basic_fields.user.id,
+                    ref            : this.basic_fields.trn_ref,
+                    trn_date       : this.basic_fields.trn_date,
+                    due_date       : this.basic_fields.due_date,
+                    bill_details   : this.formatTrnLines(this.transactionLines),
+                    attachments    : this.attachments,
                     billing_address: this.basic_fields.billing_address,
-                    type: 'bill',
-                    status: 3,
-                    particulars: this.particulars
+                    type           : 'bill',
+                    status         : 3,
+                    particulars    : this.particulars
                 };
 
                 if ( this.editMode ) {
@@ -379,6 +380,16 @@
                 }
 
                 event.target.reset();
+            },
+
+            resetFields() {
+                this.basic_fields.user = { id: null, name: null};
+                this.transactionLines       = [{}];
+                this.ledgers                = [{}];
+                this.attachments            = [];
+                this.totalAmounts           = 0;
+                this.finalTotalAmount       = 0;
+                this.particulars            = '';
             },
 
             validateForm() {
