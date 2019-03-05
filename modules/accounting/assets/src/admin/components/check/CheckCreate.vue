@@ -282,7 +282,9 @@
             },
 
             getLedgers() {
-                HTTP.get('ledgers').then((response) => {
+                let expense_chart_id = 5;
+
+                HTTP.get(`/ledgers/${expense_chart_id}/accounts`).then(response => {
                     this.ledgers = response.data;
                 });
             },
