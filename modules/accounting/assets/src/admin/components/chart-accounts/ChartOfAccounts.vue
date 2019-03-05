@@ -23,7 +23,12 @@
                     :rows="ledgers[parseInt(chart.id)]"
                     @action:click="onActionClick">
                     <template slot="ledger_name" slot-scope="data">
-                        <strong>{{ data.row.name }}</strong>
+                        <router-link :to="{ name: 'LedgerReport', params: {
+                            ledgerID  : data.row.id,
+                            ledgerName: data.row.name,
+                            ledgerCode: data.row.code
+                            }}">{{ data.row.name }}
+                        </router-link>
                     </template>
                     <template slot="row-actions" slot-scope="data" v-if="data.row.system != null">
                         <strong class="sys-acc">System</strong>
@@ -44,10 +49,10 @@
         data() {
             return {
                 columns: {
-                    'code': {label: 'Code'},
+                    'code'       : {label: 'Code'},
                     'ledger_name': {label: 'Name'},
-                    'type': {label: 'Type'},
-                    'actions': {label: 'Actions'},
+                    'type'       : {label: 'Type'},
+                    'actions'    : {label: 'Actions'},
                 },
                 actions : [
                     { key: 'edit', label: 'Edit' },
