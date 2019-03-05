@@ -85,13 +85,16 @@
             };
         },
 
-        // watch: {
-        //     'selectedLedger'() {
-        //         this.getLedgerReport();
-        //     }
-        // },
-
         created() {
+            if ( this.$route.params.ledgerID ) {
+                // Directly coming from chart of acounts
+                this.selectedLedger = {
+                    id  : parseInt( this.$route.params.ledgerID ),
+                    name: this.$route.params.ledgerName,
+                    code: this.$route.params.ledgerCode
+                };
+            }
+
             this.getLedgers();
 
             this.start_date = erp_acct_var.current_date;
