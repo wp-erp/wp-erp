@@ -48,6 +48,17 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/due/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_agency_due' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sale' );
+                },
+            ]
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -134,7 +145,6 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
-
     /**
      * Get an tax
      *
@@ -218,6 +228,30 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
+    /**
+     * Get agency due amount by id
+     *
+     * @param array $request
+     * @return void
+     */
+    public function get_agency_due( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $item = erp_acct_get_agency_due( $id );
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
 
     /**
      * Delete an tax
@@ -237,7 +271,6 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return new WP_REST_Response( true, 204 );
     }
-
 
     /**
      * Prepare a single item for create or update
@@ -269,8 +302,8 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
-            'id'       => (int) $item->id,
-            'name'     => $item->name,
+            'id'   => (int) $item->id,
+            'name' => $item->name,
         ];
 
         $data = array_merge( $data, $additional_fields );

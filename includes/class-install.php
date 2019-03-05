@@ -1275,14 +1275,29 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_pay` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `voucher_no` int(11) DEFAULT NULL,
-                `agency_id` int(11) DEFAULT NULL,
                 `trn_date` date DEFAULT NULL,
-                `tax_period` date DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,
-                `trn_by_ledger_id` int(11) DEFAULT NULL,
                 `voucher_type` varchar(255) DEFAULT NULL,
+                `trn_by` int(11) DEFAULT NULL,
+                `agency_id` int(11) DEFAULT NULL,
                 `ledger_id` int(11) DEFAULT NULL,
+                `created_at` date DEFAULT NULL,
+                `created_by` varchar(50) DEFAULT NULL,
+                `updated_at` date DEFAULT NULL,
+                `updated_by` varchar(50) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $collate;",
+
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agency_details` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `agency_id` int(11) DEFAULT NULL,
+                `trn_no` int(11) DEFAULT NULL,
+                `trn_date` date DEFAULT NULL,
+                `particulars` varchar(255) DEFAULT NULL,
+                `debit` decimal(10, 2) DEFAULT 0,
+                `credit` decimal(10, 2) DEFAULT 0,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -1315,6 +1330,7 @@ Company'
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) $collate;",
+
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_payment_methods` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
