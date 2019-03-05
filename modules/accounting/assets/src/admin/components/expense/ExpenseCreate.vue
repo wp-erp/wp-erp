@@ -448,6 +448,7 @@
                 } else {
                     this.accts_by_chart = [{ id: 1, name: 'Cash' }];
                 }
+                this.$root.$emit( 'account-changed' );
             },
 
             resetFields() {

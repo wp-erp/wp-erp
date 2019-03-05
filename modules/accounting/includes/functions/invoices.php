@@ -232,6 +232,8 @@ function erp_acct_insert_invoice( $data ) {
 
         erp_acct_insert_invoice_data_into_ledger( $invoice_data );
 
+        erp_acct_insert_invoice_data_people_details( $invoice_data );
+
         $wpdb->query( 'COMMIT' );
 
     } catch (Exception $e) {
@@ -339,6 +341,8 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
         ) );
 
         erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no );
+
+        erp_acct_update_invoice_data_people_details( $invoice_data, $invoice_no );
 
         $wpdb->query( 'COMMIT' );
 
@@ -519,7 +523,9 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
         'trn_date'    => $invoice_data['trn_date'],
         'updated_at'  => $invoice_data['updated_at'],
         'updated_by'  => $invoice_data['updated_by']
-    ), [ 'trn_no' => $invoice_no ] );
+    ), array(
+        'trn_no' => $invoice_no
+    ));
 
     // Update tax in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
@@ -528,7 +534,9 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
         'trn_date'    => $invoice_data['trn_date'],
         'updated_at'  => $invoice_data['updated_at'],
         'updated_by'  => $invoice_data['updated_by']
-    ), [ 'trn_no' => $invoice_no ] );
+    ), array(
+        'trn_no' => $invoice_no
+    ));
 
     // Update discount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
@@ -537,7 +545,9 @@ function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
         'trn_date'    => $invoice_data['trn_date'],
         'updated_at'  => $invoice_data['updated_at'],
         'updated_by'  => $invoice_data['updated_by']
-    ), [ 'trn_no' => $invoice_no ] );
+    ), array(
+        'trn_no' => $invoice_no
+    ));
 }
 
 /**
@@ -700,4 +710,68 @@ function erp_acct_get_recievables_overview() {
     return [ 'data' => $data, 'amount' => $amount ];
 }
 
+/**
+ * Get due of an invoice
+ *
+ * @param $invoice_no
+ * @return int
+ */
+function erp_acct_get_invoice_due( $invoice_no ) {
+    global $wpdb;
 
+    $result = $wpdb->get_row( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = {$invoice_no} GROUP BY ia.invoice_no", ARRAY_A );
+
+
+    return $result['due'];
+}
+
+/**
+ * Insert invoice data in people details
+ *
+ * @param $invoice_data
+ *
+ */
+function erp_acct_insert_invoice_data_people_details( $invoice_data ) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
+        'people_id'   => $invoice_data['customer_id'],
+        'trn_no'      => $invoice_data['voucher_no'],
+        'particulars' => $invoice_data['particulars'],
+        'debit'       => $invoice_data['amount'] + $invoice_data['tax'] - $invoice_data['discount'],
+        'credit'      => 0,
+        'voucher_type'=> $invoice_data['type'],
+        'trn_date'    => $invoice_data['trn_date'],
+        'created_at'  => $invoice_data['created_at'],
+        'created_by'  => $invoice_data['created_by'],
+        'updated_at'  => $invoice_data['updated_at'],
+        'updated_by'  => $invoice_data['updated_by']
+    ) );
+}
+
+/**
+ * Update invoice data in people details
+ *
+ * @param $invoice_data
+ * @param $invoice_no
+ *
+ */
+function erp_acct_update_invoice_data_people_details( $invoice_data, $invoice_no ) {
+    global $wpdb;
+
+    $wpdb->update( $wpdb->prefix . 'erp_acct_people_details', array(
+        'people_id'   => $invoice_data['customer_id'],
+        'particulars' => $invoice_data['particulars'],
+        'debit'       => $invoice_data['amount'] + $invoice_data['tax'] - $invoice_data['discount'],
+        'credit'      => 0,
+        'trn_date'    => $invoice_data['trn_date'],
+        'voucher_type'=> $invoice_data['type'],
+        'created_at'  => $invoice_data['created_at'],
+        'created_by'  => $invoice_data['created_by'],
+        'updated_at'  => $invoice_data['updated_at'],
+        'updated_by'  => $invoice_data['updated_by']
+    ), array(
+        'trn_no' => $invoice_no
+    ));
+
+}
