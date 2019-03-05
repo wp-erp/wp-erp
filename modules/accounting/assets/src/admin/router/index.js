@@ -6,6 +6,7 @@ import Employees         from 'admin/components/people/Employees.vue';
 import EmployeeDetails   from 'admin/components/people/EmployeeDetails.vue';
 import DashBoard         from 'admin/components/dashboard/DashBoard.vue';
 import TrialBalance      from 'admin/components/reports/TrialBalance.vue';
+import LedgerReport      from 'admin/components/reports/LedgerReport.vue';
 import PeopleDetails     from 'admin/components/people/PeopleDetails.vue';
 import InvoiceCreate     from 'admin/components/invoice/InvoiceCreate.vue';
 import ChartOfAccounts   from 'admin/components/chart-accounts/ChartOfAccounts.vue';
@@ -322,6 +323,11 @@ export default new Router({
                     path: 'trial-balance',
                     name: 'TrialBalance',
                     component: TrialBalance,
+                },
+                {
+                    path: 'ledger-report',
+                    name: 'LedgerReport',
+                    component: LedgerReport,
                 },
             ]
         },

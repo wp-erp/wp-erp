@@ -86,8 +86,9 @@
 
 			.btn-fake {
 				color: #fff;
-				padding: 2px 38px;
-				
+                padding: 2px 10px;
+                margin-right: 28px;
+
 				&:focus {
 					outline: 0;
 				}

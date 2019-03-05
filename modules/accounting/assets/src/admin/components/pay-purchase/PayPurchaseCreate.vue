@@ -227,6 +227,9 @@
                     finalAmount = 0;
 
                 this.pay_purchases = [];
+
+                if ( ! vendorId ) return;
+
                 HTTP.get(`/purchases/due/${vendorId}`).then(response => {
                     response.data.forEach(element => {
                         this.pay_purchases.push({

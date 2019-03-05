@@ -36,7 +36,6 @@
                                     <label>Expense Date<span class="wperp-required-sign">*</span></label>
                                     <datepicker v-model="basic_fields.trn_date"></datepicker>
                                 </div>
-
                             </div>
                             <div class="wperp-col-sm-4 with-multiselect">
                                 <label>Payment Method<span class="wperp-required-sign">*</span></label>
@@ -175,11 +174,11 @@
         data() {
             return {
                 basic_fields: {
-                    people: '',
-                    trn_ref: '',
-                    trn_date: '',
-                    deposit_to: '',
-                    trn_by: '',
+                    people         : '',
+                    trn_ref        : '',
+                    trn_date       : '',
+                    deposit_to     : '',
+                    trn_by         : '',
                     billing_address: ''
                 },
 
@@ -192,13 +191,13 @@
 
                 createButtons: [
                     {id: 'save', text: 'Create Expense'},
-                    {id: 'send_create', text: 'Create and Send'},
+                    // {id: 'send_create', text: 'Create and Send'},
                     {id: 'new_create', text: 'Create and New'},
                 ],
 
                 updateButtons: [
                     {id: 'update', text: 'Update Expense'},
-                    {id: 'send_update', text: 'Update and Send'},
+                    // {id: 'send_update', text: 'Update and Send'},
                     {id: 'new_update', text: 'Update and New'},
                 ],
 
@@ -209,7 +208,7 @@
                 ledgers         : [],
                 pay_methods     : [],
                 attachments     : [],
-                totalAmounts    : [],
+                totalAmounts    : 0,
                 finalTotalAmount: 0,
                 billModal       : false,
                 particulars     : '',
@@ -259,8 +258,10 @@
                      *? this.getLedgers()
                      *? this.getPayMethods()
                      */
+                    let expense_chart_id = 5;
+
                     let [request1, request2] = await Promise.all([
-                        HTTP.get('/ledgers'),
+                        HTTP.get(`/ledgers/${expense_chart_id}/accounts`),
                         HTTP.get('/transactions/payment-methods')
                     ]);
 
@@ -310,13 +311,15 @@
             },
 
             getLedgers() {
-                HTTP.get('/ledgers').then((response) => {
+                let expense_chart_id = 5;
+
+                HTTP.get(`/ledgers/${expense_chart_id}/accounts`).then(response => {
                     this.ledgers = response.data;
                 });
             },
 
             getPayMethods() {
-                HTTP.get('/transactions/payment-methods').then((response) => {
+                HTTP.get('/transactions/payment-methods').then(response => {
                     this.pay_methods = response.data;
                 });
             },
@@ -333,7 +336,7 @@
                     return;
                 }
 
-                HTTP.get(`/people/${user_id}/address`).then((response) => {
+                HTTP.get(`/people/${user_id}/address`).then(response => {
                     let billing = response.data;
 
                     if ( 'string' == typeof billing ) {
@@ -351,7 +354,9 @@
                 let finalAmount = 0;
 
                 this.transactionLines.forEach(element => {
-                    finalAmount += parseFloat(element.amount);
+                    if ( element.amount ) {
+                        finalAmount += parseFloat(element.amount);
+                    }
                 });
 
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
@@ -435,15 +440,22 @@
 
             changeAccounts() {
                 if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
-                    HTTP.get(`/ledgers/7/accounts`).then((response) => {
+                    let bank = 7;
+
+                    HTTP.get(`/ledgers/${bank}/accounts`).then(response => {
                         this.accts_by_chart = response.data;
                     });
                 } else {
-                    this.accts_by_chart = [{
-                        id: 1,
-                        name: 'Cash'
-                    }];
+                    this.accts_by_chart = [{ id: 1, name: 'Cash' }];
                 }
+            },
+
+            resetFields() {
+                this.basic_fields.people = { id: null, name: null };
+                this.attachments         = [];
+                this.totalAmounts        = 0;
+                this.finalTotalAmount    = 0;
+                this.particulars         = '';
             },
 
             validateForm() {

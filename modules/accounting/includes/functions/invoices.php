@@ -240,7 +240,6 @@ function erp_acct_insert_invoice( $data ) {
     }
 
     return erp_acct_get_invoice( $voucher_no );
-
 }
 
 /**
@@ -312,14 +311,21 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
                 'updated_by'  => $invoice_data['updated_by'],
             ) );
 
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
-                'invoice_details_id' => $wpdb->insert_id,
-                'agency_id'          => $item['agency_id'],
-                'tax_rate'           => $item['tax_rate'],
-                'tax_amount'         => $item['tax'],
-                'updated_at'         => $invoice_data['updated_at'],
-                'updated_by'         => $invoice_data['updated_by'],
-             ] );
+            // calculate tax for every related agency
+            $tax_rate_agency = get_tax_rate_with_agency($invoice_data['tax_rate_id'], $item['tax_cat_id']);
+
+            foreach ( $tax_rate_agency as $rate_agency ) {
+                $tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
+
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
+                    'invoice_details_id' => $wpdb->insert_id,
+                    'agency_id'          => $rate_agency['agency_id'],
+                    'tax_rate'           => $rate_agency['tax_rate'],
+                    'tax_amount'         => $tax_amount,
+                    'created_at'         => $invoice_data['created_at'],
+                    'created_by'         => $invoice_data['created_by']
+                 ] );
+            }
         }
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
