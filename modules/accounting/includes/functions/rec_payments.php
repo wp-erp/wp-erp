@@ -148,10 +148,11 @@ function erp_acct_insert_payment( $data ) {
 	        $payment_data['amount'] = $total;
 
 	        erp_acct_insert_payment_line_items( $payment_data, $item, $voucher_no );
-            erp_acct_change_invoice_status( $payment_data['invoice_no'] );
+
+            erp_acct_change_invoice_status( $item['invoice_no'] );
 	    }
 
-        erp_acct_insert_people_trn_data( $payment_data, $payment_data['customer_id'], 'credit' );
+        erp_acct_insert_payment_data_people_details( $payment_data );
 
         if ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === '3' ) {
             erp_acct_insert_check_data ( $payment_data );
@@ -256,20 +257,22 @@ function erp_acct_update_payment( $data, $voucher_no ) {
 	        $payment_data['amount'] = $total;
 
 	        erp_acct_update_payment_line_items( $payment_data, $voucher_no, $invoice_no[$key] );
+
+            erp_acct_change_invoice_status( $item['invoice_no'] );
 	    }
 
         if ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === '3' ) {
             erp_acct_insert_check_data ( $payment_data );
         }
 
-		$wpdb->query( 'COMMIT' );
+        erp_acct_update_payment_data_people_details( $payment_data, $voucher_no );
+
+        $wpdb->query( 'COMMIT' );
 
 	} catch (Exception $e) {
 		$wpdb->query( 'ROLLBACK' );
 		return new WP_error( 'payment-exception', $e->getMessage() );
 	}
-
-    erp_acct_change_invoice_status( $voucher_no );
 
     return erp_acct_get_payment( $voucher_no );
 
@@ -313,7 +316,6 @@ function erp_acct_update_payment_line_items( $data, $invoice_no, $voucher_no ) {
         'invoice_no' => $invoice_no,
     ) );
 
-    erp_acct_change_invoice_status( $invoice_no );
 	erp_acct_insert_payment_data_into_ledger( $payment_data );
 
     return $voucher_no;
@@ -401,10 +403,10 @@ function erp_acct_void_payment( $id ) {
 }
 
 /**
- * Update payment status after a transaction
+ * Update invoice status after a payment
  *
  * @param $invoice_no
- * @param $due
+ *
  * @return int
  */
 function erp_acct_change_invoice_status( $invoice_no ) {
@@ -425,24 +427,9 @@ function erp_acct_change_invoice_status( $invoice_no ) {
 }
 
 /**
- * Get due of an invoice
- *
- * @param $invoice_no
- * @return int
- */
-function erp_acct_get_invoice_due( $invoice_no ) {
-    global $wpdb;
-
-    $result = $wpdb->get_row( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = {$invoice_no} GROUP BY ia.invoice_no", ARRAY_A );
-
-
-    return $result['due'];
-}
-
-/**
  * Insert Payment/s data into ledger
  *
- * @param array $invoice_data
+ * @param array $payment_data
  *
  * @return mixed
  */
@@ -467,7 +454,8 @@ function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
 /**
  * Update Payment/s data into ledger
  *
- * @param array $invoice_data
+ * @param array $payment_data
+ * @param int $invoice_no
  *
  * @return mixed
  */
@@ -523,4 +511,54 @@ function erp_acct_format_payment_line_items( $invoice = 'all' ) {
     $sql .= "FROM {$wpdb->prefix}erp_acct_invoice_receipts_details {$invoice_sql}";
 
     return $wpdb->get_results( $sql, ARRAY_A );
+}
+
+/**
+ * Insert payment data in people details
+ *
+ * @param $payment_data
+ *
+ */
+function erp_acct_insert_payment_data_people_details( $payment_data ) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
+        'people_id'   => $payment_data['customer_id'],
+        'trn_no'      => $payment_data['voucher_no'],
+        'particulars' => $payment_data['particulars'],
+        'debit'       => 0,
+        'credit'      => $payment_data['amount'],
+        'voucher_type'=> $payment_data['type'],
+        'trn_date'    => $payment_data['trn_date'],
+        'created_at'  => $payment_data['created_at'],
+        'created_by'  => $payment_data['created_by'],
+        'updated_at'  => $payment_data['updated_at'],
+        'updated_by'  => $payment_data['updated_by']
+    ) );
+}
+
+/**
+ * Update payment data in people details
+ *
+ * @param $payment_data
+ * @param $invoice_no
+ *
+ */
+function erp_acct_update_payment_data_people_details( $payment_data, $invoice_no ) {
+    global $wpdb;
+
+    $wpdb->update( $wpdb->prefix . 'erp_acct_people_details', array(
+        'people_id'   => $payment_data['customer_id'],
+        'particulars' => $payment_data['particulars'],
+        'debit'       => 0,
+        'credit'      => $payment_data['amount'],
+        'voucher_type'=> $payment_data['type'],
+        'trn_date'    => $payment_data['trn_date'],
+        'created_at'  => $payment_data['created_at'],
+        'created_by'  => $payment_data['created_by'],
+        'updated_at'  => $payment_data['updated_at'],
+        'updated_by'  => $payment_data['updated_by']
+    ), array(
+        'trn_no' => $invoice_no
+    ));
 }

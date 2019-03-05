@@ -136,7 +136,7 @@ function erp_acct_insert_purchase( $data ) {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-            'type'       => 'sales_purchase',
+            'type'       => 'purchase',
             'created_at' => $data['created_at'],
             'created_by' => $created_by,
             'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
@@ -195,6 +195,8 @@ function erp_acct_insert_purchase( $data ) {
         ) );
 
         erp_acct_insert_purchase_data_into_ledger( $purchase_data );
+
+        erp_acct_insert_purchase_data_people_details( $purchase_data );
 
         $wpdb->query( 'COMMIT' );
 
@@ -278,6 +280,8 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
         ) );
 
         erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_id );
+
+        erp_acct_update_purchase_data_people_details( $purchase_data, $purchase_id );
 
         $wpdb->query( 'COMMIT' );
 
@@ -399,11 +403,22 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
 function erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_no ) {
     global $wpdb;
 
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
+    $ledger_id = $ledger_map->get_ledger_id_by_slug('inventory');
+
+    if ( !$ledger_id ) {
+        return new WP_Error( 505, 'Ledger ID not found for purchase', $purchase_data );
+    }
+
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
+        'ledger_id'   => $ledger_id,
         'particulars' => $purchase_data['particulars'],
         'debit'       => $purchase_data['amount'],
+        'credit'      => 0,
         'trn_date'    => $purchase_data['trn_date'],
+        'created_at'  => $purchase_data['created_at'],
+        'created_by'  => $purchase_data['created_by'],
         'updated_at'  => $purchase_data['updated_at'],
         'updated_by'  => $purchase_data['updated_by']
     ), array(
@@ -484,6 +499,57 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
 function erp_acct_get_purchase_due( $purchase_no ) {
     global $wpdb;
 
-    return $wpdb->get_var( "SELECT purchase_no, SUM( debit - credit) as due FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE purchase_no = {$purchase_no} GROUP BY purchase_no" );
+    $result = $wpdb->get_row( "SELECT purchase_no, SUM( debit - credit) as due FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE purchase_no = {$purchase_no} GROUP BY purchase_no", ARRAY_A );
+
+    return $result['due'];
 }
 
+/**
+ * Insert purchase data in people details
+ *
+ * @param $purchase_data
+ *
+ */
+function erp_acct_insert_purchase_data_people_details( $purchase_data ) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
+        'people_id'   => $purchase_data['vendor_id'],
+        'trn_no'      => $purchase_data['voucher_no'],
+        'particulars' => $purchase_data['particulars'],
+        'debit'       => 0,
+        'credit'      => $purchase_data['amount'],
+        'voucher_type'=> $purchase_data['type'],
+        'trn_date'    => $purchase_data['trn_date'],
+        'created_at'  => $purchase_data['created_at'],
+        'created_by'  => $purchase_data['created_by'],
+        'updated_at'  => $purchase_data['updated_at'],
+        'updated_by'  => $purchase_data['updated_by']
+    ) );
+}
+
+/**
+ * Update purchase data in people details
+ *
+ * @param $purchase_data
+ * @param $purchase_no
+ *
+ */
+function erp_acct_update_purchase_data_people_details( $purchase_data, $purchase_no ) {
+    global $wpdb;
+
+    $wpdb->update( $wpdb->prefix . 'erp_acct_people_details', array(
+        'people_id'   => $purchase_data['vendor_id'],
+        'particulars' => $purchase_data['particulars'],
+        'debit'       => 0,
+        'credit'      => $purchase_data['amount'],
+        'voucher_type'=> $purchase_data['type'],
+        'trn_date'    => $purchase_data['trn_date'],
+        'created_at'  => $purchase_data['created_at'],
+        'created_by'  => $purchase_data['created_by'],
+        'updated_at'  => $purchase_data['updated_at'],
+        'updated_by'  => $purchase_data['updated_by']
+    ), array(
+        'trn_no' => $purchase_no
+    ));
+}

@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <people-transaction :rows="transactions"></people-transaction>
+        <people-transaction :rows.sync="transactions"></people-transaction>
     </div>
 </template>
 
@@ -54,15 +54,15 @@
                 resData: {},
                 userData : {
                     'id': '',
-                    'name': '************',
-                    'email': '************',
+                    'name': '-',
+                    'email': '-',
                     // 'img_url': erp_acct_var.acct_assets  + '/images/dummy-user.png',
                     'meta': {
-                        'company': '**********',
-                        'website': '**********',
-                        'phone': '**********',
-                        'mobile': '*************',
-                        'address': '*********',
+                        'company': '-',
+                        'website': '-',
+                        'phone': '-',
+                        'mobile': '-',
+                        'address': '-',
                     }
                 },
                 url: '',
@@ -80,6 +80,8 @@
                 },
 
                 transactions: [],
+                opening_balance: 0,
+                people_balance: 0
             }
         },
 
@@ -96,39 +98,44 @@
             } );
         },
 
-        computed: {
-
+        watch: {
+            transactions( newVal ) {
+                this.transactions = newVal;
+            }
         },
 
         methods: {
             fetchItem( id ) {
                 HTTP.get( this.url+'/'+id, {
                     params: {}
-                })
-                    .then((response) => {
-                        this.resData = response.data;
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
-                    .then(() => {
-                        //ready
-                    });
+                }).then((response) => {
+                    this.resData = response.data;
+                }).catch((error) => {
+                    console.log(error);
+                });
             },
             getTransactions() {
                 HTTP.get( this.url + '/' + this.userId + '/transactions' ).then( res => {
                     this.transactions = res.data;
-                } );
+                });
             },
             filterTransaction( filters = {} ) {
-                HTTP.get('customers/' + this.userId + '/transactions/filter', {
+                HTTP.get( this.url + '/' + this.userId + '/transactions/filter', {
                     params: {
                         start_date: filters.start_date,
                         end_date: filters.end_date
                     }
-                } ).then( res => {
+                }).then( res => {
                     this.transactions = res.data;
-                } );
+                });
+            },
+            formatLineItems() {
+                this.transactions.forEach(line => {
+                    if(line.balance === null && typeof line.balance === "object") {
+                        line.balance = 0;
+                    }
+                    line.type = this.formatTrnStatus(line.type);
+                });
             }
         }
     }

@@ -341,6 +341,7 @@
                         name: 'Cash'
                     }];
                 }
+                this.$root.$emit( 'account-changed' );
             },
 
             validateForm() {

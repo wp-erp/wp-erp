@@ -110,6 +110,12 @@
                                     <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
                                 </td>
                             </tr>
+                            <tr class="wperp-form-group">
+                                <td colspan="9" style="text-align: left;">
+                                    <label>Particulars</label>
+                                    <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Particulars"></textarea>
+                                </td>
+                            </tr>
                             <tr>
                                 <td>
                                     <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
@@ -210,6 +216,7 @@
                 taxRate         : null,
                 taxSummary      : null,
                 products        : [],
+                particulars     : '',
                 attachments     : [],
                 transactionLines: [],
                 taxRates        : [],
@@ -327,6 +334,7 @@
                 this.transactionLines             = invoice.line_items;
                 this.taxTotalAmount               = invoice.tax;
                 this.finalTotalAmount             = invoice.debit;
+                this.particulars                  = invoice.particulars;
                 this.attachments                  = invoice.attachments;
 
                 if ( 'discount-percent' == invoice.discount_type ) {
@@ -509,6 +517,7 @@
                     tax_rate_id    : this.taxRate.id,
                     line_items     : this.formatLineItems(),
                     attachments    : this.attachments,
+                    particulars    : this.particulars,
                     type           : 'invoice',
                     status         : parseInt(this.status),
                     estimate       : this.inv_type.id

@@ -261,7 +261,7 @@ function erp_acct_insert_expense( $data ) {
         //Insert into Ledger for source account
         erp_acct_insert_source_expense_data_into_ledger( $expense_data );
 
-        erp_acct_insert_people_trn_data( $expense_data, $expense_data['people_id'], 'debit' );
+        erp_acct_insert_expense_data_people_details( $expense_data );
 
         if ( isset( $expense_data['trn_by'] ) && $expense_data['trn_by'] === '3' ) {
             erp_acct_insert_check_data ( $expense_data );
@@ -344,7 +344,7 @@ function erp_acct_update_expense( $data, $expense_id ) {
                 'updated_by'  => $expense_data['updated_by'],
             ));
 
-            erp_acct_update_expense_data_into_ledger( $expense_data, $expense_id, $item );
+            erp_acct_update_expense_data_people_details( $expense_data, $expense_id );
         }
 
         $wpdb->query( 'COMMIT' );
@@ -513,5 +513,55 @@ function erp_acct_insert_source_expense_data_into_ledger( $expense_data ) {
         'updated_at'  => $expense_data['updated_at'],
         'updated_by'  => $expense_data['updated_by'],
     ) );
+}
+
+/**
+ * Insert expense data in people details
+ *
+ * @param $expense_data
+ *
+ */
+function erp_acct_insert_expense_data_people_details( $expense_data ) {
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
+        'people_id'   => $expense_data['people_id'],
+        'trn_no'      => $expense_data['voucher_no'],
+        'particulars' => $expense_data['particulars'],
+        'debit'       => $expense_data['amount'],
+        'credit'      => 0,
+        'voucher_type'=> $expense_data['type'],
+        'trn_date'    => $expense_data['trn_date'],
+        'created_at'  => $expense_data['created_at'],
+        'created_by'  => $expense_data['created_by'],
+        'updated_at'  => $expense_data['updated_at'],
+        'updated_by'  => $expense_data['updated_by']
+    ) );
+}
+
+/**
+ * Update expense data in people details
+ *
+ * @param $expense_data
+ * @param $expense_no
+ *
+ */
+function erp_acct_update_expense_data_people_details( $expense_data, $expense_no ) {
+    global $wpdb;
+
+    $wpdb->update( $wpdb->prefix . 'erp_acct_people_details', array(
+        'people_id'   => $expense_data['people_id'],
+        'particulars' => $expense_data['particulars'],
+        'debit'       => $expense_data['amount'],
+        'credit'      => 0,
+        'voucher_type'=> $expense_data['type'],
+        'trn_date'    => $expense_data['trn_date'],
+        'created_at'  => $expense_data['created_at'],
+        'created_by'  => $expense_data['created_by'],
+        'updated_at'  => $expense_data['updated_at'],
+        'updated_by'  => $expense_data['updated_by']
+    ), array(
+        'trn_no' => $expense_no
+    ));
 }
 

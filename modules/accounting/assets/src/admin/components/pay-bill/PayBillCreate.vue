@@ -64,7 +64,7 @@
                 <table class="wperp-table wperp-form-table">
                     <thead>
                     <tr>
-                        <th scope="col" class="col--id column-primary">Bill ID</th>
+                        <th scope="col" class="col--id column-primary">Bill No</th>
                         <th scope="col">Due Date</th>
                         <th scope="col">Total</th>
                         <th scope="col">Due</th>
@@ -74,11 +74,11 @@
                     </thead>
                     <tbody>
                     <tr :key="key" v-for="(pay_bill,key) in pay_bills">
-                        <td scope="row" class="col--id column-primary">{{key+1}}</td>
+                        <td scope="row" class="col--id column-primary">{{pay_bill.voucher_no}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{pay_bill.due_date}}</td>
                         <td class="col--total" data-colname="Total">{{pay_bill.amount}}</td>
                         <td class="col--due" data-colname="Due">{{pay_bill.due}}</td>
-                        <td class="col--amount" data-colname="Amount">
+                        <td class="col--amount text-right" data-colname="Amount">
                             <input type="text" min="0" :max="pay_bill.due" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
@@ -153,7 +153,7 @@
                 basic_fields: {
                     people: '',
                     trn_ref: '',
-                    payment_date: '',
+                    payment_date: erp_acct_var.current_date,
                     deposit_to: '',
                     billing_address: '',
                     trn_by: ''
@@ -313,6 +313,7 @@
                         name: 'Cash'
                     }];
                 }
+                this.$root.$emit( 'account-changed' );
             },
 
             validateForm() {

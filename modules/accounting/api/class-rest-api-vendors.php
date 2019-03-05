@@ -101,6 +101,17 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions/filter', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'filter_transactions' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_customer' );
+                },
+            ],
+        ] );
     }
 
     /**
@@ -302,10 +313,32 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_transactions( $request ) {
         $id = (int) $request['id'];
+        $args['people_id'] = $id;
 
-        $transactions = erp_acct_get_people_transactions( $id );
+        $transactions = erp_acct_get_people_transactions( $args );
 
         return new WP_REST_Response( $transactions, 200 );
+    }
+
+    /**
+     * Get transaction by date
+     *
+     * @param  object $request
+     * @return array
+     */
+    public function filter_transactions( $request ) {
+        $id         = $request['id'];
+        $start_date = $request['start_date'];
+        $end_date   = $request['end_date'];
+        $args       = [
+            'people_id'  => $id,
+            'start_date' => $start_date,
+            'end_date'   => $end_date
+        ];
+        $transactions   =   erp_acct_get_people_transactions( $args );
+        $response       =   rest_ensure_response( $transactions );
+
+        return $response;
     }
 
     /**
@@ -318,7 +351,6 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
-        // required arguments.
         if ( isset( $request['first_name'] ) ) {
             $prepared_item['first_name'] = $request['first_name'];
         }
@@ -329,7 +361,6 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['email'] = $request['email'];
         }
 
-        // optional arguments.
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }

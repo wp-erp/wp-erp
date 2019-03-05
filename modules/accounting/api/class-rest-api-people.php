@@ -61,6 +61,17 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/opening-balance' , [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_opening_balance' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -148,6 +159,22 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
         $row = $wpdb->get_row($sql, ARRAY_A);
 
         return erp_acct_format_people_address( $row );
+    }
+
+    /**
+     * Get opening balance of a people in a date range
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_opening_balance( $request ) {
+        $id = (int) $request['id'];
+        $args['people_id'] = $id;
+
+        $transactions = erp_acct_get_people_opening_balance( $args );
+
+        return new WP_REST_Response( $transactions, 200 );
     }
 
     /**

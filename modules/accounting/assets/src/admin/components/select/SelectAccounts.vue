@@ -59,6 +59,9 @@
         },
 
         created() {
+            this.$root.$on( 'account-changed', () => {
+                this.selectedAccount = [];
+            });
             if (this.override_accts && this.override_accts.length) {
                 this.accounts = this.override_accts;
             } else {
