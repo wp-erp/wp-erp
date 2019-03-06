@@ -227,6 +227,10 @@
                     finalAmount = 0;
 
                 this.pay_purchases = [];
+
+                if ( ! vendorId ) return;
+
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get(`/purchases/due/${vendorId}`).then(response => {
                     response.data.forEach(element => {
                         this.pay_purchases.push({
@@ -237,7 +241,10 @@
                             due: parseFloat(element.due)
                         });
                     });
-                }).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.pay_purchases.forEach(element => {
                         this.totalAmounts[idx++] = parseFloat(element.due);
                         finalAmount += parseFloat(element.due);
@@ -289,6 +296,7 @@
                     return;
                 }
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/pay-purchases', {
                     vendor_id: this.basic_fields.vendor.id,
                     ref: this.basic_fields.trn_ref,
@@ -303,22 +311,11 @@
                     check_no: parseInt(this.check_data.check_no),
                     name: this.check_data.payer_name
                 }).then(res => {
-
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Pay Purchase Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Pay Purchase Created!' );
                 }).catch( error => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'error',
-                        title: 'Something went Wrong!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'error', 'Something went wrong' );
                 }).then(() => {
                     this.isWorking = false;
                     this.resetData();
@@ -338,6 +335,7 @@
                         name: 'Cash'
                     }];
                 }
+                this.$root.$emit( 'account-changed' );
             },
 
             validateForm() {

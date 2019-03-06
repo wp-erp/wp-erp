@@ -97,6 +97,7 @@
             },
 
             sendAsMail() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post(`/transactions/send-pdf/${this.$route.params.id}`, {
                     trn_data: this.data,
                     type: this.type,
@@ -105,14 +106,11 @@
                     message: this.message,
                     attachment: this.attachment
                 }).then(() => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Mail Sent!',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
-                });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Mail Sent!' );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             }
         }
     }

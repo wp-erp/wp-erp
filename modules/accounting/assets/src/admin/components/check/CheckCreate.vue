@@ -282,9 +282,13 @@
             },
 
             getLedgers() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get('ledgers').then((response) => {
                     this.ledgers = response.data;
-                });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', true );
+                } );
             },
 
             setCheckFields( check_data ) {
@@ -346,7 +350,9 @@
                 HTTP.post('/expenses', requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Check Created!');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.isWorking = false;
                     this.reset = true;
 
@@ -404,6 +410,7 @@
                         name: 'Cash'
                     }];
                 }
+                this.$root.$emit( 'account-changed' );
             },
 
             validateForm() {

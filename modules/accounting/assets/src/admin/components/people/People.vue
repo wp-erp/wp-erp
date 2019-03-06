@@ -132,7 +132,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 })
                 .catch((error) => {
-                    console.log(error);
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 })
                 .then( () => {
                     //ready
@@ -147,7 +147,9 @@
                                 this.$delete(this.rows, index);
                                 this.$store.dispatch( 'spinner/setSpinner', false );
                                 this.showAlert( 'success', 'Deleted !' );
-                            });
+                            }).catch( error => {
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                            } );
                         }
                         break;
 
@@ -176,7 +178,9 @@
                             this.fetchItems();
                             this.$store.dispatch( 'spinner/setSpinner', false );
                             this.showAlert( 'success', 'Deleted !' );
-                        });
+                        }).catch( error => {
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                        } );
                     }
                 }
             },

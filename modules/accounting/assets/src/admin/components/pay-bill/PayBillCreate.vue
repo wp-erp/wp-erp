@@ -190,6 +190,8 @@
 
         methods: {
             getPayMethods() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('/transactions/payment-methods').then((response) => {
                     response.data.forEach(element => {
                         this.pay_methods.push({
@@ -197,7 +199,11 @@
                             name: element.name
                         });
                     });
-                });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             setCheckFields( check_data ) {
@@ -211,6 +217,7 @@
                     idx = 0,
                     finalAmount = 0;
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get(`/bills/due/${peopleId}`).then((response) => {
                     response.data.forEach(element => {
                         if ( element.due !== null && element.due > 0 ) {
@@ -223,7 +230,10 @@
                             });
                         }
                     });
-                }).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.pay_bills.forEach(element => {
                         this.totalAmounts[idx++] = parseFloat(element.due);
                         finalAmount += parseFloat(element.due);
@@ -313,6 +323,7 @@
                         name: 'Cash'
                     }];
                 }
+                this.$root.$emit( 'account-changed' );
             },
 
             validateForm() {

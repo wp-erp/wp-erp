@@ -114,7 +114,7 @@
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch((error) => {
-                        console.log(error);
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 });
             },
 
@@ -123,9 +123,13 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
+                            this.$store.dispatch( 'spinner/setSpinner', true );
                             HTTP.delete('invoices/' + row.id).then( response => {
                                 this.$delete(this.rows, index);
-                            });
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                            }).catch( error => {
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                            } );
                         }
                         break;
 

@@ -180,7 +180,9 @@
                 }).then( e => {} ).then(() => {
                     this.print_data = this.bill;
                     this.isWorking = false;
-                });
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             printPopup() {

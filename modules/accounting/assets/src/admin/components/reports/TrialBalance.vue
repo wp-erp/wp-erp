@@ -63,12 +63,16 @@
             fetchItems() {
                 this.rows = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get( '/reports/trial-balance').then(response => {
                     this.rows = response.data.rows;
                     this.totalDebit = response.data.total_debit;
                     this.totalCredit = response.data.total_credit;
+
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                });
+                }).catch( error => {
+                   this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             }
         }
     }

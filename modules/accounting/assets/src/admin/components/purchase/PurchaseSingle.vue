@@ -154,6 +154,7 @@
         },
 
         created() {
+            this.$store.dispatch( 'spinner/setSpinner', true );
             this.getCompanyInfo();
             this.getPurchase();
 
@@ -173,10 +174,12 @@
 
             getPurchase() {
                 this.isWorking = true;
-
-                HTTP.get(`/purchases/${this.$route.params.id}`).then(response => {                                        
+                HTTP.get(`/purchases/${this.$route.params.id}`).then(response => {
                     this.purchase = response.data;
-                }).then( e => {} ).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then( e => {} ).then(() => {
                     this.print_data = this.purchase;
                     this.isWorking = false;
                 });

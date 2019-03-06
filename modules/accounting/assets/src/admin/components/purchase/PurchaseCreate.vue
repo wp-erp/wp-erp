@@ -78,6 +78,12 @@
                                 <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
                             </td>
                         </tr>
+                        <tr class="wperp-form-group">
+                            <td colspan="9" style="text-align: left;">
+                                <label>Particulars</label>
+                                <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Particulars"></textarea>
+                            </td>
+                        </tr>
                         <tr>
                             <td>
                                 <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
@@ -163,6 +169,7 @@
                 editMode        : false,
                 voucherNo       : 0,
                 products        : [],
+                particulars     : '',
                 attachments     : [],
                 transactionLines: [],
                 finalTotalAmount: 0,
@@ -228,6 +235,7 @@
                 this.basic_fields.due_date        = purchase.due_date;
                 this.status                       = purchase.status;
                 this.transactionLines             = purchase.line_items;
+                this.particulars                  = invoice.particulars;
                 this.attachments                  = purchase.attachments;
             },
 
@@ -300,9 +308,13 @@
             },
 
             updatePurchase(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/purchases/${this.voucherNo}`, requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Purchase Updated!');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.isWorking = false;
                     this.reset = true;
 
@@ -315,9 +327,13 @@
             },
 
             createPurchase(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/purchases', requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Purchase Created!');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.isWorking = false;
                     this.reset = true;
 
@@ -349,6 +365,7 @@
                     due_date       : this.basic_fields.due_date,
                     billing_address: this.basic_fields.billing_address,
                     line_items     : this.formatLineItems(),
+                    particulars    : this.particulars,
                     attachments    : this.attachments,
                     type           : 'purchase',
                     status         : 3

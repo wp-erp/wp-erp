@@ -159,7 +159,9 @@
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                });
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             onActionClick(action, row, index) {
@@ -171,7 +173,9 @@
                                 this.$delete(this.rows, index);
                                 this.$store.dispatch( 'spinner/setSpinner', false );
                                 this.showAlert( 'success', 'Deleted !' );
-                            });
+                            }).catch( error => {
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                            } );
                         }
                         break;
 

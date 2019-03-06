@@ -169,6 +169,8 @@
 
         methods: {
             getLedgers() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('ledgers').then((response) => {
                     response.data.forEach(element => {
                         this.ledgers.push({
@@ -176,7 +178,11 @@
                             name: element.name
                         });
                     });
-                });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             addLine() {
@@ -198,6 +204,7 @@
                     return;
                 }
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/journals', {
                     trn_date: this.basic_fields.trn_date,
                     line_items: this.formatLineItems(),
@@ -205,14 +212,8 @@
                     type: 'journal',
                     particulars: this.journal_parti,
                 }).then(res => {
-                    //console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Journal Entry Added!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Journal Entry Added!' );
                 }).then(() => {
                     this.isWorking = false;
                 });

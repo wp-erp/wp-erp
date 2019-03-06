@@ -201,9 +201,15 @@
             fetchChartAccounts() {
                 this.chartAccounts = [];
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('/ledgers/accounts').then( response => {
                     this.chartAccounts = response.data;
-                });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             fetchLedgerCategories() {
@@ -234,20 +240,28 @@
             },
 
             createLedger(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/ledgers', requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Created !');
                 }).then(() => {
                     this.resetFields();
-                });
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             updateteLedger(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/ledgers/${this.ledgerID}`, requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Updated !');
                 }).then(() => {
                     this.resetFields();
                     this.$router.push({name: 'ChartOfAccounts'});
-                });
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', true );
+                } );
             },
 
             saveAccount() {

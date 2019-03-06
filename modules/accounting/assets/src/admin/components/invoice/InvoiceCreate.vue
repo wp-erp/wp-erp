@@ -20,7 +20,7 @@
             <div class="wperp-panel-body">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
-                            <select-customers :reset="reset" v-model="basic_fields.customer"></select-customers>
+                            <select-customers v-model="basic_fields.customer"></select-customers>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
@@ -110,6 +110,12 @@
                                     <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
                                 </td>
                             </tr>
+                            <tr class="wperp-form-group">
+                                <td colspan="9" style="text-align: left;">
+                                    <label>Particulars</label>
+                                    <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Particulars"></textarea>
+                                </td>
+                            </tr>
                             <tr>
                                 <td>
                                     <div class="attachment-item" :key="index" v-for="(file, index) in attachments">
@@ -192,13 +198,13 @@
 
                 createButtons: [
                     {id: 'save', text: 'Create Invoice'},
-                    {id: 'send_create', text: 'Create and Send'},
+                    // {id: 'send_create', text: 'Create and Send'},
                     {id: 'new_create', text: 'Create and New'},
                 ],
 
                 updateButtons: [
                     {id: 'update', text: 'Update Invoice'},
-                    {id: 'send_update', text: 'Update and Send'},
+                    // {id: 'send_update', text: 'Update and Send'},
                     {id: 'new_update', text: 'Update and New'},
                 ],
 
@@ -210,6 +216,7 @@
                 taxRate         : null,
                 taxSummary      : null,
                 products        : [],
+                particulars     : '',
                 attachments     : [],
                 transactionLines: [],
                 taxRates        : [],
@@ -217,8 +224,6 @@
                 finalTotalAmount: 0,
                 inv_type        : {id: 0, name: 'Invoice'},
                 erp_acct_assets : erp_acct_var.acct_assets,
-                isWorking       : false,
-                reset           : false,
                 actionType      : null,
                 form_errors     : [],
             }
@@ -226,8 +231,6 @@
 
         watch: {
             'basic_fields.customer'() {
-                this.reset = false;
-
                 this.getCustomerAddress();
             },
 
@@ -253,6 +256,7 @@
         }),
 
         created() {
+            this.$store.dispatch( 'spinner/setSpinner', true );
             this.prepareDataLoad();
 
             this.$root.$on('remove-row', index => {
@@ -297,7 +301,7 @@
                         return;
                     }
 
-                    if ( 'awaiting_approval' != request3.data.status ) {
+                    if ( parseInt(request3.data.status) !== this.status ) {
                         this.showAlert('error', 'Can\'t edit');
                         return;
                     }
@@ -331,6 +335,7 @@
                 this.transactionLines             = invoice.line_items;
                 this.taxTotalAmount               = invoice.tax;
                 this.finalTotalAmount             = invoice.debit;
+                this.particulars                  = invoice.particulars;
                 this.attachments                  = invoice.attachments;
 
                 if ( 'discount-percent' == invoice.discount_type ) {
@@ -352,7 +357,10 @@
             getProducts() {
                 HTTP.get('/products').then(response => {
                     this.products = response.data;
-                });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             getCustomerAddress() {
@@ -468,10 +476,9 @@
                 HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Invoice Updated!');
-                }).then(() => {
-                    this.isWorking = false;
-                    this.reset = true;
-
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     if ('update' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_update' == this.actionType) {
@@ -485,10 +492,9 @@
                 HTTP.post('/invoices', requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Invoice Created!');
-                }).then(() => {
-                    this.isWorking = false;
-                    this.reset = true;
-
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     if ('save' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_create' == this.actionType) {
@@ -519,6 +525,7 @@
                     tax_rate_id    : this.taxRate.id,
                     line_items     : this.formatLineItems(),
                     attachments    : this.attachments,
+                    particulars    : this.particulars,
                     type           : 'invoice',
                     status         : parseInt(this.status),
                     estimate       : this.inv_type.id
@@ -536,15 +543,17 @@
             },
 
             resetFields() {
-                this.basic_fields.customer        = '';
+                this.basic_fields.customer        = { id: null, name: null} ;
                 this.basic_fields.trn_date        = erp_acct_var.current_date;
                 this.basic_fields.due_date        = erp_acct_var.current_date;
                 this.basic_fields.billing_address = '';
                 this.attachments                  = [];
-                this.transactionLines             = [];
+                this.transactionLines             = [{}];
+                this.discountType                 = 'discount-percent';
+                this.discount                     = 0;
+                this.taxTotalAmount               = 0;
                 this.finalTotalAmount             = 0;
                 this.isWorking                    = false;
-                this.reset                        = false;
                 this.actionType                   = null;
             },
 

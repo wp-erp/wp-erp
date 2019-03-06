@@ -167,11 +167,16 @@
                     });
             },
             getTransactions() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get( this.url + '/' + this.userId + '/transactions' ).then( res => {
                     this.transactions = res.data;
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
             filterTransaction( filters = {} ) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get('customers/' + this.userId + '/transactions/filter', {
                     params: {
                         start_date: filters.start_date,
@@ -179,6 +184,9 @@
                     }
                 } ).then( res => {
                     this.transactions = res.data;
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             }
         }
