@@ -88,7 +88,9 @@
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Rate Name Created!' );
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.resetData();
                     this.isWorking = false;
                     this.$emit('close');
@@ -100,15 +102,11 @@
                 HTTP.put(`/tax-rate-names/${this.rate_name_id}`, {
                     name: this.rate_name,
                 }).then(res => {
-                    console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Tax Rate Name Update!',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
-                }).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Tax Rate Name Updated !' );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.resetData();
                     this.isWorking = false;
                     this.$emit('close');

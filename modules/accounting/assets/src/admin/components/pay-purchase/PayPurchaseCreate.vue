@@ -189,6 +189,7 @@
 
         methods: {
             getPayMethods() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get('/transactions/payment-methods').then((response) => {
                     response.data.forEach(element => {
                         this.pay_methods.push({
@@ -196,7 +197,11 @@
                             name: element.name
                         });
                     });
-                });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             setCheckFields( check_data ) {
@@ -292,6 +297,8 @@
                     return;
                 }
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.post('/pay-purchases', {
                     vendor_id: this.basic_fields.vendor.id,
                     ref: this.basic_fields.trn_ref,
@@ -307,21 +314,14 @@
                     name: this.check_data.payer_name
                 }).then(res => {
 
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Pay Purchase Created!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Pay Purchase Created!' );
+
                 }).catch( error => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'error',
-                        title: 'Something went Wrong!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'error', 'Something went wrong!' );
+
                 }).then(() => {
                     this.isWorking = false;
                     this.resetData();

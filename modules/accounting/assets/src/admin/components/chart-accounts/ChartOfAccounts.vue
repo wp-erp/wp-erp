@@ -88,7 +88,9 @@
 
                     this.fetchLedgers();
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                });
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             fetchLedgers() {
@@ -102,9 +104,15 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
+                            this.$store.dispatch( 'spinner/setSpinner', true );
+
                             HTTP.delete(`/ledgers/${row.id}`).then( response => {
                                 this.fetchChartAccounts();
-                            });
+
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                            }).catch( error => {
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                            } );
                         }
                         break;
 
