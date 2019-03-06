@@ -316,6 +316,8 @@ function erp_acct_get_income_statement( $args ) {
         }
         $results['rows'][] = [
             'name' => 'Profit',
+            'debit' => $dr_cr_diff,
+            'credit' => 0,
             'balance' => $dr_cr_diff
         ];
     } else {
@@ -327,6 +329,8 @@ function erp_acct_get_income_statement( $args ) {
         }
         $results['rows'][] = [
             'name' => 'Loss',
+            'debit' => 0,
+            'credit' => $dr_cr_diff,
             'balance' => $balance
         ];
     }
@@ -340,6 +344,12 @@ function erp_acct_get_income_statement( $args ) {
 
     return $results;
 }
+
+/**
+ * ===================================================
+ * Balance Sheet
+ * ===================================================
+ */
 
 /**
  * Get balance sheet
@@ -402,12 +412,18 @@ function erp_acct_get_balance_sheet( $args ) {
 
     $results['rows1'][] = [
         'name' => 'Accounts Receivable',
-        'balance' => erp_acct_get_account_receivable()
+        'balance' => erp_acct_get_account_receivable( $args )
     ];
 
     $results['rows2'][] = [
         'name' => 'Accounts Payable',
-        'balance' => abs( erp_acct_get_account_payable())
+        'balance' => abs( erp_acct_get_account_payable( $args ) )
+    ];
+
+    $results['rows2'][] = [
+        'name' => 'Sales Tax Payable',
+        'slug' => 'sales_tax',
+        'balance' => abs ( erp_acct_trail_balance_sales_tax_query( $args, 'payable' ) )
     ];
 
     $profit_loss = erp_acct_get_profit_loss( $args );
