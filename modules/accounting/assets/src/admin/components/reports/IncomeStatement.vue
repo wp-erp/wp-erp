@@ -18,10 +18,10 @@
             :rows="rows"
             :showCb="false">
             <template slot="debit" slot-scope="data">
-                {{ Math.sign(data.row.balance) === 1 ? getCurrencySign() + data.row.balance : '' }}
+                {{ getCurrencySign() + Math.abs(data.row.debit) }}
             </template>
             <template slot="credit" slot-scope="data">
-                {{ Math.sign(data.row.balance) === -1 ? getCurrencySign() + Math.abs(data.row.balance) : '' }}
+                {{ getCurrencySign() + Math.abs(data.row.credit) }}
             </template>
             <template slot="tfoot">
                 <tr class="t-foot">
