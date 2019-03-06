@@ -180,7 +180,9 @@
                             this.fetchItems();
                             this.$store.dispatch( 'spinner/setSpinner', false );
                             this.showAlert( 'success', 'Deleted !' );
-                        });
+                        }).catch( error => {
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                        } );
                     }
                 }
             },

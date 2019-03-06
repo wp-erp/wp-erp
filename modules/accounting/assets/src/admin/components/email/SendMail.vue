@@ -105,14 +105,11 @@
                     message: this.message,
                     attachment: this.attachment
                 }).then(() => {
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Mail Sent!',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
-                });
+                    this.showAlert( 'success', 'Mail Sent!' );
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             }
         }
     }

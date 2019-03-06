@@ -88,7 +88,9 @@
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Agency Created!' );
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.resetData();
                     this.isWorking = false;
                     this.$emit('close');
@@ -103,7 +105,9 @@
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Agency Created!' );
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.resetData();
                     this.isWorking = false;
                     this.$emit('close');

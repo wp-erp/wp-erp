@@ -98,6 +98,7 @@
             fetchItems() {
                 this.rows = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get( '/reports/balance-sheet',{
                     params: {
                         start_date: this.start_date,
@@ -108,8 +109,11 @@
                     this.rows2 = response.data.rows2;
                     this.totalLeft = response.data.total_left;
                     this.totalRight = response.data.total_right;
+
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                });
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             }
         }
     }

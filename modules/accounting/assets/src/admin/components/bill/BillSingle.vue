@@ -177,7 +177,9 @@
                 HTTP.get(`/bills/${this.$route.params.id}`).then(response => {
                     this.bill = response.data;
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then( e => {} ).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then( e => {} ).then(() => {
                     this.print_data = this.bill;
                     this.isWorking = false;
                 });

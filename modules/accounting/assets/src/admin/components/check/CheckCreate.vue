@@ -283,10 +283,14 @@
 
             getLedgers() {
                 let expense_chart_id = 5;
-
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get(`/ledgers/${expense_chart_id}/accounts`).then(response => {
                     this.ledgers = response.data;
-                });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             setCheckFields( check_data ) {
@@ -331,7 +335,9 @@
                 HTTP.put(`/expenses/${this.voucherNo}`, requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Check Updated!');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.isWorking = false;
                     this.reset = true;
 
@@ -348,7 +354,9 @@
                 HTTP.post('/expenses', requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Check Created!');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.isWorking = false;
                     this.reset = true;
 

@@ -104,7 +104,9 @@
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Rate Updated!' );
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.resetData();
                     this.isWorking = false;
                     this.$emit('line_close');

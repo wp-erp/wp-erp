@@ -113,7 +113,7 @@
                         this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
                     .catch( (error) => {
-
+                        this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
             },
             onActionClick( action, row, index ) {
@@ -122,16 +122,24 @@
                     this.category = row;
                 } else if ( 'trash' == action ) {
                     if ( confirm( "Are you sure want to delete ?" ) ) {
+                        this.$store.dispatch( 'spinner/setSpinner', true );
                         HTTP.delete( 'product-cats/' + row.id )
                         .then( (response) => {
                             this.$delete( this.categories, index );
-                        } )
+
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                            this.showAlert( 'success', 'Deleted!' );
+                        } ).catch( error => {
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                        } );
                     }
                 }
             },
             onBulkAction( action, items ) {
                 if ( 'trash' == action ) {
                     if ( confirm( 'Are you sure want to delete?' ) ) {
+                        this.$store.dispatch( 'spinner/setSpinner', true );
+
                         HTTP.delete('product-cats/delete/' + items).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
@@ -141,7 +149,11 @@
                             this.categories = this.categories.filter( item => {
                                 return items.indexOf( item.id ) == -1;
                             } );
-                        });
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+
+                        }).catch( error => {
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                        } );
                     }
                 }
             },
@@ -161,22 +173,27 @@
                         this.categories.push( response.data );
                         this.categoryName = '';
                         this.parentCategory = 0;
+
                         this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
                     .catch( ( error ) => {
-
+                        this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
             },
             updateCategory( row ) {
                 var categoryName = document.getElementById('cat-'+row.id).value;
                 var categoryId   = row.id;
+
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put( 'product-cats/' + categoryId, { name: categoryName } )
                     .then( (response) => {
                         row.isEdit = false;
                         row.name = categoryName;
+
                         this.$store.dispatch( 'spinner/setSpinner', false );
-                    } )
+                    } ).catch( error => {
+                        this.$store.dispatch( 'spinner/setSpinner', false );
+                    } );
             },
 
         }
