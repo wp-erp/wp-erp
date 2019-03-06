@@ -11,38 +11,62 @@ if ( ! defined( 'ABSPATH' ) ) {
  * ===================================================
  */
 
-/**
- * Get account receivable
- */
-function erp_acct_get_account_receivable() {
+function erp_acct_trail_balance_sales_tax_query( $args, $type ) {
     global $wpdb;
 
-    // mainly ( debit - credit )
-    $sql = "SELECT SUM(balance) AS amount
-        FROM ( SELECT SUM( debit - credit ) AS balance
-        FROM {$wpdb->prefix}erp_acct_invoice_account_details WHERE trn_date <= CURDATE()
-        GROUP BY invoice_no HAVING balance > 0 ) AS get_amount";
+    if ( 'payable' === $type ) {
+        $having = "HAVING balance < 0";
+    } elseif ( 'receivable' === $type ) {
+        $having = "HAVING balance > 0";
+    }
+
+    $sql = $wpdb->prepare("SELECT SUM(balance) AS amount
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_tax_agency_details WHERE trn_date BETWEEN '%s' AND '%s'
+            GROUP BY agency_id {$having} ) AS get_amount",
+        $args['start_date'], $args['end_date']);
 
     return $wpdb->get_var($sql);
 }
 
 /**
+ * Trial balance helper
+ *
+ * Get account receivable
+ */
+function erp_acct_get_account_receivable( $args ) {
+    global $wpdb;
+
+    // mainly ( debit - credit )
+    $sql = $wpdb->prepare("SELECT SUM(balance) AS amount
+        FROM ( SELECT SUM( debit - credit ) AS balance
+            FROM {$wpdb->prefix}erp_acct_invoice_account_details WHERE trn_date BETWEEN '%s' AND '%s'
+            GROUP BY invoice_no HAVING balance > 0 )
+        AS get_amount", $args['start_date'], $args['end_date']);
+
+    return $wpdb->get_var($sql);
+}
+
+/**
+ * Trial balance helper
+ *
  * Get account payble
  */
-function erp_acct_get_account_payable() {
+function erp_acct_get_account_payable( $args ) {
     global $wpdb;
 
     /**
      *? Why only bills, not expense?
      *? Expense is `direct expense`, and we don't include direct expense here
      */
-    $bill_sql = "SELECT SUM(balance) AS amount
-        FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_bill_account_details WHERE trn_date <= CURDATE() GROUP BY bill_no HAVING balance < 0 )
-        AS get_amount";
+    $bill_sql = $wpdb->prepare("SELECT SUM(balance) AS amount
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_bill_account_details WHERE trn_date BETWEEN '%s' AND '%s'
+            GROUP BY bill_no HAVING balance < 0 )
+        AS get_amount", $args['start_date'], $args['end_date']);
 
-    $purchase_sql = "SELECT SUM(balance) AS amount
-    FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_purchase_account_details WHERE trn_date <= CURDATE() GROUP BY purchase_no HAVING balance < 0 )
-    AS get_amount";
+    $purchase_sql = $wpdb->prepare("SELECT SUM(balance) AS amount
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_purchase_account_details WHERE trn_date BETWEEN '%s' AND '%s'
+            GROUP BY purchase_no HAVING balance < 0 )
+        AS get_amount", $args['start_date'], $args['end_date']);
 
     $bill_amount = $wpdb->get_var($bill_sql);
     $purchase_amount = $wpdb->get_var($purchase_sql);
@@ -52,26 +76,48 @@ function erp_acct_get_account_payable() {
 
 /**
  * Get trial balance
+ *
+ * @return mixed
  */
-function erp_acct_get_trial_balance() {
+function erp_acct_get_trial_balance( $args ) {
     global $wpdb;
 
-    $sql = "SELECT
+    if ( empty( $args['start_date'] ) ) {
+        $args['start_date'] = date('Y-m-d', strtotime('first day of this month') );
+    }
+
+    if ( empty( $args['end_date'] ) ) {
+        $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
+    }
+
+    $sql = $wpdb->prepare("SELECT
         ledger.name,
         SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE trn_date <= CURDATE()
-        GROUP BY ledger_detail.ledger_id";
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
+        WHERE ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
+        $args['start_date'], $args['end_date']
+    );
 
     // All DB results are inside `rows` key
     $results['rows'] = $wpdb->get_results($sql, ARRAY_A);
+
+    $results['rows'][] = [
+        'name' => 'Sales Tax Payable',
+        'balance' => erp_acct_trail_balance_sales_tax_query( $args, 'payable' )
+    ];
+    $results['rows'][] = [
+        'name' => 'Sales Tax Receivable',
+        'balance' => erp_acct_trail_balance_sales_tax_query( $args, 'receivable' )
+    ];
+
     $results['rows'][] = [
         'name' => 'Accounts Payable',
-        'balance' => erp_acct_get_account_payable()
+        'balance' => erp_acct_get_account_payable( $args )
     ];
     $results['rows'][] = [
         'name' => 'Accounts Receivable',
-        'balance' => erp_acct_get_account_receivable()
+        'balance' => erp_acct_get_account_receivable( $args )
     ];
 
     // Totals are inside the root `result` array
@@ -79,18 +125,22 @@ function erp_acct_get_trial_balance() {
     $results['total_credit'] = 0;
 
     // Add-up all debit and credit
-    foreach ($results['rows'] as $result) {
+    foreach ( $results['rows'] as $key => $result ) {
         if ( ! empty($result['balance']) ) {
             if ( $result['balance'] > 0 ) {
                 $results['total_debit'] += $result['balance'];
             } else {
                 $results['total_credit'] += $result['balance'];
             }
+        } else {
+            // don't use unset
+            // array_splice( $results['rows'], $key, 0 );
         }
     }
 
     return $results;
 }
+
 
 
 /**
@@ -209,6 +259,15 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     ];
 }
 
+
+
+
+/**
+ * ===================================================
+ * Income Statement
+ * ===================================================
+ */
+
 /**
  * Get income statement
  */
@@ -233,7 +292,7 @@ function erp_acct_get_income_statement( $args ) {
         SUM(ledger_detail.credit) as credit,
         SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE (ledger.chart_id=4 OR ledger.chart_id=5) AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' 
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE (ledger.chart_id=4 OR ledger.chart_id=5) AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
         GROUP BY ledger_detail.ledger_id";
 
     // All DB results are inside `rows` key

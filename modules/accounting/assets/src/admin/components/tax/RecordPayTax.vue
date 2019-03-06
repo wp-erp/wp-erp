@@ -198,7 +198,16 @@
             },
 
             resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
+                this.trn_by       = {id: null, name: null};
+                this.deposit_to   = {id: null, name: null};
+                this.agency       = {id: null, name: null};
+                this.tax_amount   = 0;
+                this.dueAmount    = 0;
+                this.particulars  = '';
+                this.isWorking    = false;
+                this.form_errors  = [];
+                this.trn_date     = erp_acct_var.current_date;
+                this.voucher_type = { id: 'debit', name: 'Debit' };
             },
 
             validateForm() {
