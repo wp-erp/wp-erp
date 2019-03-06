@@ -142,7 +142,7 @@ elementContains(elm, otherElm) {
 		padding: 0;
 		text-align: center;
 		opacity: 0;
-		z-index: 2;
+		z-index: 99999;
 		left: -9999px;
 		transition: none !important;
 
