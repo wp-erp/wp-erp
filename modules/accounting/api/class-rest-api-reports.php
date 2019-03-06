@@ -62,6 +62,17 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/balance-sheet', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_balance_sheet' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -139,28 +150,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Prepare a single user output for response
-     *
-     * @param object|array $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
-     *
-     * @return WP_REST_Response $response Response data.
-     */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-
-        $data = array_merge( $item, $additional_fields );
-
-        // Wrap the data in a response object
-        $response = rest_ensure_response( $data );
-
-        $response = $this->add_links( $response, $item, $additional_fields );
-
-        return $response;
-    }
-
-    /**
-     * Get trial balance
+     * Get income statement report
      *
      * @param WP_REST_Request $request
      *
@@ -179,6 +169,51 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response = rest_ensure_response( $data );
 
         $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get balance sheet report
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_balance_sheet( $request ) {
+        $start_date = $request['start_date'];
+        $end_date   = $request['end_date'];
+        $args       = [
+            'start_date' => $start_date,
+            'end_date'   => $end_date
+        ];
+
+        $data = erp_acct_get_balance_sheet( $args );
+
+        $response = rest_ensure_response( $data );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Prepare a single user output for response
+     *
+     * @param object|array $item
+     * @param WP_REST_Request $request Request object.
+     * @param array $additional_fields (optional)
+     *
+     * @return WP_REST_Response $response Response data.
+     */
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+
+        $data = array_merge( $item, $additional_fields );
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        $response = $this->add_links( $response, $item, $additional_fields );
 
         return $response;
     }

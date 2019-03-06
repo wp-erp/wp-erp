@@ -48,6 +48,7 @@ import CheckCreate       from 'admin/components/check/CheckCreate.vue';
 import CheckSingle       from 'admin/components/check/CheckSingle.vue';
 import SingleTaxRate     from 'admin/components/tax/SingleTaxRate.vue';
 import IncomeStatement   from 'admin/components/reports/IncomeStatement.vue';
+import BalanceSheet      from 'admin/components/reports/BalanceSheet.vue';
 
 Vue.use(Router);
 
@@ -340,6 +341,11 @@ export default new Router({
                     path: 'income-statement',
                     name: 'IncomeStatement',
                     component: IncomeStatement,
+                },
+                {
+                    path: 'balance-sheet',
+                    name: 'BalanceSheet',
+                    component: BalanceSheet,
                 },
             ]
         },

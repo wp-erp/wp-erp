@@ -257,8 +257,6 @@ function erp_acct_get_income_statement( $args ) {
         }
         $results['rows'][] = [
             'name' => 'Profit',
-            'debit' => $dr_cr_diff,
-            'credit' => 0,
             'balance' => $dr_cr_diff
         ];
     } else {
@@ -270,14 +268,177 @@ function erp_acct_get_income_statement( $args ) {
         }
         $results['rows'][] = [
             'name' => 'Loss',
-            'debit' => 0,
-            'credit' => $dr_cr_diff,
             'balance' => $balance
         ];
     }
 
     $results['total_debit'] = 0;
     $results['total_credit'] = 0;
+    foreach ($results['rows'] as $result) {
+        $results['total_debit']  += (float)$result['debit'];
+        $results['total_credit'] += (float)$result['credit'];
+    }
+
+    return $results;
+}
+
+/**
+ * Get balance sheet
+ */
+function erp_acct_get_balance_sheet( $args ) {
+    global $wpdb;
+
+    if ( empty( $args['start_date'] ) ) {
+        $args['start_date'] = date('Y-m-d', strtotime('first day of this month') );
+    }
+    if ( empty( $args['end_date'] ) ) {
+        $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
+    }
+
+    if ( empty( $args['start_date'] ) && empty( $args['end_date'] ) ) {
+        $args['start_date'] = date('Y-m-d', strtotime('first day of this month') );
+        $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
+    }
+
+    $sql1 = "SELECT
+        ledger.name,
+        ABS(SUM(ledger_detail.debit - ledger_detail.credit)) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE (ledger.chart_id=1 OR ledger.chart_id=7) AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' 
+        GROUP BY ledger_detail.ledger_id";
+
+    $sql2 = "SELECT
+        ledger.name,
+        ABS(SUM(ledger_detail.debit - ledger_detail.credit)) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=2 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' 
+        GROUP BY ledger_detail.ledger_id";
+
+    $sql3 = "SELECT
+        ledger.name,
+        ABS(SUM(ledger_detail.debit - ledger_detail.credit)) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=3 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' 
+        GROUP BY ledger_detail.ledger_id";
+
+    // All DB results are inside `rows` key
+    $results['rows1'] = $wpdb->get_results($sql1, ARRAY_A);
+    $results['rows2'] = $wpdb->get_results($sql2, ARRAY_A);
+    $results['rows3'] = $wpdb->get_results($sql3, ARRAY_A);
+
+    array_unshift( $results['rows1'], [
+        'name' => 'Assets',
+        'balance' => ''
+    ] );
+
+    array_unshift( $results['rows2'], [
+        'name' => 'Liability',
+        'balance' => ''
+    ] );
+
+    array_unshift( $results['rows3'], [
+        'name' => 'Equity',
+        'balance' => ''
+    ] );
+
+    $results['rows1'][] = [
+        'name' => 'Accounts Receivable',
+        'balance' => erp_acct_get_account_receivable()
+    ];
+
+    $results['rows2'][] = [
+        'name' => 'Accounts Payable',
+        'balance' => abs( erp_acct_get_account_payable())
+    ];
+
+    $profit_loss = erp_acct_get_profit_loss( $args );
+
+    $dr_cr_diff = abs( $profit_loss['total_debit'] ) - abs( $profit_loss['total_credit'] );
+
+    if ( abs( $profit_loss['total_debit'] ) < abs( $profit_loss['total_credit'] ) ) {
+        if ( $dr_cr_diff < 0 ) {
+            $dr_cr_diff = - $dr_cr_diff;
+        }
+        $results['rows3'][] = [
+            'name' => 'Profit',
+            'slug' => 'profit',
+            'balance' => $dr_cr_diff
+        ];
+    } else {
+        if ( $dr_cr_diff > 0 ) {
+            $balance = - $dr_cr_diff;
+        } else {
+            $dr_cr_diff = - $dr_cr_diff;
+            $balance    = $dr_cr_diff;
+        }
+        $results['rows3'][] = [
+            'name' => 'Loss',
+            'slug' => 'loss',
+            'balance' => $balance
+        ];
+    }
+
+    $results['rows2'] = array_merge( $results['rows2'], $results['rows3'] );
+
+    unset( $results['rows3'] );
+
+    $results['total_left'] = 0;
+    $results['total_right'] = 0;
+
+    foreach ($results['rows1'] as $result) {
+        if ( ! empty($result['balance']) ) {
+            $results['total_left'] += $result['balance'];
+        }
+    }
+
+    foreach ($results['rows2'] as $result) {
+        if ( isset( $results['slug'] ) && $results['slug'] !== 'loss' ) {
+            $result['balance'] = abs( $result['balance'] );
+        }
+        if ( ! empty($result['balance']) ) {
+            $results['total_right'] += $result['balance'];
+        }
+    }
+
+    return $results;
+}
+
+/**
+ * @param $results
+ * @return array
+ */
+function erp_acct_get_profit_loss( $args ) {
+    global $wpdb;
+
+    if ( empty( $args['start_date'] ) ) {
+        $args['start_date'] = date('Y-m-d', strtotime('first day of this month') );
+    }
+    if ( empty( $args['end_date'] ) ) {
+        $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
+    }
+
+    if ( empty( $args['start_date'] ) && empty( $args['end_date'] ) ) {
+        $args['start_date'] = date('Y-m-d', strtotime('first day of this month') );
+        $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
+    }
+
+    $sql = "SELECT
+        ledger.name,
+        SUM(ledger_detail.debit) as debit,
+        SUM(ledger_detail.credit) as credit,
+        SUM(ledger_detail.debit - ledger_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE (ledger.chart_id=4 OR ledger.chart_id=5) AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' 
+        GROUP BY ledger_detail.ledger_id";
+
+    // All DB results are inside `rows` key
+    $results['rows'] = $wpdb->get_results($sql, ARRAY_A);
+
+    // Totals are inside the root `result` array
+    $results['total_debit'] = 0;
+    $results['total_credit'] = 0;
+
+    // Add-up all debit and credit
     foreach ($results['rows'] as $result) {
         $results['total_debit']  += (float)$result['debit'];
         $results['total_credit'] += (float)$result['credit'];
