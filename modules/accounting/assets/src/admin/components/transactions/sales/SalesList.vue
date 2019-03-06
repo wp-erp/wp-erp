@@ -141,7 +141,7 @@
                     }
                 }).then(response => {
                     let mappedData = response.data.map(item => {
-                        if ( 'sales_invoice' === item.type && 'Awaiting Approval' === item.status ) {
+                        if ( 'sales_invoice' === item.type && 2 == item.status ) {
                             item['actions'] = [
                                 { key: 'edit', label: 'Edit' },
                                 { key: 'receive', label: 'Receive Payment' },

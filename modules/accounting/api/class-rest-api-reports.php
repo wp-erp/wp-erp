@@ -40,6 +40,28 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/ledger-report', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_ledger_report' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/income-statement', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_income_statement' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
     }
 
     /**
@@ -65,7 +87,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'] 
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
         ];
 
         $chart_status = erp_acct_get_sales_chart_status($args);
@@ -83,7 +105,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_payment( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'] 
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
         ];
 
         $chart_payment = erp_acct_get_sales_chart_payment($args);
@@ -112,6 +134,30 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response = rest_ensure_response( $data );
 
         $response = $this->add_links( $response, $item, $additional_fields );
+
+        return $response;
+    }
+
+    /**
+     * Get trial balance
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_income_statement( $request ) {
+        $start_date = $request['start_date'];
+        $end_date   = $request['end_date'];
+        $args       = [
+            'start_date' => $start_date,
+            'end_date'   => $end_date
+        ];
+
+        $data = erp_acct_get_income_statement( $args );
+
+        $response = rest_ensure_response( $data );
+
+        $response->set_status( 200 );
 
         return $response;
     }

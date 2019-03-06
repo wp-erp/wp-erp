@@ -45,6 +45,7 @@ import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import CheckCreate       from 'admin/components/check/CheckCreate.vue';
 import CheckSingle       from 'admin/components/check/CheckSingle.vue';
 import SingleTaxRate     from 'admin/components/tax/SingleTaxRate.vue';
+import IncomeStatement   from 'admin/components/reports/IncomeStatement.vue';
 
 Vue.use(Router);
 
@@ -322,6 +323,21 @@ export default new Router({
                     path: 'trial-balance',
                     name: 'TrialBalance',
                     component: TrialBalance,
+                },
+                {
+                    path: 'ledger-report',
+                    name: 'LedgerReport',
+                    component: LedgerReport,
+                },
+                {
+                    path: 'sales-tax',
+                    name: 'SalesTax',
+                    component: SalesTax,
+                },
+                {
+                    path: 'income-statement',
+                    name: 'IncomeStatement',
+                    component: IncomeStatement,
                 },
             ]
         },
