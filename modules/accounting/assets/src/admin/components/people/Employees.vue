@@ -106,10 +106,11 @@
                         this.rows = response.data;
                         this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                         this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+
                         this.$store.dispatch( 'spinner/setSpinner', false );
                     })
                     .catch((error) => {
-                        console.log(error);
+                        this.$store.dispatch( 'spinner/setSpinner', false );
                     })
                     .then( () => {
                         //ready
