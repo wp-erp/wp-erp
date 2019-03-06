@@ -51,6 +51,17 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales-tax-report', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_sales_tax_report' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/income-statement', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -146,6 +157,27 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
         $end_date   = empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'];
 
         $data = erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date );
+
+        $response = rest_ensure_response( $data );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get sales tax report
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_sales_tax_report( $request ) {
+        $agency_id  = (int) $request['agency_id'];
+        $start_date = empty( $request['start_date'] ) ? null : $request['start_date'];
+        $end_date   = empty( $request['end_date'] )   ? null : $request['end_date'];
+
+        $data = erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date );
 
         $response = rest_ensure_response( $data );
 
