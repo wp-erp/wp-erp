@@ -131,10 +131,14 @@
 
             getJournal() {
                 this.isWorking = true;
+                this.$store.dispatch( 'spinner/setSpinner', true);
 
                 HTTP.get(`/journals/${this.$route.params.id}`).then(response => {
                     this.journal = response.data;
-                }).then( e => {} ).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then( e => {} ).then(() => {
                     this.isWorking = false;
                 });
             },

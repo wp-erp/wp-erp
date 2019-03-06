@@ -173,13 +173,18 @@
 
             getPurchase() {
                 this.isWorking = true;
+                this.$store.dispatch( 'spinner/setSpinner', true );
 
-                HTTP.get(`/purchases/${this.$route.params.id}`).then(response => {                                        
+                HTTP.get(`/purchases/${this.$route.params.id}`).then(response => {
                     this.purchase = response.data;
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 }).then( e => {} ).then(() => {
                     this.print_data = this.purchase;
                     this.isWorking = false;
-                });
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             printPopup() {

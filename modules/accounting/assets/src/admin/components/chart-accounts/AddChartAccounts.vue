@@ -234,17 +234,27 @@
             },
 
             createLedger(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.post('/ledgers', requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Created !');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.resetFields();
                 });
             },
 
             updateteLedger(requestData) {
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.put(`/ledgers/${this.ledgerID}`, requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Updated !');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.resetFields();
                     this.$router.push({name: 'ChartOfAccounts'});
                 });

@@ -104,7 +104,7 @@
                     </div>
 
                 </div>
-                
+
                 <div class="invoice-attachments d-print-none">
                     <h4>Attachments</h4>
                     <a class="attachment-item" :href="attachment"
@@ -169,13 +169,17 @@
 
             getPurchase() {
                 this.isWorking = true;
+                this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.get(`/pay-purchases/${this.$route.params.id}`).then(response => {
                     this.payPurchase = response.data;
-                }).then( e => {} ).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then( e => {} ).then(() => {
                     this.print_data = this.payPurchase;
                     this.isWorking = false;
-                });
+                })
             },
 
             printPopup() {

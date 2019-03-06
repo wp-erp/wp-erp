@@ -188,7 +188,9 @@
                     particulars : this.particulars,
                     voucher_type: this.voucher_type.id,
                     amount      : parseFloat(this.tax_amount),
-                }).then(res => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Paid!' );
                 }).then(() => {

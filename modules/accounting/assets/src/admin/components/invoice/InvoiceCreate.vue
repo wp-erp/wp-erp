@@ -354,9 +354,15 @@
             },
 
             getProducts() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('/products').then(response => {
                     this.products = response.data;
-                });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             getCustomerAddress() {
@@ -472,7 +478,9 @@
                 HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Invoice Updated!');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     if ('update' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_update' == this.actionType) {
@@ -483,10 +491,13 @@
 
             createInvoice(requestData) {
                 this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.post('/invoices', requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Invoice Created!');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     if ('save' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_create' == this.actionType) {

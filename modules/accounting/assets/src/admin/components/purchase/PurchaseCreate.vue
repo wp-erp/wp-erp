@@ -247,6 +247,8 @@
             getProducts() {
                 this.products = [];
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('/products').then((response) => {
                     response.data.forEach(element => {
                         this.products.push({
@@ -255,7 +257,11 @@
                             unitPrice: element.cost_price
                         });
                     });
-                });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             getvendorAddress() {
