@@ -285,7 +285,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor'            => $item->vendor,
             'cost_price'        => $item->cost_price,
             'sale_price'        => $item->sale_price,
-            'vendor_name'       => $item->vendor,
+            'vendor_name'       => $item->vendor_name,
             'cat_name'          => $item->cat_name,
             'tax_cat_name'      => erp_acct_get_tax_category_by_id( $item->tax_cat_id ),
         ];

@@ -417,7 +417,7 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
     $expense_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $expense_data['ref'] = isset( $data['ref'] ) ? $data['ref'] : '';
-    $expense_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : 0;
+    $expense_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : null;
     $expense_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $expense_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $expense_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
