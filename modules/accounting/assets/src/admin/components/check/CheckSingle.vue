@@ -61,7 +61,7 @@
                                     </tr>
                                     <tr>
                                         <th>Check Date:</th>
-                                        <td>{{ expense_data.trn_date }}</td>
+                                        <td>{{ expense_data.date }}</td>
                                     </tr>
                                 </table>
                             </div>

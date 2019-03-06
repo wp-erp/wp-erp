@@ -373,7 +373,7 @@
 
                 let requestData = {
                     people_id: this.basic_fields.people.id,
-                    check_no: parseInt(this.basic_fields.check_no),
+                    check_no: this.basic_fields.check_no,
                     trn_date: this.basic_fields.trn_date,
                     trn_by: '3',
                     bill_details: this.formatTrnLines(this.transactionLines),

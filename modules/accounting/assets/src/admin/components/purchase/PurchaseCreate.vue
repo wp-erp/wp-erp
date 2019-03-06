@@ -58,7 +58,7 @@
                             <th scope="col" class="col--actions"></th>
                         </tr>
                         </thead>
-                        <tbody id="test">
+                        <tbody>
                         <purchase-row
                             :line="line"
                             :products="products"
@@ -392,3 +392,7 @@
 
     }
 </script>
+
+<style>
+
+</style>

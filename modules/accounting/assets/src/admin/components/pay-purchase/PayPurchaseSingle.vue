@@ -76,15 +76,17 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Voucher No</th>
                                 <th>Purchase No</th>
+                                <th>Vendor</th>
                                 <th>Amount</th>
                             </tr>
                             </thead>
                             <tbody>
                                 <tr :key="index" v-for="(line, index) in payPurchase.purchase_details">
-                                    <td>{{ line.id }}</td>
-                                    <td>{{ line.purchase_no }}</td>
+                                    <td>{{ line.voucher_no }}</td>
+                                    <td>{{ line.purchase_no }}</td
+                                    <td>{{ line.vendor_name }}</td>
                                     <td>{{ getCurrencySign() + line.amount }}</td>
                                 </tr>
                             </tbody>
