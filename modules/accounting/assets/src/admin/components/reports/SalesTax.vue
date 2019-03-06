@@ -1,29 +1,168 @@
 <template>
-    <div>
-hell yoo
+    <div class="sales-tax-report">
+        <h2>Sales Tax Report</h2>
+
+        <form action="" method="" @submit.prevent="getSalesTaxReport" class="query-options">
+            <div class="with-multiselect">
+                <multi-select v-model="selectedAgency" :options="taxAgencies" />
+            </div>
+
+            <div class="wperp-date-group">
+                <datepicker v-model="start_date"></datepicker>
+                <datepicker v-model="end_date"></datepicker>
+            </div>
+
+            <button class="wperp-btn btn--primary add-line-trigger" type="submit">View</button>
+        </form>
+
+        <ul class="report-header" v-if="null !== selectedAgency">
+            <li><strong>Account Name:</strong> <em>{{ selectedAgency.name }}</em></li>
+            <li><strong>Currency:</strong> <em>Dollar</em></li>
+            <li><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></li>
+        </ul>
+
+        <list-table v-if="rows.length"
+            tableClass="wperp-table table-striped table-dark widefat"
+            :columns="columns"
+            :rows="rows">
+            <template slot="debit" slot-scope="data">
+                {{ data.row.debit }}
+            </template>
+            <template slot="credit" slot-scope="data">
+                {{ data.row.credit }}
+            </template>
+            <template slot="balance" slot-scope="data">
+                {{ data.row.balance }}
+            </template>
+            <template slot="tfoot">
+                <tr class="tfoot">
+                    <td colspan="4"></td>
+                    <td>Total =</td>
+                    <td>{{ totalDebit }}</td>
+                    <td>{{ totalCredit }}</td>
+                    <td></td>
+                </tr>
+            </template>
+        </list-table>
     </div>
 </template>
 
 <script>
+    import HTTP        from 'admin/http'
+    import ListTable   from 'admin/components/list-table/ListTable.vue'
+    import Datepicker  from 'admin/components/base/Datepicker.vue'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+
     export default {
         name: 'SalesTax',
 
+        components: {
+            ListTable,
+            Datepicker,
+            MultiSelect,
+        },
+
         data() {
             return {
-
+                start_date    : null,
+                end_date      : null,
+                selectedAgency: null,
+                taxAgencies   : [],
+                openingBalance: 0,
+                rows          : [],
+                totalDebit    : 0,
+                totalCredit   : 0,
+                columns       : {
+                    'trn_date'   : { label: 'Trns Date' },
+                    'created_at' : { label: 'Created At' },
+                    'trn_no'     : { label: 'Trns No' },
+                    'particulars': { label: 'Particulars' },
+                    'debit'      : { label: 'Debit' },
+                    'credit'     : { label: 'Credit' },
+                    'balance'    : { label: 'Balance' }
+                }
             };
         },
 
         created() {
+            //? why is nextTick here ...? i don't know.
+            this.$nextTick(function () {
+                // with leading zero, and JS month are zero index based
+                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
 
+                this.start_date = `2019-${month}-01`;
+                this.end_date   = erp_acct_var.current_date;
+            });
+
+            this.getAgencies();
         },
 
         methods: {
+            getAgencies() {
+                HTTP.get('/tax-agencies').then(res => {
+                    this.taxAgencies = res.data;
+                });
+            },
 
+            getSalesTaxReport() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
+                this.rows = [];
+
+                HTTP.get('/reports/sales-tax-report', {
+                    params: {
+                        agency_id : this.selectedAgency.id,
+                        start_date: this.start_date,
+                        end_date  : this.end_date
+                    }
+                }).then(response => {
+                    this.rows        = response.data.details;
+                    this.totalDebit  = response.data.extra.total_debit;
+                    this.totalCredit = response.data.extra.total_credit;
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch(e => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                });
+            }
         }
     }
 </script>
 
-<style scoped>
+<style lang="less">
+.sales-tax-report {
+    .query-options {
+        background: #fff;
+        padding: 30px 5px;
+        border-radius: 3px;
+    }
 
+    .with-multiselect {
+        width: 300px;
+        float: left;
+        margin-right: 50px;
+    }
+
+    .wperp-date-group {
+        float: left;
+        margin-right: 10px;
+    }
+
+    .wperp-btn {
+        margin-top: 2px;
+    }
+
+    .report-header {
+        width: 420px;
+        padding: 10px 0 0 0;
+        margin: 50px 0 0 0;
+
+        li {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
 </style>
+
+
