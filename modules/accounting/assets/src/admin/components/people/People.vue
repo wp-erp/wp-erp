@@ -145,9 +145,12 @@
                             this.$store.dispatch( 'spinner/setSpinner', true );
                             HTTP.delete( this.url + '/' + row.id).then( response => {
                                 this.$delete(this.rows, index);
+
                                 this.$store.dispatch( 'spinner/setSpinner', false );
                                 this.showAlert( 'success', 'Deleted !' );
-                            });
+                            }).catch( error => {
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                            } );
                         }
                         break;
 
@@ -176,7 +179,9 @@
                             this.fetchItems();
                             this.$store.dispatch( 'spinner/setSpinner', false );
                             this.showAlert( 'success', 'Deleted !' );
-                        });
+                        }).catch( error => {
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                        } );
                     }
                 }
             },
