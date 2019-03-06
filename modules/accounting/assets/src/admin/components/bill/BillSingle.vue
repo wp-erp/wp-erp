@@ -80,15 +80,15 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Ledger ID</th>
+                                <th>Voucher No</th>
+                                <th>Account</th>
                                 <th>Particulars</th>
                                 <th>Amount</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr :key="index" v-for="(line, index) in bill.bill_details">
-                                <td>{{ line.id}}</td>
+                                <td>{{ line.trn_no}}</td>
                                 <td>{{ line.ledger_name }}</td>
                                 <td>{{ line.particulars }}</td>
                                 <td>{{ getCurrencySign() + line.amount }}</td>

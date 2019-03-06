@@ -63,7 +63,7 @@
                     'product_type_name': {
                         label: 'Product Type'
                     },
-                    'vendor': {
+                    'vendor_name': {
                         label: 'Vendor'
                     },
                     'actions': { label: 'Actions' }

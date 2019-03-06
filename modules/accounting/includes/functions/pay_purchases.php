@@ -422,11 +422,7 @@ function erp_acct_change_purchase_status( $purchase_no ) {
 
     $due = erp_acct_get_purchase_due( $purchase_no );
 
-    error_log( print_r( "due " . $due, true ) );
-
     if ( $due == 0 ) {
-
-        error_log( print_r( "update " . $purchase_no, true ) );
 
         $wpdb->update($wpdb->prefix . 'erp_acct_purchase',
             array(
