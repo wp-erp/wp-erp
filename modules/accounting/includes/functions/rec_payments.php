@@ -188,6 +188,7 @@ function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
     $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
         'invoice_no' => $item['invoice_no'],
         'trn_no'     => $voucher_no,
+        'trn_date'   => $payment_data['trn_date'],
         'particulars'=> $payment_data['particulars'],
         'debit'      => 0,
         'credit'     => $item['line_total'],
@@ -295,6 +296,7 @@ function erp_acct_update_payment_line_items( $data, $invoice_no, $voucher_no ) {
     $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
         'trn_no'     => $voucher_no,
         'particulars'=> $payment_data['particulars'],
+        'trn_date'   => $payment_data['trn_date'],
         'debit'      => 0,
         'credit'     => $payment_data['amount'],
         'created_at' => $payment_data['created_at'],

@@ -1,9 +1,9 @@
 <template>
     <tr>
-        <th scope="row" class="col--check with-multiselect prodcut-select">
+        <th scope="row" class="col--check with-multiselect column-primary prodcut-select">
             <multi-select v-model="line.selectedProduct" :options="products" />
         </th>
-        <td class="col--qty column-primary">
+        <td class="col--qty">
             <input min="0" type="number" :class="{'has-err': errors.first('qty')}"
                    v-validate="'required'"
                    v-model="line.qty"
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
 
     export default {
