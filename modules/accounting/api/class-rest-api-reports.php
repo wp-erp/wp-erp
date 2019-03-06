@@ -72,7 +72,12 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_trial_balance( $request ) {
-        $data = erp_acct_get_trial_balance();
+        $args = [
+            'start_date' => ! empty( $request['start_date'] ) ? $request['start_date'] : null,
+            'end_date'   => ! empty( $request['end_date'] )   ? $request['end_date']   : null
+        ];
+
+        $data = erp_acct_get_trial_balance( $args );
 
         $response = rest_ensure_response( $data );
 

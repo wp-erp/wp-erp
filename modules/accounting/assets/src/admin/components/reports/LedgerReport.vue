@@ -122,8 +122,8 @@
                         end_date  : this.end_date
                     }
                 }).then(response => {
-                    this.rows = response.data.details;
-                    this.totalDebit = response.data.extra.total_debit;
+                    this.rows        = response.data.details;
+                    this.totalDebit  = response.data.extra.total_debit;
                     this.totalCredit = response.data.extra.total_credit;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );

@@ -1,9 +1,20 @@
 <template>
-    <div>
-        <h4>Trial Balance</h4>
+    <div class="trial-balance">
+        <h2>Trial Balance</h2>
 
-         <list-table
-            tableClass="wperp-table table-striped table-dark widefat trial-balance"
+        <form action="" method="" @submit.prevent="getTrialBalance" class="query-options">
+            <div class="wperp-date-btn-group">
+                <datepicker v-model="start_date"></datepicker>
+                <datepicker v-model="end_date"></datepicker>
+            </div>
+
+            <button class="wperp-btn btn--primary add-line-trigger" type="submit">View</button>
+        </form>
+
+        <p><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></p>
+
+        <list-table
+            tableClass="wperp-table table-striped table-dark widefat"
             :columns="columns"
             :rows="rows">
             <template slot="debit" slot-scope="data">
@@ -27,46 +38,66 @@
 <script>
     import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
+    import Datepicker  from 'admin/components/base/Datepicker.vue'
 
     export default {
         name: 'TrialBalance',
 
         components: {
-            ListTable
+            ListTable,
+            Datepicker,
         },
 
         data() {
             return {
                 bulkActions: [
                     {
-                        key: 'trash',
+                        key  : 'trash',
                         label: 'Move to Trash',
-                        img: erp_acct_var.erp_assets + '/images/trash.png'
+                        img  : erp_acct_var.erp_assets + '/images/trash.png'
                     }
                 ],
                 columns: {
-                    'name': { label: 'Account Name' },
-                    'debit': { label: 'Debit Total' },
+                    'name'  : { label: 'Account Name' },
+                    'debit' : { label: 'Debit Total' },
                     'credit': { label: 'Credit Total' }
                 },
-                rows: [],
-                totalDebit: 0,
-                totalCredit: 0
+                rows       : [],
+                totalDebit : 0,
+                totalCredit: 0,
+                start_date : null,
+                end_date   : null
             }
         },
 
         created() {
-            this.fetchItems();
+            //? why is nextTick here ...? i don't know.
+            this.$nextTick(function () {
+                // with leading zero, and JS month are zero index based
+                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
+
+                this.start_date = `2019-${month}-01`;
+                this.end_date   = erp_acct_var.current_date;
+            });
         },
 
         methods: {
-            fetchItems() {
+            getTrialBalance() {
                 this.rows = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get( '/reports/trial-balance').then(response => {
-                    this.rows = response.data.rows;
-                    this.totalDebit = response.data.total_debit;
+
+                HTTP.get( '/reports/trial-balance', {
+                    params: {
+                        start_date: this.start_date,
+                        end_date  : this.end_date
+                    }
+                }).then(response => {
+                    this.rows        = response.data.rows;
+                    this.totalDebit  = response.data.total_debit;
                     this.totalCredit = response.data.total_credit;
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch(e => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 });
             }
@@ -89,6 +120,14 @@
                 color: #2196f3;
                 font-weight: bold;
             }
+        }
+
+        .query-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 400px;
+            padding: 20px 0;
         }
     }
 </style>

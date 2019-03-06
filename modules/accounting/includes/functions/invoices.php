@@ -740,17 +740,17 @@ function erp_acct_insert_invoice_data_people_details( $invoice_data ) {
     global $wpdb;
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
-        'people_id'   => $invoice_data['customer_id'],
-        'trn_no'      => $invoice_data['voucher_no'],
-        'particulars' => $invoice_data['particulars'],
-        'debit'       => $invoice_data['amount'] + $invoice_data['tax'] - $invoice_data['discount'],
-        'credit'      => 0,
-        'voucher_type'=> $invoice_data['type'],
-        'trn_date'    => $invoice_data['trn_date'],
-        'created_at'  => $invoice_data['created_at'],
-        'created_by'  => $invoice_data['created_by'],
-        'updated_at'  => $invoice_data['updated_at'],
-        'updated_by'  => $invoice_data['updated_by']
+        'people_id'    => $invoice_data['customer_id'],
+        'trn_no'       => $invoice_data['voucher_no'],
+        'particulars'  => $invoice_data['particulars'],
+        'debit'        => $invoice_data['amount'] + $invoice_data['tax'] - $invoice_data['discount'],
+        'credit'       => 0,
+        'voucher_type' => empty( $invoice_data['type'] ) ? 'debit' : null, // please review
+        'trn_date'     => $invoice_data['trn_date'],
+        'created_at'   => $invoice_data['created_at'],
+        'created_by'   => $invoice_data['created_by'],
+        'updated_at'   => $invoice_data['updated_at'],
+        'updated_by'   => $invoice_data['updated_by']
     ) );
 }
 
