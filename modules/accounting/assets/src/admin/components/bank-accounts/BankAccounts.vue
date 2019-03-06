@@ -104,6 +104,8 @@
                 HTTP.get('/accounts/bank-accounts').then( (response) => {
                     this.accounts = response.data;
                     this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
 

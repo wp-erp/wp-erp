@@ -175,7 +175,7 @@
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch((error) => {
-                    console.log(error);
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 });
             },
 
@@ -208,7 +208,9 @@
                                 this.$delete(this.rows, index);
                                 this.$store.dispatch( 'spinner/setSpinner', false );
                                 this.showAlert( 'success', 'Deleted' );
-                            });
+                            }).catch( error => {
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                            } );
                         }
                         break;
 
@@ -230,6 +232,7 @@
                 if ('trash' === action) {
                     if (confirm('Are you sure to delete?')) {
                         this.$store.dispatch( 'spinner/setSpinner', true );
+
                         HTTP.delete('taxes/delete/' + items.join(',')).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
@@ -240,7 +243,9 @@
 
                             this.fetchItems();
                             this.$store.dispatch( 'spinner/setSpinner', false );
-                        });
+                        }).catch( error => {
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                        } );
                     }
                 }
             },

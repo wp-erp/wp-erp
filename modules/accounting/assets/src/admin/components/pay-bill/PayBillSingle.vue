@@ -171,7 +171,9 @@
                 HTTP.get(`/pay-bills/${this.$route.params.id}`).then(response => {
                     this.payBill = response.data;
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then( e => {} ).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then( e => {} ).then(() => {
                     this.print_data = this.payBill;
                     this.isWorking = false;
                 });
