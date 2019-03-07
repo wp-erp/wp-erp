@@ -64,7 +64,7 @@
                 <table class="wperp-table wperp-form-table">
                     <thead>
                     <tr>
-                        <th scope="col" class="col--id column-primary">Invoice ID</th>
+                        <th scope="col" class="col--id column-primary">Voucher No</th>
                         <th scope="col">Due Date</th>
                         <th scope="col">Total</th>
                         <th scope="col">Due</th>
@@ -74,7 +74,7 @@
                     </thead>
                     <tbody>
                     <tr :key="key" v-for="(invoice,key) in invoices">
-                        <td scope="row" class="col--id column-primary">{{invoice.id}}</td>
+                        <td scope="row" class="col--id column-primary">{{invoice.invoice_no}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{invoice.due_date}}</td>
                         <td class="col--total" data-colname="Total">{{invoice.amount}}</td>
                         <td class="col--due" data-colname="Due">{{invoice.due}}</td>
@@ -265,9 +265,15 @@
             },
 
             getPayMethods() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('/transactions/payment-methods').then(response => {
                     this.pay_methods = response.data;
-                });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             setCheckFields( check_data ) {

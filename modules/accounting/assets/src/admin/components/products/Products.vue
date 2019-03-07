@@ -63,7 +63,7 @@
                     'product_type_name': {
                         label: 'Product Type'
                     },
-                    'vendor': {
+                    'vendor_name': {
                         label: 'Vendor'
                     },
                     'actions': { label: 'Actions' }
@@ -83,6 +83,8 @@
                 HTTP.get('products').then( response => {
                     this.products = response.data;
                     this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
             createProduct() {
@@ -94,9 +96,15 @@
                     this.product = row;
                 } else if ( 'trash' == action ) {
                     if ( confirm( 'Are sure want to Delete ?' ) ) {
+                        this.$store.dispatch( 'spinner/setSpinner', true );
+
                         HTTP.delete( 'products/' + row.id ).then(response => {
                             this.$delete( this.products, index );
                             this.getProducts();
+
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                        } ).catch( error => {
+                            this.$store.dispatch( 'spinner/setSpinner', false );
                         } );
                     }
                 }
@@ -104,6 +112,8 @@
             onBulkAction( action, items ) {
                 if ( 'trash' == action ) {
                     if ( confirm( 'Are you sure want to delete?' ) ) {
+                        this.$store.dispatch( 'spinner/setSpinner', true );
+
                         HTTP.delete('products/delete/' + items).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
@@ -111,7 +121,11 @@
                                 toggleCheckbox.click();
                             }
                             this.getProducts();
-                        });
+
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                        }).catch( error => {
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                        } );
                     }
                 }
             }

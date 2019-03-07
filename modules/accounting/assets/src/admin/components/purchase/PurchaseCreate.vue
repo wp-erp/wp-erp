@@ -58,7 +58,7 @@
                             <th scope="col" class="col--actions"></th>
                         </tr>
                         </thead>
-                        <tbody id="test">
+                        <tbody>
                         <purchase-row
                             :line="line"
                             :products="products"
@@ -247,6 +247,8 @@
             getProducts() {
                 this.products = [];
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('/products').then((response) => {
                     response.data.forEach(element => {
                         this.products.push({
@@ -255,7 +257,11 @@
                             unitPrice: element.cost_price
                         });
                     });
-                });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             getvendorAddress() {
@@ -309,8 +315,10 @@
 
             updatePurchase(requestData) {
                 HTTP.put(`/purchases/${this.voucherNo}`, requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Purchase Updated!');
                 }).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.isWorking = false;
                     this.reset = true;
 
@@ -324,8 +332,10 @@
 
             createPurchase(requestData) {
                 HTTP.post('/purchases', requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Purchase Created!');
                 }).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.isWorking = false;
                     this.reset = true;
 
@@ -349,6 +359,7 @@
                 }
 
                 this.isWorking = true;
+                this.$store.dispatch( 'spinner/setSpinner', true );
 
                 let requestData = {
                     vendor_id      : this.basic_fields.vendor.id,
@@ -392,3 +403,7 @@
 
     }
 </script>
+
+<style>
+
+</style>

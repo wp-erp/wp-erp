@@ -157,7 +157,9 @@
                                 this.$delete(this.rows, index);
                                 this.$store.dispatch( 'spinner/setSpinner', false );
                                 this.showAlert( 'success', 'Deleted !' );
-                            });
+                            }).catch( error => {
+                                this.$store.dispatch( 'spinner/setSpinner', false );
+                            } );
                         }
                         break;
 
@@ -177,6 +179,7 @@
                 if ( 'trash' === action ) {
                     if ( confirm('Are you sure to delete?') ) {
                         this.$store.dispatch( 'spinner/setSpinner', true );
+
                         HTTP.delete('tax-cats/delete/' + items.join(',')).then(response => {
                             let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
@@ -188,7 +191,9 @@
                             this.fetchItems();
                             this.$store.dispatch( 'spinner/setSpinner', false );
                             this.showAlert( 'success', 'Deleted !' );
-                        });
+                        }).catch( error => {
+                            this.$store.dispatch( 'spinner/setSpinner', false );
+                        } );
                     }
                 }
             },
