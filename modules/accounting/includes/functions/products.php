@@ -46,7 +46,27 @@ function erp_acct_get_all_products() {
 function erp_acct_get_product( $product_id ) {
 	global $wpdb;
 
-	$row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_products WHERE id = {$product_id} GROUP BY category_id", ARRAY_A );
+	$row = $wpdb->get_row( "SELECT
+		product.id,
+		product.name,
+		product.product_type_id,
+		product.cost_price,
+		product.sale_price,
+		product.tax_cat_id,
+
+		people.id AS vendor,
+		CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+
+		cat.id AS category_id,
+		cat.name AS cat_name,
+
+		product_type.name AS product_type_name
+
+		FROM wp_erp_acct_products AS product
+		LEFT JOIN wp_erp_peoples AS people ON product.vendor = people.id
+		LEFT JOIN wp_erp_acct_product_categories AS cat ON product.category_id = cat.id
+		LEFT JOIN wp_erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
+	WHERE product.id = {$product_id} LIMIT 1", ARRAY_A );
 
 	return $row;
 }
@@ -91,7 +111,7 @@ function erp_acct_insert_product( $data ) {
 		return new WP_error( 'product-exception', $e->getMessage() );
 	}
 
-	return $product_id;
+	return erp_acct_get_product( $product_id );
 
 }
 
@@ -135,7 +155,7 @@ function erp_acct_update_product( $data, $id ) {
 		return new WP_error( 'product-exception', $e->getMessage() );
 	}
 
-	return $id;
+    return erp_acct_get_product( $id );
 
 }
 
