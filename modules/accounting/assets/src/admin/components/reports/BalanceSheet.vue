@@ -85,8 +85,8 @@
                 },
                 rows1: [],
                 rows2: [],
-                totalDebit: 0,
-                totalCredit: 0
+                totalRight: 0,
+                totalLeft: 0
             }
         },
 

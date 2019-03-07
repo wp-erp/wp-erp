@@ -53,33 +53,30 @@
                 <table class="wperp-table wperp-form-table invoice-table">
                     <thead>
                         <tr>
+                            <th>Sl.</th>
                             <th>Product</th>
                             <th>Qty</th>
                             <th>Unit Price</th>
-                            <th>Discount</th>
-                            <th>Tax</th>
-                            <th>Tax Amount</th>
                             <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr :key="index" v-for="(detail, index) in invoice.line_items">
+                            <th>{{ index+1 }}</th>
                             <th>{{ detail.name }}</th>
                             <td>{{ detail.qty }}</td>
                             <td>{{ getCurrencySign() + detail.unit_price }}</td>
-                            <td>{{ getCurrencySign() + detail.discount }}</td>
-                            <td>...</td>
-                            <td>{{ getCurrencySign() + detail.tax }}</td>
-                            <td>{{ getCurrencySign() + detail.line_total }}</td>
+                            <td>{{ getCurrencySign() + detail.item_total }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7">
+                            <td class="wperp-invoice-amounts" colspan="7">
                                 <ul>
-                                    <li><span>Subtotal:</span> {{ getCurrencySign() + invoice.debit }}</li>
+                                    <li><span>Subtotal:</span> {{ getCurrencySign() + invoice.amount }}</li>
+                                    <li><span>Discount:</span> (-) {{ getCurrencySign() + invoice.discount }}</li>
+                                    <li><span>Tax:</span> (+) {{ getCurrencySign() + invoice.tax }}</li>
                                     <li><span>Total:</span> {{ getCurrencySign() + invoice.debit }}</li>
-                                    <li><span>Total Related Payments:</span> {{ getCurrencySign() + invoice.debit }}</li>
                                 </ul>
                             </td>
                         </tr>

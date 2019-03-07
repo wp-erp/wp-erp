@@ -43,7 +43,7 @@ function erp_acct_trial_balance_cash_at_bank( $args, $type ) {
  * Trial balance helper
  *
  * @param array $args
- * @param array $type
+ * @param string $type
  *
  * @return int
  */
@@ -562,7 +562,7 @@ function erp_acct_get_balance_sheet( $args ) {
         ledger.name,
         ABS(SUM(ledger_detail.debit - ledger_detail.credit)) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE (ledger.chart_id=1 OR ledger.chart_id=7) AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=1 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
         GROUP BY ledger_detail.ledger_id";
 
     $sql2 = "SELECT
@@ -603,10 +603,18 @@ function erp_acct_get_balance_sheet( $args ) {
         'name' => 'Accounts Receivable',
         'balance' => erp_acct_get_account_receivable( $args )
     ];
+    $results['rows1'][] = [
+        'name'    => 'Cash at Bank',
+        'balance' => erp_acct_trail_balance_cash_at_bank( $args, 'balance' )
+    ];
 
     $results['rows2'][] = [
         'name' => 'Accounts Payable',
         'balance' => abs( erp_acct_get_account_payable( $args ) )
+    ];
+    $results['rows2'][] = [
+        'name'    => 'Bank Loan',
+        'balance' => erp_acct_trail_balance_cash_at_bank( $args, 'loan' )
     ];
 
     $results['rows2'][] = [
