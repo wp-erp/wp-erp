@@ -140,7 +140,7 @@
             return {
                 basic_fields: {
                     journal_no: '',
-                    trn_date: '',
+                    trn_date: erp_acct_var.current_date,
                 },
 
                 form_errors: [],

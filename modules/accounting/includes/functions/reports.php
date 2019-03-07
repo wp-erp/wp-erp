@@ -439,7 +439,7 @@ function erp_acct_get_income_statement( $args ) {
 
     $dr_cr_diff = abs( $results['total_debit'] ) - abs( $results['total_credit'] );
 
-    if ( abs( $results['total_debit'] ) < abs( $results['total_credit'] ) ) {
+    if ( abs( $results['total_debit'] ) <= abs( $results['total_credit'] ) ) {
         if ( $dr_cr_diff < 0 ) {
             $dr_cr_diff = - $dr_cr_diff;
         }
@@ -559,7 +559,7 @@ function erp_acct_get_balance_sheet( $args ) {
 
     $dr_cr_diff = abs( $profit_loss['total_debit'] ) - abs( $profit_loss['total_credit'] );
 
-    if ( abs( $profit_loss['total_debit'] ) < abs( $profit_loss['total_credit'] ) ) {
+    if ( abs( $profit_loss['total_debit'] ) <= abs( $profit_loss['total_credit'] ) ) {
         if ( $dr_cr_diff < 0 ) {
             $dr_cr_diff = - $dr_cr_diff;
         }
