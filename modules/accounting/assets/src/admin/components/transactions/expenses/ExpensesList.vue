@@ -210,7 +210,7 @@
                                 'type'       : 'Expense',
                                 'ref'        : item.ref ? item.ref : '-',
                                 'vendor_name': item.expense_people_name,
-                                'trn_date'   : item.expense_people_name,
+                                'trn_date'   : item.expense_trn_date,
                                 'due_date'   : '-',
                                 'due'        : '-',
                                 'amount'     : this.formatAmount(item.expense_amount),
