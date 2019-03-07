@@ -315,8 +315,10 @@
 
             updatePurchase(requestData) {
                 HTTP.put(`/purchases/${this.voucherNo}`, requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Purchase Updated!');
                 }).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.isWorking = false;
                     this.reset = true;
 
@@ -330,8 +332,10 @@
 
             createPurchase(requestData) {
                 HTTP.post('/purchases', requestData).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Purchase Created!');
                 }).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                     this.isWorking = false;
                     this.reset = true;
 
@@ -355,6 +359,7 @@
                 }
 
                 this.isWorking = true;
+                this.$store.dispatch( 'spinner/setSpinner', true );
 
                 let requestData = {
                     vendor_id      : this.basic_fields.vendor.id,
