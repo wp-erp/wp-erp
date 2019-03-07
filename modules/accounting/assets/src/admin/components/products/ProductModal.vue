@@ -268,7 +268,7 @@
             checkForm() {
                 this.error_msg = [];
 
-                if (this.ProductFields.name && this.ProductFields.type && this.ProductFields.vendor && this.ProductFields.costPrice && this.ProductFields.salePrice) {
+                if (this.ProductFields.name && this.ProductFields.type && this.ProductFields.vendor && this.ProductFields.salePrice) {
                     return true;
                 }
 
@@ -280,12 +280,9 @@
                     this.error_msg.push('Product type is required');
                 }
 
-                if (!this.ProductFields.costPrice) {
-                    this.error_msg.push('Product cost price is required');
-                }
 
-                if (!this.ProductFields.salePrice) {
-                    this.error_msg.push('Product sale price is required');
+                if (this.ProductFields.salePrice<=0) {
+                    this.error_msg.push('Product sale should be greater than 0');
                 }
 
                 if (!this.ProductFields.vendor) {
