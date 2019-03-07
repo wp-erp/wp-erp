@@ -444,7 +444,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
 
     $limit = '';
 
-    $where = "WHERE (voucher.type = 'pay_purchase' OR voucher.type = 'sales_purchase')";
+    $where = "WHERE (voucher.type = 'pay_purchase' OR voucher.type = 'purchase')";
 
     if ( ! empty( $args['vendor_id'] ) ) {
         $where .= " AND purchase.vendor_id = {$args['vendor_id']} OR pay_purchase.vendor_id = {$args['vendor_id']} ";

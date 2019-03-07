@@ -128,7 +128,7 @@ function erp_acct_insert_pay_bill( $data ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_pay_bill', array(
             'voucher_no'      => $voucher_no,
             'trn_date'        => $pay_bill_data['trn_date'],
-            'vendor_id'       => $pay_bill_data['people_id'],
+            'vendor_id'       => $pay_bill_data['vendor_id'],
             'vendor_name'     => $pay_bill_data['people_name'],
             'amount'          => $pay_bill_data['amount'],
             'trn_by'          => $pay_bill_data['trn_by'],

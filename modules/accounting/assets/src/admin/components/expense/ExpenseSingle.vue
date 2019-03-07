@@ -61,15 +61,7 @@
                                     </tr>
                                     <tr>
                                         <th>Expense Date:</th>
-                                        <td>{{ expense_data.trn_date }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Amount Due:</th>
-                                        <td>{{ getCurrencySign() + expense_data.due }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Due Date:</th>
-                                        <td>{{ expense_data.due_date }}</td>
+                                        <td>{{ expense_data.date }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -80,7 +72,7 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>Ledger ID</th>
+                                <th>Account</th>
                                 <th>Voucher No</th>
                                 <th>Particulars</th>
                                 <th>Amount</th>
@@ -88,7 +80,7 @@
                             </thead>
                             <tbody>
                             <tr :key="index" v-for="(line, index) in expense_data.bill_details">
-                                <td>{{ line.ledger_id}}</td>
+                                <td>{{ line.ledger_name}}</td>
                                 <td>{{ line.trn_no }}</td>
                                 <td>{{ line.particulars }}</td>
                                 <td>{{ getCurrencySign() + line.amount }}</td>
@@ -178,7 +170,9 @@
                 HTTP.get(`/expenses/${this.$route.params.id}`).then(response => {
                     this.expense_data = response.data;
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then( e => {} ).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then( e => {} ).then(() => {
                     this.print_data = this.expense_data;
                     this.isWorking = false;
                 });

@@ -404,11 +404,11 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'address'      => $item->address,
             'bill_details' => $item->bill_details,
             'total'        => (int) $item->amount,
-            'ref'          => ! empty( $item->ref ) ? $item->ref : $item->check_no,
+            'ref'          => ! empty( $item->ref ) ? $item->ref : '',
+            'check_no'     => $item->check_no,
             'particulars'  => $item->particulars,
             'status'       => $item->status,
             'attachments'  => maybe_unserialize( $item->attachments ),
-            'particulars'  => $item->particulars,
             'trn_by'       => $item->trn_by,
             'deposit_to'   => $item->trn_by_ledger_id
         ];

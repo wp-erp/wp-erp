@@ -319,9 +319,13 @@
             },
 
             getPayMethods() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get('/transactions/payment-methods').then(response => {
                     this.pay_methods = response.data;
-                });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             setCheckFields( check_data ) {
@@ -371,7 +375,9 @@
                 HTTP.put(`/expenses/${this.voucherNo}`, requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Expense Updated!');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.isWorking = false;
                     this.reset = true;
 
@@ -388,7 +394,9 @@
                 HTTP.post('/expenses', requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Expense Created!');
-                }).then(() => {
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.isWorking = false;
                     this.reset = true;
 

@@ -140,7 +140,7 @@
             return {
                 basic_fields: {
                     journal_no: '',
-                    trn_date: '',
+                    trn_date: erp_acct_var.current_date,
                 },
 
                 form_errors: [],
@@ -169,6 +169,8 @@
 
         methods: {
             getLedgers() {
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('ledgers').then((response) => {
                     response.data.forEach(element => {
                         this.ledgers.push({
@@ -176,7 +178,11 @@
                             name: element.name
                         });
                     });
-                });
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             addLine() {
@@ -189,7 +195,7 @@
 
             SubmitForJournalCreate(event) {
                 this.validateForm();
-
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 if ( this.form_errors.length ) {
                     window.scrollTo({
                         top: 10,
@@ -205,15 +211,11 @@
                     type: 'journal',
                     particulars: this.journal_parti,
                 }).then(res => {
-                    //console.log(res.data);
-                    this.$swal({
-                        position: 'center',
-                        type: 'success',
-                        title: 'Journal Entry Added!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Journal Entry Added!' );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
                     this.isWorking = false;
                 });
 
