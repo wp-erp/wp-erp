@@ -11,6 +11,42 @@ if ( ! defined( 'ABSPATH' ) ) {
  * ===================================================
  */
 
+/**
+ * Trial balance helper
+ *
+ * @param array $args
+ *
+ * @return int
+ */
+function erp_acct_trail_balance_cash_at_bank( $args, $type ) {
+    global $wpdb;
+
+    if ( 'loan' === $type ) {
+        $having = "HAVING balance < 0";
+    } elseif ( 'balance' === $type ) {
+        $having = "HAVING balance > 0";
+    }
+
+    $chart_bank = 7;
+
+    $sql1 = $wpdb->prepare("SELECT group_concat(id) FROM {$wpdb->prefix}erp_acct_ledgers where chart_id = %d", $chart_bank);
+    $ledger_ids = implode( ',', explode( ',', $wpdb->get_var($sql1) ) ); // e.g. 4, 5
+
+    $sql2 = $wpdb->prepare("SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_ledger_details
+        WHERE ledger_id IN ({$ledger_ids}) AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_id {$having}",
+        $args['start_date'], $args['end_date']);
+
+    return $wpdb->get_var($sql2);
+}
+
+/**
+ * Trial balance helper
+ *
+ * @param array $args
+ * @param array $type
+ *
+ * @return int
+ */
 function erp_acct_trail_balance_sales_tax_query( $args, $type ) {
     global $wpdb;
 
@@ -21,7 +57,7 @@ function erp_acct_trail_balance_sales_tax_query( $args, $type ) {
     }
 
     $sql = $wpdb->prepare("SELECT SUM(balance) AS amount
-        FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_tax_agency_details WHERE trn_date BETWEEN '%s' AND '%s'
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_tax_agency_details WHERE trn_date BETWEEN '%s' AND '%s'
             GROUP BY agency_id {$having} ) AS get_amount",
         $args['start_date'], $args['end_date']);
 
@@ -59,12 +95,12 @@ function erp_acct_get_account_payable( $args ) {
      *? Expense is `direct expense`, and we don't include direct expense here
      */
     $bill_sql = $wpdb->prepare("SELECT SUM(balance) AS amount
-        FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_bill_account_details WHERE trn_date BETWEEN '%s' AND '%s'
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_bill_account_details WHERE trn_date BETWEEN '%s' AND '%s'
             GROUP BY bill_no HAVING balance < 0 )
         AS get_amount", $args['start_date'], $args['end_date']);
 
     $purchase_sql = $wpdb->prepare("SELECT SUM(balance) AS amount
-        FROM ( SELECT SUM( debit - credit ) AS balance FROM wp_erp_acct_purchase_account_details WHERE trn_date BETWEEN '%s' AND '%s'
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE trn_date BETWEEN '%s' AND '%s'
             GROUP BY purchase_no HAVING balance < 0 )
         AS get_amount", $args['start_date'], $args['end_date']);
 
@@ -102,26 +138,39 @@ function erp_acct_get_trial_balance( $args ) {
     // All DB results are inside `rows` key
     $results['rows'] = $wpdb->get_results($sql, ARRAY_A);
 
+    /**
+     * Let's create some virtual ledgers
+     */
+
     $results['rows'][] = [
-        'name' => 'Sales Tax Payable',
+        'name'    => 'Cash at Bank',
+        'balance' => erp_acct_trail_balance_cash_at_bank( $args, 'balance' )
+    ];
+    $results['rows'][] = [
+        'name'    => 'Bank Loan',
+        'balance' => erp_acct_trail_balance_cash_at_bank( $args, 'loan' )
+    ];
+
+    $results['rows'][] = [
+        'name'    => 'Sales Tax Payable',
         'balance' => erp_acct_trail_balance_sales_tax_query( $args, 'payable' )
     ];
     $results['rows'][] = [
-        'name' => 'Sales Tax Receivable',
+        'name'    => 'Sales Tax Receivable',
         'balance' => erp_acct_trail_balance_sales_tax_query( $args, 'receivable' )
     ];
 
     $results['rows'][] = [
-        'name' => 'Accounts Payable',
+        'name'    => 'Accounts Payable',
         'balance' => erp_acct_get_account_payable( $args )
     ];
     $results['rows'][] = [
-        'name' => 'Accounts Receivable',
+        'name'    => 'Accounts Receivable',
         'balance' => erp_acct_get_account_receivable( $args )
     ];
 
     // Totals are inside the root `result` array
-    $results['total_debit'] = 0;
+    $results['total_debit']  = 0;
     $results['total_credit'] = 0;
 
     // Add-up all debit and credit
@@ -133,14 +182,25 @@ function erp_acct_get_trial_balance( $args ) {
                 $results['total_credit'] += $result['balance'];
             }
         } else {
-            // don't use unset
-            // array_splice( $results['rows'], $key, 0 );
+            unset( $results['rows'][$key] );
         }
     }
 
+    /**
+     * `unset-converts-array-into-object`
+     *
+     * In JSON, arrays always start at index 0.
+     * So if in PHP you remove element 0, the array starts at 1.
+     * But this cannot be represented in array notation in JSON.
+     * So it is represented as an object, which supports key/value pairs.
+     * To make JSON represent the data as an array, you must ensure that the array starts at index 0 and has no gaps.
+     *
+     * Re-index object to make it array again
+     */
+    $results['rows'] = array_values( $results['rows'] );
+
     return $results;
 }
-
 
 
 /**
