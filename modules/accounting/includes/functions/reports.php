@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return int
  */
-function erp_acct_trail_balance_cash_at_bank( $args, $type ) {
+function erp_acct_trial_balance_cash_at_bank( $args, $type ) {
     global $wpdb;
 
     if ( 'loan' === $type ) {
@@ -47,7 +47,7 @@ function erp_acct_trail_balance_cash_at_bank( $args, $type ) {
  *
  * @return int
  */
-function erp_acct_trail_balance_sales_tax_query( $args, $type ) {
+function erp_acct_trial_balance_sales_tax_query( $args, $type ) {
     global $wpdb;
 
     if ( 'payable' === $type ) {
@@ -144,20 +144,20 @@ function erp_acct_get_trial_balance( $args ) {
 
     $results['rows'][] = [
         'name'    => 'Cash at Bank',
-        'balance' => erp_acct_trail_balance_cash_at_bank( $args, 'balance' )
+        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'balance' )
     ];
     $results['rows'][] = [
         'name'    => 'Bank Loan',
-        'balance' => erp_acct_trail_balance_cash_at_bank( $args, 'loan' )
+        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'loan' )
     ];
 
     $results['rows'][] = [
         'name'    => 'Sales Tax Payable',
-        'balance' => erp_acct_trail_balance_sales_tax_query( $args, 'payable' )
+        'balance' => erp_acct_trial_balance_sales_tax_query( $args, 'payable' )
     ];
     $results['rows'][] = [
         'name'    => 'Sales Tax Receivable',
-        'balance' => erp_acct_trail_balance_sales_tax_query( $args, 'receivable' )
+        'balance' => erp_acct_trial_balance_sales_tax_query( $args, 'receivable' )
     ];
 
     $results['rows'][] = [
@@ -612,7 +612,7 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['rows2'][] = [
         'name' => 'Sales Tax Payable',
         'slug' => 'sales_tax',
-        'balance' => abs ( erp_acct_trail_balance_sales_tax_query( $args, 'payable' ) )
+        'balance' => abs ( erp_acct_trial_balance_sales_tax_query( $args, 'payable' ) )
     ];
 
     $profit_loss = erp_acct_get_profit_loss( $args );

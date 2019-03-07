@@ -1427,7 +1427,119 @@ Company'
 
             update_option( 'erp_settings_erp-crm_subscription', $settings );
         }
+
+        // check if people_types exists
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_people_types` LIMIT 0, 1" ) ) {
+            $sql = "INSERT INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`)
+                    VALUES (1, 'contact'), (2, 'company'), (3, 'customer'), (4, 'vendor'), (5, 'employee')";
+
+            $wpdb->query( $sql );
+        }
+
+        /** ===========
+         * Accounitng
+         * ============
+         */
+
+        // insert chart of accounts
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_chart_of_accounts` LIMIT 0, 1" ) ) {
+            $charts = ['Asset', 'Liability', 'Equity', 'Income', 'Expense', 'Asset & Liability', 'Bank'];
+
+            for ( $i = 0; $i < count($charts); $i++ ) {
+                $wpdb->insert( "{$wpdb->prefix}erp_acct_chart_of_accounts", [
+                    'name' => $charts[$i],
+                    'slug' => slugify($charts[$i])
+                ] );
+            }
+        }
+
+        // insert ledgers
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledgers` LIMIT 0, 1" ) ) {
+            $ledgers_json = file_get_contents( WPERP_ASSETS . '/ledgers.json' );
+            $ledgers = json_decode( $ledgers_json, true );
+
+            foreach ( array_keys( $ledgers ) as $array_key ) {
+                foreach ( $ledgers[$array_key] as $value ) {
+                    $wpdb->insert(
+                        "{$wpdb->prefix}erp_acct_ledgers",
+                        [
+                            'chart_id' => $this->get_chart_id_by_slug($array_key),
+                            'name'     => $value['name'],
+                            'slug'     => slugify( $value['name'] ),
+                            'system'   => $value['system']
+                        ]
+                    );
+                }
+            }
+        }
+
+        // insert payment methods
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_trn_status_types` LIMIT 0, 1" ) ) {
+            $statuses = [
+                'Draft',
+                'Awaiting Approval',
+                'Pending',
+                'Paid',
+                'Partially Paid',
+                'Approved',
+                'Bounced',
+                'Closed',
+                'Void'
+            ];
+
+            for ( $i = 0; $i < count($statuses); $i++ ) {
+                $wpdb->insert( "{$wpdb->prefix}erp_acct_trn_status_types", [
+                    'type_name' => $statuses[$i],
+                    'slug'      => slugify( $statuses[$i] )
+                ] );
+            }
+        }
+
+        // insert product types
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_product_types` LIMIT 0, 1" ) ) {
+            $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`)
+                    VALUES (1, 'Product'), (2, 'Service')";
+
+            $wpdb->query( $sql );
+        }
     }
+
+    /**
+     * Get chart of account id by slug
+     *
+     * @param string $key
+     *
+     * @return int
+     */
+    private function get_chart_id_by_slug( $key ) {
+		switch ($key) {
+			case 'asset':
+				$id = 1;
+				break;
+			case 'liability':
+				$id = 2;
+				break;
+			case 'equity':
+				$id = 3;
+				break;
+			case 'income':
+				$id = 4;
+				break;
+			case 'expense':
+				$id = 5;
+				break;
+			case 'asset_liability':
+				$id = 6;
+				break;
+			case 'bank':
+				$id = 7;
+				break;
+			default:
+				$id = null;
+		}
+
+		return $id;
+	}
 
     /**
      * Set default module for initial erp setup
