@@ -42,7 +42,7 @@
                 }
 
                 if ( erp_is_module_active('accounting') ) {
-                    include WPERP_ACCOUNTING_VIEWS . '/dashboard-badge.php';
+                    // include WPERP_ACCOUNTING_VIEWS . '/dashboard-badge.php';
                 }
             ?>
         </div>
