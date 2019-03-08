@@ -4116,6 +4116,12 @@ div.erp-nav-container.--show-secondary .-secondary {
   min-width: 330px;
   height: 400px;
 }
+.erp-modal {
+  z-index: 160000 !important;
+}
+.erp-modal-backdrop {
+  z-index: 159900 !important;
+}
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (max-width: 640px) {
   .erp .erp-single-container .erp-area-left {
