@@ -423,6 +423,8 @@
 
             resetData() {
                 Object.assign(this.$data, this.$options.data.call(this));
+
+                this.getPayMethods();
             },
 
             removeRow(index) {
