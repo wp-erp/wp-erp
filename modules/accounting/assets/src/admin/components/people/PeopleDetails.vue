@@ -8,22 +8,27 @@
                 <div class="wperp-panel-body">
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
-                            <pie-chart
-                                id="payment"
-                                :sign="getCurrencySign()"
-                                :title="paymentChart.title"
-                                :labels="paymentChart.labels"
-                                :colors="paymentChart.colors"
-                                :data="paymentData">
-                            </pie-chart>
+                            <pie-chart v-if="paymentData.length"
+                                       id="payment"
+                                       :title="paymentChart.title"
+                                       :sign="getCurrencySign()"
+                                       :labels="paymentChart.labels"
+                                       :colors="paymentChart.colors"
+                                       :data="paymentData"/>
                         </div>
                         <div class="wperp-col-sm-4">
-                            <pie-chart id="status" :title="statusChart.title" :labels="statusLabel" :colors="statusChart.colors" :data="statusData"></pie-chart>
+                            <pie-chart v-if="statusData.length"
+                                       id="status"
+                                       :title="statusChart.title"
+                                       :sign="getCurrencySign()"
+                                       :labels="statusLabel"
+                                       :colors="statusChart.colors"
+                                       :data="statusData"/>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-chart-block">
                                 <h3>Outstanding</h3>
-                                <div class="wperp-total"><h2>$20000,00</h2></div>
+                                <div class="wperp-total"><h2>{{ getCurrencySign() + outstanding }}</h2></div>
                             </div>
                         </div>
                     </div>
@@ -73,7 +78,7 @@
                 },
                 statusChart: {
                     title: 'Status',
-                    colors: ['#208DF8', '#E9485E', '#FF9900', '#2DCB67', '#9c27b0']
+                    colors: ['#208DF8', '#E9485E']
                 },
 
                 paymentData: [],
@@ -81,7 +86,9 @@
                 statusData: [],
                 transactions: [],
                 opening_balance: 0,
-                people_balance: 0
+                people_balance: 0,
+                outstanding: 0,
+                temp: null
             }
         },
 
@@ -158,6 +165,7 @@
                         end_date: filters.end_date
                     }
                 }).then( response => {
+                    this.outstanding = response.data.payable;
                     this.paymentData.push(
                         response.data.paid,
                         response.data.payable,
@@ -170,9 +178,10 @@
                         end_date: filters.end_date
                     }
                 }).then( response => {
+                    this.temp = response.data;
                     response.data.forEach(element => {
-                        this.statusLabel.push(element.type_name)
-                        this.statusData.push(element.sub_total)
+                        this.statusLabel.push(element.type_name);
+                        this.statusData.push(element.sub_total);
                     });
                 });
             }

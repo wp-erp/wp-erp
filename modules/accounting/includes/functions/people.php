@@ -373,3 +373,31 @@ function erp_acct_get_people_opening_balance( $args = [] ) {
 
     return isset( $result['opening_balance'] ) ? $result['opening_balance'] : 0;
 }
+
+/**
+ * Get People type by people id
+ *
+ * @param $people_id
+ * @return mixed
+ */
+function erp_acct_get_people_type_by_id( $people_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT people_types_id FROM {$wpdb->prefix}erp_people_type_relations WHERE people_id = {$people_id} LIMIT 1" );
+
+    return erp_acct_get_people_type_by_type_id( $row->people_types_id );
+}
+
+/**
+ * Get people type by type id
+ *
+ * @param $type_id
+ * @return mixed
+ */
+function erp_acct_get_people_type_by_type_id( $type_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_people_types WHERE id = {$type_id} LIMIT 1" );
+
+    return $row->name;
+}
