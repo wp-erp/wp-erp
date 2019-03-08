@@ -1474,6 +1474,17 @@ Company'
         }
 
         // insert payment methods
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_payment_methods` LIMIT 0, 1" ) ) {
+            $methods = ['Cash', 'Bank', 'Check'];
+
+            for ( $i = 0; $i < count($methods); $i++ ) {
+                $wpdb->insert( "{$wpdb->prefix}erp_acct_payment_methods", [
+                    'name' => $methods[$i],
+                ] );
+            }
+        }
+
+        // insert status types
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_trn_status_types` LIMIT 0, 1" ) ) {
             $statuses = [
                 'Draft',
