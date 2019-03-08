@@ -3003,7 +3003,7 @@ table.audit-log-table th.col-date {
   left: 15%;
   display: none;
   box-shadow: 0 1px 20px 5px rgba(0, 0, 0, 0.1);
-  z-index: 160000;
+  z-index: 160000 !important;
 }
 .erp-modal * {
   box-sizing: border-box;
@@ -3175,7 +3175,7 @@ table.audit-log-table th.col-date {
 }
 .erp-modal-backdrop {
   position: fixed;
-  z-index: 159999;
+  z-index: 159999 !important;
   top: 0;
   left: 0;
   right: 0;
@@ -4115,12 +4115,6 @@ div.erp-nav-container.--show-secondary .-secondary {
 .erp-report-chart {
   min-width: 330px;
   height: 400px;
-}
-.erp-modal {
-  z-index: 160000 !important;
-}
-.erp-modal-backdrop {
-  z-index: 159900 !important;
 }
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (max-width: 640px) {
