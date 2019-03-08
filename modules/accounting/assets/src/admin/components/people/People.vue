@@ -29,9 +29,7 @@
                     </router-link>
                 </strong>
             </template>
-
         </list-table>
-
     </div>
 </template>
 
@@ -39,6 +37,7 @@
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import PeopleModal from 'admin/components/people/PeopleModal.vue'
     import HTTP from 'admin/http'
+
     export default {
         name: 'People',
 
@@ -47,7 +46,7 @@
             PeopleModal
         },
 
-        data () {
+        data() {
             return {
                 people: null,
                 bulkActions: [
@@ -84,6 +83,7 @@
                 isActiveOptionDropdown: false
             };
         },
+
         created() {
             this.$store.dispatch( 'spinner/setSpinner', true );
             var self = this;
@@ -96,12 +96,11 @@
                 self.fetchItems();
             } );
 
-            this.buttonTitle    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'customer' : 'vendor';
+            this.buttonTitle    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'Customer' : 'Vendor';
             this.pageTitle      =   this.$route.name;
             this.url            =   this.$route.name.toLowerCase();
             this.singleUrl      =   ( this.url == 'customers' ) ? 'CustomerDetails' : 'VendorDetails';
             this.fetchItems();
-
         },
 
         computed: {
@@ -109,8 +108,7 @@
                 let items = this.rows;
                 items.map( item => {
                     item.customer = item.first_name + ' ' + item.last_name;
-                    //TODO remove after api update for expense
-                    item.expense = '55555';
+                    item.expense = 0;
                 } );
                 return items;
             }
@@ -138,6 +136,7 @@
                     //ready
                 } );
             },
+
             onActionClick(action, row, index) {
                 switch ( action ) {
                     case 'trash':

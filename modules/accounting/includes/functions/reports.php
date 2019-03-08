@@ -609,7 +609,7 @@ function erp_acct_get_balance_sheet( $args ) {
     ];
     $results['rows1'][] = [
         'name'    => 'Cash at Bank',
-        'balance' => erp_acct_trail_balance_cash_at_bank( $args, 'balance' )
+        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'balance' )
     ];
 
     $results['rows2'][] = [
@@ -618,7 +618,7 @@ function erp_acct_get_balance_sheet( $args ) {
     ];
     $results['rows2'][] = [
         'name'    => 'Bank Loan',
-        'balance' => erp_acct_trail_balance_cash_at_bank( $args, 'loan' )
+        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'loan' )
     ];
 
     $results['rows2'][] = [
