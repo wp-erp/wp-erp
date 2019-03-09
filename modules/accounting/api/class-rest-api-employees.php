@@ -51,7 +51,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)', [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_employee' ],
@@ -110,11 +110,11 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Get a collection of employees
      *
-     * @param \WP_REST_Request $request
+     * @param $request
      *
      * @return mixed|object|\WP_REST_Response
      */
-    public function get_employees( \WP_REST_Request $request ) {
+    public function get_employees( $request ) {
         $args = [
             'number'      => $request['per_page'],
             'offset'      => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -157,13 +157,21 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_employee( \WP_REST_Request $request ) {
-        $user_id = (int) $request['user_id'];
-        $item    = new Employee( $user_id );
+    public function get_employee( $request ) {
+        $user_id = (int) $request['id'];
 
-        if ( ! $item->is_employee() ) {
-            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 404 ] );
+        $employee    = new Employee( $user_id );
+        $people_id = erp_acct_get_people_id_by_user_id( $user_id );
+        $item = (array)erp_get_people( $people_id );
+
+        if ( empty( $item['id'] ) ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
+
+        $item['designation'] = $employee->get_designation();
+        $item['department'] = $employee->get_department();
+        $item['reporting_to'] = $employee->get_reporting_to();
+        $item['avatar'] = $employee->get_avatar();
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -223,7 +231,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return $this|mixed|object|\WP_Error|\WP_REST_Response
      */
-    public function update_employee( \WP_REST_Request $request ) {
+    public function update_employee( $request ) {
         $id = (int) $request['user_id'];
 
         $employee = new Employee( $id );
@@ -259,7 +267,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return \WP_REST_Response
      */
-    public function delete_employee( \WP_REST_Request $request ) {
+    public function delete_employee( $request ) {
         $id = (int) $request['user_id'];
 
         erp_employee_delete( $id );
@@ -311,75 +319,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function prepare_item_for_response( $item, $request = null, $additional_fields = [] ) {
 
-        if ( !( $item instanceof Employee ) ) {
-            return new WP_Error( 'rest_invalid_employee_data', __( 'Invalid resource data.' ), [ 'status' => 400 ] );
-        }
-
-        $default = [
-            'user_id'         => '',
-            'employee_id'     => '',
-            'first_name'      => '',
-            'middle_name'     => '',
-            'last_name'       => '',
-            'full_name'       => '',
-            'location'        => '',
-            'date_of_birth'   => '',
-            'pay_rate'        => '',
-            'pay_type'        => '',
-            'hiring_source'   => '',
-            'hiring_date'     => '',
-            'type'            => '',
-            'status'          => '',
-            'other_email'     => '',
-            'phone'           => '',
-            'work_phone'      => '',
-            'mobile'          => '',
-            'address'         => '',
-            'gender'          => '',
-            'marital_status'  => '',
-            'nationality'     => '',
-            'driving_license' => '',
-            'hobbies'         => '',
-            'user_url'        => '',
-            'description'     => '',
-            'street_1'        => '',
-            'street_2'        => '',
-            'city'            => '',
-            'country'         => '',
-            'state'           => '',
-            'postal_code'     => '',
-        ];
-
-        $data = wp_parse_args( $item->get_data( array(), true ), $default );
-
-        if ( isset( $request['include'] ) ) {
-            $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
-
-            if ( in_array( 'department', $include_params ) && ! empty( $item->get_department() ) ) {
-                $data['department'] = Department::find( $item->get_department() );
-            }
-
-            if ( in_array( 'designation', $include_params ) && ! empty( $item->get_designation() ) ) {
-                $data['designation'] = Designation::find( $item->get_designation() );
-            }
-
-            if ( in_array( 'reporting_to', $include_params ) && $item->get_reporting_to() ) {
-                $reporting_to = new Employee( $item->get_reporting_to() );
-                if ( $reporting_to->is_employee() ) {
-                    $data['reporting_to'] = $this->prepare_item_for_response( $reporting_to );
-                }
-            }
-
-            if ( in_array( 'avatar', $include_params ) ) {
-                $data['avatar_url'] = $item->get_avatar_url( 80 );
-            }
-
-            if ( in_array( 'roles', $include_params ) ) {
-                $data['roles'] = $item->get_roles();
-            }
-        }
-
-        $data = array_merge( $data, $additional_fields );
+        $data = array_merge( $item, $additional_fields );
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );

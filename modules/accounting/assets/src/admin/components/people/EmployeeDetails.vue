@@ -31,11 +31,11 @@
                         </li>
                         <li>
                             <strong style="margin-right: 10px">Department:</strong>
-                            <span v-if="user.department">{{ user.department.title }}</span>
+                            <span v-if="user.department">{{ user.department }}</span>
                         </li>
                         <li>
                             <strong style="margin-right: 10px">Designation:</strong>
-                            <span v-if="user.designation">{{ user.designation.title }}</span>
+                            <span v-if="user.designation">{{ user.designation }}</span>
                         </li>
                         <li>
                             <strong>Address:</strong>
@@ -166,13 +166,13 @@
             },
 
             getTransactions() {
-                HTTP.get( this.url + '/' + this.userId + '/transactions' ).then( res => {
+                HTTP.get( '/employees/' + this.userId + '/transactions' ).then( res => {
                     this.transactions = res.data;
                 } );
             },
 
             filterTransaction( filters = {} ) {
-                HTTP.get('customers/' + this.userId + '/transactions/filter', {
+                HTTP.get('/employees/' + this.userId + '/transactions/filter', {
                     params: {
                         start_date: filters.start_date,
                         end_date: filters.end_date

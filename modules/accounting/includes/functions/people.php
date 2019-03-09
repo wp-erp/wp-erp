@@ -407,3 +407,17 @@ function erp_acct_get_people_type_by_type_id( $type_id ) {
 
     return $row->name;
 }
+
+/**
+ * Get people id by user id
+ *
+ * @param $type_id
+ * @return mixed
+ */
+function erp_acct_get_people_id_by_user_id( $user_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE user_id = {$user_id} LIMIT 1" );
+
+    return $row->id;
+}
