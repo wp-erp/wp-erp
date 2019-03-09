@@ -193,7 +193,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $employee  = new Employee( $created->user_id );
-        $item      = erp_acct_add_employee_as_people( $item_data );
+        $item      = erp_acct_add_employee_as_people( null, $item_data );
         $additional_fields['id'] = $item;
 
         // User Notification
@@ -242,7 +242,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $updated_user = new Employee( $updated->user_id );
-        $item         = erp_acct_add_employee_as_people( $data );
+        $item         = erp_acct_add_employee_as_people( null, $data );
         $additional_fields['id'] = $item;
         $response     = $this->prepare_item_for_response( $updated_user, $request, $additional_fields );
 
