@@ -7,19 +7,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Insert employee data as people
  *
+ * @param $id
  * @param $data
  *
  * @return int
  */
-function erp_acct_add_employee_as_people( $data ) {
+function erp_acct_add_employee_as_people( $id = null, $data ) {
     global $wpdb;
 
     $update = false; $people_id = 0;
+
+    if ( !empty( $id ) ) {
+        $data['user_id'] = $id;
+    }
 
     if ( isset( $data['id'] ) ) {
         $update = true;
         $people_id = $data['id'];
     }
+
 
     if ( $update ) {
         $wpdb->update( $wpdb->prefix . 'erp_peoples', array(
