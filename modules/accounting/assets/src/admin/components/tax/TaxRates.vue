@@ -82,6 +82,7 @@
                 columns: {
                     'tax_name': {label: 'Tax Name'},
                     'tax_number': {label: 'Tax Number'},
+                    'default': {label: 'Default'},
                     'actions': {label: 'Actions'}
                 },
                 rows: [],
@@ -154,6 +155,11 @@
                 let items = this.rows;
                 items.map(item => {
                     item.tax_id = item.id;
+                    if ( 0 == item.default ) {
+                        item.default = '-';
+                    } else {
+                        item.default = 'Default';
+                    }
                 });
                 return items;
             }
@@ -178,7 +184,6 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 });
             },
-
             goToPage(page) {
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
