@@ -52,6 +52,7 @@
                     'code'       : {label: 'Code'},
                     'ledger_name': {label: 'Name'},
                     'type'       : {label: 'Type'},
+                    'balance'    : {label: 'Balance'},
                     'actions'    : {label: 'Actions'},
                 },
                 actions : [
@@ -95,8 +96,23 @@
 
             fetchLedgers() {
                 HTTP.get('/ledgers').then( response => {
+                    response.data.forEach( (ledger) => {
+                        ledger.balance = this.transformBalance( ledger.balance );
+                    });
                     this.ledgers = this.groupBy(response.data, 'chart_id');
                 });
+            },
+
+            transformBalance( val ){
+                if ( null === val && typeof val === 'object' ) {
+                    val = 0;
+                }
+                let currency = '$';
+                if ( val < 0 ){
+                    return `Cr. ${currency}${Math.abs(val)}`;
+                }
+
+                return `Dr. ${currency}${val}`;
             },
 
             onActionClick(action, row, index) {

@@ -177,17 +177,28 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             ledger.chart_id,
             ledger.category_id,
             ledger.name,
+            ledger.slug,
             ledger.code,
             ledger.system,
-
             chart_of_account.name as account_name
 
             FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-            RIGHT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id";
+            LEFT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id";
+
+        $formatted_items = []; $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
 
         $ledgers = $wpdb->get_results( $sql, ARRAY_A );
 
-        $response = rest_ensure_response( $ledgers );
+        foreach ( $ledgers as $ledger) {
+            $data = $this->prepare_item_for_response( $ledger, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, count( $ledgers ) );
 
         $response->set_status( 200 );
 
@@ -501,6 +512,8 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+
         $data = [
             'id'          => $item->id,
             'chart_id'    => $item->chart_id,
@@ -508,15 +521,14 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'name'        => $item->name,
             'slug'        => $item->slug,
             'code'        => $item->code,
-            'system'      => $item->system
+            'system'      => $item->system,
+            'balance'     => erp_acct_get_ledger_balance( $item->id )
         ];
 
         $data = array_merge( $data, $additional_fields );
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
-
-        // $response = $this->add_links( $response, $item );
 
         return $response;
     }
