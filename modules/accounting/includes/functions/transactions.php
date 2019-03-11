@@ -52,6 +52,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             invoice.trn_date AS invoice_trn_date,
             invoice_receipt.trn_date AS payment_trn_date,
             invoice.due_date,
+            invoice.estimate,
             (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
             SUM(invoice_account_detail.debit - invoice_account_detail.credit) AS due,
             invoice_receipt.amount AS payment_amount,

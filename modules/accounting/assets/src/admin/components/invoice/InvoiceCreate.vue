@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} Invoice</h2>
+                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} {{inv_title}}</h2>
                 </div>
             </div>
         </div>
@@ -37,10 +37,6 @@
                         <div class="wperp-col-sm-6">
                             <label>Billing Address</label>
                             <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
-                        </div>
-                        <div class="wperp-col-sm-6 with-multiselect">
-                            <label>Invoice Type<span class="wperp-required-sign">*</span></label>
-                            <multi-select v-model="inv_type" :options="inv_types"></multi-select>
                         </div>
                     </div>
                 <!-- </form> -->
@@ -191,11 +187,6 @@
                     billing_address: ''
                 },
 
-                inv_types: [
-                    {id: 0, name: 'Invoice'},
-                    {id: 1, name: 'Estimate'}
-                ],
-
                 createButtons: [
                     {id: 'save', text: 'Create Invoice'},
                     // {id: 'send_create', text: 'Create and Send'},
@@ -222,7 +213,8 @@
                 taxRates        : [],
                 taxTotalAmount  : 0,
                 finalTotalAmount: 0,
-                inv_type        : {id: 0, name: 'Invoice'},
+                inv_title       : '',
+                inv_type        : {},
                 erp_acct_assets : erp_acct_var.acct_assets,
                 actionType      : null,
                 form_errors     : [],
@@ -256,6 +248,15 @@
         }),
 
         created() {
+
+            if ( 'EstimateCreate' === this.$route.name ) {
+                this.inv_title = 'Estimate';
+                this.inv_type  = {id: 1, name: 'Estimate'};
+
+            } else {
+                this.inv_title = 'Invoice';
+                this.inv_type  = {id: 0, name: 'Invoice'};
+            }
             this.prepareDataLoad();
 
             this.$root.$on('remove-row', index => {

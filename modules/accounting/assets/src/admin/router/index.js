@@ -215,6 +215,22 @@ export default new Router({
             ]
         },
         {
+            path: '/estimates',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: 'new',
+                    name: 'EstimateCreate',
+                    component: InvoiceCreate,
+                },
+                {
+                    path: ':id/edit',
+                    name: 'EstimateEdit',
+                    component: InvoiceCreate,
+                },
+            ]
+        },
+        {
             path: '/product_categories',
             name: 'ProductCategory',
             component: ProductCategory
