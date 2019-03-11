@@ -36,11 +36,11 @@ import Purchases         from 'admin/components/transactions/purchases/Purchases
 import NewTaxAgency      from 'admin/components/tax/NewTaxAgency.vue';
 import NewTaxCategory    from 'admin/components/tax/NewTaxCategory.vue';
 import NewTaxRate        from 'admin/components/tax/NewTaxRate.vue';
-import NewTaxRateName    from 'admin/components/tax/NewTaxRateName.vue';
+import NewTaxZone        from 'admin/components/tax/NewTaxZone.vue';
 import RecordPayTax      from 'admin/components/tax/RecordPayTax.vue';
 import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
 import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
-import TaxRateNames      from 'admin/components/tax/TaxRateNames.vue';
+import TaxZones          from 'admin/components/tax/TaxZones.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
@@ -393,8 +393,8 @@ export default new Router({
                 },
                 {
                     path: 'rate-names',
-                    name: 'TaxRateNames',
-                    component: TaxRateNames,
+                    name: 'TaxZones',
+                    component: TaxZones,
                 },
                 {
                     path: 'agencies',
@@ -408,8 +408,8 @@ export default new Router({
                 },
                 {
                     path: 'new-rate-name',
-                    name: 'NewTaxRateName',
-                    component: NewTaxRateName,
+                    name: 'NewTaxZone',
+                    component: NewTaxZone,
                 },
                 {
                     path: 'new-agency',
@@ -438,8 +438,8 @@ export default new Router({
                 },
                 {
                     path: 'rate-names/page/:page',
-                    name: 'PaginateTaxRateNames',
-                    component: TaxRateNames,
+                    name: 'PaginateTaxZones',
+                    component: TaxZones,
                 },
                 {
                     path: 'categories/page/:page',

@@ -133,7 +133,7 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateTaxRateNames',
+                    name: 'PaginateTaxZones',
                     params: {page: page},
                     query: queries
                 });

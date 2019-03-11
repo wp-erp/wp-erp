@@ -110,13 +110,6 @@ class Assets {
      * @return array
      */
     public function get_scripts() {
-        require_once(ABSPATH . 'wp-admin/includes/screen.php');
-        $page_id = isset( get_current_screen()->id ) ? get_current_screen()->id : null;
-
-        if ( isset( $page_id ) && 'wp-erp_page_erp-accounting' != $page_id ) {
-            return [];
-        }
-
         $scripts = [
             'accounting-vendor' => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/vendor.js',
@@ -146,13 +139,6 @@ class Assets {
      * @return array
      */
     public function get_styles() {
-        require_once(ABSPATH . 'wp-admin/includes/screen.php');
-        $page_id = isset( get_current_screen()->id ) ? get_current_screen()->id : null;
-
-        if ( isset( $page_id ) && 'wp-erp_page_erp-accounting' != $page_id ) {
-            return [];
-        }
-
         $styles = [
             'accounting-style' => [
                 'src' =>  ERP_ACCOUNTING_ASSETS . '/css/style.css'

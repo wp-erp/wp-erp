@@ -4,7 +4,7 @@
             <div class="wperp-modal-content">
                 <!-- modal body title -->
                 <div class="wperp-modal-header">
-                    <h3>Add Tax Rate Name</h3>
+                    <h3>Add Tax Zone</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
                 <!-- end modal body title -->
@@ -12,7 +12,7 @@
                     <div class="wperp-modal-body">
 
                         <div class="wperp-form-group">
-                            <label>Tax Rate Name</label>
+                            <label>Tax Zone</label>
                             <input type="text" v-model="rate_name" />
                         </div>
 
@@ -22,7 +22,7 @@
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
                             <submit-button v-if="is_update" text="Update" @click.native.prevent="updateTaxRateName" :working="isWorking"></submit-button>
-                            <submit-button v-else text="Add New" @click.native.prevent="addNewTaxRateName" :working="isWorking"></submit-button>
+                            <submit-button v-else text="Add New" @click.native.prevent="addNewTaxZone" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>
@@ -38,7 +38,7 @@
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
 
     export default {
-        name: 'NewTaxRateName',
+        name: 'NewTaxZone',
 
         components: {
             HTTP,
@@ -81,13 +81,13 @@
                 });
             },
 
-            addNewTaxRateName() {
+            addNewTaxZone() {
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/tax-rate-names', {
                     name: this.rate_name,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Tax Rate Name Created!' );
+                    this.showAlert( 'success', 'Tax Zone Created!' );
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } ).then(() => {
@@ -103,7 +103,7 @@
                     name: this.rate_name,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Tax Rate Name Updated !' );
+                    this.showAlert( 'success', 'Tax Zone Updated !' );
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } ).then(() => {

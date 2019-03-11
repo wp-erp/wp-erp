@@ -95,7 +95,7 @@
                         </table>
                     </div>
 
-                    <new-tax-rate-name v-if="showRateNameModal" @close="showRateNameModal = false"/>
+                    <new-tax-zone v-if="showRateNameModal" @close="showRateNameModal = false"/>
                     <new-tax-category v-if="showCatModal" @close="showCatModal = false"/>
                     <new-tax-agency v-if="showAgencyModal" @close="showAgencyModal = false"/>
 
@@ -117,7 +117,7 @@
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import NewTaxAgency from 'admin/components/tax/NewTaxAgency.vue'
     import NewTaxCategory from 'admin/components/tax/NewTaxCategory.vue'
-    import NewTaxRateName from 'admin/components/tax/NewTaxRateName.vue'
+    import NewTaxZone from 'admin/components/tax/NewTaxZone.vue'
 
     export default {
         name: "NewTaxRate",
@@ -128,7 +128,7 @@
             SubmitButton,
             NewTaxAgency,
             NewTaxCategory,
-            NewTaxRateName
+            NewTaxZone
         },
 
         data() {
