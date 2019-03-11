@@ -321,7 +321,8 @@ window.wperp = window.wperp || {};
             });
 
             $( '.erp-select2' ).select2({
-                placeholder: $(this).attr('data-placeholder')
+                placeholder: $(this).attr('data-placeholder'),
+                dropdownParent: $('.erp-modal')
             });
         },
 
@@ -566,8 +567,7 @@ window.wperp = window.wperp || {};
             var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(email);
         },
-
-        emailSubscribe: function(e) {            
+        emailSubscribe: function(e) {
             e.preventDefault();
 
             var action = 'https://wedevs.us16.list-manage.com/subscribe/post-json?u=66e606cfe0af264974258f030&id=bc304ef91b&c=?';
