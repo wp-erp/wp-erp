@@ -448,15 +448,15 @@
 
             changeAccounts() {
                 if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
-                    let bank = 7;
-
-                    HTTP.get(`/ledgers/${bank}/accounts`).then(response => {
+                    HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
                     });
                 } else {
-                    this.accts_by_chart = [{ id: 1, name: 'Cash' }];
+                    HTTP.get('/ledgers/cash-accounts').then((response) => {
+                        this.accts_by_chart = response.data;
+                    });
                 }
-                this.$root.$emit( 'account-changed' );
+                this.$root.$emit('account-changed');
             },
 
             resetFields() {

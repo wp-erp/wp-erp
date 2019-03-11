@@ -84,7 +84,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'get_bank_accounts' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_create_bank_transfer' );
+                    return current_user_can( 'erp_ac_view_bank_accounts' );
                 },
             ],
         ] );
@@ -233,7 +233,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_bank_accounts( $request ) {
-        $items = erp_acct_get_banks( true, true );
+        $items = erp_acct_get_banks( true, true, false );
 
         if ( empty( $items ) ) {
             return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 400 ] );
