@@ -42,6 +42,7 @@
             return {
                 pages: [
                     {namedRoute: 'InvoiceCreate', name: 'Create Invoice'},
+                    {namedRoute: 'EstimateCreate', name: 'Create Estimate'},
                     {namedRoute: 'RecPaymentCreate', name: 'Receive Payment'},
                 ],
             };

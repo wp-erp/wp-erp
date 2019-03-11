@@ -32,7 +32,7 @@
                     </strong>
                 </template>
                 <template slot="type" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Payment' : 'Invoice' }}
+                    {{ getTrnType(data.row) }}
                 </template>
                 <template slot="ref" slot-scope="data">
                     {{ data.row.ref ? data.row.ref : '-' }}
@@ -142,7 +142,7 @@
                     }
                 }).then(response => {
                     let mappedData = response.data.map(item => {
-                        if ( 'sales_invoice' === item.type && 2 == item.status ) {
+                        if ( 'sales_invoice' === item.type && 'Awaiting Approval' == item.status ) {
                             item['actions'] = [
                                 { key: 'edit', label: 'Edit' },
                                 { key: 'receive', label: 'Receive Payment' },
@@ -218,6 +218,17 @@
 
             isPayment(row) {
                 return row.type === 'payment' ? true : false;
+            },
+
+            getTrnType(row) {
+                if ( row.type === 'sales_invoice' ) {
+                    if ( 1 == row.estimate ) {
+                        return 'Estimate';
+                    }
+                    return 'Invoice';
+                } else {
+                    return 'Payment';
+                }
             }
         },
 
