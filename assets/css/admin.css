@@ -3003,7 +3003,6 @@ table.audit-log-table th.col-date {
   left: 15%;
   display: none;
   box-shadow: 0 1px 20px 5px rgba(0, 0, 0, 0.1);
-  z-index: 160000 !important;
 }
 .erp-modal * {
   box-sizing: border-box;
@@ -3173,9 +3172,12 @@ table.audit-log-table th.col-date {
 .erp-modal .button-primary:active {
   vertical-align: baseline;
 }
+#adminmenuwrap {
+  z-index: 99;
+}
 .erp-modal-backdrop {
   position: fixed;
-  z-index: 159999 !important;
+  z-index: 99 !important;
   top: 0;
   left: 0;
   right: 0;
