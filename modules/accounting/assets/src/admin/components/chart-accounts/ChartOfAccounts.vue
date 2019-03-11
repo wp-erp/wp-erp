@@ -23,7 +23,8 @@
                     :rows="ledgers[parseInt(chart.id)]"
                     @action:click="onActionClick">
                     <template slot="ledger_name" slot-scope="data">
-                        <router-link :to="{ name: 'LedgerReport', params: {
+                        <router-link :to="{ name: 'LedgerSingle', params: {
+                            id        : data.row.id,
                             ledgerID  : data.row.id,
                             ledgerName: data.row.name,
                             ledgerCode: data.row.code
@@ -32,6 +33,7 @@
                     </template>
                     <template slot="trn_count" slot-scope="data">
                         <router-link :to="{ name: 'LedgerReport', params: {
+                            id        : data.row.id,
                             ledgerID  : data.row.id,
                             ledgerName: data.row.name,
                             ledgerCode: data.row.code
