@@ -3,15 +3,15 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Tax Rate Names</h2>
+                    <h2 class="content-header__title">Tax Zones</h2>
                     <a class="wperp-btn btn--primary" @click.prevent="showModal = true">
-                        <span>Add Tax Rate Name</span>
+                        <span>Add Tax Zone</span>
                     </a>
                 </div>
             </div>
         </div>
 
-        <new-tax-rate-name v-if="showModal" :rate_name_id="rate_name_id" :is_update="is_update" @close="showModal = false"></new-tax-rate-name>
+        <new-tax-zone v-if="showModal" :rate_name_id="rate_name_id" :is_update="is_update" @close="showModal = false"></new-tax-zone>
 
         <div class="table-container">
             <list-table
@@ -37,13 +37,13 @@
 <script>
     import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
-    import NewTaxRateName from 'admin/components/tax/NewTaxRateName.vue'
+    import NewTaxZone from 'admin/components/tax/NewTaxZone.vue'
 
     export default {
-        name: 'TaxRateNames',
+        name: 'TaxZones',
 
         components: {
-            NewTaxRateName,
+            NewTaxZone,
             ListTable,
         },
 
@@ -128,7 +128,7 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateTaxRateNames',
+                    name: 'PaginateTaxZones',
                     params: {page: page},
                     query: queries
                 });

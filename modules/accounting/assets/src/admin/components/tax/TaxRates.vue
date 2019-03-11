@@ -47,7 +47,7 @@
             <tax-rate-quick-edit v-if="taxRateQuickEditModal" :tax_id="tax_rate_id" @close="taxRateQuickEditModal = false" > </tax-rate-quick-edit>
         </div>
 
-        <new-tax-rate-name v-if="taxrateModal" @close="taxrateModal = false"/>
+        <new-tax-zone v-if="taxrateModal" @close="taxrateModal = false"/>
         <new-tax-category v-if="taxcatModal" @close="taxcatModal = false"/>
         <new-tax-agency v-if="taxagencyModal" @close="taxagencyModal = false"/>
     </div>
@@ -58,7 +58,7 @@
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import ComboBox from 'admin/components/select/ComboBox.vue'
     import NewTaxRate from 'admin/components/tax/NewTaxRate.vue'
-    import NewTaxRateName from 'admin/components/tax/NewTaxRateName.vue'
+    import NewTaxZone from 'admin/components/tax/NewTaxZone.vue'
     import NewTaxCategory from 'admin/components/tax/NewTaxCategory.vue'
     import NewTaxAgency from 'admin/components/tax/NewTaxAgency.vue'
     import TaxRateQuickEdit from 'admin/components/tax/TaxRateQuickEdit.vue'
@@ -70,7 +70,7 @@
             ListTable,
             ComboBox,
             NewTaxRate,
-            NewTaxRateName,
+            NewTaxZone,
             NewTaxCategory,
             NewTaxAgency,
             TaxRateQuickEdit
@@ -104,12 +104,12 @@
                     }
                 ],
                 new_entities: [
-                    {namedRoute: 'NewTaxRateName', name: 'New Tax Rate Name'},
+                    {namedRoute: 'NewTaxZone', name: 'New Tax Zone'},
                     {namedRoute: 'NewTaxCategory', name: 'New Tax Category'},
                     {namedRoute: 'NewTaxAgency', name: 'New Tax Agency'},
                 ],
                 entity_lists: [
-                    {namedRoute: 'TaxRateNames', name: 'Tax Rate Names'},
+                    {namedRoute: 'TaxZones', name: 'Tax Zones'},
                     {namedRoute: 'TaxCategories', name: 'Tax Categories'},
                     {namedRoute: 'TaxAgencies', name: 'Tax Agencies'},
                 ],
@@ -134,7 +134,7 @@
 
             this.$root.$on('comboSelected', (data) => {
                 switch (data.namedRoute) {
-                    case 'NewTaxRateName':
+                    case 'NewTaxZone':
                         this.taxrateModal = true;
                         break;
                     case 'NewTaxCategory':
