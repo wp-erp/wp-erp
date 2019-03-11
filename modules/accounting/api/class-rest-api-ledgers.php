@@ -100,6 +100,28 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/bank-accounts', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_bank_accounts' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_account_lists' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/cash-accounts', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_cash_accounts' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_account_lists' );
+                },
+            ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/categories/(?P<chart_id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -306,11 +328,65 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_ERROR|WP_REST_REQUEST
      */
     public function get_chart_accounts( $request ) {
-        $accounts  = erp_acct_get_all_charts( $request );
+        $accounts  = erp_acct_get_all_charts();
 
         $response = rest_ensure_response( $accounts );
 
         $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get a collection of bank accounts
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_bank_accounts( $request ) {
+        $items = erp_acct_get_banks( true, false, false );
+
+        if ( empty( $items ) ) {
+            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 400 ] );
+        }
+
+        foreach ( $items as $item ) {
+            $additional_fields = [];
+
+            $data = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, 0 );
+
+        return $response;
+    }
+
+    /**
+     * Get cash accounts
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_cash_accounts( $request ) {
+        $items = erp_acct_get_banks( true, true, true );
+
+        if ( empty( $items ) ) {
+            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 400 ] );
+        }
+
+        foreach ( $items as $item ) {
+            $additional_fields = [];
+
+            $data = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, 0 );
 
         return $response;
     }
@@ -441,6 +517,21 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response = rest_ensure_response( $data );
 
         // $response = $this->add_links( $response, $item );
+
+        return $response;
+    }
+
+    /**
+     * @param $item
+     * @param $request
+     * @param $additional_fields
+     * @return mixed|WP_REST_Response
+     */
+    public function prepare_bank_item_for_response(  $item, $request, $additional_fields ){
+        $data = array_merge( $item, $additional_fields );
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
 
         return $response;
     }
