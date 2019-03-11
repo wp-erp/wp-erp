@@ -233,7 +233,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_bank_accounts( $request ) {
-        $items = erp_acct_get_banks();
+        $items = erp_acct_get_banks( true, true );
 
         if ( empty( $items ) ) {
             return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 400 ] );
