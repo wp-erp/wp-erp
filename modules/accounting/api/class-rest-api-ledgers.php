@@ -521,6 +521,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'name'        => $item->name,
             'slug'        => $item->slug,
             'code'        => $item->code,
+            'trn_count'   => erp_acct_get_ledger_trn_count( $item->id ),
             'system'      => $item->system,
             'balance'     => erp_acct_get_ledger_balance( $item->id )
         ];

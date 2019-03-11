@@ -30,6 +30,14 @@
                             }}">{{ data.row.name }}
                         </router-link>
                     </template>
+                    <template slot="trn_count" slot-scope="data">
+                        <router-link :to="{ name: 'LedgerReport', params: {
+                            ledgerID  : data.row.id,
+                            ledgerName: data.row.name,
+                            ledgerCode: data.row.code
+                            }}">{{ data.row.trn_count }}
+                        </router-link>
+                    </template>
                     <template slot="row-actions" slot-scope="data" v-if="data.row.system != null">
                         <strong class="sys-acc">System</strong>
                     </template>
@@ -53,6 +61,7 @@
                     'ledger_name': {label: 'Name'},
                     'type'       : {label: 'Type'},
                     'balance'    : {label: 'Balance'},
+                    'trn_count'  : {label: 'Count'},
                     'actions'    : {label: 'Actions'},
                 },
                 actions : [
