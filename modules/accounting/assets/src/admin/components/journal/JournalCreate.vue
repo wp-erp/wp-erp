@@ -79,6 +79,11 @@
                             <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
+                    <tr class="add-new-line">
+                        <td colspan="9" style="text-align: left;">
+                            <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                        </td>
+                    </tr>
                     <tr class="total-amount-row">
                         <td colspan="3" class="pl-10 text-right col--total-amount">
                             <span>Total Amount</span>
@@ -86,11 +91,6 @@
                         <td data-colname="Debit"><input type="text" class="text-right" :value="totalDebit" readonly ></td>
                         <td data-colname="Credit"><input type="text" class="text-right" :value="totalCredit" readonly ></td>
                         <td></td>
-                    </tr>
-                    <tr class="add-new-line">
-                        <td colspan="9" style="text-align: left;">
-                            <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
-                        </td>
                     </tr>
                     </tbody>
                     <tr class="add-attachment-row">
@@ -186,11 +186,11 @@
             },
 
             addLine() {
-                this.transactionLines.push({},{});
+                this.transactionLines.push({});
             },
 
-            remove_item( index ) {
-                this.$delete( this.ledgers, index );
+            remove_item(index) {
+                this.$delete(this.transactionLines,index );
             },
 
             SubmitForJournalCreate(event) {
@@ -220,6 +220,7 @@
                 });
 
                 event.target.reset();
+                this.resetFields();
             },
 
             validateForm() {
@@ -242,11 +243,9 @@
                 }
 
                 let diff = Math.abs( this.debit_total - this.credit_total );
-
-                if( diff === 0 ) {
+                this.isWorking = true;
+                if( 0 == diff ) {
                     this.isWorking = false;
-                } else {
-                    this.isWorking = true;
                 }
             },
 
@@ -263,7 +262,6 @@
                     lineItems.push( item );
                 }
 
-
                 return lineItems;
             },
 
@@ -271,7 +269,23 @@
                 HTTP.get(`/journals/next/`).then((response) => {
                     this.journal_id = response.data.id;
                 })
-            }
+            },
+
+            resetFields() {
+                this.basic_fields.journal_no = {id: null, name: null};
+                this.basic_fields.trn_date = erp_acct_var.current_date;
+                this.attachments = [];
+                this.transactionLines = [{}, {}];
+                this.isWorking = false;
+                this.debitLine = [];
+                this.creditLine = [];
+                this.ledgers = [];
+                this.credit_total = 0;
+                this.debit_total = 0;
+                this.finalAmount = 0;
+                this.journal_parti = '';
+                this.particulars = [];
+            },
         },
 
         computed: {

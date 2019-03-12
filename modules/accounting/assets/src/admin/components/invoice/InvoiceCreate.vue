@@ -67,7 +67,11 @@
                                 v-for="(line, index) in transactionLines"
                             ></invoice-trn-row>
 
-                            <tr class="padded"></tr>
+                            <tr class="add-new-line">
+                                <td colspan="9" style="text-align: left;">
+                                    <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                                </td>
+                            </tr>
 
                             <tr class="discount-rate-row">
                                 <td colspan="4" class="text-right with-multiselect">
@@ -100,11 +104,6 @@
                                 </td>
                                 <td><input type="text" v-model="finalTotalAmount" readonly></td>
                                 <td></td>
-                            </tr>
-                            <tr class="add-new-line">
-                                <td colspan="9" style="text-align: left;">
-                                    <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
-                                </td>
                             </tr>
                             <tr class="wperp-form-group">
                                 <td colspan="9" style="text-align: left;">
