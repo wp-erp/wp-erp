@@ -39,7 +39,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
 
     $sub_query = "SELECT id FROM $ledgers" . $where . $cash_ledger;
     $ledger_details = $wpdb->prefix.'erp_acct_ledger_details';
-    $query = "Select ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance
+    $query = "Select l.id, ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance
               From $ledger_details as ld
               LEFT JOIN $ledgers as l ON l.id = ld.ledger_id
               Where ld.ledger_id IN ($sub_query)
