@@ -12,10 +12,21 @@
                     <div class="wperp-modal-body">
 
                         <div class="wperp-form-group">
-                            <label>Tax Zone</label>
+                            <label>Tax Zone Name</label>
                             <input type="text" v-model="rate_name" />
                         </div>
 
+                        <div class="wperp-form-group">
+                            <label>Tax Number</label>
+                            <input type="text" v-model="tax_number" class="wperp-form-field" placeholder="Enter Tax Number">
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" v-model="is_default" class="form-check-input">
+                                <span class="form-check-sign"></span>
+                                <span class="field-label">Is this tax default?</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="wperp-modal-footer pt-0">
@@ -58,7 +69,8 @@
 
         data() {
             return {
-                rate_names: [{}],
+                tax_number: '',
+                is_default: false,
                 rate_name: '',
                 isWorking: false,
             };
@@ -77,14 +89,19 @@
 
             getRateName() {
                 HTTP.get(`/tax-rate-names/${this.rate_name_id}`).then((response) => {
-                    this.rate_name = response.data.name;
+                    this.rate_name  = response.data.tax_rate_name;
+                    this.is_default = ('1' === response.data.default) ? true : false;
+                    this.tax_number = response.data.tax_number;
                 });
             },
 
             addNewTaxZone() {
                 this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.post('/tax-rate-names', {
-                    name: this.rate_name,
+                    tax_rate_name: this.rate_name,
+                    tax_number   : this.tax_number,
+                    default      : this.is_default,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Zone Created!' );
@@ -100,7 +117,9 @@
 
             updateTaxRateName() {
                 HTTP.put(`/tax-rate-names/${this.rate_name_id}`, {
-                    name: this.rate_name,
+                    tax_rate_name: this.rate_name,
+                    tax_number   : this.tax_number,
+                    default      : this.is_default,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Zone Updated !' );

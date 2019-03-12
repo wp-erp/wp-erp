@@ -28,6 +28,10 @@
                 :bulk-actions="bulkActions"
                 @action:click="onActionClick"
                 @bulk:click="onBulkAction">
+
+                <template slot="default" slot-scope="data">
+                    {{ '1' === data.row.default ? '&#x02713;' : '-' }}
+                </template>
             </list-table>
         </div>
 
@@ -51,9 +55,10 @@
             return {
                 modalParams: null,
                 columns: {
-                    'tax_id': {label: 'ID'},
-                    'tax_name': {label: 'Rate Name'},
-                    'actions': {label: 'Actions'}
+                    'tax_rate_name': {label: 'Tax Zone Name'},
+                    'tax_number'   : {label: 'Tax Number'},
+                    'default'      : {label: 'Default'},
+                    'actions'      : {label: 'Actions'}
                 },
                 rows: [],
                 paginationData: {
@@ -107,9 +112,10 @@
         methods: {
 
             fetchItems() {
-                this.rows = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get('tax-rate-names', {
+
+                this.rows = [];
+                HTTP.get('/tax-rate-names', {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,

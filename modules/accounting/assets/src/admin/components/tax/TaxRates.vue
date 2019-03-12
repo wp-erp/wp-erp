@@ -37,14 +37,12 @@
                 @action:click="onActionClick"
                 @bulk:click="onBulkAction">
 
-                <template slot="tax_id" slot-scope="data">
+                <template slot="tax_rate_name" slot-scope="data">
                     <strong>
-                        <a href="#" @click.prevent="singleTaxRate(data.row.tax_id)"> #{{ data.row.tax_id }}</a>
+                        <a href="#" @click.prevent="singleTaxRate(data.row.tax_id, data.row.tax_rate_name)"> {{ data.row.tax_rate_name }}</a>
                     </strong>
                 </template>
             </list-table>
-
-            <tax-rate-quick-edit v-if="taxRateQuickEditModal" :tax_id="tax_rate_id" @close="taxRateQuickEditModal = false" > </tax-rate-quick-edit>
         </div>
 
         <new-tax-zone v-if="taxrateModal" @close="taxrateModal = false"/>
@@ -61,7 +59,6 @@
     import NewTaxZone from 'admin/components/tax/NewTaxZone.vue'
     import NewTaxCategory from 'admin/components/tax/NewTaxCategory.vue'
     import NewTaxAgency from 'admin/components/tax/NewTaxAgency.vue'
-    import TaxRateQuickEdit from 'admin/components/tax/TaxRateQuickEdit.vue'
 
     export default {
         name: 'TaxRates',
@@ -73,17 +70,14 @@
             NewTaxZone,
             NewTaxCategory,
             NewTaxAgency,
-            TaxRateQuickEdit
         },
 
         data() {
             return {
                 modalParams: null,
                 columns: {
-                    'tax_name': {label: 'Tax Name'},
-                    'tax_number': {label: 'Tax Number'},
-                    'default': {label: 'Default'},
-                    'actions': {label: 'Actions'}
+                    'tax_rate_name': {label: 'Tax Zone Name'},
+                    'actions'      : {label: 'Actions'}
                 },
                 rows: [],
                 paginationData: {
@@ -93,7 +87,6 @@
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions: [
-                    {key: 'quick_edit', label: 'Quick Edit', iconClass: 'flaticon-edit'},
                     {key: 'edit', label: 'Edit', iconClass: 'flaticon-edit'},
                     {key: 'trash', label: 'Delete', iconClass: 'flaticon-trash'}
                 ],
@@ -122,7 +115,6 @@
                 tax_rate: null,
                 isActiveOptionDropdown: false,
                 tax_rate_id: null,
-                taxRateQuickEditModal: false,
                 taxrateModal: false,
                 taxcatModal: false,
                 taxagencyModal: false
@@ -153,15 +145,21 @@
         computed: {
             row_data() {
                 let items = this.rows;
-                items.map(item => {
-                    item.tax_id = item.id;
-                    if ( 0 == item.default ) {
-                        item.default = '-';
-                    } else {
-                        item.default = 'Default';
-                    }
-                });
-                return items;
+
+                if ( items.length ) {
+                    items.map(item => {
+                        item.tax_id = item.id;
+                        if ( 0 == item.default ) {
+                            item.default = '-';
+                        } else {
+                            item.default = 'Default';
+                        }
+                    });
+
+                    return items;
+                }
+
+                return [];
             }
         },
 
@@ -200,8 +198,8 @@
                 this.$router.push('taxes/new');
             },
 
-            singleTaxRate(tax_id) {
-                this.$router.push({name: 'SingleTaxRate', params: {id: tax_id}})
+            singleTaxRate(tax_id, tax_rate_name) {
+                this.$router.push({name: 'SingleTaxRate', params: {id: tax_id, name: tax_rate_name}})
             },
 
             onActionClick(action, row, index) {
@@ -217,11 +215,6 @@
                                 this.$store.dispatch( 'spinner/setSpinner', false );
                             } );
                         }
-                        break;
-
-                    case 'quick_edit':
-                        this.taxRateQuickEditModal = true;
-                        this.tax_rate_id = row.id;
                         break;
 
                     case 'edit':

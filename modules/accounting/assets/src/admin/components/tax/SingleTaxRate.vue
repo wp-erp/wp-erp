@@ -3,29 +3,21 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{taxrate.tax_name}}</h2>
+                    <h2 class="content-header__title">{{ $route.params.name }}</h2>
+
+                    <a class="wperp-btn btn--primary" @click.prevent="addNewLine = true">
+                        <span>Add New Line</span>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div v-if="!is_update" class="wperp-invoice-table">
-            <!--<div class="wperp-form-group wperp-col-sm-6">-->
-                <!--<label> Tax Number </label>-->
-                <!--{{taxrate.tax_number}}-->
-            <!--</div>-->
+        <tax-rate-line-add v-if="addNewLine" @close="addNewLine = false" />
 
-            <!--<div class="wperp-form-group wperp-col-sm-6">-->
-                <!--<div class="form-check">-->
-                    <!--<label class="form-check-label">-->
-                        <!--<input type="checkbox" :value="taxrate.default" class="form-check-input">-->
-                        <!--<span class="form-check-sign"></span>-->
-                        <!--<span class="field-label">Is this tax default?</span>-->
-                    <!--</label>-->
-                <!--</div>-->
-            <!--</div>-->
-        </div>
-
-        <tax-rate-line-edit v-if="showModal" :tax_id="tax_id" :row_data="row_data" @close="showModal = false"></tax-rate-line-edit>
+        <tax-rate-line-edit v-if="showModal"
+            :tax_id="tax_id"
+            :row_data="row_data"
+            @close="showModal = false" />
 
         <div class="table-container">
             <list-table
@@ -50,6 +42,7 @@
     import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import ComboBox from 'admin/components/select/ComboBox.vue'
+    import TaxRateLineAdd from 'admin/components/tax/TaxRateLineAdd.vue'
     import TaxRateLineEdit from 'admin/components/tax/TaxRateLineEdit.vue'
 
     export default {
@@ -58,42 +51,44 @@
         components: {
             ListTable,
             ComboBox,
-            TaxRateLineEdit
+            TaxRateLineAdd,
+            TaxRateLineEdit,
         },
 
         data() {
             return {
-                tax_id: null,
-                row_id: null,
-                row_data: null,
-                modalParams: null,
-                columns: {
+                tax_id                : null,
+                row_id                : null,
+                row_data              : null,
+                modalParams           : null,
+                taxrate               : {},
+                buttonTitle           : '',
+                pageTitle             : '',
+                url                   : '',
+                singleUrl             : '',
+                isActiveOptionDropdown: false,
+                singleTaxRateModal    : false,
+                showModal             : false,
+                addNewLine            : false,
+                is_update             : false,
+                columns               : {
                     'component_name': {label: 'Component'},
-                    'agency_name': {label: 'Agency'},
-                    'tax_cat_name': {label: 'Tax Category'},
-                    'tax_rate': {label: 'Tax Rate'},
-                    'actions': {label: 'Actions'}
+                    'agency_name'   : {label: 'Agency'},
+                    'tax_cat_name'  : {label: 'Tax Category'},
+                    'tax_rate'      : {label: 'Tax Rate'},
+                    'actions'       : {label: 'Actions'}
                 },
                 rows: [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
-                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
+                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 actions: [
                     {key: 'edit', label: 'Edit', iconClass: 'flaticon-edit'},
                     {key: 'trash', label: 'Delete', iconClass: 'flaticon-trash'}
-                ],
-                taxrate: {},
-                buttonTitle: '',
-                pageTitle: '',
-                url: '',
-                singleUrl: '',
-                isActiveOptionDropdown: false,
-                singleTaxRateModal: false,
-                showModal: false,
-                is_update: false
+                ]
             }
         },
 
@@ -163,7 +158,7 @@
                     default :
                         break;
                 }
-            },
+            }
         }
     }
 </script>

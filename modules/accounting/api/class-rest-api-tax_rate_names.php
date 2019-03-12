@@ -98,10 +98,10 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_tax_rate_names( $request ) {
         $args = [
-            'number' => !empty( $request['per_page'] ) ? $request['per_page'] : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'number'     => !empty( $request['per_page'] ) ? $request['per_page'] : 20,
+            'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
         ];
 
         $formatted_items = [];
@@ -204,14 +204,6 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['tax_components'];
-
-        foreach ( $items as $key => $item ) {
-            $item_rates[$key] = $item['tax_rate'];
-        }
-
-        $tax_data['total_rate'] = array_sum( $item_rates );
-
         $tax_id = erp_acct_update_tax_rate_name( $tax_data, $id );
 
         $tax_data['id'] = $tax_id;
@@ -257,8 +249,14 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
-        if ( isset( $request['name'] ) ) {
-            $prepared_item['name'] = $request['name'];
+        if ( isset( $request['tax_rate_name'] ) ) {
+            $prepared_item['tax_rate_name'] = $request['tax_rate_name'];
+        }
+        if ( isset( $request['tax_number'] ) ) {
+            $prepared_item['tax_number'] = $request['tax_number'];
+        }
+        if ( isset( $request['default'] ) ) {
+            $prepared_item['default'] = $request['default'];
         }
 
         return $prepared_item;

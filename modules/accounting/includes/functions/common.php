@@ -261,13 +261,13 @@ function erp_acct_get_product_category_by_id( $cat_id ) {
  *
  * @return array
  */
-function erp_acct_get_tax_rate_name_by_id( $rate_name_id ) {
-    global $wpdb;
+// function erp_acct_get_tax_rate_name_by_id( $rate_name_id ) {
+//     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_tax_rate_names WHERE id = {$rate_name_id} LIMIT 1" );
+//     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_tax_rate_names WHERE id = {$rate_name_id} LIMIT 1" );
 
-    return $row->name;
-}
+//     return $row->name;
+// }
 
 /**
  * Get tax agency name by id
