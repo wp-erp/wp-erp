@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Expense</h2>
+                    <h2 class="content-header__title">New Expense</h2>
                 </div>
             </div>
         </div>
@@ -91,6 +91,11 @@
 
                             </td>
                         </tr>
+                        <tr class="add-new-line">
+                            <td colspan="9" style="text-align: left;">
+                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                            </td>
+                        </tr>
 
                         <tr class="total-amount-row">
                             <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
@@ -98,11 +103,7 @@
                                 <input type="text" class="text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
                             <td class="text-right"></td>
                         </tr>
-                        <tr class="add-new-line">
-                            <td colspan="9" style="text-align: left;">
-                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
-                            </td>
-                        </tr>
+
                         <tr class="wperp-form-group">
                             <td colspan="9" style="text-align: left;">
                                 <label>Particulars</label>
