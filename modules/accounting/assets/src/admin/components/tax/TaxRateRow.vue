@@ -19,7 +19,7 @@
             <template v-if="is_update">
                 <multi-select
                 v-model="component_line.category"
-                :options="categories"/>
+                :options="categories" />
             </template>
             <template v-else>{{component_line.tax_cat_name}}</template>
         </div>
