@@ -65,6 +65,11 @@
                             :key="index"
                             v-for="(line, index) in transactionLines"
                         ></purchase-row>
+                        <tr class="add-new-line">
+                            <td colspan="9" style="text-align: left;">
+                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                            </td>
+                        </tr>
 
                         <tr class="total-amount-row">
                             <td colspan="3" class="text-right">
@@ -73,11 +78,7 @@
                             <td><input type="text" v-model="finalTotalAmount" readonly></td>
                             <td></td>
                         </tr>
-                        <tr class="add-new-line">
-                            <td colspan="9" style="text-align: left;">
-                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
-                            </td>
-                        </tr>
+
                         <tr class="wperp-form-group">
                             <td colspan="9" style="text-align: left;">
                                 <label>Particulars</label>
