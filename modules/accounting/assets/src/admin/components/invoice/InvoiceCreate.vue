@@ -252,11 +252,11 @@
             if ( 'EstimateCreate' === this.$route.name ) {
                 this.inv_title = 'Estimate';
                 this.inv_type  = {id: 1, name: 'Estimate'};
-
             } else {
                 this.inv_title = 'Invoice';
                 this.inv_type  = {id: 0, name: 'Invoice'};
             }
+
             this.prepareDataLoad();
 
             this.$root.$on('remove-row', index => {

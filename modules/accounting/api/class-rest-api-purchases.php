@@ -365,6 +365,9 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['status'] ) ) {
             $prepared_item['status'] = $request['status'];
         }
+        if ( isset( $request['purchase_order'] ) ) {
+            $prepared_item['purchase_order'] = $request['purchase_order'];
+        }
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
         }
@@ -400,6 +403,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'line_items'  => $item->line_items,
             'type'        => !empty( $item->type ) ? $item->type : 'purchase',
             'status'      => $item->status,
+            'purchase_order' => $item->purchase_order,
             'amount'      => $item->amount,
             'due'         => empty($item->due) ? erp_acct_get_purchase_due($item->voucher_no) : $item->due,
             'attachments' => maybe_unserialize( $item->attachments )
