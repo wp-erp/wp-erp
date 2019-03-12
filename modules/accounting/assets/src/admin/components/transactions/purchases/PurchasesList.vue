@@ -34,7 +34,7 @@
                     </strong>
                 </template>
                 <template slot="type" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Pay Purchase' : 'Purchase Order' }}
+                    {{ getTrnType(data.row) }}
                 </template>
                 <template slot="ref" slot-scope="data">
                     {{ data.row.ref ? data.row.ref : '-' }}
@@ -162,7 +162,7 @@
 
                     case 'edit':
                         if ( 'purchase' == row.type ) {
-                            this.$router.push({ name: 'PurchaseOrderEdit', params: { id: row.id } })
+                            this.$router.push({ name: 'PurchaseEdit', params: { id: row.id } })
                         }
 
                         break;
@@ -186,6 +186,17 @@
 
             isPayment(row) {
                 return row.type === 'pay_purchase' ? true : false;
+            },
+
+            getTrnType(row) {
+                if ( row.type === 'purchase' ) {
+                    if ( 1 == row.purchase_order ) {
+                        return 'Purchase Order';
+                    }
+                    return 'Purchase';
+                } else {
+                    return 'Pay Purchase';
+                }
             }
         },
 

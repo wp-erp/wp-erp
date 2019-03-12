@@ -547,6 +547,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             purchase.due_date,
             purchase.amount,
             purchase.ref,
+            purchase.purchase_order,
             pay_purchase.amount as pay_bill_amount,
             ABS(SUM(purchase_acct_details.debit - purchase_acct_details.credit)) AS due,
             status_type.type_name AS status";
