@@ -154,15 +154,15 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
-                            // HTTP.delete('purchases/' + row.id).then( response => {
-                            //     this.$delete(this.rows, index);
-                            // });
+                            HTTP.delete('purchases/' + row.id).then( response => {
+                                this.$delete(this.rows, index);
+                            });
                         }
                         break;
 
                     case 'edit':
                         if ( 'purchase' == row.type ) {
-                            this.$router.push({ name: 'PurchaseEdit', params: { id: row.id } })
+                            this.$router.push({ name: 'PurchaseOrderEdit', params: { id: row.id } })
                         }
 
                         break;

@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">New Purchase</h2>
+                    <h2 class="content-header__title">New {{inv_title}}</h2>
                 </div>
             </div>
         </div>
@@ -175,6 +175,8 @@
                 finalTotalAmount: 0,
                 erp_acct_assets : erp_acct_var.acct_assets,
                 isWorking       : false,
+                purchase_title  : '',
+                purchase_order  : 0,
             }
         },
 
@@ -185,6 +187,14 @@
         },
 
         created() {
+            if ( 'PurchaseOrderCreate' === this.$route.name ) {
+                this.inv_title = 'Purchase Order';
+                this.purchase_order = 1;
+            } else {
+                this.inv_title = 'Purchase';
+                this.purchase_order = 0;
+            }
+
             this.prepareDataLoad();
 
             this.$root.$on('remove-row', index => {
@@ -371,7 +381,8 @@
                     particulars    : this.particulars,
                     attachments    : this.attachments,
                     type           : 'purchase',
-                    status         : 3
+                    status         : 3,
+                    purchase_order : this.purchase_order,
                 };
 
                 if ( this.editMode ) {

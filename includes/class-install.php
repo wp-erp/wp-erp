@@ -1139,6 +1139,7 @@ Company'
                 `amount` decimal(10,2) DEFAULT 0,
                 `ref` varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
+                `purchase_order` boolean DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,

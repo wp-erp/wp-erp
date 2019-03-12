@@ -313,6 +313,28 @@ export default new Router({
             ]
         },
         {
+            path: '/purchase-orders',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+
+                    path: 'new',
+                    name: 'PurchaseOrderCreate',
+                    component: PurchaseCreate
+                },
+                {
+                    path: ':id',
+                    name: 'PurchaseOrderSingle',
+                    component: PurchaseSingle,
+                },
+                {
+                    path: ':id/edit',
+                    name: 'PurchaseOrderEdit',
+                    component: PurchaseCreate,
+                },
+            ]
+        },
+        {
             path: '/pay-purchases',
             component: { render (c) { return c('router-view') } },
             children: [

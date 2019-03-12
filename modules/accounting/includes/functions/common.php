@@ -363,6 +363,11 @@ function erp_acct_quick_access_menu() {
             'slug'  => 'invoice',
             'url'   => 'invoices/new'
         ],
+        'estimate' => [
+            'title' => 'Estimate',
+            'slug'  => 'estimate',
+            'url'   => 'estimates/new'
+        ],
         "rec_payment" => [
             'title' => 'Receive Payment',
             'slug'  => 'payment',
@@ -377,6 +382,11 @@ function erp_acct_quick_access_menu() {
             'title' => 'Pay Bill',
             'slug'  => 'pay_bill',
             'url'   => 'pay-bills/new'
+        ],
+        "purchase-order" => [
+            'title' => 'Purchase Order',
+            'slug'  => 'purchase-orders',
+            'url'   => 'purchase-orders/new'
         ],
         "purchase" => [
             'title' => 'Purchase',
