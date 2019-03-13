@@ -185,7 +185,7 @@
                 this.ProductFields.id = product.id;
                 this.ProductFields.type = {id: product.product_type_id, name: product.type_name};
                 this.ProductFields.categories = {id: product.category_id, name: product.cat_name};
-                this.ProductFields.tax_cat_id = {id: product.category_id, name: product.cat_name};
+                this.ProductFields.tax_cat_id = {id: product.tax_cat_id, name: product.tax_cat_name};
                 this.ProductFields.vendor = {id: product.vendor, name: product.vendor_name};
                 this.ProductFields.salePrice = product.sale_price;
                 this.ProductFields.costPrice = product.cost_price;
