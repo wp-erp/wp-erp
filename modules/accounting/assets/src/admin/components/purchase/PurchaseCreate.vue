@@ -175,6 +175,7 @@
                 isWorking       : false,
                 purchase_title  : '',
                 purchase_order  : 0,
+                actionType      : null,
             }
         },
 
@@ -205,6 +206,10 @@
 
             this.$root.$on('total-updated', amount => {
                 this.updateFinalAmount();
+            });
+
+            this.$root.$on('combo-btn-select', button => {
+                this.actionType = button.id;
             });
         },
 

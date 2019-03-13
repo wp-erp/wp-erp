@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4>Income Statement</h4>
+        <h2 class="content-header__title">Income Statement</h2>
 
         <form action="" method="" @submit.prevent="fetchItems" class="query-options">
 
@@ -16,6 +16,7 @@
             tableClass="wperp-table table-striped table-dark widefat income-statement"
             :columns="columns"
             :rows="rows"
+            :showItemNumbers="false"
             :showCb="false">
             <template slot="debit" slot-scope="data">
                 {{ getCurrencySign() + Math.abs(data.row.debit) }}
