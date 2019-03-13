@@ -529,7 +529,7 @@
                     line_items     : this.formatLineItems(),
                     attachments    : this.attachments,
                     particulars    : this.particulars,
-                    type           : 'invoice',
+                    type           : 'sales_invoice',
                     status         : parseInt(this.status),
                     estimate       : this.inv_type.id
                 };
