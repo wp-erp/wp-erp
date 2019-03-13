@@ -32,11 +32,15 @@ function erp_acct_trial_balance_cash_at_bank( $args, $type ) {
     $sql1 = $wpdb->prepare("SELECT group_concat(id) FROM {$wpdb->prefix}erp_acct_ledgers where chart_id = %d", $chart_bank);
     $ledger_ids = implode( ',', explode( ',', $wpdb->get_var($sql1) ) ); // e.g. 4, 5
 
-    $sql2 = $wpdb->prepare("SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_ledger_details
-        WHERE ledger_id IN ({$ledger_ids}) AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_id {$having}",
-        $args['start_date'], $args['end_date']);
+    if ( $ledger_ids ) {
+        $sql2 = $wpdb->prepare("SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_ledger_details
+            WHERE ledger_id IN ({$ledger_ids}) AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_id {$having}",
+            $args['start_date'], $args['end_date']);
 
-    return $wpdb->get_var($sql2);
+        return $wpdb->get_var($sql2);
+    }
+
+    return null;
 }
 
 /**
@@ -131,7 +135,7 @@ function erp_acct_get_trial_balance( $args ) {
         SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
-        WHERE ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
+        WHERE ledger.chart_id <> 7 AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
         $args['start_date'], $args['end_date']
     );
 
@@ -605,7 +609,7 @@ function erp_acct_get_balance_sheet( $args ) {
     ];
     $results['rows1'][] = [
         'name'    => 'Cash at Bank',
-        'balance' => erp_acct_trail_balance_cash_at_bank( $args, 'balance' )
+        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'balance' )
     ];
 
     $results['rows2'][] = [
@@ -614,7 +618,7 @@ function erp_acct_get_balance_sheet( $args ) {
     ];
     $results['rows2'][] = [
         'name'    => 'Bank Loan',
-        'balance' => erp_acct_trail_balance_cash_at_bank( $args, 'loan' )
+        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'loan' )
     ];
 
     $results['rows2'][] = [

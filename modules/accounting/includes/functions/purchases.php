@@ -61,6 +61,7 @@ function erp_acct_get_purchase( $purchase_no ) {
     purchase.vendor_name,
     purchase.ref,
     purchase.status,
+    purchase.purchase_order,
     purchase.attachments,
     purchase.particulars,
 
@@ -157,6 +158,7 @@ function erp_acct_insert_purchase( $data ) {
             'amount'      => $purchase_data['amount'],
             'ref'         => $purchase_data['ref'],
             'status'      => $purchase_data['status'],
+            'purchase_order'=> $purchase_data['purchase_order'],
             'attachments' => $purchase_data['attachments'],
             'particulars' => $purchase_data['particulars'],
             'created_at'  => $purchase_data['created_at'],
@@ -234,10 +236,14 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
             'vendor_name' => $purchase_data['vendor_name'],
             'trn_date'    => $purchase_data['trn_date'],
             'due_date'    => $purchase_data['due_date'],
-            'amount'      => $purchase_data['total'],
+            'amount'      => $purchase_data['amount'],
             'ref'         => $purchase_data['ref'],
+            'status'      => $purchase_data['status'],
+            'purchase_order'=> $purchase_data['purchase_order'],
             'attachments' => $purchase_data['attachments'],
             'particulars' => $purchase_data['particulars'],
+            'created_at'  => $purchase_data['created_at'],
+            'created_by'  => $purchase_data['created_by'],
             'updated_at'  => $purchase_data['updated_at'],
             'updated_by'  => $purchase_data['updated_by'],
         ), array(
@@ -350,6 +356,7 @@ function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
     $purchase_data['amount']      = isset( $data['amount'] ) ? floatval( $data['amount'] ) : 0;
     $purchase_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $purchase_data['status']      = isset( $data['status'] ) ? intval( $data['status'] ) : '';
+    $purchase_data['purchase_order']  = isset( $data['purchase_order'] ) ? intval( $data['purchase_order'] ) : '';
     $purchase_data['ref']         = isset( $data['ref'] ) ? $data['ref'] : '';
     $purchase_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $purchase_data['created_at']  = date( "Y-m-d" );

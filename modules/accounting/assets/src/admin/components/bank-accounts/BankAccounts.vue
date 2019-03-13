@@ -168,7 +168,7 @@
                 color: #525252;
                 &.account-number {
                     font-weight: 400;
-                    color: 000;
+                    color: #000;
                 }
             }
         }

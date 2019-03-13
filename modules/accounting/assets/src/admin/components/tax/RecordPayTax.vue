@@ -140,16 +140,16 @@
             },
 
             changeAccounts() {
-                let bank = 7;
-
-                // Todo: we should change numbers into slug
                 if ( '2' === this.trn_by.id || '3' === this.trn_by.id ) {
-                    HTTP.get(`/ledgers/${bank}/accounts`).then(response => {
+                    HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
                     });
                 } else {
-                    this.accts_by_chart = [{ id: 1, name: 'Cash' }];
+                    HTTP.get('/ledgers/cash-accounts').then((response) => {
+                        this.accts_by_chart = response.data;
+                    });
                 }
+                this.$root.$emit('account-changed');
             },
 
             getAgencies() {

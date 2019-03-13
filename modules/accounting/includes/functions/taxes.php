@@ -31,9 +31,8 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
     }
 
     $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( tax.id ) as total_number " : " tax.*, tax_rate_name.name ";
-    $sql .= "FROM {$wpdb->prefix}erp_acct_taxes as tax
-    LEFT JOIN {$wpdb->prefix}erp_acct_tax_rate_names AS tax_rate_name ON tax.tax_rate_id = tax_rate_name.id ORDER BY {$args['orderby']} {$args['order']} {$limit}";
+    $sql .= $args['count'] ? " COUNT( tax.id ) as total_number " : " * ";
+    $sql .= "FROM {$wpdb->prefix}erp_acct_taxes AS tax INNER JOIN {$wpdb->prefix}erp_acct_tax_cat_agency as cat_agency on tax.id = cat_agency.tax_id ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         return $wpdb->get_var($sql);
@@ -56,7 +55,7 @@ function erp_acct_get_tax_rate( $tax_no ) {
     $sql = "SELECT
 
     tax.id,
-    tax.tax_rate_id,
+    tax.tax_rate_name,
     tax.tax_number,
     tax.default,
     tax.created_at,
@@ -99,31 +98,16 @@ function erp_acct_insert_tax_rate( $data ) {
     global $wpdb;
 
     $created_by = get_current_user_id();
-    $data['created_at'] = date("Y-m-d H:i:s");
+    $data['created_at'] = date('Y-m-d H:i:s');
     $data['created_by'] = $created_by;
 
     $tax_data = erp_acct_get_formatted_tax_data( $data );
 
     $items = $data['tax_components'];
 
-    if ( !empty( $tax_data['default'] ) && $tax_data['default'] ) {
-        $sql = "UPDATE " . $wpdb->prefix . "erp_acct_taxes" . " SET `default`=0";
-        $results = $wpdb->get_results( $sql );
-    }
+    $tax_id = (int) $data['tax_rate_name'];
 
-    $wpdb->insert($wpdb->prefix . 'erp_acct_taxes', array(
-        'tax_rate_id'   => $tax_data['tax_rate_id'],
-        'tax_number'    => $tax_data['tax_number'],
-        'default'       => $tax_data['default'],
-        'created_at'    => $tax_data['created_at'],
-        'created_by'    => $tax_data['created_by'],
-        'updated_at'    => $tax_data['updated_at'],
-        'updated_by'    => $tax_data['updated_by'],
-    ));
-
-    $tax_id = $wpdb->insert_id;
-
-    foreach ($items as $key => $item) {
+    foreach ( $items as $key => $item ) {
         $wpdb->insert($wpdb->prefix . 'erp_acct_tax_cat_agency', array(
             'tax_id'         => $tax_id,
             'component_name' => $item['component_name'],
@@ -139,7 +123,6 @@ function erp_acct_insert_tax_rate( $data ) {
         $wpdb->insert($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
             'tax_id'                => $tax_id,
             'sales_tax_category_id' => $item['tax_category_id'],
-            'tax_rate'              => $item['tax_rate'],
             'created_at'            => $tax_data['created_at'],
             'created_by'            => $tax_data['created_by'],
             'updated_at'            => $tax_data['updated_at'],
@@ -147,9 +130,7 @@ function erp_acct_insert_tax_rate( $data ) {
         ));
     }
 
-
     return $tax_id;
-
 }
 
 /**
@@ -202,7 +183,6 @@ function erp_acct_update_tax_rate( $data, $id ) {
 
         $wpdb->update($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
             'sales_tax_category_id' => $item['tax_cat_id'],
-            'tax_rate'              => $item['tax_rate'],
             'created_at' => $tax_data['created_at'],
             'created_by' => $tax_data['created_by'],
             'updated_at' => $tax_data['updated_at'],
@@ -251,6 +231,36 @@ function erp_acct_quick_edit_tax_rate( $data, $id ) {
 }
 
 /**
+ * Add line item of a tax rate
+ *
+ * @param $data
+ * @return int
+ */
+function erp_acct_add_tax_rate_line( $data ) {
+    global $wpdb;
+
+    $updated_by = get_current_user_id();
+    $data['updated_at'] = date('Y-m-d H:i:s');
+    $data['updated_by'] = $updated_by;
+
+    $tax_data = erp_acct_get_formatted_tax_line_data( $data );
+
+    $wpdb->insert($wpdb->prefix . 'erp_acct_tax_cat_agency', array(
+        'tax_id'         => $tax_data['tax_id'],
+        'component_name' => $tax_data['component_name'],
+        'tax_cat_id'     => $tax_data['tax_cat_id'],
+        'agency_id'      => $tax_data['agency_id'],
+        'tax_rate'       => $tax_data['tax_rate'],
+        'created_at'     => $tax_data['created_at'],
+        'created_by'     => $tax_data['created_by'],
+        'updated_at'     => $tax_data['updated_at'],
+        'updated_by'     => $tax_data['updated_by'],
+    ));
+
+    return $tax_data['tax_id'];
+}
+
+/**
  * Update line item of a tax rate
  *
  * @param $data
@@ -279,7 +289,6 @@ function erp_acct_edit_tax_rate_line( $data ) {
     ));
 
     return $tax_data['db_id'];
-
 }
 
 /**
@@ -455,8 +464,6 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data = [];
 
     $tax_data['tax_rate_id']     = isset($data['tax_rate_name']) ? $data['tax_rate_name'] : '';
-    $tax_data['tax_number']      = isset($data['tax_number']) ? $data['tax_number'] : '';
-    $tax_data['default']         = isset($data['default']) ? $data['default'] : 0;
     $tax_data['tax_rate']        = isset($data['tax_rate']) ? $data['tax_rate'] : 0;
     $tax_data['tax_id']          = isset($data['tax_id']) ? $data['tax_id'] : 0;
     $tax_data['trn_by']          = isset($data['trn_by']) ? $data['trn_by'] : '';
@@ -467,7 +474,7 @@ function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data['tax_components']  = isset($data['tax_components']) ? $data['tax_components'] : [];
     $tax_data['created_at']      = date('Y-m-d');
     $tax_data['created_by']      = isset($data['created_by']) ? $data['created_by'] : '';
-    $tax_data['updated_at']      = isset($data['updated_at']) ? $data['updated_at'] : '';
+    $tax_data['updated_at']      = isset($data['updated_at']) ? $data['updated_at'] : null;
     $tax_data['updated_by']      = isset($data['updated_by']) ? $data['updated_by'] : '';
     $tax_data['name']            = isset($data['name']) ? $data['name'] : '';
     $tax_data['description']     = isset($data['description']) ? $data['description'] : '';
@@ -492,15 +499,17 @@ function erp_acct_get_formatted_tax_data( $data ) {
 function erp_acct_get_formatted_tax_line_data( $data ) {
     $tax_data = [];
 
-    $tax_data['tax_id'] = isset($data['tax_id']) ? $data['tax_id'] : '';
-    $tax_data['db_id'] = isset($data['db_id']) ? $data['db_id'] : '';
-    $tax_data['rate_id'] = isset($data['rate_id']) ? $data['rate_id'] : '';
+    $tax_data['tax_id']         = isset($data['tax_id']) ? $data['tax_id'] : '';
+    $tax_data['db_id']          = isset($data['db_id']) ? $data['db_id'] : '';
+    $tax_data['rate_id']        = isset($data['rate_id']) ? $data['rate_id'] : '';
     $tax_data['component_name'] = isset($data['component_name']) ? $data['component_name'] : '';
-    $tax_data['agency_id'] = isset($data['agency_id']) ? $data['agency_id'] : 0;
-    $tax_data['tax_cat_id'] = isset($data['tax_cat_id']) ? $data['tax_cat_id'] : 0;
-    $tax_data['tax_rate'] = isset($data['tax_rate']) ? $data['tax_rate'] : 0;
-    $tax_data['created_at'] = isset($data['created_at']) ? $data['created_at'] : '';
-    $tax_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
+    $tax_data['agency_id']      = isset($data['agency_id']) ? $data['agency_id'] : 0;
+    $tax_data['tax_cat_id']     = isset($data['tax_cat_id']) ? $data['tax_cat_id'] : 0;
+    $tax_data['tax_rate']       = isset($data['tax_rate']) ? $data['tax_rate'] : 0;
+    $tax_data['created_at']     = isset($data['created_at']) ? $data['created_at'] : '';
+    $tax_data['created_by']     = isset($data['created_by']) ? $data['created_by'] : '';
+    $tax_data['updated_at']     = isset($data['updated_at']) ? $data['updated_at'] : null;
+    $tax_data['updated_by']     = isset($data['updated_by']) ? $data['updated_by'] : '';
 
     return $tax_data;
 }
@@ -511,21 +520,12 @@ function erp_acct_get_formatted_tax_line_data( $data ) {
 function erp_acct_tax_summary() {
     global $wpdb;
 
-    $sql = "SELECT
-        tax.id AS tax_rate_id,
-        tax.default,
-        rate_name.name,
-
-        sales_tax_category.sales_tax_category_id,
-        sales_tax_category.tax_rate
-
-        FROM {$wpdb->prefix}erp_acct_tax_sales_tax_categories AS sales_tax_category
-        LEFT JOIN {$wpdb->prefix}erp_acct_tax_categories AS tax_category ON tax_category.id = sales_tax_category.sales_tax_category_id
-        LEFT JOIN {$wpdb->prefix}erp_acct_tax_cat_agency AS cat_agency ON cat_agency.tax_cat_id = tax_category.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_taxes AS tax ON tax.id = sales_tax_category.tax_id
-        LEFT JOIN {$wpdb->prefix}erp_acct_tax_rate_names AS rate_name ON rate_name.id = tax.tax_rate_id
-
-        GROUP BY tax_rate_id, sales_tax_category_id";
+    $sql = "SELECT tax.id AS tax_rate_id,
+                tax.default, tca.tax_cat_id,
+                tca.tax_rate, tax.tax_rate_name from {$wpdb->prefix}erp_acct_tax_sales_tax_categories as stc
+                inner join ( SELECT tax_cat_id,sum(tax_rate) as tax_rate FROM {$wpdb->prefix}erp_acct_tax_cat_agency group by tax_cat_id
+                ) tca on stc.sales_tax_category_id = tca.tax_cat_id
+            inner join {$wpdb->prefix}erp_acct_taxes as tax on tax.id = stc.tax_id";
 
     return $wpdb->get_results( $sql, ARRAY_A);
 }

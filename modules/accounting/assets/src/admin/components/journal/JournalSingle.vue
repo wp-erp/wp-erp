@@ -35,8 +35,8 @@
                     <div class="invoice-body">
                         <h4>Journal</h4>
                         <div class="wperp-row" v-if="null != journal">
-                            <div class="wperp-col-sm-6">
-                                <table class="invoice-info pull-right">
+                            <div class="wperp-col-sm-12 pull-right">
+                                <table class="invoice-info">
                                     <tr>
                                         <th>Journal No</th>
                                         <td>#{{ journal.id }}</td>

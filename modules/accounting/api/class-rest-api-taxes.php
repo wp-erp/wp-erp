@@ -88,6 +88,19 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-add', [
+
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'line_add_tax_rate' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-edit', [
 
             [
@@ -319,6 +332,35 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
+     * Add component of a tax rate
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function line_add_tax_rate( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $tax_data = $this->prepare_line_item_for_database( $request );
+
+        $line_id = erp_acct_add_tax_rate_line( $tax_data );
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $tax_data = $this->prepare_tax_line_for_response( $tax_data, $request, $additional_fields );
+
+        $response = rest_ensure_response( $tax_data );
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
      * Update component of a tax rate
      *
      * @param WP_REST_Request $request
@@ -476,9 +518,6 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['tax_rate_name'] ) ) {
             $prepared_item['tax_rate_name'] = $request['tax_rate_name'];
         }
-        if ( isset( $request['tax_number'] ) ) {
-            $prepared_item['tax_number'] = $request['tax_number'];
-        }
         if ( isset( $request['is_compound'] ) ) {
             $prepared_item['is_compound'] = $request['is_compound'];
         }
@@ -511,9 +550,6 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['tax_rate'] ) ) {
             $prepared_item['tax_rate'] = $request['tax_rate'];
-        }
-        if ( isset( $request['default'] ) ) {
-            $prepared_item['default'] = $request['default'];
         }
 
         return $prepared_item;
@@ -568,16 +604,13 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'tax_name_id'     => $item->tax_rate_id,
-            'tax_name'        => $item->name,
-            'tax_number'      => $item->tax_number,
+            'tax_rate_name'   => $item->tax_rate_name,
             'tax_rate'        => ! empty($item->tax_rate) ? $item->tax_rate : '',
             'default'         => $item->default,
             'tax_components'  => ! empty($item->tax_components) ? $item->tax_components : '',
         ];
 
         $data = array_merge( $data, $additional_fields );
-
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
@@ -655,11 +688,13 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function prepare_tax_summary_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
+        error_log(print_r($item, true));
+
         $data = [
             'tax_rate_id'           => (int) $item->tax_rate_id,
             'default'               => (int) $item->default,
-            'tax_rate_name'         => $item->name,
-            'sales_tax_category_id' => $item->sales_tax_category_id,
+            'tax_rate_name'         => $item->tax_rate_name,
+            'sales_tax_category_id' => $item->tax_cat_id,
             'tax_rate'              => $item->tax_rate
         ];
 

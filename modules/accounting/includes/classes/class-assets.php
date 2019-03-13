@@ -110,8 +110,6 @@ class Assets {
      * @return array
      */
     public function get_scripts() {
-        $prefix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.min' : '';
-
         $scripts = [
             'accounting-vendor' => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/vendor.js',
@@ -141,7 +139,6 @@ class Assets {
      * @return array
      */
     public function get_styles() {
-
         $styles = [
             'accounting-style' => [
                 'src' =>  ERP_ACCOUNTING_ASSETS . '/css/style.css'
