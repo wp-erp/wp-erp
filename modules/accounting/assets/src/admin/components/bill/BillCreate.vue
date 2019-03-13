@@ -192,7 +192,8 @@
                 totalAmounts    : 0,
                 finalTotalAmount: 0,
                 particulars     : '',
-                erp_acct_assets : erp_acct_var.acct_assets
+                erp_acct_assets : erp_acct_var.acct_assets,
+                actionType      : null
             }
         },
 
@@ -202,6 +203,10 @@
             this.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
+            });
+
+            this.$root.$on('combo-btn-select', button => {
+                this.actionType = button.id;
             });
         },
 

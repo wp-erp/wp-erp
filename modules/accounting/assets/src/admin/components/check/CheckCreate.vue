@@ -205,7 +205,8 @@
                 particulars     : '',
                 isWorking       : false,
                 accts_by_chart: [],
-                erp_acct_assets : erp_acct_var.acct_assets
+                erp_acct_assets : erp_acct_var.acct_assets,
+                actionType      : null
             }
         },
 
@@ -215,6 +216,10 @@
             this.$root.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
+            });
+
+            this.$root.$on('combo-btn-select', button => {
+                this.actionType = button.id;
             });
         },
 
@@ -343,7 +348,7 @@
                     this.reset = true;
 
                     if ('update' == this.actionType) {
-                        this.$router.push({name: 'Expense'});
+                        this.$router.push({name: 'Expenses'});
                     } else if ('new_update' == this.actionType) {
                         this.resetFields();
                     }
@@ -362,7 +367,7 @@
                     this.reset = true;
 
                     if ('save' == this.actionType) {
-                        this.$router.push({name: 'Expense'});
+                        this.$router.push({name: 'Expenses'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
                     }

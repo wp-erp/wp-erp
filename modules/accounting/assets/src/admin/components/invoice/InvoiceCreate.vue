@@ -497,7 +497,7 @@
                     this.showAlert('success', 'Invoice Created!');
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
+                }).then(() => {
                     if ('save' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_create' == this.actionType) {
