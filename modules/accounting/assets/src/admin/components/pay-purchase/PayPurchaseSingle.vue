@@ -2,7 +2,7 @@
     <div class="wperp-modal-dialog paypurchase-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h4>Pay Purchase</h4>
+                <h2>Pay Purchase</h2>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
@@ -193,8 +193,24 @@
 
 <style lang="less">
     .paypurchase-single {
-        width: 800px;
-        margin: 40px 0;
+        max-width: 960px;
+        margin: 0 auto;
+        .wperp-modal-footer {
+            border-top: 1px solid #e2e2e2;
+        }
+        .wperp-modal-header {
+            border-bottom: 1px solid #e2e2e2;
+        }
+        .wperp-form-field, input:not(.wperp-btn) {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+        }
+    }
+
+    @media print {
+        .erp-nav-container {
+            display: none;
+        }
     }
 </style>
 
