@@ -589,18 +589,18 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['rows3'] = $wpdb->get_results($sql3, ARRAY_A);
 
     array_unshift( $results['rows1'], [
-        'name' => 'Assets',
-        'balance' => ''
+        'name' => '<strong class="wperp-bs-header">Assets</strong>',
+        'balance' => '-'
     ] );
 
     array_unshift( $results['rows2'], [
-        'name' => 'Liability',
-        'balance' => ''
+        'name' => '<strong class="wperp-bs-header">Liability</strong>',
+        'balance' => '-'
     ] );
 
     array_unshift( $results['rows3'], [
-        'name' => 'Equity',
-        'balance' => ''
+        'name' => '<strong class="wperp-bs-header">Equity</strong>',
+        'balance' => '-'
     ] );
 
     $results['rows1'][] = [
