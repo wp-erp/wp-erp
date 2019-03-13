@@ -10,6 +10,7 @@ class Admin {
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
         add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_menu' ] );
         add_action( 'admin_init', [ $this, 'init_hooks' ], 5 );
+        add_action( 'erp_hr_employee_new', [ $this, 'make_people_from_employee' ], 10, 2 );
     }
 
     /**
@@ -241,5 +242,42 @@ class Admin {
      */
     public function plugin_page() {
         echo '<div class="wrap"><div id="erp-accounting"></div></div>';
+    }
+
+    /**
+     * Make employee as people
+     *
+     * @param  integer $id
+     * @param  array $data
+     * @return bool
+     */
+    public function make_people_from_employee( $id, $data ) {
+
+        if ( ! current_user_can( 'erp_create_employee' ) ) {
+            return;
+        }
+
+        $first_name = isset( $data['personal']['first_name'] ) ? $data['personal']['first_name'] : '';
+        $last_name = isset( $data['personal']['last_name'] ) ? $data['personal']['last_name'] : '';
+        $mobile    = isset( $data['personal']['mobile'] ) ? $data['personal']['mobile'] : '';
+        $phone     = isset( $data['personal']['phone'] ) ? $data['personal']['phone'] : '';
+        $email     = isset( $data['user_email'] ) ? $data['user_email'] : '';
+
+        $args = array(
+            'first_name' => $first_name,
+            'last_name'  => $last_name,
+            'email'      => $email,
+            'mobile'     => $mobile,
+            'phone'      => $phone,
+            'type'       => 'employee'
+        );
+
+        $people_id = erp_insert_people( $args );
+
+        if ( is_wp_error( $people_id ) ) {
+            return new WP_Error( 'crate_people', __( 'Could not create people', 'erp' ) );
+        }
+
+        return $people_id;
     }
 }
