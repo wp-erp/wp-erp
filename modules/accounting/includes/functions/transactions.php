@@ -464,6 +464,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
     } else {
         $sql .= " voucher.id,
             voucher.type,
+            bill.vendor_id AS vendor_id,
             bill.vendor_name AS vendor_name,
             pay_bill.vendor_name AS pay_bill_vendor_name,
             expense.people_name AS expense_people_name,
