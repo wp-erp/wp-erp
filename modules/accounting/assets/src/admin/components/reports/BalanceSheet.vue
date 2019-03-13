@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4>Balance Sheet</h4>
+        <h2 class="content-header__title">Balance Sheet</h2>
 
         <form action="" method="" @submit.prevent="fetchItems" class="query-options">
 
@@ -19,9 +19,14 @@
                         tableClass="wperp-table table-striped table-dark widefat balance-sheet"
                         :columns="columns"
                         :rows="rows1"
+                        :showItemNumbers="false"
                         :showCb="false">
-                        <template slot="bs_left" slot-scope="data">
-                            {{ getCurrencySign() + Math.abs(data.row.balance) }}
+                        <template slot="name" slot-scope="data">
+                            <span v-html="data.row.name"> </span>
+                        </template>
+                        <template slot="balance" slot-scope="data">
+                            <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
+                            <span v-else>{{ getCurrencySign() + Math.abs(data.row.balance) }} </span>
                         </template>
                         <template slot="tfoot">
                             <tr class="t-foot">
@@ -37,9 +42,14 @@
                         tableClass="wperp-table table-striped table-dark widefat balance-sheet"
                         :columns="columns"
                         :rows="rows2"
+                        :showItemNumbers="false"
                         :showCb="false">
-                        <template slot="bs_right" slot-scope="data">
-                            {{ getCurrencySign() + Math.abs(data.row.balance) }}
+                        <template slot="name" slot-scope="data">
+                            <span v-html="data.row.name"> </span>
+                        </template>
+                        <template slot="balance" slot-scope="data">
+                            <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
+                            <span v-else>{{ getCurrencySign() + Math.abs(data.row.balance) }} </span>
                         </template>
                         <template slot="tfoot">
                             <tr class="t-foot">
@@ -80,7 +90,7 @@
                     }
                 ],
                 columns: {
-                    'name': { label: 'Account Name' },
+                    'name': { label: '' },
                     'balance': { label: 'Balance' }
                 },
                 rows1: [],
@@ -129,5 +139,9 @@
     .balance-sheet .t-foot td {
         color: #2196f3;
         font-weight: bold;
+    }
+    .wperp-bs-header {
+        color: #2196f3;
+        font-weight: bolder;
     }
 </style>

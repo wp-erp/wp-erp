@@ -3,6 +3,12 @@
         <div id="wperp-invoice-modal" class="wperp-modal wperp-modal-open wperp-custom-scroll" role="dialog">
             <div class="wperp-modal-dialog">
                 <div class="wperp-modal-content">
+                    <div class="wperp-modal-header">
+                        <h3 v-if="!product">Add {{ title }}</h3>
+                        <h3 v-else>Update {{ title }}</h3>
+                        <span class="modal-close">
+                                <i class="flaticon-close" @click.prevent="$parent.$emit('close')"></i></span>
+                    </div>
                     <div class="wperp-modal-body">
                         <ul class="errors" v-if="error_msg.length">
                             <li v-for="(error, index) in error_msg" :key="index">* {{ error }}</li>
@@ -168,6 +174,7 @@
                 categories: [],
                 tax_cats: [],
                 productType: [],
+                title: 'Product'
             }
         },
 
@@ -178,7 +185,7 @@
                 this.ProductFields.id = product.id;
                 this.ProductFields.type = {id: product.product_type_id, name: product.type_name};
                 this.ProductFields.categories = {id: product.category_id, name: product.cat_name};
-                this.ProductFields.tax_cat_id = {id: product.category_id, name: product.cat_name};
+                this.ProductFields.tax_cat_id = {id: product.tax_cat_id, name: product.tax_cat_name};
                 this.ProductFields.vendor = {id: product.vendor, name: product.vendor_name};
                 this.ProductFields.salePrice = product.sale_price;
                 this.ProductFields.costPrice = product.cost_price;

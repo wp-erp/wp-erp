@@ -83,8 +83,8 @@
                             <td class="col--amount" data-colname="Amount">
                                 <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
                             </td>
-                            <td class="col--total" style="text-align: center" data-colname="Total">
-                                <input type="text" :value="line.amount" readonly disabled/>
+                            <td class="col--total" data-colname="Total">
+                                <input type="text" :value="line.amount" class="text-right" readonly disabled/>
                             </td>
                             <td class="delete-row" data-colname="Remove Above Selection">
                                 <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -213,8 +213,9 @@
                 finalTotalAmount: 0,
                 particulars     : '',
                 isWorking       : false,
-                accts_by_chart: [],
-                erp_acct_assets : erp_acct_var.acct_assets
+                accts_by_chart  : [],
+                erp_acct_assets : erp_acct_var.acct_assets,
+                actionType      : null
             }
         },
 
@@ -240,6 +241,9 @@
                 this.updateFinalAmount();
             });
 
+            this.$root.$on('combo-btn-select', button => {
+                this.actionType = button.id;
+            });
         },
 
         methods: {
@@ -382,7 +386,7 @@
                     this.reset = true;
 
                     if ('update' == this.actionType) {
-                        this.$router.push({name: 'Expense'});
+                        this.$router.push({name: 'Expenses'});
                     } else if ('new_update' == this.actionType) {
                         this.resetFields();
                     }
@@ -401,7 +405,7 @@
                     this.reset = true;
 
                     if ('save' == this.actionType) {
-                        this.$router.push({name: 'Expense'});
+                        this.$router.push({name: 'Expenses'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
                     }
