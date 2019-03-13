@@ -546,24 +546,29 @@
             },
 
             resetFields() {
-                this.basic_fields.customer        = { id: null, name: null} ;
+                // why can't we use `form.reset()` ?
+
+                this.basic_fields.customer        = { id: null, name: null };
                 this.basic_fields.trn_date        = erp_acct_var.current_date;
                 this.basic_fields.due_date        = erp_acct_var.current_date;
                 this.basic_fields.billing_address = '';
+                this.particulars                  = '';
                 this.attachments                  = [];
-                this.transactionLines             = [{}];
+                this.transactionLines             = [];
                 this.discountType                 = 'discount-percent';
                 this.discount                     = 0;
                 this.taxTotalAmount               = 0;
                 this.finalTotalAmount             = 0;
                 this.isWorking                    = false;
                 this.actionType                   = null;
+
+                this.transactionLines.push({}, {}, {});
             },
 
             validateForm() {
                 this.form_errors = [];
 
-                if (!this.basic_fields.customer.hasOwnProperty('id')) {
+                if ( ! this.basic_fields.customer.hasOwnProperty('id') ) {
                     this.form_errors.push('Customer Name is required.');
                 }
 

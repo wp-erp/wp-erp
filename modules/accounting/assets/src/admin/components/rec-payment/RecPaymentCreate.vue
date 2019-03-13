@@ -44,7 +44,7 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <label>Deposit to<span class="wperp-required-sign">*</span></label>
-                            <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
+                            <select-accounts v-model="basic_fields.deposit_to" :reset="reset" :override_accts="accts_by_chart"></select-accounts>
                         </div>
                         <div class="wperp-col-sm-4">
                             <label>Billing Address</label>
@@ -74,7 +74,7 @@
                     </thead>
                     <tbody>
                     <tr :key="key" v-for="(invoice,key) in invoices">
-                        <td scope="row" class="col--id column-primary">{{invoice.invoice_no}}</td>
+                        <td scope="row" class="col--id column-primary">#{{invoice.invoice_no}}</td>
                         <td class="col--due-date" data-colname="Due Date">{{invoice.due_date}}</td>
                         <td class="col--total" data-colname="Total">{{invoice.amount}}</td>
                         <td class="col--due" data-colname="Due">{{invoice.due}}</td>
@@ -122,7 +122,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Receive Payment"></submit-button>
+                            <combo-button :options="createButtons" />
                         </td>
                     </tr>
                     </tfoot>
@@ -140,11 +140,11 @@
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import CheckFields from 'admin/components/check/CheckFields.vue'
     import ShowErrors from 'admin/components/base/ShowErrors.vue'
+    import ComboButton from 'admin/components/select/ComboButton.vue'
 
     export default {
         name: 'RecPaymentCreate',
@@ -153,11 +153,11 @@
             SelectAccounts,
             Datepicker,
             FileUpload,
-            SubmitButton,
             SelectCustomers,
             MultiSelect,
             CheckFields,
-            ShowErrors
+            ShowErrors,
+            ComboButton
         },
 
         data() {
@@ -176,6 +176,11 @@
                     check_no  : ''
                 },
 
+                createButtons: [
+                    {id: 'save', text: 'Receive Payment'},
+                    {id: 'new_create', text: 'Receive and New'},
+                ],
+
                 form_errors: [],
 
                 editMode        : false,
@@ -189,6 +194,8 @@
                 isWorking       : false,
                 accts_by_chart  : [],
                 erp_acct_assets : erp_acct_var.acct_assets,
+                actionType      : null,
+                reset           : false
             }
         },
 
@@ -210,6 +217,10 @@
 
         created() {
             this.prepareDataLoad();
+
+            this.$root.$on('combo-btn-select', button => {
+                this.actionType = button.id;
+            });
         },
 
         mounted() {
@@ -353,6 +364,7 @@
                     element['line_total'] = parseFloat( this.totalAmounts[index] );
                 });
                 this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.post('/payments', {
                     customer_id: this.basic_fields.customer.id,
                     ref        : this.basic_fields.trn_ref,
@@ -368,10 +380,15 @@
                     name       : this.check_data.payer_name
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
+
                     this.showAlert('success', 'Payment Created!');
-                }).then(() => {
-                    this.resetData();
-                    this.isWorking = false;
+                    this.reset = true;
+
+                    if ('save' == this.actionType) {
+                        this.$router.push({name: 'Sales'});
+                    } else if ('new_create' == this.actionType) {
+                        this.resetFields();
+                    }
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 });
@@ -381,10 +398,14 @@
 
             changeAccounts() {
                 if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
+                    this.accts_by_chart = [];
+
                     HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
                     });
                 } else {
+                    this.accts_by_chart = [];
+
                     HTTP.get('/ledgers/cash-accounts').then((response) => {
                         this.accts_by_chart = response.data;
                     });
@@ -421,9 +442,29 @@
             },
 
             resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
+                this.basic_fields = {
+                    customer       : '',
+                    trn_ref        : '',
+                    payment_date   : erp_acct_var.current_date,
+                    deposit_to     : '',
+                    billing_address: '',
+                    trn_by         : ''
+                };
 
-                this.getPayMethods();
+                this.check_data = {
+                    payer_name: '',
+                    check_no  : ''
+                };
+
+                this.form_errors      = [];
+                this.invoices         = [];
+                this.attachments      = [];
+                this.totalAmounts     = [];
+                this.finalTotalAmount = 0;
+                this.particulars      = '';
+                this.isWorking        = false,
+                this.reset            = false;
+                this.actionType       = null;
             },
 
             removeRow(index) {

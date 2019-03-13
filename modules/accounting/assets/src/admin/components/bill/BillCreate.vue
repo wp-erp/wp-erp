@@ -385,18 +385,25 @@
                 } else {
                     this.createBill(requestData);
                 }
-
-                event.target.reset();
             },
 
             resetFields() {
-                this.basic_fields.user = { id: null, name: null};
-                this.transactionLines       = [{}];
-                this.ledgers                = [{}];
-                this.attachments            = [];
-                this.totalAmounts           = 0;
-                this.finalTotalAmount       = 0;
-                this.particulars            = '';
+                this.transactionLines  = [];
+                this.attachments       = [];
+                this.totalAmounts      = 0;
+                this.finalTotalAmount  = 0;
+                this.particulars       = '';
+                this.form_errors       = [];
+
+                this.basic_fields = {
+                    user           : { id: null, name: null},
+                    trn_ref        : '',
+                    trn_date       : erp_acct_var.current_date,
+                    due_date       : erp_acct_var.current_date,
+                    billing_address: ''
+                };
+
+                this.transactionLines.push({}, {}, {});
             },
 
             validateForm() {

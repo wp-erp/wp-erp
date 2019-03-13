@@ -688,8 +688,6 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function prepare_tax_summary_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
-        error_log(print_r($item, true));
-
         $data = [
             'tax_rate_id'           => (int) $item->tax_rate_id,
             'default'               => (int) $item->default,
