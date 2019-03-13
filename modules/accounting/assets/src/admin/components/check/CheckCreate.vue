@@ -437,8 +437,30 @@
                 }
             },
 
-            resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
+            resetFields() {
+                this.basic_fields = {
+                    people         : { id: null, name: null },
+                    check_no       : '',
+                    trn_date       : erp_acct_var.current_date,
+                    deposit_to     : '',
+                    trn_by         : '',
+                    billing_address: ''
+                };
+
+                this.check_data = {
+                    payer_name: '',
+                    check_no  : ''
+                };
+
+                this.form_errors      = [];
+                this.transactionLines = [];
+                this.attachments      = [];
+                this.totalAmounts     = [];
+                this.finalTotalAmount = 0;
+                this.particulars      = '';
+                this.isWorking        = false;
+
+                this.transactionLines.push({}, {}, {});
             },
 
             removeRow(index) {

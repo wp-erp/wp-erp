@@ -109,7 +109,8 @@
                         <tfoot>
                         <tr>
                             <td colspan="9" style="text-align: right;">
-                                <submit-button text="Pay Purchase"></submit-button>
+                                <combo-button :options="createButtons" />
+                                <!-- <submit-button text="Pay Purchase"></submit-button> -->
                             </td>
                         </tr>
                         </tfoot>
@@ -124,12 +125,12 @@
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import SelectVendors from 'admin/components/people/SelectVendors.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import CheckFields from 'admin/components/check/CheckFields.vue'
     import ShowErrors from 'admin/components/base/ShowErrors.vue'
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
+    import ComboButton from 'admin/components/select/ComboButton.vue';
 
     export default {
         name: 'PayPurchaseCreate',
@@ -140,7 +141,7 @@
             HTTP,
             Datepicker,
             FileUpload,
-            SubmitButton,
+            ComboButton,
             CheckFields,
             SelectAccounts,
             ShowErrors
@@ -168,35 +169,40 @@
                     check_no: ''
                 },
 
-                form_errors: [],
+                createButtons: [
+                    {id: 'save', text: 'Pay Purchase'},
+                    {id: 'new_create', text: 'Pay and New'},
+                ],
 
-                pay_methods: [],
-                deposit_accts: [],
-                pay_purchases: [],
-                attachments: [],
-                totalAmounts:[],
+                form_errors     : [],
+                pay_methods     : [],
+                deposit_accts   : [],
+                pay_purchases   : [],
+                attachments     : [],
+                totalAmounts    : [],
                 finalTotalAmount: 0,
-                particulars: '',
-                isWorking: false,
-                accts_by_chart: [],
-                acct_assets: erp_acct_var.acct_assets
+                particulars     : '',
+                isWorking       : false,
+                accts_by_chart  : [],
+                actionType      : null,
+                acct_assets     : erp_acct_var.acct_assets
             }
         },
 
         created() {
             this.getPayMethods();
+
+            this.$root.$on('combo-btn-select', button => {
+                this.actionType = button.id;
+            });
         },
 
         methods: {
             getPayMethods() {
                 this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.get('/transactions/payment-methods').then((response) => {
-                    response.data.forEach(element => {
-                        this.pay_methods.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+                    this.pay_methods = response.data;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
@@ -210,25 +216,25 @@
 
             resetData() {
                 this.basic_fields = {
-                    vendor: '',
-                    trn_ref: '',
-                    payment_date: '',
-                    deposit_to: '',
+                    vendor         : '',
+                    trn_ref        : '',
+                    payment_date   : '',
+                    deposit_to     : '',
                     billing_address: '',
-                    trn_by: { id: null, name: null }
+                    trn_by         : { id: null, name: null }
                 };
 
-                this.pay_purchases = [];
-                this.attachments = [];
-                this.totalAmounts = [];
+                this.pay_purchases    = [];
+                this.attachments      = [];
+                this.totalAmounts     = [];
                 this.finalTotalAmount = 0;
-                this.particulars = '';
-                this.isWorking = false;
+                this.particulars      = '';
+                this.isWorking        = false;
             },
 
             getDuePurchases() {
-                let vendorId = this.basic_fields.vendor.id,
-                    idx = 0,
+                let vendorId    = this.basic_fields.vendor.id,
+                    idx         = 0,
                     finalAmount = 0;
 
                 this.pay_purchases = [];
@@ -238,11 +244,11 @@
                 HTTP.get(`/purchases/due/${vendorId}`).then(response => {
                     response.data.forEach(element => {
                         this.pay_purchases.push({
-                            id: element.id,
+                            id        : element.id,
                             voucher_no: element.voucher_no,
-                            due_date: element.due_date,
-                            total: parseFloat(element.amount),
-                            due: parseFloat(element.due)
+                            due_date  : element.due_date,
+                            total     : parseFloat(element.amount),
+                            due       : parseFloat(element.due)
                         });
                     });
                 }).then(() => {
@@ -317,25 +323,29 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Pay Purchase Created!' );
 
+                    if ('save' == this.actionType) {
+                        this.$router.push({name: 'Purchases'});
+                    } else if ('new_create' == this.actionType) {
+                        this.resetFields();
+                    }
                 }).catch( error => {
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'error', 'Something went wrong!' );
 
-                }).then(() => {
-                    this.isWorking = false;
-                    this.resetData();
                 });
-
-                event.target.reset();
             },
 
             changeAccounts() {
                 if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
+                    this.accts_by_chart = [];
+
                     HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
                     });
                 } else {
+                    this.accts_by_chart = [];
+
                     HTTP.get('/ledgers/cash-accounts').then((response) => {
                         this.accts_by_chart = response.data;
                     });
@@ -369,6 +379,41 @@
 
             showPaymentModal() {
                 this.getDuePurchases();
+            },
+
+            resetFields() {
+                this.basic_fields = {
+                    vendor         : {id: null, name: null},
+                    trn_by         : { id: null, name: null },
+                    trn_ref        : '',
+                    payment_date   : erp_acct_var.current_date,
+                    deposit_to     : '',
+                    billing_address: ''
+                };
+
+                this.paymentMethods = {
+                    cash : '1',
+                    bank : '2',
+                    check: '3'
+                };
+
+                this.check_data = {
+                    payer_name: '',
+                    check_no  : ''
+                };
+
+                createButtons: [
+                    {id: 'save', text: 'Pay Purchase'},
+                    {id: 'new_create', text: 'Pay and New'},
+                ],
+
+                this.form_errors      = [];
+                this.attachments      = [];
+                this.totalAmounts     = [];
+                this.finalTotalAmount = 0;
+                this.particulars      = '';
+                this.isWorking        = false;
+                this.actionType       = null;
             },
 
             remove_item( index ) {
