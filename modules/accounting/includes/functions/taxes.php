@@ -31,7 +31,7 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
     }
 
     $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( tax.id ) as total_number " : " * ";
+    $sql .= $args['count'] ? " COUNT( DISTINCT tax.id ) as total_number " : " DISTINCT tax.id, tax.tax_rate_name, tax.tax_number, tax.default ";
     $sql .= "FROM {$wpdb->prefix}erp_acct_taxes AS tax INNER JOIN {$wpdb->prefix}erp_acct_tax_cat_agency as cat_agency on tax.id = cat_agency.tax_id ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
