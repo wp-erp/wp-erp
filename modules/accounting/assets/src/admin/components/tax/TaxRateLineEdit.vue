@@ -18,7 +18,6 @@
                         />
                     </div>
 
-
                 </div>
             </div>
         </div>
@@ -55,7 +54,6 @@
                 agency: '',
                 category: '',
                 isWorking: false,
-                rate_names: [],
                 agencies: [],
                 categories: [],
             };
@@ -75,18 +73,6 @@
 
                 HTTP.get(`/taxes/${taxid}`).then((response) => {
                     this.tax_rate = response.data;
-                }).catch((error) => {
-                    console.log(error);
-                });
-
-                HTTP.get('/tax-rate-names').then((response) => {
-                    this.rate_names = [];
-                    response.data.forEach(element => {
-                        this.rate_names.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
                 }).catch((error) => {
                     console.log(error);
                 });

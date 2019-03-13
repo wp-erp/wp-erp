@@ -122,8 +122,47 @@ function erp_acct_get_ledgers_by_chart_id( $chart_id ) {
     return $charts;
 }
 
+/**
+ * Get ledger transaction count
+ *
+ * @param $ledger_id
+ * @return mixed
+ */
+function erp_acct_get_ledger_trn_count( $ledger_id ) {
+    global $wpdb;
 
+    $sql = "SELECT
+        COUNT(*) as count
+        FROM {$wpdb->prefix}erp_acct_ledger_details 
+        WHERE ledger_id = {$ledger_id}";
 
+    $ledger = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $ledger['count'];
+}
+
+/**
+ * Get ledger balance
+ *
+ * @param $ledger_id
+ * @return mixed
+ */
+function erp_acct_get_ledger_balance( $ledger_id ) {
+    global $wpdb;
+
+    $sql = "SELECT
+        ledger.id,
+        ledger.name,
+        SUM(ld.debit - ld.credit) as balance
+
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger 
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ld ON ledger.id = ld.ledger_id 
+        WHERE ledger.id = {$ledger_id}";
+
+    $ledger = $wpdb->get_row($sql, ARRAY_A);
+
+    return $ledger['balance'];
+}
 
 
 /**============

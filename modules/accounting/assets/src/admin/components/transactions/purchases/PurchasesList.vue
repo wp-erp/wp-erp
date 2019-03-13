@@ -34,7 +34,7 @@
                     </strong>
                 </template>
                 <template slot="type" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Pay Purchase' : 'Purchase Order' }}
+                    {{ getTrnType(data.row) }}
                 </template>
                 <template slot="ref" slot-scope="data">
                     {{ data.row.ref ? data.row.ref : '-' }}
@@ -154,9 +154,9 @@
                 switch ( action ) {
                     case 'trash':
                         if ( confirm('Are you sure to delete?') ) {
-                            // HTTP.delete('purchases/' + row.id).then( response => {
-                            //     this.$delete(this.rows, index);
-                            // });
+                            HTTP.delete('purchases/' + row.id).then( response => {
+                                this.$delete(this.rows, index);
+                            });
                         }
                         break;
 
@@ -186,6 +186,17 @@
 
             isPayment(row) {
                 return row.type === 'pay_purchase' ? true : false;
+            },
+
+            getTrnType(row) {
+                if ( row.type === 'purchase' ) {
+                    if ( 1 == row.purchase_order ) {
+                        return 'Purchase Order';
+                    }
+                    return 'Purchase';
+                } else {
+                    return 'Pay Purchase';
+                }
             }
         },
 

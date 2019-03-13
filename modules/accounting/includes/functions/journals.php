@@ -79,7 +79,7 @@ function erp_acct_get_journal( $journal_no ) {
     
     FROM {$wpdb->prefix}erp_acct_journals as journal
     LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
-    WHERE journal.id = {$journal_no} LIMIT 1";
+    WHERE journal.voucher_no = {$journal_no} LIMIT 1";
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
     $rows = $row;
@@ -268,7 +268,7 @@ function erp_acct_format_journal_data( $item, $journal_no ) {
     
     FROM {$wpdb->prefix}erp_acct_journals as journal
     LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
-    WHERE journal.id = {$journal_no}";
+    WHERE journal.voucher_no = {$journal_no}";
 
     $rows = $wpdb->get_results( $sql, ARRAY_A );
     $line_items = [];

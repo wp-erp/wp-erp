@@ -183,6 +183,28 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/people-chart' . '/trn-amount' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_people_trn_amount_data' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/people-chart' . '/trn-status' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_people_trn_status_data' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -308,7 +330,11 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
         ];
 
-        $chart_payment = erp_acct_get_expense_chart_data($args);
+        $bill_payment = erp_acct_get_bill_chart_data($args);
+        $expense_payment = erp_acct_get_expense_chart_data($args);
+
+        $chart_payment['paid'] = $bill_payment['paid'] + $expense_payment['paid'];;
+        $chart_payment['payable'] = $bill_payment['payable'] + $expense_payment['payable'];;
 
         $response = rest_ensure_response( $chart_payment );
 
@@ -330,9 +356,19 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
         ];
 
-        $chart_status = erp_acct_get_expense_chart_status($args);
+        $chart_statuses = erp_acct_get_bill_chart_status($args);
+        $expense_status = erp_acct_get_expense_chart_status($args);
 
-        $response = rest_ensure_response( $chart_status );
+        foreach ( $chart_statuses as $bill_status ) {
+            if ( $bill_status['type_name'] == $expense_status['type_name'] ) {
+                $bill_status['sub_total'] += $expense_status['sub_total'];
+            } else {
+                array_push( $chart_statuses, $expense_status );
+                break;
+            }
+        }
+
+        $response = rest_ensure_response( $chart_statuses );
 
         $response->set_status( 200 );
 
@@ -521,5 +557,101 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
+
+    /**
+     * Chart transaction data of a people
+     */
+    public function get_people_trn_amount_data( $request ) {
+        $args = [
+            'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+        ];
+
+        $args['people_id'] = $request['id'];
+
+        $bill_payment = erp_acct_get_bill_chart_data( $args );
+        $expense_payment = erp_acct_get_expense_chart_data( $args );
+        $sales_payment = erp_acct_get_sales_chart_payment( $args );
+        $purchase_payment = erp_acct_get_purchase_chart_data( $args );
+
+        $chart_payment['paid'] = $bill_payment['paid'] + $expense_payment['paid'] + $sales_payment['received'] + $purchase_payment['paid'];
+        $chart_payment['payable'] = $bill_payment['payable'] + $expense_payment['payable'] + $sales_payment['outstanding'] + $purchase_payment['payable'];
+
+
+
+        $response = rest_ensure_response( $chart_payment );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Chart transaction status/s of a people
+     */
+    public function get_people_trn_status_data( $request ) {
+        $args = [
+            'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+        ];
+
+        $args['people_id'] = $request['id'];
+
+        $chart_statuses = erp_acct_get_bill_chart_status( $args );
+        $expense_status = erp_acct_get_expense_chart_status( $args );
+        $sales_statuses = erp_acct_get_sales_chart_status( $args );
+        $purchase_statuses = erp_acct_get_purchase_chart_status( $args );
+
+        for ( $i = 0; $i < count ( $chart_statuses );  $i++ ) {
+            $chart_statuses[$i]['sub_total'] = (int) $chart_statuses[$i]['sub_total'];
+        }
+
+        for ( $i = 0; $i < count ( $sales_statuses );  $i++ ) {
+            $sales_statuses[$i]['sub_total'] = (int) $sales_statuses[$i]['sub_total'];
+        }
+
+        for ( $i = 0; $i < count ( $purchase_statuses );  $i++ ) {
+            $purchase_statuses[$i]['sub_total'] = (int) $purchase_statuses[$i]['sub_total'];
+        }
+
+        if ( !empty( $expense_status ) ) {
+            $expense_status['sub_total'] = (int) $expense_status['sub_total'];
+            array_push( $chart_statuses, $expense_status );
+        }
+        $chart_statuses = array_merge( $chart_statuses, $sales_statuses, $purchase_statuses );
+
+        $statuses = [];
+
+        $len = count( $chart_statuses );
+        for ( $i = 0; $i < $len; $i++ ) {
+            $k = 0;
+            if ( is_null( $chart_statuses[$i] ) ) {
+                continue;
+            }
+            for ( $j = $i + 1; $j < $len; $j++ ) {
+                if ( is_null( $chart_statuses[$j] ) ) {
+                    continue;
+                }
+                if ( $chart_statuses[$i]['type_name'] == $chart_statuses[$j]['type_name'] ) {
+                    $chart_statuses[$i]['sub_total'] += $chart_statuses[$j]['sub_total'];
+                    $statuses[$k]['type_name'] = $chart_statuses[$i]['type_name'];
+                    $statuses[$k]['sub_total'] = $chart_statuses[$i]['sub_total'];
+                    $k++;
+                    $chart_statuses[$j] = null;
+                }
+            }
+            $statuses[$k]['type_name'] = $chart_statuses[$i]['type_name'];
+            $statuses[$k]['sub_total'] = $chart_statuses[$i]['sub_total'];
+            $k++;
+        }
+
+        $response = rest_ensure_response( $statuses );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+
 
 }

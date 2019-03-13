@@ -1,6 +1,7 @@
 <template>
     <div class="with-multiselect">
         <multi-select placeholder="Select Account" v-model="selectedAccount" :options="accounts" />
+        <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(balance)}}</span>
     </div>
 </template>
 
@@ -35,14 +36,19 @@
         data() {
             return {
                 selectedAccount: null,
-                accounts       : []
+                balance        : 0,
+                accounts       : [],
             }
         },
 
         watch: {
             value(newVal) {
                 let val = this.accounts.find(account => newVal.id === account.id);
+                if ( typeof newVal === 'undefined' || typeof val === 'undefined' ) {
+                    return newVal;
+                }
                 this.selectedAccount = val;
+                this.balance = val.balance;
             },
 
             selectedAccount() {
@@ -55,7 +61,7 @@
 
             reset() {
                 this.selectedAccount = [];
-            }
+            },
         },
 
         created() {
@@ -74,6 +80,15 @@
                 HTTP.get('/accounts').then(response => {
                     this.accounts = response.data;
                 } );
+            },
+
+            transformBalance( val ){
+                let currency = '$';
+                if ( val < 0 ){
+                    return `Cr. ${currency} ${Math.abs(val)}`;
+                }
+
+                return `Dr. ${currency} ${val}`;
             },
         }
     }

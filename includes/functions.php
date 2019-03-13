@@ -1719,26 +1719,22 @@ function erp_process_import_export() {
                 }
 
                 if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
+                    $contact_owner = isset( $_POST['contact_owner'] ) ? absint( $_POST['contact_owner'] ) : erp_crm_get_default_contact_owner();
+                    $line_data['contact_owner'] = $contact_owner;
                     $people = erp_insert_people( $line_data, true );
 
                     if ( is_wp_error( $people ) ) {
                         continue;
                     } else {
                         $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
-                        $contact_owner = isset( $_POST['contact_owner'] ) ? absint( $_POST['contact_owner'] ) : erp_crm_get_default_contact_owner();
                         $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
 
                         if ( ! $people->exists ) {
                             $contact->update_life_stage( $life_stage );
-                            $contact->update_meta( 'contact_owner', $contact_owner );
 
                         } else {
                             if ( ! $contact->get_life_stage() ) {
                                 $contact->update_life_stage( $life_stage );
-                            }
-
-                            if ( ! $contact->get_contact_owner() ) {
-                                $contact->update_meta( 'contact_owner', $contact_owner );
                             }
                         }
 

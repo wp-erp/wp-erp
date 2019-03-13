@@ -128,7 +128,7 @@ class Admin {
         erp_add_menu( 'accounting', [
             'title'      =>  __( 'Tax', 'erp' ),
             'capability' => 'erp_ac_view_sale',
-            'slug'       => 'tax',
+            'slug'       => 'taxes',
             'position'   => 45,
         ] );
         erp_add_submenu( 'accounting', 'tax', [

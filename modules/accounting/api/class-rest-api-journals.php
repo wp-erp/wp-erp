@@ -187,16 +187,12 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $trans_data['voucher_amount'] = $total_dr;
 
-        $id = erp_acct_insert_journal( $trans_data );
-
-        if ( is_wp_error( $id ) ) {
-            return $id;
-        }
+        $journal = erp_acct_insert_journal( $trans_data );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
         
-        $response = $this->prepare_item_for_response( $trans_data, $request, $additional_fields );
+        $response = $this->prepare_item_for_response( $journal, $request, $additional_fields );
         $response = rest_ensure_response( $response );
         
         $response->set_status( 201 );

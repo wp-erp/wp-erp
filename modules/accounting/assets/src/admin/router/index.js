@@ -36,11 +36,11 @@ import Purchases         from 'admin/components/transactions/purchases/Purchases
 import NewTaxAgency      from 'admin/components/tax/NewTaxAgency.vue';
 import NewTaxCategory    from 'admin/components/tax/NewTaxCategory.vue';
 import NewTaxRate        from 'admin/components/tax/NewTaxRate.vue';
-import NewTaxRateName    from 'admin/components/tax/NewTaxRateName.vue';
+import NewTaxZone        from 'admin/components/tax/NewTaxZone.vue';
 import RecordPayTax      from 'admin/components/tax/RecordPayTax.vue';
 import TaxAgencies       from 'admin/components/tax/TaxAgencies.vue';
 import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
-import TaxRateNames      from 'admin/components/tax/TaxRateNames.vue';
+import TaxZones          from 'admin/components/tax/TaxZones.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
@@ -215,6 +215,22 @@ export default new Router({
             ]
         },
         {
+            path: '/estimates',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: 'new',
+                    name: 'EstimateCreate',
+                    component: InvoiceCreate,
+                },
+                {
+                    path: ':id/edit',
+                    name: 'EstimateEdit',
+                    component: InvoiceCreate,
+                },
+            ]
+        },
+        {
             path: '/product_categories',
             name: 'ProductCategory',
             component: ProductCategory
@@ -297,6 +313,28 @@ export default new Router({
             ]
         },
         {
+            path: '/purchase-orders',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+
+                    path: 'new',
+                    name: 'PurchaseOrderCreate',
+                    component: PurchaseCreate
+                },
+                {
+                    path: ':id',
+                    name: 'PurchaseOrderSingle',
+                    component: PurchaseSingle,
+                },
+                {
+                    path: ':id/edit',
+                    name: 'PurchaseOrderEdit',
+                    component: PurchaseCreate,
+                },
+            ]
+        },
+        {
             path: '/pay-purchases',
             component: { render (c) { return c('router-view') } },
             children: [
@@ -350,6 +388,17 @@ export default new Router({
             ]
         },
         {
+            path: '/ledgers',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: ':id',
+                    name: 'LedgerSingle',
+                    component: LedgerReport,
+                },
+            ]
+        },
+        {
             path: '/journals',
             component: { render (c) { return c('router-view') } },
             children: [
@@ -393,8 +442,8 @@ export default new Router({
                 },
                 {
                     path: 'rate-names',
-                    name: 'TaxRateNames',
-                    component: TaxRateNames,
+                    name: 'TaxZones',
+                    component: TaxZones,
                 },
                 {
                     path: 'agencies',
@@ -408,8 +457,8 @@ export default new Router({
                 },
                 {
                     path: 'new-rate-name',
-                    name: 'NewTaxRateName',
-                    component: NewTaxRateName,
+                    name: 'NewTaxZone',
+                    component: NewTaxZone,
                 },
                 {
                     path: 'new-agency',
@@ -438,8 +487,8 @@ export default new Router({
                 },
                 {
                     path: 'rate-names/page/:page',
-                    name: 'PaginateTaxRateNames',
-                    component: TaxRateNames,
+                    name: 'PaginateTaxZones',
+                    component: TaxZones,
                 },
                 {
                     path: 'categories/page/:page',

@@ -44,7 +44,8 @@
         data() {
             return {
                 pages: [
-                    {namedRoute: 'PurchaseCreate', name: 'Purchase'},
+                    {namedRoute: 'PurchaseOrderCreate', name: 'Create Purchase Order'},
+                    {namedRoute: 'PurchaseCreate', name: 'Create Purchase'},
                     {namedRoute: 'PayPurchaseCreate', name: 'Pay Purchase'},
                 ],
             };

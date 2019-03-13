@@ -1139,6 +1139,7 @@ Company'
                 `amount` decimal(10,2) DEFAULT 0,
                 `ref` varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
+                `purchase_order` boolean DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
@@ -1194,7 +1195,7 @@ Company'
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_taxes` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                `tax_rate_id` int(11) DEFAULT NULL,
+                `tax_rate_name` varchar(255) DEFAULT NULL,
                 `tax_number` varchar(100) DEFAULT NULL,
                 `default` boolean DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
@@ -1224,18 +1225,6 @@ Company'
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `tax_id` int(11) DEFAULT NULL,
                 `sales_tax_category_id` int(11) DEFAULT NULL,
-                `tax_rate` decimal(10,2) DEFAULT 0,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) $collate;",
-
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_rate_names` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `name` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -1474,6 +1463,17 @@ Company'
         }
 
         // insert payment methods
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_payment_methods` LIMIT 0, 1" ) ) {
+            $methods = ['Cash', 'Bank', 'Check'];
+
+            for ( $i = 0; $i < count($methods); $i++ ) {
+                $wpdb->insert( "{$wpdb->prefix}erp_acct_payment_methods", [
+                    'name' => $methods[$i],
+                ] );
+            }
+        }
+
+        // insert status types
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_trn_status_types` LIMIT 0, 1" ) ) {
             $statuses = [
                 'Draft',

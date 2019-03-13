@@ -52,6 +52,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             invoice.trn_date AS invoice_trn_date,
             invoice_receipt.trn_date AS payment_trn_date,
             invoice.due_date,
+            invoice.estimate,
             (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
             SUM(invoice_account_detail.debit - invoice_account_detail.credit) AS due,
             invoice_receipt.amount AS payment_amount,
@@ -74,6 +75,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
+
 /**
  * Get sales chart status
  */
@@ -86,14 +88,19 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
         $where .= "WHERE invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
 
+    if ( ! empty( $args['people_id'] ) ) {
+        $where .= " AND invoice.customer_id = {$args['people_id']} ";
+    }
+
     $sql = "SELECT COUNT(invoice.status) AS sub_total, status_type.type_name
             FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
-            LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.status = status_type.slug {$where}
+            LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.status = status_type.id {$where}
             GROUP BY status_type.id HAVING COUNT(invoice.status) > 0 ORDER BY status_type.type_name ASC";
 
     // error_log(print_r($sql, true));
     return $wpdb->get_results($sql, ARRAY_A);
 }
+
 
 /**
  * Get sales chart payment
@@ -107,15 +114,206 @@ function erp_acct_get_sales_chart_payment( $args = [] ) {
         $where .= "WHERE invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
 
+
+    if ( ! empty( $args['people_id'] ) ) {
+        $where .= " AND invoice.customer_id = {$args['people_id']} ";
+    }
+
     $sql = "SELECT SUM(credit) as received, SUM(balance) AS outstanding
         FROM ( SELECT invoice.voucher_no, SUM(invoice_acc_detail.credit) AS credit, SUM( invoice_acc_detail.debit - invoice_acc_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_invoices AS invoice
         LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_acc_detail ON invoice.voucher_no = invoice_acc_detail.invoice_no {$where}
-        GROUP BY invoice.voucher_no HAVING balance > 0 ) AS get_amount";
+        GROUP BY invoice.voucher_no) AS get_amount";
 
     // error_log(print_r($sql, true));
     return $wpdb->get_row($sql, ARRAY_A);
 }
+
+
+/**
+ * Get bill chart data
+ *
+ * @param array $args
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_bill_chart_data( $args = [] ) {
+    global $wpdb;
+
+    $where = '';
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+
+    if ( ! empty( $args['people_id'] ) ) {
+        $where .= " AND bill.vendor_id = {$args['people_id']} ";
+    }
+
+    $sql = "SELECT SUM(debit) as paid, ABS(SUM(balance)) AS payable
+        FROM ( SELECT bill.voucher_no, SUM(bill_acc_detail.debit) AS debit, SUM( bill_acc_detail.debit - bill_acc_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_bills AS bill
+        LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.bill_no {$where}
+        GROUP BY bill.voucher_no) AS get_amount";
+
+    return $wpdb->get_row($sql, ARRAY_A);
+}
+
+
+/**
+ * Get bill chart status
+ *
+ * @param array $args
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_bill_chart_status( $args = [] ) {
+    global $wpdb;
+
+    $where = '';
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+
+    if ( ! empty( $args['people_id'] ) ) {
+        $where .= " AND bill.vendor_id = {$args['people_id']} ";
+    }
+
+    $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
+            FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
+            LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.status = status_type.id {$where}
+            GROUP BY status_type.id
+            HAVING sub_total > 0
+            ORDER BY status_type.type_name ASC";
+
+    return $wpdb->get_results($sql, ARRAY_A);
+}
+
+
+/**
+ * Get expense chart data
+ *
+ * @param array $args
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_purchase_chart_data( $args = [] ) {
+    global $wpdb;
+
+    $where = '';
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+
+    if ( ! empty( $args['people_id'] ) ) {
+        $where .= " AND bill.vendor_id = {$args['people_id']} ";
+    }
+
+    $sql = "SELECT SUM(debit) as paid, ABS(SUM(balance)) AS payable
+        FROM ( SELECT bill.voucher_no, SUM(bill_acc_detail.debit) AS debit, SUM( bill_acc_detail.debit - bill_acc_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_purchase AS bill
+        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.purchase_no {$where}
+        GROUP BY bill.voucher_no) AS get_amount";
+
+    $result = $wpdb->get_row($sql, ARRAY_A);
+
+    return $result;
+}
+
+
+/**
+ * Get expense chart status
+ *
+ * @param array $args
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_purchase_chart_status( $args = [] ) {
+    global $wpdb;
+
+    $where = '';
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+
+    if ( ! empty( $args['people_id'] ) ) {
+        $where .= " AND bill.vendor_id = {$args['people_id']} ";
+    }
+
+    $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
+            FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
+            LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS bill ON bill.status = status_type.id {$where}
+            GROUP BY status_type.id
+            HAVING sub_total > 0
+            ORDER BY status_type.type_name ASC";
+
+    $result =  $wpdb->get_results($sql, ARRAY_A);
+
+    return $result;
+}
+
+
+/**
+ * Get expense chart data
+ *
+ * @param array $args
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_expense_chart_data( $args = [] ) {
+    global $wpdb;
+
+    $where = '';
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+
+    if ( ! empty( $args['people_id'] ) ) {
+        $where .= " AND bill.people_id = {$args['people_id']} ";
+    }
+
+    $sql = "SELECT SUM(balance) as paid, 0 AS payable
+        FROM ( SELECT bill.voucher_no, bill_acc_detail.amount AS balance
+        FROM {$wpdb->prefix}erp_acct_expenses AS bill
+        LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.trn_no {$where}
+        GROUP BY bill.voucher_no HAVING balance > 0 ) AS get_amount";
+
+    return $wpdb->get_row($sql, ARRAY_A);
+}
+
+/**
+ * Get expense chart status
+ *
+ * @param array $args
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_expense_chart_status( $args = [] ) {
+    global $wpdb;
+
+    $where = '';
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+
+    if ( ! empty( $args['people_id'] ) ) {
+        $where .= " AND bill.people_id = {$args['people_id']} ";
+    }
+
+    $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
+            FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
+            LEFT JOIN {$wpdb->prefix}erp_acct_expenses AS bill ON bill.status = status_type.id {$where}
+            GROUP BY status_type.id
+            HAVING sub_total > 0
+            ORDER BY status_type.type_name ASC";
+
+    return $wpdb->get_row($sql, ARRAY_A);
+}
+
 
 /**
  * Get Income Expense Chart data for dashbaord
@@ -225,70 +423,6 @@ function erp_acct_format_monthly_data_to_yearly_data( $result ) {
     return $this_yr_data;
 }
 
-
-/**
- * Get expense chart data
- *
- * @param array $args
- *
- * @return array|null|object
- */
-function erp_acct_get_expense_chart_data( $args = [] ) {
-    global $wpdb;
-
-    $where = '';
-
-    if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
-    }
-
-    $sql = "SELECT SUM(debit) as paid, ABS(SUM(balance)) AS payable
-        FROM ( SELECT bill.voucher_no, SUM(bill_acc_detail.debit) AS debit, SUM( bill_acc_detail.debit - bill_acc_detail.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_bills AS bill
-        LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.bill_no {$where}
-        GROUP BY bill.voucher_no HAVING balance < 0 ) AS get_amount";
-
-    return $wpdb->get_row($sql, ARRAY_A);
-}
-
-/**
- * Get expense chart status
- *
- * @param array $args
- *
- * @return array|null|object
- */
-function erp_acct_get_expense_chart_status( $args = [] ) {
-    global $wpdb;
-
-    $where = '';
-
-    if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
-    }
-
-    $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
-            FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
-            LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.status = status_type.id {$where}
-            GROUP BY status_type.id
-            HAVING sub_total > 0
-            ORDER BY status_type.type_name ASC";
-
-    return $wpdb->get_results($sql, ARRAY_A);
-}
-
-/**
- * Get voucher type by id
- */
-function erp_acct_get_transaction_type($voucher_no) {
-    global $wpdb;
-
-    $sql = $wpdb->prepare("SELECT type FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = %d", $voucher_no);
-
-    return $wpdb->get_var($sql);
-}
-
-
 /**
  * Get all Expenses
  *
@@ -335,7 +469,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             expense.people_name AS expense_people_name,
             bill.trn_date AS bill_trn_date,
             pay_bill.trn_date AS pay_bill_trn_date,
-            expense.trn_date AS expense_people_name,
+            expense.trn_date AS expense_trn_date,
             bill.due_date,
             bill.amount,
             pay_bill.amount as pay_bill_amount,
@@ -362,63 +496,6 @@ function erp_acct_get_expense_transactions( $args = [] ) {
 
     // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
-}
-
-
-/**
- * Get expense chart data
- *
- * @param array $args
- *
- * @return array|null|object
- */
-function erp_acct_get_purchase_chart_data( $args = [] ) {
-    global $wpdb;
-
-    $where = '';
-
-    if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
-    }
-
-    $sql = "SELECT SUM(debit) as paid, ABS(SUM(balance)) AS payable
-        FROM ( SELECT bill.voucher_no, SUM(bill_acc_detail.debit) AS debit, SUM( bill_acc_detail.debit - bill_acc_detail.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_purchase AS bill
-        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.purchase_no {$where}
-        GROUP BY bill.voucher_no HAVING balance < 0 ) AS get_amount";
-
-    $result = $wpdb->get_row($sql, ARRAY_A);
-
-    return $result;
-}
-
-
-/**
- * Get expense chart status
- *
- * @param array $args
- *
- * @return array|null|object
- */
-function erp_acct_get_purchase_chart_status( $args = [] ) {
-    global $wpdb;
-
-    $where = '';
-
-    if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
-    }
-
-    $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
-            FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
-            LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS bill ON bill.status = status_type.id {$where}
-            GROUP BY status_type.id
-            HAVING sub_total > 0
-            ORDER BY status_type.type_name ASC";
-
-    $result =  $wpdb->get_results($sql, ARRAY_A);
-
-    return $result;
 }
 
 
@@ -470,6 +547,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             purchase.due_date,
             purchase.amount,
             purchase.ref,
+            purchase.purchase_order,
             pay_purchase.amount as pay_bill_amount,
             ABS(SUM(purchase_acct_details.debit - purchase_acct_details.credit)) AS due,
             status_type.type_name AS status";
@@ -708,4 +786,15 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
     unlink( $file_name );
 
     return $result;
+}
+
+/**
+ * Get voucher type by id
+ */
+function erp_acct_get_transaction_type( $voucher_no ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT type FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = %d", $voucher_no);
+
+    return $wpdb->get_var($sql);
 }

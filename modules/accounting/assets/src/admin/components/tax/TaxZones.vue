@@ -3,15 +3,15 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Tax Rate Names</h2>
+                    <h2 class="content-header__title">Tax Zones</h2>
                     <a class="wperp-btn btn--primary" @click.prevent="showModal = true">
-                        <span>Add Tax Rate Name</span>
+                        <span>Add Tax Zone</span>
                     </a>
                 </div>
             </div>
         </div>
 
-        <new-tax-rate-name v-if="showModal" :rate_name_id="rate_name_id" :is_update="is_update" @close="showModal = false"></new-tax-rate-name>
+        <new-tax-zone v-if="showModal" :rate_name_id="rate_name_id" :is_update="is_update" @close="showModal = false"></new-tax-zone>
 
         <div class="table-container">
             <list-table
@@ -28,6 +28,10 @@
                 :bulk-actions="bulkActions"
                 @action:click="onActionClick"
                 @bulk:click="onBulkAction">
+
+                <template slot="default" slot-scope="data">
+                    {{ '1' === data.row.default ? '&#x02713;' : '-' }}
+                </template>
             </list-table>
         </div>
 
@@ -37,13 +41,13 @@
 <script>
     import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
-    import NewTaxRateName from 'admin/components/tax/NewTaxRateName.vue'
+    import NewTaxZone from 'admin/components/tax/NewTaxZone.vue'
 
     export default {
-        name: 'TaxRateNames',
+        name: 'TaxZones',
 
         components: {
-            NewTaxRateName,
+            NewTaxZone,
             ListTable,
         },
 
@@ -51,9 +55,10 @@
             return {
                 modalParams: null,
                 columns: {
-                    'tax_id': {label: 'ID'},
-                    'tax_name': {label: 'Rate Name'},
-                    'actions': {label: 'Actions'}
+                    'tax_rate_name': {label: 'Tax Zone Name'},
+                    'tax_number'   : {label: 'Tax Number'},
+                    'default'      : {label: 'Default'},
+                    'actions'      : {label: 'Actions'}
                 },
                 rows: [],
                 paginationData: {
@@ -107,9 +112,10 @@
         methods: {
 
             fetchItems() {
-                this.rows = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get('tax-rate-names', {
+
+                this.rows = [];
+                HTTP.get('/tax-rate-names', {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
@@ -128,7 +134,7 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateTaxRateNames',
+                    name: 'PaginateTaxZones',
                     params: {page: page},
                     query: queries
                 });

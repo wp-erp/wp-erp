@@ -23,11 +23,21 @@
                     :rows="ledgers[parseInt(chart.id)]"
                     @action:click="onActionClick">
                     <template slot="ledger_name" slot-scope="data">
-                        <router-link :to="{ name: 'LedgerReport', params: {
+                        <router-link :to="{ name: 'LedgerSingle', params: {
+                            id        : data.row.id,
                             ledgerID  : data.row.id,
                             ledgerName: data.row.name,
                             ledgerCode: data.row.code
                             }}">{{ data.row.name }}
+                        </router-link>
+                    </template>
+                    <template slot="trn_count" slot-scope="data">
+                        <router-link :to="{ name: 'LedgerReport', params: {
+                            id        : data.row.id,
+                            ledgerID  : data.row.id,
+                            ledgerName: data.row.name,
+                            ledgerCode: data.row.code
+                            }}">{{ data.row.trn_count }}
                         </router-link>
                     </template>
                     <template slot="row-actions" slot-scope="data" v-if="data.row.system != null">
@@ -52,6 +62,8 @@
                     'code'       : {label: 'Code'},
                     'ledger_name': {label: 'Name'},
                     'type'       : {label: 'Type'},
+                    'balance'    : {label: 'Balance'},
+                    'trn_count'  : {label: 'Count'},
                     'actions'    : {label: 'Actions'},
                 },
                 actions : [
@@ -95,8 +107,23 @@
 
             fetchLedgers() {
                 HTTP.get('/ledgers').then( response => {
+                    response.data.forEach( (ledger) => {
+                        ledger.balance = this.transformBalance( ledger.balance );
+                    });
                     this.ledgers = this.groupBy(response.data, 'chart_id');
                 });
+            },
+
+            transformBalance( val ){
+                if ( null === val && typeof val === 'object' ) {
+                    val = 0;
+                }
+                let currency = '$';
+                if ( val < 0 ){
+                    return `Cr. ${currency}${Math.abs(val)}`;
+                }
+
+                return `Dr. ${currency}${val}`;
             },
 
             onActionClick(action, row, index) {
