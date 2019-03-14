@@ -541,6 +541,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     } else {
         $sql .= " voucher.id,
             voucher.type,
+            purchase.vendor_id as vendor_id,
             purchase.vendor_name AS vendor_name,
             pay_purchase.vendor_name AS pay_bill_vendor_name,
             purchase.trn_date AS bill_trn_date,
