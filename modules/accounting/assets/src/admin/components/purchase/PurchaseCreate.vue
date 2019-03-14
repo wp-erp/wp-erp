@@ -73,7 +73,7 @@
                             <td colspan="3" class="text-right">
                                 <span>Total Amount = </span>
                             </td>
-                            <td><input type="text" v-model="finalTotalAmount" readonly></td>
+                            <td><input type="text" v-model="finalTotalAmount" class="text-right" readonly></td>
                             <td></td>
                         </tr>
 

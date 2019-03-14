@@ -74,8 +74,8 @@
                         <td class="col--amount" data-colname="Amount">
                             <input type="number" min="0" step="0.01" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
-                        <td class="col--total" style="text-align: center" data-colname="Total">
-                            <input type="number" :value="line.amount" readonly disabled/>
+                        <td class="col--total" data-colname="Total">
+                            <input type="number" :value="line.amount" class="text-right" readonly disabled/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
