@@ -19,7 +19,7 @@
                 :per-page="paginationData.perPage"
                 :current-page="paginationData.currentPage"
                 @pagination="goToPage"
-                :actions="actions"
+                :actions="[]"
                 @action:click="onActionClick">
                 <template slot="trn_no" slot-scope="data">
                     <strong>
@@ -28,7 +28,14 @@
                         </router-link>
                     </strong>
                 </template>
-
+                <!-- custom row actions -->
+                <template slot="action-list" slot-scope="data">
+                    <li v-for="(action, index) in data.row.actions" :key="action.key" :class="action.key">
+                        <a href="#" @click.prevent="onActionClick(action.key, data.row, index)">
+                            <i :class="action.iconClass"></i>{{ action.label }}
+                        </a>
+                    </li>
+                </template>
             </list-table>
 
         </div>
@@ -67,10 +74,7 @@
                     perPage    : 10,
                     currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
-                actions : [
-                    { key: 'edit', label: 'Edit' },
-                    { key: 'trash', label: 'Delete' }
-                ]
+                actions : []
             };
         },
 
@@ -122,11 +126,11 @@
 
                 switch ( action ) {
                     case 'trash':
-                        if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete('invoices/' + row.id).then( response => {
-                                this.$delete(this.rows, index);
-                            });
-                        }
+                        // if ( confirm('Are you sure to delete?') ) {
+                        //     HTTP.delete('invoices/' + row.id).then( response => {
+                        //         this.$delete(this.rows, index);
+                        //     });
+                        // }
                         break;
 
                     case 'edit':
@@ -142,6 +146,17 @@
                             this.$router.push({ name: 'CheckEdit', params: { id: row.id } })
                         }
 
+                        break;
+
+                    case 'payment':
+                        if ( 'Bill' == row.type ) {
+                            this.$router.push({
+                                name: 'PayBillCreate', params: {
+                                    vendor_id: row.vendor_id,
+                                    vendor_name: row.vendor_name,
+                                }
+                            });
+                        }
                         break;
 
                     default :
@@ -183,7 +198,10 @@
                                 'due'        : '-',
                                 'amount'     : this.formatAmount(item.pay_bill_amount),
                                 'status'     : 'Paid',
-                                'singleView' : { name: 'PayBillSingle', params: { id: item.id }}
+                                'singleView' : { name: 'PayBillSingle', params: { id: item.id }},
+                                'actions'    : [
+                                    { key: 'void', label: 'Void' },
+                                ]
                             };
                             break;
 
@@ -193,13 +211,18 @@
                                 'trn_no'     : item.id,
                                 'type'       : 'Bill',
                                 'ref'        : item.ref ? item.ref : '-',
+                                'vendor_id'  : item.vendor_id,
                                 'vendor_name': item.vendor_name,
                                 'trn_date'   : item.bill_trn_date,
                                 'due_date'   : item.due_date,
                                 'due'        : this.formatAmount(item.due),
                                 'amount'     : this.formatAmount(item.amount),
                                 'status'     : item.status,
-                                'singleView' : { name: 'BillSingle', params: { id: item.id }}
+                                'singleView' : { name: 'BillSingle', params: { id: item.id }},
+                                'actions'    : [
+                                    { key: 'edit', label: 'Edit' },
+                                    { key: 'payment', label: 'Make Payment' },
+                                ]
                             };
                             break;
 
@@ -215,7 +238,10 @@
                                 'due'        : '-',
                                 'amount'     : this.formatAmount(item.expense_amount),
                                 'status'     : 'Paid',
-                                'singleView' : { name: 'ExpenseSingle', params: { id: item.id }}
+                                'singleView' : { name: 'ExpenseSingle', params: { id: item.id }},
+                                'actions'    : [
+                                    { key: 'void', label: 'Void' },
+                                ]
                             };
                             break;
 
@@ -231,7 +257,10 @@
                                 'due'        : '-',
                                 'amount'     : this.formatAmount(item.expense_amount),
                                 'status'     : 'Paid',
-                                'singleView' : { name: 'CheckSingle', params: { id: item.id }}
+                                'singleView' : { name: 'CheckSingle', params: { id: item.id }},
+                                'actions'    : [
+                                    { key: 'void', label: 'Void' },
+                                ]
                             };
                             break;
 

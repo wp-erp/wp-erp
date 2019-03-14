@@ -150,7 +150,7 @@
         data() {
             return {
                 basic_fields: {
-                    vendor: '',
+                    vendor: {},
                     trn_ref: '',
                     payment_date: erp_acct_var.current_date,
                     deposit_to: '',
@@ -197,6 +197,13 @@
             });
         },
 
+        mounted() {
+            this.basic_fields.vendor  = {
+                id  : parseInt(this.$route.params.vendor_id),
+                name: this.$route.params.vendor_name
+            };
+        },
+
         methods: {
             getPayMethods() {
                 this.$store.dispatch( 'spinner/setSpinner', true );
@@ -233,15 +240,12 @@
             },
 
             getDuePurchases() {
-                let vendorId    = this.basic_fields.vendor.id,
-                    idx         = 0,
+                let idx         = 0,
                     finalAmount = 0;
 
                 this.pay_purchases = [];
 
-                if ( ! vendorId ) return;
-
-                HTTP.get(`/purchases/due/${vendorId}`).then(response => {
+                HTTP.get(`/purchases/due/${this.basic_fields.vendor.id}`).then(response => {
                     response.data.forEach(element => {
                         this.pay_purchases.push({
                             id        : element.id,

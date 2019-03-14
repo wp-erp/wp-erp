@@ -19,7 +19,7 @@
                 :per-page="paginationData.perPage"
                 :current-page="paginationData.currentPage"
                 @pagination="goToPage"
-                :actions="actions"
+                :actions="[]"
                 @action:click="onActionClick">
                 <template slot="trn_no" slot-scope="data">
                     <strong v-if="isPayment(data.row)">
@@ -56,6 +56,15 @@
                 </template>
                 <template slot="status" slot-scope="data">
                     {{ isPayment(data.row) ? 'Paid' : data.row.status }}
+                </template>
+
+                <!-- custom row actions -->
+                <template slot="action-list" slot-scope="data">
+                    <li v-for="(action, index) in data.row.actions" :key="action.key" :class="action.key">
+                        <a href="#" @click.prevent="onActionClick(action.key, data.row, index)">
+                            <i :class="action.iconClass"></i>{{ action.label }}
+                        </a>
+                    </li>
                 </template>
 
             </list-table>
@@ -97,10 +106,7 @@
                     perPage: 10,
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
-                actions : [
-                    { key: 'edit', label: 'Edit' },
-                    { key: 'trash', label: 'Delete' }
-                ]
+                actions : []
             };
         },
 
@@ -138,7 +144,22 @@
                         end_date: filters.end_date
                     }
                 }).then( (response) => {
-                    this.rows = response.data;
+                    let mappedData = response.data.map(item => {
+                        if ( 'purchase' === item.type ) {
+                            item['actions'] = [
+                                { key: 'edit', label: 'Edit' },
+                                { key: 'payment', label: 'Make Payment' },
+                            ];
+                        } else {
+                            item['actions'] = [
+                                { key: 'void', label: 'Void' },
+                            ];
+                        }
+
+                        return item;
+                    });
+
+                    this.rows = mappedData;
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
@@ -166,6 +187,18 @@
                         }
 
                         break;
+
+                    case 'payment':
+                        if ( 'purchase' == row.type ) {
+                            this.$router.push({
+                                name: 'PayPurchaseCreate', params: {
+                                    vendor_id: row.vendor_id,
+                                    vendor_name: row.vendor_name,
+                                }
+                            });
+                        }
+                        break;
+
 
                     default :
 
