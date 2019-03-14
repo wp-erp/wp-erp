@@ -25,7 +25,7 @@
                     <strong>
                         <router-link :to="{ name: 'SalesSingle', params: {
                             id: data.row.id,
-                            type: isPayment(data.row) ? 'payment' : 'sales_invoice'
+                            type: isPayment(data.row) ? 'payment' : 'invoice'
                         }}">
                             #{{ data.row.id }}
                         </router-link>
@@ -142,7 +142,7 @@
                     }
                 }).then(response => {
                     let mappedData = response.data.map(item => {
-                        if ( 'sales_invoice' === item.type && 'Awaiting Approval' == item.status ) {
+                        if ( 'invoice' === item.type && 'Awaiting Approval' == item.status ) {
                             item['actions'] = [
                                 { key: 'edit', label: 'Edit' },
                                 { key: 'receive', label: 'Receive Payment' },
@@ -183,7 +183,7 @@
                         break;
 
                     case 'edit':
-                        if ( 'sales_invoice' == row.type ) {
+                        if ( 'invoice' == row.type ) {
                             this.$router.push({ name: 'InvoiceEdit', params: { id: row.id } })
                         }
 
@@ -221,7 +221,7 @@
             },
 
             getTrnType(row) {
-                if ( row.type === 'sales_invoice' ) {
+                if ( row.type === 'invoice' ) {
                     if ( 1 == row.estimate ) {
                         return 'Estimate';
                     }
