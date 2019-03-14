@@ -27,7 +27,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
 
     $limit = '';
 
-    $where = "WHERE (voucher.type = 'sales_invoice' OR voucher.type = 'payment')";
+    $where = "WHERE (voucher.type = 'invoice' OR voucher.type = 'payment')";
 
     if ( ! empty( $args['customer_id'] ) ) {
         $where .= " AND invoice.customer_id = {$args['customer_id']} OR invoice_receipt.customer_id = {$args['customer_id']} ";
@@ -661,7 +661,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
     $trn_pdf->set_to_address($to_address);
 
     /* Customize columns based on transaction type */
-    if ( 'sales_invoice' == $type ) {
+    if ( 'invoice' == $type ) {
         // Set Column Headers
         $trn_pdf->set_table_headers( [__('PRODUCT', 'erp'), __('QUANTITY', 'erp'), __('UNIT PRICE', 'erp'), __('DISCOUNT', 'erp'), __('TAX AMOUNT', 'erp'), __('AMOUNT', 'erp')] );
         // Add Table Items

@@ -154,7 +154,7 @@ function erp_acct_insert_invoice( $data ) {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-            'type'        => 'sales_invoice',
+            'type'        => 'invoice',
             'currency'    => '',
             'created_at'  => $data['created_at'],
             'created_by'  => $data['created_by']
