@@ -147,7 +147,7 @@
         data() {
             return {
                 basic_fields: {
-                    people         : '',
+                    people         : {},
                     trn_ref        : '',
                     payment_date   : erp_acct_var.current_date,
                     deposit_to     : '',
@@ -192,6 +192,14 @@
                 this.actionType = button.id;
             });
         },
+
+        mounted() {
+            this.basic_fields.people  = {
+                id  : parseInt(this.$route.params.vendor_id),
+                name: this.$route.params.vendor_name
+            };
+        },
+
 
         methods: {
             getPayMethods() {
