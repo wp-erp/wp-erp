@@ -88,6 +88,26 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/cash-at-bank', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_cash_at_bank' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_bank_accounts' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'update_dashboard_accounts' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_bank_transfer' );
+                },
+            ],
+        ] );
+
     }
 
     /**
@@ -253,6 +273,74 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
+     * Get dashboard bank accounts
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_cash_at_bank( $request ) {
+        $items = erp_acct_get_dashboard_banks();
+
+        if ( empty( $items ) ) {
+            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 400 ] );
+        }
+
+        foreach ( $items as $item ) {
+            $additional_fields = [];
+
+            $data = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, 0 );
+
+        return $response;
+    }
+
+    /**
+     * Update dashboard bank accounts
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function update_dashboard_accounts( $request ) {
+        global $wpdb;
+
+        $wpdb->query('TRUNCATE TABLE ' . $wpdb->prefix . 'erp_acct_cash_at_banks');
+
+        $items = $request['accounts'];
+
+        if ( empty( $items ) ) {
+            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 400 ] );
+        }
+
+        foreach ( $items as $item ) {
+            $additional_fields = [];
+
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_cash_at_banks', array(
+                'ledger_id' => $item['ledger_id'],
+                'name'      => $item['name'],
+                'balance'   => $item['balance'],
+            ));
+
+            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $response = $this->prepare_item_for_response( $items, $request, $additional_fields );
+        $response = rest_ensure_response( $response );
+        $response->set_status( 201 );
+
+        return $response;
+    }
+
+    /**
      * Prepare a single item for create or update
      *
      * @param WP_REST_Request $request Request object.
@@ -329,11 +417,11 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         ];
 
         if ( isset( $request['include'] ) ) {
-//            $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
-//
-//            if ( in_array( 'created_by', $include_params ) ) {
-//                $data['created_by'] = $this->get_user( intval( $item->created_by ) );
-//            }
+            $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+            if ( in_array( 'created_by', $include_params ) ) {
+                $data['created_by'] = $this->get_user( intval( $item->created_by ) );
+            }
         }
 
         $data = array_merge( $data, $additional_fields );

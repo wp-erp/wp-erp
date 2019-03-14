@@ -2,14 +2,14 @@
     <div :class="['bank-accounts-section', 'wperp-panel', 'wperp-panel-default', ( isEditSettingsEnabled ? 'open-edit':'' )]">
         <div class="wperp-panel-heading wperp-bg-white">
             <h4>Bank Accounts</h4>
-            <!--<a href="#" @click.prevent="isEditSettingsEnabled = !isEditSettingsEnabled" id="bank-account-edit" class="panel-badge">-->
-                <!--<span v-if="isEditSettingsEnabled">Save</span>-->
-                <!--<i v-else class="flaticon-quick-edit"></i>-->
-            <!--</a>-->
+            <a href="#" @click.prevent="isEditSettingsEnabled = !isEditSettingsEnabled" id="bank-account-edit" class="panel-badge">
+                <span v-if="isEditSettingsEnabled" @click.prevent="saveDashboardBanks">Save</span>
+                <i v-else class="flaticon-quick-edit"></i>
+            </a>
         </div>
         <div class="wperp-panel-body pb-0">
             <ul class="wperp-list-unstyled list-table-content list-table-content--border list-table-content--bg-space">
-                <li v-for="item in accounts">
+                <li :key="key" v-for="(item,key) in accounts">
                     <div class="left">
                         <i class="flaticon-menu-1"></i>
                         <a href="#" class="title">{{item.name}}</a>
@@ -17,7 +17,7 @@
                     <div class="right">
                         <span v-if="undefined === item.balance" class="price">{{formatAmount(0)}}</span>
                         <span v-else class="price">{{formatAmount(item.balance)}}</span>
-                        <i class="flaticon-trash"></i>
+                        <i class="flaticon-trash" @click.prevent="removeAccount(key)"></i>
                     </div>
                 </li>
             </ul>
@@ -38,6 +38,7 @@
 
     export default {
         name: "Accounts",
+
         components : {
             Dropdown
         },
@@ -51,10 +52,28 @@
 
         methods: {
             fetchAccounts(){
-                HTTP.get('/accounts/bank-accounts').then( (response) => {
+                HTTP.get('/accounts/cash-at-bank').then( (response) => {
                     this.accounts = response.data;
-                } );
+                });
+
+                if ( !this.accounts.length ) {
+                    HTTP.get('/accounts/bank-accounts').then( (response) => {
+                        this.accounts = response.data;
+                    });
+                }
             },
+
+            saveDashboardBanks() {
+                HTTP.post('/accounts/cash-at-bank', {
+                    accounts: this.accounts
+                }).then((response) => {
+                    this.accounts = response.data;
+                });
+            },
+
+            removeAccount(key) {
+                this.$delete(this.accounts, key);
+            }
         },
 
         created(){
@@ -66,9 +85,9 @@
                 if ( typeof this.accounts === "object" && null === this.accounts ) {
                     return;
                 }
-                let total = this.accounts.reduce( ( amount, item ) => {
-                                return amount + parseFloat(item.balance);
-                            }, 0 );
+                let total = this.accounts.reduce((amount, item) => {
+                    return amount + parseFloat(item.balance);
+                }, 0);
 
                 if ( isNaN( parseFloat(total) )) {
                     total = 0;
@@ -76,8 +95,10 @@
 
                 return this.formatAmount(total);
             }
+        },
 
-        }
+
+
     }
 </script>
 

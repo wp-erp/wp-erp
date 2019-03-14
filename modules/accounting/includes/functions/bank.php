@@ -57,7 +57,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
  * @param $data
  * @return mixed
  */
-function erp_acct_get_dashboard() {
+function erp_acct_get_dashboard_banks() {
     global $wpdb;
 
     $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_cash_at_banks", ARRAY_A );
