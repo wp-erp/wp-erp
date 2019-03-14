@@ -282,7 +282,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'              => (int) $item->id,
             'name'            => $item->name,
-            'description'     => $item->description
+            'description'     => ! empty( $item->description ) ? $item->description : ''
         ];
 
         $data = array_merge( $data, $additional_fields );

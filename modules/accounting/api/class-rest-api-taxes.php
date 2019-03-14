@@ -606,7 +606,6 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'id'              => (int) $item->id,
             'tax_rate_name'   => $item->tax_rate_name,
             'tax_rate'        => ! empty($item->tax_rate) ? $item->tax_rate : '',
-            'default'         => $item->default,
             'tax_components'  => ! empty($item->tax_components) ? $item->tax_components : '',
         ];
 
@@ -691,7 +690,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'tax_rate_id'           => (int) $item->tax_rate_id,
             'tax_rate_name'         => $item->tax_rate_name,
-            'tax_number'            => $item->tax_number,
+            // 'tax_number'            => $item->tax_number,
             'default'               => (int) $item->default,
             'sales_tax_category_id' => $item->tax_cat_id,
             'tax_rate'              => !empty( $item->tax_rate ) ? $item->tax_rate : null
