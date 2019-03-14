@@ -167,6 +167,12 @@
 
 <style lang="less">
 .ledger-report {
+    .tablenav,
+        .column-cb,
+        .check-column {
+            display: none;
+        }
+
     .query-options {
         background: #fff;
         padding: 30px 5px;

@@ -6,7 +6,7 @@
             <a href="" id="erp-product-new" @click.prevent="showModal = true">+ Add New Product</a>
         </h2>
         <list-table
-            tableClass="wp-ListTable widefat fixed product-list"
+            tableClass="wp-ListTable table-striped widefat fixed product-list"
             action-column="actions"
             :columns="columns"
             :rows="products"
@@ -41,10 +41,10 @@
 
         data() {
             return {
-                products: [],
-                product: null,
+                products : [],
+                product  : null,
                 showModal: false,
-                columns: {
+                columns  : {
                     'name': {
                         label: 'Product Name'
                     },
@@ -93,7 +93,7 @@
             onActionClick( action, row, index ) {
                 if ( 'edit' == action ) {
                     this.showModal = true;
-                    this.product = row;
+                    this.product   = row;
                 } else if ( 'trash' == action ) {
                     if ( confirm( 'Are sure want to Delete ?' ) ) {
                         this.$store.dispatch( 'spinner/setSpinner', true );
@@ -136,6 +136,7 @@
             this.getProducts();
             this.$on( 'close', function() {
                 this.showModal = false;
+                this.product = null;
             } );
         }
     }
