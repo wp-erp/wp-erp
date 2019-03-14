@@ -662,6 +662,10 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['total_right'] = 0;
 
     foreach ($results['rows1'] as $result) {
+        if ( !is_numeric( $result['balance'] ) ) {
+            continue;
+        }
+
         if ( ! empty($result['balance']) ) {
             $results['total_left'] += $result['balance'];
         }
@@ -671,7 +675,11 @@ function erp_acct_get_balance_sheet( $args ) {
         if ( isset( $results['slug'] ) && $results['slug'] !== 'loss' ) {
             $result['balance'] = abs( $result['balance'] );
         }
+
         if ( ! empty($result['balance']) ) {
+            if ( !is_numeric( $result['balance'] ) ) {
+                continue;
+            }
             $results['total_right'] += $result['balance'];
         }
     }

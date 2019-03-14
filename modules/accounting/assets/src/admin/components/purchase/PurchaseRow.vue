@@ -12,10 +12,10 @@
                    class="wperp-form-field">
         </td>
         <td class="col--uni_price" data-colname="Unit Price">
-            <input min="0" type="number" v-model="line.unitPrice" @keyup="calculateAmount" class="wperp-form-field">
+            <input min="0" type="number" v-model="line.unitPrice" @keyup="calculateAmount" class="wperp-form-field text-right">
         </td>
         <td class="col--amount" data-colname="Amount">
-            <input type="number" min="0" step="0.01" v-model="line.amount" class="wperp-form-field" readonly>
+            <input type="number" min="0" step="0.01" v-model="line.amount" class="wperp-form-field text-right" readonly>
         </td>
         <td class="col--actions delete-row" data-colname="Action">
             <span class="wperp-btn" @click="removeRow"><i class="flaticon-trash"></i></span>
@@ -100,24 +100,4 @@
 </script>
 
 <style lang="less">
-    .with-multiselect {
-        &.prodcut-select {
-            .multiselect__tags {
-                min-height: 43px;
-                padding: 3px 30px 0 8px;
-            }
-
-            .multiselect__placeholder {
-                margin: 8px 0;
-            }
-
-            .multiselect__select {
-                height: 41px;
-            }
-
-            .multiselect__single {
-                line-height: 37px;
-            }
-        }
-    }
 </style>
