@@ -1455,6 +1455,7 @@ Company'
                             'chart_id' => $this->get_chart_id_by_slug($array_key),
                             'name'     => $value['name'],
                             'slug'     => slugify( $value['name'] ),
+                            'code'     => $value['code'],
                             'system'   => $value['system']
                         ]
                     );
