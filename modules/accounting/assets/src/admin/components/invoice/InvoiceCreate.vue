@@ -157,7 +157,6 @@
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import ComboButton from 'admin/components/select/ComboButton.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue'
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
@@ -171,7 +170,6 @@
             Datepicker,
             FileUpload,
             ComboButton,
-            SubmitButton,
             InvoiceTrnRow,
             SelectCustomers,
             ShowErrors

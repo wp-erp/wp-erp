@@ -520,12 +520,15 @@ function erp_acct_get_formatted_tax_line_data( $data ) {
 function erp_acct_tax_summary() {
     global $wpdb;
 
-    $sql = "SELECT tax.id AS tax_rate_id,
-                tax.default, tca.tax_cat_id,
-                tca.tax_rate, tax.tax_rate_name from {$wpdb->prefix}erp_acct_tax_sales_tax_categories as stc
-                inner join ( SELECT tax_cat_id,sum(tax_rate) as tax_rate FROM {$wpdb->prefix}erp_acct_tax_cat_agency group by tax_cat_id
-                ) tca on stc.sales_tax_category_id = tca.tax_cat_id
-            inner join {$wpdb->prefix}erp_acct_taxes as tax on tax.id = stc.tax_id";
+    $sql = "SELECT
+            tax.id AS tax_rate_id,
+            tax.tax_rate_name,
+            tax.default,
+            tca.tax_cat_id,
+            sum(tca.tax_rate) AS tax_rate
+        FROM {$wpdb->prefix}erp_acct_tax_cat_agency AS tca
+        INNER JOIN {$wpdb->prefix}erp_acct_taxes AS tax ON tax.id = tca.tax_id
+        GROUP BY tca.tax_cat_id, tax.id order by tax_cat_id";
 
     return $wpdb->get_results( $sql, ARRAY_A);
 }
