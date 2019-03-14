@@ -119,15 +119,6 @@ function erp_acct_insert_tax_rate( $data ) {
             'updated_at'     => $tax_data['updated_at'],
             'updated_by'     => $tax_data['updated_by'],
         ));
-
-        $wpdb->insert($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
-            'tax_id'                => $tax_id,
-            'sales_tax_category_id' => $item['tax_category_id'],
-            'created_at'            => $tax_data['created_at'],
-            'created_by'            => $tax_data['created_by'],
-            'updated_at'            => $tax_data['updated_at'],
-            'updated_by'            => $tax_data['updated_by'],
-        ));
     }
 
     return $tax_id;
@@ -180,20 +171,9 @@ function erp_acct_update_tax_rate( $data, $id ) {
         ), array(
             'tax_id' => $id
         ));
-
-        $wpdb->update($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
-            'sales_tax_category_id' => $item['tax_cat_id'],
-            'created_at' => $tax_data['created_at'],
-            'created_by' => $tax_data['created_by'],
-            'updated_at' => $tax_data['updated_at'],
-            'updated_by' => $tax_data['updated_by'],
-        ), array(
-            'tax_id' => $id
-        ));
     }
 
     return $id;
-
 }
 
 
