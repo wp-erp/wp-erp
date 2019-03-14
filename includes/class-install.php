@@ -955,6 +955,8 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_cash_at_banks` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `ledger_id` int(11) DEFAULT NULL,
+                `name` varchar(255) DEFAULT NULL,
+                `balance` decimal(10,2) DEFAULT 0,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -967,7 +969,7 @@ Company'
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `voucher_no` int(11) DEFAULT NULL,
                 `trn_date` date DEFAULT NULL,
-                `amount` int(11) DEFAULT NULL,
+                `amount` decimal(10,2) DEFAULT NULL,
                 `ac_from` int(11) DEFAULT NULL,
                 `ac_to` int(11) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
