@@ -9,7 +9,7 @@
                         &nbsp; Print
                     </a>
                     <!-- todo: more action has some dropdown and will implement later please consider as planning -->
-                    
+
                     <dropdown>
                         <template slot="button">
                             <a href="#" class="wperp-btn btn--default">
@@ -26,14 +26,14 @@
                 </div>
             </div>
 
-            <invoice-single-content 
+            <invoice-single-content
                 v-if="null != invoice && null != company"
-                :invoice="invoice" 
+                :invoice="invoice"
                 :company="company" />
 
-            <payment-single-content 
+            <payment-single-content
                 v-if="null != payment && null != company"
-                :payment="payment" 
+                :payment="payment"
                 :company="company" />
 
             <send-mail v-if="showModal" :data="print_data" :type="type"/>
@@ -74,7 +74,7 @@
         },
 
         created() {
-            /* If this page load directly, 
+            /* If this page load directly,
             then we don't have the type or type is `undefined`
             thats why we need to load the type from database */
             let params = this.$route.params;
@@ -112,7 +112,7 @@
             loadData(type) {
                 this.type = type;
 
-                if ( 'sales_invoice' === type ) {
+                if ( 'invoice' === type ) {
                     this.getInvoice();
                 } else if ( 'payment' === type ) {
                     this.getPayment();
@@ -122,7 +122,7 @@
             getInvoice() {
                 this.isWorking = true;
 
-                HTTP.get(`/invoices/${this.$route.params.id}`).then(response => {                    
+                HTTP.get(`/invoices/${this.$route.params.id}`).then(response => {
                     this.invoice = response.data;
                 }).then( e => {} ).then(() => {
                     this.print_data = this.invoice;
@@ -155,7 +155,7 @@
             display: none !important;
             height: 0 !important;
             visibility: hidden;
-        }  
+        }
         .multiselect__tags {
             font-size: 12px;
             padding-left: 15px;
@@ -164,7 +164,7 @@
                 max-height: 30px;
                 font-size: 12px;
             }
-        } 
+        }
         .multiselect__tag-icon {
             line-height: 18px;
         }

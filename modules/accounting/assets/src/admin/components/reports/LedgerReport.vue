@@ -85,14 +85,25 @@
             };
         },
 
+        watch: {
+            selectedLedger(newVal) {
+                if ( ! isNaN( newVal.id ) ) {
+                    this.rows = [];
+                    this.$router.push({ params: { id: parseInt(newVal.id) } });
+                }
+            }
+        },
+
         created() {
-            if ( this.$route.params.ledgerID ) {
+            if ( this.$route.params.ledgerName ) {
                 // Directly coming from chart of acounts
                 this.selectedLedger = {
                     id  : parseInt( this.$route.params.ledgerID ),
                     name: this.$route.params.ledgerName,
                     code: this.$route.params.ledgerCode
                 };
+
+                this.getLedgerReport();
             }
 
             this.getLedgers();
@@ -105,7 +116,26 @@
             getLedgers() {
                 HTTP.get('/ledgers').then(res => {
                     this.ledgers = res.data;
+
+                    this.setDefault();
                 });
+            },
+
+            setDefault() {
+                if ( this.$route.params.id && ! this.$route.params.ledgerName ) {
+                    // Normally refresh page
+                    let ledger = this.ledgers.filter((ledger, index) => {
+                        return parseInt( ledger.id ) === parseInt( this.$route.params.id );
+                    })[0];
+
+                    this.selectedLedger = {
+                        id  : parseInt( ledger.id ),
+                        name: ledger.name,
+                        code: ledger.code
+                    };
+
+                    this.getLedgerReport();
+                }
             },
 
             getLedgerReport() {
