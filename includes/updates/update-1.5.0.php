@@ -517,18 +517,6 @@ function erp_acct_create_accounting_tables() {
             PRIMARY KEY (`id`)
         ) $collate;",
 
-        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_sales_tax_categories` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `tax_id` int(11) DEFAULT NULL,
-            `sales_tax_category_id` int(11) DEFAULT NULL,
-            `tax_rate` decimal(10,2) DEFAULT 0,
-            `created_at` date DEFAULT NULL,
-            `created_by` varchar(50) DEFAULT NULL,
-            `updated_at` date DEFAULT NULL,
-            `updated_by` varchar(50) DEFAULT NULL,
-            PRIMARY KEY (`id`)
-        ) $collate;",
-
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_rate_names` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `name` varchar(255) DEFAULT NULL,
@@ -674,22 +662,114 @@ function erp_acct_create_accounting_tables() {
 }
 
 /**
- * Get previous accounting data
+ * ===========================================================================
+ * Begin the hard work ...
+ * ====================================================================
+ */
+
+global $db_tax_items;
+global $db_tax_agencies;
+
+/**
+ * Custom array unique
+ */
+function erp_array_unique( $array ) {
+    return array_intersect_key(
+        $array,
+        array_unique( array_map( 'strtolower', $array ) )
+    );
+}
+
+/**
+ * Populate tax agencies
+ *
+ * @return array
+ */
+function erp_acct_populate_tax_agencies() {
+    global $wpdb;
+    global $db_tax_items;
+    global $db_tax_agencies;
+
+    //=============================
+    // get previous tax info
+    //=============================
+    $db_tax_items = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_ac_tax_items", ARRAY_A);
+
+    $tax_agencies = array_map(function($tax) {
+        return $tax['agency_name'];
+    }, $db_tax_items);
+
+    $unique_agencies = erp_array_unique( $tax_agencies );
+
+    foreach ( $unique_agencies as $unique_agency ) {
+        $wpdb->insert(
+            // `erp_acct_tax_agencies`
+            "{$wpdb->prefix}erp_acct_tax_agencies", [
+                'name'       => $unique_agency,
+                'created_at' => date('Y-m-d'),
+                'created_by' => 1
+            ]
+        );
+    }
+
+    // name, id ( order is very* *very important here )
+    $db_tax_agencies = $wpdb->get_results("SELECT name, id FROM {$wpdb->prefix}erp_acct_tax_agencies", OBJECT_K);
+}
+
+/**
+ * Populate tax data
  *
  * @return array
  */
 function erp_acct_populate_tax_data() {
     global $wpdb;
+    global $db_tax_items;
+    global $db_tax_agencies;
 
     //=============================
     // first get previous tax info
     //=============================
-    $taxes     = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_ac_tax");
-    $tax_items = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_ac_tax_items");
+    $taxes = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_ac_tax", ARRAY_A);
 
-    error_log(print_r($taxes, true));
-    error_log('-------------------');
-    error_log(print_r($tax_items, true));
+    for ( $i = 0; $i < count($taxes); $i++ ) {
+        $wpdb->insert(
+            // `erp_acct_taxes`
+            "{$wpdb->prefix}erp_acct_taxes", [
+                'tax_rate_id' => $i + 1,
+                'tax_number'  => $taxes[$i]['tax_number'],
+                'default'     => 0 === $i ? 1 : 0, // if first record
+                'created_at'  => date('Y-m-d'),
+                'created_by'  => $taxes[$i]['created_by']
+            ]
+        );
+
+        foreach ( $db_tax_items as $db_tax_item ) {
+            if ( $taxes[$i]['id'] === $db_tax_item['tax_id'] ) {
+                $wpdb->insert(
+                    // `erp_acct_tax_cat_agency`
+                    "{$wpdb->prefix}erp_acct_tax_cat_agency", [
+                        'tax_id'         => $db_tax_item['tax_id'],
+                        'component_name' => $db_tax_item['component_name'],
+                        'tax_cat_id'     => null,
+                        'agency_id'      => $db_tax_agencies[$db_tax_item['agency_name']]->id,
+                        'tax_rate'       => $db_tax_item['tax_rate'],
+                        'created_at'     => date('Y-m-d'),
+                        'created_by'     => $taxes[$i]['created_by']
+                    ]
+                );
+            } // if
+        } // foreach
+    } // for
+
+    foreach ( $taxes as $tax ) {
+        $wpdb->insert(
+            // `erp_acct_tax_rate_names`
+            "{$wpdb->prefix}erp_acct_tax_rate_names", [
+                'name'       => $tax['name'],
+                'created_at' => date('Y-m-d'),
+            ]
+        );
+    } // foreach
 }
 
 
@@ -702,6 +782,7 @@ function erp_acct_populate_tax_data() {
 function wperp_update_accounting_module_1_5_0() {
     erp_acct_create_accounting_tables();
 
+    erp_acct_populate_tax_agencies();
     erp_acct_populate_tax_data();
 }
 
