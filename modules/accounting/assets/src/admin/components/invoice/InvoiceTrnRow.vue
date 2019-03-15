@@ -194,6 +194,10 @@
             },
 
             setProductInfo() {
+                if ( ! this.line.selectedProduct ) {
+                    return;
+                }
+
                 let product_id = this.line.selectedProduct.id;
 
                 if ( ! product_id ) return;
