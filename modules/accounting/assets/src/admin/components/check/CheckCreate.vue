@@ -74,8 +74,8 @@
                         <td class="col--amount" data-colname="Amount">
                             <input type="number" min="0" step="0.01" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
                         </td>
-                        <td class="col--total" style="text-align: center" data-colname="Total">
-                            <input type="number" :value="line.amount" readonly disabled/>
+                        <td class="col--total" data-colname="Total">
+                            <input type="number" :value="line.amount" class="text-right" readonly disabled/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -205,7 +205,8 @@
                 particulars     : '',
                 isWorking       : false,
                 accts_by_chart: [],
-                erp_acct_assets : erp_acct_var.acct_assets
+                erp_acct_assets : erp_acct_var.acct_assets,
+                actionType      : null
             }
         },
 
@@ -215,6 +216,10 @@
             this.$root.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
+            });
+
+            this.$root.$on('combo-btn-select', button => {
+                this.actionType = button.id;
             });
         },
 
@@ -343,7 +348,7 @@
                     this.reset = true;
 
                     if ('update' == this.actionType) {
-                        this.$router.push({name: 'Expense'});
+                        this.$router.push({name: 'Expenses'});
                     } else if ('new_update' == this.actionType) {
                         this.resetFields();
                     }
@@ -362,7 +367,7 @@
                     this.reset = true;
 
                     if ('save' == this.actionType) {
-                        this.$router.push({name: 'Expense'});
+                        this.$router.push({name: 'Expenses'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
                     }
@@ -437,8 +442,30 @@
                 }
             },
 
-            resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
+            resetFields() {
+                this.basic_fields = {
+                    people         : { id: null, name: null },
+                    check_no       : '',
+                    trn_date       : erp_acct_var.current_date,
+                    deposit_to     : '',
+                    trn_by         : '',
+                    billing_address: ''
+                };
+
+                this.check_data = {
+                    payer_name: '',
+                    check_no  : ''
+                };
+
+                this.form_errors      = [];
+                this.transactionLines = [];
+                this.attachments      = [];
+                this.totalAmounts     = [];
+                this.finalTotalAmount = 0;
+                this.particulars      = '';
+                this.isWorking        = false;
+
+                this.transactionLines.push({}, {}, {});
             },
 
             removeRow(index) {

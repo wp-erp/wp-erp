@@ -4,7 +4,7 @@
         <label>People<span class="wperp-required-sign">*</span></label>
         <multi-select v-model="selected" :options="options" />
 
-        <a href="#" class="add-new-people" @click="showModal = true"><i class="flaticon-add-plus-button"></i>Add new</a>
+        <!--<a href="#" class="add-new-people" @click="showModal = true"><i class="flaticon-add-plus-button"></i>Add new</a>-->
     </div>
 </template>
 

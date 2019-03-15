@@ -61,6 +61,7 @@
 
             reset() {
                 this.selectedAccount = [];
+                this.balance         = 0;
             },
         },
 

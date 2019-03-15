@@ -28,7 +28,7 @@
                                         <input type="text" v-model="peopleFields.last_name" id="last_name" class="wperp-form-field" placeholder="Last Name">
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                        <label for="email">Email</label>
+                                        <label for="email">Email<span class="required-sign">*</span></label>
                                         <input type="email" v-model="peopleFields.email" id="email" class="wperp-form-field" placeholder="you@domain.com">
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">

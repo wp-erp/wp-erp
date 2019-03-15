@@ -1221,18 +1221,6 @@ Company'
             ) $collate;",
 
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_sales_tax_categories` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `tax_id` int(11) DEFAULT NULL,
-                `sales_tax_category_id` int(11) DEFAULT NULL,
-                `created_at` date DEFAULT NULL,
-                `created_by` varchar(50) DEFAULT NULL,
-                `updated_at` date DEFAULT NULL,
-                `updated_by` varchar(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
-            ) $collate;",
-
-
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agencies` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
@@ -1455,6 +1443,7 @@ Company'
                             'chart_id' => $this->get_chart_id_by_slug($array_key),
                             'name'     => $value['name'],
                             'slug'     => slugify( $value['name'] ),
+                            'code'     => $value['code'],
                             'system'   => $value['system']
                         ]
                     );

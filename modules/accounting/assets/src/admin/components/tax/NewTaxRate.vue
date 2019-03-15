@@ -232,6 +232,8 @@
 
             resetData() {
                 Object.assign(this.$data, this.$options.data.call(this));
+
+                this.fetchData();
             },
 
             removeRow(index) {

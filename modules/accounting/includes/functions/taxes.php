@@ -31,7 +31,7 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
     }
 
     $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( tax.id ) as total_number " : " * ";
+    $sql .= $args['count'] ? " COUNT( DISTINCT tax.id ) as total_number " : " DISTINCT tax.id, tax.tax_rate_name, tax.tax_number, tax.default ";
     $sql .= "FROM {$wpdb->prefix}erp_acct_taxes AS tax INNER JOIN {$wpdb->prefix}erp_acct_tax_cat_agency as cat_agency on tax.id = cat_agency.tax_id ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
@@ -119,15 +119,6 @@ function erp_acct_insert_tax_rate( $data ) {
             'updated_at'     => $tax_data['updated_at'],
             'updated_by'     => $tax_data['updated_by'],
         ));
-
-        $wpdb->insert($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
-            'tax_id'                => $tax_id,
-            'sales_tax_category_id' => $item['tax_category_id'],
-            'created_at'            => $tax_data['created_at'],
-            'created_by'            => $tax_data['created_by'],
-            'updated_at'            => $tax_data['updated_at'],
-            'updated_by'            => $tax_data['updated_by'],
-        ));
     }
 
     return $tax_id;
@@ -180,20 +171,9 @@ function erp_acct_update_tax_rate( $data, $id ) {
         ), array(
             'tax_id' => $id
         ));
-
-        $wpdb->update($wpdb->prefix . 'erp_acct_tax_sales_tax_categories', array(
-            'sales_tax_category_id' => $item['tax_cat_id'],
-            'created_at' => $tax_data['created_at'],
-            'created_by' => $tax_data['created_by'],
-            'updated_at' => $tax_data['updated_at'],
-            'updated_by' => $tax_data['updated_by'],
-        ), array(
-            'tax_id' => $id
-        ));
     }
 
     return $id;
-
 }
 
 
@@ -520,12 +500,15 @@ function erp_acct_get_formatted_tax_line_data( $data ) {
 function erp_acct_tax_summary() {
     global $wpdb;
 
-    $sql = "SELECT tax.id AS tax_rate_id,
-                tax.default, tca.tax_cat_id,
-                tca.tax_rate, tax.tax_rate_name from {$wpdb->prefix}erp_acct_tax_sales_tax_categories as stc
-                inner join ( SELECT tax_cat_id,sum(tax_rate) as tax_rate FROM {$wpdb->prefix}erp_acct_tax_cat_agency group by tax_cat_id
-                ) tca on stc.sales_tax_category_id = tca.tax_cat_id
-            inner join {$wpdb->prefix}erp_acct_taxes as tax on tax.id = stc.tax_id";
+    $sql = "SELECT
+            tax.id AS tax_rate_id,
+            tax.tax_rate_name,
+            tax.default,
+            tca.tax_cat_id,
+            sum(tca.tax_rate) AS tax_rate
+        FROM {$wpdb->prefix}erp_acct_tax_cat_agency AS tca
+        INNER JOIN {$wpdb->prefix}erp_acct_taxes AS tax ON tax.id = tca.tax_id
+        GROUP BY tca.tax_cat_id, tax.id order by tax_cat_id";
 
     return $wpdb->get_results( $sql, ARRAY_A);
 }

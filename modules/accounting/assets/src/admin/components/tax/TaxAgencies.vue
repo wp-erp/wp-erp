@@ -52,7 +52,7 @@
                 showModal: false,
                 modalParams: null,
                 columns: {
-                    'tax_agency_id': {label: 'ID'},
+                    // 'tax_agency_id': {label: 'ID'},
                     'tax_agency_name': {label: 'Agency Name'},
                     'actions': { label: 'Actions' }
                 },

@@ -157,7 +157,6 @@
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import ComboButton from 'admin/components/select/ComboButton.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue'
     import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
@@ -171,7 +170,6 @@
             Datepicker,
             FileUpload,
             ComboButton,
-            SubmitButton,
             InvoiceTrnRow,
             SelectCustomers,
             ShowErrors
@@ -497,7 +495,7 @@
                     this.showAlert('success', 'Invoice Created!');
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
+                }).then(() => {
                     if ('save' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_create' == this.actionType) {
@@ -529,7 +527,7 @@
                     line_items     : this.formatLineItems(),
                     attachments    : this.attachments,
                     particulars    : this.particulars,
-                    type           : 'invoice',
+                    type           : 'sales_invoice',
                     status         : parseInt(this.status),
                     estimate       : this.inv_type.id
                 };
@@ -546,24 +544,29 @@
             },
 
             resetFields() {
-                this.basic_fields.customer        = { id: null, name: null} ;
+                // why can't we use `form.reset()` ?
+
+                this.basic_fields.customer        = { id: null, name: null };
                 this.basic_fields.trn_date        = erp_acct_var.current_date;
                 this.basic_fields.due_date        = erp_acct_var.current_date;
                 this.basic_fields.billing_address = '';
+                this.particulars                  = '';
                 this.attachments                  = [];
-                this.transactionLines             = [{}];
+                this.transactionLines             = [];
                 this.discountType                 = 'discount-percent';
                 this.discount                     = 0;
                 this.taxTotalAmount               = 0;
                 this.finalTotalAmount             = 0;
                 this.isWorking                    = false;
                 this.actionType                   = null;
+
+                this.transactionLines.push({}, {}, {});
             },
 
             validateForm() {
                 this.form_errors = [];
 
-                if (!this.basic_fields.customer.hasOwnProperty('id')) {
+                if ( ! this.basic_fields.customer.hasOwnProperty('id') ) {
                     this.form_errors.push('Customer Name is required.');
                 }
 
