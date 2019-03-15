@@ -18,7 +18,6 @@
 
                 <show-errors :error_msgs="form_errors" ></show-errors>
 
-                <!-- <form action="" class="wperp-form" method="post"> -->
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
@@ -50,10 +49,8 @@
                             <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
 
-
                         <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
                     </div>
-                <!-- </form> -->
 
             </div>
         </div>
@@ -110,7 +107,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Pay Bill"></submit-button>
+                            <combo-button :options="createButtons" />
                         </td>
                     </tr>
                     </tfoot>
@@ -123,15 +120,15 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
-    import FileUpload from 'admin/components/base/FileUpload.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import SelectPeople from 'admin/components/people/SelectPeople.vue'
+    import HTTP           from 'admin/http'
+    import Datepicker     from 'admin/components/base/Datepicker.vue'
+    import FileUpload     from 'admin/components/base/FileUpload.vue'
+    import SelectPeople   from 'admin/components/people/SelectPeople.vue'
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import CheckFields from 'admin/components/check/CheckFields.vue'
-    import ShowErrors from 'admin/components/base/ShowErrors.vue'
+    import MultiSelect    from 'admin/components/select/MultiSelect.vue'
+    import CheckFields    from 'admin/components/check/CheckFields.vue'
+    import ShowErrors     from 'admin/components/base/ShowErrors.vue'
+    import ComboButton    from 'admin/components/select/ComboButton.vue'
 
     export default {
         name: 'PayBillCreate',
@@ -139,24 +136,23 @@
         components: {
             SelectAccounts,
             SelectPeople,
-            HTTP,
             Datepicker,
             FileUpload,
-            SubmitButton,
             MultiSelect,
             CheckFields,
-            ShowErrors
+            ShowErrors,
+            ComboButton
         },
 
         data() {
             return {
                 basic_fields: {
-                    people: '',
-                    trn_ref: '',
-                    payment_date: erp_acct_var.current_date,
-                    deposit_to: '',
+                    people         : {},
+                    trn_ref        : '',
+                    payment_date   : erp_acct_var.current_date,
+                    deposit_to     : '',
                     billing_address: '',
-                    trn_by: ''
+                    trn_by         : ''
                 },
 
                 check_data: {
@@ -164,18 +160,23 @@
                     check_no: ''
                 },
 
-                form_errors: [],
+                createButtons: [
+                    {id: 'save', text: 'Pay Bill'},
+                    {id: 'new_create', text: 'Pay and New'},
+                ],
 
-                pay_bills: [],
-                attachments: [],
-                dueAmounts: [],
-                totalAmounts:[],
-                pay_methods: [],
+                form_errors     : [],
+                pay_bills       : [],
+                attachments     : [],
+                dueAmounts      : [],
+                totalAmounts    : [],
+                pay_methods     : [],
                 finalTotalAmount: 0,
-                particulars: '',
-                isWorking: false,
-                accts_by_chart: [],
-                acct_assets: erp_acct_var.acct_assets
+                particulars     : '',
+                isWorking       : false,
+                accts_by_chart  : [],
+                acct_assets     : erp_acct_var.acct_assets,
+                actionType      : null
             }
         },
 
@@ -186,18 +187,26 @@
                 this.$delete(this.pay_bills, index);
                 this.updateFinalAmount();
             });
+
+            this.$root.$on('combo-btn-select', button => {
+                this.actionType = button.id;
+            });
         },
+
+        mounted() {
+            this.basic_fields.people  = {
+                id  : parseInt(this.$route.params.vendor_id),
+                name: this.$route.params.vendor_name
+            };
+        },
+
 
         methods: {
             getPayMethods() {
                 this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get('/transactions/payment-methods').then((response) => {
-                    response.data.forEach(element => {
-                        this.pay_methods.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+
+                HTTP.get('/transactions/payment-methods').then(response => {
+                    this.pay_methods = response.data;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
 
@@ -221,11 +230,11 @@
                     response.data.forEach(element => {
                         if ( element.due !== null && element.due > 0 ) {
                             this.pay_bills.push({
-                                id: element.id,
+                                id        : element.id,
                                 voucher_no: element.voucher_no,
-                                due_date: element.due_date,
-                                amount: parseFloat(element.amount),
-                                due: parseFloat(element.due)
+                                due_date  : element.due_date,
+                                amount    : parseFloat(element.amount),
+                                due       : parseFloat(element.due)
                             });
                         }
                     });
@@ -277,35 +286,35 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.post('/pay-bills', {
-                    vendor_id: this.basic_fields.people.id,
-                    ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.payment_date,
-                    due_date: this.basic_fields.due_date,
+                    vendor_id   : this.basic_fields.people.id,
+                    ref         : this.basic_fields.trn_ref,
+                    trn_date    : this.basic_fields.payment_date,
+                    due_date    : this.basic_fields.due_date,
                     bill_details: this.pay_bills,
-                    attachments: this.attachments,
-                    type: 'pay_bill',
-                    status: 4,
-                    particulars: this.particulars,
-                    deposit_to: this.basic_fields.deposit_to.id,
-                    trn_by: this.basic_fields.trn_by.id,
-                    check_no: parseInt(this.check_data.check_no),
-                    name: this.check_data.payer_name
+                    attachments : this.attachments,
+                    type        : 'pay_bill',
+                    status      : 4,
+                    particulars : this.particulars,
+                    deposit_to  : this.basic_fields.deposit_to.id,
+                    trn_by      : this.basic_fields.trn_by.id,
+                    check_no    : parseInt(this.check_data.check_no),
+                    name        : this.check_data.payer_name
                 }).then(res => {
-
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Pay-Bill Created!' );
 
+                    if ('save' == this.actionType) {
+                        this.$router.push({name: 'Expenses'});
+                    } else if ('new_create' == this.actionType) {
+                        this.resetFields();
+                    }
                 }).catch( error => {
-
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'error', 'Something went wrong!' );
-
                 }).then(() => {
-                    this.resetData();
+                    this.resetFields();
                     this.isWorking = false;
                 });
-
-                event.target.reset();
             },
 
             changeAccounts() {
@@ -350,8 +359,29 @@
                 this.getDueBills();
             },
 
-            resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
+            resetFields() {
+                this.basic_fields = {
+                    people         : {id: null, name: null},
+                    trn_ref        : '',
+                    payment_date   : erp_acct_var.current_date,
+                    deposit_to     : '',
+                    billing_address: '',
+                    trn_by         : ''
+                };
+
+                this.check_data = {
+                    payer_name: '',
+                    check_no: ''
+                };
+
+                this.form_errors      = [];
+                this.attachments      = [];
+                this.dueAmounts       = [],
+                this.totalAmounts     = [],
+                this.finalTotalAmount = 0;
+                this.particulars      = '';
+                this.isWorking        = false;
+                this.actionType       = null;
             },
 
             removeRow(index) {

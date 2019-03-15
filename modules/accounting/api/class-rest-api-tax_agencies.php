@@ -303,7 +303,7 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'   => (int) $item->id,
-            'name' => $item->name,
+            'name' => ! empty( $item->name ) ? $item->name : $item->agency_name,
         ];
 
         $data = array_merge( $data, $additional_fields );

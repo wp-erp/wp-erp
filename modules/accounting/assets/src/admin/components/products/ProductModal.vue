@@ -3,6 +3,12 @@
         <div id="wperp-invoice-modal" class="wperp-modal wperp-modal-open wperp-custom-scroll" role="dialog">
             <div class="wperp-modal-dialog">
                 <div class="wperp-modal-content">
+                    <div class="wperp-modal-header">
+                        <h3 v-if="!product">Add {{ title }}</h3>
+                        <h3 v-else>Update {{ title }}</h3>
+                        <span class="modal-close">
+                                <i class="flaticon-close" @click.prevent="$parent.$emit('close')"></i></span>
+                    </div>
                     <div class="wperp-modal-body">
                         <ul class="errors" v-if="error_msg.length">
                             <li v-for="(error, index) in error_msg" :key="index">* {{ error }}</li>
@@ -11,9 +17,15 @@
                         <!-- add new product form -->
                         <form action="" method="post" @submit.prevent="saveProduct" class="add-product-form wperp-form-horizontal">
                             <!-- product name field -->
-                            <div class="wperp-form-group">
-                                <input type="text" class="wperp-form-field" placeholder="Enter Product Name Here"
-                                       v-model="ProductFields.name">
+
+                            <div class="wperp-row">
+                                <div class="wperp-col-sm-3 wperp-col-xs-12">
+                                    <label>Product Name <span class="required-sign">*</span></label>
+                                </div>
+                                <div class="wperp-col-sm-9 wperp-col-xs-12">
+                                    <input type="text" class="wperp-form-field" placeholder="Enter Product Name Here"
+                                        v-model="ProductFields.name">
+                                </div>
                             </div>
 
                             <!-- product/service details panel -->
@@ -25,7 +37,7 @@
                                 <div class="wperp-panel-body">
                                     <div class="wperp-row">
                                         <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                            <label>Product Type</label>
+                                            <label>Product Type <span class="required-sign">*</span></label>
                                         </div>
                                         <div class="wperp-col-sm-9 wperp-col-xs-12">
                                             <div class="with-multiselect">
@@ -72,7 +84,7 @@
                                     </div>
                                     <div class="wperp-row">
                                         <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                            <label for="sale-price">Sale Price</label>
+                                            <label for="sale-price">Sale Price <span class="required-sign">*</span></label>
                                         </div>
                                         <div class="wperp-col-sm-9 wperp-col-xs-12">
                                             <input type="text" name="sale-price" id="sale-price" value="0"
@@ -91,7 +103,7 @@
                                 <div class="wperp-panel-body">
                                     <div class="wperp-row">
                                         <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                            <label>Vendor</label>
+                                            <label>Vendor <span class="required-sign">*</span></label>
                                         </div>
                                         <div class="wperp-col-sm-9 wperp-col-xs-12">
                                             <div class="with-multiselect">
@@ -155,34 +167,36 @@
             return {
                 error_msg: [],
                 ProductFields: {
-                    id: null,
-                    name: '',
-                    type: 0,
+                    id        : null,
+                    name      : '',
+                    type      : 0,
                     categories: 0,
-                    costPrice: 0,
-                    salePrice: 0,
-                    vendor: 0,
+                    costPrice : 0,
+                    salePrice : 0,
+                    vendor    : 0,
                     tax_cat_id: 0
                 },
-                vendors: [],
-                categories: [],
-                tax_cats: [],
+                vendors    : [],
+                categories : [],
+                tax_cats   : [],
                 productType: [],
+                title      : 'Product'
             }
         },
 
         created() {
             if (this.product) {
-                let product = this.product;
-                this.ProductFields.name = product.name;
-                this.ProductFields.id = product.id;
-                this.ProductFields.type = {id: product.product_type_id, name: product.type_name};
-                this.ProductFields.categories = {id: product.category_id, name: product.cat_name};
-                this.ProductFields.tax_cat_id = {id: product.category_id, name: product.cat_name};
-                this.ProductFields.vendor = {id: product.vendor, name: product.vendor_name};
-                this.ProductFields.salePrice = product.sale_price;
-                this.ProductFields.costPrice = product.cost_price;
+                let product                       = this.product;
+                    this.ProductFields.name       = product.name;
+                    this.ProductFields.id         = product.id;
+                    this.ProductFields.type       = {id: product.product_type_id, name: product.type_name};
+                    this.ProductFields.categories = {id: product.category_id, name: product.cat_name};
+                    this.ProductFields.tax_cat_id = {id: product.tax_cat_id, name: product.tax_cat_name};
+                    this.ProductFields.vendor     = {id: product.vendor, name: product.vendor_name};
+                    this.ProductFields.salePrice  = product.sale_price;
+                    this.ProductFields.costPrice  = product.cost_price;
             }
+
             this.loaded();
         },
 
@@ -201,20 +215,20 @@
                     var url = 'products/' + this.ProductFields.id;
                 }
                 var data = {
-                    name: this.ProductFields.name,
+                    name           : this.ProductFields.name,
                     product_type_id: this.ProductFields.type,
-                    category_id: this.ProductFields.categories,
-                    tax_cat_id: this.ProductFields.tax_cat_id,
-                    vendor: this.ProductFields.vendor,
-                    cost_price: this.ProductFields.costPrice,
-                    sale_price: this.ProductFields.salePrice,
+                    category_id    : this.ProductFields.categories,
+                    tax_cat_id     : this.ProductFields.tax_cat_id,
+                    vendor         : this.ProductFields.vendor,
+                    cost_price     : this.ProductFields.costPrice,
+                    sale_price     : this.ProductFields.salePrice,
                 };
                 HTTP[type](url, data).then(response => {
                     this.$parent.$emit('close');
                     this.$parent.getProducts();
                     this.resetForm();
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert('success', 'Product Created!');
+                    this.showAlert('success', 'put' === type ? 'Product Updated!' : 'Product Created!');
                 });
             },
 
@@ -252,17 +266,19 @@
             getProductTypes() {
                 HTTP.get('products/types').then(response => {
                     this.productType = response.data;
+
+                    this.ProductFields.type = { id: parseInt( response.data[0].id ), name: response.data[0].name };
                 })
             },
 
             resetForm() {
-                this.ProductFields.id = null;
-                this.ProductFields.name = '';
-                this.ProductFields.type = [];
+                this.ProductFields.id         = null;
+                this.ProductFields.name       = '';
+                this.ProductFields.type       = [];
                 this.ProductFields.categories = [];
-                this.ProductFields.vendor = [];
-                this.ProductFields.costPrice = '';
-                this.ProductFields.salePrice = '';
+                this.ProductFields.vendor     = [];
+                this.ProductFields.costPrice  = '';
+                this.ProductFields.salePrice  = '';
             },
 
             checkForm() {

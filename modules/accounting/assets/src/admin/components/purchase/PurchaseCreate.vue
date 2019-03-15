@@ -18,7 +18,6 @@
 
                     <show-errors :error_msgs="form_errors" ></show-errors>
 
-                    <!-- <form action="#" class="wperp-form" method="post"> -->
                         <div class="wperp-row">
                             <div class="wperp-col-sm-4">
                                 <select-vendors v-model="basic_fields.vendor"></select-vendors>
@@ -40,7 +39,6 @@
                                 <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                             </div>
                         </div>
-                    <!-- </form> -->
 
                 </div>
             </div>
@@ -75,7 +73,7 @@
                             <td colspan="3" class="text-right">
                                 <span>Total Amount = </span>
                             </td>
-                            <td><input type="text" v-model="finalTotalAmount" readonly></td>
+                            <td><input type="text" v-model="finalTotalAmount" class="text-right" readonly></td>
                             <td></td>
                         </tr>
 
@@ -136,7 +134,6 @@
         name: 'PurchaseCreate',
 
         components: {
-            HTTP,
             Datepicker,
             FileUpload,
             ComboButton,
@@ -148,9 +145,9 @@
         data() {
             return {
                 basic_fields: {
-                    vendor: '',
-                    trn_date: '',
-                    due_date: '',
+                    vendor         : '',
+                    trn_date       : '',
+                    due_date       : '',
                     billing_address: ''
                 },
 
@@ -178,6 +175,7 @@
                 isWorking       : false,
                 purchase_title  : '',
                 purchase_order  : 0,
+                actionType      : null,
             }
         },
 
@@ -208,6 +206,10 @@
 
             this.$root.$on('total-updated', amount => {
                 this.updateFinalAmount();
+            });
+
+            this.$root.$on('combo-btn-select', button => {
+                this.actionType = button.id;
             });
         },
 
@@ -251,8 +253,19 @@
             },
 
             resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
-                this.getProducts();
+                this.basic_fields = {
+                    vendor         : {id: null, name: null},
+                    trn_date       : erp_acct_var.current_date,
+                    due_date       : erp_acct_var.current_date,
+                    billing_address: ''
+                };
+
+                this.form_errors      = [];
+                this.particulars      = '';
+                this.attachments      = [];
+                this.transactionLines = [];
+                this.finalTotalAmount = 0;
+                this.isWorking        = false;
             },
 
             getProducts() {
@@ -263,8 +276,8 @@
                 HTTP.get('/products').then((response) => {
                     response.data.forEach(element => {
                         this.products.push({
-                            id: element.id,
-                            name: element.name,
+                            id       : element.id,
+                            name     : element.name,
                             unitPrice: element.cost_price
                         });
                     });
@@ -313,11 +326,11 @@
 
                 this.transactionLines.forEach(line => {
                     lineItems.push({
-                        product_id: line.selectedProduct.id,
+                        product_id  : line.selectedProduct.id,
                         product_type: 'service',
-                        qty: line.qty,
-                        unit_price: line.unitPrice,
-                        item_total: line.amount,
+                        qty         : line.qty,
+                        unit_price  : line.unitPrice,
+                        item_total  : line.amount,
                     });
                 });
 
@@ -415,7 +428,3 @@
 
     }
 </script>
-
-<style>
-
-</style>

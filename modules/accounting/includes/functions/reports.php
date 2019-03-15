@@ -589,18 +589,18 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['rows3'] = $wpdb->get_results($sql3, ARRAY_A);
 
     array_unshift( $results['rows1'], [
-        'name' => 'Assets',
-        'balance' => ''
+        'name' => '<strong class="wperp-bs-header">Assets</strong>',
+        'balance' => '-'
     ] );
 
     array_unshift( $results['rows2'], [
-        'name' => 'Liability',
-        'balance' => ''
+        'name' => '<strong class="wperp-bs-header">Liability</strong>',
+        'balance' => '-'
     ] );
 
     array_unshift( $results['rows3'], [
-        'name' => 'Equity',
-        'balance' => ''
+        'name' => '<strong class="wperp-bs-header">Equity</strong>',
+        'balance' => '-'
     ] );
 
     $results['rows1'][] = [
@@ -662,6 +662,10 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['total_right'] = 0;
 
     foreach ($results['rows1'] as $result) {
+        if ( !is_numeric( $result['balance'] ) ) {
+            continue;
+        }
+
         if ( ! empty($result['balance']) ) {
             $results['total_left'] += $result['balance'];
         }
@@ -671,7 +675,11 @@ function erp_acct_get_balance_sheet( $args ) {
         if ( isset( $results['slug'] ) && $results['slug'] !== 'loss' ) {
             $result['balance'] = abs( $result['balance'] );
         }
+
         if ( ! empty($result['balance']) ) {
+            if ( !is_numeric( $result['balance'] ) ) {
+                continue;
+            }
             $results['total_right'] += $result['balance'];
         }
     }

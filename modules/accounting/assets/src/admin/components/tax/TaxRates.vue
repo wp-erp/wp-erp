@@ -23,7 +23,7 @@
 
         <div class="table-container">
             <list-table
-                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark"
+                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark table-taxrates"
                 action-column="actions"
                 :columns="columns"
                 :rows="row_data"
@@ -251,5 +251,9 @@
     }
 </script>
 <style lang="less">
-
+.table-taxrates {
+    .col--actions {
+        text-align: left !important;
+    }
+}
 </style>

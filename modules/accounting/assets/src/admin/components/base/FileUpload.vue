@@ -6,8 +6,8 @@
                 :disabled="isSaving"
                 @change="filesChange($event)" class="display-none">
             <label for="attachment">Select files</label> from your computer
-            <span v-if="isSaving" class="upload-count"> (uploading {{ fileCount }} files...)</span>
-            <span v-if="isUploaded" class="upload-count"> (uploaded {{ fileCount }} files...)</span>
+            <span v-if="isSaving" class="upload-count"> (uploading {{ fileCount }} file(s) ...)</span>
+            <span v-if="isUploaded" class="upload-count"> (uploaded {{ fileCount }} file(s) ...)</span>
         </div>
     </form>
 </template>
@@ -48,6 +48,11 @@
         watch: {
             value(newVal) {
                 this.uploadedFiles = this.value;
+
+                if ( ! newVal.length ) {
+                    this.fileCount  = 0;
+                    this.isUploaded = false;
+                }
             }
         },
 
@@ -120,9 +125,15 @@
     }
 </script>
 
-<style>
+<style lang="less" scoped>
     .upload-count {
         color: #f44336;
+    }
+
+    .attachment-container {
+        .attachment-placeholder {
+            max-width: 396px;
+        }
     }
 </style>
 
