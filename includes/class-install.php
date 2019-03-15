@@ -1493,6 +1493,14 @@ Company'
 
             $wpdb->query( $sql );
         }
+
+        // insert currency info
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_currency_info` LIMIT 0, 1" ) ) {
+            $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_currency_info` (`id`, `name`, `sign`)
+                    VALUES (1, 'USD', '$'), (2, 'EUR', '€')";
+
+            $wpdb->query( $sql );
+        }
     }
 
     /**
