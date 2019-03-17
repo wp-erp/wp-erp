@@ -12,7 +12,7 @@
 
         <ul class="wperp-options" v-if="showMenu">
             <li :key="index" v-for="(option, index) in options.slice(1)">
-                <button class="btn-fake" @click="optionSelected(option)">{{ option.text }}</button>
+                <button class="btn-fake" @click.native="optionSelected(option)">{{ option.text }}</button>
             </li>
         </ul>
     </div>
