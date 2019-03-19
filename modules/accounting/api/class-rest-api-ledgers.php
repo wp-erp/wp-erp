@@ -359,7 +359,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = erp_acct_get_banks( true, false, false );
 
         if ( empty( $items ) ) {
-            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
         }
 
         foreach ( $items as $item ) {
@@ -386,7 +386,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = erp_acct_get_banks( true, true, true );
 
         if ( empty( $items ) ) {
-            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 400 ] );
+            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
         }
 
         foreach ( $items as $item ) {

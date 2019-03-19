@@ -82,7 +82,7 @@
 
         computed: {
             totalAmount() {
-                if ( typeof this.accounts === "object" && null === this.accounts ) {
+                if ( ( typeof this.accounts === "object" && null === this.accounts ) || !this.accounts.length ) {
                     return;
                 }
                 let total = this.accounts.reduce((amount, item) => {

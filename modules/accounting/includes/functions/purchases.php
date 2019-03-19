@@ -183,6 +183,11 @@ function erp_acct_insert_purchase( $data ) {
             ) );
         }
 
+        if ( 1 == $purchase_data['purchase_order'] ) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_purchase( $voucher_no );
+        }
+
         $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
             'purchase_no' => $purchase_no,
             'trn_no'      => $voucher_no,
@@ -268,17 +273,30 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_details', array(
                 'product_id' => $item['product_id'],
                 'qty'        => $item['qty'],
-                'unit_price' => $item['unit_price'],
-                'amount'     => $item['amount'],
+                'price'      => $item['unit_price'],
+                'amount'     => $item['item_total'],
+                'created_at' => $purchase_data['created_at'],
+                'created_by' => $purchase_data['created_by'],
                 'updated_at' => $purchase_data['updated_at'],
                 'updated_by' => $purchase_data['updated_by']
+            ), array(
+                'trn_no'     => $purchase_id
             ) );
         }
 
+        if ( 1 == $purchase_data['purchase_order'] ) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_purchase( $purchase_id );
+        }
+
         $wpdb->update( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
+            'purchase_no' => $purchase_id,
             'trn_date'    => $purchase_data['trn_date'],
             'particulars' => $purchase_data['particulars'],
+            'debit'       => 0,
             'credit'      => $purchase_data['amount'],
+            'created_at'  => $purchase_data['created_at'],
+            'created_by'  => $purchase_data['created_by'],
             'updated_at'  => $purchase_data['updated_at'],
             'updated_by'  => $purchase_data['updated_by']
         ), array(
