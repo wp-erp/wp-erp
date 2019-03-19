@@ -163,6 +163,7 @@
                 createButtons: [
                     {id: 'save', text: 'Pay Bill'},
                     {id: 'new_create', text: 'Pay and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 form_errors     : [],
@@ -190,6 +191,7 @@
 
             this.$root.$on('combo-btn-select', button => {
                 this.actionType = button.id;
+                this.SubmitForPayment();
             });
         },
 
@@ -226,6 +228,10 @@
                     idx = 0,
                     finalAmount = 0;
 
+                if( isNaN(peopleId) ) {
+                    return;
+                }
+
                 HTTP.get(`/bills/due/${peopleId}`).then((response) => {
                     response.data.forEach(element => {
                         if ( element.due !== null && element.due > 0 ) {
@@ -251,6 +257,10 @@
             getPeopleAddress() {
                 let people_id = this.basic_fields.people.id;
 
+                if( isNaN(people_id) ) {
+                    return;
+                }
+
                 HTTP.get(`/people/${people_id}`).then((response) => {
                     // add more info
                     this.basic_fields.billing_address =
@@ -262,14 +272,14 @@
             updateFinalAmount() {
                 let finalAmount = 0;
 
-                this.totalAmounts.forEach(element => {
-                    finalAmount += parseFloat(element);
+                this.pay_bills.forEach(element => {
+                    finalAmount += parseFloat(element.amount);
                 });
 
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
             },
 
-            SubmitForPayment(event) {
+            SubmitForPayment() {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -285,6 +295,13 @@
                 });
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
+                let trn_status = null;
+                if ( 'draft' === this.actionType) {
+                    trn_status = 1;
+                } else {
+                    trn_status = 4;
+                }
+
                 HTTP.post('/pay-bills', {
                     vendor_id   : this.basic_fields.people.id,
                     ref         : this.basic_fields.trn_ref,
@@ -293,7 +310,7 @@
                     bill_details: this.pay_bills,
                     attachments : this.attachments,
                     type        : 'pay_bill',
-                    status      : 4,
+                    status      : trn_status,
                     particulars : this.particulars,
                     deposit_to  : this.basic_fields.deposit_to.id,
                     trn_by      : this.basic_fields.trn_by.id,
@@ -303,7 +320,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Pay-Bill Created!' );
 
-                    if ('save' == this.actionType) {
+                    if ('save' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Expenses'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
@@ -385,7 +402,8 @@
             },
 
             removeRow(index) {
-                this.$delete(this.transactionLines, index);
+                this.$delete(this.pay_bills, index);
+                this.$delete( this.totalAmounts, index );
                 this.updateFinalAmount();
             },
         },
