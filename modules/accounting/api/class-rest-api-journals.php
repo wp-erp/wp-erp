@@ -245,7 +245,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
             'id'          => $item->id,
             'particulars' => $item->particulars,
             'trn_date'    => $item->trn_date,
-            'line_items'  => $item->line_items,
+            'line_items'  => !empty( $item->line_items ) ? $item->line_items : [],
             'attachments' => maybe_unserialize( $item->attachments ),
             'total'       => (float) $item->voucher_amount,
         ];

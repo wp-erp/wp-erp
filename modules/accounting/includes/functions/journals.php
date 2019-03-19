@@ -47,7 +47,8 @@ function erp_acct_get_all_journals( $args = [] ) {
     $sql .= " ON journal.voucher_no = journal_detail.trn_no {$where} GROUP BY journal.voucher_no ORDER BY journal.{$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var($sql);
+        $wpdb->get_results($sql);
+        return $wpdb->num_rows;
     }
 
     return $wpdb->get_results( $sql, ARRAY_A );
