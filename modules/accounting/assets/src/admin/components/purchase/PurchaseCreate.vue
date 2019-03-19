@@ -153,14 +153,16 @@
 
                 createButtons: [
                     {id: 'save', text: 'Create Purchase'},
-                    {id: 'send_create', text: 'Create and Send'},
+                    //{id: 'send_create', text: 'Create and Send'},
                     {id: 'new_create', text: 'Create and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 updateButtons: [
                     {id: 'update', text: 'Update Purchase'},
-                    {id: 'send_update', text: 'Update and Send'},
+                    //{id: 'send_update', text: 'Update and Send'},
                     {id: 'new_update', text: 'Update and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 form_errors     : [],
@@ -346,7 +348,7 @@
                     this.isWorking = false;
                     this.reset = true;
 
-                    if ('update' == this.actionType) {
+                    if ('update' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Purchases'});
                     } else if ('new_update' == this.actionType) {
                         this.resetFields();
@@ -363,7 +365,7 @@
                     this.isWorking = false;
                     this.reset = true;
 
-                    if ('save' == this.actionType) {
+                    if ('save' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Purchases'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
@@ -371,7 +373,7 @@
                 });
             },
 
-            SubmitForApproval(event) {
+            SubmitForApproval() {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -385,6 +387,13 @@
                 this.isWorking = true;
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
+                let trn_status = null;
+                if ( 'draft' === this.actionType) {
+                    trn_status = 1;
+                } else {
+                    trn_status = 3;
+                }
+
                 let requestData = {
                     vendor_id      : this.basic_fields.vendor.id,
                     vendor_name    : this.basic_fields.vendor.name,
@@ -395,7 +404,7 @@
                     particulars    : this.particulars,
                     attachments    : this.attachments,
                     type           : 'purchase',
-                    status         : 3,
+                    status         : trn_status,
                     purchase_order : this.purchase_order,
                 };
 
@@ -404,8 +413,6 @@
                 } else {
                     this.createPurchase(requestData);
                 }
-
-                event.target.reset();
             },
 
             validateForm() {
