@@ -148,6 +148,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
@@ -216,8 +218,7 @@
                 particulars     : '',
                 isWorking       : false,
                 accts_by_chart  : [],
-                erp_acct_assets : erp_acct_var.acct_assets,
-                actionType      : null
+                erp_acct_assets : erp_acct_var.acct_assets
             }
         },
 
@@ -233,6 +234,10 @@
             'basic_fields.trn_by'() {
                 this.changeAccounts();
             }
+        },
+
+        computed: {
+            ...mapState({ actionType: state => state.combo.btnID })
         },
 
         created() {
@@ -277,6 +282,9 @@
                     this.pay_methods = request2.data;
                     this.setDataForEdit( request3.data );
 
+                    // initialize combo button id with `update`
+                    this.$store.dispatch('combo/setBtnID', 'update');
+
                 } else {
                     /**
                      * ----------------------------------------------
@@ -289,6 +297,9 @@
                     this.basic_fields.trn_date = erp_acct_var.current_date;
                     this.basic_fields.due_date = erp_acct_var.current_date;
                     this.transactionLines.push({}, {}, {});
+
+                    // initialize combo button id with `save`
+                    this.$store.dispatch('combo/setBtnID', 'save');
                 }
             },
 
@@ -494,6 +505,8 @@
                 this.isWorking        = false;
 
                 this.transactionLines.push({}, {}, {});
+
+                this.$store.dispatch('combo/setBtnID', 'save');
             },
 
             validateForm() {

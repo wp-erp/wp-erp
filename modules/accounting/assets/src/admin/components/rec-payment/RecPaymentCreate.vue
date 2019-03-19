@@ -136,6 +136,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
@@ -195,7 +197,6 @@
                 isWorking       : false,
                 accts_by_chart  : [],
                 erp_acct_assets : erp_acct_var.acct_assets,
-                actionType      : null,
                 reset           : false
             }
         },
@@ -216,12 +217,15 @@
 
         },
 
+        computed: {
+            ...mapState({ actionType: state => state.combo.btnID })
+        },
+
         created() {
             this.prepareDataLoad();
 
-            this.$root.$on('combo-btn-select', button => {
-                this.actionType = button.id;
-            });
+            // initialize combo button id with `save`
+            this.$store.dispatch('combo/setBtnID', 'save');
         },
 
         mounted() {
@@ -470,7 +474,8 @@
                 this.particulars      = '';
                 this.isWorking        = false,
                 this.reset            = false;
-                this.actionType       = null;
+
+                this.$store.dispatch('combo/setBtnID', 'save');
             },
 
             removeRow(index) {

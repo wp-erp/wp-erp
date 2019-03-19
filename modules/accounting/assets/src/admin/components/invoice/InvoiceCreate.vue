@@ -265,9 +265,6 @@
             this.$root.$on('total-updated', amount => {
                 this.updateFinalAmount();
             });
-
-            // initialize combo button id with `save`
-            this.$store.dispatch('combo/setBtnID', 'save');
         },
 
         methods: {
@@ -308,6 +305,9 @@
                     this.taxRates   = this.getUniqueTaxRates(request2.data);
                     this.setDataForEdit( request3.data );
 
+                    // initialize combo button id with `update`
+                    this.$store.dispatch('combo/setBtnID', 'update');
+
                 } else {
                     /**
                      * ----------------------------------------------
@@ -320,6 +320,9 @@
                     this.basic_fields.trn_date = erp_acct_var.current_date;
                     this.basic_fields.due_date = erp_acct_var.current_date;
                     this.transactionLines.push({}, {}, {});
+
+                    // initialize combo button id with `save`
+                    this.$store.dispatch('combo/setBtnID', 'save');
                 }
             },
 
