@@ -60,7 +60,7 @@
             options: state => state.sales.customers
         }),
 
-        created() {            
+        created() {
             this.$store.dispatch('sales/fetchCustomers');
 
             this.$root.$on( 'options-query', query => {
@@ -86,7 +86,7 @@
                         type: 'customer',
                         search: query
                     }
-                }).then(response => {                    
+                }).then(response => {
                     this.$store.dispatch('sales/fillCustomers', response.data);
                 });
             },
