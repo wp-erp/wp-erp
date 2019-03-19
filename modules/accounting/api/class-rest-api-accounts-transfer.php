@@ -326,15 +326,14 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'balance'   => $item['balance'],
             ));
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data = $this->prepare_dashboard_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $response = $this->prepare_item_for_response( $items, $request, $additional_fields );
-        $response = rest_ensure_response( $response );
+        $response = rest_ensure_response( $formatted_items );
         $response->set_status( 201 );
 
         return $response;
@@ -360,7 +359,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Prepare a single user output for response
+     * Prepare a single account output for response
      *
      * @param object $item
      * @param WP_REST_Request $request Request object.
@@ -390,6 +389,33 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $data = array_merge( $data, $additional_fields );
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        return $response;
+    }
+
+    /**
+     * Prepare a single dashboard output for response
+     *
+     * @param object $item
+     * @param WP_REST_Request $request Request object.
+     * @param array $additional_fields (optional)
+     *
+     * @return WP_REST_Response $response Response data.
+     */
+    public function prepare_dashboard_item_for_response( $item, $request, $additional_fields = [] ) {
+
+        if ( isset( $request['include'] ) ) {
+            $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+            if ( in_array( 'created_by', $include_params ) ) {
+                $data['created_by'] = $this->get_user( intval( $item->created_by ) );
+            }
+        }
+
+        $data = array_merge( $item, $additional_fields );
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );

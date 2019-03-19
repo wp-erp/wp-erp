@@ -65,23 +65,33 @@
         },
 
         methods: {
-            fetchAccounts(){
-                HTTP.get('/accounts/cash-at-bank').then( (response) => {
-                    this.accounts = response.data;
-                });
-
-                if ( !this.accounts.length ) {
-                    HTTP.get('/accounts/bank-accounts').then( (response) => {
+            fetchAccounts() {
+                if ( !this.isEditSettingsEnabled ) {
+                    HTTP.get('/accounts/cash-at-bank').then( (response) => {
                         this.accounts = response.data;
+                    });
+
+                    if ( !this.accounts.length ) {
+                        this.edit_accounts = [];
+                        HTTP.get('/accounts/bank-accounts').then( (response) => {
+                            this.accounts = response.data;
+                            this.edit_accounts = response.data;
+                        });
+                    }
+                } else {
+                    HTTP.get('/accounts/bank-accounts').then( (response) => {
                         this.edit_accounts = response.data;
                     });
                 }
+
             },
 
             saveDashboardBanks() {
                 HTTP.post('/accounts/cash-at-bank', {
                     accounts: this.edit_accounts
                 }).then(() => {
+                    this.fetchAccounts();
+                    this.isEditSettingsEnabled = false;
                 });
             },
 
@@ -94,7 +104,7 @@
             }
         },
 
-        created(){
+        created() {
             this.fetchAccounts();
         },
 
