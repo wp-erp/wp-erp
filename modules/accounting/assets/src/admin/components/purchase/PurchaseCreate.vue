@@ -176,8 +176,7 @@
                 erp_acct_assets : erp_acct_var.acct_assets,
                 isWorking       : false,
                 purchase_title  : '',
-                purchase_order  : 0,
-                actionType      : null,
+                purchase_order  : 0
             }
         },
 
@@ -185,6 +184,10 @@
             'basic_fields.vendor'() {
                 this.getvendorAddress();
             }
+        },
+
+        computed: {
+            ...mapState({ actionType: state => state.combo.btnID })
         },
 
         created() {
@@ -210,9 +213,8 @@
                 this.updateFinalAmount();
             });
 
-            this.$root.$on('combo-btn-select', button => {
-                this.actionType = button.id;
-            });
+            // initialize combo button id with `update`
+            this.$store.dispatch('combo/setBtnID', 'update');
         },
 
         methods: {
@@ -229,6 +231,9 @@
 
                     let response = await HTTP.get(`/purchases/${this.$route.params.id}`);
                     this.setDataForEdit( response.data );
+
+                    // initialize combo button id with `update`
+                    this.$store.dispatch('combo/setBtnID', 'update');
                 } else {
                     /**
                      * ----------------------------------------------
@@ -240,6 +245,9 @@
                     this.basic_fields.trn_date = erp_acct_var.current_date;
                     this.basic_fields.due_date = erp_acct_var.current_date;
                     this.transactionLines.push({}, {}, {});
+
+                    // initialize combo button id with `save`
+                    this.$store.dispatch('combo/setBtnID', 'save');
                 }
             },
 
@@ -268,6 +276,8 @@
                 this.transactionLines = [];
                 this.finalTotalAmount = 0;
                 this.isWorking        = false;
+
+                this.$store.dispatch('combo/setBtnID', 'save');
             },
 
             getProducts() {

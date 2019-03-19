@@ -176,9 +176,12 @@
                 particulars     : '',
                 isWorking       : false,
                 accts_by_chart  : [],
-                acct_assets     : erp_acct_var.acct_assets,
-                actionType      : null
+                acct_assets     : erp_acct_var.acct_assets
             }
+        },
+
+        computed: {
+            ...mapState({ actionType: state => state.combo.btnID })
         },
 
         created() {
@@ -189,10 +192,8 @@
                 this.updateFinalAmount();
             });
 
-            this.$root.$on('combo-btn-select', button => {
-                this.actionType = button.id;
-                this.SubmitForPayment();
-            });
+            // initialize combo button id with `save`
+            this.$store.dispatch('combo/setBtnID', 'save');
         },
 
         mounted() {
@@ -398,7 +399,9 @@
                 this.finalTotalAmount = 0;
                 this.particulars      = '';
                 this.isWorking        = false;
-                this.actionType       = null;
+
+                // initialize combo button id with `save`
+                this.$store.dispatch('combo/setBtnID', 'save');
             },
 
             removeRow(index) {
@@ -424,7 +427,3 @@
 
     }
 </script>
-
-<style lang="less">
-
-</style>
