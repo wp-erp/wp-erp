@@ -10,7 +10,7 @@
 			</div>
         </div>
 
-        <ul class="wperp-options" v-if="showMenu">
+        <ul class="wperp-options" v-show="showMenu">
             <li :key="index" @click="optionSelected(option)" v-for="(option, index) in options.slice(1)">
                 <button type="submit" class="btn-fake">{{ option.text }}</button>
             </li>

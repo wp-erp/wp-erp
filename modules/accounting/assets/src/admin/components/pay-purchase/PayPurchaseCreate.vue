@@ -122,6 +122,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
@@ -185,17 +187,19 @@
                 particulars     : '',
                 isWorking       : false,
                 accts_by_chart  : [],
-                actionType      : null,
                 acct_assets     : erp_acct_var.acct_assets
             }
+        },
+
+        computed: {
+            ...mapState({ actionType: state => state.combo.btnID }),
         },
 
         created() {
             this.getPayMethods();
 
-            this.$root.$on('combo-btn-select', button => {
-                this.actionType = button.id;
-            });
+            // initialize combo button id with `save`
+            this.$store.dispatch('combo/setBtnID', 'save');
         },
 
         mounted() {
@@ -209,7 +213,7 @@
             getPayMethods() {
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
-                HTTP.get('/transactions/payment-methods').then((response) => {
+                HTTP.get('/transactions/payment-methods').then(response => {
                     this.pay_methods = response.data;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
@@ -321,18 +325,18 @@
                 }
 
                 HTTP.post('/pay-purchases', {
-                    vendor_id: this.basic_fields.vendor.id,
-                    ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.payment_date,
+                    vendor_id       : this.basic_fields.vendor.id,
+                    ref             : this.basic_fields.trn_ref,
+                    trn_date        : this.basic_fields.payment_date,
                     purchase_details: this.pay_purchases,
-                    attachments: this.attachments,
-                    type: 'pay_purchase',
-                    status: trn_status,
-                    particulars: this.particulars,
-                    deposit_to: this.basic_fields.deposit_to.id,
-                    trn_by: this.basic_fields.trn_by.id,
-                    check_no: parseInt(this.check_data.check_no),
-                    name: this.check_data.payer_name
+                    attachments     : this.attachments,
+                    type            : 'pay_purchase',
+                    status          : trn_status,
+                    particulars     : this.particulars,
+                    deposit_to      : this.basic_fields.deposit_to.id,
+                    trn_by          : this.basic_fields.trn_by.id,
+                    check_no        : parseInt(this.check_data.check_no),
+                    name            : this.check_data.payer_name
                 }).then(res => {
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
@@ -422,7 +426,9 @@
                 this.finalTotalAmount = 0;
                 this.particulars      = '';
                 this.isWorking        = false;
-                this.actionType       = null;
+
+                // initialize combo button id with `save`
+                this.$store.dispatch('combo/setBtnID', 'save');
             },
 
             remove_item( index ) {

@@ -311,7 +311,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $wpdb->query('TRUNCATE TABLE ' . $wpdb->prefix . 'erp_acct_cash_at_banks');
 
-        $items = $request['accounts'];
+        $items = $request['accounts']; $formatted_items = [];
 
         if ( empty( $items ) ) {
             return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
