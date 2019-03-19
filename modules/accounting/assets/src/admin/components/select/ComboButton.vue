@@ -2,7 +2,7 @@
     <div class="wperp-select-container select-primary combo-btns" v-click-outside="outside">
         <div class="wperp-selected-option">
       		<div class="left-part" @click="optionSelected(options[0])">
-				<button class="btn-fake">{{ options[0].text }}</button>
+				<button type="submit" class="btn-fake">{{ options[0].text }}</button>
 			</div>
 
       		<div class="right-part" @click="toggleButtons">
@@ -11,8 +11,8 @@
         </div>
 
         <ul class="wperp-options" v-if="showMenu">
-            <li :key="index" v-for="(option, index) in options.slice(1)">
-                <button class="btn-fake" @click="optionSelected(option)">{{ option.text }}</button>
+            <li :key="index" @click="optionSelected(option)" v-for="(option, index) in options.slice(1)">
+                <button type="submit" class="btn-fake">{{ option.text }}</button>
             </li>
         </ul>
     </div>
@@ -27,6 +27,7 @@
 				showMenu: false
             }
         },
+
         props: {
             options: {
 				type: Array,
@@ -42,7 +43,8 @@
 
             optionSelected(option) {
                 this.showMenu = false;
-                this.$root.$emit('combo-btn-select', option);
+
+                this.$store.dispatch('combo/setBtnID', option.id);
             },
 
             toggleButtons() {
