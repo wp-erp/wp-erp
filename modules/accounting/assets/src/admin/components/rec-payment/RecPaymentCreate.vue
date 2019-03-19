@@ -179,6 +179,7 @@
                 createButtons: [
                     {id: 'save', text: 'Receive Payment'},
                     {id: 'new_create', text: 'Receive and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 form_errors: [],
@@ -256,7 +257,7 @@
                         return;
                     }
 
-                    if ( 'awaiting_approval' != request3.data.status ) {
+                    if ( 'Pending' != request3.data.status ) {
                         this.showAlert('error', 'Can\'t edit');
                         return;
                     }
@@ -365,6 +366,13 @@
                 });
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
+                let trn_status = null;
+                if ( 'draft' === this.actionType) {
+                    trn_status = 1;
+                } else {
+                    trn_status = 4;
+                }
+
                 HTTP.post('/payments', {
                     customer_id: this.basic_fields.customer.id,
                     ref        : this.basic_fields.trn_ref,
@@ -372,7 +380,7 @@
                     line_items : this.invoices,
                     attachments: this.attachments,
                     type       : 'payment',
-                    status     : 4,
+                    status     : trn_status,
                     particulars: this.particulars,
                     deposit_to : this.basic_fields.deposit_to.id,
                     trn_by     : this.basic_fields.trn_by.id,
@@ -384,7 +392,7 @@
                     this.showAlert('success', 'Payment Created!');
                     this.reset = true;
 
-                    if ('save' == this.actionType) {
+                    if ('save' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
@@ -392,8 +400,6 @@
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 });
-
-                event.target.reset();
             },
 
             changeAccounts() {
@@ -469,6 +475,7 @@
 
             removeRow(index) {
                 this.$delete(this.invoices, index);
+                this.$delete( this.totalAmounts, index );
                 this.updateFinalAmount();
             },
         },
