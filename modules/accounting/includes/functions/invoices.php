@@ -185,6 +185,12 @@ function erp_acct_insert_invoice( $data ) {
         ) );
 
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no );
+
+        if ( 1 == $invoice_data['estimate'] ) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_invoice( $voucher_no );
+        }
+
         erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no );
         erp_acct_insert_invoice_data_into_ledger( $invoice_data );
         erp_acct_insert_invoice_data_people_details( $invoice_data );
@@ -231,24 +237,16 @@ function erp_acct_insert_invoice_details_and_tax($invoice_data, $voucher_no) {
             'created_by'  => $invoice_data['created_by']
         ) );
 
+        if ( 1 == $invoice_data['estimate'] ) {
+            return;
+        }
+
         // calculate tax for every related agency
         $tax_rate_agency = get_tax_rate_with_agency($invoice_data['tax_rate_id'], $item['tax_cat_id']);
 
         foreach ( $tax_rate_agency as $rate_agency ) {
             /*==== calculate tax amount ====*/
             $tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
-
-            /*==== Rough paper ====*/
-            // $arr = [
-            //     2 => 40,
-            //     3 => 50
-            // ];
-            // if ( array_key_exists(1, $arr) ) {
-            //     $arr[1] += 10;
-            // } else {
-            //     $arr[1] = 4;
-            // }
-            // var_dump( $arr );
 
             if ( array_key_exists( $rate_agency['agency_id'], $tax_agency_details ) ) {
                 $tax_agency_details[ $rate_agency['agency_id'] ] += $tax_amount;
@@ -360,6 +358,11 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
         $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agency_details', [ 'trn_no' => $invoice_no ] );
 
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $invoice_no );
+
+        if ( 1 == $invoice_data['estimate'] ) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_invoice( $invoice_no );
+        }
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
             'particulars' => $invoice_data['particulars'],

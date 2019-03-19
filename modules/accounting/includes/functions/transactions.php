@@ -64,7 +64,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS invoice_receipt ON invoice_receipt.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = invoice.status
         LEFT JOIN wp_erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
-        {$where} GROUP BY voucher.id ORDER BY CONCAT(invoice.trn_date, invoice_receipt.trn_date) {$args['order']} {$limit}";
+        {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         $wpdb->get_results($sql);
@@ -108,7 +108,7 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
 function erp_acct_get_sales_chart_payment( $args = [] ) {
     global $wpdb;
 
-    $where = '';
+    $where = ' WHERE invoice.estimate = 0 AND invoice.status != 1';
 
     if ( ! empty( $args['start_date'] ) ) {
         $where .= "WHERE invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
@@ -140,7 +140,7 @@ function erp_acct_get_sales_chart_payment( $args = [] ) {
 function erp_acct_get_bill_chart_data( $args = [] ) {
     global $wpdb;
 
-    $where = '';
+    $where = ' WHERE bill.status != 1';
 
     if ( ! empty( $args['start_date'] ) ) {
         $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
@@ -201,7 +201,7 @@ function erp_acct_get_bill_chart_status( $args = [] ) {
 function erp_acct_get_purchase_chart_data( $args = [] ) {
     global $wpdb;
 
-    $where = '';
+    $where = ' WHERE purchase.purchase_order = 0 AND purchase.status != 1';
 
     if ( ! empty( $args['start_date'] ) ) {
         $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
@@ -212,10 +212,10 @@ function erp_acct_get_purchase_chart_data( $args = [] ) {
     }
 
     $sql = "SELECT SUM(debit) as paid, ABS(SUM(balance)) AS payable
-        FROM ( SELECT bill.voucher_no, SUM(bill_acc_detail.debit) AS debit, SUM( bill_acc_detail.debit - bill_acc_detail.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_purchase AS bill
-        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.purchase_no {$where}
-        GROUP BY bill.voucher_no) AS get_amount";
+        FROM ( SELECT purchase.voucher_no, SUM(purchase_acc_detail.debit) AS debit, SUM( purchase_acc_detail.debit - purchase_acc_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_purchase AS purchase
+        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.purchase_no {$where}
+        GROUP BY purchase.voucher_no) AS get_amount";
 
     $result = $wpdb->get_row($sql, ARRAY_A);
 
