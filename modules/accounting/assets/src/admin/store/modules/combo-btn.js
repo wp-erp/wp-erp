@@ -1,24 +1,24 @@
 // Initial state
 const state = {
-    loader: false
+    btnID: null
 }
 
 // Getters
 const getters = {
-    getStatus: (state) => state.loader
+    getBtnID: (state) => state.btnID
 }
 
 // Actions
 const actions = {
-    setSpinner({ commit }, data) {
-        commit('setSpinner', data)
+    setBtnID({ commit }, data) {
+        commit('setBtnID', data)
     }
 }
 
 // Mutations
 const mutations = {
-    setSpinner(state, data) {
-        state.loader = data
+    setBtnID(state, data) {
+        state.btnID = data
     }
 }
 

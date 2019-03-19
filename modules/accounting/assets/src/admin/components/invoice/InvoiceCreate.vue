@@ -215,7 +215,6 @@
                 inv_title       : '',
                 inv_type        : {},
                 erp_acct_assets : erp_acct_var.acct_assets,
-                actionType      : null,
                 form_errors     : [],
             }
         },
@@ -242,12 +241,12 @@
             }
         },
 
-        computed: mapState({
-            invoiceTotalAmount: state => state.sales.invoiceTotalAmount
-        }),
+        computed: {
+            ...mapState({ invoiceTotalAmount: state => state.sales.invoiceTotalAmount }),
+            ...mapState({ actionType: state => state.combo.btnID })
+        },
 
-        mounted() {
-
+        created() {
             if ( 'EstimateCreate' === this.$route.name ) {
                 this.inv_title = 'Estimate';
                 this.inv_type  = {id: 1, name: 'Estimate'};
@@ -267,9 +266,8 @@
                 this.updateFinalAmount();
             });
 
-            this.$root.$on('combo-btn-select', button => {
-                this.actionType = button.id;
-            });
+            // initialize combo button id with `save`
+            this.$store.dispatch('combo/setBtnID', 'save');
         },
 
         methods: {
@@ -475,6 +473,7 @@
 
             updateInvoice(requestData) {
                 this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Invoice Updated!');
@@ -566,9 +565,10 @@
                 this.taxTotalAmount               = 0;
                 this.finalTotalAmount             = 0;
                 this.isWorking                    = false;
-                this.actionType                   = null;
 
                 this.transactionLines.push({}, {}, {});
+
+                this.$store.dispatch('combo/setBtnID', 'save');
             },
 
             validateForm() {
