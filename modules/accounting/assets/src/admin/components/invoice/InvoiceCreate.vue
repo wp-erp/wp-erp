@@ -188,19 +188,21 @@
                     {id: 'save', text: 'Create Invoice'},
                     // {id: 'send_create', text: 'Create and Send'},
                     {id: 'new_create', text: 'Create and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 updateButtons: [
                     {id: 'update', text: 'Update Invoice'},
                     // {id: 'send_update', text: 'Update and Send'},
                     {id: 'new_update', text: 'Update and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 editMode        : false,
                 voucherNo       : 0,
                 discountType    : 'discount-percent',
                 discount        : 0,
-                status          : 2,
+                status          : null,
                 taxRate         : null,
                 taxSummary      : null,
                 products        : [],
@@ -244,7 +246,7 @@
             invoiceTotalAmount: state => state.sales.invoiceTotalAmount
         }),
 
-        created() {
+        mounted() {
 
             if ( 'EstimateCreate' === this.$route.name ) {
                 this.inv_title = 'Estimate';
@@ -479,7 +481,7 @@
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } ).then(() => {
-                    if ('update' == this.actionType) {
+                    if ('update' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_update' == this.actionType) {
                         this.resetFields();
@@ -496,7 +498,7 @@
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).then(() => {
-                    if ('save' == this.actionType) {
+                    if ('save' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
@@ -517,6 +519,12 @@
 
                 this.isWorking = true;
 
+                if ( 'draft' == this.actionType) {
+                    this.status = 1;
+                } else {
+                    this.status = 3;
+                }
+
                 let requestData = {
                     customer_id    : this.basic_fields.customer.id,
                     date           : this.basic_fields.trn_date,
@@ -527,7 +535,7 @@
                     line_items     : this.formatLineItems(),
                     attachments    : this.attachments,
                     particulars    : this.particulars,
-                    type           : 'sales_invoice',
+                    type           : 'invoice',
                     status         : parseInt(this.status),
                     estimate       : this.inv_type.id
                 };

@@ -172,6 +172,7 @@
                 createButtons: [
                     {id: 'save', text: 'Pay Purchase'},
                     {id: 'new_create', text: 'Pay and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 form_errors     : [],
@@ -245,6 +246,10 @@
 
                 this.pay_purchases = [];
 
+                if( isNaN(this.basic_fields.vendor.id) ) {
+                    return;
+                }
+
                 HTTP.get(`/purchases/due/${this.basic_fields.vendor.id}`).then(response => {
                     response.data.forEach(element => {
                         this.pay_purchases.push({
@@ -292,7 +297,7 @@
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
             },
 
-            SubmitForPayment(event) {
+            SubmitForPayment() {
                 this.pay_purchases.forEach( (element,index) => {
                     element['line_total'] = parseFloat( this.totalAmounts[index] );
                 });
@@ -308,6 +313,12 @@
                 }
 
                 this.$store.dispatch( 'spinner/setSpinner', true );
+                let trn_status = null;
+                if ( 'draft' === this.actionType) {
+                    trn_status = 1;
+                } else {
+                    trn_status = 4;
+                }
 
                 HTTP.post('/pay-purchases', {
                     vendor_id: this.basic_fields.vendor.id,
@@ -316,7 +327,7 @@
                     purchase_details: this.pay_purchases,
                     attachments: this.attachments,
                     type: 'pay_purchase',
-                    status: 4,
+                    status: trn_status,
                     particulars: this.particulars,
                     deposit_to: this.basic_fields.deposit_to.id,
                     trn_by: this.basic_fields.trn_by.id,
@@ -327,7 +338,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Pay Purchase Created!' );
 
-                    if ('save' == this.actionType) {
+                    if ('save' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Purchases'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
@@ -336,7 +347,6 @@
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'error', 'Something went wrong!' );
-
                 });
             },
 
@@ -405,11 +415,6 @@
                     payer_name: '',
                     check_no  : ''
                 };
-
-                createButtons: [
-                    {id: 'save', text: 'Pay Purchase'},
-                    {id: 'new_create', text: 'Pay and New'},
-                ],
 
                 this.form_errors      = [];
                 this.attachments      = [];
