@@ -217,6 +217,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } ).then(() => {
                     this.isWorking = false;
+                    this.$router.push({name: 'JournalList'})
                 });
 
                 event.target.reset();
