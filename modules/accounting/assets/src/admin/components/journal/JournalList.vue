@@ -45,7 +45,7 @@
             return {
                 journalModal: false,
                 columns: {
-                    'l_id': {label: 'ID'},
+                    'l_id': {label: 'Voucher No.'},
                     'l_date': {label: 'Date'},
                     'l_particulars': {label: 'Particulars'},
                     'amount': {label: 'Amount'},
