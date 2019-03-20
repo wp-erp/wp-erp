@@ -165,6 +165,11 @@ function erp_acct_insert_bill( $data ) {
             erp_acct_insert_bill_data_into_ledger( $bill_data, $item );
         }
 
+        if ( 1 == $bill_data['status']) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_invoice( $voucher_no );
+        }
+
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
             'bill_no'     => $voucher_no,
             'trn_no'      => $voucher_no,
@@ -250,6 +255,11 @@ function erp_acct_update_bill( $data, $bill_id ) {
             ] );
 
             erp_acct_update_bill_data_into_ledger( $bill_data, $bill_id, $item );
+        }
+
+        if ( 1 == $bill_data['status']) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_invoice( $bill_id );
         }
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
@@ -357,6 +367,10 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
 function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
     global $wpdb;
 
+    if ( 1 == $bill_data['status']) {
+        return;
+    }
+
     // Insert items amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $item_data['ledger_id']['id'],
@@ -385,6 +399,10 @@ function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
  */
 function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data ) {
     global $wpdb;
+
+    if ( 1 == $bill_data['status']) {
+        return;
+    }
 
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(

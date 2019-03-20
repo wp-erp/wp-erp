@@ -186,7 +186,7 @@ function erp_acct_insert_invoice( $data ) {
 
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no );
 
-        if ( 1 == $invoice_data['estimate'] ) {
+        if ( 1 == $invoice_data['estimate'] || 1 == $invoice_data['status'] ) {
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_invoice( $voucher_no );
         }
@@ -359,7 +359,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $invoice_no );
 
-        if ( 1 == $invoice_data['estimate'] ) {
+        if ( 1 == $invoice_data['estimate'] || 1 == $invoice_data['status']) {
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_invoice( $invoice_no );
         }

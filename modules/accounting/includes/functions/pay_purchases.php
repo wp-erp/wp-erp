@@ -153,6 +153,12 @@ function erp_acct_insert_pay_purchase( $data ) {
             erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $item );
         }
 
+        if ( 1 == $pay_purchase_data['status']) {
+            $wpdb->query( 'COMMIT' );
+
+            return erp_acct_get_pay_purchase( $voucher_no );
+        }
+
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
                 'purchase_no' => $item['voucher_no'],
@@ -234,6 +240,12 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
             ) );
 
             erp_acct_update_pay_purchase_data_into_ledger( $pay_purchase_data, $pay_purchase_id, $item );
+        }
+
+        if ( 1 == $pay_purchase_data['status']) {
+            $wpdb->query( 'COMMIT' );
+
+            return erp_acct_get_pay_purchase( $pay_purchase_id );
         }
 
         foreach ( $items as $key => $item ) {
@@ -354,6 +366,10 @@ function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
 function erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $item_data ) {
     global $wpdb;
 
+    if ( 1 == $pay_purchase_data['status']) {
+        return;
+    }
+
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $pay_purchase_data['trn_by_ledger_id'],
@@ -381,6 +397,10 @@ function erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $ite
  */
 function erp_acct_update_pay_purchase_data_into_ledger( $pay_purchase_data, $pay_purchase_no, $item_data ) {
     global $wpdb;
+
+    if ( 1 == $pay_purchase_data['status']) {
+        return;
+    }
 
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
