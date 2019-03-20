@@ -183,7 +183,7 @@ function erp_acct_insert_purchase( $data ) {
             ) );
         }
 
-        if ( 1 == $purchase_data['purchase_order'] ) {
+        if ( 1 == $purchase_data['purchase_order'] || 1 == $purchase_data['status'] ) {
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_purchase( $voucher_no );
         }
@@ -284,7 +284,7 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
             ) );
         }
 
-        if ( 1 == $purchase_data['purchase_order'] ) {
+        if ( 1 == $purchase_data['purchase_order'] || 1 == $purchase_data['status'] ) {
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_purchase( $purchase_id );
         }
@@ -504,7 +504,7 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
                                     HAVING due > 0
                                 ) as ps
                                 ON purchase.voucher_no = ps.purchase_no
-                                WHERE purchase.vendor_id = %d
+                                WHERE purchase.vendor_id = %d AND purchase.status != 1 AND purchase.purchase_order != 1
                                 ORDER BY %s %s $limit", $args['vendor_id'], $args['orderby'], $args['order']  );
 
     if ( $args['count'] ) {
