@@ -36,6 +36,9 @@
                         </a>
                     </li>
                 </template>
+                <template slot="status" slot-scope="data">
+                    {{ data.row.status }}
+                </template>
             </list-table>
 
         </div>
@@ -197,7 +200,7 @@
                                 'due_date'   : '-',
                                 'due'        : '-',
                                 'amount'     : this.formatAmount(item.pay_bill_amount),
-                                'status'     : 'Paid',
+                                'status'     : item.status,
                                 'singleView' : { name: 'PayBillSingle', params: { id: item.id }},
                                 'actions'    : [
                                     { key: 'void', label: 'Void' },
@@ -237,7 +240,7 @@
                                 'due_date'   : '-',
                                 'due'        : '-',
                                 'amount'     : this.formatAmount(item.expense_amount),
-                                'status'     : 'Paid',
+                                'status'     : item.status,
                                 'singleView' : { name: 'ExpenseSingle', params: { id: item.id }},
                                 'actions'    : [
                                     { key: 'void', label: 'Void' },
@@ -256,7 +259,7 @@
                                 'due_date'   : '-',
                                 'due'        : '-',
                                 'amount'     : this.formatAmount(item.expense_amount),
-                                'status'     : 'Paid',
+                                'status'     : item.status,
                                 'singleView' : { name: 'CheckSingle', params: { id: item.id }},
                                 'actions'    : [
                                     { key: 'void', label: 'Void' },

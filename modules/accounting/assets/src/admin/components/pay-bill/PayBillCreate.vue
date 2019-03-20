@@ -86,7 +86,7 @@
                     <tr class="total-amount-row">
                         <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
                         <td class="text-right" data-colname="Total Amount">
-                            <input type="text" class="text-right" v-model="finalTotalAmount" readonly disabled/></td>
+                            <input type="text" class="text-right" :value="finalTotalAmount" readonly disabled/></td>
                         <td class="text-right"></td>
                     </tr>
                     </tbody>
@@ -275,9 +275,9 @@
             updateFinalAmount() {
                 let finalAmount = 0;
 
-                this.pay_bills.forEach(element => {
-                    finalAmount += parseFloat(element.amount);
-                });
+                for( let idx =0; idx < this.totalAmounts.length; idx++ ) {
+                    finalAmount += parseFloat(this.totalAmounts[idx])
+                }
 
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
             },
