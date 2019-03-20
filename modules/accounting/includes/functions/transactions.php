@@ -56,13 +56,13 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
             SUM(invoice_account_detail.debit - invoice_account_detail.credit) AS due,
             invoice_receipt.amount AS payment_amount,
-            status_type.type_name AS status";
+            invoice.status as inv_status,
+            invoice_receipt.status as pay_status";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS invoice_receipt ON invoice_receipt.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = invoice.status
         LEFT JOIN wp_erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
         {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
 
@@ -70,8 +70,6 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         $wpdb->get_results($sql);
         return $wpdb->num_rows;
     }
-
-    // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
@@ -476,13 +474,14 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             pay_bill.amount as pay_bill_amount,
             expense.amount as expense_amount,
             SUM(bill_acct_details.debit - bill_acct_details.credit) AS due,
-            status_type.type_name AS status";
+            bill.status as bill_status,
+            pay_bill.status as pay_bill_status,
+            expense.status as expense_status";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_pay_bill AS pay_bill ON pay_bill.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = bill.status
         LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acct_details ON bill_acct_details.bill_no = bill.voucher_no
         LEFT JOIN {$wpdb->prefix}erp_acct_expenses AS expense ON expense.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON cheque.trn_no = voucher.id
@@ -552,13 +551,13 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             purchase.purchase_order,
             pay_purchase.amount as pay_bill_amount,
             ABS(SUM(purchase_acct_details.debit - purchase_acct_details.credit)) AS due,
-            status_type.type_name AS status";
+            purchase.status AS purchase_status,
+            pay_purchase.status AS pay_purchase_status";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS purchase ON purchase.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase ON pay_purchase.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = purchase.status
         LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acct_details ON purchase_acct_details.purchase_no = purchase.voucher_no
         {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
 

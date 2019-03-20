@@ -521,6 +521,24 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
 
+        if ( !empty( $item['inv_status'] ) ) {
+            $status = $item['inv_status'];
+        } else if ( !empty( $item['pay_status'] ) ) {
+            $status = $item['pay_status'];
+        } else if ( !empty( $item['bill_status'] ) ) {
+            $status = $item['bill_status'];
+        } else if ( !empty( $item['pay_bill_status'] ) ) {
+            $status = $item['pay_bill_status'];
+        } else if ( !empty( $item['expense_status'] ) ) {
+            $status = $item['expense_status'];
+        } else if ( !empty( $item['purchase_status'] ) ) {
+            $status = $item['purchase_status'];
+        } else if ( !empty( $item['pay_purchase_status'] ) ) {
+            $status = $item['pay_purchase_status'];
+        }
+
+        $item['status'] = erp_acct_get_trn_status_by_id( $status );
+
         $data = array_merge( $item, $additional_fields );
 
         // Wrap the data in a response object

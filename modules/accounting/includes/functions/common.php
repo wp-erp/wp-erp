@@ -312,7 +312,7 @@ function erp_acct_get_trn_status_by_id( $trn_id ) {
     global $wpdb;
 
     if ( !$trn_id ) {
-        return 'awaiting_approval';
+        return 'pending';
     }
 
     $row = $wpdb->get_row( "SELECT type_name FROM {$wpdb->prefix}erp_acct_trn_status_types WHERE id = {$trn_id}" );

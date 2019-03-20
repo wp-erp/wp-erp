@@ -182,7 +182,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $total_cr = array_sum( $vocher_amount_cr );
 
         if ( $total_dr != $total_cr ) {
-            return new WP_Error( 'rest_journal_invalid_amount', __( 'Summation of debit and credit must be equal.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_journal_invalid_amount', __( 'Summation of debit and credit must be equal.' ), [ 'status' => 400 ] );
         }
 
         $trans_data['voucher_amount'] = $total_dr;
