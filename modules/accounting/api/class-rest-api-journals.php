@@ -225,6 +225,9 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
         }
+        if ( isset( $request['ref'] ) ) {
+            $prepared_item['ref'] = $request['ref'];
+        }
 
         return $prepared_item;
     }
@@ -245,6 +248,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
             'id'          => $item->id,
             'voucher_no'  => $item->voucher_no,
             'particulars' => $item->particulars,
+            'ref'         => $item->ref,
             'trn_date'    => $item->trn_date,
             'line_items'  => !empty( $item->line_items ) ? $item->line_items : [],
             'attachments' => maybe_unserialize( $item->attachments ),
@@ -289,6 +293,14 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'particulars'  => [
                     'description' => __( 'Particulars for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'ref'  => [
+                    'description' => __( 'Reference for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
