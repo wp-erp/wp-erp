@@ -10,6 +10,7 @@
             </div>
 
             <list-table
+                :loading="listLoading"
                 tableClass="wperp-table table-striped table-dark widefat table2 transactions-table"
                 action-column="actions"
                 :columns="columns"
@@ -96,11 +97,12 @@
                     'actions'      : {label: ''},
 
                 },
-                rows: [],
+                listLoading   : false,
+                rows          : [],
                 paginationData: {
                     totalItems : 0,
                     totalPages : 0,
-                    perPage    : 3,
+                    perPage    : 10,
                     currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 }
             };
@@ -135,10 +137,10 @@
 
                 HTTP.get('/transactions/sales', {
                     params: {
-                        per_page: this.paginationData.perPage,
-                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+                        per_page  : this.paginationData.perPage,
+                        page      : this.$route.params.page === undefined ? this.paginationData.currentPage: this.$route.params.page,
                         start_date: filters.start_date,
-                        end_date: filters.end_date
+                        end_date  : filters.end_date
                     }
                 }).then(response => {
                     let mappedData = response.data.map(item => {
@@ -160,8 +162,10 @@
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
 
+                    this.listLoading = false;
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
+                    this.listLoading = false;
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
@@ -205,6 +209,8 @@
             },
 
             goToPage(page) {
+                this.listLoading = true;
+
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
