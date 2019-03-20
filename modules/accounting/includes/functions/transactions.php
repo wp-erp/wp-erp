@@ -322,8 +322,8 @@ function erp_acct_get_expense_chart_status( $args = [] ) {
  */
 function erp_acct_get_income_expense_chart_data() {
 
-    $income_chart_id = 3; //Default db value
-    $expense_chart_id = 4; //Default db value
+    $income_chart_id = 4; //Default db value
+    $expense_chart_id = 5; //Default db value
 
     $current_year = date( 'Y' );
     $start_date = $current_year . '-01-01';
