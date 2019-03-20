@@ -183,7 +183,7 @@ function erp_acct_insert_purchase( $data ) {
             ) );
         }
 
-        if ( 1 == $purchase_data['purchase_order'] ) {
+        if ( 1 == $purchase_data['purchase_order'] || 1 == $purchase_data['status'] ) {
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_purchase( $voucher_no );
         }
@@ -284,7 +284,7 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
             ) );
         }
 
-        if ( 1 == $purchase_data['purchase_order'] ) {
+        if ( 1 == $purchase_data['purchase_order'] || 1 == $purchase_data['status'] ) {
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_purchase( $purchase_id );
         }
