@@ -17,6 +17,18 @@
             tableClass="wperp-table table-striped table-dark widefat"
             :columns="columns"
             :rows="rows">
+            <template slot="name" slot-scope="data">
+
+                <details v-if="data.row.additional" open>
+                    <summary>{{ data.row.name }}</summary>
+                    <p :key="additional.id" v-for="additional in data.row.additional">
+                        <strong>{{ additional.name }}</strong>
+                        <em>{{ getCurrencySign() + Math.abs(additional.balance) }}</em>
+                    </p>
+                </details>
+                <span v-else>{{ data.row.name }}</span>
+
+            </template>
             <template slot="debit" slot-scope="data">
                 {{ Math.sign(data.row.balance) === 1 ? getCurrencySign() + data.row.balance : '' }}
             </template>
@@ -78,6 +90,8 @@
 
                 this.start_date = `2019-${month}-01`;
                 this.end_date   = erp_acct_var.current_date;
+
+                this.getTrialBalance();
             });
         },
 
@@ -128,6 +142,24 @@
             justify-content: space-between;
             width: 400px;
             padding: 20px 0;
+        }
+
+        details {
+            summary {
+                margin-bottom: 15px;
+
+                &:focus {
+                    outline: 0;
+                }
+            }
+
+            p {
+                display: flex;
+                justify-content: space-between;
+                max-width: 300px;
+                box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+                padding: 3px;
+            }
         }
     }
 </style>
