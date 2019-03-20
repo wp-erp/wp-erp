@@ -453,7 +453,7 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
                                     HAVING due > 0
                                 ) as bs
                                 ON bill.voucher_no = bs.bill_no
-                                WHERE bill.vendor_id = %d
+                                WHERE bill.vendor_id = %d AND bill.status != 1
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {
