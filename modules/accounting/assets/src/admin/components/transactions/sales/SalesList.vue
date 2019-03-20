@@ -54,7 +54,7 @@
                     {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Received' : data.row.status }}
+                    {{ data.row.status }}
                 </template>
 
                 <!-- custom row actions -->

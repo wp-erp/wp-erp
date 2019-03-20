@@ -355,7 +355,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'account'         => erp_acct_get_ledger_name_by_id( $item->trn_by_ledger_id ),
             'line_items'      => $item->line_items,
             'attachments'     => maybe_unserialize( $item->attachments ),
-            'status'          => $item->status,
+            'status'          => erp_acct_get_trn_status_by_id( $item->status ),
             'type'            => !empty( $item->type ) ? $item->type : 'payment',
         ];
 
