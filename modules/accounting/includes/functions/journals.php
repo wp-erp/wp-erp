@@ -70,6 +70,7 @@ function erp_acct_get_journal( $journal_no ) {
     journal.id,
     journal.voucher_no,
     journal.trn_date,
+    journal.ref,
     journal.voucher_amount,
     journal.attachments,
     journal.particulars,
@@ -122,6 +123,7 @@ function erp_acct_insert_journal( $data ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_journals', array(
             'voucher_no'      => $voucher_no,
             'trn_date'        => $journal_data['trn_date'],
+            'ref'             => $journal_data['ref'],
             'voucher_amount'  => $journal_data['voucher_amount'],
             'particulars'     => $journal_data['particulars'],
             'attachments'     => $journal_data['attachments'],
@@ -191,6 +193,7 @@ function erp_acct_update_journal( $data, $journal_no ) {
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_journals', array(
             'trn_date'        => $journal_data['trn_date'],
+            'ref'             => $journal_data['ref'],
             'voucher_amount'  => $journal_data['voucher_amount'],
             'particulars'     => $journal_data['particulars'],
             'attachments'     => $journal_data['attachments'],
@@ -245,6 +248,7 @@ function erp_acct_get_formatted_journal_data( $data, $voucher_no ) {
     $journal_data['voucher_amount'] = isset($data['voucher_amount']) ? $data['voucher_amount'] : 0;
     $journal_data['line_items'] = isset($data['line_items']) ? $data['line_items'] : array();
     $journal_data['particulars'] = isset($data['particulars']) ? $data['particulars'] : '';
+    $journal_data['ref'] = isset($data['ref']) ? $data['ref'] : '';
     $journal_data['attachments'] = isset($data['attachments']) ? $data['attachments'] : '';
     $journal_data['created_at'] = isset($data['created_at']) ? $data['created_at'] : '';
     $journal_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
