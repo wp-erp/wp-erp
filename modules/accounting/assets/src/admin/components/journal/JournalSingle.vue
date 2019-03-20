@@ -54,7 +54,7 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>Ledger ID</th>
+                                <th>Account</th>
                                 <th>Particulars</th>
                                 <th>Debit</th>
                                 <th>Credit</th>
@@ -62,7 +62,7 @@
                             </thead>
                             <tbody>
                             <tr :key="index" v-for="(line, index) in journal.line_items">
-                                <td>{{ line.ledger_id}}</td>
+                                <td>{{ line.account}}</td>
                                 <td>{{ line.particulars }}</td>
                                 <td>{{ line.debit }}</td>
                                 <td>{{ line.credit }}</td>
