@@ -151,11 +151,6 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $count = $wpdb->get_row( "SELECT count(*) FROM " . $wpdb->prefix . "erp_acct_journals", ARRAY_N );
         $item['id'] = $count['0'] + 1;
 
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
-
         $response = rest_ensure_response( $item );
 
         return $response;
@@ -182,7 +177,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $total_cr = array_sum( $vocher_amount_cr );
 
         if ( $total_dr != $total_cr ) {
-            return new WP_Error( 'rest_journal_invalid_amount', __( 'Summation of debit and credit must be equal.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_journal_invalid_amount', __( 'Summation of debit and credit must be equal.' ), [ 'status' => 400 ] );
         }
 
         $trans_data['voucher_amount'] = $total_dr;
