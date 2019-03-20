@@ -45,17 +45,17 @@
             return {
                 journalModal: false,
                 columns: {
-                    'l_id': {label: 'Voucher No.'},
-                    'l_date': {label: 'Date'},
+                    'l_id'         : {label: 'Voucher No.'},
+                    'l_date'       : {label: 'Date'},
                     'l_particulars': {label: 'Particulars'},
-                    'amount': {label: 'Amount'},
+                    'amount'       : {label: 'Amount'},
                 },
                 rows: [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
-                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 2,
+                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 journal_id: 0,
             };
@@ -72,7 +72,7 @@
                     item.l_id = item.voucher_no;
                     item.l_date = item.trn_date;
                     item.l_particulars = item.particulars;
-                    item.amount = item.total;
+                    item.amount        = item.total;
                 } );
                 return items;
             }
@@ -85,7 +85,7 @@
 
             fetchItems(){
                 this.rows = [];
-                HTTP.get('journals', {
+                HTTP.get('/journals', {
                     params: {
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
