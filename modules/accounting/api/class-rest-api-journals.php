@@ -243,6 +243,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'          => $item->id,
+            'voucher_no'  => $item->voucher_no,
             'particulars' => $item->particulars,
             'trn_date'    => $item->trn_date,
             'line_items'  => !empty( $item->line_items ) ? $item->line_items : [],
