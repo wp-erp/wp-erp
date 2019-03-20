@@ -609,14 +609,14 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
                                     HAVING due > 0
                                 ) as invs
                                 ON invoice.voucher_no = invs.invoice_no
-                                WHERE invoice.customer_id = %d
+                                WHERE invoice.customer_id = %d AND invoice.status != 1 AND invoice.estimate != 1 
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $query );
     }
 
-    // error_log(print_r($query, true));
+     //error_log(print_r($query, true));
     return $wpdb->get_results( $query, ARRAY_A );
 }
 
