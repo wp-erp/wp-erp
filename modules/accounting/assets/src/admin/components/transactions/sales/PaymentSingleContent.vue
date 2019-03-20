@@ -38,7 +38,7 @@
                             </tr>
                             <tr>
                                 <th>Deposit To:</th>
-                                <td>Bank</td>
+                                <td>{{ payment.account }}</td>
                             </tr>
                         </table>
                     </div>

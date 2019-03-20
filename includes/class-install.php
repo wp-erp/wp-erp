@@ -881,6 +881,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_journals` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `trn_date` date DEFAULT NULL,
+                `ref` varchar(255) DEFAULT NULL,
                 `voucher_no` int(11) DEFAULT NULL,
                 `voucher_amount` decimal(10,2) DEFAULT 0,
                 `particulars` varchar(255) DEFAULT NULL,

@@ -106,7 +106,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/income_expense_overview', [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/income-expense-overview', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_income_expense_overview' ],

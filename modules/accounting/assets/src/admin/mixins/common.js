@@ -9,6 +9,14 @@ export default {
             return prefix ? `Dr. ${currency}${val}` : `${currency}${Math.abs(val)}`;
         },
 
+        formatDBAmount( val, prefix = false ) {
+            let currency = '$';
+            if ( val < 0 ) {
+                return `(-) ${currency}${Math.abs(val)}`;
+            }
+            return `${currency}${val}`;
+        },
+
         getCurrencySign() {
             return '$';
         },
