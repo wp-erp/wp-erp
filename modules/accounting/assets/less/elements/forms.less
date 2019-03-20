@@ -71,7 +71,7 @@
 @field-border-color: #ECECEC;
 @field-border-radius: 3px;
 @field-padding: 7.5px 15px;
-@field-group-margin: 20px; 
+@field-group-margin: 20px;
 @form-padding: 15px;
 @field-width: 50px;
 @placeholder-color: #ACACAC;
@@ -137,13 +137,13 @@ input, select, textarea {
         display: inline-block;
         min-width: 120px;
     }
-    
+
     select {
         border: 1px solid @field-border-color;
         -webkit-appearance: none;
         -moz-appearance:    none;
         appearance:         none;
-        
+
     }
     i {
         position: absolute;
@@ -197,7 +197,7 @@ input, select, textarea {
 /*.select2-container--default .select2-selection--multiple .select2-selection__rendered {
     margin: -3.5px -10px;
     li {
-        
+
         .select2-selection__choice__remove {
             float: right;
             margin-left: 5px;
@@ -230,14 +230,14 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     -webkit-appearance: none;
     margin: 0;
     text-align: center;
-  
+
 }
- 
+
 input[type="number"] {
     -moz-appearance: textfield;
 }
 
-.@{theme-prefix}-form-field, input:not(.wperp-btn) {
+.@{theme-prefix}-form-field, .@{theme-prefix}-form-field:not(.wperp-btn) {
     width: 100%;
     border-radius: @field-border-radius;
     border: 1px solid @field-border-color;
@@ -249,6 +249,7 @@ input[type="number"] {
         outline: 0;
         border-color: #208DF8;
     }
+
 }
 input {
     color: #5c5c6f;
