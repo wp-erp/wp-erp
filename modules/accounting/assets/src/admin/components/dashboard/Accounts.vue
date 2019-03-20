@@ -15,8 +15,8 @@
                         <a href="#" class="title">{{item.name}}</a>
                     </div>
                     <div class="right">
-                        <span v-if="undefined === item.balance" class="price">{{formatAmount(0)}}</span>
-                        <span v-else class="price">{{formatAmount(item.balance)}}</span>
+                        <span v-if="undefined === item.balance" class="price">{{formatDBAmount(0)}}</span>
+                        <span v-else class="price">{{formatDBAmount(item.balance)}}</span>
                         <i class="flaticon-trash" @click.prevent="removeAccount(key)"></i>
                     </div>
                 </li>
@@ -28,8 +28,8 @@
                         <a href="#" class="title">{{item.name}}</a>
                     </div>
                     <div class="right">
-                        <span v-if="undefined === item.balance" class="price">{{formatAmount(0)}}</span>
-                        <span v-else class="price">{{formatAmount(item.balance)}}</span>
+                        <span v-if="undefined === item.balance" class="price">{{formatDBAmount(0)}}</span>
+                        <span v-else class="price">{{formatDBAmount(item.balance)}}</span>
                         <i class="flaticon-trash" @click.prevent="removeEditAccount(key)"></i>
                     </div>
                 </li>
@@ -104,7 +104,7 @@
             }
         },
 
-        created() {
+        mounted() {
             this.fetchAccounts();
         },
 

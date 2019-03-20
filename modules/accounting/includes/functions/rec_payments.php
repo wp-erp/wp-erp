@@ -64,6 +64,7 @@ function erp_acct_get_payment( $invoice_no ) {
     -- pay_inv.billing_address,
     pay_inv.amount,
     pay_inv.trn_by,
+    pay_inv.trn_by_ledger_id,
     pay_inv.particulars,
     pay_inv.attachments,
     pay_inv.status,

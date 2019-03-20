@@ -20,18 +20,25 @@
 
                 <!-- <form action="#" class="wperp-form" method="post"> -->
                     <div class="wperp-row">
-                        <div class="wperp-col-sm-6">
-                            <div class="wperp-form-group">
-                                <label>Journal No.</label>
-                                <input type="text" :value="journal_id">
-                            </div>
-                        </div>
-                        <div class="wperp-col-sm-6">
+                        <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label>Transaction Date<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.trn_date"></datepicker>
                             </div>
                         </div>
+                        <div class="wperp-col-sm-4">
+                            <div class="wperp-form-group">
+                                <label>Ref.</label>
+                                <input type="text" v-model="basic_fields.trn_ref">
+                            </div>
+                        </div>
+                        <div class="wperp-col-sm-4">
+                            <div class="wperp-form-group">
+                                <label>Journal No.</label>
+                                <input type="text" :value="journal_id">
+                            </div>
+                        </div>
+
                         <div class="wperp-col-xs-12">
                             <label>Particulars</label>
                             <textarea v-model="journal_parti" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
@@ -140,6 +147,7 @@
             return {
                 basic_fields: {
                     journal_no: '',
+                    trn_ref: '',
                     trn_date: erp_acct_var.current_date,
                 },
 
@@ -201,6 +209,7 @@
 
                 HTTP.post('/journals', {
                     trn_date: this.basic_fields.trn_date,
+                    ref: this.basic_fields.trn_ref,
                     line_items: this.formatLineItems(),
                     attachments: this.attachments,
                     type: 'journal',
