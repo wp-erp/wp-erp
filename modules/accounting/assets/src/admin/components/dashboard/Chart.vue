@@ -173,7 +173,7 @@
 
             fetchData() {
 
-                HTTP.get( 'transactions/income_expense_overview').then( (response) => {
+                HTTP.get( 'transactions/income-expense-overview').then( (response) => {
                      this.respData = response.data;
                      this.createChart();
                      this.showDropdown = true;
