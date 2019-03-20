@@ -151,11 +151,6 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $count = $wpdb->get_row( "SELECT count(*) FROM " . $wpdb->prefix . "erp_acct_journals", ARRAY_N );
         $item['id'] = $count['0'] + 1;
 
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
-
         $response = rest_ensure_response( $item );
 
         return $response;
