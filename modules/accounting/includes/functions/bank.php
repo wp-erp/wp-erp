@@ -45,8 +45,17 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
               Where ld.ledger_id IN ($sub_query)
               Group BY ld.ledger_id";
 
-    $results = $wpdb->get_results( $query, ARRAY_A );
+    $accts = $wpdb->get_results( $query, ARRAY_A );
+    $banks = erp_acct_get_ledgers_by_chart_id( 7 );
 
+    $temp1 = wp_list_pluck( $accts, 'id' );
+    $temp2 = wp_list_pluck( $banks, 'id' );
+
+    if ( !count(array_intersect( $temp1, $temp2 ) ) ) {
+        $results = array_merge( $accts, $banks );
+    } else {
+        $results = $accts ;
+    }
 
     return $results;
 }

@@ -196,8 +196,19 @@ export default new Router({
                 },
                 {
                     path: 'purchases',
-                    name: 'Purchases',
-                    component: Purchases,
+                    component: { render (c) { return c('router-view') } },
+                    children: [
+                        {
+                            path: '',
+                            name: 'Purchases',
+                            component: Purchases,
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginatePurchases',
+                            component: Purchases,
+                        }
+                    ]
                 },
             ]
         },

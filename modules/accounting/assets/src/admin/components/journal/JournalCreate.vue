@@ -20,24 +20,24 @@
 
                 <!-- <form action="#" class="wperp-form" method="post"> -->
                     <div class="wperp-row">
-                        <div class="wperp-col-sm-4">
+                        <div class="wperp-col-sm-6">
                             <div class="wperp-form-group">
                                 <label>Transaction Date<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.trn_date"></datepicker>
                             </div>
                         </div>
-                        <div class="wperp-col-sm-4">
+                        <div class="wperp-col-sm-6">
                             <div class="wperp-form-group">
                                 <label>Ref.</label>
                                 <input type="text" v-model="basic_fields.trn_ref">
                             </div>
                         </div>
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <label>Journal No.</label>
-                                <input type="text" :value="journal_id">
-                            </div>
-                        </div>
+                        <!--<div class="wperp-col-sm-4">-->
+                            <!--<div class="wperp-form-group">-->
+                                <!--<label>Journal No.</label>-->
+                                <!--<input type="text" :value="journal_id">-->
+                            <!--</div>-->
+                        <!--</div>-->
 
                         <div class="wperp-col-xs-12">
                             <label>Particulars</label>
