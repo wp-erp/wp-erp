@@ -150,53 +150,48 @@
   ],
   "equity": [
     {
-      "name"  : "Owner's Capital",
+      "name"  : "Owner's Equity",
       "code"  : 300,
       "system": 1
     },
     {
-      "name"  : "Owner's  Drawings",
+      "name"  : "Common Stock",
       "code"  : 301,
       "system": 1
     },
     {
-      "name"  : "Common Stock",
+      "name"  : "Paid- in Capital in Excess of Par- Common Stock",
       "code"  : 302,
       "system": 1
     },
     {
-      "name"  : "Paid- in Capital in Excess of Par- Common Stock",
+      "name"  : "Paid- in Capital in Excess of Par- Preferred Stock",
       "code"  : 303,
       "system": 1
     },
     {
-      "name"  : "Paid- in Capital in Excess of Par- Preferred Stock",
+      "name"  : "Preferred Stock",
       "code"  : 304,
       "system": 1
     },
     {
-      "name"  : "Preferred Stock",
+      "name"  : "Treasury Stock",
       "code"  : 305,
       "system": 1
     },
     {
-      "name"  : "Treasury Stock",
+      "name"  : "Retained Earnings",
       "code"  : 306,
       "system": 1
     },
     {
-      "name"  : "Retained Earnings",
+      "name"  : "Dividends",
       "code"  : 307,
       "system": 1
     },
     {
-      "name"  : "Dividends",
-      "code"  : 308,
-      "system": 1
-    },
-    {
       "name"  : "Income Summary",
-      "code"  : 309,
+      "code"  : 308,
       "system": 1
     }
   ],
