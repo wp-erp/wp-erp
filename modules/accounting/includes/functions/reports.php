@@ -33,14 +33,41 @@ function erp_acct_trial_balance_cash_at_bank( $args, $type ) {
     $ledger_ids = implode( ',', explode( ',', $wpdb->get_var($sql1) ) ); // e.g. 4, 5
 
     if ( $ledger_ids ) {
-        $sql2 = $wpdb->prepare("SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_ledger_details
-            WHERE ledger_id IN ({$ledger_ids}) AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_id {$having}",
+        $sql2 = $wpdb->prepare("SELECT SUM(ledger_details.balance) as balance from (SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_ledger_details
+            WHERE ledger_id IN ({$ledger_ids}) AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_id {$having}) AS ledger_details",
             $args['start_date'], $args['end_date']);
 
         return $wpdb->get_var($sql2);
     }
 
     return null;
+}
+
+/**
+ * Trial balance helper
+ *
+ * @param array $args
+ *
+ * @return int
+ */
+function erp_acct_trial_balance_bank_balance( $args, $type ) {
+    global $wpdb;
+
+    if ( 'loan' === $type ) {
+        $having = "HAVING balance < 0";
+    } elseif ( 'balance' === $type ) {
+        $having = "HAVING balance > 0";
+    }
+
+    $chart_bank = 7;
+
+    $sql = $wpdb->prepare("SELECT ledger.id, ledger.name, SUM( debit - credit ) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
+        WHERE ledger.chart_id = %d AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger.id {$having}",
+        $chart_bank, $args['start_date'], $args['end_date']);
+
+    return $wpdb->get_results($sql);
 }
 
 /**
@@ -147,12 +174,14 @@ function erp_acct_get_trial_balance( $args ) {
      */
 
     $results['rows'][] = [
-        'name'    => 'Cash at Bank',
-        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'balance' )
+        'name'       => 'Cash at Bank',
+        'balance'    => erp_acct_trial_balance_cash_at_bank( $args, 'balance' ),
+        'additional' => erp_acct_trial_balance_bank_balance( $args, 'balance' )
     ];
     $results['rows'][] = [
-        'name'    => 'Bank Loan',
-        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'loan' )
+        'name'       => 'Bank Loan',
+        'balance'    => erp_acct_trial_balance_cash_at_bank( $args, 'loan' ),
+        'additional' => erp_acct_trial_balance_bank_balance( $args, 'loan' )
     ];
 
     $results['rows'][] = [

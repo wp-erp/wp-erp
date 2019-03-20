@@ -198,9 +198,9 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $from_balance = $ledger_details[0]['balance'];
 
-        if ( $from_balance < $item['amount'] ) {
-            return new WP_Error( 'rest_transfer_insufficient_funds', __( 'Not enough money on selected transfer source.' ), [ 'status' => 400 ] );
-        }
+        // if ( $from_balance < $item['amount'] ) {
+        //     return new WP_Error( 'rest_transfer_insufficient_funds', __( 'Not enough money on selected transfer source.' ), [ 'status' => 400 ] );
+        // }
 
         $id = erp_acct_perform_transfer( $item );
 

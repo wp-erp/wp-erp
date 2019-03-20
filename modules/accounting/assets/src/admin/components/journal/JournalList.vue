@@ -54,7 +54,7 @@
                 paginationData: {
                     totalItems : 0,
                     totalPages : 0,
-                    perPage    : 2,
+                    perPage    : 10,
                     currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 journal_id: 0,
@@ -80,7 +80,7 @@
 
         methods: {
             newJournal() {
-                this.$router.push('journals/new');
+                this.$router.push('/journals/new');
             },
 
             fetchItems(){
