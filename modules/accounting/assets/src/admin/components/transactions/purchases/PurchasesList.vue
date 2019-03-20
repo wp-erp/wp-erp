@@ -55,7 +55,7 @@
                     {{ isPayment(data.row) ? formatAmount(data.row.pay_bill_amount) : formatAmount(data.row.amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Paid' : data.row.status }}
+                    {{ data.row.status }}
                 </template>
 
                 <!-- custom row actions -->
