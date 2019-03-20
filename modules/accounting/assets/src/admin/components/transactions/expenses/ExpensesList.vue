@@ -50,7 +50,7 @@
         name: 'ExpensesList',
 
         components: {
-            ListTable, HTTP
+            ListTable
         },
 
         data() {
@@ -71,7 +71,7 @@
                 paginationData: {
                     totalItems : 0,
                     totalPages : 0,
-                    perPage    : 10,
+                    perPage    : 2,
                     currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 actions : []
@@ -118,7 +118,7 @@
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch((error) => {
-                        console.log(error);
+                    console.log(error);
                 });
             },
 
@@ -168,7 +168,7 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateInvoices',
+                    name: 'PaginateExpenses',
                     params: { page: page },
                     query: queries
                 });

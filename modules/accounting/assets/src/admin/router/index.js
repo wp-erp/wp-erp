@@ -66,10 +66,21 @@ export default new Router({
             ]
         },
         {
-            path : '/inventory',
-            name : 'Products',
-            component: Products,
-            alias: '/products'
+            path: '/inventory',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'Products',
+                    component: Products,
+                    alias: '/products'
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateProducts',
+                    component: Products,
+                },
+            ]
         },
         {
             path: '/customers',
@@ -158,12 +169,28 @@ export default new Router({
                             name: 'SalesSingle',
                             component: SalesSingle,
                         },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateSales',
+                            component: Sales,
+                        }
                     ]
                 },
                 {
                     path: 'expenses',
-                    name: 'Expenses',
-                    component: Expenses,
+                    component: { render (c) { return c('router-view') } },
+                    children: [
+                        {
+                            path: '',
+                            name: 'Expenses',
+                            component: Expenses,
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateExpenses',
+                            component: Expenses,
+                        }
+                    ]
                 },
                 {
                     path: 'purchases',

@@ -88,7 +88,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_journals( $request ) {
         $args['number'] = !empty( $request['per_page'] ) ? $request['per_page'] : 20;
-        $args['offset'] = 0;
+        $args['offset'] = ( $request['per_page'] * ( $request['page'] - 1 ) );
 
         $additional_fields = [];
 
@@ -127,7 +127,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $item = erp_acct_get_journal( $id );
-        
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -191,10 +191,10 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
-        
+
         $response = $this->prepare_item_for_response( $journal, $request, $additional_fields );
         $response = rest_ensure_response( $response );
-        
+
         $response->set_status( 201 );
 
         return $response;
