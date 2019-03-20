@@ -58,28 +58,28 @@
                 ],
                 columns: {
                     'customer': { label: 'Name', isColPrimary: true },
-                    'company': { label: 'Company' },
-                    'email': { label: 'Email' },
-                    'phone': { label: 'Phone' },
-                    'expense': { label: 'Expense' },
-                    'actions': { label: 'Actions' }
+                    'company' : { label: 'Company' },
+                    'email'   : { label: 'Email' },
+                    'phone'   : { label: 'Phone' },
+                    'expense' : { label: 'Expense' },
+                    'actions' : { label: 'Actions' }
                 },
                 rows: [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
-                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
+                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 actions : [
                     { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
                     { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
                 ],
-                showModal: false,
-                buttonTitle: '',
-                pageTitle: '',
-                url: '',
-                singleUrl: '',
+                showModal             : false,
+                buttonTitle           : '',
+                pageTitle             : '',
+                url                   : '',
+                singleUrl             : '',
                 isActiveOptionDropdown: false
             };
         },
@@ -96,10 +96,10 @@
                 self.fetchItems();
             } );
 
-            this.buttonTitle    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'Customer' : 'Vendor';
-            this.pageTitle      =   this.$route.name;
-            this.url            =   this.$route.name.toLowerCase();
-            this.singleUrl      =   ( this.url == 'customers' ) ? 'CustomerDetails' : 'VendorDetails';
+            this.buttonTitle = ( this.$route.name.toLowerCase() == 'customers' ) ? 'Customer' : 'Vendor';
+            this.pageTitle   = this.$route.name;
+            this.url         = this.$route.name.toLowerCase();
+            this.singleUrl   = ( this.url == 'customers' ) ? 'CustomerDetails' : 'VendorDetails';
             this.fetchItems();
         },
 
@@ -108,14 +108,14 @@
                 let items = this.rows;
                 items.map( item => {
                     item.customer = item.first_name + ' ' + item.last_name;
-                    item.expense = 0;
+                    item.expense  = 0;
                 } );
                 return items;
             }
         },
 
         methods: {
-            fetchItems(){
+            fetchItems() {
                 this.rows = [];
                 HTTP.get( this.url , {
                     params: {
