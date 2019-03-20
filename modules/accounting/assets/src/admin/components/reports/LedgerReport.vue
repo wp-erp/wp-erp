@@ -37,7 +37,7 @@
             </template>
             <template slot="tfoot">
                 <tr class="tfoot">
-                    <td colspan="4"></td>
+                    <td colspan="3"></td>
                     <td>Total =</td>
                     <td>{{ totalDebit }}</td>
                     <td>{{ totalCredit }}</td>

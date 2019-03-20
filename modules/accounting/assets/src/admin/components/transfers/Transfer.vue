@@ -20,7 +20,7 @@
                                 <div class="wperp-custom-select with-multiselect">
                                     <multi-select id="transfer_funds_from" name="from" v-model="transferFrom" :multiple="false" :options="fa" placeholder="Select Account"></multi-select>
                                 </div>
-                                <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferFrom.balance)}}</span>
+                                <span class="balance mt-10 display-inline-block">Balance: {{formatAmount(transferFrom.balance)}}</span>
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                 <label for="transfer_funds_to">Transfer Funds To</label>
@@ -28,7 +28,7 @@
                                 <div class="wperp-custom-select with-multiselect">
                                     <multi-select id="transfer_funds_to" name="to" v-model="transferTo" :multiple="false" :options="ta" placeholder="Select Account"></multi-select>
                                 </div>
-                                <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferTo.balance)}}</span>
+                                <span class="balance mt-10 display-inline-block">Balance: {{formatAmount(transferTo.balance)}}</span>
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                 <label for="transfer_amount">Transfer Amount</label>
