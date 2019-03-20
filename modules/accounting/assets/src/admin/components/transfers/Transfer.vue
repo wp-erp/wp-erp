@@ -5,81 +5,31 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">Transfer Money</h2>
+                    <router-link class="wperp-btn btn--primary" :to="{ name: 'NewTransfer'}">Add new</router-link>
                 </div>
             </div>
         </div>
         <!-- End .header-section -->
-        <div class="wperp-panel wperp-panel-default pb-0">
-            <div class="wperp-panel-body">
-                <form action="" method="post" class="modal-form edit-customer-modal" @submit.prevent="submitTransfer">
-                    <div class="wperp-modal-body">
-                        <!-- add new product form -->
-                        <div class="wperp-row wperp-gutter-20">
-                            <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="transfer_funds_from">Transfer Funds From</label>
-                                <div class="wperp-custom-select with-multiselect">
-                                    <multi-select id="transfer_funds_from" name="from" v-model="transferFrom" :multiple="false" :options="fa" placeholder="Select Account"></multi-select>
-                                </div>
-                                <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferFrom.balance)}}</span>
-                            </div>
-                            <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="transfer_funds_to">Transfer Funds To</label>
-
-                                <div class="wperp-custom-select with-multiselect">
-                                    <multi-select id="transfer_funds_to" name="to" v-model="transferTo" :multiple="false" :options="ta" placeholder="Select Account"></multi-select>
-                                </div>
-                                <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferTo.balance)}}</span>
-                            </div>
-                            <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="transfer_amount">Transfer Amount</label>
-                                <input required min="0" type="number" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00" v-model="amount">
-                            </div>
-                            <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="transfer_date">Transfer Date</label>
-                                <datepicker id="transfer_date" name="transfer_date" v-model="transferdate"></datepicker>
-                            </div>
-                            <div class="wperp-col-xs-12 wperp-form-group">
-                                <label for="transfer_memo">Memo</label>
-                                <textarea name="transfer_memo" id="transfer_memo" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="particulars"></textarea>
-                            </div>
-                            <!--<div class="wperp-col-xs-12">-->
-                                <!--<div class="attachment-container">-->
-                                    <!--<label class="col&#45;&#45;attachement">Attachment</label>-->
-                                    <!--<div class="attachment-preview">-->
-                                        <!--<img src="assets/images/img-thumb.png" alt="attachment image">-->
-                                        <!--<i class="flaticon-close remove-attachment"></i>-->
-                                    <!--</div>-->
-                                    <!--<div class="attachment-placeholder">-->
-                                        <!--To attach <input type="file" id="attachment" name="attachment" class="display-none"> <label class="mt-0" for="attachment">Select files</label> from your computer-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        </div>
-
-                    </div>
-
-                    <div class="wperp-modal-footer pt-0">
-                        <button class="wperp-btn btn--primary" type="submit">Transfer Money</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <list-table
+            tableClass="wperp-table table-striped table-dark widefat table2 money-trnsfer-list"
+            action-column="actions"
+            :columns="columns"
+            :rows="transfer_list">
+        </list-table>
     </div>
 
 </template>
 
 <script>
-    import MultiSelect from "admin/components/select/MultiSelect.vue"
     import HTTP from 'admin/http'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
+    import ListTable from 'admin/components/list-table/ListTable.vue'
 
     export default {
         name: "Transfer",
 
         components: {
-            MultiSelect,
             HTTP,
-            Datepicker
+            ListTable
         },
 
         data() {
@@ -92,77 +42,31 @@
                 transferdate: erp_acct_var.current_date,
                 particulars : '',
                 amount: '',
-
+                money_transfer: false,
+                transfer_list: [],
+                columns: {
+                    'voucher'    : {label: 'Voucher No'},
+                    'ac_from'    : {label: 'Account From'},
+                    'amount'     : {label: 'Amount'},
+                    'ac_to'      : {label: 'Account To'},
+                },
             };
         },
 
         created(){
-            this.fetchAccounts();
+            this.$store.dispatch( 'spinner/setSpinner', true );
+            this.get_transfer_list();
         },
 
         methods: {
-            fetchAccounts(){
-                HTTP.get('accounts').then( (response) => {
-                    this.accounts = response.data;
-                    this.fa = response.data;
-                    this.ta = response.data;
-
-                } );
-            },
-
-            transformBalance( val ){
-                let currency = '$';
-                if ( val < 0 ){
-                    return `Cr. ${currency} ${Math.abs(val)}`;
-                }
-
-                return `Dr. ${currency} ${val}`;
-            },
-
-            submitTransfer(){
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.post( '/accounts/transfer', {
-                    date : this.transferdate,
-                    from_account_id : this.transferFrom.id,
-                    to_account_id : this.transferTo.id,
-                    amount : this.amount,
-                    particulars : this.particulars,
-                } ).then( res => {
+            get_transfer_list() {
+                HTTP.get( '/accounts/list' ).then( res => {
+                    this.transfer_list = res.data;
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Transfer Successful!' );
-                    this.fetchAccounts();
-                    this.resetData();
                 } ).catch( err => {
-                    let msg = err.response.data.message;
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'error', msg );
                 } );
-            },
-
-            resetData(){
-                this.transferFrom = { balance : 0 };
-                this.transferTo = { balance : 0 };
-                this.accounts = [];
-                this.transferdate = erp_acct_var.current_date;
-                this.particulars = '';
-                this.amount = '';
-            },
-        },
-
-        watch: {
-            'transferFrom'(){
-                let id = this.transferFrom.id;
-                this.ta = jQuery.grep(this.accounts, function(e){
-                    return e.id != id;
-                });
-            },
-            'transferTo'(){
-                let id = this.transferTo.id;
-                this.fa = jQuery.grep(this.accounts, function(e){
-                    return e.id != id;
-                });
             }
-
         }
     }
 </script>
