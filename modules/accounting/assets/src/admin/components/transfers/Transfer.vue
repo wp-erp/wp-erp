@@ -15,6 +15,13 @@
             action-column="actions"
             :columns="columns"
             :rows="transfer_list">
+            <template slot="voucher" slot-scope="data">
+                <strong>
+                    <router-link :to="{ name: 'SingleTransfer', params: { id: data.row.id }}">
+                        #{{ data.row.voucher }}
+                    </router-link>
+                </strong>
+            </template>
         </list-table>
     </div>
 

@@ -337,6 +337,27 @@ function erp_acct_get_transfer_vouchers( $args = [] ) {
 
     return $result;
 }
+
+/**
+ * Get single voucher
+ *
+ * @param  integer $id Voucher id
+ * @return object     Single voucher
+ */
+function erp_acct_get_single_voucher( $id ) {
+    global $wpdb;
+
+    if ( ! $id ) {
+        return ;
+    }
+
+    $table = $wpdb->prefix . 'erp_acct_transfer_voucher';
+    $query = "Select * From $table WHERE id = {$id}";
+
+    $result = $wpdb->get_row( $query );
+
+    return $result;
+}
 /**
  * Get balance by Ledger ID
  *
