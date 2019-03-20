@@ -71,7 +71,7 @@
                 paginationData: {
                     totalItems : 0,
                     totalPages : 0,
-                    perPage    : 2,
+                    perPage    : 10,
                     currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 actions : []
