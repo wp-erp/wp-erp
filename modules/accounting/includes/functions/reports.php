@@ -141,6 +141,32 @@ function erp_acct_get_account_payable( $args ) {
     return $bill_amount + $purchase_amount;
 }
 
+
+/**
+ * Trial balance helper
+ *
+ * Get owners equity
+ */
+function erp_acct_get_owners_equity( $args, $type ) {
+    global $wpdb;
+
+    if ( 'capital' === $type ) {
+        $having = "HAVING balance < 0";
+    } elseif ( 'drawings' === $type ) {
+        $having = "HAVING balance > 0";
+    }
+
+    $owners_equity = 30;
+
+    $sql = $wpdb->prepare("SELECT SUM( debit - credit ) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
+        WHERE ledger.id = %d AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger.id {$having}",
+        $owners_equity, $args['start_date'], $args['end_date']);
+
+    return $wpdb->get_var($sql);
+}
+
 /**
  * Get trial balance
  *
@@ -162,7 +188,7 @@ function erp_acct_get_trial_balance( $args ) {
         SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
-        WHERE ledger.chart_id <> 7 AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
+        WHERE ledger.chart_id <> 7 AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
         $args['start_date'], $args['end_date']
     );
 
@@ -200,6 +226,15 @@ function erp_acct_get_trial_balance( $args ) {
     $results['rows'][] = [
         'name'    => 'Accounts Receivable',
         'balance' => erp_acct_get_account_receivable( $args )
+    ];
+
+    $results['rows'][] = [
+        'name'    => 'Owner\'s Capital',
+        'balance' => erp_acct_get_owners_equity( $args, 'capital' )
+    ];
+    $results['rows'][] = [
+        'name'    => 'Owner\'s Drawings',
+        'balance' => erp_acct_get_owners_equity( $args, 'drawings' )
     ];
 
     // Totals are inside the root `result` array
