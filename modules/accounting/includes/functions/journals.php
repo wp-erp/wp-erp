@@ -75,9 +75,9 @@ function erp_acct_get_journal( $journal_no ) {
     journal.particulars,
     journal.created_at,
     journal.created_by,
-    journal.updated_at, 
+    journal.updated_at,
     journal.updated_by
-    
+
     FROM {$wpdb->prefix}erp_acct_journals as journal
     LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
     WHERE journal.voucher_no = {$journal_no} LIMIT 1";
@@ -260,13 +260,13 @@ function erp_acct_format_journal_data( $item, $journal_no ) {
 
     $sql = "SELECT
     journal.id,
-    
+
     journal_detail.trn_no,
     journal_detail.ledger_id,
     journal_detail.particulars,
     journal_detail.debit,
     journal_detail.credit
-    
+
     FROM {$wpdb->prefix}erp_acct_journals as journal
     LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
     WHERE journal.voucher_no = {$journal_no}";
