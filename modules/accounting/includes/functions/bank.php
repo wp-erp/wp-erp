@@ -241,11 +241,31 @@ function erp_acct_perform_transfer( $item ) {
             'updated_by' => $updated_by,
         ) );
 
+        erp_acct_sync_dashboard_accounts();
+
         $wpdb->query( 'COMMIT' );
 
     } catch (Exception $e) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'transfer-exception', $e->getMessage() );
+    }
+
+}
+
+/**
+ * Sync dashboard account on transfer
+ */
+function erp_acct_sync_dashboard_accounts() {
+    global $wpdb;
+
+    $accounts = erp_acct_get_banks( true, true, false );
+
+    foreach ( $accounts as $account ) {
+        $wpdb->update( $wpdb->prefix . 'erp_acct_cash_at_banks', array(
+            'balance' => $account['balance'],
+        ), array(
+            'ledger_id' => $account['ledger_id']
+        ));
     }
 
 }
