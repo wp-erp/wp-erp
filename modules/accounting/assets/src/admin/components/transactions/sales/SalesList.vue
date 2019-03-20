@@ -100,7 +100,7 @@
                 paginationData: {
                     totalItems : 0,
                     totalPages : 0,
-                    perPage    : 10,
+                    perPage    : 3,
                     currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 }
             };
@@ -208,7 +208,7 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateInvoices',
+                    name: 'PaginateSales',
                     params: { page: page },
                     query: queries
                 });

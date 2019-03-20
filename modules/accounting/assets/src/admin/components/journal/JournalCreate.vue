@@ -145,20 +145,20 @@
 
                 form_errors: [],
 
-                journal_id: 0,
-                account_ids: [],
+                journal_id      : 0,
+                account_ids     : [],
                 transactionLines: [{},{}],
-                attachments: [],
-                debitLine:[],
-                creditLine:[],
-                ledgers:[],
-                credit_total: 0,
-                debit_total: 0,
-                finalAmount: 0,
-                journal_parti: '',
-                particulars: [],
-                isWorking: false,
-                acct_assets: erp_acct_var.acct_assets
+                attachments     : [],
+                debitLine       : [],
+                creditLine      : [],
+                ledgers         : [],
+                credit_total    : 0,
+                debit_total     : 0,
+                finalAmount     : 0,
+                journal_parti   : '',
+                particulars     : [],
+                isWorking       : false,
+                acct_assets     : erp_acct_var.acct_assets
             }
         },
 
@@ -172,12 +172,7 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.get('ledgers').then((response) => {
-                    response.data.forEach(element => {
-                        this.ledgers.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+                    this.ledgers = response.data;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
@@ -217,7 +212,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } ).then(() => {
                     this.isWorking = false;
-                    this.$router.push({name: 'JournalList'})
+                    this.$router.push({name: 'Journals'})
                 });
 
                 event.target.reset();
