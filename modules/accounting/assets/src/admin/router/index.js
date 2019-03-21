@@ -406,9 +406,20 @@ export default new Router({
                     component: TrialBalance,
                 },
                 {
-                    path: 'ledger-report',
-                    name: 'LedgerReport',
-                    component: LedgerReport,
+                    path: 'ledgers',
+                    component: { render (c) { return c('router-view') } },
+                    children: [
+                        {
+                            path: '',
+                            name: 'LedgerReport',
+                            component: LedgerReport,
+                        },
+                        {
+                            path: ':id',
+                            name: 'LedgerSingle',
+                            component: LedgerReport
+                        },
+                    ]
                 },
                 {
                     path: 'sales-tax',
@@ -427,17 +438,17 @@ export default new Router({
                 },
             ]
         },
-        {
-            path: '/ledgers',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: ':id',
-                    name: 'LedgerSingle',
-                    component: LedgerReport,
-                },
-            ]
-        },
+        // {
+        //     path: '/ledgers',
+        //     component: { render (c) { return c('router-view') } },
+        //     children: [
+        //         {
+        //             path: ':id',
+        //             name: 'LedgerSingle',
+        //             component: LedgerReport,
+        //         },
+        //     ]
+        // },
         {
             path: '/journals',
             component: { render (c) { return c('router-view') } },

@@ -405,9 +405,6 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['vendor_id'] ) ) {
             $prepared_item['vendor_id'] = $request['vendor_id'];
         }
-        if ( isset( $request['ref'] ) ) {
-            $prepared_item['ref'] = $request['ref'];
-        }
         if ( isset( $request['trn_date'] ) ) {
             $prepared_item['trn_date'] =  $request['trn_date'];
         }
