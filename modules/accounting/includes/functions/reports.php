@@ -644,28 +644,13 @@ function erp_acct_get_balance_sheet( $args ) {
         ledger.name,
         ABS(SUM(ledger_detail.debit - ledger_detail.credit)) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=3 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=3 AND ledger.slug != 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
         GROUP BY ledger_detail.ledger_id";
 
     // All DB results are inside `rows` key
     $results['rows1'] = $wpdb->get_results($sql1, ARRAY_A);
     $results['rows2'] = $wpdb->get_results($sql2, ARRAY_A);
     $results['rows3'] = $wpdb->get_results($sql3, ARRAY_A);
-
-    array_unshift( $results['rows1'], [
-        'name' => '<strong class="wperp-bs-header">Assets</strong>',
-        'balance' => '-'
-    ] );
-
-    array_unshift( $results['rows2'], [
-        'name' => '<strong class="wperp-bs-header">Liability</strong>',
-        'balance' => '-'
-    ] );
-
-    array_unshift( $results['rows3'], [
-        'name' => '<strong class="wperp-bs-header">Equity</strong>',
-        'balance' => '-'
-    ] );
 
     $results['rows1'][] = [
         'name' => 'Accounts Receivable',
@@ -689,6 +674,14 @@ function erp_acct_get_balance_sheet( $args ) {
         'name' => 'Sales Tax Payable',
         'slug' => 'sales_tax',
         'balance' => abs ( erp_acct_trial_balance_sales_tax_query( $args, 'payable' ) )
+    ];
+
+    $capital = erp_acct_get_owners_equity( $args, 'capital' );
+    $drawings = erp_acct_get_owners_equity( $args, 'drawings' );
+
+    $results['rows3'][] = [
+        'name'    => 'Owner\'s Equity',
+        'balance' => $capital + $drawings
     ];
 
     $profit_loss = erp_acct_get_profit_loss( $args );
@@ -718,12 +711,9 @@ function erp_acct_get_balance_sheet( $args ) {
         ];
     }
 
-    $results['rows2'] = array_merge( $results['rows2'], $results['rows3'] );
-
-    unset( $results['rows3'] );
-
-    $results['total_left'] = 0;
-    $results['total_right'] = 0;
+    $results['total_asset'] = 0;
+    $results['total_equity'] = 0;
+    $results['total_liability'] = 0;
 
     foreach ($results['rows1'] as $result) {
         if ( !is_numeric( $result['balance'] ) ) {
@@ -731,11 +721,21 @@ function erp_acct_get_balance_sheet( $args ) {
         }
 
         if ( ! empty($result['balance']) ) {
-            $results['total_left'] += $result['balance'];
+            $results['total_asset'] += $result['balance'];
         }
     }
 
     foreach ($results['rows2'] as $result) {
+        if ( !is_numeric( $result['balance'] ) ) {
+            continue;
+        }
+
+        if ( ! empty($result['balance']) ) {
+            $results['total_liability'] += $result['balance'];
+        }
+    }
+
+    foreach ($results['rows3'] as $result) {
         if ( isset( $results['slug'] ) && $results['slug'] !== 'loss' ) {
             $result['balance'] = abs( $result['balance'] );
         }
@@ -744,7 +744,7 @@ function erp_acct_get_balance_sheet( $args ) {
             if ( !is_numeric( $result['balance'] ) ) {
                 continue;
             }
-            $results['total_right'] += $result['balance'];
+            $results['total_equity'] += $result['balance'];
         }
     }
 
