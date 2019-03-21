@@ -290,7 +290,6 @@
                 this.$store.dispatch( 'spinner/setSpinner', false );
             }
 
-
         }
     }
 </script>

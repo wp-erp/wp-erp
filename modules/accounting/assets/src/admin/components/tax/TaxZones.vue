@@ -62,9 +62,9 @@
                 },
                 rows: [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions: [
@@ -78,16 +78,16 @@
                         iconClass: 'flaticon-trash'
                     }
                 ],
-                taxes: [{}],
-                buttonTitle: '',
-                pageTitle: '',
-                url: '',
-                singleUrl: '',
+                taxes                 : [{}],
+                buttonTitle           : '',
+                pageTitle             : '',
+                url                   : '',
+                singleUrl             : '',
                 isActiveOptionDropdown: false,
-                singleTaxRateModal: false,
-                showModal: false,
-                rate_name_id: null,
-                is_update: false
+                singleTaxRateModal    : false,
+                showModal             : false,
+                rate_name_id          : null,
+                is_update             : false
             }
         },
 
@@ -105,6 +105,7 @@
                     item.tax_id = item.id;
                     item.tax_name = item.name;
                 });
+
                 return items;
             }
         },

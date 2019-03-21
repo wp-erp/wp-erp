@@ -130,11 +130,8 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 })
                 .catch((error) => {
-                    console.log(error);
-                })
-                .then( () => {
-                    //ready
-                } );
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                });
             },
 
             onActionClick(action, row, index) {

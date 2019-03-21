@@ -116,6 +116,7 @@
                         this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
             },
+
             onActionClick( action, row, index ) {
                 if ( 'edit' == action ) {
                     row.isEdit = true;
@@ -157,6 +158,7 @@
                     }
                 }
             },
+
             createCategory() {
                 if ( this.categoryName == '' ) {
                     this.error = true;
@@ -180,6 +182,7 @@
                         this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
             },
+
             updateCategory( row ) {
                 var categoryName = document.getElementById('cat-'+row.id).value;
                 var categoryId   = row.id;

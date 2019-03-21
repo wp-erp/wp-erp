@@ -127,8 +127,6 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch((error) => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(() => {
-                    //ready
                 });
             },
 

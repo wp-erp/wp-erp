@@ -8,10 +8,6 @@
                         <span>Add Tax Rate</span>
                     </a>
                     <div class="erp-acct-tax-menus">
-                        <!--<combo-box-->
-                            <!--:options="new_entities"-->
-                            <!--placeholder="New Tax Entity" />-->
-
                         <combo-box
                             :options="entity_lists"
                             :hasUrl="true"
@@ -81,9 +77,9 @@
                 },
                 rows: [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions: [
@@ -107,17 +103,17 @@
                     {namedRoute: 'TaxCategories', name: 'Tax Categories'},
                     {namedRoute: 'TaxAgencies', name: 'Tax Agencies'},
                 ],
-                taxes: [{}],
-                buttonTitle: '',
-                pageTitle: '',
-                url: '',
-                singleUrl: '',
-                tax_rate: null,
+                taxes                 : [{}],
+                buttonTitle           : '',
+                pageTitle             : '',
+                url                   : '',
+                singleUrl             : '',
+                tax_rate              : null,
                 isActiveOptionDropdown: false,
-                tax_rate_id: null,
-                taxrateModal: false,
-                taxcatModal: false,
-                taxagencyModal: false
+                tax_rate_id           : null,
+                taxrateModal          : false,
+                taxcatModal           : false,
+                taxagencyModal        : false
             };
         },
 

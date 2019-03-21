@@ -105,13 +105,13 @@
             fetchData() {
                 HTTP.get('/tax-agencies').then((response) => {
                     this.agencies = response.data;
-                }).catch((error) => {
+                }).catch(error => {
                     console.log(error);
                 });
 
                 HTTP.get('/tax-cats').then((response) => {
                     this.categories = response.data;
-                }).catch((error) => {
+                }).catch(error => {
                     console.log(error);
                 });
             },

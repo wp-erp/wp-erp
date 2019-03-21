@@ -246,7 +246,6 @@
                     this.ledgers   = request1.data;
                     this.setDataForEdit( request2.data );
 
-
                     // initialize combo button id with `update`
                     this.$store.dispatch('combo/setBtnID', 'update');
 

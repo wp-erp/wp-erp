@@ -61,8 +61,8 @@
                     }
                 ],
                 columns: {
-                    'name': { label: 'Account Name' },
-                    'debit': { label: 'Debit Total' },
+                    'name'  : { label: 'Account Name' },
+                    'debit' : { label: 'Debit Total' },
                     'credit': { label: 'Credit Total' }
                 },
                 rows: [],
@@ -85,8 +85,8 @@
                         end_date  : this.end_date
                     }
                 }).then(response => {
-                    this.rows = response.data.rows;
-                    this.totalDebit = response.data.total_debit;
+                    this.rows        = response.data.rows;
+                    this.totalDebit  = response.data.total_debit;
                     this.totalCredit = response.data.total_credit;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
