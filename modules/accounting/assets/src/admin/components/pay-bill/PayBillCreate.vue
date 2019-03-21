@@ -26,7 +26,7 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Reference<span class="wperp-required-sign">*</span></label>
+                                <label>Reference</span></label>
                                 <input type="text" v-model="basic_fields.trn_ref"/>
                             </div>
                         </div>
@@ -355,10 +355,6 @@
 
                 if ( !this.basic_fields.people.hasOwnProperty('id') ) {
                     this.form_errors.push('People Name is required.');
-                }
-
-                if ( !this.basic_fields.trn_ref ) {
-                    this.form_errors.push('Transaction Reference is required.');
                 }
 
                 if ( !this.basic_fields.payment_date ) {
