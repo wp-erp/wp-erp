@@ -735,7 +735,6 @@ Company'
                 `trn_date` date DEFAULT NULL,
                 `due_date` date DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,
-                `ref` varchar(255) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
