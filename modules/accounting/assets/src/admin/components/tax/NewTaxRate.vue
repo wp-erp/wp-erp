@@ -10,7 +10,7 @@
         </div>
         <!-- End .header-section -->
 
-        <div class="wperp-panel wperp-panel-default pb-0">
+        <div class="wperp-panel wperp-panel-default pb-0 new-tax-rate">
             <div class="wperp-panel-body">
                 <form action="" method="post" class="wperp-form">
                     <div class="wperp-row wperp-gutter-20">
@@ -20,7 +20,7 @@
                                 <multi-select v-model="tax_name" :options="rate_names"/>
                             </div>
                         </div>
-                        <div class="wperp-form-group wperp-col-sm-6">
+                        <div class="wperp-form-group wperp-col-sm-6 compound-checkbox">
                             <div class="form-check">
                                 <label class="form-check-label">
                                     <input type="checkbox" v-model="is_compound" class="form-check-input"
@@ -257,4 +257,15 @@
 </script>
 
 <style lang="less" scoped>
+    .new-tax-rate {
+        .compound-checkbox {
+            display: flex;
+            align-items: center;
+            margin: 0;
+
+            .form-check-label {
+                width: 200px;
+            }
+        }
+    }
 </style>
