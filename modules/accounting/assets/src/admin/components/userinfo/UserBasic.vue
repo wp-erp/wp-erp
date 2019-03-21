@@ -65,10 +65,10 @@
                         'email': 'email@mail.com',
                         'img_url' : erp_acct_var.acct_assets + '/images/dummy-user.png',
                         'meta': {
-                            'phone': '+ 88101230123',
-                            'mobile': '+ 999999999',
+                            'phone'  : '+ 88101230123',
+                            'mobile' : '+ 999999999',
                             'website': 'www.website.com',
-                            'fax': '+99898989898',
+                            'fax'    : '+99898989898',
                             'address': 'House#1005, Block#B, Avenue#9, Mirpur DOHS',
                         }
                     }

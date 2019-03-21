@@ -13,7 +13,7 @@
 
         <p><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></p>
 
-        <list-table v-if="rows.length"
+        <list-table
             tableClass="wperp-table table-striped table-dark widefat"
             :columns="columns"
             :rows="rows">
@@ -157,7 +157,6 @@
                 display: flex;
                 justify-content: space-between;
                 max-width: 300px;
-                box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
                 padding: 3px;
             }
         }

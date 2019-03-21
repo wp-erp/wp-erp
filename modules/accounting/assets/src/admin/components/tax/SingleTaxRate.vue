@@ -113,8 +113,8 @@
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
                     }
                 }).then((response) => {
-                    this.taxrate = response.data;
-                    this.rows = response.data.tax_components;
+                    this.taxrate                   = response.data;
+                    this.rows                      = response.data.tax_components;
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
 

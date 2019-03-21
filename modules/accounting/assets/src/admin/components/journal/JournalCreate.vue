@@ -198,7 +198,7 @@
 
             SubmitForJournalCreate(event) {
                 this.validateForm();
-                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 if ( this.form_errors.length ) {
                     window.scrollTo({
                         top: 10,
@@ -207,12 +207,14 @@
                     return;
                 }
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.post('/journals', {
-                    trn_date: this.basic_fields.trn_date,
-                    ref: this.basic_fields.trn_ref,
-                    line_items: this.formatLineItems(),
+                    trn_date   : this.basic_fields.trn_date,
+                    ref        : this.basic_fields.trn_ref,
+                    line_items : this.formatLineItems(),
                     attachments: this.attachments,
-                    type: 'journal',
+                    type       : 'journal',
                     particulars: this.journal_parti,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
