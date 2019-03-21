@@ -13,22 +13,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank = false ) {
     global $wpdb;
 
-    $ledgers = $wpdb->prefix.'erp_acct_ledgers';
+    $ledgers = $wpdb->prefix . 'erp_acct_ledgers'; $show_all = false; $cash_only = false; $bank_only = false;
 
     $chart_id = 7; $cash_ledger = ''; $where = '';
     if ( $with_cash && !$no_bank ) {
         $where = " WHERE chart_id = {$chart_id}";
         $cash_ledger = " OR slug = 'cash' ";
+        $show_all = true;
     }
 
     if ( $with_cash && $no_bank ) {
         $where = " WHERE";
         $cash_ledger = " slug = 'cash' ";
+        $cash_only = true;
     }
 
     if ( !$with_cash && !$no_bank ) {
         $where = " WHERE chart_id = {$chart_id}";
         $cash_ledger = "";
+        $bank_only = true;
     }
 
     if ( !$show_balance ) {
@@ -46,15 +49,34 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
               Group BY ld.ledger_id";
 
     $accts = $wpdb->get_results( $query, ARRAY_A );
+
+    if ( empty( $accts ) && ( $cash_only || $show_all ) ) {
+        $acct['id'] = 1;
+        $acct['name'] = 'Cash';
+        $acct['balance'] = 0;
+
+        $accts[] = $acct ;
+    }
+
     $banks = erp_acct_get_ledgers_by_chart_id( 7 );
+
+    if ( $bank_only && empty( $banks ) ) {
+        return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
+    }
 
     $temp1 = wp_list_pluck( $accts, 'id' );
     $temp2 = wp_list_pluck( $banks, 'id' );
 
-    if ( !count(array_intersect( $temp1, $temp2 ) ) ) {
+    if ( !count(array_intersect( $temp1, $temp2 ) )  && !$cash_only) {
         $results = array_merge( $accts, $banks );
     } else {
         $results = $accts ;
+    }
+
+    for ( $i = 0; $i < count( $results ); $i++ ) {
+        if ( !array_key_exists( 'balance', $results[$i] ) ) {
+            $results[$i]['balance'] = 0;
+        }
     }
 
     return $results;
