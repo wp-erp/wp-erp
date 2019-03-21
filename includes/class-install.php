@@ -972,6 +972,7 @@ Company'
                 `amount` decimal(10,2) DEFAULT NULL,
                 `ac_from` int(11) DEFAULT NULL,
                 `ac_to` int(11) DEFAULT NULL,
+                `particulars` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
