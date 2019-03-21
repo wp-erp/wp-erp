@@ -67,6 +67,17 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/transfer/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_single_transfer' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::READABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_bank_transfer' );
+                },
+            ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/list', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -241,6 +252,20 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, 0 );
+
+        return $response;
+    }
+
+    /**
+     * Get single voucher
+     */
+    public function get_single_transfer( $request ) {
+        $id         = ! empty( $request['id'] ) ? intval( $request['id'] ) : 0;
+        $item       = erp_acct_get_single_voucher( $id );
+        $accounts   = erp_acct_get_transfer_accounts();
+        $accounts   = wp_list_pluck( $accounts, 'name', 'id' );
+        $data       = $this->prepare_list_item_for_response( $item, $request, [], $accounts );
+        $response   = rest_ensure_response( $data );
 
         return $response;
     }
@@ -434,6 +459,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item = (object) $item;
 
         $data = [
+            'id'      => $item->id,
             'voucher'  => (int) $item->voucher_no,
             'ac_from'  => $accounts[$item->ac_from],
             'ac_to'    => $accounts[$item->ac_to],
