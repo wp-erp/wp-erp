@@ -26,12 +26,6 @@
                             </div>
                             <div class="wperp-col-sm-3">
                                 <div class="wperp-form-group">
-                                    <label>Reference</span></label>
-                                    <input type="text" v-model="basic_fields.trn_ref"/>
-                                </div>
-                            </div>
-                            <div class="wperp-col-sm-3">
-                                <div class="wperp-form-group">
                                     <label>Bill Date<span class="wperp-required-sign">*</span></label>
                                     <datepicker v-model="basic_fields.trn_date"></datepicker>
                                 </div>
@@ -165,7 +159,6 @@
             return {
                 basic_fields: {
                     user           : '',
-                    trn_ref        : '',
                     trn_date       : '',
                     due_date       : '',
                     billing_address: ''
@@ -269,7 +262,6 @@
             setDataForEdit(bill) {
                 this.basic_fields.user            = { id: parseInt(bill.vendor_id), name: bill.vendor_name };
                 this.basic_fields.billing_address = bill.billing_address;
-                this.basic_fields.trn_ref         = bill.ref;
                 this.basic_fields.trn_date        = bill.trn_date;
                 this.basic_fields.due_date        = bill.due_date;
                 this.status                       = bill.status;
