@@ -21,7 +21,7 @@
             <li><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></li>
         </ul>
 
-        <list-table v-if="rows.length"
+        <list-table
             tableClass="wperp-table table-striped table-dark widefat"
             :columns="columns"
             :rows="rows">
