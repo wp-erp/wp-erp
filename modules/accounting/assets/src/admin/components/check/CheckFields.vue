@@ -13,11 +13,7 @@
 
 <script>
     export default {
-        name: "CheckFields",
-
-        props: {
-
-        },
+        name: 'CheckFields',
 
         data() {
             return {

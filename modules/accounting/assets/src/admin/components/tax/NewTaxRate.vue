@@ -200,11 +200,11 @@
                 var lineItems = [];
 
                 for(let idx = 0; idx < this.componentLines.length; idx++) {
-                    let item = {};
-                    item.component_name = this.componentLines[idx].component_name;
-                    item.agency_id = this.componentLines[idx].agency_id.id;
-                    item.tax_category_id = this.componentLines[idx].tax_category.id;
-                    item.tax_rate  = this.componentLines[idx].tax_rate;
+                    let item                 = {};
+                        item.component_name  = this.componentLines[idx].component_name;
+                        item.agency_id       = this.componentLines[idx].agency_id.id;
+                        item.tax_category_id = this.componentLines[idx].tax_category.id;
+                        item.tax_rate        = this.componentLines[idx].tax_rate;
 
                     lineItems.push( item );
                 }

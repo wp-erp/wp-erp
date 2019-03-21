@@ -140,7 +140,6 @@
         components: {
             MultiSelect,
             SelectVendors,
-            HTTP,
             Datepicker,
             FileUpload,
             ComboButton,
@@ -152,12 +151,12 @@
         data() {
             return {
                 basic_fields: {
-                    vendor: {},
-                    trn_ref: '',
-                    payment_date: erp_acct_var.current_date,
-                    deposit_to: '',
+                    vendor         : {},
+                    trn_ref        : '',
+                    payment_date   : erp_acct_var.current_date,
+                    deposit_to     : '',
                     billing_address: '',
-                    trn_by: { id: null, name: null }
+                    trn_by         : { id: null, name: null }
                 },
 
                 paymentMethods: {

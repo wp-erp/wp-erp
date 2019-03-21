@@ -214,7 +214,6 @@
                     this.pay_methods = response.data;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
-
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
@@ -264,11 +263,12 @@
                     return;
                 }
 
-                HTTP.get(`/people/${people_id}`).then((response) => {
-                    // add more info
-                    this.basic_fields.billing_address =
-                        `Street: ${response.data.street_1} ${response.data.street_2},
-                        City: ${response.data.city}, Country: ${response.data.country}`;
+                HTTP.get(`/people/${people_id}`).then(response => {
+                    let billing = response.data;
+
+                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                    this.basic_fields.billing_address = address;
                 });
             },
 

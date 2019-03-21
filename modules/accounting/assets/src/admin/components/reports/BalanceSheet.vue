@@ -150,12 +150,12 @@
                         end_date  : this.end_date
                     }
                 }).then(response => {
-                    this.rows1 = response.data.rows1;
-                    this.rows2 = response.data.rows2;
-                    this.rows3 = response.data.rows3;
-                    this.totalAsset = response.data.total_asset;
+                    this.rows1          = response.data.rows1;
+                    this.rows2          = response.data.rows2;
+                    this.rows3          = response.data.rows3;
+                    this.totalAsset     = response.data.total_asset;
                     this.totalLiability = response.data.total_liability;
-                    this.totalEquity = response.data.total_equity;
+                    this.totalEquity    = response.data.total_equity;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
