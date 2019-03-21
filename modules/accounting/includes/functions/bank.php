@@ -265,6 +265,7 @@ function erp_acct_perform_transfer( $item ) {
             'amount'     => $item['amount'],
             'ac_from'    => $item['from_account_id'],
             'ac_to'      => $item['to_account_id'],
+            'particulars'=> $item['particulars'],
             'trn_date'   => $item['date'],
             'created_at' => $created_at,
             'created_by' => $created_by,

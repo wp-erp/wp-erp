@@ -96,6 +96,7 @@
 </script>
 <style lang="less">
     .wperp-modal-dialog {
-        max-width: 1000px !important;
+        max-width: 900px!important;
+        margin: 50px auto;
     }
 </style>
