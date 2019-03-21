@@ -27,6 +27,8 @@ import JournalList       from 'admin/components/journal/JournalList.vue';
 import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
 import JournalSingle     from 'admin/components/journal/JournalSingle.vue';
 import Transfer          from 'admin/components/transfers/Transfer.vue';
+import NewTransfer       from 'admin/components/transfers/NewTransfer.vue';
+import SingleTransfer    from 'admin/components/transfers/SingleTransfer.vue';
 import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
 import SalesSingle       from 'admin/components/transactions/sales/SalesSingle.vue';
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
@@ -557,9 +559,25 @@ export default new Router({
             ]
         },
         {
-            path: '/transfer/new',
-            name: 'Transfer',
-            component: Transfer
+            path: '/transfer',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                  path: '',
+                  name: 'Transfer',
+                  component: Transfer
+                },
+                {
+                    path: 'new',
+                    name: 'NewTransfer',
+                    component: NewTransfer
+                },
+                {
+                    path: ':id',
+                    name: 'SingleTransfer',
+                    component: SingleTransfer,
+                },
+            ]
         },
         {
             path: '/expenses',
