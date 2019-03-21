@@ -19,18 +19,18 @@
 
                     <form action="" class="wperp-form" method="post">
                         <div class="wperp-row">
-                            <div class="wperp-col-sm-3">
+                            <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
                                     <select-people v-model="basic_fields.user"></select-people>
                                 </div>
                             </div>
-                            <div class="wperp-col-sm-3">
+                            <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
                                     <label>Bill Date<span class="wperp-required-sign">*</span></label>
                                     <datepicker v-model="basic_fields.trn_date"></datepicker>
                                 </div>
                             </div>
-                            <div class="wperp-col-sm-3">
+                            <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
                                     <label>Due Date<span class="wperp-required-sign">*</span></label>
                                     <datepicker v-model="basic_fields.due_date"></datepicker>
