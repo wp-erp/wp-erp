@@ -533,7 +533,7 @@
                     due_date       : this.basic_fields.due_date,
                     billing_address: this.basic_fields.billing_address,
                     discount_type  : this.discountType,
-                    tax_rate_id    : this.taxRate.id,
+                    tax_rate_id    : this.taxRate !== null ? this.taxRate.id : null,
                     line_items     : this.formatLineItems(),
                     attachments    : this.attachments,
                     particulars    : this.particulars,
