@@ -14,10 +14,10 @@
 
         <div class="wperp-panel-body">
             <div class="wperp-row">
-                <div class="wperp-col-sm-6">
+                <div class="wperp-col-sm-12">
                     <list-table
                         tableClass="wperp-table table-striped table-dark widefat balance-sheet"
-                        :columns="columns"
+                        :columns="columns1"
                         :rows="rows1"
                         :showItemNumbers="false"
                         :showCb="false">
@@ -30,17 +30,17 @@
                         </template>
                         <template slot="tfoot">
                             <tr class="t-foot">
-                                <td>Total</td>
-                                <td>{{ getCurrencySign() + totalLeft }}</td>
+                                <td>Total Asset</td>
+                                <td>{{ getCurrencySign() + totalAsset }}</td>
                             </tr>
                         </template>
                     </list-table>
                 </div>
 
-                <div class="wperp-col-sm-6">
+                <div class="wperp-col-sm-12">
                     <list-table
                         tableClass="wperp-table table-striped table-dark widefat balance-sheet"
-                        :columns="columns"
+                        :columns="columns2"
                         :rows="rows2"
                         :showItemNumbers="false"
                         :showCb="false">
@@ -53,12 +53,37 @@
                         </template>
                         <template slot="tfoot">
                             <tr class="t-foot">
-                                <td>Total</td>
-                                <td>{{ getCurrencySign() + Math.abs(totalRight) }}</td>
+                                <td>Total Liability</td>
+                                <td>{{ getCurrencySign() + Math.abs(totalLiability) }}</td>
                             </tr>
                         </template>
                     </list-table>
                 </div>
+
+                <div class="wperp-col-sm-12">
+                    <list-table
+                        tableClass="wperp-table table-striped table-dark widefat balance-sheet"
+                        :columns="columns3"
+                        :rows="rows3"
+                        :showItemNumbers="false"
+                        :showCb="false">
+                        <template slot="name" slot-scope="data">
+                            <span v-html="data.row.name"> </span>
+                        </template>
+                        <template slot="balance" slot-scope="data">
+                            <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
+                            <span v-else>{{ getCurrencySign() + Math.abs(data.row.balance) }} </span>
+                        </template>
+                        <template slot="tfoot">
+                            <tr class="t-foot">
+                                <td>Total Equity</td>
+                                <td>{{ getCurrencySign() + Math.abs(totalEquity) }}</td>
+                            </tr>
+                        </template>
+                    </list-table>
+                </div>
+
+
             </div>
         </div>
 
@@ -89,14 +114,24 @@
                         img: erp_acct_var.erp_assets + '/images/trash.png'
                     }
                 ],
-                columns: {
-                    'name': { label: '' },
-                    'balance': { label: 'Balance' }
+                columns1: {
+                    'name': { label: 'Assets' },
+                    'balance': { label: 'Amount' }
+                },
+                columns2: {
+                    'name': { label: 'Liability' },
+                    'balance': { label: 'Amount' }
+                },
+                columns3: {
+                    'name': { label: 'Equity' },
+                    'balance': { label: 'Amount' }
                 },
                 rows1: [],
                 rows2: [],
-                totalRight: 0,
-                totalLeft: 0
+                rows3: [],
+                totalAsset: 0,
+                totalLiability: 0,
+                totalEquity: 0
             }
         },
 
@@ -117,8 +152,10 @@
                 }).then(response => {
                     this.rows1 = response.data.rows1;
                     this.rows2 = response.data.rows2;
-                    this.totalLeft = response.data.total_left;
-                    this.totalRight = response.data.total_right;
+                    this.rows3 = response.data.rows3;
+                    this.totalAsset = response.data.total_asset;
+                    this.totalLiability = response.data.total_liability;
+                    this.totalEquity = response.data.total_equity;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
