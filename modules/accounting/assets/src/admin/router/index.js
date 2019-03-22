@@ -45,6 +45,7 @@ import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
 import TaxZones          from 'admin/components/tax/TaxZones.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
+import PayTaxSingle      from 'admin/components/tax/PayTaxSingle.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import CheckCreate       from 'admin/components/check/CheckCreate.vue';
 import CheckSingle       from 'admin/components/check/CheckSingle.vue';
@@ -438,17 +439,6 @@ export default new Router({
                 },
             ]
         },
-        // {
-        //     path: '/ledgers',
-        //     component: { render (c) { return c('router-view') } },
-        //     children: [
-        //         {
-        //             path: ':id',
-        //             name: 'LedgerSingle',
-        //             component: LedgerReport,
-        //         },
-        //     ]
-        // },
         {
             path: '/journals',
             component: { render (c) { return c('router-view') } },
@@ -566,6 +556,11 @@ export default new Router({
                     path: 'page/:page',
                     name: 'PaginateTaxRecords',
                     component: TaxRecords,
+                },
+                {
+                    path: ':id',
+                    name: 'PayTaxSingle',
+                    component: PayTaxSingle,
                 },
             ]
         },
