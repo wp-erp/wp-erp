@@ -84,6 +84,12 @@
             };
         },
 
+        watch: {
+            selectedAgency() {
+                this.rows = [];
+            }
+        },
+
         created() {
             //? why is nextTick here ...? i don't know.
             this.$nextTick(function () {
@@ -105,6 +111,8 @@
             },
 
             getSalesTaxReport() {
+                if ( null === this.selectedAgency ) return;
+
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 this.rows = [];
@@ -131,6 +139,10 @@
 
 <style lang="less">
 .sales-tax-report {
+    h2 {
+        padding-top: 15px;
+    }
+
     .query-options {
         background: #fff;
         padding: 30px 5px;

@@ -1,5 +1,5 @@
 <template>
-    <div class="app-customers">
+    <div class="app-customers tax-zones">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
@@ -30,7 +30,7 @@
                 @bulk:click="onBulkAction">
 
                 <template slot="default" slot-scope="data">
-                    {{ '1' === data.row.default ? '&#x02713;' : '-' }}
+                    {{ '1' === data.row.default ? '&#x02713;' : '' }}
                 </template>
             </list-table>
         </div>
@@ -202,5 +202,21 @@
     }
     .combo-box {
         margin-right: 10px !important;
+    }
+
+    .tax-zones {
+        .check-column {
+            padding: 20px !important;
+        }
+
+        .actions {
+            text-align: right;
+        }
+
+        tbody .column.default {
+            color: #388e3c;
+            font-size: 26px;
+            line-height: 26px;
+        }
     }
 </style>

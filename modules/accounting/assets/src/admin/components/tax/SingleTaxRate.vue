@@ -154,9 +154,6 @@
                         this.row_data = this.rows[index];
                         this.showModal = true;
                         break;
-
-                    default :
-                        break;
                 }
             }
         }
@@ -164,8 +161,9 @@
 </script>
 <style lang="less">
     .erp-acct-tax-menus {
-        margin-left: 600px;
+        margin-left: 240px;
     }
+
     .combo-box {
         margin-right: 10px !important;
     }

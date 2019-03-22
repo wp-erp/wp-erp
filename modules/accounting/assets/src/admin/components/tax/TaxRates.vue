@@ -1,5 +1,5 @@
 <template>
-    <div class="app-customers">
+    <div class="app-taxes">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
@@ -250,6 +250,21 @@
 .table-taxrates {
     .col--actions {
         text-align: left !important;
+    }
+}
+
+.app-taxes {
+    .table-container {
+        width: 600px;
+    }
+
+    .check-column {
+        padding: 20px !important;
+    }
+
+    .actions,
+    .col--actions {
+        text-align: right !important;
     }
 }
 </style>

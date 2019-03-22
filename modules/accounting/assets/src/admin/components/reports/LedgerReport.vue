@@ -169,6 +169,11 @@
 
 <style lang="less">
 .ledger-report {
+
+    h2 {
+        padding-top: 15px;
+    }
+
     .tablenav,
         .column-cb,
         .check-column {
