@@ -39,8 +39,8 @@
                                 <datepicker id="transfer_date" name="transfer_date" v-model="transferdate"></datepicker>
                             </div>
                             <div class="wperp-col-xs-12 wperp-form-group">
-                                <label for="transfer_memo">Memo</label>
-                                <textarea name="transfer_memo" id="transfer_memo" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="particulars"></textarea>
+                                <label for="particulars">Particulars</label>
+                                <textarea name="particulars" id="particulars" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="particulars"></textarea>
                             </div>
                             <!--<div class="wperp-col-xs-12">-->
                                 <!--<div class="attachment-container">-->
