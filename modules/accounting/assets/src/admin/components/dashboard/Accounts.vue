@@ -8,7 +8,7 @@
             </a>
         </div>
         <div class="wperp-panel-body pb-0">
-            <ul v-if="!isEditSettingsEnabled" class="wperp-list-unstyled list-table-content list-table-content--border list-table-content--bg-space">
+            <ul v-if="!isEditSettingsEnabled" class="wperp-list-unstyled list-table-content list-table-content--border">
                 <li v-if="accounts.length" :key="key" v-for="(item,key) in accounts">
                     <div class="left">
                         <i class="flaticon-menu-1"></i>
@@ -21,7 +21,7 @@
                     </div>
                 </li>
             </ul>
-            <ul v-else class="wperp-list-unstyled list-table-content list-table-content--border list-table-content--bg-space">
+            <ul v-else class="wperp-list-unstyled list-table-content list-table-content--border">
                 <li :key="key" v-for="(item,key) in edit_accounts">
                     <div class="left">
                         <i class="flaticon-menu-1"></i>
@@ -135,7 +135,4 @@
 </script>
 
 <style scoped>
-    .list-table-content--border li:last-child{
-        border-bottom: 0px;
-    }
 </style>

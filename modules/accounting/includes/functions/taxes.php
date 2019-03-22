@@ -324,6 +324,29 @@ function erp_acct_get_tax_pay_records( $args = [] ) {
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
+function erp_acct_get_tax_pay_record( $voucher_no ) {
+    global $wpdb;
+
+    $sql = "SELECT
+
+    tax.id,
+    tax.voucher_no,
+    tax.particulars,
+    tax.amount,
+    tax.trn_date,
+    tax.voucher_type,
+    tax.trn_by,
+    tax.agency_id,
+    tax.ledger_id
+
+    FROM {$wpdb->prefix}erp_acct_tax_pay AS tax
+    WHERE tax.voucher_no = {$voucher_no} LIMIT 1";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $row;
+}
+
 /**
  * Make a tax payment
  *
