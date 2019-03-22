@@ -83,7 +83,7 @@
                 let items = this.rows;
                 items.map( item => {
                     item.employee = item.full_name;
-                    item.email = item.user_email;
+                    item.email = item.email;
                     item.designation = item.designation.title;
                 } );
                 return items;
