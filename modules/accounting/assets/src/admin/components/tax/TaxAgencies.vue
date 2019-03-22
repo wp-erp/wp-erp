@@ -1,5 +1,5 @@
 <template>
-    <div class="app-customers">
+    <div class="app-tax-agencies">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
@@ -15,7 +15,7 @@
 
         <div class="table-container">
             <list-table
-                tableClass="wp-ListTable widefat fixed tax-agencies-list"
+                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark tax-agencies-list"
                 action-column="actions"
                 :columns="columns"
                 :rows="row_data"
@@ -193,6 +193,20 @@
         }
     }
 </script>
-<style lang="less">
 
+<style lang="less">
+.app-tax-agencies {
+
+    .table-container {
+        width: 600px;
+    }
+
+    .check-column {
+        padding: 20px !important;
+    }
+
+    .actions {
+        text-align: right;
+    }
+}
 </style>

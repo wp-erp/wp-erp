@@ -122,7 +122,7 @@
                     this.showAlert( 'success', 'Transfer Successful!' );
                     this.fetchAccounts();
                     this.resetData();
-                    this.$router.push('/transfer');
+                    this.$router.push('/transfers');
                 } ).catch( err => {
                     let msg = err.response.data.message;
                     this.$store.dispatch( 'spinner/setSpinner', false );

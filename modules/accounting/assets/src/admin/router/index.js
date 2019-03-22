@@ -26,7 +26,7 @@ import PayPurchaseSingle from 'admin/components/pay-purchase/PayPurchaseSingle.v
 import JournalList       from 'admin/components/journal/JournalList.vue';
 import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
 import JournalSingle     from 'admin/components/journal/JournalSingle.vue';
-import Transfer          from 'admin/components/transfers/Transfer.vue';
+import Transfers         from 'admin/components/transfers/Transfers.vue';
 import NewTransfer       from 'admin/components/transfers/NewTransfer.vue';
 import SingleTransfer    from 'admin/components/transfers/SingleTransfer.vue';
 import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
@@ -565,13 +565,13 @@ export default new Router({
             ]
         },
         {
-            path: '/transfer',
+            path: '/transfers',
             component: { render (c) { return c('router-view') } },
             children: [
                 {
                   path: '',
-                  name: 'Transfer',
-                  component: Transfer
+                  name: 'Transfers',
+                  component: Transfers
                 },
                 {
                     path: 'new',

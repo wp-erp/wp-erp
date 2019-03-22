@@ -6,7 +6,7 @@
         </h2>
         <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false"></people-modal>
         <list-table
-            tableClass="wperp-table table-striped table-dark"
+            tableClass="wperp-table people-table table-striped table-dark"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -201,6 +201,7 @@
 <style lang="less">
     .app-customers {
         .add-new-people {
+            padding-top: 10px;
             align-items: center;
             display: flex;
             span {
@@ -278,6 +279,11 @@
             }
             tbody td {
                 line-height: 3em;
+            }
+        }
+        .people-table {
+            .col--actions {
+                float: left !important;
             }
         }
     }

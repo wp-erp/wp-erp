@@ -121,6 +121,10 @@
 
 <style lang="less">
     .trial-balance {
+        h2 {
+            padding-top: 15px;
+        }
+
         .col--check {
             display: none;
         }

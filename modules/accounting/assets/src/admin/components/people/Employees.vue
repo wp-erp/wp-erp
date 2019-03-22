@@ -83,7 +83,7 @@
                 let items = this.rows;
                 items.map( item => {
                     item.employee = item.full_name;
-                    item.email = item.user_email;
+                    item.email = item.email;
                     item.designation = item.designation.title;
                 } );
                 return items;
@@ -168,6 +168,7 @@
 <style lang="less">
     .app-employees {
         .add-new-people {
+            margin-top: 10px;
             align-items: center;
             display: flex;
             span {
@@ -233,6 +234,11 @@
             }
             tbody td {
                 line-height: 3em;
+            }
+        }
+        .employee-list {
+            .col--actions {
+                float: left !important;
             }
         }
     }
