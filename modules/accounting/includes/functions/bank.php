@@ -91,9 +91,79 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
 function erp_acct_get_dashboard_banks() {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_cash_at_banks", ARRAY_A );
+    $sql = "SELECT
+        ledger.name,
+        SUM(ledger_detail.debit - ledger_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
+        WHERE ledger.slug = 'cash' GROUP BY ledger_detail.ledger_id";
 
-    return $rows;
+    // All DB results are inside `rows` key
+    $results = $wpdb->get_results($sql, ARRAY_A);
+
+    $results[] = [
+        'name'       => 'Cash at Bank',
+        'balance'    => erp_acct_dashboard_balance_cash_at_bank('balance' ),
+        'additional' => erp_acct_dashboard_balance_bank_balance('balance' )
+    ];
+    $results[] = [
+        'name'       => 'Bank Loan',
+        'balance'    => erp_acct_dashboard_balance_cash_at_bank('loan' ),
+        'additional' => erp_acct_dashboard_balance_bank_balance('loan' )
+    ];
+
+    return $results;
+}
+
+/**
+ * Dashboard account helper
+ *
+ * @param string $type
+ *
+ * @return mixed
+ */
+function erp_acct_dashboard_balance_cash_at_bank( $type ) {
+    global $wpdb;
+
+    if ( 'loan' === $type ) {
+        $having = "HAVING balance < 0";
+    } elseif ( 'balance' === $type ) {
+        $having = "HAVING balance >= 0";
+    }
+
+    $chart_bank = 7;
+
+    $sql1 = $wpdb->prepare("SELECT group_concat(id) FROM {$wpdb->prefix}erp_acct_ledgers where chart_id = %d", $chart_bank);
+    $ledger_ids = implode( ',', explode( ',', $wpdb->get_var($sql1) ) );
+
+    $sql = "SELECT SUM(ledger_details.balance) as balance from (SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_ledger_details
+            WHERE ledger_id IN ({$ledger_ids}) {$having}) as ledger_details";
+
+    return $wpdb->get_var($sql);
+}
+
+/**
+ * Dashboard account helper
+ *
+ * @param string $type
+ *
+ * @return mixed
+ */
+function erp_acct_dashboard_balance_bank_balance( $type ) {
+    global $wpdb;
+
+    if ( 'loan' === $type ) {
+        $having = "HAVING balance < 0";
+    } elseif ( 'balance' === $type ) {
+        $having = "HAVING balance >= 0";
+    }
+
+    $sql = "SELECT ledger.id, ledger.name, SUM( debit - credit ) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
+        WHERE ledger.chart_id = 7 GROUP BY ledger.id {$having}";
+
+    return $wpdb->get_results($sql);
 }
 
 /**

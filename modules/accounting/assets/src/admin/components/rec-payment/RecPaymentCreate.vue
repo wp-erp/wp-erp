@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container rec-payment">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -28,7 +28,7 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Reference</span></label>
+                                <label>Reference</label>
                                 <input type="text" v-model="basic_fields.trn_ref"/>
                             </div>
                         </div>
@@ -485,5 +485,13 @@
 </script>
 
 <style lang="less">
+    .rec-payment {
+        .dropdown {
+            width: 100%;
+        }
 
+        .col--amount {
+            width: 200px;
+        }
+    }
 </style>
