@@ -45,6 +45,7 @@
 
             $('body' ).on( 'keyup', '.erp-ac-check-invoice-number', this.keyupInvoice );
             $('body' ).on( 'change', '.erp-ac-check-invoice-number', this.changeInvoice );
+            $('body').on( 'change', 'select.erp-country-select', this.setCountryStateValue );
 
             $('body' ).on( 'click', '.erp-ac-not-found-btn-in-drop', this.dropDownAddMore );
             $('.erp-ac-transaction-report').on('click', this.transactionReport );
@@ -993,21 +994,35 @@
             $('#erp-ac-hidden-new-payment').find('.erp-select2').select2('destroy');
             $('#erp-ac-new-payment-voucher').find('.erp-select2').select2('destroy');
             // $('#erp-ac-hidden-new-payment').find('span.select2').remove();
-
-            ERP_Accounting.setCountryStateValue();
         },
 
         setCountryStateValue: function() {
-            $('select.erp-country-select').trigger('change');
-
-            var element = $( 'ul.erp-form-fields' ).find( 'li.row-state' ),
-                selectedVal = element.data('selected');
-
-            if ( selectedVal !== '' ) {
-                element.find( 'select' ).val( selectedVal );
+            if (typeof wpErpCountries === 'undefined') {
+                return false;
             }
 
-            $('select.erp-state-select').trigger('change');
+            var self = $(this),
+                country = self.val(),
+                parent = self.closest(self.data('parent')),
+                empty = '<option value="">- Select -</option>';
+
+            if (wpErpCountries[country]) {
+                var options = '',
+                    state = wpErpCountries[country];
+
+                for (var index in state) {
+                    options = options + '<option value="' + index + '">' + state[index] + '</option>';
+                }
+
+                if ($.isArray(wpErpCountries[country])) {
+                    $('.erp-state-select').html(empty);
+                } else {
+                    $('.erp-state-select').html(options);
+                }
+
+            } else {
+                $('.erp-state-select').html(empty);
+            }
 
         },
 

@@ -309,6 +309,9 @@ class Admin_Menu {
                 'urlstream_upload' => true,
             )
         ));
+
+        $country = \WeDevs\ERP\Countries::instance();
+        wp_localize_script( 'wp-erp-ac-js', 'wpErpCountries', $country->load_country_states() );
     }
 
     /**
