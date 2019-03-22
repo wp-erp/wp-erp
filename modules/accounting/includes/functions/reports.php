@@ -715,7 +715,7 @@ function erp_acct_get_balance_sheet( $args ) {
         }
 
         if ( ! empty($result['balance']) ) {
-            $results['total_asset'] += $result['balance'];
+            $results['total_asset'] += abs( $result['balance'] );
         }
     }
 
@@ -725,7 +725,7 @@ function erp_acct_get_balance_sheet( $args ) {
         }
 
         if ( ! empty($result['balance']) ) {
-            $results['total_liability'] += $result['balance'];
+            $results['total_liability'] += abs( $result['balance'] );
         }
     }
 
