@@ -11,7 +11,7 @@
         </div>
         <!-- End .header-section -->
         <list-table
-            tableClass="wperp-table table-striped table-dark widefat table2 money-trnsfer-list"
+            tableClass="wperp-table table-striped table-dark widefat table2 money-transfer-list"
             action-column="actions"
             :columns="columns"
             :rows="transfer_list">
@@ -32,7 +32,7 @@
     import ListTable from 'admin/components/list-table/ListTable.vue'
 
     export default {
-        name: "Transfer",
+        name: "Transfers",
 
         components: {
             HTTP,
@@ -79,6 +79,11 @@
 </script>
 
 <style lang="less">
+    .money-transfer-list {
+        .ac_to {
+            float: left !important;
+        }
+    }
     .wperp-modal {
         z-index: 999 !important;
     }
