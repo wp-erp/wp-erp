@@ -15,7 +15,7 @@
 
         <div class="table-container">
             <list-table
-                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark"
+                tableClass="wp-ListTable widefat fixed tax-zone-list wperp-table table-striped table-dark"
                 action-column="actions"
                 :columns="columns"
                 :rows="row_data"
@@ -202,5 +202,11 @@
     }
     .combo-box {
         margin-right: 10px !important;
+    }
+
+    .tax-zone-list {
+        .col--actions {
+            float: !important;
+        }
     }
 </style>

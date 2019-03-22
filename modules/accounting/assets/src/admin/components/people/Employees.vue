@@ -168,6 +168,7 @@
 <style lang="less">
     .app-employees {
         .add-new-people {
+            margin-top: 10px;
             align-items: center;
             display: flex;
             span {
@@ -233,6 +234,11 @@
             }
             tbody td {
                 line-height: 3em;
+            }
+        }
+        .employee-list {
+            .col--actions {
+                float: left !important;
             }
         }
     }

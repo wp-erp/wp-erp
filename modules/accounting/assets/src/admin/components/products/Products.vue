@@ -7,7 +7,7 @@
         </h2>
 
         <list-table
-            tableClass="wperp-table table-striped table-dark widefat table2 producdt-list"
+            tableClass="wperp-table table-striped table-dark widefat table2 product-list"
             action-column="actions"
             :columns="columns"
             :rows="products"
@@ -201,6 +201,12 @@
 
         .check-column {
             padding: 20px !important;
+        }
+
+        .product-list {
+            .col--actions {
+                float: left !important;
+            }
         }
     }
 </style>
