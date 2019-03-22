@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container purchase-create">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -49,11 +49,11 @@
                     <table class="wperp-table wperp-form-table">
                         <thead>
                         <tr>
-                            <td scope="col" class="col--check">Product/Service</td>
-                            <th scope="col" class="column-primary">Qty</th>
+                            <td scope="col" class="col--product">Product/Service</td>
+                            <th scope="col">Qty</th>
                             <th scope="col">Unit Price</th>
                             <th scope="col">Amount</th>
-                            <th scope="col" class="col--actions"></th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -447,3 +447,28 @@
 
     }
 </script>
+
+<style lang="less">
+.purchase-create {
+    .dropdown {
+        width: 100%;
+    }
+
+    .col--product {
+        min-width: 500px;
+    }
+
+    .col--qty {
+        width: 120px;
+    }
+
+    .col--qty input {
+        width: 100% !important;
+    }
+
+    .col--uni_price,
+    .col--amount {
+        width: 200px;
+    }
+}
+</style>

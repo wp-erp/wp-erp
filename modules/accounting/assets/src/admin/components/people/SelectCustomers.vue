@@ -105,7 +105,7 @@
         }
 
         .multiselect__placeholder {
-            margin: 2px 0 0 7px !important;
+            margin: 4px 0 0 7px !important;
         }
     }
 </style>
