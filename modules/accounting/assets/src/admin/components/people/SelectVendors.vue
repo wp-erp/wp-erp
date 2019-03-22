@@ -96,24 +96,24 @@
 </script>
 
 <style lang="less">
-    .invoice-customers.with-multiselect {
-        .multiselect__input,
-        .multiselect__single {
-            min-height: 30px;
-            line-height: 30px;
-            margin-bottom: 0;
-        }
+    // .invoice-customers.with-multiselect {
+    //     .multiselect__input,
+    //     .multiselect__single {
+    //         min-height: 30px;
+    //         line-height: 30px;
+    //         margin-bottom: 0;
+    //     }
 
-        .multiselect__tags {
-            padding: 8px 0;
-        }
+    //     .multiselect__tags {
+    //         padding: 8px 0;
+    //     }
 
-        .multiselect__placeholder {
-            margin: 4px 0 0 7px !important;
-        }
+    //     .multiselect__placeholder {
+    //         margin: 4px 0 0 7px !important;
+    //     }
 
-        .multiselect__select {
-            height: 41px;
-        }
-    }
+    //     .multiselect__select {
+    //         height: 41px;
+    //     }
+    // }
 </style>
