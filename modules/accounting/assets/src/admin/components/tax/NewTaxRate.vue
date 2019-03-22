@@ -48,6 +48,8 @@
                                 v-for="(line,key) in componentLines">
                                 <td scope="row" class="col--component-name column-primary">
                                     <input type="text" class="wperp-form-field" v-model="line.component_name">
+                                    <a href="#" @click.prevent="" class="vis-hide after-select-dropdown">component</a>
+
                                     <button type="button" class="wperp-toggle-row"
                                             @click.prevent="isRowExpanded = !isRowExpanded"></button>
                                 </td>
@@ -63,6 +65,7 @@
                                 </td>
                                 <td class="col--tax-rate" data-colname="Tax Rate">
                                     <input type="text" class="wperp-form-field text-right" v-model="line.tax_rate">
+                                    <a href="#" @click.prevent="" class="vis-hide after-select-dropdown">tax rate</a>
                                 </td>
                                 <td class="col--actions delete-row" data-colname="Remove Above Selection">
                                     <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -265,6 +268,19 @@
 
             .form-check-label {
                 width: 200px;
+            }
+        }
+
+        .vis-hide {
+            visibility: hidden;
+        }
+
+        .col--actions.delete-row {
+            vertical-align: unset;
+
+            a {
+                display: block;
+                margin-top: 10px;
             }
         }
     }

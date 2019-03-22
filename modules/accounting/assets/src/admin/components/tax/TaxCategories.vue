@@ -1,5 +1,5 @@
 <template>
-    <div class="app-customers">
+    <div class="app-tax-categories">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
@@ -15,7 +15,7 @@
 
         <div class="table-container">
             <list-table
-                tableClass="wp-ListTable widefat fixed tax-cats-list"
+                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark tax-cats-list"
                 action-column="actions"
                 :columns="columns"
                 :rows="row_data"
@@ -52,7 +52,6 @@
                 showModal: false,
                 modalParams: null,
                 columns: {
-                    'tax_cat_id'  : {label: 'ID'},
                     'tax_cat_name': {label: 'Category Name'},
                     'tax_cat_desc': {label: 'Description'},
                     'actions'     : { label: 'Actions' }
@@ -200,3 +199,15 @@
         }
     }
 </script>
+
+<style lang="less">
+.app-tax-categories {
+    .check-column {
+        padding: 20px !important;
+    }
+
+    .actions {
+        text-align: right;
+    }
+}
+</style>
