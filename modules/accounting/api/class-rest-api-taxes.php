@@ -126,6 +126,17 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/tax-records' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_tax_pay_record' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sale' );
+                },
+            ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/pay-tax', [
             [
                 'methods'             => WP_REST_Server::CREATABLE,
@@ -455,6 +466,33 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
+     * Get a tax payment
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_tax_pay_record( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_tax_pay_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $item = erp_acct_get_tax_pay_record( $id );
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $item  = $this->prepare_tax_pay_response( $item, $request, $additional_fields );
+        $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
      * Make a tax payment
      *
      * @param WP_REST_Request $request
@@ -661,7 +699,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'particulars'  => $item->particulars,
             'amount'       => $item->amount,
             'trn_by'       => $item->trn_by,
-            'ledger_id'    => $item->ledger_id,
+            'ledger_id'    => erp_acct_get_ledger_name_by_id( $item->ledger_id ),
             'voucher_type' => $item->voucher_type,
         ];
 
