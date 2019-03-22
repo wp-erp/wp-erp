@@ -318,8 +318,11 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return mixed|object|\WP_REST_Response
      */
     public function prepare_item_for_response( $item, $request = null, $additional_fields = [] ) {
+        $item = $item->data;
 
-        $data = array_merge( $item, $additional_fields );
+        $data = array_merge( $item['work'], $item['personal'], $additional_fields );
+        $data['user_id'] = $item['user_id'];
+        $data['email'] = $item['user_email'];
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
