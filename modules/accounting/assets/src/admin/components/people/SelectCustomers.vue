@@ -104,16 +104,8 @@
             margin-bottom: 0;
         }
 
-        .multiselect__tags {
-            padding: 8px 0;
-        }
-
         .multiselect__placeholder {
-            margin: 4px 0 0 7px !important;
-        }
-
-        .multiselect__select {
-            height: 41px;
+            margin: 2px 0 0 7px !important;
         }
     }
 </style>
