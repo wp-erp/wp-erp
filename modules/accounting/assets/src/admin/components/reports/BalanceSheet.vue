@@ -16,7 +16,7 @@
             <div class="wperp-row">
                 <div class="wperp-col-sm-12">
                     <list-table
-                        tableClass="wperp-table table-striped table-dark widefat balance-sheet"
+                        tableClass="wperp-table table-striped table-dark widefat balance-sheet-asset"
                         :columns="columns1"
                         :rows="rows1"
                         :showItemNumbers="false"
@@ -39,7 +39,7 @@
 
                 <div class="wperp-col-sm-12">
                     <list-table
-                        tableClass="wperp-table table-striped table-dark widefat balance-sheet"
+                        tableClass="wperp-table table-striped table-dark widefat balance-sheet-liability"
                         :columns="columns2"
                         :rows="rows2"
                         :showItemNumbers="false"
@@ -62,7 +62,7 @@
 
                 <div class="wperp-col-sm-12">
                     <list-table
-                        tableClass="wperp-table table-striped table-dark widefat balance-sheet"
+                        tableClass="wperp-table table-striped table-dark widefat balance-sheet-equity"
                         :columns="columns3"
                         :rows="rows3"
                         :showItemNumbers="false"
@@ -83,6 +83,16 @@
                     </list-table>
                 </div>
 
+                <table class="wperp-table table-striped table-dark widefat liability-equity-balance">
+                    <tbody>
+                        <tr>
+                            <td><strong>Liability + Equity = </strong></td>
+                            <td>{{ getCurrencySign() + liability_equity }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
 
             </div>
         </div>
@@ -139,6 +149,12 @@
             this.fetchItems();
         },
 
+        computed: {
+            liability_equity() {
+                return parseFloat( Math.abs(this.totalLiability) ) + parseFloat(Math.abs(this.totalEquity));
+            }
+        },
+
         methods: {
             fetchItems() {
                 this.rows = [];
@@ -170,15 +186,30 @@
     .wperp-date-group {
         padding-left: 50px !important;
     }
-    .balance-sheet tbody tr td:last-child {
+    .balance-sheet-asset tbody tr td:last-child {
         text-align: initial !important;
     }
-    .balance-sheet .t-foot td {
+    .balance-sheet-asset .t-foot td {
         color: #2196f3;
         font-weight: bold;
     }
-    .wperp-bs-header {
+    .balance-sheet-liability tbody tr td:last-child {
+        text-align: initial !important;
+    }
+    .balance-sheet-liability .t-foot td {
         color: #2196f3;
-        font-weight: bolder;
+        font-weight: bold;
+    }
+    .balance-sheet-equity tbody tr td:last-child {
+        text-align: initial !important;
+    }
+    .balance-sheet-equity .t-foot td {
+        color: #2196f3;
+        font-weight: bold;
+    }
+    .liability-equity-balance tr td {
+        background-color: #f2f2f2;
+        color: #2196f3;
+        font-weight: bold;
     }
 </style>

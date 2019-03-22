@@ -80,6 +80,7 @@
                     }
                 } else {
                     HTTP.get('/accounts/bank-accounts').then( (response) => {
+                        this.accounts = response.data;
                         this.edit_accounts = response.data;
                     });
                 }

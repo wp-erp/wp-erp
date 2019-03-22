@@ -19,24 +19,18 @@
 
                     <form action="" class="wperp-form" method="post">
                         <div class="wperp-row">
-                            <div class="wperp-col-sm-3">
+                            <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
                                     <select-people v-model="basic_fields.user"></select-people>
                                 </div>
                             </div>
-                            <div class="wperp-col-sm-3">
-                                <div class="wperp-form-group">
-                                    <label>Reference<span class="wperp-required-sign">*</span></label>
-                                    <input type="text" v-model="basic_fields.trn_ref"/>
-                                </div>
-                            </div>
-                            <div class="wperp-col-sm-3">
+                            <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
                                     <label>Bill Date<span class="wperp-required-sign">*</span></label>
                                     <datepicker v-model="basic_fields.trn_date"></datepicker>
                                 </div>
                             </div>
-                            <div class="wperp-col-sm-3">
+                            <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
                                     <label>Due Date<span class="wperp-required-sign">*</span></label>
                                     <datepicker v-model="basic_fields.due_date"></datepicker>
@@ -165,7 +159,6 @@
             return {
                 basic_fields: {
                     user           : '',
-                    trn_ref        : '',
                     trn_date       : '',
                     due_date       : '',
                     billing_address: ''
@@ -269,7 +262,6 @@
             setDataForEdit(bill) {
                 this.basic_fields.user            = { id: parseInt(bill.vendor_id), name: bill.vendor_name };
                 this.basic_fields.billing_address = bill.billing_address;
-                this.basic_fields.trn_ref         = bill.ref;
                 this.basic_fields.trn_date        = bill.trn_date;
                 this.basic_fields.due_date        = bill.due_date;
                 this.status                       = bill.status;
@@ -435,10 +427,6 @@
 
                 if ( !this.basic_fields.user.hasOwnProperty('id') ) {
                     this.form_errors.push('People Name is required.');
-                }
-
-                if ( !this.basic_fields.trn_ref ) {
-                    this.form_errors.push('Transaction Reference is required.');
                 }
 
                 if ( !this.basic_fields.trn_date ) {

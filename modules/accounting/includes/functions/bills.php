@@ -142,7 +142,6 @@ function erp_acct_insert_bill( $data ) {
             'trn_date'        => $bill_data['trn_date'],
             'due_date'        => $bill_data['due_date'],
             'amount'          => $bill_data['amount'],
-            'ref'             => $bill_data['ref'],
             'particulars'     => $bill_data['particulars'],
             'status'          => $bill_data['status'],
             'attachments'     => $bill_data['attachments'],
@@ -221,7 +220,6 @@ function erp_acct_update_bill( $data, $bill_id ) {
             'trn_date'        => $bill_data['trn_date'],
             'due_date'        => $bill_data['due_date'],
             'amount'          => $bill_data['amount'],
-            'ref'             => $bill_data['ref'],
             'particulars'     => $bill_data['particulars'],
             'attachments'     => $bill_data['attachments'],
             'updated_at'      => $bill_data['updated_at'],
@@ -343,7 +341,6 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
     $bill_data['due'] = isset( $data['due'] ) ? $data['due'] : 0;
     $bill_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $bill_data['ref'] = isset( $data['ref'] ) ? $data['ref'] : '';
     $bill_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $bill_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $bill_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;

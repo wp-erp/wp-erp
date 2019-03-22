@@ -33,8 +33,8 @@
                             <img :src="company.logo" alt="logo name" width="100" height="100">
                         </div>
                         <div class="invoice-address">
-                            <address>
-                                <strong>{{ company.name }}</strong><br>
+                            <address v-if="company.address">
+                                <strong >{{ company.name }}</strong><br>
                                 {{ company.address.address_1 }}<br>
                                 {{ company.address.address_2 }}<br>
                                 {{ company.address.city }}<br>
@@ -45,7 +45,7 @@
 
                     <div class="invoice-body">
                         <h4>Transfer Money</h4>
-                        <div class="wperp-row">
+                        <div class="wperp-row" v-if="voucher.created_by">
                             <div class="wperp-col-sm-6">
                                 <h5>Created By:</h5>
                                 <div class="persons-info">
@@ -83,6 +83,14 @@
                                     <th>{{ voucher.ac_to }}</th>
                                 </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="wperp-invoice-amounts" colspan="7">
+                                        <h2>Particulars</h2>
+                                        <p v-if="voucher.particulars">{{ voucher.particulars }}</p>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
 
@@ -193,6 +201,11 @@
             padding-top: 10px !important;
             padding-bottom: 10px !important;
         }
+    }
+
+    .wperp-invoice-table td:last-child,
+    .wperp-invoice-table th:last-child {
+        width: 100px !important;
     }
 
     @media print {

@@ -516,10 +516,6 @@
                     this.form_errors.push('People Name is required.');
                 }
 
-                if ( !this.basic_fields.trn_ref ) {
-                    this.form_errors.push('Transaction Reference is required.');
-                }
-
                 if ( !this.basic_fields.trn_date ) {
                     this.form_errors.push('Transaction Date is required.');
                 }
