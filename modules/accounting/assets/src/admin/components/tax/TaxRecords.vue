@@ -23,9 +23,18 @@
                 :current-page="paginationData.currentPage"
                 @pagination="goToPage"
                 :actions="actions"
+                :showCb="false"
                 :bulk-actions="bulkActions"
                 @action:click="onActionClick"
                 @bulk:click="onBulkAction">
+
+                <template slot="voucher_no" slot-scope="data">
+                    <strong>
+                        <router-link :to="{ name: 'PayTaxSingle', params: { id: data.row.voucher_no }}">
+                            #{{ data.row.voucher_no }}
+                        </router-link>
+                    </strong>
+                </template>
             </list-table>
         </div>
 
@@ -207,5 +216,9 @@
     }
 </script>
 <style lang="less">
-
+    .tax-records-list {
+        .col--actions {
+            text-align: left !important;
+        }
+    }
 </style>
