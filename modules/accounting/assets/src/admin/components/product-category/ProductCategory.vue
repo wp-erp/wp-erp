@@ -30,7 +30,7 @@
             </div>
             <div id="col-right" style="margin-top: 12px">
                 <div class="col-wrap">
-                    <list-table class="category-list"
+                    <list-table class="wperp-table table-striped table-dark widefat table2 category-list"
                         action-column="actions"
                         :columns="columns"
                         :rows="categories"
@@ -206,6 +206,8 @@
 <style lang="less">
     .categories {
         .category-list {
+            background-color: transparent;
+
             th ul,
             th li {
                 margin: 0;
@@ -213,18 +215,26 @@
             th li {
                 display: flex;
                 align-items: center;
+
                 img {
                     width: 20px;
                     padding-right: 5px;
                 }
             }
+
             .name {
                 width: 80% !important;
             }
+
+            .check-column {
+                padding: 20px !important;
+            }
         }
+
         .buttons-wrapper {
             float: left !important;
         }
+
         .with-multiselect {
             width: 60%;
         }

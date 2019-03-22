@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container check-create">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -58,7 +58,7 @@
                 <table class="wperp-table wperp-form-table">
                     <thead>
                     <tr>
-                        <th scope="col" class="col--id column-primary">ID</th>
+                        <th scope="col" class="col--id column-primary">SL No.</th>
                         <th scope="col">Account</th>
                         <th scope="col">Description</th>
                         <th scope="col">Amount</th>
@@ -519,5 +519,17 @@
 </script>
 
 <style lang="less">
+    .check-create {
+        .dropdown {
+            width: 100%;
+        }
 
+        .col--account {
+            width: 300px;
+        }
+
+        .col--particulars {
+            width: 400px;
+        }
+    }
 </style>

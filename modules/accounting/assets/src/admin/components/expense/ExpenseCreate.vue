@@ -63,11 +63,11 @@
                     <table class="wperp-table wperp-form-table">
                         <thead>
                         <tr>
-                            <th scope="col" class="col--id column-primary">Serial</th>
-                            <th scope="col" class="col--account">Account</th>
-                            <th scope="col" class="col--description">Description</th>
-                            <th scope="col" class="col--amount">Amount</th>
-                            <th scope="col" class="col--total">Total</th>
+                            <th scope="col" class="col--id column-primary">SL No.</th>
+                            <th scope="col">Account</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Total</th>
                             <th scope="col" class="col--actions"></th>
                         </tr>
                         </thead>
@@ -559,7 +559,7 @@
         }
 
         .col--account {
-            width: 3px;
+            width: 300px;
         }
 
         .col--account {

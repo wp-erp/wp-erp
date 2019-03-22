@@ -41,21 +41,21 @@
 
         data() {
             return {
-                transferFrom: { balance : 0 },
-                transferTo: { balance : 0 },
-                accounts: [],
-                fa: [],
-                ta: [],
-                transferdate: erp_acct_var.current_date,
-                particulars : '',
-                amount: '',
+                transferFrom  : { balance : 0 },
+                transferTo    : { balance : 0 },
+                accounts      : [],
+                fa            : [],
+                ta            : [],
+                transferdate  : erp_acct_var.current_date,
+                particulars   : '',
+                amount        : '',
                 money_transfer: false,
-                transfer_list: [],
-                columns: {
-                    'voucher'    : {label: 'Voucher No'},
-                    'ac_from'    : {label: 'Account From'},
-                    'amount'     : {label: 'Amount'},
-                    'ac_to'      : {label: 'Account To'},
+                transfer_list : [],
+                columns       : {
+                    'voucher': {label: 'Voucher No'},
+                    'ac_from': {label: 'Account From'},
+                    'amount' : {label: 'Amount'},
+                    'ac_to'  : {label: 'Account To'}
                 },
             };
         },
@@ -81,5 +81,9 @@
 <style lang="less">
     .wperp-modal {
         z-index: 999 !important;
+    }
+
+    #transfer_date {
+        width: 100%;
     }
 </style>

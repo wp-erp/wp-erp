@@ -334,5 +334,13 @@
                 font-weight: bold;
             }
         }
+
+        input[type="number"] {
+            height: auto;
+        }
     }
+</style>
+
+<style lang="less" scoped>
+
 </style>

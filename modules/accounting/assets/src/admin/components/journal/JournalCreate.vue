@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container journal-create">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -18,33 +18,24 @@
 
                 <show-errors :error_msgs="form_errors" ></show-errors>
 
-                <!-- <form action="#" class="wperp-form" method="post"> -->
-                    <div class="wperp-row">
-                        <div class="wperp-col-sm-6">
-                            <div class="wperp-form-group">
-                                <label>Transaction Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.trn_date"></datepicker>
-                            </div>
-                        </div>
-                        <div class="wperp-col-sm-6">
-                            <div class="wperp-form-group">
-                                <label>Ref.</label>
-                                <input type="text" v-model="basic_fields.trn_ref">
-                            </div>
-                        </div>
-                        <!--<div class="wperp-col-sm-4">-->
-                            <!--<div class="wperp-form-group">-->
-                                <!--<label>Journal No.</label>-->
-                                <!--<input type="text" :value="journal_id">-->
-                            <!--</div>-->
-                        <!--</div>-->
-
-                        <div class="wperp-col-xs-12">
-                            <label>Particulars</label>
-                            <textarea v-model="journal_parti" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                <div class="wperp-row">
+                    <div class="wperp-col-sm-4">
+                        <div class="wperp-form-group">
+                            <label>Transaction Date<span class="wperp-required-sign">*</span></label>
+                            <datepicker v-model="basic_fields.trn_date"></datepicker>
                         </div>
                     </div>
-                <!-- </form> -->
+                    <div class="wperp-col-sm-4">
+                        <div class="wperp-form-group">
+                            <label>Ref.</label>
+                            <input type="text" v-model="basic_fields.trn_ref">
+                        </div>
+                    </div>
+                    <div class="wperp-col-sm-4">
+                        <label>Particulars</label>
+                        <textarea v-model="journal_parti" rows="1" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -314,6 +305,18 @@
     }
 </script>
 
-<style scoped>
+<style lang="less">
+.journal-create {
+    .dropdown {
+        width: 100%;
+    }
 
+    .col--account {
+        width: 300px;
+    }
+
+    .col--particulars {
+        width: 400px;
+    }
+}
 </style>

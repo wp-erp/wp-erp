@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container pay-purchase-create">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -18,7 +18,6 @@
 
                     <show-errors :error_msgs="form_errors" ></show-errors>
 
-                    <!-- <form action="" class="wperp-form" method="post"> -->
                         <div class="wperp-row">
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
@@ -27,7 +26,7 @@
                             </div>
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
-                                    <label>Reference</span></label>
+                                    <label>Reference</label>
                                     <input type="text" v-model="basic_fields.trn_ref"/>
                                 </div>
                             </div>
@@ -52,7 +51,6 @@
 
                             <check-fields v-if="basic_fields.trn_by.id === paymentMethods.check" @updateCheckFields="setCheckFields"></check-fields>
                         </div>
-                    <!-- </form> -->
 
                 </div>
             </div>
@@ -451,5 +449,13 @@
 </script>
 
 <style lang="less">
+.pay-purchase-create {
+    .dropdown {
+        width: 100%;
+    }
 
+    .col--amount {
+        width: 200px;
+    }
+}
 </style>

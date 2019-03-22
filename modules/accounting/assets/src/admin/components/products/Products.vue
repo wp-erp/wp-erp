@@ -7,7 +7,7 @@
         </h2>
 
         <list-table
-            tableClass="wp-ListTable table-striped widefat fixed product-list"
+            tableClass="wperp-table table-striped table-dark widefat table2 producdt-list"
             action-column="actions"
             :columns="columns"
             :rows="products"
@@ -198,65 +198,9 @@
                 width: 135px;
             }
         }
-        .product-list {
-            border-radius: 3px;
-            tbody {
-                background: #FAFAFA;
-            }
-            tfoot th,
-            thead th {
-                color: #1A9ED4;
-                font-weight: bold;
-            }
-            th ul,
-            th li {
-                margin: 0;
-            }
-            th li {
-                display: flex;
-                align-items: center;
-                img {
-                    width: 22px;
-                    padding-right: 5px;
-                }
-            }
-            .column.title {
-                &.selected {
-                    color: #1A9ED4;
-                }
-                a {
-                    color: #222;
-                    font-weight: normal;
-                    &:hover {
-                        color: #1A9ED4;
-                    }
-                }
-            }
-            .check-column input {
-                border-color: #E7E7E7;
-                box-shadow: none;
-                border-radius: 3px;
-                &:checked {
-                    background: #1ABC9C;
-                    border-color: #1ABC9C;
-                    border-radius: 3px;
-                    &:before {
-                        color: #fff;
-                    }
-                }
-            }
-            .row-actions {
-                padding-left: 20px;
-            }
-        }
-        .widefat {
-            tfoot td,
-            tbody th {
-                line-height: 2.5em;
-            }
-            tbody td {
-                line-height: 3em;
-            }
+
+        .check-column {
+            padding: 20px !important;
         }
     }
 </style>
