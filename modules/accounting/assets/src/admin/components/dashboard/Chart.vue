@@ -1,8 +1,9 @@
 <template>
     <div class="income-expense-section wperp-panel wperp-panel-default">
-        <div class="wperp-panel-heading wperp-bg-white"><h4>Income & Expense</h4></div>
-        <div class="wperp-panel-body">
-            <div class="wperp-custom-select wperp-custom-select--inline-block wperp-pull-right mb-20" v-if="showDropdown">
+        <div class="wperp-panel-heading wperp-bg-white">
+            <h4>Income & Expense</h4>
+
+            <div class="wperp-custom-select wperp-custom-select--inline-block wperp-pull-right" v-if="showDropdown">
                 <select name="query_time" class="wperp-form-field" id="att-filter-duration" v-model="chartRange" >
                     <!--<option value="this_month">This Month</option>-->
                     <!--<option value="last_month">Last Month</option>-->
@@ -13,9 +14,10 @@
                 </select>
                 <i class="flaticon-arrow-down-sign-to-navigate"></i>
             </div>
-
+        </div>
+        <div class="wperp-panel-body">
             <div class="wperp-chart-block">
-                <canvas id="bar_chart" ref="bar_chart"></canvas>
+                <canvas id="bar_chart" ref="bar_chart" height="90"></canvas>
             </div>
         </div>
     </div>
@@ -43,10 +45,6 @@
 
         created() {
             this.fetchData();
-        },
-
-        mounted() {
-            // this.createChart();
         },
 
         computed: {
@@ -235,6 +233,8 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+    .wperp-panel-heading.wperp-bg-white {
+        padding: 10px;
+    }
 </style>

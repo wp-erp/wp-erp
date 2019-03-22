@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container expense-create">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -28,7 +28,7 @@
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
                                     <label>Reference<span class="wperp-required-sign">*</span></label>
-                                    <input type="text" v-model="basic_fields.trn_ref"/>
+                                    <input type="text" v-model="basic_fields.trn_ref" class="wperp-form-field">
                                 </div>
                             </div>
                             <div class="wperp-col-sm-4">
@@ -63,11 +63,11 @@
                     <table class="wperp-table wperp-form-table">
                         <thead>
                         <tr>
-                            <th scope="col" class="col--id column-primary">ID</th>
-                            <th scope="col">Account</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">Total</th>
+                            <th scope="col" class="col--id column-primary">Serial</th>
+                            <th scope="col" class="col--account">Account</th>
+                            <th scope="col" class="col--description">Description</th>
+                            <th scope="col" class="col--amount">Amount</th>
+                            <th scope="col" class="col--total">Total</th>
                             <th scope="col" class="col--actions"></th>
                         </tr>
                         </thead>
@@ -555,5 +555,28 @@
     input:disabled {
         background: #eee;
         color: #333;
+    }
+
+    .expense-create {
+        .dropdown {
+            width: 100%;
+        }
+
+        .col--account {
+            width: 3px;
+        }
+
+        .col--account {
+            .with-multiselect .multiselect__select,
+            .with-multiselect .multiselect__tags {
+                min-height: 33px !important;
+                margin-top: 3px;
+                margin-top: 4px;
+            }
+
+            .with-multiselect .multiselect__placeholder {
+                margin-top: 3px;
+            }
+        }
     }
 </style>
