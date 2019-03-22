@@ -1,8 +1,7 @@
 <template>
     <div class="app-employees">
-        <h2 class="add-new-employee">
+        <h2 class="add-new-people">
             <span>Employees</span>
-            <!-- {{data.row.employee}} -->
         </h2>
         <list-table
             tableClass="wp-ListTable widefat fixed employee-list"
@@ -168,24 +167,12 @@
 </script>
 <style lang="less">
     .app-employees {
-        .add-new-employee {
+        .add-new-people {
             align-items: center;
             display: flex;
             span {
                 font-size: 18px;
                 font-weight: bold;
-            }
-            a {
-                background: #1a9ed4;
-                border-radius: 3px;
-                color: #fff;
-                font-size: 12px;
-                height: 29px;
-                line-height: 29px;
-                margin-left: 13px;
-                text-align: center;
-                text-decoration: none;
-                width: 135px;
             }
         }
         .employee-list {

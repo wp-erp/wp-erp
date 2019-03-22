@@ -50,11 +50,11 @@
                     <table class="wperp-table wperp-form-table">
                         <thead>
                             <tr>
-                                <th scope="col">Product/Service</th>
-                                <th scope="col">Qty</th>
-                                <th scope="col">Unit Price</th>
-                                <th scope="col">Amount</th>
-                                <th scope="col">Tax</th>
+                                <th scope="col" class="col--products">Product/Service</th>
+                                <th scope="col" class="col--qty">Qty</th>
+                                <th scope="col" class="col--unit-price">Unit Price</th>
+                                <th scope="col" class="col--amount">Amount</th>
+                                <th scope="col" class="col--tax">Tax</th>
                                 <th scope="col" class="col--actions"></th>
                             </tr>
                         </thead>
@@ -648,6 +648,45 @@
             margin-left: 50px;
             text-align: left;
             line-height: 2;
+        }
+    }
+
+    .invoice-create {
+        .dropdown {
+            width: 100%;
+        }
+
+        .col--products {
+            width: 400px;
+        }
+
+        .col--qty {
+            width: 80px;
+        }
+
+        .col--unit-price {
+            width: 120px;
+        }
+
+        .col--amount {
+            width: 200px;
+        }
+
+        .col--tax {
+            width: 100px;
+        }
+
+        .prodcut-select {
+            .with-multiselect .multiselect__select,
+            .with-multiselect .multiselect__tags {
+                min-height: 33px !important;
+                margin-top: 3px;
+                margin-top: 4px;
+            }
+
+            .with-multiselect .multiselect__placeholder {
+                margin-top: 3px;
+            }
         }
     }
 </style>

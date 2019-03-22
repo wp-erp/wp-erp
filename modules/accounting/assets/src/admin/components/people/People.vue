@@ -1,6 +1,6 @@
 <template>
     <div class="app-customers">
-        <h2 class="add-new-customer">
+        <h2 class="add-new-people">
             <span>{{ pageTitle }}</span>
             <a href="" id="erp-customer-new" @click.prevent="showModal = true">+ Add New {{ buttonTitle }}</a>
         </h2>
@@ -200,7 +200,7 @@
 </script>
 <style lang="less">
     .app-customers {
-        .add-new-customer {
+        .add-new-people {
             align-items: center;
             display: flex;
             span {
@@ -217,7 +217,7 @@
                 margin-left: 13px;
                 text-align: center;
                 text-decoration: none;
-                width: 135px;
+                width: 150px;
             }
         }
         .customer-list {
