@@ -1,5 +1,5 @@
 <template>
-    <div class="app-customers tax-zones">
+    <div class="app-tax-zones">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
@@ -15,7 +15,7 @@
 
         <div class="table-container">
             <list-table
-                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark"
+                tableClass="wp-ListTable widefat fixed tax-zone-list wperp-table table-striped table-dark"
                 action-column="actions"
                 :columns="columns"
                 :rows="row_data"
@@ -200,11 +200,12 @@
     .erp-acct-tax-menus {
         margin-left: 600px;
     }
+
     .combo-box {
         margin-right: 10px !important;
     }
 
-    .tax-zones {
+    .app-tax-zones {
         .check-column {
             padding: 20px !important;
         }

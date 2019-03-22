@@ -1,7 +1,7 @@
 <template>
     <div class="wperp-form-group invoice-customers with-multiselect">
         <people-modal v-if="showModal" title="Add new customer" type="customer"></people-modal>
-        <label for="customer">Customer<span class="wperp-required-sign">*</span></label>
+        <label>Customer<span class="wperp-required-sign">*</span></label>
         <multi-select v-model="selected" :options="options" />
 
         <a href="#" class="add-new-customer" @click="showModal = true"><i class="flaticon-add-plus-button"></i>Add new</a>

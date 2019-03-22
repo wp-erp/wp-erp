@@ -89,7 +89,7 @@
                     { key: 'transfer', label: 'Transfer', iconClass: 'flaticon-sent-mail' },
                 ],
                 pages: [
-                    { namedRoute: 'Transfer', name: 'Transfer Money' }
+                    { namedRoute: 'Transfers', name: 'Transfer Money' }
                 ],
             }
         },
@@ -124,7 +124,7 @@
             actionClicked( action, acct_id ) {
                 switch ( action ) {
                     case 'transfer':
-                        this.$router.push( 'transfer/new' );
+                        this.$router.push( 'transfers/new' );
                         break;
 
                     default :
