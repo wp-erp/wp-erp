@@ -64,17 +64,20 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
         return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
     }
 
-    $temp1 = wp_list_pluck( $accts, 'id' );
-    $temp2 = wp_list_pluck( $banks, 'id' );
+    $results = array_merge( $accts, $banks );
 
-    if ( !count(array_intersect( $temp1, $temp2 ) )  && !$cash_only) {
-        $results = array_merge( $accts, $banks );
-    } else {
-        $results = $accts ;
+    $uniq_accts = array();
+
+    foreach ( $results as $index => $result ) {
+        if ( !empty( $uniq_accts ) && in_array( $result['id'], $uniq_accts ) ) {
+            unset( $results[$index] );
+            continue;
+        }
+        $uniq_accts[] = $result['id'];
     }
 
     for ( $i = 0; $i < count( $results ); $i++ ) {
-        if ( !array_key_exists( 'balance', $results[$i] ) ) {
+        if (  !empty ( $results[$i]['id'] ) && !array_key_exists( 'balance', $results[$i] ) ) {
             $results[$i]['balance'] = 0;
         }
     }
