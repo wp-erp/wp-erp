@@ -101,15 +101,13 @@ function erp_acct_get_dashboard_banks() {
     // All DB results are inside `rows` key
     $results = $wpdb->get_results($sql, ARRAY_A);
 
+    $additional = erp_acct_dashboard_balance_bank_balance('balance' );
+    $balance = erp_acct_dashboard_balance_cash_at_bank( $additional );
+
     $results[] = [
         'name'       => 'Cash at Bank',
-        'balance'    => erp_acct_dashboard_balance_cash_at_bank('balance' ),
-        'additional' => erp_acct_dashboard_balance_bank_balance('balance' )
-    ];
-    $results[] = [
-        'name'       => 'Bank Loan',
-        'balance'    => erp_acct_dashboard_balance_cash_at_bank('loan' ),
-        'additional' => erp_acct_dashboard_balance_bank_balance('loan' )
+        'balance'    => $balance,
+        'additional' => $additional,
     ];
 
     return $results;
@@ -118,28 +116,18 @@ function erp_acct_get_dashboard_banks() {
 /**
  * Dashboard account helper
  *
- * @param string $type
+ * @param object $additionals
  *
- * @return mixed
+ * @return float
  */
-function erp_acct_dashboard_balance_cash_at_bank( $type ) {
-    global $wpdb;
+function erp_acct_dashboard_balance_cash_at_bank( $additionals ) {
+    $balance = 0;
 
-    if ( 'loan' === $type ) {
-        $having = "HAVING balance < 0";
-    } elseif ( 'balance' === $type ) {
-        $having = "HAVING balance >= 0";
+    foreach ( $additionals as $additional ) {
+        $balance += (float) $additional['balance'];
     }
 
-    $chart_bank = 7;
-
-    $sql1 = $wpdb->prepare("SELECT group_concat(id) FROM {$wpdb->prefix}erp_acct_ledgers where chart_id = %d", $chart_bank);
-    $ledger_ids = implode( ',', explode( ',', $wpdb->get_var($sql1) ) );
-
-    $sql = "SELECT SUM(ledger_details.balance) as balance from (SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_ledger_details
-            WHERE ledger_id IN ({$ledger_ids}) {$having}) as ledger_details";
-
-    return $wpdb->get_var($sql);
+    return $balance;
 }
 
 /**
@@ -163,7 +151,7 @@ function erp_acct_dashboard_balance_bank_balance( $type ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
         WHERE ledger.chart_id = 7 GROUP BY ledger.id {$having}";
 
-    return $wpdb->get_results($sql);
+    return $wpdb->get_results( $sql, ARRAY_A);
 }
 
 /**
