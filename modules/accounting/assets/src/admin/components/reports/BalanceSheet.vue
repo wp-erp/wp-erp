@@ -86,6 +86,12 @@
                 <table class="wperp-table table-striped table-dark widefat liability-equity-balance">
                     <tbody>
                         <tr>
+                            <td><strong>Assets = </strong></td>
+                            <td>{{ getCurrencySign() + totalAsset }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
                             <td><strong>Liability + Equity = </strong></td>
                             <td>{{ getCurrencySign() + liability_equity }}</td>
                             <td></td>
