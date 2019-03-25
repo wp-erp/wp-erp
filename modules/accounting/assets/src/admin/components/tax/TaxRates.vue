@@ -247,24 +247,18 @@
     }
 </script>
 <style lang="less">
-.table-taxrates {
-    .col--actions {
-        text-align: left !important;
-    }
-}
+    .app-taxes {
+        .table-container {
+            width: 600px;
+        }
 
-.app-taxes {
-    .table-container {
-        width: 600px;
-    }
+        .check-column {
+            padding: 20px !important;
+        }
 
-    .check-column {
-        padding: 20px !important;
+        .actions,
+        .col--actions {
+            float: right !important;
+        }
     }
-
-    .actions,
-    .col--actions {
-        text-align: right !important;
-    }
-}
 </style>
