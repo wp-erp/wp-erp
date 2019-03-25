@@ -188,10 +188,11 @@
     }
 </script>
 
-<style>
-    .wperp-date-group {
-        padding-left: 50px !important;
+<style scoped>
+    .content-header__title {
+        padding-top: 5px !important;
     }
+
     .balance-sheet-asset tbody tr td:last-child {
         text-align: initial !important;
     }
