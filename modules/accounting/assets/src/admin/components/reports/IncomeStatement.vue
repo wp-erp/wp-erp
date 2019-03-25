@@ -140,9 +140,9 @@
     }
 </script>
 
-<style>
-    .wperp-date-group {
-        padding-left: 50px !important;
+<style scoped>
+    .content-header__title {
+        padding-top: 5px !important;
     }
     .income-statement tbody tr td:last-child {
         text-align: initial !important;
