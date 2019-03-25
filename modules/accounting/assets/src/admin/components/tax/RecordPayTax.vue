@@ -136,13 +136,24 @@
             },
 
             changeAccounts() {
+                this.accts_by_chart = [];
                 if ( '2' === this.trn_by.id || '3' === this.trn_by.id ) {
                     HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 } else {
                     HTTP.get('/ledgers/cash-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 }
                 this.$root.$emit('account-changed');
@@ -190,6 +201,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Paid!' );
                 }).then(() => {
+                    this.$router.push({name: 'TaxRecords'})
                     this.resetData();
                     this.isWorking = false;
                 });
@@ -233,6 +245,10 @@
 
                 if ( this.tax_amount > this.dueAmount ) {
                     this.form_errors.push('Please pay according to your due balance.');
+                }
+
+                if ( parseFloat(this.deposit_to.balance) < parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Not enough balance in selected account.');
                 }
             }
         },
