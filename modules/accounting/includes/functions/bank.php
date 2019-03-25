@@ -50,6 +50,10 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
 
     $accts = $wpdb->get_results( $query, ARRAY_A );
 
+    if ( $cash_only && !empty( $accts ) ) {
+        return $accts;
+    }
+
     if ( empty( $accts ) && ( $cash_only || $show_all ) ) {
         $acct['id'] = 1;
         $acct['name'] = 'Cash';
@@ -74,12 +78,6 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
             continue;
         }
         $uniq_accts[] = $result['id'];
-    }
-
-    for ( $i = 0; $i < count( $results ); $i++ ) {
-        if (  !empty ( $results[$i]['id'] ) && !array_key_exists( 'balance', $results[$i] ) ) {
-            $results[$i]['balance'] = 0;
-        }
     }
 
     return $results;
