@@ -66,7 +66,7 @@
                     'voucher_no': {label: 'Voucher No'},
                     'agency_id' : {label: 'Agency'},
                     'trn_date'  : {label: 'Date'},
-                    'tax_period': {label: 'Tax Period'},
+                    // 'tax_period': {label: 'Tax Period'},
                     'amount'    : {label: 'Amount'},
                     'actions'   : { label: 'Actions' }
                 },
@@ -116,7 +116,6 @@
                     item.voucher_no = item.voucher_no;
                     item.agency_id  = item.agency_id;
                     item.trn_date   = item.trn_date;
-                    item.tax_period = item.tax_period;
                     item.amount     = item.amount;
                 } );
                 return items;
