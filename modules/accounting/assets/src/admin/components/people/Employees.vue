@@ -83,7 +83,6 @@
                 let items = this.rows;
                 items.map( item => {
                     item.employee = item.full_name;
-                    item.email = item.email;
                     item.designation = item.designation.title;
                 } );
                 return items;
@@ -107,9 +106,6 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch((error) => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                })
-                .then(() => {
-                    //ready
                 });
             },
 
@@ -123,13 +119,8 @@
                             });
                         }
                         break;
-
-                    case 'edit':
-                        //TODO
-                        break;
-
                     default :
-
+                        break;
                 }
             },
 

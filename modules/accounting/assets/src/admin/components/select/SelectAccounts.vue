@@ -80,7 +80,7 @@
             fetchAccounts() {
                 HTTP.get('/accounts').then(response => {
                     this.accounts = response.data;
-                } );
+                });
             },
 
             transformBalance( val ){
