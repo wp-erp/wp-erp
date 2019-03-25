@@ -357,7 +357,7 @@
                     return;
                 }
 
-                HTTP.get(`/people/${user_id}/address`).then(response => {
+                HTTP.get(`/people/${user_id}`).then(response => {
                     let billing = response.data;
 
                     if ( 'string' == typeof billing ) {
