@@ -272,6 +272,22 @@ function erp_acct_edit_tax_rate_line( $data ) {
 }
 
 /**
+ * Delete an tax rate line
+ *
+ * @param $line_no
+ *
+ * @return int
+ */
+
+function erp_acct_delete_tax_rate_line( $line_no ) {
+    global $wpdb;
+
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_cat_agency', array( 'id' => $line_no ) );
+
+    return $line_no;
+}
+
+/**
  * Delete an tax
  *
  * @param $tax_no
