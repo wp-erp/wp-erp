@@ -188,13 +188,13 @@
     }
 </script>
 
-<style scoped>
+<style>
     .content-header__title {
         padding-top: 5px !important;
     }
 
     .balance-sheet-asset tbody tr td:last-child {
-        text-align: initial !important;
+        text-align: left !important;
     }
     .balance-sheet-asset .t-foot td {
         color: #2196f3;
