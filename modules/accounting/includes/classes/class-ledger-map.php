@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\ERP\Accounting\Includes;
+namespace WeDevs\ERP\Accounting\Includes\Classes;
 
 class Ledger_Map {
     private static $instance = null;

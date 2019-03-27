@@ -177,11 +177,11 @@ final class Accounting {
     public function init_classes() {
 
         if ( $this->is_request( 'admin' ) ) {
-            $this->container['admin'] = new \WeDevs\ERP\Accounting\INCLUDES\Admin();
+            $this->container['admin'] = new \WeDevs\ERP\Accounting\Includes\Classes\Admin();
         }
 
         $this->container['rest'] = new \WeDevs\ERP\Accounting\API\REST_API();
-        $this->container['assets'] = new \WeDevs\ERP\Accounting\INCLUDES\Assets();
+        $this->container['assets'] = new \WeDevs\ERP\Accounting\Includes\Classes\Assets();
     }
 
 
