@@ -52,6 +52,7 @@ import CheckSingle       from 'admin/components/check/CheckSingle.vue';
 import SingleTaxRate     from 'admin/components/tax/SingleTaxRate.vue';
 import IncomeStatement   from 'admin/components/reports/IncomeStatement.vue';
 import BalanceSheet      from 'admin/components/reports/BalanceSheet.vue';
+import DynamicTrnLoader  from 'admin/components/transactions/DynamicTrnLoader.vue';
 
 Vue.use(Router);
 
@@ -633,6 +634,18 @@ export default new Router({
             path: '/pay-tax',
             name: 'RecordPayTax',
             component: RecordPayTax
+        },
+        {
+            path: '/trn-loader',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'DynamicTrnLoader',
+                    component: DynamicTrnLoader,
+                    alias: '/trn-loader/:id'
+                }
+            ]
         },
     ]
 })

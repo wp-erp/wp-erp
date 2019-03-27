@@ -205,6 +205,17 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/voucher-type' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_voucher_type' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -508,6 +519,21 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $row = $wpdb->get_results( $sql, ARRAY_A );
 
         return $row;
+    }
+
+    public function get_voucher_type( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_voucher_type_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $response = erp_acct_get_trn_type_by_voucher_no( $id );
+
+        $response = rest_ensure_response( $response );
+        $response->set_status( 200 );
+
+        return $response;
     }
 
     /**
