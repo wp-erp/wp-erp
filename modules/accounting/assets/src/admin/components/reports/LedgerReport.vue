@@ -23,7 +23,7 @@
         </ul>
 
         <list-table
-            tableClass="wperp-table table-striped table-dark widefat"
+            tableClass="wperp-table table-striped table-dark widefat ledger-table"
             :columns="columns"
             :rows="rows">
             <template slot="trn_no" slot-scope="data">
@@ -220,6 +220,10 @@
             display: flex;
             justify-content: space-between;
         }
+    }
+
+    .ledger-table tbody tr td:last-child {
+        text-align: left !important;
     }
 }
 </style>
