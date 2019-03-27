@@ -368,7 +368,7 @@ function erp_acct_get_transfer_accounts( $show_balance = false ) {
     /*
     global $wpdb;
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
     $cash_ledger = $ledger_map->get_ledger_details_by_slug( 'cash' );
 
     $ledgers = $wpdb->prefix.'erp_acct_ledgers';

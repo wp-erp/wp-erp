@@ -491,7 +491,7 @@ function get_tax_rate_with_agency($tax_id, $tax_cat_id) {
 function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
     global $wpdb;
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
     $sales_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_revenue');
     $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discounts');
