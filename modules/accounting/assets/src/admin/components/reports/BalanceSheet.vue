@@ -16,7 +16,7 @@
             <div class="wperp-row">
                 <div class="wperp-col-sm-12">
                     <list-table
-                        tableClass="wperp-table table-striped table-dark widefat balance-sheet-asset"
+                        tableClass="wperp-table table-striped table-dark widefat balance-sheet-asset report-table"
                         :columns="columns1"
                         :rows="rows1"
                         :showItemNumbers="false"
@@ -39,7 +39,7 @@
 
                 <div class="wperp-col-sm-12">
                     <list-table
-                        tableClass="wperp-table table-striped table-dark widefat balance-sheet-liability"
+                        tableClass="wperp-table table-striped table-dark widefat balance-sheet-liability report-table"
                         :columns="columns2"
                         :rows="rows2"
                         :showItemNumbers="false"
@@ -62,7 +62,7 @@
 
                 <div class="wperp-col-sm-12">
                     <list-table
-                        tableClass="wperp-table table-striped table-dark widefat balance-sheet-equity"
+                        tableClass="wperp-table table-striped table-dark widefat balance-sheet-equity report-table"
                         :columns="columns3"
                         :rows="rows3"
                         :showItemNumbers="false"
@@ -83,7 +83,7 @@
                     </list-table>
                 </div>
 
-                <table class="wperp-table table-striped table-dark widefat liability-equity-balance">
+                <table class="wperp-table table-striped table-dark widefat liability-equity-balance report-table">
                     <tbody>
                         <tr>
                             <td><strong>Assets = </strong></td>
@@ -195,6 +195,9 @@
 
     .balance-sheet-asset tbody tr td:last-child {
         text-align: left !important;
+    }
+    .report-table tbody tr td:first-child {
+        width: 70% !important;
     }
     .balance-sheet-asset .t-foot td {
         color: #2196f3;
