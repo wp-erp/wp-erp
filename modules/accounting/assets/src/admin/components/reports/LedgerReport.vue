@@ -26,6 +26,13 @@
             tableClass="wperp-table table-striped table-dark widefat ledger-table"
             :columns="columns"
             :rows="rows">
+            <template slot="trn_no" slot-scope="data">
+                <strong>
+                    <router-link :to="{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}">
+                        #{{ data.row.trn_no }}
+                    </router-link>
+                </strong>
+            </template>
             <template slot="balance" slot-scope="data">
                 {{ data.row.balance }}
             </template>
@@ -53,6 +60,7 @@
     import ListTable   from 'admin/components/list-table/ListTable.vue'
     import Datepicker  from 'admin/components/base/Datepicker.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
+    import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue'
 
     export default {
         name: 'LedgerReport',
@@ -61,6 +69,7 @@
             ListTable,
             Datepicker,
             MultiSelect,
+            DynamicTrnLoader
         },
 
         data() {
