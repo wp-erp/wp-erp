@@ -2,13 +2,18 @@
     <div>
         <h2 class="content-header__title">Income Statement</h2>
 
-        <form action="" @submit.prevent="fetchItems" class="query-options">
+        <form action="" @submit.prevent="fetchItems" class="query-options no-print">
 
             <div class="wperp-date-group">
                 <datepicker v-model="start_date"></datepicker>
                 <datepicker v-model="end_date"></datepicker>
                 <button class="wperp-btn btn--primary add-line-trigger" type="submit">Filter</button>
             </div>
+
+            <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
+                <i class="flaticon-printer-1"></i>
+                &nbsp; Print
+            </a>
 
         </form>
 
@@ -135,6 +140,10 @@
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
+            },
+
+            printPopup() {
+                window.print();
             }
         }
     }
@@ -151,9 +160,24 @@
         color: #2196f3;
         font-weight: bold;
     }
+    .query-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 500px;
+        padding: 20px 0;
+    }
     .income-statement-balance tr td {
         background-color: #f2f2f2;
         color: #2196f3;
         font-weight: bold;
+    }
+    @media print {
+        .erp-nav-container {
+            display: none;
+        }
+        .no-print, .no-print * {
+            display: none !important;
+        }
     }
 </style>

@@ -53,7 +53,7 @@
                     this.$router.push({name: 'SingleTransfer', params: {id: this.voucher_no}});
                 }
                 if ( 'tax_payment' === this.voucher_type ) {
-                    this.$router.push({name: 'SingleTaxRate', params: {id: this.voucher_no}});
+                    this.$router.push({name: 'PayTaxSingle', params: {id: this.voucher_no}});
                 }
             });
         },

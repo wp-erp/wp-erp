@@ -12437,6 +12437,11 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -12501,6 +12506,9 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
       }).catch(function (e) {
         _this.$store.dispatch('spinner/setSpinner', false);
       });
+    },
+    printPopup: function printPopup() {
+      window.print();
     }
   }
 });
@@ -12515,6 +12523,12 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_transactions_DynamicTrnLoader_vue__ = __webpack_require__(79);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -12695,6 +12709,9 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
       }).catch(function (e) {
         _this3.$store.dispatch('spinner/setSpinner', false);
       });
+    },
+    printPopup: function printPopup() {
+      window.print();
     }
   }
 });
@@ -12867,7 +12884,7 @@ if (false) {(function () {
 
       if ('tax_payment' === _this.voucher_type) {
         _this.$router.push({
-          name: 'SingleTaxRate',
+          name: 'PayTaxSingle',
           params: {
             id: _this.voucher_no
           }
@@ -12886,6 +12903,12 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -13032,6 +13055,9 @@ if (false) {(function () {
       }).catch(function (e) {
         _this2.$store.dispatch('spinner/setSpinner', false);
       });
+    },
+    printPopup: function printPopup() {
+      window.print();
     }
   }
 });
@@ -27024,6 +27050,11 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -27091,6 +27122,9 @@ setTimeout(function () {
       }).catch(function (error) {
         _this.$store.dispatch('spinner/setSpinner', false);
       });
+    },
+    printPopup: function printPopup() {
+      window.print();
     }
   }
 });
@@ -27103,6 +27137,11 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -27292,6 +27331,9 @@ setTimeout(function () {
       }).catch(function (error) {
         _this.$store.dispatch('spinner/setSpinner', false);
       });
+    },
+    printPopup: function printPopup() {
+      window.print();
     }
   }
 });
@@ -32952,7 +32994,7 @@ var render = function() {
       _c(
         "form",
         {
-          staticClass: "query-options",
+          staticClass: "query-options no-print",
           attrs: { action: "", method: "" },
           on: {
             submit: function($event) {
@@ -32996,6 +33038,24 @@ var render = function() {
               attrs: { type: "submit" }
             },
             [_vm._v("View")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "wperp-btn btn--default print-btn",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.printPopup($event)
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: "flaticon-printer-1" }),
+              _vm._v("\n          Print\n        ")
+            ]
           )
         ]
       ),
@@ -33228,7 +33288,7 @@ var render = function() {
       _c(
         "form",
         {
-          staticClass: "query-options",
+          staticClass: "query-options no-print",
           attrs: { action: "", method: "" },
           on: {
             submit: function($event) {
@@ -33290,6 +33350,24 @@ var render = function() {
               attrs: { type: "submit" }
             },
             [_vm._v("Filter")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "wperp-btn btn--default print-btn",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.printPopup($event)
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: "flaticon-printer-1" }),
+              _vm._v("\n              Print\n        ")
+            ]
           )
         ]
       ),
@@ -33447,11 +33525,11 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SalesTax_vue__ = __webpack_require__(81);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7e95079f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesTax_vue__ = __webpack_require__(276);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7e95079f_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesTax_vue__ = __webpack_require__(603);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(275)
+  __webpack_require__(602)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -33464,12 +33542,12 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = null
+var __vue_scopeId__ = "data-v-7e95079f"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SalesTax_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7e95079f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesTax_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7e95079f_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesTax_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -33497,236 +33575,8 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 275 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 276 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "sales-tax-report" },
-    [
-      _c("h2", [_vm._v("Sales Tax Report")]),
-      _vm._v(" "),
-      _c(
-        "form",
-        {
-          staticClass: "query-options",
-          attrs: { action: "", method: "" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.getSalesTaxReport($event)
-            }
-          }
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "with-multiselect" },
-            [
-              _c("multi-select", {
-                attrs: { options: _vm.taxAgencies },
-                model: {
-                  value: _vm.selectedAgency,
-                  callback: function($$v) {
-                    _vm.selectedAgency = $$v
-                  },
-                  expression: "selectedAgency"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "wperp-date-group" },
-            [
-              _c("datepicker", {
-                model: {
-                  value: _vm.start_date,
-                  callback: function($$v) {
-                    _vm.start_date = $$v
-                  },
-                  expression: "start_date"
-                }
-              }),
-              _vm._v(" "),
-              _c("datepicker", {
-                model: {
-                  value: _vm.end_date,
-                  callback: function($$v) {
-                    _vm.end_date = $$v
-                  },
-                  expression: "end_date"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "wperp-btn btn--primary add-line-trigger",
-              attrs: { type: "submit" }
-            },
-            [_vm._v("View")]
-          )
-        ]
-      ),
-      _vm._v(" "),
-      null !== _vm.selectedAgency
-        ? _c("ul", { staticClass: "report-header" }, [
-            _c("li", [
-              _c("strong", [_vm._v("Account Name:")]),
-              _vm._v(" "),
-              _c("em", [_vm._v(_vm._s(_vm.selectedAgency.name))])
-            ]),
-            _vm._v(" "),
-            _vm._m(0),
-            _vm._v(" "),
-            _c("li", [
-              _c("strong", [_vm._v("For the period of ( Transaction date ):")]),
-              _vm._v(" "),
-              _c("em", [_vm._v(_vm._s(_vm.start_date))]),
-              _vm._v(" to "),
-              _c("em", [_vm._v(_vm._s(_vm.end_date))])
-            ])
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "list-table",
-        {
-          attrs: {
-            tableClass:
-              "wperp-table table-striped table-dark widefat sales-tax-table",
-            columns: _vm.columns,
-            rows: _vm.rows
-          },
-          scopedSlots: _vm._u([
-            {
-              key: "trn_no",
-              fn: function(data) {
-                return [
-                  _c(
-                    "strong",
-                    [
-                      _c(
-                        "router-link",
-                        {
-                          attrs: {
-                            to: {
-                              name: "DynamicTrnLoader",
-                              params: { id: data.row.trn_no }
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                    #" +
-                              _vm._s(data.row.trn_no) +
-                              "\n                "
-                          )
-                        ]
-                      )
-                    ],
-                    1
-                  )
-                ]
-              }
-            },
-            {
-              key: "debit",
-              fn: function(data) {
-                return [
-                  _vm._v(
-                    "\n            " + _vm._s(data.row.debit) + "\n        "
-                  )
-                ]
-              }
-            },
-            {
-              key: "credit",
-              fn: function(data) {
-                return [
-                  _vm._v(
-                    "\n            " + _vm._s(data.row.credit) + "\n        "
-                  )
-                ]
-              }
-            },
-            {
-              key: "balance",
-              fn: function(data) {
-                return [
-                  _vm._v(
-                    "\n            " + _vm._s(data.row.balance) + "\n        "
-                  )
-                ]
-              }
-            }
-          ])
-        },
-        [
-          _vm._v(" "),
-          _vm._v(" "),
-          _vm._v(" "),
-          _vm._v(" "),
-          _c("template", { slot: "tfoot" }, [
-            _c("tr", { staticClass: "tfoot" }, [
-              _c("td", { attrs: { colspan: "4" } }),
-              _vm._v(" "),
-              _c("td", [_vm._v("Total =")]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.totalDebit))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.totalCredit))]),
-              _vm._v(" "),
-              _c("td")
-            ])
-          ])
-        ],
-        2
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", [
-      _c("strong", [_vm._v("Currency:")]),
-      _vm._v(" "),
-      _c("em", [_vm._v("Dollar")])
-    ])
-  }
-]
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7e95079f", esExports)
-  }
-}
-
-/***/ }),
+/* 275 */,
+/* 276 */,
 /* 277 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -51572,7 +51422,7 @@ var render = function() {
       _c(
         "form",
         {
-          staticClass: "query-options",
+          staticClass: "query-options no-print",
           attrs: { action: "" },
           on: {
             submit: function($event) {
@@ -51616,6 +51466,24 @@ var render = function() {
               )
             ],
             1
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "wperp-btn btn--default print-btn",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.printPopup($event)
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: "flaticon-printer-1" }),
+              _vm._v("\n              Print\n        ")
+            ]
           )
         ]
       ),
@@ -51780,7 +51648,7 @@ if (false) {
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(494)
+  __webpack_require__(600)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -51826,12 +51694,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 494 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 494 */,
 /* 495 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -51848,7 +51711,7 @@ var render = function() {
     _c(
       "form",
       {
-        staticClass: "query-options",
+        staticClass: "query-options no-print",
         attrs: { action: "", method: "" },
         on: {
           submit: function($event) {
@@ -51892,6 +51755,24 @@ var render = function() {
             )
           ],
           1
+        ),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "wperp-btn btn--default print-btn",
+            attrs: { href: "#" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.printPopup($event)
+              }
+            }
+          },
+          [
+            _c("i", { staticClass: "flaticon-printer-1" }),
+            _vm._v("\n              Print\n        ")
+          ]
         )
       ]
     ),
@@ -52637,6 +52518,355 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
+
+/***/ }),
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */,
+/* 510 */,
+/* 511 */,
+/* 512 */,
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */,
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */,
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 601 */,
+/* 602 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 603 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "sales-tax-report" },
+    [
+      _c("h2", [_vm._v("Sales Tax Report")]),
+      _vm._v(" "),
+      _c(
+        "form",
+        {
+          staticClass: "query-options no-print",
+          attrs: { action: "", method: "" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.getSalesTaxReport($event)
+            }
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "with-multiselect" },
+            [
+              _c("multi-select", {
+                attrs: { options: _vm.taxAgencies },
+                model: {
+                  value: _vm.selectedAgency,
+                  callback: function($$v) {
+                    _vm.selectedAgency = $$v
+                  },
+                  expression: "selectedAgency"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wperp-date-group" },
+            [
+              _c("datepicker", {
+                model: {
+                  value: _vm.start_date,
+                  callback: function($$v) {
+                    _vm.start_date = $$v
+                  },
+                  expression: "start_date"
+                }
+              }),
+              _vm._v(" "),
+              _c("datepicker", {
+                model: {
+                  value: _vm.end_date,
+                  callback: function($$v) {
+                    _vm.end_date = $$v
+                  },
+                  expression: "end_date"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "wperp-btn btn--primary add-line-trigger",
+              attrs: { type: "submit" }
+            },
+            [_vm._v("View")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "wperp-btn btn--default print-btn",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.printPopup($event)
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: "flaticon-printer-1" }),
+              _vm._v("\n              Print\n        ")
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      null !== _vm.selectedAgency
+        ? _c("ul", { staticClass: "report-header" }, [
+            _c("li", [
+              _c("strong", [_vm._v("Account Name:")]),
+              _vm._v(" "),
+              _c("em", [_vm._v(_vm._s(_vm.selectedAgency.name))])
+            ]),
+            _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _c("li", [
+              _c("strong", [_vm._v("For the period of ( Transaction date ):")]),
+              _vm._v(" "),
+              _c("em", [_vm._v(_vm._s(_vm.start_date))]),
+              _vm._v(" to "),
+              _c("em", [_vm._v(_vm._s(_vm.end_date))])
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "list-table",
+        {
+          attrs: {
+            tableClass:
+              "wperp-table table-striped table-dark widefat sales-tax-table",
+            columns: _vm.columns,
+            rows: _vm.rows
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "trn_no",
+              fn: function(data) {
+                return [
+                  _c(
+                    "strong",
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          attrs: {
+                            to: {
+                              name: "DynamicTrnLoader",
+                              params: { id: data.row.trn_no }
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                    #" +
+                              _vm._s(data.row.trn_no) +
+                              "\n                "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ]
+              }
+            },
+            {
+              key: "debit",
+              fn: function(data) {
+                return [
+                  _vm._v(
+                    "\n            " + _vm._s(data.row.debit) + "\n        "
+                  )
+                ]
+              }
+            },
+            {
+              key: "credit",
+              fn: function(data) {
+                return [
+                  _vm._v(
+                    "\n            " + _vm._s(data.row.credit) + "\n        "
+                  )
+                ]
+              }
+            },
+            {
+              key: "balance",
+              fn: function(data) {
+                return [
+                  _vm._v(
+                    "\n            " + _vm._s(data.row.balance) + "\n        "
+                  )
+                ]
+              }
+            }
+          ])
+        },
+        [
+          _vm._v(" "),
+          _vm._v(" "),
+          _vm._v(" "),
+          _vm._v(" "),
+          _c("template", { slot: "tfoot" }, [
+            _c("tr", { staticClass: "tfoot" }, [
+              _c("td", { attrs: { colspan: "4" } }),
+              _vm._v(" "),
+              _c("td", [_vm._v("Total =")]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.totalDebit))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.totalCredit))]),
+              _vm._v(" "),
+              _c("td")
+            ])
+          ])
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", [
+      _c("strong", [_vm._v("Currency:")]),
+      _vm._v(" "),
+      _c("em", [_vm._v("Dollar")])
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7e95079f", esExports)
+  }
+}
 
 /***/ })
 ],[171]);
