@@ -22,7 +22,7 @@
         </ul>
 
         <list-table
-            tableClass="wperp-table table-striped table-dark widefat"
+            tableClass="wperp-table table-striped table-dark widefat sales-tax-table"
             :columns="columns"
             :rows="rows">
             <template slot="trn_no" slot-scope="data">
@@ -180,6 +180,9 @@
             display: flex;
             justify-content: space-between;
         }
+    }
+    .sales-tax-table tbody tr td:last-child {
+        text-align: left !important;
     }
 }
 </style>

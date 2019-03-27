@@ -140,12 +140,12 @@
     }
 </script>
 
-<style scoped>
+<style>
     .content-header__title {
         padding-top: 5px !important;
     }
     .income-statement tbody tr td:last-child {
-        text-align: initial !important;
+        text-align: left !important;
     }
     .income-statement .t-foot td {
         color: #2196f3;
