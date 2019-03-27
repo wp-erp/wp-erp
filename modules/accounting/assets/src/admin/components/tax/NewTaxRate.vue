@@ -192,7 +192,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success',  'Tax Rate Created!' );
                 }).then(() => {
-                    this.$router.push({name: 'TaxRates'})
+                    this.$router.push({name: 'TaxRates'});
                     this.resetData();
                 });
 
