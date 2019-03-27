@@ -25,6 +25,13 @@
             tableClass="wperp-table table-striped table-dark widefat"
             :columns="columns"
             :rows="rows">
+            <template slot="trn_no" slot-scope="data">
+                <strong>
+                    <router-link :to="{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}">
+                        #{{ data.row.trn_no }}
+                    </router-link>
+                </strong>
+            </template>
             <template slot="debit" slot-scope="data">
                 {{ data.row.debit }}
             </template>
