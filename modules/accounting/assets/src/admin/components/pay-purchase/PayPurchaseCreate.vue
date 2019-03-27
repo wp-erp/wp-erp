@@ -352,17 +352,24 @@
             },
 
             changeAccounts() {
+                this.accts_by_chart = [];
                 if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
-                    this.accts_by_chart = [];
-
                     HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 } else {
-                    this.accts_by_chart = [];
-
                     HTTP.get('/ledgers/cash-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 }
                 this.$root.$emit('account-changed');
@@ -385,6 +392,10 @@
 
                 if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
                     this.form_errors.push('Payment Method is required.');
+                }
+
+                if ( parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Not enough balance in selected account.');
                 }
             },
 

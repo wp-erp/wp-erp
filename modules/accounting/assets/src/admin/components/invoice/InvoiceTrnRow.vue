@@ -1,6 +1,6 @@
 <template>
     <tr>
-        <th scope="row" class="col--product with-multiselect prodcut-select">
+        <th scope="row" class="col--products with-multiselect product-select">
             <multi-select v-model="line.selectedProduct" :options="products" />
         </th>
         <td class="col--qty column-primary">
@@ -227,7 +227,7 @@
     }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
     .wperp-form-table {
         .col--tax {
             input {
@@ -236,5 +236,8 @@
                 border-color: rgba(26, 158, 212, 0.45);
             }
         }
+    }
+    .product-select {
+        font-weight: normal !important;
     }
 </style>

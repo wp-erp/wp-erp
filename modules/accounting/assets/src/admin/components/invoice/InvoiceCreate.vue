@@ -676,11 +676,10 @@
             width: 100px;
         }
 
-        .prodcut-select {
+        .product-select {
             .with-multiselect .multiselect__select,
             .with-multiselect .multiselect__tags {
                 min-height: 33px !important;
-                margin-top: 3px;
                 margin-top: 4px;
             }
 

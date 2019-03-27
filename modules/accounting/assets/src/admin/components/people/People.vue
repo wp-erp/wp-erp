@@ -286,5 +286,8 @@
                 float: left !important;
             }
         }
+        .check-column {
+            padding: 20px !important;
+        }
     }
 </style>

@@ -114,6 +114,19 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-delete' . '/(?P<db_id>[\d]+)', [
+
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'line_delete_tax_rate' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/tax-records', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -398,6 +411,25 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response->set_status( 201 );
 
         return $response;
+    }
+
+    /**
+     * Update component of a tax rate
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function line_delete_tax_rate( $request ) {
+        $id = (int) $request['db_id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        erp_acct_delete_tax_rate_line( $id );
+
+        return new WP_REST_Response(true, 204 );
     }
 
 
@@ -757,6 +789,12 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'properties' => [
                 'id'          => [
                     'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'db_id'          => [
+                    'description' => __( 'Unique identifier for the line resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,

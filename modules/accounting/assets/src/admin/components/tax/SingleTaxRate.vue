@@ -141,7 +141,7 @@
                     case 'trash':
                         if (confirm('Are you sure to delete?')) {
                             this.$store.dispatch( 'spinner/setSpinner', true );
-                            HTTP.delete(this.url + '/' + row.id).then(response => {
+                            HTTP.delete('/taxes/' + this.tax_id + '/line-delete/' + row.db_id).then(response => {
                                 this.$delete(this.rows, index);
                                 this.$store.dispatch( 'spinner/setSpinner', false );
                                 this.showAlert( 'success', 'Deleted !' );
@@ -166,5 +166,9 @@
 
     .combo-box {
         margin-right: 10px !important;
+    }
+
+    .col--actions {
+        float: left !important;
     }
 </style>

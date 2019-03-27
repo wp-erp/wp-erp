@@ -15,8 +15,8 @@
                         <details v-if="data.additional" open>
                             <summary>{{ data.name }}</summary>
                             <p :key="additional.id" v-for="additional in data.additional">
-                                <strong>{{ additional.name }}</strong>
-                                <em>{{ getCurrencySign() + Math.abs(additional.balance) }}</em>
+                                {{ additional.name }}
+                                {{ getCurrencySign() + Math.abs(additional.balance) }}
                             </p>
                         </details>
                         <span v-else>{{ data.name }}</span>

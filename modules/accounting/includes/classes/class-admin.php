@@ -139,7 +139,7 @@ class Admin {
             'position'   => 15
         ] );
         erp_add_submenu( 'accounting', 'taxes', [
-            'title'      => __( 'Tax Records', 'erp' ),
+            'title'      => __( 'Tax Payments', 'erp' ),
             'capability' => $sale,
             'slug'       => 'tax-records',
             'position'   => 15
