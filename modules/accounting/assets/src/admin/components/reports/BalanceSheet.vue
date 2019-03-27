@@ -2,13 +2,18 @@
     <div>
         <h2 class="content-header__title">Balance Sheet</h2>
 
-        <form action="" method="" @submit.prevent="fetchItems" class="query-options">
+        <form action="" method="" @submit.prevent="fetchItems" class="query-options no-print">
 
             <div class="wperp-date-group">
                 <datepicker v-model="start_date"></datepicker>
                 <datepicker v-model="end_date"></datepicker>
                 <button class="wperp-btn btn--primary add-line-trigger" type="submit">Filter</button>
             </div>
+
+            <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
+                <i class="flaticon-printer-1"></i>
+                &nbsp; Print
+            </a>
 
         </form>
 
@@ -183,43 +188,106 @@
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
+            },
+
+            printPopup() {
+                window.print();
             }
         }
     }
 </script>
 
-<style>
+<style lang="less">
     .content-header__title {
         padding-top: 5px !important;
     }
-
-    .balance-sheet-asset tbody tr td:last-child {
-        text-align: left !important;
+    .query-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 500px;
+        padding: 20px 0;
     }
-    .report-table tbody tr td:first-child {
-        width: 70% !important;
+    .balance-sheet-asset {
+        tbody {
+            tr {
+                td {
+                    &:last-child {
+                        text-align: left !important;
+                    }
+                }
+            }
+        }
+        .t-foot {
+            td {
+                color: #2196f3;
+                font-weight: bold;
+            }
+        }
     }
-    .balance-sheet-asset .t-foot td {
-        color: #2196f3;
-        font-weight: bold;
+    .report-table {
+        tbody {
+            tr {
+                td {
+                    &:first-child {
+                        width: 70% !important;
+                    }
+                }
+            }
+        }
     }
-    .balance-sheet-liability tbody tr td:last-child {
-        text-align: initial !important;
+    .balance-sheet-liability {
+        tbody {
+            tr {
+                td {
+                    &:last-child {
+                        text-align: initial !important;
+                    }
+                }
+            }
+        }
+        .t-foot {
+            td {
+                color: #2196f3;
+                font-weight: bold;
+            }
+        }
     }
-    .balance-sheet-liability .t-foot td {
-        color: #2196f3;
-        font-weight: bold;
+    .balance-sheet-equity {
+        tbody {
+            tr {
+                td {
+                    &:last-child {
+                        text-align: initial !important;
+                    }
+                }
+            }
+        }
+        .t-foot {
+            td {
+                color: #2196f3;
+                font-weight: bold;
+            }
+        }
     }
-    .balance-sheet-equity tbody tr td:last-child {
-        text-align: initial !important;
+    .liability-equity-balance {
+        tr {
+            td {
+                background-color: #f2f2f2;
+                color: #2196f3;
+                font-weight: bold;
+            }
+        }
     }
-    .balance-sheet-equity .t-foot td {
-        color: #2196f3;
-        font-weight: bold;
-    }
-    .liability-equity-balance tr td {
-        background-color: #f2f2f2;
-        color: #2196f3;
-        font-weight: bold;
+    @media print {
+        .erp-nav-container {
+            display: none;
+        }
+        .no-print {
+            display: none !important;
+            * {
+                display: none !important;
+            }
+        }
     }
 </style>

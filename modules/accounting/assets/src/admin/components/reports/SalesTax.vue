@@ -2,7 +2,7 @@
     <div class="sales-tax-report">
         <h2>Sales Tax Report</h2>
 
-        <form action="" method="" @submit.prevent="getSalesTaxReport" class="query-options">
+        <form action="" method="" @submit.prevent="getSalesTaxReport" class="query-options no-print">
             <div class="with-multiselect">
                 <multi-select v-model="selectedAgency" :options="taxAgencies" />
             </div>
@@ -13,6 +13,12 @@
             </div>
 
             <button class="wperp-btn btn--primary add-line-trigger" type="submit">View</button>
+
+            <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
+                <i class="flaticon-printer-1"></i>
+                &nbsp; Print
+            </a>
+
         </form>
 
         <ul class="report-header" v-if="null !== selectedAgency">
@@ -139,52 +145,64 @@
                 }).catch(e => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 });
+            },
+
+            printPopup() {
+                window.print();
             }
         }
     }
 </script>
 
-<style lang="less">
-.sales-tax-report {
-    h2 {
-        padding-top: 15px;
-    }
+<style lang="less" scoped>
+    .sales-tax-report {
+        h2 {
+            padding-top: 15px;
+        }
 
-    .query-options {
-        background: #fff;
-        padding: 30px 5px;
-        border-radius: 3px;
-    }
-
-    .with-multiselect {
-        width: 300px;
-        float: left;
-        margin-right: 50px;
-    }
-
-    .wperp-date-group {
-        float: left;
-        margin-right: 10px;
-    }
-
-    .wperp-btn {
-        margin-top: 2px;
-    }
-
-    .report-header {
-        width: 420px;
-        padding: 10px 0 0 0;
-        margin: 50px 0 0 0;
-
-        li {
+        .query-options {
             display: flex;
+            align-items: center;
             justify-content: space-between;
+            padding: 20px 0;
+            width: 900px;
+        }
+
+        .with-multiselect {
+            width: 300px;
+            float: left;
+            margin-right: 50px;
+        }
+
+        .wperp-btn {
+            margin-top: 2px;
+        }
+
+        .report-header {
+            width: 420px;
+            padding: 10px 0 0 0;
+            margin: 50px 0 0 0;
+
+            li {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+
+        .sales-tax-table tbody tr td:last-child {
+            text-align: left !important;
+        }
+
+        @media print {
+            .erp-nav-container {
+                display: none;
+            }
+
+            .no-print, .no-print * {
+                display: none !important;
+            }
         }
     }
-    .sales-tax-table tbody tr td:last-child {
-        text-align: left !important;
-    }
-}
 </style>
 
 

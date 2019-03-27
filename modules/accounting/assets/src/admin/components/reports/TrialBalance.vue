@@ -2,13 +2,18 @@
     <div class="trial-balance">
         <h2>Trial Balance</h2>
 
-        <form action="" method="" @submit.prevent="getTrialBalance" class="query-options">
+        <form action="" method="" @submit.prevent="getTrialBalance" class="query-options no-print">
             <div class="wperp-date-btn-group">
                 <datepicker v-model="start_date"></datepicker>
                 <datepicker v-model="end_date"></datepicker>
             </div>
 
             <button class="wperp-btn btn--primary add-line-trigger" type="submit">View</button>
+
+            <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
+            <i class="flaticon-printer-1"></i>
+            &nbsp; Print
+            </a>
         </form>
 
         <p><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></p>
@@ -114,6 +119,10 @@
                 }).catch(e => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 });
+            },
+
+            printPopup() {
+                window.print();
             }
         }
     }
@@ -144,7 +153,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 400px;
+            width: 500px;
             padding: 20px 0;
         }
 
@@ -162,6 +171,15 @@
                 justify-content: space-between;
                 max-width: 300px;
                 padding: 3px;
+            }
+        }
+
+        @media print {
+            .erp-nav-container {
+                display: none;
+            }
+            .no-print, .no-print * {
+                display: none !important;
             }
         }
     }
