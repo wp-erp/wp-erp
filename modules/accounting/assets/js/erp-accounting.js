@@ -997,8 +997,7 @@
         },
 
         setCountryStateValue: function() {
-
-            if (typeof ERP_AC.countries === 'undefined') {
+            if (typeof wpErpCountries === 'undefined') {
                 return false;
             }
 
@@ -1007,15 +1006,15 @@
                 parent = self.closest(self.data('parent')),
                 empty = '<option value="">- Select -</option>';
 
-            if (ERP_AC.countries[country]) {
+            if (wpErpCountries[country]) {
                 var options = '',
-                    state = ERP_AC.countries[country];
+                    state = wpErpCountries[country];
 
                 for (var index in state) {
                     options = options + '<option value="' + index + '">' + state[index] + '</option>';
                 }
 
-                if ($.isArray(ERP_AC.countries[country])) {
+                if ($.isArray(wpErpCountries[country])) {
                     $('.erp-state-select').html(empty);
                 } else {
                     $('.erp-state-select').html(options);
