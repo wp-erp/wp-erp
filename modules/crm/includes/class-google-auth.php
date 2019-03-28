@@ -130,11 +130,6 @@ class Google_Auth {
 
         wperp()->google_sync->update_profile();
 
-        //disable other providers, disabel imap
-        $option = get_option( 'erp_settings_erp-crm_email_connect_imap', [] );
-        $option['enable_imap'] = 'no';
-        update_option( 'erp_settings_erp-crm_email_connect_imap', $option );
-
         wp_redirect( $this->get_settings_url() );
     }
 
