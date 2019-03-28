@@ -8,8 +8,8 @@
             <!--</a>-->
         </div>
         <div class="wperp-panel-body pb-0">
-            <ul class="wperp-list-unstyled list-table-content list-table-content--border">
-                <li v-if="accounts.length" :key="key" v-for="(data,key) in accounts">
+            <ul v-if="accounts.length" class="wperp-list-unstyled list-table-content list-table-content--border">
+                <li :key="key" v-for="(data,key) in accounts">
                     <div class="left">
                         <i class="flaticon-menu-1"></i>
                         <details v-if="data.additional" open>
@@ -52,14 +52,46 @@
         data() {
             return {
                 isEditSettingsEnabled: false,
-                accounts: [],
-                edit_accounts: []
+                accounts             : [],
+                edit_accounts        : []
             }
+        },
+
+        computed: {
+            totalAmount() {
+                if ( ( typeof this.accounts === "object" && null === this.accounts ) ) {
+                    return;
+                }
+                let amount = 0;
+                this.accounts.forEach( element => {
+                    if ( null === element.balance ) {
+                        element.balance = 0;
+                    }
+                    amount += parseFloat(element.balance);
+                });
+
+                if ( isNaN( parseFloat(amount) )) {
+                    amount = 0;
+                }
+
+                return this.formatAmount(amount);
+            },
+        },
+
+        created() {
+            this.fetchAccounts();
+        },
+
+
+        mounted() {
+            hooks.addFilter( 'dashboardTitle', 'acct', function(title) {
+                return title.toUpperCase();
+            } );
         },
 
         methods: {
             fetchAccounts() {
-                HTTP.get('/accounts/cash-at-bank').then( (response) => {
+                HTTP.get('/accounts/cash-at-bank').then( response => {
                     this.accounts = response.data;
                 });
             },
@@ -86,32 +118,6 @@
             //     this.isEditSettingsEnabled = !this.isEditSettingsEnabled;
             // }
         },
-
-        mounted() {
-            this.fetchAccounts();
-        },
-
-        computed: {
-            totalAmount() {
-                if ( ( typeof this.accounts === "object" && null === this.accounts ) ) {
-                    return;
-                }
-                let amount = 0;
-                this.accounts.forEach( element => {
-                    if ( null === element.balance ) {
-                        element.balance = 0;
-                    }
-                    amount += parseFloat(element.balance);
-                });
-
-                if ( isNaN( parseFloat(amount) )) {
-                    amount = 0;
-                }
-
-                return this.formatAmount(amount);
-            },
-        },
-
     }
 </script>
 
