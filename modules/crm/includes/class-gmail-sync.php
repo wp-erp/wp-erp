@@ -49,7 +49,6 @@ class Gmail_Sync {
         if ( $id < $this->get_historyid() ) {
             return false;
         }
-        error_log( 'updating history id to : '.$id );
         return update_option( 'erp_gsync_historyid', $id );
     }
 

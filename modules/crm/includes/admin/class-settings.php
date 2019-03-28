@@ -18,7 +18,6 @@ class CRM_Settings extends ERP_Settings_Page {
 
         add_action( 'erp_admin_field_listing_save_templates', [ $this, 'listing_save_templates' ] );
         add_action( 'erp_admin_field_render_email_providers', [ $this, 'render_email_providers' ] );
-        add_action( 'erp_settings_crm_updated_sub_section', [$this, 'toggle_providers'], 10, 2 );
 
         add_action( 'erp_admin_field_imap_status', [ $this, 'imap_status' ] );
         add_action( 'erp_admin_field_imap_test_connection', [ $this, 'imap_test_connection' ] );
