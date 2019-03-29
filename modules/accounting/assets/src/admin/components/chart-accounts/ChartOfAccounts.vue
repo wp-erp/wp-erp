@@ -156,7 +156,13 @@
     }
 </script>
 
-<style lang="less">
+<style>
+    .chart-list tr .ledger_name {
+        width: 40%;
+    }
+</style>
+
+<style lang="less" scoped>
     .chart-accounts {
         .tablenav,
         .column-cb,
