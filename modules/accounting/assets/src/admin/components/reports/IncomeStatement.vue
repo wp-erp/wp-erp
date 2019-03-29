@@ -18,7 +18,7 @@
         </form>
 
          <list-table
-            tableClass="wperp-table table-striped table-dark widefat income-statement"
+            tableClass="wperp-table table-striped table-dark widefat income-statement income-balance-report"
             :columns="columns1"
             :rows="rows1"
             :showItemNumbers="false"
@@ -35,7 +35,7 @@
         </list-table>
 
         <list-table
-            tableClass="wperp-table table-striped table-dark widefat income-statement"
+            tableClass="wperp-table table-striped table-dark widefat income-statement income-balance-report"
             :columns="columns2"
             :rows="rows2"
             :showItemNumbers="false"
@@ -51,7 +51,7 @@
             </template>
         </list-table>
 
-        <table class="wperp-table table-striped table-dark widefat income-statement-balance">
+        <table class="wperp-table table-striped table-dark widefat income-statement-balance income-balance-report">
             <template v-if="balance >= 0">
                 <tbody class="wperp-col-sm-12">
                 <tr>
@@ -155,6 +155,12 @@
     }
     .income-statement tbody tr td:last-child {
         text-align: left !important;
+    }
+    .income-balance-report tbody tr td:first-child {
+        width: 70% !important;
+    }
+    .income-balance-report thead tr th:first-child {
+        width: 70% !important;
     }
     .income-statement .t-foot td {
         color: #2196f3;
