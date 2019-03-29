@@ -28,18 +28,15 @@
     import HTTP from 'admin/http'
 
     export default {
-        name: "Chart",
-        components: {
-            HTTP
-        },
+        name: 'Chart',
 
         data() {
             return {
-                items: [],
-                chart : '',
-                chartRange : 'this_year',
-                respData : '',
-                showDropdown : false
+                items       : [],
+                chart       : '',
+                chartRange  : 'this_year',
+                respData    : '',
+                showDropdown: false
             }
         },
 
@@ -144,33 +141,43 @@
         methods: {
             createChart() {
                 let dataChart = {
-                        labels: this.thisYear.labels,
-                        datasets: this.thisYear.datasets
-                    },
-                    config = {
-                        type: 'bar',
-                        data: dataChart,
-                        options: {
-                            maintainAspectRatio: true,
-                            responsive: true,
-                            legend: {
-                                display: false
-                            },
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
+                    labels: this.thisYear.labels,
+                    datasets: this.thisYear.datasets
+                },
+                config = {
+                    type: 'bar',
+                    data: dataChart,
+                    options: {
+                        maintainAspectRatio: true,
+                        responsive: true,
+                        legend: {
+                            display: false
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    callback: function(value, index, values) {
+                                        return '$' + value;
                                     }
-                                }]
+                                }
+                            }]
+                        },
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItems, data) {
+                                    return '$' + tooltipItems.yLabel.toString();
+                                }
                             }
                         }
-                    };
+                    }
+                };
+
                 let bar_chart_ctx = this.$refs['bar_chart'].getContext("2d");
                 this.chart = new Chart(bar_chart_ctx, config);
             },
 
             fetchData() {
-
                 HTTP.get( 'transactions/income-expense-overview').then( (response) => {
                      this.respData = response.data;
                      this.createChart();
@@ -216,7 +223,8 @@
                     startDate = new Date(today.getFullYear(), quarter * 3, 1);
 
                 let endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 3, 0);
-                if( val === 'current' ){
+
+                if ( val === 'current' ){
                     return { 'start' : startDate.getMonth(), 'end' : endDate.getMonth() }
                 }
 
