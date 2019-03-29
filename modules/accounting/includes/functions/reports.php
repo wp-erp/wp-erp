@@ -409,7 +409,7 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
   * @param string $end_date
   * @return mixed
   */
- function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
+function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
     global $wpdb;
 
     // opening balance
@@ -708,7 +708,7 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['total_equity'] = 0;
     $results['total_liability'] = 0;
 
-    foreach ($results['rows1'] as $result) {
+    foreach ( $results['rows1'] as $result ) {
         if ( !is_numeric( $result['balance'] ) ) {
             continue;
         }
@@ -718,7 +718,7 @@ function erp_acct_get_balance_sheet( $args ) {
         }
     }
 
-    foreach ($results['rows2'] as $result) {
+    foreach ( $results['rows2'] as $result ) {
         if ( !is_numeric( $result['balance'] ) ) {
             continue;
         }
@@ -772,12 +772,12 @@ function erp_acct_get_profit_loss( $args ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE (ledger.chart_id=4 OR ledger.chart_id=5) AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
         GROUP BY ledger_detail.ledger_id";
 
-    $results['rows'] = $wpdb->get_results($sql, ARRAY_A);
+    $results['rows'] = $wpdb->get_results( $sql, ARRAY_A );
 
     $results['total_debit'] = 0;
     $results['total_credit'] = 0;
-    
-    foreach ($results['rows'] as $result) {
+
+    foreach ( $results['rows'] as $result ) {
         $results['total_debit']  += (float)$result['debit'];
         $results['total_credit'] += (float)$result['credit'];
     }
