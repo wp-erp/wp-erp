@@ -20,6 +20,7 @@
                     action-column="actions"
                     :columns="columns"
                     :actions="actions"
+                    :showCb="false"
                     :rows="ledgers[parseInt(chart.id)]"
                     @action:click="onActionClick">
                     <template slot="ledger_name" slot-scope="data">
