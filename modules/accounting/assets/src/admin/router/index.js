@@ -53,6 +53,7 @@ import SingleTaxRate     from 'admin/components/tax/SingleTaxRate.vue';
 import IncomeStatement   from 'admin/components/reports/IncomeStatement.vue';
 import BalanceSheet      from 'admin/components/reports/BalanceSheet.vue';
 import DynamicTrnLoader  from 'admin/components/transactions/DynamicTrnLoader.vue';
+import OpeningBalance    from 'admin/components/opening-balance/OpeningBalance.vue';
 
 Vue.use(Router);
 
@@ -644,6 +645,17 @@ export default new Router({
                     name: 'DynamicTrnLoader',
                     component: DynamicTrnLoader,
                     alias: '/trn-loader/:id'
+                }
+            ]
+        },
+        {
+            path: '/opening-balance',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'OpeningBalance',
+                    component: OpeningBalance
                 }
             ]
         },

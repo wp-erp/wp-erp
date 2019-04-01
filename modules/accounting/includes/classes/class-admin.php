@@ -144,10 +144,16 @@ class Admin {
             'position'   => 15
         ] );
         erp_add_menu( 'accounting', [
+            'title'      =>  __( 'Openning Balance', 'erp' ),
+            'capability' => $account_charts,
+            'slug'       => 'opening-balance',
+            'position'   => 90
+        ] );
+        erp_add_menu( 'accounting', [
             'title'      =>  __( 'Reports', 'erp' ),
             'capability' => $reports,
             'slug'       => 'reports',
-            'position'   => 90
+            'position'   => 100
         ] );
         erp_add_menu( 'accounting', [
             'title'      =>  __( 'Help', 'erp' ),
