@@ -45,7 +45,7 @@
         },
 
         computed: {
-            thisYear(){
+            thisYear() {
                 return {
                     labels : this.respData.thisYear.labels,
                     datasets : [
@@ -81,7 +81,7 @@
                 }
             },
 
-            thisQuarter(){
+            thisQuarter() {
                 let quarter = this.getQuarterRange();
                 let labels = this.thisYear.labels.slice(quarter.start, quarter.end+1);
                 let newIncome = this.thisYear.datasets[0].data.slice(quarter.start, quarter.end+1);
@@ -107,7 +107,7 @@
             lastQuarter(){
                 let quarter = this.getQuarterRange('previous');
 
-                let yearData = this.thisYear.datasets;
+                let yearData = this.thisYear;
 
                 if ( quarter.start < 0 ) {
                     yearData = this.lastYear;
@@ -178,7 +178,7 @@
             },
 
             fetchData() {
-                HTTP.get( 'transactions/income-expense-overview').then( (response) => {
+                HTTP.get( '/transactions/income-expense-overview').then( response => {
                      this.respData = response.data;
                      this.createChart();
                      this.showDropdown = true;
