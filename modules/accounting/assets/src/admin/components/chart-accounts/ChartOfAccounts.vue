@@ -20,6 +20,7 @@
                     action-column="actions"
                     :columns="columns"
                     :actions="actions"
+                    :showCb="false"
                     :rows="ledgers[parseInt(chart.id)]"
                     @action:click="onActionClick">
                     <template slot="ledger_name" slot-scope="data">
@@ -156,7 +157,13 @@
     }
 </script>
 
-<style lang="less">
+<style>
+    .chart-list tr .ledger_name {
+        width: 40%;
+    }
+</style>
+
+<style lang="less" scoped>
     .chart-accounts {
         .tablenav,
         .column-cb,

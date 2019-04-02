@@ -5,7 +5,10 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Dashboard</h2>
+                    <h2 class="content-header__title">{{ dashboardTitle }}</h2>
+
+                    <!-- test add action hook -->
+                    {{ hooks.doAction( 'todayDate', new Date ) }}
                 </div>
             </div>
         </div>
@@ -87,10 +90,9 @@
 </template>
 
 <script>
-
+    import HTTP from 'admin/http';
     import Dropdown from 'admin/components/base/Dropdown.vue'
     import Accounts from 'admin/components/dashboard/Accounts.vue'
-    import HTTP from 'admin/http';
     import Chart from "admin/components/dashboard/Chart.vue";
 
     export default {
@@ -100,32 +102,21 @@
             Chart,
             Accounts,
             Dropdown,
-            HTTP
         },
 
-        data () {
+        data() {
             return {
-                title1: 'Income & Expenses',
-                title2: 'Bank Accounts',
-                title3: 'Invoices owed to you',
-                title4: 'Bills to pay',
-                closable: true,
-                msg: 'Accounting',
-
-                to_receive: [],
-                to_pay: []
+                title1        : 'Income & Expenses',
+                title2        : 'Bank Accounts',
+                title3        : 'Invoices owed to you',
+                title4        : 'Bills to pay',
+                closable      : true,
+                msg           : 'Accounting',
+                to_receive    : [],
+                to_pay        : [],
+                dashboardTitle: null
             }
         },
-
-        mounted () {
-
-        },
-
-       created(){
-            this.$store.dispatch( 'spinner/setSpinner', true );
-            this.fetchReceivables();
-            this.fetchPayables();
-       },
 
         computed: {
             total_receivable() {
@@ -136,6 +127,7 @@
 
                 return this.formatAmount(total);
             },
+
             total_payable() {
                 let amounts = Object.values(this.to_pay.amount);
                 let total = amounts.reduce( ( amount, item ) => {
@@ -144,6 +136,21 @@
                 this.$store.dispatch( 'spinner/setSpinner', false );
                 return this.formatAmount(total);
             },
+
+            hooks() {
+                return window.hooks;
+            }
+        },
+
+        created() {
+            this.$store.dispatch( 'spinner/setSpinner', true );
+            this.fetchReceivables();
+            this.fetchPayables();
+       },
+
+        mounted() {
+            // `hooks` object can be use with/without `this` inside <script>
+            this.dashboardTitle = hooks.applyFilters( 'dashboardTitle', 'dashboard' );
         },
 
         methods: {
@@ -160,12 +167,6 @@
                     this.to_pay = res.data;
                 } );
             }
-
         }
-
     }
 </script>
-
-<style scoped>
-
-</style>

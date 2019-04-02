@@ -1,5 +1,5 @@
 <?php
-namespace WeDevs\ERP\Accounting\INCLUDES;
+namespace WeDevs\ERP\Accounting\Includes\Classes;
 
 use WeDevs\ERP\Email;
 

@@ -26,7 +26,9 @@ import PayPurchaseSingle from 'admin/components/pay-purchase/PayPurchaseSingle.v
 import JournalList       from 'admin/components/journal/JournalList.vue';
 import JournalCreate     from 'admin/components/journal/JournalCreate.vue';
 import JournalSingle     from 'admin/components/journal/JournalSingle.vue';
-import Transfer          from 'admin/components/transfers/Transfer.vue';
+import Transfers         from 'admin/components/transfers/Transfers.vue';
+import NewTransfer       from 'admin/components/transfers/NewTransfer.vue';
+import SingleTransfer    from 'admin/components/transfers/SingleTransfer.vue';
 import ExpenseCreate     from 'admin/components/expense/ExpenseCreate.vue';
 import SalesSingle       from 'admin/components/transactions/sales/SalesSingle.vue';
 import Sales             from 'admin/components/transactions/sales/Sales.vue';
@@ -43,12 +45,15 @@ import TaxCategories     from 'admin/components/tax/TaxCategories.vue';
 import TaxZones          from 'admin/components/tax/TaxZones.vue';
 import TaxRates          from 'admin/components/tax/TaxRates.vue';
 import TaxRecords        from 'admin/components/tax/TaxRecords.vue';
+import PayTaxSingle      from 'admin/components/tax/PayTaxSingle.vue';
 import BankAccounts      from 'admin/components/bank-accounts/BankAccounts.vue';
 import CheckCreate       from 'admin/components/check/CheckCreate.vue';
 import CheckSingle       from 'admin/components/check/CheckSingle.vue';
 import SingleTaxRate     from 'admin/components/tax/SingleTaxRate.vue';
 import IncomeStatement   from 'admin/components/reports/IncomeStatement.vue';
 import BalanceSheet      from 'admin/components/reports/BalanceSheet.vue';
+import DynamicTrnLoader  from 'admin/components/transactions/DynamicTrnLoader.vue';
+import OpeningBalance    from 'admin/components/opening-balance/OpeningBalance.vue';
 
 Vue.use(Router);
 
@@ -66,10 +71,21 @@ export default new Router({
             ]
         },
         {
-            path : '/inventory',
-            name : 'Products',
-            component: Products,
-            alias: '/products'
+            path: '/inventory',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'Products',
+                    component: Products,
+                    alias: '/products'
+                },
+                {
+                    path: 'page/:page',
+                    name: 'PaginateProducts',
+                    component: Products,
+                },
+            ]
         },
         {
             path: '/customers',
@@ -158,17 +174,44 @@ export default new Router({
                             name: 'SalesSingle',
                             component: SalesSingle,
                         },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateSales',
+                            component: Sales,
+                        }
                     ]
                 },
                 {
                     path: 'expenses',
-                    name: 'Expenses',
-                    component: Expenses,
+                    component: { render (c) { return c('router-view') } },
+                    children: [
+                        {
+                            path: '',
+                            name: 'Expenses',
+                            component: Expenses,
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateExpenses',
+                            component: Expenses,
+                        }
+                    ]
                 },
                 {
                     path: 'purchases',
-                    name: 'Purchases',
-                    component: Purchases,
+                    component: { render (c) { return c('router-view') } },
+                    children: [
+                        {
+                            path: '',
+                            name: 'Purchases',
+                            component: Purchases,
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginatePurchases',
+                            component: Purchases,
+                        }
+                    ]
                 },
             ]
         },
@@ -366,9 +409,20 @@ export default new Router({
                     component: TrialBalance,
                 },
                 {
-                    path: 'ledger-report',
-                    name: 'LedgerReport',
-                    component: LedgerReport,
+                    path: 'ledgers',
+                    component: { render (c) { return c('router-view') } },
+                    children: [
+                        {
+                            path: '',
+                            name: 'LedgerReport',
+                            component: LedgerReport,
+                        },
+                        {
+                            path: ':id',
+                            name: 'LedgerSingle',
+                            component: LedgerReport
+                        },
+                    ]
                 },
                 {
                     path: 'sales-tax',
@@ -384,17 +438,6 @@ export default new Router({
                     path: 'balance-sheet',
                     name: 'BalanceSheet',
                     component: BalanceSheet,
-                },
-            ]
-        },
-        {
-            path: '/ledgers',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: ':id',
-                    name: 'LedgerSingle',
-                    component: LedgerReport,
                 },
             ]
         },
@@ -516,12 +559,33 @@ export default new Router({
                     name: 'PaginateTaxRecords',
                     component: TaxRecords,
                 },
+                {
+                    path: ':id',
+                    name: 'PayTaxSingle',
+                    component: PayTaxSingle,
+                },
             ]
         },
         {
-            path: '/transfer/new',
-            name: 'Transfer',
-            component: Transfer
+            path: '/transfers',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                  path: '',
+                  name: 'Transfers',
+                  component: Transfers
+                },
+                {
+                    path: 'new',
+                    name: 'NewTransfer',
+                    component: NewTransfer
+                },
+                {
+                    path: ':id',
+                    name: 'SingleTransfer',
+                    component: SingleTransfer,
+                },
+            ]
         },
         {
             path: '/expenses',
@@ -571,6 +635,29 @@ export default new Router({
             path: '/pay-tax',
             name: 'RecordPayTax',
             component: RecordPayTax
+        },
+        {
+            path: '/trn-loader',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'DynamicTrnLoader',
+                    component: DynamicTrnLoader,
+                    alias: '/trn-loader/:id'
+                }
+            ]
+        },
+        {
+            path: '/opening-balance',
+            component: { render (c) { return c('router-view') } },
+            children: [
+                {
+                    path: '',
+                    name: 'OpeningBalance',
+                    component: OpeningBalance
+                }
+            ]
         },
     ]
 })

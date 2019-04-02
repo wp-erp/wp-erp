@@ -2,7 +2,7 @@
     <div class="wperp-modal-dialog sales-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h2 v-if="null != type">{{ 'payment' == type ? 'Payment' : 'Invoice' }}</h2>
+                <h2 v-if="null != type">{{ 'payment' == type ? 'Receive Payment' : 'Invoice' }}</h2>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>

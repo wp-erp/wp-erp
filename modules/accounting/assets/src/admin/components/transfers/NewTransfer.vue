@@ -39,8 +39,8 @@
                                 <datepicker id="transfer_date" name="transfer_date" v-model="transferdate"></datepicker>
                             </div>
                             <div class="wperp-col-xs-12 wperp-form-group">
-                                <label for="transfer_memo">Memo</label>
-                                <textarea name="transfer_memo" id="transfer_memo" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="particulars"></textarea>
+                                <label for="particulars">Particulars</label>
+                                <textarea name="particulars" id="particulars" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="particulars"></textarea>
                             </div>
                             <!--<div class="wperp-col-xs-12">-->
                                 <!--<div class="attachment-container">-->
@@ -72,16 +72,13 @@
     import MultiSelect from "admin/components/select/MultiSelect.vue"
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
-
     export default {
         name: "Transfer",
-
         components: {
             MultiSelect,
             HTTP,
             Datepicker
         },
-
         data() {
             return {
                 transferFrom: { balance : 0 },
@@ -92,33 +89,26 @@
                 transferdate: erp_acct_var.current_date,
                 particulars : '',
                 amount: '',
-
             };
         },
-
         created(){
             this.fetchAccounts();
         },
-
         methods: {
             fetchAccounts(){
                 HTTP.get('accounts').then( (response) => {
                     this.accounts = response.data;
                     this.fa = response.data;
                     this.ta = response.data;
-
                 } );
             },
-
             transformBalance( val ){
                 let currency = '$';
                 if ( val < 0 ){
                     return `Cr. ${currency} ${Math.abs(val)}`;
                 }
-
                 return `Dr. ${currency} ${val}`;
             },
-
             submitTransfer(){
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post( '/accounts/transfer', {
@@ -132,13 +122,13 @@
                     this.showAlert( 'success', 'Transfer Successful!' );
                     this.fetchAccounts();
                     this.resetData();
+                    this.$router.push('/transfers');
                 } ).catch( err => {
                     let msg = err.response.data.message;
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'error', msg );
                 } );
             },
-
             resetData(){
                 this.transferFrom = { balance : 0 };
                 this.transferTo = { balance : 0 };
@@ -148,7 +138,6 @@
                 this.amount = '';
             },
         },
-
         watch: {
             'transferFrom'(){
                 let id = this.transferFrom.id;
@@ -162,7 +151,6 @@
                     return e.id != id;
                 });
             }
-
         }
     }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="app-customers">
+    <div class="app-tax-agencies">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
@@ -15,7 +15,7 @@
 
         <div class="table-container">
             <list-table
-                tableClass="wp-ListTable widefat fixed tax-agencies-list"
+                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark tax-agencies-list"
                 action-column="actions"
                 :columns="columns"
                 :rows="row_data"
@@ -58,10 +58,10 @@
                 },
                 rows: [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
-                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
+                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 actions : [
                     { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
@@ -74,14 +74,14 @@
                         iconClass: 'flaticon-trash'
                     }
                 ],
-                tax_agencies: [{}],
-                buttonTitle: '',
-                pageTitle: '',
-                url: '',
-                singleUrl: '',
+                tax_agencies          : [{}],
+                buttonTitle           : '',
+                pageTitle             : '',
+                url                   : '',
+                singleUrl             : '',
                 isActiveOptionDropdown: false,
-                agency_id: null,
-                is_update: false
+                agency_id             : null,
+                is_update             : false
             };
         },
 
@@ -127,8 +127,6 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch((error) => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(() => {
-                    //ready
                 });
             },
 
@@ -195,6 +193,20 @@
         }
     }
 </script>
-<style lang="less">
 
+<style lang="less">
+.app-tax-agencies {
+
+    .table-container {
+        width: 600px;
+    }
+
+    .check-column {
+        padding: 20px !important;
+    }
+
+    .actions {
+        text-align: right;
+    }
+}
 </style>

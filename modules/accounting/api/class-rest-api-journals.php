@@ -88,7 +88,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_journals( $request ) {
         $args['number'] = !empty( $request['per_page'] ) ? $request['per_page'] : 20;
-        $args['offset'] = 0;
+        $args['offset'] = ( $request['per_page'] * ( $request['page'] - 1 ) );
 
         $additional_fields = [];
 
@@ -127,7 +127,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $item = erp_acct_get_journal( $id );
-        
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -150,11 +150,6 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $count = $wpdb->get_row( "SELECT count(*) FROM " . $wpdb->prefix . "erp_acct_journals", ARRAY_N );
         $item['id'] = $count['0'] + 1;
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
 
         $response = rest_ensure_response( $item );
 
@@ -182,7 +177,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $total_cr = array_sum( $vocher_amount_cr );
 
         if ( $total_dr != $total_cr ) {
-            return new WP_Error( 'rest_journal_invalid_amount', __( 'Summation of debit and credit must be equal.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_journal_invalid_amount', __( 'Summation of debit and credit must be equal.' ), [ 'status' => 400 ] );
         }
 
         $trans_data['voucher_amount'] = $total_dr;
@@ -191,10 +186,10 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
-        
+
         $response = $this->prepare_item_for_response( $journal, $request, $additional_fields );
         $response = rest_ensure_response( $response );
-        
+
         $response->set_status( 201 );
 
         return $response;
@@ -225,6 +220,9 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
         }
+        if ( isset( $request['ref'] ) ) {
+            $prepared_item['ref'] = $request['ref'];
+        }
 
         return $prepared_item;
     }
@@ -243,9 +241,11 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'          => $item->id,
+            'voucher_no'  => $item->voucher_no,
             'particulars' => $item->particulars,
+            'ref'         => $item->ref,
             'trn_date'    => $item->trn_date,
-            'line_items'  => $item->line_items,
+            'line_items'  => !empty( $item->line_items ) ? $item->line_items : [],
             'attachments' => maybe_unserialize( $item->attachments ),
             'total'       => (float) $item->voucher_amount,
         ];
@@ -288,6 +288,14 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'particulars'  => [
                     'description' => __( 'Particulars for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'ref'  => [
+                    'description' => __( 'Reference for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

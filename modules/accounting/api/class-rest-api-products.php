@@ -109,13 +109,19 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_inventory_products( $request ) {
-        $formatted_items = []; $additional_fields = [];
+        $args = [
+            'number' => $request['per_page'],
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+        ];
+
+        $formatted_items = [];
+        $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-	    $product_data = erp_acct_get_all_products();
-	    $total_items = is_array( $product_data ) ? count( $product_data ) : 1;
+	    $product_data = erp_acct_get_all_products( $args );
+	    $total_items = erp_acct_get_all_products( [ 'count' => true, 'number' => -1 ] );
 
 	    foreach ( $product_data as $item ) {
             $data = $this->prepare_item_for_response( $item, $request, $additional_fields );

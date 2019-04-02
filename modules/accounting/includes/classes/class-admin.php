@@ -1,5 +1,5 @@
 <?php
-namespace WeDevs\ERP\Accounting\INCLUDES;
+namespace WeDevs\ERP\Accounting\Includes\Classes;
 
 /**
  * Admin Pages Handler
@@ -31,8 +31,7 @@ class Admin {
 
         $slug           = 'erp-accounting';
 
-        add_submenu_page( 'erp', __( 'Accounting', 'erp' ), 'Accounting', 'erp_ac_manager', $slug , [
-            $this, 'plugin_page' ] );
+        add_submenu_page( 'erp', __( 'Accounting', 'erp' ), 'Accounting', 'erp_ac_manager', $slug , [ $this, 'plugin_page' ] );
 
         erp_add_menu_header( 'accounting', 'Accounting', '<svg id="Group_235" data-name="Group 235" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 239 341.4"><defs><style>.cls-1{fill:#9ca1a6}</style></defs><path id="Path_281" data-name="Path 281" class="cls-1" d="M221.9,0H17.1C6.8,0,0,6.8,0,17.1V324.3c0,10.2,6.8,17.1,17.1,17.1H221.9c10.2,0,17.1-6.8,17.1-17.1V17.1C238.9,6.8,232.1,0,221.9,0ZM68.3,307.2H34.1V273.1H68.2v34.1Zm0-68.3H34.1V204.8H68.2v34.1Zm0-68.2H34.1V136.6H68.2v34.1Zm68.2,136.5H102.4V273.1h34.1Zm0-68.3H102.4V204.8h34.1Zm0-68.2H102.4V136.6h34.1Zm68.3,136.5H170.7V273.1h34.1v34.1Zm0-68.3H170.7V204.8h34.1v34.1Zm0-68.2H170.7V136.6h34.1v34.1Zm0-68.3H34.1V34.1H204.8v68.3Zm0,0"/></svg>' );
 
@@ -132,23 +131,29 @@ class Admin {
             'slug'       => 'taxes',
             'position'   => 45,
         ] );
-        erp_add_submenu( 'accounting', 'tax', [
+        erp_add_submenu( 'accounting', 'taxes', [
             'title'      => __( 'Tax Rates', 'erp' ),
             'capability' => $sale,
             'slug'       => 'taxes',
             'position'   => 15
         ] );
-        erp_add_submenu( 'accounting', 'tax', [
-            'title'      => __( 'Tax Records', 'erp' ),
+        erp_add_submenu( 'accounting', 'taxes', [
+            'title'      => __( 'Tax Payments', 'erp' ),
             'capability' => $sale,
             'slug'       => 'tax-records',
             'position'   => 15
         ] );
         erp_add_menu( 'accounting', [
+            'title'      =>  __( 'Openning Balance', 'erp' ),
+            'capability' => $account_charts,
+            'slug'       => 'opening-balance',
+            'position'   => 90
+        ] );
+        erp_add_menu( 'accounting', [
             'title'      =>  __( 'Reports', 'erp' ),
             'capability' => $reports,
             'slug'       => 'reports',
-            'position'   => 90
+            'position'   => 100
         ] );
         erp_add_menu( 'accounting', [
             'title'      =>  __( 'Help', 'erp' ),
@@ -242,6 +247,12 @@ class Admin {
      */
     public function plugin_page() {
         echo '<div class="wrap"><div id="erp-accounting"></div></div>';
+
+        $component = 'accounting';
+        $menu = erp_menu();
+        $menu = $menu[$component];
+        $section = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
+        $sub = ( isset( $_GET['sub-section'] ) && !empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? $_GET['sub-section'] : false;
     }
 
     /**

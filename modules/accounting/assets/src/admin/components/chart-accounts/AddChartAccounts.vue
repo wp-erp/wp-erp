@@ -290,7 +290,6 @@
                 this.$store.dispatch( 'spinner/setSpinner', false );
             }
 
-
         }
     }
 </script>
@@ -334,6 +333,10 @@
             & > label {
                 font-weight: bold;
             }
+        }
+
+        input[type="number"] {
+            height: auto;
         }
     }
 </style>

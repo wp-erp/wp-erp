@@ -1,7 +1,7 @@
 <template>
     <div class="wperp-form-group invoice-customers with-multiselect">
         <people-modal v-if="showModal" title="Add new customer" type="customer"></people-modal>
-        <label for="customer">Customer<span class="wperp-required-sign">*</span></label>
+        <label>Customer<span class="wperp-required-sign">*</span></label>
         <multi-select v-model="selected" :options="options" />
 
         <a href="#" class="add-new-customer" @click="showModal = true"><i class="flaticon-add-plus-button"></i>Add new</a>
@@ -60,7 +60,7 @@
             options: state => state.sales.customers
         }),
 
-        created() {            
+        created() {
             this.$store.dispatch('sales/fetchCustomers');
 
             this.$root.$on( 'options-query', query => {
@@ -86,7 +86,7 @@
                         type: 'customer',
                         search: query
                     }
-                }).then(response => {                    
+                }).then(response => {
                     this.$store.dispatch('sales/fillCustomers', response.data);
                 });
             },
@@ -104,16 +104,8 @@
             margin-bottom: 0;
         }
 
-        .multiselect__tags {
-            padding: 8px 0;
-        }
-
         .multiselect__placeholder {
             margin: 4px 0 0 7px !important;
-        }
-
-        .multiselect__select {
-            height: 41px;
         }
     }
 </style>

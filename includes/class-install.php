@@ -735,7 +735,6 @@ Company'
                 `trn_date` date DEFAULT NULL,
                 `due_date` date DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,
-                `ref` varchar(255) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
@@ -881,6 +880,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_journals` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `trn_date` date DEFAULT NULL,
+                `ref` varchar(255) DEFAULT NULL,
                 `voucher_no` int(11) DEFAULT NULL,
                 `voucher_amount` decimal(10,2) DEFAULT 0,
                 `particulars` varchar(255) DEFAULT NULL,
@@ -955,6 +955,8 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_cash_at_banks` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `ledger_id` int(11) DEFAULT NULL,
+                `name` varchar(255) DEFAULT NULL,
+                `balance` decimal(10,2) DEFAULT 0,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -967,9 +969,10 @@ Company'
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `voucher_no` int(11) DEFAULT NULL,
                 `trn_date` date DEFAULT NULL,
-                `amount` int(11) DEFAULT NULL,
+                `amount` decimal(10,2) DEFAULT NULL,
                 `ac_from` int(11) DEFAULT NULL,
                 `ac_to` int(11) DEFAULT NULL,
+                `particulars` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -1488,6 +1491,14 @@ Company'
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_product_types` LIMIT 0, 1" ) ) {
             $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`)
                     VALUES (1, 'Product'), (2, 'Service')";
+
+            $wpdb->query( $sql );
+        }
+
+        // insert currency info
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_currency_info` LIMIT 0, 1" ) ) {
+            $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_currency_info` (`id`, `name`, `sign`)
+                    VALUES (1, 'USD', '$'), (2, 'EUR', '€')";
 
             $wpdb->query( $sql );
         }

@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container rec-payment">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -28,7 +28,7 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Reference<span class="wperp-required-sign">*</span></label>
+                                <label>Reference</label>
                                 <input type="text" v-model="basic_fields.trn_ref"/>
                             </div>
                         </div>
@@ -136,6 +136,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
@@ -179,6 +181,7 @@
                 createButtons: [
                     {id: 'save', text: 'Receive Payment'},
                     {id: 'new_create', text: 'Receive and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 form_errors: [],
@@ -194,7 +197,6 @@
                 isWorking       : false,
                 accts_by_chart  : [],
                 erp_acct_assets : erp_acct_var.acct_assets,
-                actionType      : null,
                 reset           : false
             }
         },
@@ -215,12 +217,15 @@
 
         },
 
+        computed: {
+            ...mapState({ actionType: state => state.combo.btnID })
+        },
+
         created() {
             this.prepareDataLoad();
 
-            this.$root.$on('combo-btn-select', button => {
-                this.actionType = button.id;
-            });
+            // initialize combo button id with `save`
+            this.$store.dispatch('combo/setBtnID', 'save');
         },
 
         mounted() {
@@ -256,7 +261,7 @@
                         return;
                     }
 
-                    if ( 'awaiting_approval' != request3.data.status ) {
+                    if ( 'Pending' != request3.data.status ) {
                         this.showAlert('error', 'Can\'t edit');
                         return;
                     }
@@ -365,6 +370,13 @@
                 });
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
+                let trn_status = null;
+                if ( 'draft' === this.actionType) {
+                    trn_status = 1;
+                } else {
+                    trn_status = 4;
+                }
+
                 HTTP.post('/payments', {
                     customer_id: this.basic_fields.customer.id,
                     ref        : this.basic_fields.trn_ref,
@@ -372,7 +384,7 @@
                     line_items : this.invoices,
                     attachments: this.attachments,
                     type       : 'payment',
-                    status     : 4,
+                    status     : trn_status,
                     particulars: this.particulars,
                     deposit_to : this.basic_fields.deposit_to.id,
                     trn_by     : this.basic_fields.trn_by.id,
@@ -384,7 +396,7 @@
                     this.showAlert('success', 'Payment Created!');
                     this.reset = true;
 
-                    if ('save' == this.actionType) {
+                    if ('save' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Sales'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
@@ -392,22 +404,27 @@
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 });
-
-                event.target.reset();
             },
 
             changeAccounts() {
+                this.accts_by_chart = [];
                 if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
-                    this.accts_by_chart = [];
-
                     HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 } else {
-                    this.accts_by_chart = [];
-
                     HTTP.get('/ledgers/cash-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 }
                 this.$root.$emit('account-changed');
@@ -418,10 +435,6 @@
 
                 if ( !this.basic_fields.customer.hasOwnProperty('id') ) {
                     this.form_errors.push('Customer Name is required.');
-                }
-
-                if ( !this.basic_fields.trn_ref ) {
-                    this.form_errors.push('Transaction Reference is required.');
                 }
 
                 if ( !this.basic_fields.payment_date ) {
@@ -464,11 +477,13 @@
                 this.particulars      = '';
                 this.isWorking        = false,
                 this.reset            = false;
-                this.actionType       = null;
+
+                this.$store.dispatch('combo/setBtnID', 'save');
             },
 
             removeRow(index) {
                 this.$delete(this.invoices, index);
+                this.$delete( this.totalAmounts, index );
                 this.updateFinalAmount();
             },
         },
@@ -477,5 +492,13 @@
 </script>
 
 <style lang="less">
+    .rec-payment {
+        .dropdown {
+            width: 100%;
+        }
 
+        .col--amount {
+            width: 200px;
+        }
+    }
 </style>

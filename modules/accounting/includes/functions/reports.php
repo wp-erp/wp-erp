@@ -33,14 +33,41 @@ function erp_acct_trial_balance_cash_at_bank( $args, $type ) {
     $ledger_ids = implode( ',', explode( ',', $wpdb->get_var($sql1) ) ); // e.g. 4, 5
 
     if ( $ledger_ids ) {
-        $sql2 = $wpdb->prepare("SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_ledger_details
-            WHERE ledger_id IN ({$ledger_ids}) AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_id {$having}",
+        $sql2 = $wpdb->prepare("SELECT SUM(ledger_details.balance) as balance from (SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_ledger_details
+            WHERE ledger_id IN ({$ledger_ids}) AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_id {$having}) AS ledger_details",
             $args['start_date'], $args['end_date']);
 
         return $wpdb->get_var($sql2);
     }
 
     return null;
+}
+
+/**
+ * Trial balance helper
+ *
+ * @param array $args
+ *
+ * @return int
+ */
+function erp_acct_trial_balance_bank_balance( $args, $type ) {
+    global $wpdb;
+
+    if ( 'loan' === $type ) {
+        $having = "HAVING balance < 0";
+    } elseif ( 'balance' === $type ) {
+        $having = "HAVING balance > 0";
+    }
+
+    $chart_bank = 7;
+
+    $sql = $wpdb->prepare("SELECT ledger.id, ledger.name, SUM( debit - credit ) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
+        WHERE ledger.chart_id = %d AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger.id {$having}",
+        $chart_bank, $args['start_date'], $args['end_date']);
+
+    return $wpdb->get_results($sql);
 }
 
 /**
@@ -114,6 +141,32 @@ function erp_acct_get_account_payable( $args ) {
     return $bill_amount + $purchase_amount;
 }
 
+
+/**
+ * Trial balance helper
+ *
+ * Get owners equity
+ */
+function erp_acct_get_owners_equity( $args, $type ) {
+    global $wpdb;
+
+    if ( 'capital' === $type ) {
+        $having = "HAVING balance < 0";
+    } elseif ( 'drawings' === $type ) {
+        $having = "HAVING balance > 0";
+    }
+
+    $owners_equity = 30;
+
+    $sql = $wpdb->prepare("SELECT SUM( debit - credit ) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
+        WHERE ledger.id = %d AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger.id {$having}",
+        $owners_equity, $args['start_date'], $args['end_date']);
+
+    return $wpdb->get_var($sql);
+}
+
 /**
  * Get trial balance
  *
@@ -135,7 +188,7 @@ function erp_acct_get_trial_balance( $args ) {
         SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
-        WHERE ledger.chart_id <> 7 AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
+        WHERE ledger.chart_id <> 7 AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
         $args['start_date'], $args['end_date']
     );
 
@@ -147,12 +200,14 @@ function erp_acct_get_trial_balance( $args ) {
      */
 
     $results['rows'][] = [
-        'name'    => 'Cash at Bank',
-        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'balance' )
+        'name'       => 'Cash at Bank',
+        'balance'    => erp_acct_trial_balance_cash_at_bank( $args, 'balance' ),
+        'additional' => erp_acct_trial_balance_bank_balance( $args, 'balance' )
     ];
     $results['rows'][] = [
-        'name'    => 'Bank Loan',
-        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'loan' )
+        'name'       => 'Bank Loan',
+        'balance'    => erp_acct_trial_balance_cash_at_bank( $args, 'loan' ),
+        'additional' => erp_acct_trial_balance_bank_balance( $args, 'loan' )
     ];
 
     $results['rows'][] = [
@@ -171,6 +226,15 @@ function erp_acct_get_trial_balance( $args ) {
     $results['rows'][] = [
         'name'    => 'Accounts Receivable',
         'balance' => erp_acct_get_account_receivable( $args )
+    ];
+
+    $results['rows'][] = [
+        'name'    => 'Owner\'s Capital',
+        'balance' => erp_acct_get_owners_equity( $args, 'capital' )
+    ];
+    $results['rows'][] = [
+        'name'    => 'Owner\'s Drawings',
+        'balance' => erp_acct_get_owners_equity( $args, 'drawings' )
     ];
 
     // Totals are inside the root `result` array
@@ -345,7 +409,7 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
   * @param string $end_date
   * @return mixed
   */
- function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
+function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
     global $wpdb;
 
     // opening balance
@@ -479,61 +543,55 @@ function erp_acct_get_income_statement( $args ) {
         $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
     }
 
-    $sql = "SELECT
+    $sql1 = "SELECT
         ledger.name,
-        SUM(ledger_detail.debit) as debit,
         SUM(ledger_detail.credit) as credit,
         SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE (ledger.chart_id=4 OR ledger.chart_id=5) AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=4 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
+        GROUP BY ledger_detail.ledger_id";
+
+    $sql2 = "SELECT
+        ledger.name,
+        SUM(ledger_detail.debit) as debit,
+        SUM(ledger_detail.debit - ledger_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=5 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
         GROUP BY ledger_detail.ledger_id";
 
     // All DB results are inside `rows` key
-    $results['rows'] = $wpdb->get_results($sql, ARRAY_A);
+    $results['rows1'] = $wpdb->get_results($sql1, ARRAY_A);
+    $results['rows2'] = $wpdb->get_results($sql2, ARRAY_A);
 
     // Totals are inside the root `result` array
     $results['total_debit'] = 0;
     $results['total_credit'] = 0;
 
     // Add-up all debit and credit
-    foreach ($results['rows'] as $result) {
-        $results['total_debit']  += (float)$result['debit'];
+    foreach ($results['rows1'] as $result) {
         $results['total_credit'] += (float)$result['credit'];
     }
+    foreach ($results['rows2'] as $result) {
+        $results['total_debit']  += (float)$result['debit'];
+    }
 
-    $dr_cr_diff = abs( $results['total_debit'] ) - abs( $results['total_credit'] );
+    $dr_cr_diff = $results['total_debit'] - $results['total_credit'];
 
     if ( abs( $results['total_debit'] ) <= abs( $results['total_credit'] ) ) {
         if ( $dr_cr_diff < 0 ) {
             $dr_cr_diff = - $dr_cr_diff;
         }
-        $results['rows'][] = [
-            'name' => 'Profit',
-            'debit' => $dr_cr_diff,
-            'credit' => 0,
-            'balance' => $dr_cr_diff
-        ];
+        $results['profit'] = $dr_cr_diff;
     } else {
         if ( $dr_cr_diff > 0 ) {
             $balance = - $dr_cr_diff;
         } else {
-            $dr_cr_diff = - $dr_cr_diff;
-            $balance    = $dr_cr_diff;
+            $balance = - $dr_cr_diff;
         }
-        $results['rows'][] = [
-            'name' => 'Loss',
-            'debit' => 0,
-            'credit' => $dr_cr_diff,
-            'balance' => $balance
-        ];
+        $results['loss'] = $balance;
     }
 
-    $results['total_debit'] = 0;
-    $results['total_credit'] = 0;
-    foreach ($results['rows'] as $result) {
-        $results['total_debit']  += (float)$result['debit'];
-        $results['total_credit'] += (float)$result['credit'];
-    }
+    $results['balance'] = $dr_cr_diff;
 
     return $results;
 }
@@ -580,28 +638,12 @@ function erp_acct_get_balance_sheet( $args ) {
         ledger.name,
         ABS(SUM(ledger_detail.debit - ledger_detail.credit)) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=3 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=3 AND ledger.slug != 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
         GROUP BY ledger_detail.ledger_id";
 
-    // All DB results are inside `rows` key
-    $results['rows1'] = $wpdb->get_results($sql1, ARRAY_A);
-    $results['rows2'] = $wpdb->get_results($sql2, ARRAY_A);
-    $results['rows3'] = $wpdb->get_results($sql3, ARRAY_A);
-
-    array_unshift( $results['rows1'], [
-        'name' => '<strong class="wperp-bs-header">Assets</strong>',
-        'balance' => '-'
-    ] );
-
-    array_unshift( $results['rows2'], [
-        'name' => '<strong class="wperp-bs-header">Liability</strong>',
-        'balance' => '-'
-    ] );
-
-    array_unshift( $results['rows3'], [
-        'name' => '<strong class="wperp-bs-header">Equity</strong>',
-        'balance' => '-'
-    ] );
+    $results['rows1'] = $wpdb->get_results( $sql1, ARRAY_A );
+    $results['rows2'] = $wpdb->get_results( $sql2, ARRAY_A );
+    $results['rows3'] = $wpdb->get_results( $sql3, ARRAY_A );
 
     $results['rows1'][] = [
         'name' => 'Accounts Receivable',
@@ -618,13 +660,21 @@ function erp_acct_get_balance_sheet( $args ) {
     ];
     $results['rows2'][] = [
         'name'    => 'Bank Loan',
-        'balance' => erp_acct_trial_balance_cash_at_bank( $args, 'loan' )
+        'balance' => abs( erp_acct_trial_balance_cash_at_bank( $args, 'loan' ) )
     ];
 
     $results['rows2'][] = [
         'name' => 'Sales Tax Payable',
         'slug' => 'sales_tax',
         'balance' => abs ( erp_acct_trial_balance_sales_tax_query( $args, 'payable' ) )
+    ];
+
+    $capital = erp_acct_get_owners_equity( $args, 'capital' );
+    $drawings = erp_acct_get_owners_equity( $args, 'drawings' );
+
+    $results['rows3'][] = [
+        'name'    => 'Owner\'s Equity',
+        'balance' => $capital - $drawings
     ];
 
     $profit_loss = erp_acct_get_profit_loss( $args );
@@ -654,33 +704,40 @@ function erp_acct_get_balance_sheet( $args ) {
         ];
     }
 
-    $results['rows2'] = array_merge( $results['rows2'], $results['rows3'] );
+    $results['total_asset'] = 0;
+    $results['total_equity'] = 0;
+    $results['total_liability'] = 0;
 
-    unset( $results['rows3'] );
-
-    $results['total_left'] = 0;
-    $results['total_right'] = 0;
-
-    foreach ($results['rows1'] as $result) {
+    foreach ( $results['rows1'] as $result ) {
         if ( !is_numeric( $result['balance'] ) ) {
             continue;
         }
 
         if ( ! empty($result['balance']) ) {
-            $results['total_left'] += $result['balance'];
+            $results['total_asset'] += (float) $result['balance'];
         }
     }
 
-    foreach ($results['rows2'] as $result) {
+    foreach ( $results['rows2'] as $result ) {
+        if ( !is_numeric( $result['balance'] ) ) {
+            continue;
+        }
+
+        if ( ! empty($result['balance']) ) {
+            $results['total_liability'] += (float) $result['balance'];
+        }
+    }
+
+    foreach ($results['rows3'] as $result) {
         if ( isset( $results['slug'] ) && $results['slug'] !== 'loss' ) {
             $result['balance'] = abs( $result['balance'] );
         }
 
         if ( ! empty($result['balance']) ) {
-            if ( !is_numeric( $result['balance'] ) ) {
+            if ( !is_numeric( (float) $result['balance'] ) ) {
                 continue;
             }
-            $results['total_right'] += $result['balance'];
+            $results['total_equity'] += (float) $result['balance'];
         }
     }
 
@@ -715,15 +772,12 @@ function erp_acct_get_profit_loss( $args ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE (ledger.chart_id=4 OR ledger.chart_id=5) AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
         GROUP BY ledger_detail.ledger_id";
 
-    // All DB results are inside `rows` key
-    $results['rows'] = $wpdb->get_results($sql, ARRAY_A);
+    $results['rows'] = $wpdb->get_results( $sql, ARRAY_A );
 
-    // Totals are inside the root `result` array
     $results['total_debit'] = 0;
     $results['total_credit'] = 0;
 
-    // Add-up all debit and credit
-    foreach ($results['rows'] as $result) {
+    foreach ( $results['rows'] as $result ) {
         $results['total_debit']  += (float)$result['debit'];
         $results['total_credit'] += (float)$result['credit'];
     }

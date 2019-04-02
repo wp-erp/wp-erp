@@ -23,9 +23,18 @@
                 :current-page="paginationData.currentPage"
                 @pagination="goToPage"
                 :actions="actions"
+                :showCb="false"
                 :bulk-actions="bulkActions"
                 @action:click="onActionClick"
                 @bulk:click="onBulkAction">
+
+                <template slot="voucher_no" slot-scope="data">
+                    <strong>
+                        <router-link :to="{ name: 'PayTaxSingle', params: { id: data.row.voucher_no }}">
+                            #{{ data.row.voucher_no }}
+                        </router-link>
+                    </strong>
+                </template>
             </list-table>
         </div>
 
@@ -55,11 +64,11 @@
                 modalParams: null,
                 columns: {
                     'voucher_no': {label: 'Voucher No'},
-                    'agency_id': {label: 'Agency'},
-                    'trn_date': {label: 'Date'},
-                    'tax_period': {label: 'Tax Period'},
-                    'amount': {label: 'Amount'},
-                    'actions': { label: 'Actions' }
+                    'agency_id' : {label: 'Agency'},
+                    'trn_date'  : {label: 'Date'},
+                    // 'tax_period': {label: 'Tax Period'},
+                    'amount'    : {label: 'Amount'},
+                    'actions'   : { label: 'Actions' }
                 },
                 rows: [],
                 paginationData: {
@@ -79,13 +88,13 @@
                         iconClass: 'flaticon-trash'
                     }
                 ],
-                taxes: [{}],
-                buttonTitle: '',
-                pageTitle: '',
-                url: '',
-                singleUrl: '',
+                taxes                 : [{}],
+                buttonTitle           : '',
+                pageTitle             : '',
+                url                   : '',
+                singleUrl             : '',
                 isActiveOptionDropdown: false,
-                showModal: false
+                showModal             : false
             };
         },
 
@@ -94,8 +103,8 @@
                 this.showModal = false;
             });
 
-            this.pageTitle      =   this.$route.name;
-            this.url            =   this.$route.name.toLowerCase();
+            this.pageTitle = this.$route.name;
+            this.url       = this.$route.name.toLowerCase();
 
             this.fetchItems();
         },
@@ -105,10 +114,9 @@
                 let items = this.rows;
                 items.map( item => {
                     item.voucher_no = item.voucher_no;
-                    item.agency_id = item.agency_id;
-                    item.trn_date = item.trn_date;
-                    item.tax_period = item.tax_period;
-                    item.amount = item.amount;
+                    item.agency_id  = item.agency_id;
+                    item.trn_date   = item.trn_date;
+                    item.amount     = item.amount;
                 } );
                 return items;
             }
@@ -133,12 +141,9 @@
                         this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
                         this.$store.dispatch( 'spinner/setSpinner', false );
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         this.$store.dispatch( 'spinner/setSpinner', false );
-                    })
-                    .then( () => {
-                        //ready
-                    } );
+                    });
             },
 
             goToPage(page) {
@@ -210,5 +215,9 @@
     }
 </script>
 <style lang="less">
-
+    .tax-records-list {
+        .col--actions {
+            text-align: left !important;
+        }
+    }
 </style>

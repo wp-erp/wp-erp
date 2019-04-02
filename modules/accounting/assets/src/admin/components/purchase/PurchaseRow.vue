@@ -1,6 +1,6 @@
 <template>
     <tr>
-        <th scope="row" class="col--check with-multiselect column-primary prodcut-select">
+        <th scope="row" class="col--check with-multiselect column-primary product-select">
             <multi-select v-model="line.selectedProduct" :options="products" />
         </th>
         <td class="col--qty">
@@ -99,5 +99,8 @@
     }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+    .product-select {
+        font-weight: normal !important;
+    }
 </style>

@@ -10,29 +10,56 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_products() {
-	global $wpdb;
+function erp_acct_get_all_products( $args = [] ) {
+    global $wpdb;
 
-	return $wpdb->get_results("SELECT
-		product.id,
-		product.name,
-		product.product_type_id,
-		product.cost_price,
-		product.sale_price,
-		product.tax_cat_id,
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
 
-		people.id AS vendor,
-		CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+    $args = wp_parse_args( $args, $defaults );
 
-		cat.id AS category_id,
-		cat.name AS cat_name,
+    $where = '';
+    $limit = '';
 
-		product_type.name AS product_type_name
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
 
-		FROM wp_erp_acct_products AS product
-		LEFT JOIN wp_erp_peoples AS people ON product.vendor = people.id
-		LEFT JOIN wp_erp_acct_product_categories AS cat ON product.category_id = cat.id
-		LEFT JOIN wp_erp_acct_product_types AS product_type ON product.product_type_id = product_type.id", ARRAY_A);
+    $sql = "SELECT";
+
+    if ( $args['count'] ) {
+        $sql .= " COUNT( product.id ) as total_number";
+    } else {
+        $sql .= " product.id,
+            product.name,
+            product.product_type_id,
+            product.cost_price,
+            product.sale_price,
+            product.tax_cat_id,
+            people.id AS vendor,
+            CONCAT(people.first_name, ' ',  people.last_name) AS vendor_name,
+            cat.id AS category_id,
+            cat.name AS cat_name,
+            product_type.name AS product_type_name";
+    }
+
+    $sql .= " FROM {$wpdb->prefix}erp_acct_products AS product
+        LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON
+        product.product_type_id = product_type.id ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
+
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**

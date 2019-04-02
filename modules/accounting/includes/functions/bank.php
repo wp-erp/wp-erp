@@ -13,22 +13,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank = false ) {
     global $wpdb;
 
-    $ledgers = $wpdb->prefix.'erp_acct_ledgers';
+    $ledgers = $wpdb->prefix . 'erp_acct_ledgers'; $show_all = false; $cash_only = false; $bank_only = false;
 
     $chart_id = 7; $cash_ledger = ''; $where = '';
     if ( $with_cash && !$no_bank ) {
         $where = " WHERE chart_id = {$chart_id}";
         $cash_ledger = " OR slug = 'cash' ";
+        $show_all = true;
     }
 
     if ( $with_cash && $no_bank ) {
         $where = " WHERE";
         $cash_ledger = " slug = 'cash' ";
+        $cash_only = true;
     }
 
     if ( !$with_cash && !$no_bank ) {
         $where = " WHERE chart_id = {$chart_id}";
         $cash_ledger = "";
+        $bank_only = true;
     }
 
     if ( !$show_balance ) {
@@ -45,8 +48,37 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
               Where ld.ledger_id IN ($sub_query)
               Group BY ld.ledger_id";
 
-    $results = $wpdb->get_results( $query, ARRAY_A );
+    $accts = $wpdb->get_results( $query, ARRAY_A );
 
+    if ( $cash_only && !empty( $accts ) ) {
+        return $accts;
+    }
+
+    if ( empty( $accts ) && ( $cash_only || $show_all ) ) {
+        $acct['id'] = 1;
+        $acct['name'] = 'Cash';
+        $acct['balance'] = 0;
+
+        $accts[] = $acct ;
+    }
+
+    $banks = erp_acct_get_ledgers_by_chart_id( 7 );
+
+    if ( $bank_only && empty( $banks ) ) {
+        return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
+    }
+
+    $results = array_merge( $accts, $banks );
+
+    $uniq_accts = array();
+
+    foreach ( $results as $index => $result ) {
+        if ( !empty( $uniq_accts ) && in_array( $result['id'], $uniq_accts ) ) {
+            unset( $results[$index] );
+            continue;
+        }
+        $uniq_accts[] = $result['id'];
+    }
 
     return $results;
 }
@@ -57,12 +89,70 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
  * @param $data
  * @return mixed
  */
-function erp_acct_get_dashboard() {
+function erp_acct_get_dashboard_banks() {
     global $wpdb;
 
-    $rows = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_cash_at_banks", ARRAY_A );
+    $sql = "SELECT
+        ledger.name,
+        SUM(ledger_detail.debit - ledger_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
+        WHERE ledger.slug = 'cash' GROUP BY ledger_detail.ledger_id";
 
-    return $rows;
+    // All DB results are inside `rows` key
+    $results = $wpdb->get_results($sql, ARRAY_A);
+
+    $additional = erp_acct_dashboard_balance_bank_balance('balance' );
+    $balance = erp_acct_dashboard_balance_cash_at_bank( $additional );
+
+    $results[] = [
+        'name'       => 'Cash at Bank',
+        'balance'    => $balance,
+        'additional' => $additional,
+    ];
+
+    return $results;
+}
+
+/**
+ * Dashboard account helper
+ *
+ * @param object $additionals
+ *
+ * @return float
+ */
+function erp_acct_dashboard_balance_cash_at_bank( $additionals ) {
+    $balance = 0;
+
+    foreach ( $additionals as $additional ) {
+        $balance += (float) $additional['balance'];
+    }
+
+    return $balance;
+}
+
+/**
+ * Dashboard account helper
+ *
+ * @param string $type
+ *
+ * @return mixed
+ */
+function erp_acct_dashboard_balance_bank_balance( $type ) {
+    global $wpdb;
+
+    if ( 'loan' === $type ) {
+        $having = "HAVING balance < 0";
+    } elseif ( 'balance' === $type ) {
+        $having = "HAVING balance >= 0";
+    }
+
+    $sql = "SELECT ledger.id, ledger.name, SUM( debit - credit ) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
+        WHERE ledger.chart_id = 7 GROUP BY ledger.id {$having}";
+
+    return $wpdb->get_results( $sql, ARRAY_A);
 }
 
 /**
@@ -234,12 +324,15 @@ function erp_acct_perform_transfer( $item ) {
             'amount'     => $item['amount'],
             'ac_from'    => $item['from_account_id'],
             'ac_to'      => $item['to_account_id'],
+            'particulars'=> $item['particulars'],
             'trn_date'   => $item['date'],
             'created_at' => $created_at,
             'created_by' => $created_by,
             'updated_at' => $updated_at,
             'updated_by' => $updated_by,
         ) );
+
+        erp_acct_sync_dashboard_accounts();
 
         $wpdb->query( 'COMMIT' );
 
@@ -251,13 +344,31 @@ function erp_acct_perform_transfer( $item ) {
 }
 
 /**
+ * Sync dashboard account on transfer
+ */
+function erp_acct_sync_dashboard_accounts() {
+    global $wpdb;
+
+    $accounts = erp_acct_get_banks( true, true, false );
+
+    foreach ( $accounts as $account ) {
+        $wpdb->update( $wpdb->prefix . 'erp_acct_cash_at_banks', array(
+            'balance' => $account['balance'],
+        ), array(
+            'ledger_id' => $account['ledger_id']
+        ));
+    }
+
+}
+
+/**
  * Get transferrable accounts
  */
 function erp_acct_get_transfer_accounts( $show_balance = false ) {
     /*
     global $wpdb;
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
     $cash_ledger = $ledger_map->get_ledger_details_by_slug( 'cash' );
 
     $ledgers = $wpdb->prefix.'erp_acct_ledgers';
@@ -314,6 +425,27 @@ function erp_acct_get_transfer_vouchers( $args = [] ) {
     $query = "Select * From $table ORDER BY {$args['order_by']} {$args['order']} {$limit}";
 
     $result = $wpdb->get_results( $query, ARRAY_A );
+
+    return $result;
+}
+
+/**
+ * Get single voucher
+ *
+ * @param  integer $id Voucher id
+ * @return object     Single voucher
+ */
+function erp_acct_get_single_voucher( $id ) {
+    global $wpdb;
+
+    if ( ! $id ) {
+        return ;
+    }
+
+    $table = $wpdb->prefix . 'erp_acct_transfer_voucher';
+    $query = "Select * From $table WHERE id = {$id}";
+
+    $result = $wpdb->get_row( $query );
 
     return $result;
 }

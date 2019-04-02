@@ -47,7 +47,8 @@ function erp_acct_get_all_journals( $args = [] ) {
     $sql .= " ON journal.voucher_no = journal_detail.trn_no {$where} GROUP BY journal.voucher_no ORDER BY journal.{$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var($sql);
+        $wpdb->get_results($sql);
+        return $wpdb->num_rows;
     }
 
     return $wpdb->get_results( $sql, ARRAY_A );
@@ -69,14 +70,15 @@ function erp_acct_get_journal( $journal_no ) {
     journal.id,
     journal.voucher_no,
     journal.trn_date,
+    journal.ref,
     journal.voucher_amount,
     journal.attachments,
     journal.particulars,
     journal.created_at,
     journal.created_by,
-    journal.updated_at, 
+    journal.updated_at,
     journal.updated_by
-    
+
     FROM {$wpdb->prefix}erp_acct_journals as journal
     LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
     WHERE journal.voucher_no = {$journal_no} LIMIT 1";
@@ -121,6 +123,7 @@ function erp_acct_insert_journal( $data ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_journals', array(
             'voucher_no'      => $voucher_no,
             'trn_date'        => $journal_data['trn_date'],
+            'ref'             => $journal_data['ref'],
             'voucher_amount'  => $journal_data['voucher_amount'],
             'particulars'     => $journal_data['particulars'],
             'attachments'     => $journal_data['attachments'],
@@ -190,6 +193,7 @@ function erp_acct_update_journal( $data, $journal_no ) {
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_journals', array(
             'trn_date'        => $journal_data['trn_date'],
+            'ref'             => $journal_data['ref'],
             'voucher_amount'  => $journal_data['voucher_amount'],
             'particulars'     => $journal_data['particulars'],
             'attachments'     => $journal_data['attachments'],
@@ -244,6 +248,7 @@ function erp_acct_get_formatted_journal_data( $data, $voucher_no ) {
     $journal_data['voucher_amount'] = isset($data['voucher_amount']) ? $data['voucher_amount'] : 0;
     $journal_data['line_items'] = isset($data['line_items']) ? $data['line_items'] : array();
     $journal_data['particulars'] = isset($data['particulars']) ? $data['particulars'] : '';
+    $journal_data['ref'] = isset($data['ref']) ? $data['ref'] : '';
     $journal_data['attachments'] = isset($data['attachments']) ? $data['attachments'] : '';
     $journal_data['created_at'] = isset($data['created_at']) ? $data['created_at'] : '';
     $journal_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
@@ -259,13 +264,13 @@ function erp_acct_format_journal_data( $item, $journal_no ) {
 
     $sql = "SELECT
     journal.id,
-    
+
     journal_detail.trn_no,
     journal_detail.ledger_id,
     journal_detail.particulars,
     journal_detail.debit,
     journal_detail.credit
-    
+
     FROM {$wpdb->prefix}erp_acct_journals as journal
     LEFT JOIN {$wpdb->prefix}erp_acct_journal_details as journal_detail ON journal.voucher_no = journal_detail.trn_no
     WHERE journal.voucher_no = {$journal_no}";
@@ -275,6 +280,7 @@ function erp_acct_format_journal_data( $item, $journal_no ) {
 
     foreach ( $rows as $key => $item ) {
         $line_items[$key]['ledger_id'] = $item['ledger_id'];
+        $line_items[$key]['account'] = erp_acct_get_ledger_name_by_id( $item['ledger_id'] );
         $line_items[$key]['particulars'] = $item['particulars'];
         $line_items[$key]['debit'] = $item['debit'];
         $line_items[$key]['credit'] = $item['credit'];

@@ -6,10 +6,15 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import commonMixins from './mixins/common'
 import store from './store/store'
 import Loading from 'vue-loading-overlay';
+import { createHooks } from '@wordpress/hooks';
 import accounting from 'accounting';
 
 Vue.config.productionTip = false
 
+// Global hooks container ( use anywhere in accounting )
+window.hooks = createHooks();
+
+// Vue uses
 Vue.use(VeeValidate);
 Vue.use(VueSweetalert2);
 Vue.use(Loading);

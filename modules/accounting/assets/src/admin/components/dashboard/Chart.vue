@@ -1,8 +1,9 @@
 <template>
     <div class="income-expense-section wperp-panel wperp-panel-default">
-        <div class="wperp-panel-heading wperp-bg-white"><h4>Income & Expense</h4></div>
-        <div class="wperp-panel-body">
-            <div class="wperp-custom-select wperp-custom-select--inline-block wperp-pull-right mb-20" v-if="showDropdown">
+        <div class="wperp-panel-heading wperp-bg-white">
+            <h4>Income & Expense</h4>
+
+            <div class="wperp-custom-select wperp-custom-select--inline-block wperp-pull-right" v-if="showDropdown">
                 <select name="query_time" class="wperp-form-field" id="att-filter-duration" v-model="chartRange" >
                     <!--<option value="this_month">This Month</option>-->
                     <!--<option value="last_month">Last Month</option>-->
@@ -13,9 +14,10 @@
                 </select>
                 <i class="flaticon-arrow-down-sign-to-navigate"></i>
             </div>
-
+        </div>
+        <div class="wperp-panel-body">
             <div class="wperp-chart-block">
-                <canvas id="bar_chart" ref="bar_chart"></canvas>
+                <canvas id="bar_chart" ref="bar_chart" height="90"></canvas>
             </div>
         </div>
     </div>
@@ -26,18 +28,15 @@
     import HTTP from 'admin/http'
 
     export default {
-        name: "Chart",
-        components: {
-            HTTP
-        },
+        name: 'Chart',
 
         data() {
             return {
-                items: [],
-                chart : '',
-                chartRange : 'this_year',
-                respData : '',
-                showDropdown : false
+                items       : [],
+                chart       : '',
+                chartRange  : 'this_year',
+                respData    : '',
+                showDropdown: false
             }
         },
 
@@ -45,12 +44,8 @@
             this.fetchData();
         },
 
-        mounted() {
-            // this.createChart();
-        },
-
         computed: {
-            thisYear(){
+            thisYear() {
                 return {
                     labels : this.respData.thisYear.labels,
                     datasets : [
@@ -86,7 +81,7 @@
                 }
             },
 
-            thisQuarter(){
+            thisQuarter() {
                 let quarter = this.getQuarterRange();
                 let labels = this.thisYear.labels.slice(quarter.start, quarter.end+1);
                 let newIncome = this.thisYear.datasets[0].data.slice(quarter.start, quarter.end+1);
@@ -112,7 +107,7 @@
             lastQuarter(){
                 let quarter = this.getQuarterRange('previous');
 
-                let yearData = this.thisYear.datasets;
+                let yearData = this.thisYear;
 
                 if ( quarter.start < 0 ) {
                     yearData = this.lastYear;
@@ -146,34 +141,44 @@
         methods: {
             createChart() {
                 let dataChart = {
-                        labels: this.thisYear.labels,
-                        datasets: this.thisYear.datasets
-                    },
-                    config = {
-                        type: 'bar',
-                        data: dataChart,
-                        options: {
-                            maintainAspectRatio: true,
-                            responsive: true,
-                            legend: {
-                                display: false
-                            },
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
+                    labels: this.thisYear.labels,
+                    datasets: this.thisYear.datasets
+                },
+                config = {
+                    type: 'bar',
+                    data: dataChart,
+                    options: {
+                        maintainAspectRatio: true,
+                        responsive: true,
+                        legend: {
+                            display: false
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    callback: function(value, index, values) {
+                                        return '$' + value;
                                     }
-                                }]
+                                }
+                            }]
+                        },
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItems, data) {
+                                    return '$' + tooltipItems.yLabel.toString();
+                                }
                             }
                         }
-                    };
+                    }
+                };
+
                 let bar_chart_ctx = this.$refs['bar_chart'].getContext("2d");
                 this.chart = new Chart(bar_chart_ctx, config);
             },
 
             fetchData() {
-
-                HTTP.get( 'transactions/income_expense_overview').then( (response) => {
+                HTTP.get( '/transactions/income-expense-overview').then( response => {
                      this.respData = response.data;
                      this.createChart();
                      this.showDropdown = true;
@@ -218,7 +223,8 @@
                     startDate = new Date(today.getFullYear(), quarter * 3, 1);
 
                 let endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 3, 0);
-                if( val === 'current' ){
+
+                if ( val === 'current' ){
                     return { 'start' : startDate.getMonth(), 'end' : endDate.getMonth() }
                 }
 
@@ -235,6 +241,8 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+    .wperp-panel-heading.wperp-bg-white {
+        padding: 10px;
+    }
 </style>
