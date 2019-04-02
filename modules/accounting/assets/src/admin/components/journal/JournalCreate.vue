@@ -187,7 +187,7 @@
                 this.$delete(this.transactionLines,index );
             },
 
-            SubmitForJournalCreate(event) {
+            SubmitForJournalCreate() {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -217,7 +217,6 @@
                     this.$router.push({name: 'Journals'})
                 });
 
-                event.target.reset();
                 this.resetFields();
             },
 
