@@ -669,6 +669,26 @@ function erp_acct_create_accounting_tables() {
 
 global $db_tax_items;
 global $db_tax_agencies;
+global $currencies;
+
+/**
+ * Get currency name
+ */
+function get_currecny_id( $name ) {
+    global $currencies;
+
+    $first = 0;
+
+    $currency = array_filter($currencies, function( $currency ) use ($name) {
+        return $currency['name'] === $name;
+    });
+
+    if ( empty( $currency ) ) {
+        return $first;
+    }
+
+    return (int) $currency[$first]['id'];
+}
 
 /**
  * Custom array unique
@@ -772,6 +792,71 @@ function erp_acct_populate_tax_data() {
     } // foreach
 }
 
+/**
+ * Populate transactions data
+ *
+ * @return void
+ */
+function erp_acct_populate_transactions() {
+    global $currencies;
+
+    //=======================================
+    // get transaction status types (new)
+    //=======================================
+    $status_types = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A);
+
+    //=============================
+    // get currencies info (new)
+    //=============================
+    $currencies = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_acct_currency_info", ARRAY_A);
+
+    //=============================
+    // get transactions (old)
+    //=============================
+    $transactions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_ac_transactions", ARRAY_A);
+
+    for ( $i = 0; $i < count($transactions); $i++ ) {
+        if ( 'invoice' === $transactions[$i]['form_type'] ) {
+
+            $wpdb->insert(
+                // `erp_acct_voucher_no`
+                "{$wpdb->prefix}erp_acct_voucher_no", [
+                    'type'     => 'invoice',
+                    'currency' => get_currecny_id( $transactions[$i]['currency'] )
+                ]
+            );
+
+            $voucher_no = $wpdb->insert_id;
+
+
+            $wpdb->insert(
+                // `erp_acct_invoices`
+                "{$wpdb->prefix}erp_acct_invoices", [
+                    'voucher_no' => $voucher_no,
+                    `customer_id` int(11) DEFAULT NULL,
+                    `customer_name` varchar(255) DEFAULT NULL,
+                    `trn_date` date DEFAULT NULL,
+                    `due_date` date DEFAULT NULL,
+                    `billing_address` varchar(255) DEFAULT NULL,
+                    `amount` decimal(10,2) DEFAULT '0.00',
+                    `discount` decimal(10,2) DEFAULT '0.00',
+                    `discount_type` varchar(255) DEFAULT NULL,
+                    `tax_rate_id` int(11) DEFAULT NULL,
+                    `tax` decimal(10,2) DEFAULT '0.00',
+                    `estimate` tinyint(1) DEFAULT NULL,
+                    `attachments` varchar(255) DEFAULT NULL,
+                    `status` int(11) DEFAULT NULL,
+                    `particulars` varchar(255) DEFAULT NULL,
+                    `created_at` date DEFAULT NULL,
+                    `created_by` varchar(50) DEFAULT NULL,
+                    `updated_at` date DEFAULT NULL,
+                    `updated_by` varchar(50) DEFAULT NULL,
+                ]
+            );
+        } // invoice
+    }
+}
+
 
 
 /**
@@ -784,6 +869,8 @@ function wperp_update_accounting_module_1_5_0() {
 
     erp_acct_populate_tax_agencies();
     erp_acct_populate_tax_data();
+
+    erp_acct_populate_transactions();
 }
 
 wperp_update_accounting_module_1_5_0();
