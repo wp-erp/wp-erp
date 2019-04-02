@@ -1,189 +1,237 @@
 <template>
     <div class="wperp-container accordion-container">
-        <div v-if="chartAccounts[0]" class="erp-accordion">
-            <div class="erp-accordion-expand"
-                 @click="open1=!open1"
-                 :class="open1?'active':'beforeBorder'">
-                <span class="wp-erp-ob-title">{{chartAccounts[0].label}}</span>
-            </div>
-            <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open1">
-                <thead>
-                <tr>
-                    <th>Account</th>
-                    <th>Balance</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr :key="idx" v-if="ledgers[1]" v-for="(ledger,idx) in ledgers[1]">
-                    <td>{{ledger.name}}</td>
-                    <td>{{ledger.balance}}</td>
-                    <td><input type="number" v-model="ledger.debit"></td>
-                    <td><input type="number" v-model="ledger.credit"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div v-if="chartAccounts[1]" class="erp-accordion">
-            <div class="erp-accordion-expand"
-                 @click="open2=!open2"
-                 :class="open2?'active':'beforeBorder'">
-                <span class="wp-erp-ob-title">{{chartAccounts[1].label}}</span>
-            </div>
-            <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open2">
-                <thead>
-                <tr>
-                    <th>Account</th>
-                    <th>Balance</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr :key="idx" v-if="ledgers[2]" v-for="(ledger,idx) in ledgers[2]">
-                    <td>{{ledger.name}}</td>
-                    <td>{{ledger.balance}}</td>
-                    <td><input type="number" v-model="ledger.debit"></td>
-                    <td><input type="number" v-model="ledger.credit"></td>
-                </tr>
-                </tbody>
-            </table>
 
-        </div>
-        <div v-if="chartAccounts[2]" class="erp-accordion">
-            <div class="erp-accordion-expand"
-                 @click="open3=!open3"
-                 :class="open3?'active':'beforeBorder'">
-                <span class="wp-erp-ob-title">{{chartAccounts[2].label}}</span>
+        <!-- Start .header-section -->
+        <div class="content-header-section separator">
+            <div class="wperp-row wperp-between-xs">
+                <div class="wperp-col">
+                    <h2 class="content-header__title">Opening Balances</h2>
+                </div>
             </div>
-            <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open3">
-                <thead>
-                <tr>
-                    <th>Account</th>
-                    <th>Balance</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr :key="idx" v-if="ledgers[3]" v-for="(ledger,idx) in ledgers[3]">
-                    <td>{{ledger.name}}</td>
-                    <td>{{ledger.balance}}</td>
-                    <td><input type="number" v-model="ledger.debit"></td>
-                    <td><input type="number" v-model="ledger.credit"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div v-if="chartAccounts[3]" class="erp-accordion">
-            <div class="erp-accordion-expand"
-                 @click="open4=!open4"
-                 :class="open4?'active':'beforeBorder'">
-                <span class="wp-erp-ob-title">{{chartAccounts[3].label}}</span>
+        </div> <!-- End .header-section -->
+
+        <form action="" method="post" @submit.prevent="submitOBForm">
+            <h2>Financial Year</h2>
+            <div class="wperp-custom-select">
+                <select class="text-right">
+                    <option v-for="year in years" :value="year">{{ year }}</option>
+                </select>
+                <i class="flaticon-arrow-down-sign-to-navigate"></i>
             </div>
-            <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open4">
-                <thead>
-                <tr>
-                    <th>Account</th>
-                    <th>Balance</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr :key="idx" v-if="ledgers[4]" v-for="(ledger,idx) in ledgers[4]">
-                    <td>{{ledger.name}}</td>
-                    <td>{{ledger.balance}}</td>
-                    <td><input type="number" v-model="ledger.debit"></td>
-                    <td><input type="number" v-model="ledger.credit"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div v-if="chartAccounts[4]" class="erp-accordion">
-            <div class="erp-accordion-expand"
-                 @click="open5=!open5"
-                 :class="open5?'active':'beforeBorder'">
-                <span class="wp-erp-ob-title">{{chartAccounts[4].label}}</span>
+            <div v-if="chartAccounts[0]" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open1=!open1"
+                     :class="open1?'active':'before-border'">
+                    <span class="wp-erp-ob-title">{{chartAccounts[0].label}}</span>
+                </div>
+                <table v-if="ledgers[1]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open1">
+                    <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr :key="idx" v-for="(ledger,idx) in ledgers[1]">
+                        <td>{{ledger.name}}</td>
+                        <td>{{ledger.balance}}</td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open5">
-                <thead>
-                <tr>
-                    <th>Account</th>
-                    <th>Balance</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr :key="idx" v-if="ledgers[5]" v-for="(ledger,idx) in ledgers[2]">
-                    <td>{{ledger.name}}</td>
-                    <td>{{ledger.balance}}</td>
-                    <td><input type="number" v-model="ledger.debit"></td>
-                    <td><input type="number" v-model="ledger.credit"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div v-if="chartAccounts[5]" class="erp-accordion">
-            <div class="erp-accordion-expand"
-                 @click="open6=!open6"
-                 :class="open6?'active':'beforeBorder'">
-                <span class="wp-erp-ob-title">{{chartAccounts[5].label}}</span>
+            <div v-if="chartAccounts[1]" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open2=!open2"
+                     :class="open2?'active':'before-border'">
+                    <span class="wp-erp-ob-title">{{chartAccounts[1].label}}</span>
+                </div>
+                <table v-if="ledgers[2]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open2">
+                    <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr :key="idx" v-for="(ledger,idx) in ledgers[2]">
+                        <td>{{ledger.name}}</td>
+                        <td>{{ledger.balance}}</td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
             </div>
-            <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open6">
-                <thead>
-                <tr>
-                    <th>Account</th>
-                    <th>Balance</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr :key="idx" v-if="ledgers[6]" v-for="(ledger,idx) in ledgers[6]">
-                    <td>{{ledger.name}}</td>
-                    <td>{{ledger.balance}}</td>
-                    <td><input type="number" v-model="ledger.debit"></td>
-                    <td><input type="number" v-model="ledger.credit"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div v-if="chartAccounts[6]" class="erp-accordion">
-            <div class="erp-accordion-expand"
-                 @click="open7=!open7"
-                 :class="open7?'active':'beforeBorder'">
-                <span class="wp-erp-ob-title">{{chartAccounts[6].label}}</span>
+            <div v-if="chartAccounts[2]" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open3=!open3"
+                     :class="open3?'active':'before-border'">
+                    <span class="wp-erp-ob-title">{{chartAccounts[2].label}}</span>
+                </div>
+                <table v-if="ledgers[3]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open3">
+                    <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr :key="idx" v-for="(ledger,idx) in ledgers[3]">
+                        <td>{{ledger.name}}</td>
+                        <td>{{ledger.balance}}</td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open7">
-                <thead>
-                <tr>
-                    <th>Account</th>
-                    <th>Balance</th>
-                    <th>Debit</th>
-                    <th>Credit</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr :key="idx" v-if="ledgers[7]" v-for="(ledger,idx) in ledgers[7]">
-                    <td>{{ledger.name}}</td>
-                    <td>{{ledger.balance}}</td>
-                    <td><input type="number" v-model="ledger.debit"></td>
-                    <td><input type="number" v-model="ledger.credit"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <div v-if="chartAccounts[3]" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open4=!open4"
+                     :class="open4?'active':'before-border'">
+                    <span class="wp-erp-ob-title">{{chartAccounts[3].label}}</span>
+                </div>
+                <table v-if="ledgers[4]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open4">
+                    <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr :key="idx" v-for="(ledger,idx) in ledgers[4]">
+                        <td>{{ledger.name}}</td>
+                        <td>{{ledger.balance}}</td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div v-if="chartAccounts[4]" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open5=!open5"
+                     :class="open5?'active':'before-border'">
+                    <span class="wp-erp-ob-title">{{chartAccounts[4].label}}</span>
+                </div>
+                <table v-if="ledgers[5]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open5">
+                    <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr :key="idx" v-for="(ledger,idx) in ledgers[2]">
+                        <td>{{ledger.name}}</td>
+                        <td>{{ledger.balance}}</td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div v-if="chartAccounts[5]" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open6=!open6"
+                     :class="open6?'active':'before-border'">
+                    <span class="wp-erp-ob-title">{{chartAccounts[5].label}}</span>
+                </div>
+                <table v-if="ledgers[6]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open6">
+                    <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr :key="idx" v-for="(ledger,idx) in ledgers[6]">
+                        <td>{{ledger.name}}</td>
+                        <td>{{ledger.balance}}</td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div v-if="chartAccounts[6]" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open7=!open7"
+                     :class="open7?'active':'before-border'">
+                    <span class="wp-erp-ob-title">{{chartAccounts[6].label}}</span>
+                </div>
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open7">
+                    <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr :key="idx" v-if="ledgers[7]" v-for="(ledger,idx) in ledgers[7]">
+                        <td>{{ledger.name}}</td>
+                        <td>{{ledger.balance}}</td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="wperp-table wperp-form-table">
+                    <tbody>
+                        <tr class="total-amount-row">
+                            <td></td>
+                            <td colspan="2" class="pl-10 text-right col--total-amount">
+                                <span>Total Amount</span>
+                            </td>
+                            <td data-colname="Total Debit"><input type="text" class="text-right" :value="debit_total" readonly ></td>
+                            <td data-colname="Total Credit"><input type="text" class="text-right" :value="credit_total" readonly ></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table>
+                    <tfoot>
+                        <tr>
+                            <td colspan="9" class="text-right">
+                                <submit-button text="Submit"></submit-button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </form>
     </div>
 </template>
 
 <script>
     import HTTP from 'admin/http'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+    import SubmitButton from 'admin/components/base/SubmitButton.vue'
 
     export default {
         name: "OpeningBalance",
+
+        components: {
+            HTTP,
+            MultiSelect,
+            SubmitButton
+        },
 
         props: {
             title: {
@@ -207,11 +255,18 @@
                 open7: false,
                 chartAccounts: [],
                 ledgers: [],
+                fin_year: '',
+                years: [],
+                all_ledgers: [],
+                credit_total: 0,
+                debit_total: 0,
+                isWorking: false,
             }
         },
 
         mounted() {
             this.fetchChartAccounts();
+            this.getYears();
         },
 
         methods: {
@@ -241,6 +296,7 @@
                         ledger.balance = this.transformBalance( ledger.balance );
                     });
                     this.ledgers = this.groupBy(response.data, 'chart_id');
+                    this.all_ledgers = response.data;
                 });
             },
 
@@ -255,7 +311,84 @@
 
                 return `Dr. ${currency}${val}`;
             },
-        }
+
+            calculateAmount() {
+                this.debit_total = 0; this.credit_total = 0;
+                for (let key in this.ledgers) {
+                    for ( let idx = 0; idx < this.ledgers[key].length; idx++ ) {
+                        if ( this.ledgers[key][idx].hasOwnProperty('debit') ) {
+                            this.debit_total += parseFloat(this.ledgers[key][idx].debit);
+                        }
+                        if ( this.ledgers[key][idx].hasOwnProperty('credit') ) {
+                            this.credit_total += parseFloat(this.ledgers[key][idx].credit);
+                        }
+                    }
+                }
+
+                let diff = Math.abs( this.debit_total - this.credit_total );
+                this.isWorking = true;
+                if( 0 == diff ) {
+                    this.isWorking = false;
+                }
+            },
+
+            validateForm() {
+                this.form_errors = [];
+
+                if ( !this.basic_fields.trn_date ) {
+                    this.form_errors.push('Transaction Date is required.');
+                }
+
+                if ( this.isWorking ) {
+                    this.form_errors.push('Debit and Credit must be Equal.');
+                }
+            },
+
+            submitOBForm() {
+                this.validateForm();
+
+                if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
+                    return;
+                }
+
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
+                HTTP.post('/opening-balances', {
+                    trn_date   : this.basic_fields.trn_date,
+                    ref        : this.basic_fields.trn_ref,
+                    line_items : this.formatLineItems(),
+                    attachments: this.attachments,
+                }).then(res => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.showAlert( 'success', 'Opening Balance Created!' );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
+                    this.isWorking = false;
+                });
+            },
+
+
+            getYears(startYear) {
+                let currentYear = new Date().getFullYear();
+                startYear = startYear || 1980;
+                while ( startYear <= currentYear ) {
+                    this.years.push(startYear++);
+                }
+
+                return this.years;
+            }
+        },
+
+        watch: {
+            isWorking(newval) {
+                this.isWorking = newval;
+            },
+        },
     }
 </script>
 
@@ -268,10 +401,10 @@
         color: #3f9ed4;
         font-size: larger;
     }
-    .beforeBorder {
+    .before-border {
         position: relative;
     }
-    .beforeBorder:before {
+    .before-border:before {
         transition: opacity 0.1s linear, transform 0.5s ease-in-out;
         position: absolute;
         content: '';
