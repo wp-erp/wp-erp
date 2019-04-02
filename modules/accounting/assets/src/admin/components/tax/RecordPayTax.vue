@@ -20,7 +20,7 @@
                             <label>Payment Method<span class="wperp-required-sign">*</span></label>
                             <multi-select v-model="trn_by" :options="pay_methods"></multi-select>
                         </div>
-                        <div class="wperp-col-sm-4">
+                        <div class="wperp-col-sm-4 mb-20">
                             <label>Deposit to<span class="wperp-required-sign">*</span></label>
                             <select-accounts v-model="deposit_to" :override_accts="accts_by_chart"></select-accounts>
                         </div>
@@ -33,13 +33,13 @@
 	                        </div>
 	                    </div>
 
-	                    <div class="wperp-col-sm-6 wperp-col-xs-12">
+	                    <div class="wperp-col-sm-4 wperp-col-xs-12">
 	                        <div class="wperp-form-group with-multiselect">
 	                            <label>Payment To</label>
                                 <multi-select v-model="agency" :options="agencies" />
 	                        </div>
 	                    </div>
-	                    <div class="wperp-col-sm-6 wperp-col-xs-12">
+	                    <div class="wperp-col-sm-4 wperp-col-xs-12">
 	                        <div class="wperp-form-group">
 	                            <label>Tax Amount</label>
 	                            <input type="number" v-model="tax_amount" class="wperp-form-field" placeholder="Enter Tax Amount">
@@ -47,17 +47,13 @@
                                 <span>Due Amount: <span class="text-theme">${{ dueAmount }}</span></span>
 	                        </div>
 	                    </div>
-                        <div class="wperp-col-sm-6 wperp-col-xs-12">
+                        <div class="wperp-col-sm-4 wperp-col-xs-12">
                             <div class="wperp-form-group with-multiselect">
                                 <label>Voucher Type</label>
                                 <multi-select v-model="voucher_type" :options="voucher_types" placeholder="Enter Voucher Type" />
                             </div>
                         </div>
-	                    <!-- <div class="wperp-col-sm-6 wperp-col-xs-12">
-	                        <div class="wperp-form-group available-balance">
-	                            <label>Available Balance: <span class="text-theme">$1,52000.00</span></label>
-	                        </div>
-	                    </div> -->
+
 	                    <div class="wperp-col-xs-12">
 	                        <label>Particulars</label>
 	                        <textarea rows="3" v-model="particulars" class="wperp-form-field" placeholder="Enter Particulars"></textarea>
@@ -140,13 +136,24 @@
             },
 
             changeAccounts() {
+                this.accts_by_chart = [];
                 if ( '2' === this.trn_by.id || '3' === this.trn_by.id ) {
                     HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 } else {
                     HTTP.get('/ledgers/cash-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 }
                 this.$root.$emit('account-changed');
@@ -194,6 +201,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Paid!' );
                 }).then(() => {
+                    this.$router.push({name: 'TaxRecords'})
                     this.resetData();
                     this.isWorking = false;
                 });
@@ -237,6 +245,10 @@
 
                 if ( this.tax_amount > this.dueAmount ) {
                     this.form_errors.push('Please pay according to your due balance.');
+                }
+
+                if ( parseFloat(this.deposit_to.balance) < parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Not enough balance in selected account.');
                 }
             }
         },

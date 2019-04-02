@@ -1,5 +1,5 @@
 <template>
-    <div class="app-customers">
+    <div class="app-tax-categories">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
@@ -15,7 +15,7 @@
 
         <div class="table-container">
             <list-table
-                tableClass="wp-ListTable widefat fixed tax-cats-list"
+                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark tax-cats-list"
                 action-column="actions"
                 :columns="columns"
                 :rows="row_data"
@@ -52,17 +52,16 @@
                 showModal: false,
                 modalParams: null,
                 columns: {
-                    'tax_cat_id': {label: 'ID'},
                     'tax_cat_name': {label: 'Category Name'},
                     'tax_cat_desc': {label: 'Description'},
-                    'actions': { label: 'Actions' }
+                    'actions'     : { label: 'Actions' }
                 },
                 rows: [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
-                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
+                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 actions : [
                     { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
@@ -75,14 +74,14 @@
                         iconClass: 'flaticon-trash'
                     }
                 ],
-                tax_cats: [{}],
-                buttonTitle: '',
-                pageTitle: '',
-                url: '',
-                singleUrl: '',
+                tax_cats              : [{}],
+                buttonTitle           : '',
+                pageTitle             : '',
+                url                   : '',
+                singleUrl             : '',
                 isActiveOptionDropdown: false,
-                cat_id: null,
-                is_update: false
+                cat_id                : null,
+                is_update             : false
             };
         },
 
@@ -98,7 +97,7 @@
             row_data() {
                 let items = this.rows;
                 items.map( item => {
-                    item.tax_cat_id = item.id;
+                    item.tax_cat_id   = item.id;
                     item.tax_cat_name = item.name;
                     item.tax_cat_desc = item.description;
                 } );
@@ -131,9 +130,9 @@
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateTaxCategories',
+                    name  : 'PaginateTaxCategories',
                     params: { page: page },
-                    query: queries
+                    query : queries
                 });
 
                 this.$root.$on('refetch_tax_data',() => {
@@ -165,7 +164,7 @@
 
                     case 'edit':
                         this.showModal = true;
-                        this.cat_id = row.id;
+                        this.cat_id    = row.id;
                         this.is_update = true;
                         this.fetchItems();
                         break;
@@ -200,6 +199,15 @@
         }
     }
 </script>
-<style lang="less">
 
+<style lang="less">
+.app-tax-categories {
+    .check-column {
+        padding: 20px !important;
+    }
+
+    .actions {
+        text-align: right;
+    }
+}
 </style>

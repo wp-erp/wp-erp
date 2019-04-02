@@ -113,8 +113,8 @@
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
                     }
                 }).then((response) => {
-                    this.taxrate = response.data;
-                    this.rows = response.data.tax_components;
+                    this.taxrate                   = response.data;
+                    this.rows                      = response.data.tax_components;
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
 
@@ -141,7 +141,7 @@
                     case 'trash':
                         if (confirm('Are you sure to delete?')) {
                             this.$store.dispatch( 'spinner/setSpinner', true );
-                            HTTP.delete(this.url + '/' + row.id).then(response => {
+                            HTTP.delete('/taxes/' + this.tax_id + '/line-delete/' + row.db_id).then(response => {
                                 this.$delete(this.rows, index);
                                 this.$store.dispatch( 'spinner/setSpinner', false );
                                 this.showAlert( 'success', 'Deleted !' );
@@ -154,9 +154,6 @@
                         this.row_data = this.rows[index];
                         this.showModal = true;
                         break;
-
-                    default :
-                        break;
                 }
             }
         }
@@ -164,9 +161,14 @@
 </script>
 <style lang="less">
     .erp-acct-tax-menus {
-        margin-left: 600px;
+        margin-left: 240px;
     }
+
     .combo-box {
         margin-right: 10px !important;
+    }
+
+    .col--actions {
+        float: left !important;
     }
 </style>

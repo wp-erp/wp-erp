@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container check-create">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -58,7 +58,7 @@
                 <table class="wperp-table wperp-form-table">
                     <thead>
                     <tr>
-                        <th scope="col" class="col--id column-primary">ID</th>
+                        <th scope="col" class="col--id column-primary">SL No.</th>
                         <th scope="col">Account</th>
                         <th scope="col">Description</th>
                         <th scope="col">Amount</th>
@@ -139,6 +139,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
@@ -182,14 +184,16 @@
 
                 createButtons: [
                     {id: 'save', text: 'Create Check'},
-                    {id: 'send_create', text: 'Create and Send'},
+                    //{id: 'send_create', text: 'Create and Send'},
                     {id: 'new_create', text: 'Create and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 updateButtons: [
                     {id: 'update', text: 'Update Check'},
-                    {id: 'send_update', text: 'Update and Send'},
+                    //{id: 'send_update', text: 'Update and Send'},
                     {id: 'new_update', text: 'Update and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 editMode        : false,
@@ -205,9 +209,12 @@
                 particulars     : '',
                 isWorking       : false,
                 accts_by_chart: [],
-                erp_acct_assets : erp_acct_var.acct_assets,
-                actionType      : null
+                erp_acct_assets : erp_acct_var.acct_assets
             }
+        },
+
+         computed: {
+            ...mapState({ actionType: state => state.combo.btnID })
         },
 
         created() {
@@ -216,10 +223,6 @@
             this.$root.$on('remove-row', index => {
                 this.$delete(this.transactionLines, index);
                 this.updateFinalAmount();
-            });
-
-            this.$root.$on('combo-btn-select', button => {
-                this.actionType = button.id;
             });
         },
 
@@ -249,6 +252,9 @@
                     this.ledgers   = request1.data;
                     this.setDataForEdit( request2.data );
 
+                    // initialize combo button id with `update`
+                    this.$store.dispatch('combo/setBtnID', 'update');
+
                 } else {
                     /**
                      * ----------------------------------------------
@@ -260,6 +266,9 @@
                     this.basic_fields.trn_date = erp_acct_var.current_date;
                     this.basic_fields.due_date = erp_acct_var.current_date;
                     this.transactionLines.push({}, {}, {});
+
+                    // initialize combo button id with `save`
+                    this.$store.dispatch('combo/setBtnID', 'save');
                 }
             },
 
@@ -343,11 +352,11 @@
                     this.showAlert('success', 'Check Updated!');
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
+                }).then(() => {
                     this.isWorking = false;
                     this.reset = true;
 
-                    if ('update' == this.actionType) {
+                    if ('update' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Expenses'});
                     } else if ('new_update' == this.actionType) {
                         this.resetFields();
@@ -362,11 +371,11 @@
                     this.showAlert('success', 'Check Created!');
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
+                }).then(() => {
                     this.isWorking = false;
                     this.reset = true;
 
-                    if ('save' == this.actionType) {
+                    if ('save' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Expenses'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
@@ -374,7 +383,7 @@
                 });
             },
 
-            submitCheckForm(event) {
+            submitCheckForm() {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -383,6 +392,13 @@
                         behavior: 'smooth'
                     });
                     return;
+                }
+
+                let trn_status = null;
+                if ( 'draft' === this.actionType) {
+                    trn_status = 1;
+                } else {
+                    trn_status = 4;
                 }
 
                 let requestData = {
@@ -395,7 +411,7 @@
                     billing_address: this.basic_fields.billing_address,
                     attachments: this.attachments,
                     type: 'check',
-                    status: 4,
+                    status: trn_status,
                     particulars: this.particulars,
                     name: this.check_data.payer_name
                 };
@@ -406,17 +422,27 @@
                     this.createCheck(requestData);
                 }
 
-                event.target.reset();
             },
 
             changeAccounts() {
+                this.accts_by_chart = [];
                 if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
                     HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 } else {
                     HTTP.get('/ledgers/cash-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 }
                 this.$root.$emit('account-changed');
@@ -439,6 +465,10 @@
 
                 if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
                     this.form_errors.push('Transaction Account is required.');
+                }
+
+                if ( parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Not enough balance in selected account.');
                 }
             },
 
@@ -466,6 +496,7 @@
                 this.isWorking        = false;
 
                 this.transactionLines.push({}, {}, {});
+                this.$store.dispatch('combo/setBtnID', 'save');
             },
 
             removeRow(index) {
@@ -503,5 +534,17 @@
 </script>
 
 <style lang="less">
+    .check-create {
+        .dropdown {
+            width: 100%;
+        }
 
+        .col--account {
+            width: 300px;
+        }
+
+        .col--particulars {
+            width: 400px;
+        }
+    }
 </style>

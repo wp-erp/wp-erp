@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container journal-create">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -18,26 +18,24 @@
 
                 <show-errors :error_msgs="form_errors" ></show-errors>
 
-                <!-- <form action="#" class="wperp-form" method="post"> -->
-                    <div class="wperp-row">
-                        <div class="wperp-col-sm-6">
-                            <div class="wperp-form-group">
-                                <label>Journal No.</label>
-                                <input type="text" :value="journal_id">
-                            </div>
-                        </div>
-                        <div class="wperp-col-sm-6">
-                            <div class="wperp-form-group">
-                                <label>Transaction Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.trn_date"></datepicker>
-                            </div>
-                        </div>
-                        <div class="wperp-col-xs-12">
-                            <label>Particulars</label>
-                            <textarea v-model="journal_parti" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                <div class="wperp-row">
+                    <div class="wperp-col-sm-4">
+                        <div class="wperp-form-group">
+                            <label>Transaction Date<span class="wperp-required-sign">*</span></label>
+                            <datepicker v-model="basic_fields.trn_date"></datepicker>
                         </div>
                     </div>
-                <!-- </form> -->
+                    <div class="wperp-col-sm-4">
+                        <div class="wperp-form-group">
+                            <label>Ref.</label>
+                            <input type="text" v-model="basic_fields.trn_ref">
+                        </div>
+                    </div>
+                    <div class="wperp-col-sm-4">
+                        <label>Particulars</label>
+                        <textarea v-model="journal_parti" rows="1" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -140,25 +138,26 @@
             return {
                 basic_fields: {
                     journal_no: '',
+                    trn_ref: '',
                     trn_date: erp_acct_var.current_date,
                 },
 
                 form_errors: [],
 
-                journal_id: 0,
-                account_ids: [],
+                journal_id      : 0,
+                account_ids     : [],
                 transactionLines: [{},{}],
-                attachments: [],
-                debitLine:[],
-                creditLine:[],
-                ledgers:[],
-                credit_total: 0,
-                debit_total: 0,
-                finalAmount: 0,
-                journal_parti: '',
-                particulars: [],
-                isWorking: false,
-                acct_assets: erp_acct_var.acct_assets
+                attachments     : [],
+                debitLine       : [],
+                creditLine      : [],
+                ledgers         : [],
+                credit_total    : 0,
+                debit_total     : 0,
+                finalAmount     : 0,
+                journal_parti   : '',
+                particulars     : [],
+                isWorking       : false,
+                acct_assets     : erp_acct_var.acct_assets
             }
         },
 
@@ -172,12 +171,7 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.get('ledgers').then((response) => {
-                    response.data.forEach(element => {
-                        this.ledgers.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
+                    this.ledgers = response.data;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
@@ -195,7 +189,7 @@
 
             SubmitForJournalCreate(event) {
                 this.validateForm();
-                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 if ( this.form_errors.length ) {
                     window.scrollTo({
                         top: 10,
@@ -204,11 +198,14 @@
                     return;
                 }
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
+
                 HTTP.post('/journals', {
-                    trn_date: this.basic_fields.trn_date,
-                    line_items: this.formatLineItems(),
+                    trn_date   : this.basic_fields.trn_date,
+                    ref        : this.basic_fields.trn_ref,
+                    line_items : this.formatLineItems(),
                     attachments: this.attachments,
-                    type: 'journal',
+                    type       : 'journal',
                     particulars: this.journal_parti,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
@@ -217,6 +214,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } ).then(() => {
                     this.isWorking = false;
+                    this.$router.push({name: 'Journals'})
                 });
 
                 event.target.reset();
@@ -307,6 +305,18 @@
     }
 </script>
 
-<style scoped>
+<style lang="less">
+.journal-create {
+    .dropdown {
+        width: 100%;
+    }
 
+    .col--account {
+        width: 300px;
+    }
+
+    .col--particulars {
+        width: 400px;
+    }
+}
 </style>

@@ -84,7 +84,6 @@ class Countries {
             'NL' => array(),
             'NO' => array(),
             'PL' => array(),
-            'PT' => array(),
             'SG' => array(),
             'SK' => array(),
             'SI' => array(),

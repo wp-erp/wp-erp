@@ -272,6 +272,22 @@ function erp_acct_edit_tax_rate_line( $data ) {
 }
 
 /**
+ * Delete an tax rate line
+ *
+ * @param $line_no
+ *
+ * @return int
+ */
+
+function erp_acct_delete_tax_rate_line( $line_no ) {
+    global $wpdb;
+
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_cat_agency', array( 'id' => $line_no ) );
+
+    return $line_no;
+}
+
+/**
  * Delete an tax
  *
  * @param $tax_no
@@ -322,6 +338,29 @@ function erp_acct_get_tax_pay_records( $args = [] ) {
     }
 
     return $wpdb->get_results( $sql, ARRAY_A );
+}
+
+function erp_acct_get_tax_pay_record( $voucher_no ) {
+    global $wpdb;
+
+    $sql = "SELECT
+
+    tax.id,
+    tax.voucher_no,
+    tax.particulars,
+    tax.amount,
+    tax.trn_date,
+    tax.voucher_type,
+    tax.trn_by,
+    tax.agency_id,
+    tax.ledger_id
+
+    FROM {$wpdb->prefix}erp_acct_tax_pay AS tax
+    WHERE tax.voucher_no = {$voucher_no} LIMIT 1";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $row;
 }
 
 /**

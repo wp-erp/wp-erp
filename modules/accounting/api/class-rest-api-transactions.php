@@ -106,7 +106,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/income_expense_overview', [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/income-expense-overview', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_income_expense_overview' ],
@@ -201,6 +201,17 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/voucher-type' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_voucher_type' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
         ] );
@@ -510,6 +521,21 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $row;
     }
 
+    public function get_voucher_type( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_voucher_type_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $response = erp_acct_get_trn_type_by_voucher_no( $id );
+
+        $response = rest_ensure_response( $response );
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
     /**
      * Prepare a single user output for response
      *
@@ -520,6 +546,24 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+
+        if ( !empty( $item['inv_status'] ) ) {
+            $status = $item['inv_status'];
+        } else if ( !empty( $item['pay_status'] ) ) {
+            $status = $item['pay_status'];
+        } else if ( !empty( $item['bill_status'] ) ) {
+            $status = $item['bill_status'];
+        } else if ( !empty( $item['pay_bill_status'] ) ) {
+            $status = $item['pay_bill_status'];
+        } else if ( !empty( $item['expense_status'] ) ) {
+            $status = $item['expense_status'];
+        } else if ( !empty( $item['purchase_status'] ) ) {
+            $status = $item['purchase_status'];
+        } else if ( !empty( $item['pay_purchase_status'] ) ) {
+            $status = $item['pay_purchase_status'];
+        }
+
+        $item['status'] = erp_acct_get_trn_status_by_id( $status );
 
         $data = array_merge( $item, $additional_fields );
 

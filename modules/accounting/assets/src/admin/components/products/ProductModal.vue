@@ -202,11 +202,12 @@
 
         methods: {
             saveProduct() {
-                if (!this.checkForm()) {
+                if ( ! this.checkForm()) {
                     return false;
                 }
 
                 this.$store.dispatch( 'spinner/setSpinner', true );
+
                 if (!this.product) {
                     var type = 'post';
                     var url = 'products';
@@ -214,6 +215,7 @@
                     var type = 'put';
                     var url = 'products/' + this.ProductFields.id;
                 }
+
                 var data = {
                     name           : this.ProductFields.name,
                     product_type_id: this.ProductFields.type,
@@ -223,13 +225,16 @@
                     cost_price     : this.ProductFields.costPrice,
                     sale_price     : this.ProductFields.salePrice,
                 };
+
                 HTTP[type](url, data).then(response => {
                     this.$parent.$emit('close');
                     this.$parent.getProducts();
                     this.resetForm();
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'put' === type ? 'Product Updated!' : 'Product Created!');
-                });
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
             },
 
             loaded() {

@@ -5,14 +5,13 @@
                 <div class="col-wrap">
                     <div class="form-wrap">
                         <h2>Add new category</h2>
-                        <form action="" method="POST" id="product-category">
+                        <form id="erp-acct-product-category">
                             <div :class="['form-field term-name-wrap', { 'form-invalid': error }]">
-                                <label for="">Name</label>
+                                <label>Category Name</label>
                                 <input type="text" v-model="categoryName">
-                                <p>The name is how it appears on your site.</p>
                             </div>
                             <div class="form-field">
-                                <label for="">Parent Category</label>
+                                <label>Parent Category</label>
                                 <div class="with-multiselect">
                                     <multi-select
                                     v-model="parentCategory"
@@ -21,8 +20,8 @@
                                     <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
                                 </div>
                             </div>
-                            <div class="buttons-wrapper text-right">
-                                <input type="submit" value="Add new category" class="wperp-btn btn--primary" @click.prevent="createCategory"/>
+                            <div class="buttons-wrapper">
+                                <input type="submit" value="Add new category" class="wperp-btn btn--primary text-left" @click.prevent="createCategory"/>
                             </div>
                         </form>
                     </div>
@@ -30,7 +29,7 @@
             </div>
             <div id="col-right" style="margin-top: 12px">
                 <div class="col-wrap">
-                    <list-table class="category-list"
+                    <list-table class="wperp-table table-striped table-dark widefat table2 category-list"
                         action-column="actions"
                         :columns="columns"
                         :rows="categories"
@@ -116,6 +115,7 @@
                         this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
             },
+
             onActionClick( action, row, index ) {
                 if ( 'edit' == action ) {
                     row.isEdit = true;
@@ -157,6 +157,7 @@
                     }
                 }
             },
+
             createCategory() {
                 if ( this.categoryName == '' ) {
                     this.error = true;
@@ -180,6 +181,7 @@
                         this.$store.dispatch( 'spinner/setSpinner', false );
                     } )
             },
+
             updateCategory( row ) {
                 var categoryName = document.getElementById('cat-'+row.id).value;
                 var categoryId   = row.id;
@@ -200,9 +202,11 @@
     }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
     .categories {
         .category-list {
+            background-color: transparent;
+
             th ul,
             th li {
                 margin: 0;
@@ -210,18 +214,26 @@
             th li {
                 display: flex;
                 align-items: center;
+
                 img {
                     width: 20px;
                     padding-right: 5px;
                 }
             }
+
             .name {
                 width: 80% !important;
             }
+
+            .check-column {
+                padding: 20px !important;
+            }
         }
-        .buttons-wrapper {
-            float: left !important;
+
+        .buttons-wrapper .wperp-btn {
+            margin-left: 0 !important;
         }
+
         .with-multiselect {
             width: 60%;
         }

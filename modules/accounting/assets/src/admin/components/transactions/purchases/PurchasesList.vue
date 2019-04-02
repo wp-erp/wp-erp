@@ -10,6 +10,7 @@
             </div>
 
             <list-table
+                :loading="listLoading"
                 tableClass="wperp-table table-striped table-dark widefat table2 transactions-table"
                 action-column="actions"
                 :columns="columns"
@@ -55,7 +56,7 @@
                     {{ isPayment(data.row) ? formatAmount(data.row.pay_bill_amount) : formatAmount(data.row.amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Paid' : data.row.status }}
+                    {{ data.row.status }}
                 </template>
 
                 <!-- custom row actions -->
@@ -99,11 +100,12 @@
                     'actions':       {label: ''},
 
                 },
-                rows: [],
+                listLoading   : false,
+                rows          : [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions : []
@@ -122,7 +124,7 @@
             // Get start & end date from url on page load
             if ( this.$route.query.start && this.$route.query.end ) {
                 filters.start_date = this.$route.query.start;
-                filters.end_date = this.$route.query.end;
+                filters.end_date   = this.$route.query.end;
             }
 
             this.fetchItems(filters);
@@ -138,10 +140,10 @@
 
                 HTTP.get('/transactions/purchases', {
                     params: {
-                        per_page: this.paginationData.perPage,
-                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+                        per_page  : this.paginationData.perPage,
+                        page      : this.$route.params.page === undefined ? this.paginationData.currentPage: this.$route.params.page,
                         start_date: filters.start_date,
-                        end_date: filters.end_date
+                        end_date  : filters.end_date
                     }
                 }).then( (response) => {
                     let mappedData = response.data.map(item => {
@@ -164,8 +166,10 @@
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
 
+                    this.listLoading = false;
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
+                    this.listLoading = false;
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
@@ -206,12 +210,14 @@
             },
 
             goToPage(page) {
+                this.listLoading = true;
+
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateInvoices',
+                    name  : 'PaginatePurchases',
                     params: { page: page },
-                    query: queries
+                    query : queries
                 });
 
                 this.fetchItems();

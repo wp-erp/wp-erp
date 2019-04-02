@@ -316,7 +316,7 @@
                                 <?php do_action( 'erp_crm_contact_form_additional' ); ?>
                             <# } #>
 
-                        </ol>
+                        </div>
                         </fieldset>
 
                         <fieldset class="social-info">

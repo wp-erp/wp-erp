@@ -394,14 +394,14 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['city'] ) ) {
             $prepared_item['city'] = $request['city'];
         }
-        if ( isset( $request['state'] ) ) {
-            $prepared_item['state'] = $request['state'];
+        if ( !empty( $request['state'] ) ) {
+            $prepared_item['state'] = $request['state']['id'];
         }
         if ( isset( $request['postal_code'] ) ) {
             $prepared_item['postal_code'] = $request['postal_code'];
         }
-        if ( isset( $request['country'] ) ) {
-            $prepared_item['country'] = $request['country'];
+        if ( !empty( $request['country'] ) ) {
+            $prepared_item['country'] = $request['country']['id'];
         }
         if ( isset( $request['currency'] ) ) {
             $prepared_item['currency'] = $request['currency'];

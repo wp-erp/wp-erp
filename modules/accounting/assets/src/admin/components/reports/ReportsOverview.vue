@@ -1,7 +1,7 @@
 <template>
     <ul>
         <li><router-link :to="{ name: 'TrialBalance' }">Trial Balance</router-link></li>
-        <li><router-link :to="{ name: 'LedgerReport' }">Ledger Report</router-link></li>
+        <li><router-link :to="{ name: 'LedgerSingle', params: { id: 1 } }">Ledger Report</router-link></li>
         <li><router-link :to="{ name: 'IncomeStatement' }">Income Statement</router-link></li>
         <li><router-link :to="{ name: 'SalesTax' }">Sales Tax</router-link></li>
         <li><router-link :to="{ name: 'BalanceSheet' }">Balance Sheet</router-link></li>

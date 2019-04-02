@@ -10,6 +10,7 @@
             </div>
 
             <list-table
+                :loading="listLoading"
                 tableClass="wperp-table table-striped table-dark widefat table2 transactions-table"
                 action-column="actions"
                 :columns="columns"
@@ -53,7 +54,7 @@
                     {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount) }}
                 </template>
                 <template slot="status" slot-scope="data">
-                    {{ isPayment(data.row) ? 'Received' : data.row.status }}
+                    {{ data.row.status }}
                 </template>
 
                 <!-- custom row actions -->
@@ -96,7 +97,8 @@
                     'actions'      : {label: ''},
 
                 },
-                rows: [],
+                listLoading   : false,
+                rows          : [],
                 paginationData: {
                     totalItems : 0,
                     totalPages : 0,
@@ -135,14 +137,14 @@
 
                 HTTP.get('/transactions/sales', {
                     params: {
-                        per_page: this.paginationData.perPage,
-                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+                        per_page  : this.paginationData.perPage,
+                        page      : this.$route.params.page === undefined ? this.paginationData.currentPage: this.$route.params.page,
                         start_date: filters.start_date,
-                        end_date: filters.end_date
+                        end_date  : filters.end_date
                     }
                 }).then(response => {
                     let mappedData = response.data.map(item => {
-                        if ( 'invoice' === item.type && 'Awaiting Approval' == item.status ) {
+                        if ( 'invoice' === item.type && 'Pending' == item.status ) {
                             item['actions'] = [
                                 { key: 'edit', label: 'Edit' },
                                 { key: 'receive', label: 'Receive Payment' },
@@ -160,8 +162,10 @@
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
 
+                    this.listLoading = false;
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
+                    this.listLoading = false;
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
@@ -205,10 +209,12 @@
             },
 
             goToPage(page) {
+                this.listLoading = true;
+
                 let queries = Object.assign({}, this.$route.query);
                 this.paginationData.currentPage = page;
                 this.$router.push({
-                    name: 'PaginateInvoices',
+                    name: 'PaginateSales',
                     params: { page: page },
                     query: queries
                 });

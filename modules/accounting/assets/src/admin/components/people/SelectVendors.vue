@@ -1,7 +1,7 @@
 <template>
     <div class="wperp-form-group invoice-customers with-multiselect">
         <people-modal title="Add new vendor" type="vendor" v-if="showModal"></people-modal>
-        <label for="vendor">vendor<span class="wperp-required-sign">*</span></label>
+        <label>Vendor<span class="wperp-required-sign">*</span></label>
         <multi-select v-model="selected" :options="options" />
 
         <a href="#" class="add-new-customer" @click="showModal = true"><i class="flaticon-add-plus-button"></i>Add new</a>
@@ -96,24 +96,24 @@
 </script>
 
 <style lang="less">
-    .invoice-customers.with-multiselect {
-        .multiselect__input,
-        .multiselect__single {
-            min-height: 30px;
-            line-height: 30px;
-            margin-bottom: 0;
-        }
+    // .invoice-customers.with-multiselect {
+    //     .multiselect__input,
+    //     .multiselect__single {
+    //         min-height: 30px;
+    //         line-height: 30px;
+    //         margin-bottom: 0;
+    //     }
 
-        .multiselect__tags {
-            padding: 8px 0;
-        }
+    //     .multiselect__tags {
+    //         padding: 8px 0;
+    //     }
 
-        .multiselect__placeholder {
-            margin: 4px 0 0 7px !important;
-        }
+    //     .multiselect__placeholder {
+    //         margin: 4px 0 0 7px !important;
+    //     }
 
-        .multiselect__select {
-            height: 41px;
-        }
-    }
+    //     .multiselect__select {
+    //         height: 41px;
+    //     }
+    // }
 </style>

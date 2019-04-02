@@ -114,6 +114,19 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-delete' . '/(?P<db_id>[\d]+)', [
+
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'line_delete_tax_rate' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/tax-records', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -124,6 +137,17 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 },
             ],
             'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/tax-records' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_tax_pay_record' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sale' );
+                },
+            ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/pay-tax', [
@@ -389,6 +413,25 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
+    /**
+     * Update component of a tax rate
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function line_delete_tax_rate( $request ) {
+        $id = (int) $request['db_id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_tax_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        erp_acct_delete_tax_rate_line( $id );
+
+        return new WP_REST_Response(true, 204 );
+    }
+
 
     /**
      * Delete an tax
@@ -448,6 +491,33 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, $total_items );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get a tax payment
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_tax_pay_record( $request ) {
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_tax_pay_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $item = erp_acct_get_tax_pay_record( $id );
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $item  = $this->prepare_tax_pay_response( $item, $request, $additional_fields );
+        $response = rest_ensure_response( $item );
 
         $response->set_status( 200 );
 
@@ -661,7 +731,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'particulars'  => $item->particulars,
             'amount'       => $item->amount,
             'trn_by'       => $item->trn_by,
-            'ledger_id'    => $item->ledger_id,
+            'ledger_id'    => erp_acct_get_ledger_name_by_id( $item->ledger_id ),
             'voucher_type' => $item->voucher_type,
         ];
 
@@ -719,6 +789,12 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'properties' => [
                 'id'          => [
                     'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'db_id'          => [
+                    'description' => __( 'Unique identifier for the line resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,

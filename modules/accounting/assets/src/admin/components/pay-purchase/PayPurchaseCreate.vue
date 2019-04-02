@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container pay-purchase-create">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -18,7 +18,6 @@
 
                     <show-errors :error_msgs="form_errors" ></show-errors>
 
-                    <!-- <form action="" class="wperp-form" method="post"> -->
                         <div class="wperp-row">
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
@@ -27,7 +26,7 @@
                             </div>
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
-                                    <label>Reference<span class="wperp-required-sign">*</span></label>
+                                    <label>Reference</label>
                                     <input type="text" v-model="basic_fields.trn_ref"/>
                                 </div>
                             </div>
@@ -52,7 +51,6 @@
 
                             <check-fields v-if="basic_fields.trn_by.id === paymentMethods.check" @updateCheckFields="setCheckFields"></check-fields>
                         </div>
-                    <!-- </form> -->
 
                 </div>
             </div>
@@ -122,6 +120,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
@@ -138,7 +138,6 @@
         components: {
             MultiSelect,
             SelectVendors,
-            HTTP,
             Datepicker,
             FileUpload,
             ComboButton,
@@ -150,12 +149,12 @@
         data() {
             return {
                 basic_fields: {
-                    vendor: {},
-                    trn_ref: '',
-                    payment_date: erp_acct_var.current_date,
-                    deposit_to: '',
+                    vendor         : {},
+                    trn_ref        : '',
+                    payment_date   : erp_acct_var.current_date,
+                    deposit_to     : '',
                     billing_address: '',
-                    trn_by: { id: null, name: null }
+                    trn_by         : { id: null, name: null }
                 },
 
                 paymentMethods: {
@@ -172,6 +171,7 @@
                 createButtons: [
                     {id: 'save', text: 'Pay Purchase'},
                     {id: 'new_create', text: 'Pay and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 form_errors     : [],
@@ -184,17 +184,19 @@
                 particulars     : '',
                 isWorking       : false,
                 accts_by_chart  : [],
-                actionType      : null,
                 acct_assets     : erp_acct_var.acct_assets
             }
+        },
+
+        computed: {
+            ...mapState({ actionType: state => state.combo.btnID }),
         },
 
         created() {
             this.getPayMethods();
 
-            this.$root.$on('combo-btn-select', button => {
-                this.actionType = button.id;
-            });
+            // initialize combo button id with `save`
+            this.$store.dispatch('combo/setBtnID', 'save');
         },
 
         mounted() {
@@ -208,7 +210,7 @@
             getPayMethods() {
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
-                HTTP.get('/transactions/payment-methods').then((response) => {
+                HTTP.get('/transactions/payment-methods').then(response => {
                     this.pay_methods = response.data;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
@@ -244,6 +246,10 @@
                     finalAmount = 0;
 
                 this.pay_purchases = [];
+
+                if( isNaN(this.basic_fields.vendor.id) ) {
+                    return;
+                }
 
                 HTTP.get(`/purchases/due/${this.basic_fields.vendor.id}`).then(response => {
                     response.data.forEach(element => {
@@ -292,7 +298,7 @@
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
             },
 
-            SubmitForPayment(event) {
+            SubmitForPayment() {
                 this.pay_purchases.forEach( (element,index) => {
                     element['line_total'] = parseFloat( this.totalAmounts[index] );
                 });
@@ -308,26 +314,32 @@
                 }
 
                 this.$store.dispatch( 'spinner/setSpinner', true );
+                let trn_status = null;
+                if ( 'draft' === this.actionType) {
+                    trn_status = 1;
+                } else {
+                    trn_status = 4;
+                }
 
                 HTTP.post('/pay-purchases', {
-                    vendor_id: this.basic_fields.vendor.id,
-                    ref: this.basic_fields.trn_ref,
-                    trn_date: this.basic_fields.payment_date,
+                    vendor_id       : this.basic_fields.vendor.id,
+                    ref             : this.basic_fields.trn_ref,
+                    trn_date        : this.basic_fields.payment_date,
                     purchase_details: this.pay_purchases,
-                    attachments: this.attachments,
-                    type: 'pay_purchase',
-                    status: 4,
-                    particulars: this.particulars,
-                    deposit_to: this.basic_fields.deposit_to.id,
-                    trn_by: this.basic_fields.trn_by.id,
-                    check_no: parseInt(this.check_data.check_no),
-                    name: this.check_data.payer_name
+                    attachments     : this.attachments,
+                    type            : 'pay_purchase',
+                    status          : trn_status,
+                    particulars     : this.particulars,
+                    deposit_to      : this.basic_fields.deposit_to.id,
+                    trn_by          : this.basic_fields.trn_by.id,
+                    check_no        : parseInt(this.check_data.check_no),
+                    name            : this.check_data.payer_name
                 }).then(res => {
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Pay Purchase Created!' );
 
-                    if ('save' == this.actionType) {
+                    if ('save' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Purchases'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
@@ -336,22 +348,28 @@
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'error', 'Something went wrong!' );
-
                 });
             },
 
             changeAccounts() {
+                this.accts_by_chart = [];
                 if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
-                    this.accts_by_chart = [];
-
                     HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 } else {
-                    this.accts_by_chart = [];
-
                     HTTP.get('/ledgers/cash-accounts').then((response) => {
                         this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
                     });
                 }
                 this.$root.$emit('account-changed');
@@ -364,10 +382,6 @@
                     this.form_errors.push('Vendor Name is required.');
                 }
 
-                if ( !this.basic_fields.trn_ref ) {
-                    this.form_errors.push('Transaction Reference is required.');
-                }
-
                 if ( !this.basic_fields.payment_date ) {
                     this.form_errors.push('Transaction Date is required.');
                 }
@@ -378,6 +392,10 @@
 
                 if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
                     this.form_errors.push('Payment Method is required.');
+                }
+
+                if ( parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Not enough balance in selected account.');
                 }
             },
 
@@ -406,18 +424,15 @@
                     check_no  : ''
                 };
 
-                createButtons: [
-                    {id: 'save', text: 'Pay Purchase'},
-                    {id: 'new_create', text: 'Pay and New'},
-                ],
-
                 this.form_errors      = [];
                 this.attachments      = [];
                 this.totalAmounts     = [];
                 this.finalTotalAmount = 0;
                 this.particulars      = '';
                 this.isWorking        = false;
-                this.actionType       = null;
+
+                // initialize combo button id with `save`
+                this.$store.dispatch('combo/setBtnID', 'save');
             },
 
             remove_item( index ) {
@@ -445,5 +460,13 @@
 </script>
 
 <style lang="less">
+.pay-purchase-create {
+    .dropdown {
+        width: 100%;
+    }
 
+    .col--amount {
+        width: 200px;
+    }
+}
 </style>

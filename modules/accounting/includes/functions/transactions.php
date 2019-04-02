@@ -56,22 +56,20 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
             SUM(invoice_account_detail.debit - invoice_account_detail.credit) AS due,
             invoice_receipt.amount AS payment_amount,
-            status_type.type_name AS status";
+            invoice.status as inv_status,
+            invoice_receipt.status as pay_status";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS invoice_receipt ON invoice_receipt.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = invoice.status
         LEFT JOIN wp_erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
-        {$where} GROUP BY voucher.id ORDER BY CONCAT(invoice.trn_date, invoice_receipt.trn_date) {$args['order']} {$limit}";
+        {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         $wpdb->get_results($sql);
         return $wpdb->num_rows;
     }
-
-    // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
@@ -108,7 +106,7 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
 function erp_acct_get_sales_chart_payment( $args = [] ) {
     global $wpdb;
 
-    $where = '';
+    $where = ' WHERE invoice.estimate = 0 AND invoice.status != 1';
 
     if ( ! empty( $args['start_date'] ) ) {
         $where .= "WHERE invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
@@ -140,7 +138,7 @@ function erp_acct_get_sales_chart_payment( $args = [] ) {
 function erp_acct_get_bill_chart_data( $args = [] ) {
     global $wpdb;
 
-    $where = '';
+    $where = ' WHERE bill.status != 1';
 
     if ( ! empty( $args['start_date'] ) ) {
         $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
@@ -201,7 +199,7 @@ function erp_acct_get_bill_chart_status( $args = [] ) {
 function erp_acct_get_purchase_chart_data( $args = [] ) {
     global $wpdb;
 
-    $where = '';
+    $where = ' WHERE purchase.purchase_order = 0 AND purchase.status != 1';
 
     if ( ! empty( $args['start_date'] ) ) {
         $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
@@ -212,10 +210,10 @@ function erp_acct_get_purchase_chart_data( $args = [] ) {
     }
 
     $sql = "SELECT SUM(debit) as paid, ABS(SUM(balance)) AS payable
-        FROM ( SELECT bill.voucher_no, SUM(bill_acc_detail.debit) AS debit, SUM( bill_acc_detail.debit - bill_acc_detail.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_purchase AS bill
-        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS bill_acc_detail ON bill.voucher_no = bill_acc_detail.purchase_no {$where}
-        GROUP BY bill.voucher_no) AS get_amount";
+        FROM ( SELECT purchase.voucher_no, SUM(purchase_acc_detail.debit) AS debit, SUM( purchase_acc_detail.debit - purchase_acc_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_purchase AS purchase
+        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.purchase_no {$where}
+        GROUP BY purchase.voucher_no) AS get_amount";
 
     $result = $wpdb->get_row($sql, ARRAY_A);
 
@@ -322,8 +320,8 @@ function erp_acct_get_expense_chart_status( $args = [] ) {
  */
 function erp_acct_get_income_expense_chart_data() {
 
-    $income_chart_id = 3; //Default db value
-    $expense_chart_id = 4; //Default db value
+    $income_chart_id = 4; //Default db value
+    $expense_chart_id = 5; //Default db value
 
     $current_year = date( 'Y' );
     $start_date = $current_year . '-01-01';
@@ -476,13 +474,14 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             pay_bill.amount as pay_bill_amount,
             expense.amount as expense_amount,
             SUM(bill_acct_details.debit - bill_acct_details.credit) AS due,
-            status_type.type_name AS status";
+            bill.status as bill_status,
+            pay_bill.status as pay_bill_status,
+            expense.status as expense_status";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_pay_bill AS pay_bill ON pay_bill.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = bill.status
         LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS bill_acct_details ON bill_acct_details.bill_no = bill.voucher_no
         LEFT JOIN {$wpdb->prefix}erp_acct_expenses AS expense ON expense.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON cheque.trn_no = voucher.id
@@ -552,13 +551,13 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             purchase.purchase_order,
             pay_purchase.amount as pay_bill_amount,
             ABS(SUM(purchase_acct_details.debit - purchase_acct_details.credit)) AS due,
-            status_type.type_name AS status";
+            purchase.status AS purchase_status,
+            pay_purchase.status AS pay_purchase_status";
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS purchase ON purchase.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase ON pay_purchase.voucher_no = voucher.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_trn_status_types AS status_type ON status_type.id = purchase.status
         LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acct_details ON purchase_acct_details.purchase_no = purchase.voucher_no
         {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
 
@@ -780,7 +779,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
     $file_name = sprintf('%s_%s.pdf', $trn_id, date('d-m-Y'));
     $trn_pdf->render($file_name, $output_method);
-    $trn_email  = new \WeDevs\ERP\Accounting\INCLUDES\Send_Email();
+    $trn_email  = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
     $file_name  = $attach_pdf ? $file_name : '';
 
     $result = $trn_email->trigger( $receiver, $subject, $body, $file_name );

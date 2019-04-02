@@ -1,7 +1,7 @@
 <template>
     <div class="wperp-form-group expense-people with-multiselect">
         <people-modal v-if="showModal" title="Add new people" type="all"></people-modal>
-        <label>People<span class="wperp-required-sign">*</span></label>
+        <label>Pay to<span class="wperp-required-sign">*</span></label>
         <multi-select v-model="selected" :options="options" />
 
         <!--<a href="#" class="add-new-people" @click="showModal = true"><i class="flaticon-add-plus-button"></i>Add new</a>-->
@@ -104,16 +104,8 @@
             margin-bottom: 0;
         }
 
-        .multiselect__tags {
-            padding: 8px 0;
-        }
-
         .multiselect__placeholder {
             margin: 4px 0 0 7px !important;
-        }
-
-        .multiselect__select {
-            height: 41px;
         }
     }
 </style>

@@ -1,12 +1,12 @@
 <template>
     <div class="app-customers">
-        <h2 class="add-new-customer">
+        <h2 class="add-new-people">
             <span>{{ pageTitle }}</span>
             <a href="" id="erp-customer-new" @click.prevent="showModal = true">+ Add New {{ buttonTitle }}</a>
         </h2>
         <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false"></people-modal>
         <list-table
-            tableClass="wperp-table table-striped table-dark"
+            tableClass="wperp-table people-table table-striped table-dark"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -58,28 +58,28 @@
                 ],
                 columns: {
                     'customer': { label: 'Name', isColPrimary: true },
-                    'company': { label: 'Company' },
-                    'email': { label: 'Email' },
-                    'phone': { label: 'Phone' },
-                    'expense': { label: 'Expense' },
-                    'actions': { label: 'Actions' }
+                    'company' : { label: 'Company' },
+                    'email'   : { label: 'Email' },
+                    'phone'   : { label: 'Phone' },
+                    'expense' : { label: 'Expense' },
+                    'actions' : { label: 'Actions' }
                 },
                 rows: [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
-                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
+                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 actions : [
                     { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
                     { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
                 ],
-                showModal: false,
-                buttonTitle: '',
-                pageTitle: '',
-                url: '',
-                singleUrl: '',
+                showModal             : false,
+                buttonTitle           : '',
+                pageTitle             : '',
+                url                   : '',
+                singleUrl             : '',
                 isActiveOptionDropdown: false
             };
         },
@@ -96,10 +96,10 @@
                 self.fetchItems();
             } );
 
-            this.buttonTitle    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'Customer' : 'Vendor';
-            this.pageTitle      =   this.$route.name;
-            this.url            =   this.$route.name.toLowerCase();
-            this.singleUrl      =   ( this.url == 'customers' ) ? 'CustomerDetails' : 'VendorDetails';
+            this.buttonTitle = ( this.$route.name.toLowerCase() == 'customers' ) ? 'Customer' : 'Vendor';
+            this.pageTitle   = this.$route.name;
+            this.url         = this.$route.name.toLowerCase();
+            this.singleUrl   = ( this.url == 'customers' ) ? 'CustomerDetails' : 'VendorDetails';
             this.fetchItems();
         },
 
@@ -108,14 +108,14 @@
                 let items = this.rows;
                 items.map( item => {
                     item.customer = item.first_name + ' ' + item.last_name;
-                    item.expense = 0;
+                    item.expense  = 0;
                 } );
                 return items;
             }
         },
 
         methods: {
-            fetchItems(){
+            fetchItems() {
                 this.rows = [];
                 HTTP.get( this.url , {
                     params: {
@@ -130,11 +130,8 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 })
                 .catch((error) => {
-                    console.log(error);
-                })
-                .then( () => {
-                    //ready
-                } );
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                });
             },
 
             onActionClick(action, row, index) {
@@ -203,7 +200,8 @@
 </script>
 <style lang="less">
     .app-customers {
-        .add-new-customer {
+        .add-new-people {
+            padding-top: 10px;
             align-items: center;
             display: flex;
             span {
@@ -220,7 +218,7 @@
                 margin-left: 13px;
                 text-align: center;
                 text-decoration: none;
-                width: 135px;
+                width: 150px;
             }
         }
         .customer-list {
@@ -282,6 +280,14 @@
             tbody td {
                 line-height: 3em;
             }
+        }
+        .people-table {
+            .col--actions {
+                float: left !important;
+            }
+        }
+        .check-column {
+            padding: 20px !important;
         }
     }
 </style>

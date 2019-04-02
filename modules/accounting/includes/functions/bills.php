@@ -142,7 +142,6 @@ function erp_acct_insert_bill( $data ) {
             'trn_date'        => $bill_data['trn_date'],
             'due_date'        => $bill_data['due_date'],
             'amount'          => $bill_data['amount'],
-            'ref'             => $bill_data['ref'],
             'particulars'     => $bill_data['particulars'],
             'status'          => $bill_data['status'],
             'attachments'     => $bill_data['attachments'],
@@ -163,6 +162,11 @@ function erp_acct_insert_bill( $data ) {
              ] );
 
             erp_acct_insert_bill_data_into_ledger( $bill_data, $item );
+        }
+
+        if ( 1 == $bill_data['status']) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_invoice( $voucher_no );
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
@@ -216,7 +220,6 @@ function erp_acct_update_bill( $data, $bill_id ) {
             'trn_date'        => $bill_data['trn_date'],
             'due_date'        => $bill_data['due_date'],
             'amount'          => $bill_data['amount'],
-            'ref'             => $bill_data['ref'],
             'particulars'     => $bill_data['particulars'],
             'attachments'     => $bill_data['attachments'],
             'updated_at'      => $bill_data['updated_at'],
@@ -250,6 +253,11 @@ function erp_acct_update_bill( $data, $bill_id ) {
             ] );
 
             erp_acct_update_bill_data_into_ledger( $bill_data, $bill_id, $item );
+        }
+
+        if ( 1 == $bill_data['status']) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_invoice( $bill_id );
         }
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
@@ -333,7 +341,6 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
     $bill_data['due'] = isset( $data['due'] ) ? $data['due'] : 0;
     $bill_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $bill_data['ref'] = isset( $data['ref'] ) ? $data['ref'] : '';
     $bill_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
     $bill_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $bill_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
@@ -356,6 +363,10 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
  */
 function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
     global $wpdb;
+
+    if ( 1 == $bill_data['status']) {
+        return;
+    }
 
     // Insert items amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
@@ -385,6 +396,10 @@ function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
  */
 function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data ) {
     global $wpdb;
+
+    if ( 1 == $bill_data['status']) {
+        return;
+    }
 
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
@@ -453,7 +468,7 @@ function erp_acct_get_due_bills_by_people( $args = [] ) {
                                     HAVING due > 0
                                 ) as bs
                                 ON bill.voucher_no = bs.bill_no
-                                WHERE bill.vendor_id = %d
+                                WHERE bill.vendor_id = %d AND bill.status != 1
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {

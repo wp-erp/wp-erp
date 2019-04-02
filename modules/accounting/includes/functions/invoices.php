@@ -185,6 +185,12 @@ function erp_acct_insert_invoice( $data ) {
         ) );
 
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no );
+
+        if ( 1 == $invoice_data['estimate'] || 1 == $invoice_data['status'] ) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_invoice( $voucher_no );
+        }
+
         erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no );
         erp_acct_insert_invoice_data_into_ledger( $invoice_data );
         erp_acct_insert_invoice_data_people_details( $invoice_data );
@@ -231,24 +237,16 @@ function erp_acct_insert_invoice_details_and_tax($invoice_data, $voucher_no) {
             'created_by'  => $invoice_data['created_by']
         ) );
 
+        if ( 1 == $invoice_data['estimate'] ) {
+            return;
+        }
+
         // calculate tax for every related agency
         $tax_rate_agency = get_tax_rate_with_agency($invoice_data['tax_rate_id'], $item['tax_cat_id']);
 
         foreach ( $tax_rate_agency as $rate_agency ) {
             /*==== calculate tax amount ====*/
             $tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
-
-            /*==== Rough paper ====*/
-            // $arr = [
-            //     2 => 40,
-            //     3 => 50
-            // ];
-            // if ( array_key_exists(1, $arr) ) {
-            //     $arr[1] += 10;
-            // } else {
-            //     $arr[1] = 4;
-            // }
-            // var_dump( $arr );
 
             if ( array_key_exists( $rate_agency['agency_id'], $tax_agency_details ) ) {
                 $tax_agency_details[ $rate_agency['agency_id'] ] += $tax_amount;
@@ -360,6 +358,11 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
         $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agency_details', [ 'trn_no' => $invoice_no ] );
 
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $invoice_no );
+
+        if ( 1 == $invoice_data['estimate'] || 1 == $invoice_data['status']) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_invoice( $invoice_no );
+        }
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
             'particulars' => $invoice_data['particulars'],
@@ -488,7 +491,7 @@ function get_tax_rate_with_agency($tax_id, $tax_cat_id) {
 function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
     global $wpdb;
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Ledger_Map::getInstance();
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
     $sales_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_revenue');
     $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discounts');
@@ -606,14 +609,14 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
                                     HAVING due > 0
                                 ) as invs
                                 ON invoice.voucher_no = invs.invoice_no
-                                WHERE invoice.customer_id = %d
+                                WHERE invoice.customer_id = %d AND invoice.status != 1 AND invoice.estimate != 1 
                                 ORDER BY %s %s $limit", $args['people_id'],$args['orderby'],$args['order']  );
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $query );
     }
 
-    // error_log(print_r($query, true));
+     //error_log(print_r($query, true));
     return $wpdb->get_results( $query, ARRAY_A );
 }
 

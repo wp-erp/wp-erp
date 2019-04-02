@@ -261,23 +261,23 @@
 
             setInputField() {
                 if ( this.people) {
-                    let people = this.people;
-                    this.peopleFields.id = people.id;
-                    this.peopleFields.first_name = people.first_name;
-                    this.peopleFields.last_name = people.last_name;
-                    this.peopleFields.email = people.email;
-                    this.peopleFields.mobile = people.mobile;
-                    this.peopleFields.company = people.company;
-                    this.peopleFields.phone = people.phone;
-                    this.peopleFields.website = people.website;
-                    this.peopleFields.notes = people.notes;
-                    this.peopleFields.fax = people.fax;
-                    this.peopleFields.street_1 = people.billing.street_1;
-                    this.peopleFields.street_2 = people.billing.street_2;
-                    this.peopleFields.city = people.billing.city;
-                    this.peopleFields.country = this.selectedCountry( people.billing.country );
-                    this.peopleFields.state = this.selectedState(people.billing.state );
-                    this.peopleFields.postal_code = people.billing.postal_code;
+                    let people                        = this.people;
+                        this.peopleFields.id          = people.id;
+                        this.peopleFields.first_name  = people.first_name;
+                        this.peopleFields.last_name   = people.last_name;
+                        this.peopleFields.email       = people.email;
+                        this.peopleFields.mobile      = people.mobile;
+                        this.peopleFields.company     = people.company;
+                        this.peopleFields.phone       = people.phone;
+                        this.peopleFields.website     = people.website;
+                        this.peopleFields.notes       = people.notes;
+                        this.peopleFields.fax         = people.fax;
+                        this.peopleFields.street_1    = people.billing.street_1;
+                        this.peopleFields.street_2    = people.billing.street_2;
+                        this.peopleFields.city        = people.billing.city;
+                        this.peopleFields.country     = this.selectedCountry( people.billing.country );
+                        this.peopleFields.state       = this.selectedState(people.billing.state );
+                        this.peopleFields.postal_code = people.billing.postal_code;
                 }
             },
 
@@ -288,6 +288,7 @@
             selectedState( id ) {
                 return this.get_states.find( item => item.id == id );
             },
+
             generateUrl() {
                 var url;
                 if ( this.type ) {
@@ -306,28 +307,26 @@
 
                 return url;
             },
+
             resetForm() {
                 this.peopleFields.first_name = '';
-                this.peopleFields.last_name = '';
-                this.peopleFields.email = '';
-                this.peopleFields.mobile = '';
-                this.peopleFields.company = '';
-                this.peopleFields.phone = '';
-                this.peopleFields.website = '';
-                this.peopleFields.note = '';
-                this.peopleFields.fax = '';
-                this.peopleFields.street1 = '';
-                this.peopleFields.street2 = '';
-                this.peopleFields.city = '';
-                this.peopleFields.country = '';
-                this.peopleFields.state = '';
-                this.peopleFields.post_code = '';
+                this.peopleFields.last_name  = '';
+                this.peopleFields.email      = '';
+                this.peopleFields.mobile     = '';
+                this.peopleFields.company    = '';
+                this.peopleFields.phone      = '';
+                this.peopleFields.website    = '';
+                this.peopleFields.note       = '';
+                this.peopleFields.fax        = '';
+                this.peopleFields.street1    = '';
+                this.peopleFields.street2    = '';
+                this.peopleFields.city       = '';
+                this.peopleFields.country    = '';
+                this.peopleFields.state      = '';
+                this.peopleFields.post_code  = '';
             }
         },
         created() {
-            if ( this.$route.name.toLowerCase() === 'ven' ) {
-
-            }
             this.url = this.generateUrl();
             this.selectedCountry();
             this.setInputField();

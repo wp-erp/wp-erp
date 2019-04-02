@@ -73,31 +73,21 @@
 
                 HTTP.get(`/taxes/${taxid}`).then((response) => {
                     this.tax_rate = response.data;
-                }).catch((error) => {
+                }).catch(error => {
                     console.log(error);
                 });
 
                 HTTP.get('/tax-agencies').then((response) => {
                     this.agencies = [];
-                    response.data.forEach(element => {
-                        this.agencies.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
-                }).catch((error) => {
+                    this.agencies = response.data;
+                }).catch(error => {
                     console.log(error);
                 });
 
                 HTTP.get('/tax-cats').then((response) => {
                     this.categories = [];
-                    response.data.forEach(element => {
-                        this.categories.push({
-                            id: element.id,
-                            name: element.name
-                        });
-                    });
-                }).catch((error) => {
+                    this.categories = response.data;
+                }).catch(error => {
                     console.log(error);
                 });
             },
@@ -106,6 +96,7 @@
 </script>
 <style lang="less">
     .wperp-modal-dialog {
-        max-width: 1000px !important;
+        max-width: 900px!important;
+        margin: 50px auto;
     }
 </style>

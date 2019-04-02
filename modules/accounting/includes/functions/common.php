@@ -312,7 +312,7 @@ function erp_acct_get_trn_status_by_id( $trn_id ) {
     global $wpdb;
 
     if ( !$trn_id ) {
-        return 'awaiting_approval';
+        return 'pending';
     }
 
     $row = $wpdb->get_row( "SELECT type_name FROM {$wpdb->prefix}erp_acct_trn_status_types WHERE id = {$trn_id}" );
@@ -444,5 +444,21 @@ function slugify($str) {
     $str = preg_replace('~[^\pL\d]+~u', '_', $str);
 
     return strtolower($str);
+}
+
+/**
+ * Get ledger account name by ledger id
+ *
+ * @param $id
+ * @return mixed
+ */
+function erp_acct_get_ledger_name_by_id( $id ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = %d", $id);
+
+    $result = $wpdb->get_row( $sql );
+
+    return $result->name;
 }
 

@@ -118,7 +118,8 @@ final class Accounting {
      */
     public function plugin_init() {
         $this->includes();
-        $this->init_hooks();
+        $this->init_actions();
+        $this->init_filters();
     }
 
     /**
@@ -159,14 +160,33 @@ final class Accounting {
     }
 
     /**
-     * Initialize the hooks
+     * Init the plugin actions
      *
      * @return void
      */
-    public function init_hooks() {
-
+    public function init_actions() {
         add_action( 'init', [ $this, 'init_classes' ] );
+    }
 
+    /**
+     * Init the plugin filters
+     *
+     * @return void
+     */
+    public function init_filters() {
+        add_filter( 'erp_settings_pages', [ $this, 'add_settings_page' ] );
+    }
+
+    /**
+     * Add settings page
+     *
+     * @param array $settings
+     *
+     * @return array
+     */
+    public function add_settings_page( $settings = array() ) {
+        $settings[] = include __DIR__ . '/includes/classes/class-settings.php';
+        return $settings;
     }
 
     /**
@@ -177,11 +197,11 @@ final class Accounting {
     public function init_classes() {
 
         if ( $this->is_request( 'admin' ) ) {
-            $this->container['admin'] = new \WeDevs\ERP\Accounting\INCLUDES\Admin();
+            $this->container['admin'] = new \WeDevs\ERP\Accounting\Includes\Classes\Admin();
         }
 
         $this->container['rest'] = new \WeDevs\ERP\Accounting\API\REST_API();
-        $this->container['assets'] = new \WeDevs\ERP\Accounting\INCLUDES\Assets();
+        $this->container['assets'] = new \WeDevs\ERP\Accounting\Includes\Classes\Assets();
     }
 
 

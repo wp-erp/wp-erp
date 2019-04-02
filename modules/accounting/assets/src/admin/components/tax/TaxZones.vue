@@ -1,5 +1,5 @@
 <template>
-    <div class="app-customers">
+    <div class="app-tax-zones">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
@@ -15,7 +15,7 @@
 
         <div class="table-container">
             <list-table
-                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark"
+                tableClass="wp-ListTable widefat fixed tax-zone-list wperp-table table-striped table-dark"
                 action-column="actions"
                 :columns="columns"
                 :rows="row_data"
@@ -30,7 +30,7 @@
                 @bulk:click="onBulkAction">
 
                 <template slot="default" slot-scope="data">
-                    {{ '1' === data.row.default ? '&#x02713;' : '-' }}
+                    {{ '1' === data.row.default ? '&#x02713;' : '' }}
                 </template>
             </list-table>
         </div>
@@ -62,9 +62,9 @@
                 },
                 rows: [],
                 paginationData: {
-                    totalItems: 0,
-                    totalPages: 0,
-                    perPage: 10,
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
                 actions: [
@@ -78,16 +78,16 @@
                         iconClass: 'flaticon-trash'
                     }
                 ],
-                taxes: [{}],
-                buttonTitle: '',
-                pageTitle: '',
-                url: '',
-                singleUrl: '',
+                taxes                 : [{}],
+                buttonTitle           : '',
+                pageTitle             : '',
+                url                   : '',
+                singleUrl             : '',
                 isActiveOptionDropdown: false,
-                singleTaxRateModal: false,
-                showModal: false,
-                rate_name_id: null,
-                is_update: false
+                singleTaxRateModal    : false,
+                showModal             : false,
+                rate_name_id          : null,
+                is_update             : false
             }
         },
 
@@ -105,6 +105,7 @@
                     item.tax_id = item.id;
                     item.tax_name = item.name;
                 });
+
                 return items;
             }
         },
@@ -199,7 +200,24 @@
     .erp-acct-tax-menus {
         margin-left: 600px;
     }
+
     .combo-box {
         margin-right: 10px !important;
+    }
+
+    .app-tax-zones {
+        .check-column {
+            padding: 20px !important;
+        }
+
+        .actions {
+            text-align: right;
+        }
+
+        tbody .column.default {
+            color: #388e3c;
+            font-size: 26px;
+            line-height: 26px;
+        }
     }
 </style>

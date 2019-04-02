@@ -10,7 +10,7 @@
         </div>
         <!-- End .header-section -->
 
-        <div class="wperp-panel wperp-panel-default pb-0">
+        <div class="wperp-panel wperp-panel-default pb-0 new-tax-rate">
             <div class="wperp-panel-body">
                 <form action="" method="post" class="wperp-form">
                     <div class="wperp-row wperp-gutter-20">
@@ -20,7 +20,7 @@
                                 <multi-select v-model="tax_name" :options="rate_names"/>
                             </div>
                         </div>
-                        <div class="wperp-form-group wperp-col-sm-6">
+                        <div class="wperp-form-group wperp-col-sm-6 compound-checkbox">
                             <div class="form-check">
                                 <label class="form-check-label">
                                     <input type="checkbox" v-model="is_compound" class="form-check-input"
@@ -48,6 +48,8 @@
                                 v-for="(line,key) in componentLines">
                                 <td scope="row" class="col--component-name column-primary">
                                     <input type="text" class="wperp-form-field" v-model="line.component_name">
+                                    <a href="#" @click.prevent="" class="vis-hide after-select-dropdown">component</a>
+
                                     <button type="button" class="wperp-toggle-row"
                                             @click.prevent="isRowExpanded = !isRowExpanded"></button>
                                 </td>
@@ -63,6 +65,7 @@
                                 </td>
                                 <td class="col--tax-rate" data-colname="Tax Rate">
                                     <input type="text" class="wperp-form-field text-right" v-model="line.tax_rate">
+                                    <a href="#" @click.prevent="" class="vis-hide after-select-dropdown">tax rate</a>
                                 </td>
                                 <td class="col--actions delete-row" data-colname="Remove Above Selection">
                                     <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -189,6 +192,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success',  'Tax Rate Created!' );
                 }).then(() => {
+                    this.$router.push({name: 'TaxRates'});
                     this.resetData();
                 });
 
@@ -200,11 +204,11 @@
                 var lineItems = [];
 
                 for(let idx = 0; idx < this.componentLines.length; idx++) {
-                    let item = {};
-                    item.component_name = this.componentLines[idx].component_name;
-                    item.agency_id = this.componentLines[idx].agency_id.id;
-                    item.tax_category_id = this.componentLines[idx].tax_category.id;
-                    item.tax_rate  = this.componentLines[idx].tax_rate;
+                    let item                 = {};
+                        item.component_name  = this.componentLines[idx].component_name;
+                        item.agency_id       = this.componentLines[idx].agency_id.id;
+                        item.tax_category_id = this.componentLines[idx].tax_category.id;
+                        item.tax_rate        = this.componentLines[idx].tax_rate;
 
                     lineItems.push( item );
                 }
@@ -257,4 +261,28 @@
 </script>
 
 <style lang="less" scoped>
+    .new-tax-rate {
+        .compound-checkbox {
+            display: flex;
+            align-items: center;
+            margin: 0;
+
+            .form-check-label {
+                width: 200px;
+            }
+        }
+
+        .vis-hide {
+            visibility: hidden;
+        }
+
+        .col--actions.delete-row {
+            vertical-align: unset;
+
+            a {
+                display: block;
+                margin-top: 10px;
+            }
+        }
+    }
 </style>

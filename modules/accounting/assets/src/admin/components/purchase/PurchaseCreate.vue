@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="wperp-container purchase-create">
 
         <!-- Start .header-section -->
         <div class="content-header-section separator">
@@ -49,11 +49,11 @@
                     <table class="wperp-table wperp-form-table">
                         <thead>
                         <tr>
-                            <td scope="col" class="col--check">Product/Service</td>
-                            <th scope="col" class="column-primary">Qty</th>
+                            <td scope="col" class="col--product">Product/Service</td>
+                            <th scope="col">Qty</th>
                             <th scope="col">Unit Price</th>
                             <th scope="col">Amount</th>
-                            <th scope="col" class="col--actions"></th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -122,6 +122,8 @@
 </template>
 
 <script>
+    import { mapState, mapActions } from 'vuex'
+
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
@@ -153,14 +155,16 @@
 
                 createButtons: [
                     {id: 'save', text: 'Create Purchase'},
-                    {id: 'send_create', text: 'Create and Send'},
+                    //{id: 'send_create', text: 'Create and Send'},
                     {id: 'new_create', text: 'Create and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 updateButtons: [
                     {id: 'update', text: 'Update Purchase'},
-                    {id: 'send_update', text: 'Update and Send'},
+                    //{id: 'send_update', text: 'Update and Send'},
                     {id: 'new_update', text: 'Update and New'},
+                    {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 form_errors     : [],
@@ -174,8 +178,7 @@
                 erp_acct_assets : erp_acct_var.acct_assets,
                 isWorking       : false,
                 purchase_title  : '',
-                purchase_order  : 0,
-                actionType      : null,
+                purchase_order  : 0
             }
         },
 
@@ -183,6 +186,10 @@
             'basic_fields.vendor'() {
                 this.getvendorAddress();
             }
+        },
+
+        computed: {
+            ...mapState({ actionType: state => state.combo.btnID })
         },
 
         created() {
@@ -208,9 +215,8 @@
                 this.updateFinalAmount();
             });
 
-            this.$root.$on('combo-btn-select', button => {
-                this.actionType = button.id;
-            });
+            // initialize combo button id with `update`
+            this.$store.dispatch('combo/setBtnID', 'update');
         },
 
         methods: {
@@ -227,6 +233,9 @@
 
                     let response = await HTTP.get(`/purchases/${this.$route.params.id}`);
                     this.setDataForEdit( response.data );
+
+                    // initialize combo button id with `update`
+                    this.$store.dispatch('combo/setBtnID', 'update');
                 } else {
                     /**
                      * ----------------------------------------------
@@ -238,6 +247,9 @@
                     this.basic_fields.trn_date = erp_acct_var.current_date;
                     this.basic_fields.due_date = erp_acct_var.current_date;
                     this.transactionLines.push({}, {}, {});
+
+                    // initialize combo button id with `save`
+                    this.$store.dispatch('combo/setBtnID', 'save');
                 }
             },
 
@@ -266,6 +278,8 @@
                 this.transactionLines = [];
                 this.finalTotalAmount = 0;
                 this.isWorking        = false;
+
+                this.$store.dispatch('combo/setBtnID', 'save');
             },
 
             getProducts() {
@@ -346,7 +360,7 @@
                     this.isWorking = false;
                     this.reset = true;
 
-                    if ('update' == this.actionType) {
+                    if ('update' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Purchases'});
                     } else if ('new_update' == this.actionType) {
                         this.resetFields();
@@ -363,7 +377,7 @@
                     this.isWorking = false;
                     this.reset = true;
 
-                    if ('save' == this.actionType) {
+                    if ('save' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Purchases'});
                     } else if ('new_create' == this.actionType) {
                         this.resetFields();
@@ -371,7 +385,7 @@
                 });
             },
 
-            SubmitForApproval(event) {
+            SubmitForApproval() {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -385,6 +399,13 @@
                 this.isWorking = true;
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
+                let trn_status = null;
+                if ( 'draft' === this.actionType) {
+                    trn_status = 1;
+                } else {
+                    trn_status = 3;
+                }
+
                 let requestData = {
                     vendor_id      : this.basic_fields.vendor.id,
                     vendor_name    : this.basic_fields.vendor.name,
@@ -395,7 +416,7 @@
                     particulars    : this.particulars,
                     attachments    : this.attachments,
                     type           : 'purchase',
-                    status         : 3,
+                    status         : trn_status,
                     purchase_order : this.purchase_order,
                 };
 
@@ -404,8 +425,6 @@
                 } else {
                     this.createPurchase(requestData);
                 }
-
-                event.target.reset();
             },
 
             validateForm() {
@@ -428,3 +447,28 @@
 
     }
 </script>
+
+<style lang="less">
+.purchase-create {
+    .dropdown {
+        width: 100%;
+    }
+
+    .col--product {
+        min-width: 500px;
+    }
+
+    .col--qty {
+        width: 120px;
+    }
+
+    .col--qty input {
+        width: 100% !important;
+    }
+
+    .col--uni_price,
+    .col--amount {
+        width: 200px;
+    }
+}
+</style>

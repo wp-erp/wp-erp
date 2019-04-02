@@ -108,6 +108,8 @@
                         this.$root.$emit('category-created');
                         this.$store.dispatch( 'spinner/setSpinner', false );
                     }).catch((err) => {
+                        this.$store.dispatch( 'spinner/setSpinner', false );
+
                         this.category = '';
                         this.isCatSaving = false;
                         // Error message

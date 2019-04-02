@@ -258,6 +258,15 @@ function erp_acct_insert_expense( $data ) {
             erp_acct_insert_expense_data_into_ledger( $expense_data, $item );
         }
 
+        if ( 1 == $expense_data['status']) {
+            $wpdb->query( 'COMMIT' );
+            if ( 'check' === $type ) {
+                return erp_acct_get_check( $voucher_no );
+            }
+
+            return erp_acct_get_expense( $voucher_no );
+        }
+
         //Insert into Ledger for source account
         erp_acct_insert_source_expense_data_into_ledger( $expense_data );
 
@@ -275,10 +284,10 @@ function erp_acct_insert_expense( $data ) {
     }
 
     if ( 'check' === $type ) {
-        return erp_acct_get_check($voucher_no);
+        return erp_acct_get_check( $voucher_no );
     }
 
-    return erp_acct_get_expense($voucher_no);
+    return erp_acct_get_expense( $voucher_no );
 }
 
 /**
@@ -446,6 +455,10 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
 function erp_acct_insert_expense_data_into_ledger( $expense_data, $item_data = [] ) {
     global $wpdb;
 
+    if ( 1 == $expense_data['status']) {
+        return;
+    }
+
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $item_data['ledger_id'],
@@ -474,6 +487,10 @@ function erp_acct_insert_expense_data_into_ledger( $expense_data, $item_data = [
 function erp_acct_update_expense_data_into_ledger( $expense_data, $expense_no, $item_data = [] ) {
     global $wpdb;
 
+    if ( 1 == $expense_data['status']) {
+        return;
+    }
+
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $item_data['ledger_id'],
@@ -500,6 +517,10 @@ function erp_acct_update_expense_data_into_ledger( $expense_data, $expense_no, $
  */
 function erp_acct_insert_source_expense_data_into_ledger( $expense_data ) {
     global $wpdb;
+
+    if ( 1 == $expense_data['status']) {
+        return;
+    }
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $expense_data['trn_by_ledger_id'],

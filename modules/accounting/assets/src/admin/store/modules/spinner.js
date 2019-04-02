@@ -5,9 +5,7 @@ const state = {
 
 // Getters
 const getters = {
-    getStatus: (state) => {
-        return state.loader;
-    }
+    getStatus: (state) => state.loader
 }
 
 // Actions

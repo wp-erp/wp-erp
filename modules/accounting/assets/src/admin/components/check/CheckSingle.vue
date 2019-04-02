@@ -179,7 +179,6 @@
     }
 </script>
 
-
 <style lang="less">
     .expense-single {
         max-width: 960px;

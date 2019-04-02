@@ -2,7 +2,7 @@
     <div class="sales-tax-report">
         <h2>Sales Tax Report</h2>
 
-        <form action="" method="" @submit.prevent="getSalesTaxReport" class="query-options">
+        <form action="" method="" @submit.prevent="getSalesTaxReport" class="query-options no-print">
             <div class="with-multiselect">
                 <multi-select v-model="selectedAgency" :options="taxAgencies" />
             </div>
@@ -13,6 +13,12 @@
             </div>
 
             <button class="wperp-btn btn--primary add-line-trigger" type="submit">View</button>
+
+            <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
+                <i class="flaticon-printer-1"></i>
+                &nbsp; Print
+            </a>
+
         </form>
 
         <ul class="report-header" v-if="null !== selectedAgency">
@@ -21,10 +27,17 @@
             <li><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></li>
         </ul>
 
-        <list-table v-if="rows.length"
-            tableClass="wperp-table table-striped table-dark widefat"
+        <list-table
+            tableClass="wperp-table table-striped table-dark widefat sales-tax-table"
             :columns="columns"
             :rows="rows">
+            <template slot="trn_no" slot-scope="data">
+                <strong>
+                    <router-link :to="{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}">
+                        #{{ data.row.trn_no }}
+                    </router-link>
+                </strong>
+            </template>
             <template slot="debit" slot-scope="data">
                 {{ data.row.debit }}
             </template>
@@ -84,6 +97,12 @@
             };
         },
 
+        watch: {
+            selectedAgency() {
+                this.rows = [];
+            }
+        },
+
         created() {
             //? why is nextTick here ...? i don't know.
             this.$nextTick(function () {
@@ -105,6 +124,8 @@
             },
 
             getSalesTaxReport() {
+                if ( null === this.selectedAgency ) return;
+
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 this.rows = [];
@@ -124,45 +145,64 @@
                 }).catch(e => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 });
+            },
+
+            printPopup() {
+                window.print();
             }
         }
     }
 </script>
 
-<style lang="less">
-.sales-tax-report {
-    .query-options {
-        background: #fff;
-        padding: 30px 5px;
-        border-radius: 3px;
-    }
+<style lang="less" scoped>
+    .sales-tax-report {
+        h2 {
+            padding-top: 15px;
+        }
 
-    .with-multiselect {
-        width: 300px;
-        float: left;
-        margin-right: 50px;
-    }
-
-    .wperp-date-group {
-        float: left;
-        margin-right: 10px;
-    }
-
-    .wperp-btn {
-        margin-top: 2px;
-    }
-
-    .report-header {
-        width: 420px;
-        padding: 10px 0 0 0;
-        margin: 50px 0 0 0;
-
-        li {
+        .query-options {
             display: flex;
+            align-items: center;
             justify-content: space-between;
+            padding: 20px 0;
+            width: 900px;
+        }
+
+        .with-multiselect {
+            width: 300px;
+            float: left;
+            margin-right: 50px;
+        }
+
+        .wperp-btn {
+            margin-top: 2px;
+        }
+
+        .report-header {
+            width: 420px;
+            padding: 10px 0 0 0;
+            margin: 50px 0 0 0;
+
+            li {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+
+        .sales-tax-table tbody tr td:last-child {
+            text-align: left !important;
+        }
+
+        @media print {
+            .erp-nav-container {
+                display: none;
+            }
+
+            .no-print, .no-print * {
+                display: none !important;
+            }
         }
     }
-}
 </style>
 
 

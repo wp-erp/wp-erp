@@ -1,8 +1,7 @@
 <template>
     <div class="app-employees">
-        <h2 class="add-new-employee">
+        <h2 class="add-new-people">
             <span>Employees</span>
-            <!-- {{data.row.employee}} -->
         </h2>
         <list-table
             tableClass="wp-ListTable widefat fixed employee-list"
@@ -84,7 +83,6 @@
                 let items = this.rows;
                 items.map( item => {
                     item.employee = item.full_name;
-                    item.email = item.user_email;
                     item.designation = item.designation.title;
                 } );
                 return items;
@@ -108,9 +106,6 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch((error) => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                })
-                .then(() => {
-                    //ready
                 });
             },
 
@@ -124,13 +119,8 @@
                             });
                         }
                         break;
-
-                    case 'edit':
-                        //TODO
-                        break;
-
                     default :
-
+                        break;
                 }
             },
 
@@ -168,24 +158,13 @@
 </script>
 <style lang="less">
     .app-employees {
-        .add-new-employee {
+        .add-new-people {
+            margin-top: 10px;
             align-items: center;
             display: flex;
             span {
                 font-size: 18px;
                 font-weight: bold;
-            }
-            a {
-                background: #1a9ed4;
-                border-radius: 3px;
-                color: #fff;
-                font-size: 12px;
-                height: 29px;
-                line-height: 29px;
-                margin-left: 13px;
-                text-align: center;
-                text-decoration: none;
-                width: 135px;
             }
         }
         .employee-list {
@@ -246,6 +225,11 @@
             }
             tbody td {
                 line-height: 3em;
+            }
+        }
+        .employee-list {
+            .col--actions {
+                float: left !important;
             }
         }
     }

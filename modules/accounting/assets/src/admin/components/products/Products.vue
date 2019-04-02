@@ -5,14 +5,20 @@
             <span>Products</span>
             <a href="" id="erp-product-new" @click.prevent="showModal = true">+ Add New Product</a>
         </h2>
+
         <list-table
-            tableClass="wp-ListTable table-striped widefat fixed product-list"
+            tableClass="wperp-table table-striped table-dark widefat table2 product-list"
             action-column="actions"
             :columns="columns"
             :rows="products"
             :bulk-actions="bulkActions"
             @action:click="onActionClick"
             @bulk:click="onBulkAction"
+            :total-items="paginationData.totalItems"
+            :total-pages="paginationData.totalPages"
+            :per-page="paginationData.perPage"
+            :current-page="paginationData.currentPage"
+            @pagination="goToPage"
             :actions="[
                 { key: 'edit', label: 'Edit' },
                 { key: 'trash', label: 'Delete' }
@@ -75,21 +81,34 @@
                         img: erp_acct_var.erp_assets + '/images/trash.png',
                     }
                 ],
+                paginationData: {
+                    totalItems : 0,
+                    totalPages : 0,
+                    perPage    : 10,
+                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
+                },
             }
         },
         methods: {
             getProducts() {
                 this.products = [];
-                HTTP.get('products').then( response => {
+                HTTP.get('/products', {
+                    params: {
+                        per_page: this.paginationData.perPage,
+                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+                    }
+                }).then( response => {
                     this.products = response.data;
+
+                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } ).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
-            createProduct() {
 
-            },
             onActionClick( action, row, index ) {
                 if ( 'edit' == action ) {
                     this.showModal = true;
@@ -109,6 +128,7 @@
                     }
                 }
             },
+
             onBulkAction( action, items ) {
                 if ( 'trash' == action ) {
                     if ( confirm( 'Are you sure want to delete?' ) ) {
@@ -128,12 +148,25 @@
                         } );
                     }
                 }
-            }
+            },
+
+            goToPage(page) {
+                let queries = Object.assign({}, this.$route.query);
+                this.paginationData.currentPage = page;
+                this.$router.push({
+                    name  : 'PaginateProducts',
+                    params: { page: page },
+                    query : queries
+                });
+
+                this.getProducts();
+            },
 
         },
         created() {
             this.$store.dispatch( 'spinner/setSpinner', true );
             this.getProducts();
+
             this.$on( 'close', function() {
                 this.showModal = false;
                 this.product = null;
@@ -165,64 +198,14 @@
                 width: 135px;
             }
         }
-        .product-list {
-            border-radius: 3px;
-            tbody {
-                background: #FAFAFA;
-            }
-            tfoot th,
-            thead th {
-                color: #1A9ED4;
-                font-weight: bold;
-            }
-            th ul,
-            th li {
-                margin: 0;
-            }
-            th li {
-                display: flex;
-                align-items: center;
-                img {
-                    width: 22px;
-                    padding-right: 5px;
-                }
-            }
-            .column.title {
-                &.selected {
-                    color: #1A9ED4;
-                }
-                a {
-                    color: #222;
-                    font-weight: normal;
-                    &:hover {
-                        color: #1A9ED4;
-                    }
-                }
-            }
-            .check-column input {
-                border-color: #E7E7E7;
-                box-shadow: none;
-                border-radius: 3px;
-                &:checked {
-                    background: #1ABC9C;
-                    border-color: #1ABC9C;
-                    border-radius: 3px;
-                    &:before {
-                        color: #fff;
-                    }
-                }
-            }
-            .row-actions {
-                padding-left: 20px;
-            }
+
+        .check-column {
+            padding: 20px !important;
         }
-        .widefat {
-            tfoot td,
-            tbody th {
-                line-height: 2.5em;
-            }
-            tbody td {
-                line-height: 3em;
+
+        .product-list {
+            .col--actions {
+                float: left !important;
             }
         }
     }

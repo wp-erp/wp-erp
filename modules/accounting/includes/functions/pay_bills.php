@@ -144,16 +144,24 @@ function erp_acct_insert_pay_bill( $data ) {
         $items = $pay_bill_data['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_pay_bill_details', array(
-                'voucher_no'  => $voucher_no,
-                'bill_no'     => $item['voucher_no'],
-                'amount'      => $item['amount'],
-                'created_at'  => $pay_bill_data['created_at'],
-                'created_by'  => $pay_bill_data['created_by'],
-                'updated_at'  => $pay_bill_data['updated_at'],
-                'updated_by'  => $pay_bill_data['updated_by'],
-            ) );
+            $wpdb->insert($wpdb->prefix . 'erp_acct_pay_bill_details', array(
+                'voucher_no' => $voucher_no,
+                'bill_no' => $item['voucher_no'],
+                'amount' => $item['amount'],
+                'created_at' => $pay_bill_data['created_at'],
+                'created_by' => $pay_bill_data['created_by'],
+                'updated_at' => $pay_bill_data['updated_at'],
+                'updated_by' => $pay_bill_data['updated_by'],
+            ));
 
+            if ( 1 == $pay_bill_data['status']) {
+                $wpdb->query( 'COMMIT' );
+
+                return erp_acct_get_pay_bill( $voucher_no );
+            }
+        }
+
+        foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
                 'bill_no'     => $item['voucher_no'],
                 'trn_no'      => $voucher_no,
