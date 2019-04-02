@@ -86,6 +86,10 @@ class Form_Handler {
      */
     public function contact_groups_bulk_action() {
 
+        if ( current_user_can( 'erp_crm_agent' ) ) {
+            return;
+        }
+
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
             return;
         }
