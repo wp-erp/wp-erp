@@ -1474,7 +1474,6 @@ Company'
                 'Paid',
                 'Partially Paid',
                 'Approved',
-                'Bounced',
                 'Closed',
                 'Void'
             ];
