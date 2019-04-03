@@ -662,6 +662,144 @@ function erp_acct_create_accounting_tables() {
 }
 
 /**
+ * Populate tables with initial data
+ *
+ * @return void
+ */
+function erp_acct_populate_data() {
+    global $wpdb;
+
+    // check if people_types exists
+        $sql = "INSERT IGNORE INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`) VALUES (5, 'employee')";
+
+        $wpdb->query( $sql );
+
+    /** ===========
+     * Accounitng
+     * ============
+     */
+
+    // insert chart of accounts
+    if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_chart_of_accounts` LIMIT 0, 1" ) ) {
+        $charts = ['Asset', 'Liability', 'Equity', 'Income', 'Expense', 'Asset & Liability', 'Bank'];
+
+        for ( $i = 0; $i < count($charts); $i++ ) {
+            $wpdb->insert( "{$wpdb->prefix}erp_acct_chart_of_accounts", [
+                'name' => $charts[$i],
+                'slug' => slugify($charts[$i])
+            ] );
+        }
+    }
+
+    // insert ledgers
+    if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledgers` LIMIT 0, 1" ) ) {
+        $ledgers_json = file_get_contents( WPERP_ASSETS . '/ledgers.json' );
+        $ledgers = json_decode( $ledgers_json, true );
+
+        foreach ( array_keys( $ledgers ) as $array_key ) {
+            foreach ( $ledgers[$array_key] as $value ) {
+                $wpdb->insert(
+                    "{$wpdb->prefix}erp_acct_ledgers",
+                    [
+                        'chart_id' => get_chart_id_by_slug($array_key),
+                        'name'     => $value['name'],
+                        'slug'     => slugify( $value['name'] ),
+                        'code'     => $value['code'],
+                        'system'   => $value['system']
+                    ]
+                );
+            }
+        }
+    }
+
+    // insert payment methods
+    if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_payment_methods` LIMIT 0, 1" ) ) {
+        $methods = ['Cash', 'Bank', 'Check'];
+
+        for ( $i = 0; $i < count($methods); $i++ ) {
+            $wpdb->insert( "{$wpdb->prefix}erp_acct_payment_methods", [
+                'name' => $methods[$i],
+            ] );
+        }
+    }
+
+    // insert status types
+    if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_trn_status_types` LIMIT 0, 1" ) ) {
+        $statuses = [
+            'Draft',
+            'Awaiting Approval',
+            'Pending',
+            'Paid',
+            'Partially Paid',
+            'Approved',
+            'Bounced',
+            'Closed',
+            'Void'
+        ];
+
+        for ( $i = 0; $i < count($statuses); $i++ ) {
+            $wpdb->insert( "{$wpdb->prefix}erp_acct_trn_status_types", [
+                'type_name' => $statuses[$i],
+                'slug'      => slugify( $statuses[$i] )
+            ] );
+        }
+    }
+
+    // insert product types
+    if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_product_types` LIMIT 0, 1" ) ) {
+        $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`)
+                VALUES (1, 'Product'), (2, 'Service')";
+
+        $wpdb->query( $sql );
+    }
+
+    // insert currency info
+    if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_currency_info` LIMIT 0, 1" ) ) {
+        $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_currency_info` (`id`, `name`, `sign`)
+                VALUES (1, 'USD', '$'), (2, 'EUR', '€')";
+
+        $wpdb->query( $sql );
+    }
+}
+
+/**
+ * Get chart of account id by slug
+ *
+ * @param string $key
+ *
+ * @return int
+ */
+function get_chart_id_by_slug( $key ) {
+    switch ($key) {
+        case 'asset':
+            $id = 1;
+            break;
+        case 'liability':
+            $id = 2;
+            break;
+        case 'equity':
+            $id = 3;
+            break;
+        case 'income':
+            $id = 4;
+            break;
+        case 'expense':
+            $id = 5;
+            break;
+        case 'asset_liability':
+            $id = 6;
+            break;
+        case 'bank':
+            $id = 7;
+            break;
+        default:
+            $id = null;
+    }
+
+    return $id;
+}
+
+/**
  * ===========================================================================
  * Begin the hard work ...
  * ====================================================================
@@ -670,6 +808,13 @@ function erp_acct_create_accounting_tables() {
 global $db_tax_items;
 global $db_tax_agencies;
 global $currencies;
+
+/**
+ * Get formatted created at
+ */
+function get_created_at( $created_at ) {
+    return \DateTime::createFromFormat('Y-m-d H:i:s', $created_at)->format('Y-m-d');
+}
 
 /**
  * Get currency name
@@ -798,6 +943,7 @@ function erp_acct_populate_tax_data() {
  * @return void
  */
 function erp_acct_populate_transactions() {
+    global $wpdb;
     global $currencies;
 
     //=======================================
@@ -815,46 +961,103 @@ function erp_acct_populate_transactions() {
     //=============================
     $transactions = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}erp_ac_transactions", ARRAY_A);
 
+    // Keep various id`s
+    $invoices = [];
+
+    // loop through transactions
     for ( $i = 0; $i < count($transactions); $i++ ) {
-        if ( 'invoice' === $transactions[$i]['form_type'] ) {
+        $trn = $transactions[$i];
+
+        if ( 'invoice' === $trn['form_type'] ) {
 
             $wpdb->insert(
                 // `erp_acct_voucher_no`
                 "{$wpdb->prefix}erp_acct_voucher_no", [
                     'type'     => 'invoice',
-                    'currency' => get_currecny_id( $transactions[$i]['currency'] )
+                    'currency' => get_currecny_id( $trn['currency'] )
                 ]
             );
 
             $voucher_no = $wpdb->insert_id;
 
+            // Have to fix => tax_rate_id, attachment and status
+
+            $people = erp_get_people( $trn['user_id'] );
 
             $wpdb->insert(
                 // `erp_acct_invoices`
                 "{$wpdb->prefix}erp_acct_invoices", [
-                    'voucher_no' => $voucher_no,
-                    `customer_id` int(11) DEFAULT NULL,
-                    `customer_name` varchar(255) DEFAULT NULL,
-                    `trn_date` date DEFAULT NULL,
-                    `due_date` date DEFAULT NULL,
-                    `billing_address` varchar(255) DEFAULT NULL,
-                    `amount` decimal(10,2) DEFAULT '0.00',
-                    `discount` decimal(10,2) DEFAULT '0.00',
-                    `discount_type` varchar(255) DEFAULT NULL,
-                    `tax_rate_id` int(11) DEFAULT NULL,
-                    `tax` decimal(10,2) DEFAULT '0.00',
-                    `estimate` tinyint(1) DEFAULT NULL,
-                    `attachments` varchar(255) DEFAULT NULL,
-                    `status` int(11) DEFAULT NULL,
-                    `particulars` varchar(255) DEFAULT NULL,
-                    `created_at` date DEFAULT NULL,
-                    `created_by` varchar(50) DEFAULT NULL,
-                    `updated_at` date DEFAULT NULL,
-                    `updated_by` varchar(50) DEFAULT NULL,
+                    'voucher_no'      => $voucher_no,
+                    'customer_id'     => $trn['user_id'],
+                    'customer_name'   => $people->first_name + $people->last_name,
+                    'trn_date'        => $trn['issue_date'],
+                    'due_date'        => $trn['due_date'],
+                    'billing_address' => $trn['billing_address'],
+                    'amount'          => $trn['sub_total'],
+                    'discount'        => 0,
+                    'discount_type'   => 'discount-value',
+                    'tax_rate_id'     => '',
+                    'tax'             => 0,
+                    'estimate'        => 0,
+                    'attachments'     => $trn['files'],
+                    'status'          => 3,
+                    'particulars'     => $trn['summary'],
+                    'created_at'      => get_created_at( $trn['created_at'] ),
+                    'created_by'      => $trn['created_by']
                 ]
             );
+
+            $invoices[$voucher_no] = $wpdb->insert_id;
         } // invoice
     }
+
+    if ( ! empty( $invoices ) ) {
+
+        $ids = implode( ',', $invoices );
+
+        //=============================
+        // get transaction items (old)
+        //=============================
+        $sql1 = "SELECT tran.created_at, tran.created_by, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+                LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
+                WHERE tran.id IN ({$ids})";
+
+        $transaction_items = $wpdb->get_results($sql1, ARRAY_A);
+
+        for ( $i = 0; $i < count($transaction_items); $i++ ) {
+            $trn_item = $transaction_items[$i];
+
+            $trn_no     = array_search( (int) $trn_item['transaction_id'], $invoices );
+            $amount     = (float) $trn_item['unit_price'] * (int) $trn_item['qty'];
+            $discount   = ( $amount * (int) $trn_item['discount'] ) / 100;
+            $item_total = $amount - $discount;
+            $tax        = ( $item_total * (float) $trn_item['tax_rate'] ) / 100;
+
+            $wpdb->insert(
+                // `erp_acct_invoice_details`
+                "{$wpdb->prefix}erp_acct_invoice_details", [
+                    'trn_no'      => $trn_no,
+                    'product_id'  => $trn_item['product_id'],
+                    'qty'         => (int) $trn_item['qty'],
+                    'unit_price'  => $trn_item['unit_price'],
+                    'discount'    => $discount,
+                    'tax'         => $tax,
+                    'item_total'  => $item_total,
+                    'tax_percent' => $trn_item['tax_rate'],
+                    'created_at'  => get_created_at( $trn_item['created_at'] ),
+                    'created_by'  => $trn_item['created_by']
+                ]
+            );
+
+            $sql2 = $wpdb->prepare("UPDATE {$wpdb->prefix}erp_acct_invoices
+                        SET discount = discount + {$discount}, tax = tax + {$tax}
+                        WHERE voucher_no = %d", $trn_no);
+
+            $wpdb->query($sql2);
+
+        }
+    }
+
 }
 
 
@@ -866,6 +1069,8 @@ function erp_acct_populate_transactions() {
  */
 function wperp_update_accounting_module_1_5_0() {
     erp_acct_create_accounting_tables();
+    erp_acct_populate_data();
+    // erp_acct_remove_previous_tables();
 
     erp_acct_populate_tax_agencies();
     erp_acct_populate_tax_data();
