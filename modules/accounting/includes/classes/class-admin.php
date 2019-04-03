@@ -144,7 +144,7 @@ class Admin {
             'position'   => 15
         ] );
         erp_add_menu( 'accounting', [
-            'title'      =>  __( 'Openning Balance', 'erp' ),
+            'title'      =>  __( 'Opening Balance', 'erp' ),
             'capability' => $account_charts,
             'slug'       => 'opening-balance',
             'position'   => 90
