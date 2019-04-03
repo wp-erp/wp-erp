@@ -90,6 +90,11 @@ class Contact_Group_List_Table extends \WP_List_Table {
             'created_at'   => __( 'Created At', 'erp' )
         );
 
+        if ( current_user_can( 'erp_crm_agent' ) ) {
+            unset( $columns['cb'] );
+        }
+
+
         return apply_filters( 'erp_crm_contact_group_table_cols', $columns );
     }
 
@@ -148,6 +153,9 @@ class Contact_Group_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_bulk_actions() {
+        if ( current_user_can( 'erp_crm_agent' ) ) {
+            return;
+        }
         $actions = array(
             'contact_group_delete'  => __( 'Delete', 'erp' ),
         );
