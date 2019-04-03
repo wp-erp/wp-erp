@@ -10,13 +10,14 @@
             </div>
         </div> <!-- End .header-section -->
 
+        <show-errors :error_msgs="form_errors" ></show-errors>
+
         <form action="" method="post" @submit.prevent="submitOBForm">
-            <h2>Financial Year</h2>
             <div class="wperp-custom-select">
-                <select class="text-right">
+                <label>Financial Year</label>
+                <select v-model="fin_year">
                     <option v-for="year in years" :value="year">{{ year }}</option>
                 </select>
-                <i class="flaticon-arrow-down-sign-to-navigate"></i>
             </div>
             <div v-if="chartAccounts[0]" class="erp-accordion">
                 <div class="erp-accordion-expand"
@@ -193,28 +194,22 @@
                     </tr>
                     </tbody>
                 </table>
-                <table class="wperp-table wperp-form-table">
-                    <tbody>
-                        <tr class="total-amount-row">
-                            <td></td>
-                            <td colspan="2" class="pl-10 text-right col--total-amount">
-                                <span>Total Amount</span>
-                            </td>
-                            <td data-colname="Total Debit"><input type="text" class="text-right" :value="debit_total" readonly ></td>
-                            <td data-colname="Total Credit"><input type="text" class="text-right" :value="credit_total" readonly ></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table>
-                    <tfoot>
-                        <tr>
-                            <td colspan="9" class="text-right">
-                                <submit-button text="Submit"></submit-button>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
             </div>
+
+            <!-- do your comment -->
+            <table class="wperp-table wperp-form-table">
+                <tbody>
+                <tr class="total-amount-row">
+                    <td class="pl-10 text-right col--total-amount" style="width: 60%;">
+                        <span>Total Amount</span>
+                    </td>
+                    <td data-colname="Total Debit"><input type="text" class="text-right" :value="debit_total" readonly ></td>
+                    <td data-colname="Total Credit"><input type="text" class="text-right" :value="credit_total" readonly ></td>
+                </tr>
+                </tbody>
+            </table>
+            <submit-button text="Add Opening Balance"></submit-button>
+
         </form>
     </div>
 </template>
@@ -223,6 +218,7 @@
     import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: "OpeningBalance",
@@ -230,7 +226,8 @@
         components: {
             HTTP,
             MultiSelect,
-            SubmitButton
+            SubmitButton,
+            ShowErrors
         },
 
         props: {
@@ -253,6 +250,7 @@
                 open5: false,
                 open6: false,
                 open7: false,
+                form_errors: [],
                 chartAccounts: [],
                 ledgers: [],
                 fin_year: '',
@@ -335,8 +333,8 @@
             validateForm() {
                 this.form_errors = [];
 
-                if ( !this.basic_fields.trn_date ) {
-                    this.form_errors.push('Transaction Date is required.');
+                if ( !this.fin_year ) {
+                    this.form_errors.push('Financial year is required.');
                 }
 
                 if ( this.isWorking ) {
@@ -358,10 +356,8 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.post('/opening-balances', {
-                    trn_date   : this.basic_fields.trn_date,
-                    ref        : this.basic_fields.trn_ref,
-                    line_items : this.formatLineItems(),
-                    attachments: this.attachments,
+                    year: this.fin_year,
+                    ledgers: this.ledgers,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Opening Balance Created!' );
@@ -392,9 +388,58 @@
     }
 </script>
 
-<style scoped>
+<style>
+    .accordion-container .erp-accordion table {
+        width: calc(100% - 40px);
+    }
+</style>
+
+<style scoped lang="less">
     .accordion-container {
         padding-top: 10px;
+        .wperp-custom-select {
+            label {
+                display: inline;
+                font-weight: bold;
+                padding-right : 5px;
+            }
+            select {
+                background: #fff;
+                border: none;
+                box-shadow: none;
+                margin-bottom: 10px;
+                padding: 5px 15px;
+                height: auto;
+                width: 15%;
+            }
+        }
+        .erp-accordion {
+            background: #fff;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 18px -11px rgba(0,0,0,.25);
+            table {
+                padding: 0;
+                margin: 20px;
+                thead {
+                    th {
+                        &:first-child {
+                            width: 40%;
+                        }
+                        &:not(:first-child) {
+                            width: 20%;
+                        }
+
+                    }
+                }
+                tbody {
+                    td input {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+
     }
     .wp-erp-ob-title{
         font-weight: bolder;
@@ -412,21 +457,10 @@
         left: 0;
         bottom: -1px;
     }
-    .erp-accordion {
-        background: #fff;
-        box-shadow: 0 1px 12px 1PX rgba(0,0,0,0.25);
-        overflow: hidden;
-    }
     .erp-accordion-expand {
         cursor: pointer;
         padding: .5rem .75rem;
         border-bottom: 1px solid #efefef;
-    }
-    .erp-accordion-expand:hover {
-        color: #477dca;
-    }
-    .erp-accordion-expand.active {
-        border-bottom-color: #477dca;
     }
     .erp-accordion-expand-icon.open* {
         transform: rotate(180deg);

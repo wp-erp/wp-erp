@@ -981,12 +981,24 @@ Company'
             ) $collate;",
 
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_opening_balance` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_opening_balances` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                `balance_date` date DEFAULT NULL,
+                `financial_year_id` int(11) DEFAULT NULL,
                 `ledger_id` int(11) DEFAULT NULL,
                 `debit` decimal(10,2) DEFAULT 0,
                 `credit` decimal(10,2) DEFAULT 0,
+                `created_at` date DEFAULT NULL,
+                `created_by` varchar(50) DEFAULT NULL,
+                `updated_at` date DEFAULT NULL,
+                `updated_by` varchar(50) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $collate;",
+
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_financial_years` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `name` VARCHAR(11) DEFAULT NULL,
+                `description` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
