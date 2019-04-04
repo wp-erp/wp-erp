@@ -294,16 +294,30 @@ class Admin {
     }
 
     public function save_accounting_settings() {
-        if ( !empty( $_POST['ob_names'] ) ) {
-            update_option( 'erp_ob_names', maybe_serialize( $_POST['ob_names'] ) );
+        $fin_years = [];
+
+        $ob_names  = isset( $_POST['ob_names'] ) ? $_POST['ob_names'] : '';
+        $ob_starts = isset( $_POST['ob_starts'] ) ? $_POST['ob_starts'] : '';
+        $ob_ends   = isset( $_POST['ob_ends'] ) ? $_POST['ob_ends']: '';
+
+        if ( !empty( $ob_names ) ) {
+            for ( $i = 0; $i < count( $ob_names ); $i++ ) {
+                $fin_years['ob_names'][] = $ob_names[$i];
+            }
         }
 
-        if ( !empty( $_POST['ob_starts'] ) ) {
-            update_option( 'erp_ob_starts', maybe_serialize( $_POST['ob_starts'] ) );
+        if ( !empty( $ob_starts ) ) {
+            for ( $i = 0; $i < count( $ob_starts ); $i++ ) {
+                $fin_years['ob_starts'][] = $ob_starts[$i];
+            }
         }
 
-        if ( !empty( $_POST['ob_ends'] ) ) {
-            update_option( 'erp_ob_ends', maybe_serialize( $_POST['ob_ends'] ) );
+        if ( !empty( $ob_ends ) ) {
+            for ( $i = 0; $i < count( $ob_ends ); $i++ ) {
+                $fin_years['ob_ends'][] = $ob_ends[$i];
+            }
         }
+
+        update_option( 'erp_acct_fisc_years', maybe_serialize( $fin_years ) );
     }
 }
