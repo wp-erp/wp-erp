@@ -11,6 +11,7 @@ class Admin {
         add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_menu' ] );
         add_action( 'admin_init', [ $this, 'init_hooks' ], 5 );
         add_action( 'erp_hr_employee_new', [ $this, 'make_people_from_employee' ], 10, 2 );
+        add_action( 'admin_init', [ $this, 'save_accounting_settings'] );
     }
 
     /**
@@ -290,5 +291,19 @@ class Admin {
         }
 
         return $people_id;
+    }
+
+    public function save_accounting_settings() {
+        if ( !empty( $_POST['ob_names'] ) ) {
+            update_option( 'erp_ob_names', maybe_serialize( $_POST['ob_names'] ) );
+        }
+
+        if ( !empty( $_POST['ob_starts'] ) ) {
+            update_option( 'erp_ob_starts', maybe_serialize( $_POST['ob_starts'] ) );
+        }
+
+        if ( !empty( $_POST['ob_ends'] ) ) {
+            update_option( 'erp_ob_ends', maybe_serialize( $_POST['ob_ends'] ) );
+        }
     }
 }
