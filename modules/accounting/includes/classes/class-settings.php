@@ -37,7 +37,7 @@ class Settings extends ERP_Settings_Page {
      *
      * @return array
      */
-    public function get_section_fields($section = '') {
+    public function get_section_fields( $section = '' ) {
 
         $symbol = erp_acct_get_currency_symbol();
 
@@ -89,10 +89,11 @@ class Settings extends ERP_Settings_Page {
                 'title' => __( 'Opening Balance', 'erp' ),
                 'type'  => 'title',
                 'desc'  => __( '', 'erp' ),
-                'id'    => 'erp-acct-ob-options'
+                'id'    => 'erp_acct_ob_options'
             ),
             array(
-                'type' => 'acct_opening_balance'
+                'type' => 'acct_opening_balance',
+                'id'  => 'erp_ac_ob_years'
             ),
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
 

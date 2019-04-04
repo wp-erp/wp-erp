@@ -110,9 +110,12 @@ function erp_acct_insert_opening_balance( $data ) {
         $wpdb->query( 'START TRANSACTION' );
 
         $opening_balance_data = erp_acct_get_formatted_opening_balance_data( $data );
+        $date = erp_acct_get_start_end_date( $opening_balance_data['year'] );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
             'name' => $opening_balance_data['year'],
+            'start' => $date['start'],
+            'end' => $date['end'],
             'description' => $opening_balance_data['description'],
             'created_at' => $opening_balance_data['created_at'],
             'created_by' => $opening_balance_data['created_by'],
@@ -171,9 +174,12 @@ function erp_acct_update_opening_balance( $data, $opening_balance_no ) {
         $wpdb->query( 'START TRANSACTION' );
 
         $opening_balance_data = erp_acct_get_formatted_opening_balance_data( $data );
+        $date = erp_acct_get_start_end_date( $opening_balance_data['year'] );
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_financial_years', array(
             'description' => $opening_balance_data['description'],
+            'start' => $date['start'],
+            'end' => $date['end'],
             'created_at' => $opening_balance_data['created_at'],
             'created_by' => $opening_balance_data['created_by'],
             'updated_at' => $opening_balance_data['updated_at'],
@@ -237,3 +243,24 @@ function erp_acct_get_formatted_opening_balance_data( $data ) {
     return $opening_balance_data;
 }
 
+/**
+ * Get opening balance names
+ */
+function erp_acct_get_opening_balance_names() {
+    $ob_names = maybe_unserialize( get_option( 'erp_acct_fisc_years' ) );
+    return $ob_names['ob_names'];
+}
+
+/**
+ * @param $ob_name
+ */
+function erp_acct_get_start_end_date( $ob_name ) {
+    $dates = [];
+    $ob_names = maybe_unserialize( get_option( 'erp_acct_fisc_years' ) );
+    $idx = array_search( $ob_name, $ob_names['ob_names'] );
+
+    $dates['start'] = $ob_names['ob_starts'][$idx];
+    $dates['end'] = $ob_names['ob_ends'][$idx];
+
+    return $dates;
+}

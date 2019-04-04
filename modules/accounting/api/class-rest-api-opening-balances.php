@@ -47,6 +47,18 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/names', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_opening_balance_names' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_journal' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -125,6 +137,30 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
 
         $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get a collection of opening_balance_names
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_opening_balance_names( $request ) {
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $item     = erp_acct_get_opening_balance_names();
+
+        $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
 
         return $response;
     }
@@ -236,7 +272,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Prepare output for response
      *
-     * @param object $item
+     * @param array|object $item
      * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
