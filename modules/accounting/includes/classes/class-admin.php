@@ -296,9 +296,15 @@ class Admin {
     public function save_accounting_settings() {
         $fin_years = [];
 
-        $ob_names  = isset( $_POST['ob_names'] ) ? $_POST['ob_names'] : '';
-        $ob_starts = isset( $_POST['ob_starts'] ) ? $_POST['ob_starts'] : '';
-        $ob_ends   = isset( $_POST['ob_ends'] ) ? $_POST['ob_ends']: '';
+        if ( empty( $_POST['ob_names'] ) || empty( $_POST['ob_starts'] ) || empty( $_POST['ob_ends'] ) ) {
+            return;
+        }
+
+        error_log(print_r( $_POST, true ) );
+
+        $ob_names  = $_POST['ob_names'];
+        $ob_starts = $_POST['ob_starts'];
+        $ob_ends   = $_POST['ob_ends'];
 
         if ( !empty( $ob_names ) ) {
             for ( $i = 0; $i < count( $ob_names ); $i++ ) {

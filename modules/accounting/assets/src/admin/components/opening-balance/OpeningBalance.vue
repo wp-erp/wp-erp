@@ -263,8 +263,7 @@
         },
 
         mounted() {
-            this.fetchChartAccounts();
-            this.getYears();
+            this.fetchData();
         },
 
         methods: {
@@ -275,9 +274,10 @@
                 }, {})
             },
 
-            fetchChartAccounts() {
+            fetchData() {
                 this.chartAccounts = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
+                this.getYears();
                 HTTP.get('/ledgers/accounts').then( response => {
                     this.chartAccounts = response.data;
 
@@ -285,7 +285,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
+                });
             },
 
             fetchLedgers() {
@@ -368,15 +368,10 @@
                 });
             },
 
-
-            getYears(startYear) {
-                let currentYear = new Date().getFullYear();
-                startYear = startYear || 1980;
-                while ( startYear <= currentYear ) {
-                    this.years.push(startYear++);
-                }
-
-                return this.years;
+            getYears() {
+                HTTP.get('/opening-balances/names').then( response => {
+                    this.years = response.data;
+                });
             }
         },
 
