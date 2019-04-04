@@ -321,8 +321,7 @@ window.wperp = window.wperp || {};
             });
 
             $( '.erp-select2' ).select2({
-                placeholder: $(this).attr('data-placeholder'),
-                dropdownParent: $('.erp-modal')
+                placeholder: $(this).attr('data-placeholder')
             });
         },
 
