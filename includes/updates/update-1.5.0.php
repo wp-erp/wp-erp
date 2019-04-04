@@ -996,7 +996,7 @@ function erp_acct_populate_transactions() {
                     'amount'          => $trn['sub_total'],
                     'discount'        => 0,
                     'discount_type'   => 'discount-value',
-                    'tax_rate_id'     => '',
+                    'tax_rate_id'     => 1,
                     'tax'             => 0,
                     'estimate'        => 0,
                     'attachments'     => $trn['files'],
@@ -1008,56 +1008,187 @@ function erp_acct_populate_transactions() {
             );
 
             $invoices[$voucher_no] = $wpdb->insert_id;
+
+            _helper_invoice_account_details_migration($trn, $voucher_no);
+            _helper_invoice_people_details_migration($trn, $voucher_no);
+            _helper_invoice_ledger_details_migration($trn, $voucher_no);
         } // invoice
     }
 
     if ( ! empty( $invoices ) ) {
+        _helper_invoice_details_migration($invoices);
+    }
+}
 
-        $ids = implode( ',', $invoices );
+/**
+ * Helper of invoice account details migration
+ *
+ * @param array $trn
+ * @param int $trn_no
+ *
+ * @return void
+ */
+function _helper_invoice_account_details_migration( $trn, $trn_no ) {
+    global $wpdb;
 
-        //=============================
-        // get transaction items (old)
-        //=============================
-        $sql1 = "SELECT tran.created_at, tran.created_by, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
-                LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
-                WHERE tran.id IN ({$ids})";
+    $wpdb->insert(
+        // `erp_acct_invoice_account_details`
+        "{$wpdb->prefix}erp_acct_invoice_account_details", [
+            'invoice_no'  => $trn_no,
+            'trn_no'      => $trn_no,
+            'trn_date'    => $trn['issue_date'],
+            'particulars' => $trn['summary'],
+            'debit'       => 0,
+            'credit'      => 0,
+            'created_at'  => get_created_at( $trn['created_at'] ),
+            'created_by'  => $trn['created_by']
+        ]
+    );
+}
 
-        $transaction_items = $wpdb->get_results($sql1, ARRAY_A);
+/**
+ * Helper of invoice people details migration
+ *
+ * @param array $trn
+ * @param int $trn_no
+ *
+ * @return void
+ */
+function _helper_invoice_people_details_migration( $trn, $trn_no ) {
+    global $wpdb;
 
-        for ( $i = 0; $i < count($transaction_items); $i++ ) {
-            $trn_item = $transaction_items[$i];
+    $wpdb->insert(
+        // `erp_acct_people_details`
+        "{$wpdb->prefix}erp_acct_people_details", [
+            'people_id'    => $trn['user_id'],
+            'trn_no'       => $trn_no,
+            'particulars'  => $trn['summary'],
+            'debit'        => 0,
+            'credit'       => 0,
+            'voucher_type' => 'invoice',
+            'trn_date'     => $trn['issue_date'],
+            'created_at'   => get_created_at( $trn['created_at'] ),
+            'created_by'   => $trn['created_by']
+        ]
+    );
+}
 
-            $trn_no     = array_search( (int) $trn_item['transaction_id'], $invoices );
-            $amount     = (float) $trn_item['unit_price'] * (int) $trn_item['qty'];
-            $discount   = ( $amount * (int) $trn_item['discount'] ) / 100;
-            $item_total = $amount - $discount;
-            $tax        = ( $item_total * (float) $trn_item['tax_rate'] ) / 100;
+/**
+ * Helper of invoice ledger details migration
+ *
+ * @param array $trn
+ * @param int $trn_no
+ *
+ * @return void
+ */
+function _helper_invoice_ledger_details_migration( $trn, $trn_no ) {
+    global $wpdb;
 
-            $wpdb->insert(
-                // `erp_acct_invoice_details`
-                "{$wpdb->prefix}erp_acct_invoice_details", [
-                    'trn_no'      => $trn_no,
-                    'product_id'  => $trn_item['product_id'],
-                    'qty'         => (int) $trn_item['qty'],
-                    'unit_price'  => $trn_item['unit_price'],
-                    'discount'    => $discount,
-                    'tax'         => $tax,
-                    'item_total'  => $item_total,
-                    'tax_percent' => $trn_item['tax_rate'],
-                    'created_at'  => get_created_at( $trn_item['created_at'] ),
-                    'created_by'  => $trn_item['created_by']
-                ]
-            );
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
-            $sql2 = $wpdb->prepare("UPDATE {$wpdb->prefix}erp_acct_invoices
-                        SET discount = discount + {$discount}, tax = tax + {$tax}
-                        WHERE voucher_no = %d", $trn_no);
+    $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug('sales_revenue');
+    $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discounts');
 
-            $wpdb->query($sql2);
+    $wpdb->insert(
+        // `erp_acct_ledger_details`
+        "{$wpdb->prefix}erp_acct_ledger_details", [
+            'ledger_id'   => $sales_ledger_id,
+            'trn_no'      => $trn_no,
+            'trn_date'    => $trn['issue_date'],
+            'particulars' => $trn['summary'],
+            'debit'       => 0,
+            'credit'      => $trn['sub_total'],
+            'created_at'  => get_created_at( $trn['created_at'] ),
+            'created_by'  => $trn['created_by']
+        ]
+    );
 
+    $wpdb->insert(
+        // `erp_acct_ledger_details`
+        "{$wpdb->prefix}erp_acct_ledger_details", [
+            'ledger_id'   => $sales_discount_ledger_id,
+            'trn_no'      => $trn_no,
+            'trn_date'    => $trn['issue_date'],
+            'particulars' => $trn['summary'],
+            'debit'       => 0,
+            'credit'      => 0,
+            'created_at'  => get_created_at( $trn['created_at'] ),
+            'created_by'  => $trn['created_by']
+        ]
+    );
+}
+
+/**
+ * Helper of invoice details migration
+ *
+ * @param array $invoices
+ *
+ * @return void
+ */
+function _helper_invoice_details_migration( $invoices ) {
+    global $wpdb;
+
+    $ids = implode( ',', $invoices );
+
+    //=============================
+    // get transaction items (old)
+    //=============================
+    $sql1 = "SELECT tran.created_at, tran.created_by, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+            LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
+            WHERE tran.id IN ({$ids})";
+
+    $transaction_items = $wpdb->get_results($sql1, ARRAY_A);
+
+    for ( $i = 0; $i < count($transaction_items); $i++ ) {
+        $trn_item = $transaction_items[$i];
+
+        $trn_no     = array_search( (int) $trn_item['transaction_id'], $invoices );
+        $amount     = (float) $trn_item['unit_price'] * (int) $trn_item['qty'];
+        $discount   = ( $amount * (int) $trn_item['discount'] ) / 100;
+        $item_total = $amount - $discount;
+        $tax        = ( $item_total * (float) $trn_item['tax_rate'] ) / 100;
+
+        $wpdb->insert(
+            // `erp_acct_invoice_details`
+            "{$wpdb->prefix}erp_acct_invoice_details", [
+                'trn_no'      => $trn_no,
+                'product_id'  => $trn_item['product_id'],
+                'qty'         => (int) $trn_item['qty'],
+                'unit_price'  => $trn_item['unit_price'],
+                'discount'    => $discount,
+                'tax'         => $tax,
+                'item_total'  => $item_total,
+                'tax_percent' => $trn_item['tax_rate'],
+                'created_at'  => get_created_at( $trn_item['created_at'] ),
+                'created_by'  => $trn_item['created_by']
+            ]
+        );
+
+        $details_id = $wpdb->insert_id;
+
+        $wpdb->insert(
+            // `erp_acct_invoice_details_tax`
+            "{$wpdb->prefix}erp_acct_invoice_details_tax", [
+                'invoice_details_id' => $details_id,
+                'agency_id'          => null,
+                'tax_rate'           => $trn_item['tax_rate'],
+                'tax_amount'         => $tax,
+                'created_at'         => get_created_at( $trn_item['created_at'] ),
+                'created_by'         => $trn_item['created_by']
+            ]
+        );
+
+        $sqls = [
+            "UPDATE {$wpdb->prefix}erp_acct_invoices SET discount = discount + {$discount}, tax = tax + {$tax} WHERE voucher_no = %d",
+            "UPDATE {$wpdb->prefix}erp_acct_invoice_account_details SET debit = debit + {$item_total} + {$tax} WHERE trn_no = %d",
+            "UPDATE {$wpdb->prefix}erp_acct_people_details SET debit = debit + {$item_total} + {$tax} WHERE trn_no = %d",
+            "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET debit = debit + {$discount} WHERE trn_no = %d"
+        ];
+
+        foreach ( $sqls as $sql ) {
+            $wpdb->query( $wpdb->prepare( $sql, $trn_no) );
         }
     }
-
 }
 
 
