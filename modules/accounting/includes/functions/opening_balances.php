@@ -85,8 +85,6 @@ function erp_acct_get_opening_balance( $year_id ) {
     LEFT JOIN {$wpdb->prefix}erp_acct_financial_years as financial_year ON opening_balance.financial_year_id = financial_year.id
     WHERE financial_year.name = {$year_id}";
 
-    error_log( print_r( $sql, true ) );
-
     $rows = $wpdb->get_results( $sql, ARRAY_A );
 
     return $rows;
@@ -252,7 +250,11 @@ function erp_acct_get_opening_balance_names() {
 }
 
 /**
+ * Get opening balance date ranges
+ *
  * @param $ob_name
+ *
+ * @return array
  */
 function erp_acct_get_start_end_date( $ob_name ) {
     $dates = [];
@@ -263,4 +265,27 @@ function erp_acct_get_start_end_date( $ob_name ) {
     $dates['end'] = $ob_names['ob_ends'][$idx];
 
     return $dates;
+}
+
+/**
+ * Get virtual accts summary for opening balance
+ */
+function erp_acct_get_ob_virtual_accts( $ob_data ) {
+    $dates = []; $args = [];
+    if ( !empty( $ob_data['year'] ) ) {
+        $dates = erp_acct_get_start_end_date( $ob_data['year'] );
+        $args['start_date'] = $dates['start'];
+        $args['end_date'] = $dates['end'];
+    }
+
+    if ( empty( $dates ) ) {
+        $args['start_date'] = date('Y-m-d', strtotime('first day of january this year' ) );
+        $args['end_date'] = date('Y-m-d', strtotime('last day of december this year' ) );
+    }
+
+    $vir_ac['acct_payable'] = abs( (float)erp_acct_get_account_payable( $args ) );
+    $vir_ac['acct_receivable'] = abs( (float)erp_acct_get_account_receivable( $args ));
+
+    return $vir_ac;
+
 }

@@ -19,6 +19,55 @@
                     <option v-for="year in years" :value="year">{{ year }}</option>
                 </select>
             </div>
+
+            <div  v-if="virtual_accts" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open8=!open8"
+                     :class="open8?'active':'before-border'">
+                    <span class="wp-erp-ob-title">Accounts Receivable</span>
+                </div>
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open8">
+                    <thead>
+                    <tr>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ virtual_accts.acct_receivable }}</td>
+                        <td><input :value="virtual_accts.acct_receivable" disabled></td>
+                        <td><input :value="0" disabled=""></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div v-if="virtual_accts" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open9=!open9"
+                     :class="open9?'active':'before-border'">
+                    <span class="wp-erp-ob-title">Accounts Payable</span>
+                </div>
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open9">
+                    <thead>
+                    <tr>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ virtual_accts.acct_payable }}</td>
+                        <td><input :value="0" disabled></td>
+                        <td><input :value="virtual_accts.acct_payable" disabled></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <div v-if="chartAccounts[0]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open1=!open1"
@@ -44,6 +93,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div v-if="chartAccounts[1]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open2=!open2"
@@ -68,8 +118,8 @@
                     </tr>
                     </tbody>
                 </table>
-
             </div>
+
             <div v-if="chartAccounts[2]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open3=!open3"
@@ -95,6 +145,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div v-if="chartAccounts[3]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open4=!open4"
@@ -120,6 +171,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div v-if="chartAccounts[4]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open5=!open5"
@@ -145,13 +197,14 @@
                     </tbody>
                 </table>
             </div>
-            <div v-if="chartAccounts[5]" class="erp-accordion">
+
+            <div v-if="chartAccounts[5] && ledgers[6]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open6=!open6"
                      :class="open6?'active':'before-border'">
                     <span class="wp-erp-ob-title">{{chartAccounts[5].label}}</span>
                 </div>
-                <table v-if="ledgers[6]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open6">
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open6">
                     <thead>
                     <tr>
                         <th>Account</th>
@@ -170,6 +223,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div v-if="chartAccounts[6]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open7=!open7"
@@ -196,7 +250,6 @@
                 </table>
             </div>
 
-            <!-- do your comment -->
             <table class="wperp-table wperp-form-table">
                 <tbody>
                 <tr class="total-amount-row">
@@ -250,6 +303,8 @@
                 open5: false,
                 open6: false,
                 open7: false,
+                open8: false,
+                open9: false,
                 form_errors: [],
                 chartAccounts: [],
                 ledgers: [],
@@ -259,6 +314,7 @@
                 credit_total: 0,
                 debit_total: 0,
                 isWorking: false,
+                virtual_accts: null
             }
         },
 
@@ -278,10 +334,12 @@
                 this.chartAccounts = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 this.getYears();
+                this.fetchLedgers();
+                this.getVirtualAccts();
                 HTTP.get('/ledgers/accounts').then( response => {
                     this.chartAccounts = response.data;
 
-                    this.fetchLedgers();
+
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
@@ -371,6 +429,12 @@
             getYears() {
                 HTTP.get('/opening-balances/names').then( response => {
                     this.years = response.data;
+                });
+            },
+
+            getVirtualAccts() {
+                HTTP.get('/opening-balances/virtual-accts').then( response => {
+                    this.virtual_accts = response.data;
                 });
             }
         },
