@@ -122,20 +122,20 @@ function erp_acct_insert_payment( $data ) {
         $payment_data = erp_acct_get_formatted_payment_data( $data, $voucher_no );
 
 	    $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_receipts', array(
-            'voucher_no' => $voucher_no,
-            'customer_id' => $payment_data['customer_id'],
-            'customer_name' => $payment_data['customer_name'],
-            'trn_date' => date('Y-m-d'),
-            'particulars' => $payment_data['particulars'],
-            'amount' => $payment_data['amount'],
-            'trn_by' => $payment_data['trn_by'],
-            'attachments' => $payment_data['attachments'],
-            'status' => $payment_data['status'],
+            'voucher_no'       => $voucher_no,
+            'customer_id'      => $payment_data['customer_id'],
+            'customer_name'    => $payment_data['customer_name'],
+            'trn_date'         => date('Y-m-d'),
+            'particulars'      => $payment_data['particulars'],
+            'amount'           => $payment_data['amount'],
+            'trn_by'           => $payment_data['trn_by'],
+            'attachments'      => $payment_data['attachments'],
+            'status'           => $payment_data['status'],
             'trn_by_ledger_id' => $payment_data['deposit_to'],
-            'created_at' => $payment_data['created_at'],
-            'created_by' => $payment_data['created_by'],
-            'updated_at' => $payment_data['updated_at'],
-            'updated_by' => $payment_data['updated_by'],
+            'created_at'       => $payment_data['created_at'],
+            'created_by'       => $payment_data['created_by'],
+            'updated_at'       => $payment_data['updated_at'],
+            'updated_by'       => $payment_data['updated_by'],
 	    ) );
 
         $items = $payment_data['line_items'];
@@ -239,15 +239,15 @@ function erp_acct_update_payment( $data, $voucher_no ) {
 		$payment_data = erp_acct_get_formatted_payment_data( $data, $voucher_no );
 
 	    $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_receipts', array(
-            'trn_date' => date("Y-m-d"),
-            'particulars' => $payment_data['particulars'],
-            'amount' => $payment_data['amount'],
-            'trn_by' => $payment_data['trn_by'],
+            'trn_date'         => date("Y-m-d"),
+            'particulars'      => $payment_data['particulars'],
+            'amount'           => $payment_data['amount'],
+            'trn_by'           => $payment_data['trn_by'],
             'trn_by_ledger_id' => $payment_data['deposit_to'],
-            'created_at' => $payment_data['created_at'],
-            'created_by' => $payment_data['created_by'],
-            'updated_at' => $payment_data['updated_at'],
-            'updated_by' => $payment_data['updated_by'],
+            'created_at'       => $payment_data['created_at'],
+            'created_by'       => $payment_data['created_by'],
+            'updated_at'       => $payment_data['updated_at'],
+            'updated_by'       => $payment_data['updated_by'],
 	    ), array(
 	        'voucher_no' => $voucher_no,
 	    ) );
@@ -348,28 +348,28 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $user_info = erp_get_people( $data['customer_id'] );
     $company = new \WeDevs\ERP\Company();
 
-    $payment_data['voucher_no']  = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $payment_data['invoice_no']  = ! empty( $invoice_no ) ? $invoice_no : 0;
-    $payment_data['customer_id'] = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
+    $payment_data['voucher_no']    = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $payment_data['invoice_no']    = ! empty( $invoice_no ) ? $invoice_no : 0;
+    $payment_data['customer_id']   = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
     $payment_data['customer_name'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
-    $payment_data['trn_date']    = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
-    $payment_data['line_items']  = isset( $data['line_items'] ) ? $data['line_items'] : array();
-    $payment_data['created_at']  = date( "Y-m-d" );
-    $payment_data['amount']      = isset( $data['amount'] ) ? $data['amount'] : 0;
-    $payment_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $payment_data['voucher_type']= isset( $data['type'] ) ? $data['type'] : '';
-    $payment_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
-    $payment_data['trn_by']      = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
-    $payment_data['deposit_to'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
-    $payment_data['status']      = isset( $data['status'] ) ? $data['status'] : null;
-    $payment_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : 0;
-    $payment_data['pay_to'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
-    $payment_data['name'] = isset( $data['name'] ) ?  $data['name'] : $company->name;
-    $payment_data['voucher_type'] = isset( $data['type'] ) ?  $data['type'] : '';
-    $payment_data['created_at']  = isset( $data['created_at'] ) ? $data['created_at'] : null;
-    $payment_data['created_by']  = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $payment_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
-    $payment_data['updated_by']  = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $payment_data['trn_date']      = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
+    $payment_data['line_items']    = isset( $data['line_items'] ) ? $data['line_items'] : array();
+    $payment_data['created_at']    = date( "Y-m-d" );
+    $payment_data['amount']        = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $payment_data['attachments']   = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $payment_data['voucher_type']  = isset( $data['type'] ) ? $data['type'] : '';
+    $payment_data['particulars']   = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $payment_data['trn_by']        = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
+    $payment_data['deposit_to']    = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
+    $payment_data['status']        = isset( $data['status'] ) ? $data['status'] : null;
+    $payment_data['check_no']      = isset( $data['check_no'] ) ? $data['check_no'] : 0;
+    $payment_data['pay_to']        = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
+    $payment_data['name']          = isset( $data['name'] ) ?  $data['name'] : $company->name;
+    $payment_data['voucher_type']  = isset( $data['type'] ) ?  $data['type'] : '';
+    $payment_data['created_at']    = isset( $data['created_at'] ) ? $data['created_at'] : null;
+    $payment_data['created_by']    = isset( $data['created_by'] ) ? $data['created_by'] : '';
+    $payment_data['updated_at']    = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
+    $payment_data['updated_by']    = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
 
     return $payment_data;
 }
