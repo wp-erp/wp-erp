@@ -963,6 +963,7 @@ function erp_acct_populate_transactions() {
 
     // Keep various id`s
     $invoices = [];
+    $payments = [];
 
     // loop through transactions
     for ( $i = 0; $i < count($transactions); $i++ ) {
@@ -989,7 +990,7 @@ function erp_acct_populate_transactions() {
                 "{$wpdb->prefix}erp_acct_invoices", [
                     'voucher_no'      => $voucher_no,
                     'customer_id'     => $trn['user_id'],
-                    'customer_name'   => $people->first_name + $people->last_name,
+                    'customer_name'   => $people->first_name . ' ' . $people->last_name,
                     'trn_date'        => $trn['issue_date'],
                     'due_date'        => $trn['due_date'],
                     'billing_address' => $trn['billing_address'],
@@ -1012,11 +1013,55 @@ function erp_acct_populate_transactions() {
             _helper_invoice_account_details_migration($trn, $voucher_no);
             _helper_invoice_people_details_migration($trn, $voucher_no);
             _helper_invoice_ledger_details_migration($trn, $voucher_no);
+
         } // invoice
+
+        elseif ( 'payment' === $trn['form_type'] ) {
+            $wpdb->insert(
+                // `erp_acct_voucher_no`
+                "{$wpdb->prefix}erp_acct_voucher_no", [
+                    'type'     => 'payment',
+                    'currency' => get_currecny_id( $trn['currency'] )
+                ]
+            );
+
+            $people = erp_get_people( $trn['user_id'] );
+
+            $voucher_no = $wpdb->insert_id;
+
+            $wpdb->insert(
+                // `erp_acct_invoice_receipts`
+                "{$wpdb->prefix}erp_acct_invoice_receipts", [
+                    'voucher_no'       => $voucher_no,
+                    'customer_id'      => $trn['user_id'],
+                    'customer_name'    => $people->first_name . ' ' . $people->last_name,
+                    'trn_date'         => $trn['issue_date'],
+                    'amount'           => $trn['total'],
+                    'particulars'      => $trn['summary'],
+                    'attachments'      => $trn['files'],
+                    'status'           => 4,
+                    'trn_by'           => 1,
+                    'trn_by_ledger_id' => 1,
+                    'created_at'       => get_created_at( $trn['created_at'] ),
+                    'created_by'       => $trn['created_by']
+                ]
+            );
+
+            $payments[$voucher_no] = $wpdb->insert_id;
+
+            _helper_invoice_account_details_migration($trn, $voucher_no);
+            _helper_invoice_people_details_migration($trn, $voucher_no);
+            _helper_invoice_receipts_ledger_details_migration($trn, $voucher_no);
+
+        } // payment
     }
 
     if ( ! empty( $invoices ) ) {
         _helper_invoice_details_migration($invoices);
+    }
+
+    if ( ! empty( $payments ) ) {
+        _helper_invoice_receipts_details_migration($payments);
     }
 }
 
@@ -1119,6 +1164,36 @@ function _helper_invoice_ledger_details_migration( $trn, $trn_no ) {
 }
 
 /**
+ * Helper of invoice receipts ledger details migration
+ *
+ * @param array $trn
+ * @param int $trn_no
+ *
+ * @return void
+ */
+function _helper_invoice_receipts_ledger_details_migration( $trn, $trn_no ) {
+    global $wpdb;
+
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+
+    $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
+
+    $wpdb->insert(
+        // `erp_acct_ledger_details`
+        "{$wpdb->prefix}erp_acct_ledger_details", [
+            'ledger_id'   => $cash_ledger_id,
+            'trn_no'      => $trn_no,
+            'trn_date'    => $trn['issue_date'],
+            'particulars' => $trn['summary'],
+            'debit'       => $trn['total'],
+            'credit'      => 0,
+            'created_at'  => get_created_at( $trn['created_at'] ),
+            'created_by'  => $trn['created_by']
+        ]
+    );
+}
+
+/**
  * Helper of invoice details migration
  *
  * @param array $invoices
@@ -1190,6 +1265,55 @@ function _helper_invoice_details_migration( $invoices ) {
         }
     }
 }
+
+/**
+ * Helper of invoice receipts details migration
+ *
+ * @param array $invoices
+ *
+ * @return void
+ */
+function _helper_invoice_receipts_details_migration( $payments ) {
+    global $wpdb;
+
+    $ids = implode( ',', $payments );
+
+    //=============================
+    // get transaction items (old)
+    //=============================
+    $sql1 = "SELECT tran.created_at, tran.created_by, tran.invoice_number, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+            LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
+            WHERE tran.id IN ({$ids})";
+
+    $transaction_items = $wpdb->get_results($sql1, ARRAY_A);
+
+    for ( $i = 0; $i < count($transaction_items); $i++ ) {
+        $trn_item = $transaction_items[$i];
+
+        $trn_no = array_search( (int) $trn_item['transaction_id'], $payments );
+
+        $wpdb->insert(
+            // `erp_acct_invoice_receipts_details`
+            "{$wpdb->prefix}erp_acct_invoice_receipts_details", [
+                'voucher_no' => $trn_no,
+                'invoice_no' => $trn_item['invoice_number'],
+                'amount'     => $trn_item['line_total'],
+                'created_at' => get_created_at( $trn_item['created_at'] ),
+                'created_by' => $trn_item['created_by']
+            ]
+        );
+
+        $sqls = [
+            "UPDATE {$wpdb->prefix}erp_acct_invoice_account_details SET credit = credit + {$trn_item['line_total']} WHERE trn_no = %d",
+            "UPDATE {$wpdb->prefix}erp_acct_people_details SET credit = credit + {$trn_item['line_total']} WHERE trn_no = %d"
+        ];
+
+        foreach ( $sqls as $sql ) {
+            $wpdb->query( $wpdb->prepare( $sql, $trn_no) );
+        }
+    }
+}
+
 
 
 
