@@ -11,6 +11,7 @@ class Admin {
         add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_menu' ] );
         add_action( 'admin_init', [ $this, 'init_hooks' ], 5 );
         add_action( 'erp_hr_employee_new', [ $this, 'make_people_from_employee' ], 10, 2 );
+        add_action( 'admin_init', [ $this, 'save_accounting_settings'] );
     }
 
     /**
@@ -144,7 +145,7 @@ class Admin {
             'position'   => 15
         ] );
         erp_add_menu( 'accounting', [
-            'title'      =>  __( 'Openning Balance', 'erp' ),
+            'title'      =>  __( 'Opening Balance', 'erp' ),
             'capability' => $account_charts,
             'slug'       => 'opening-balance',
             'position'   => 90
@@ -290,5 +291,39 @@ class Admin {
         }
 
         return $people_id;
+    }
+
+    public function save_accounting_settings() {
+        $fin_years = [];
+
+        if ( empty( $_POST['ob_names'] ) || empty( $_POST['ob_starts'] ) || empty( $_POST['ob_ends'] ) ) {
+            return;
+        }
+
+        error_log(print_r( $_POST, true ) );
+
+        $ob_names  = $_POST['ob_names'];
+        $ob_starts = $_POST['ob_starts'];
+        $ob_ends   = $_POST['ob_ends'];
+
+        if ( !empty( $ob_names ) ) {
+            for ( $i = 0; $i < count( $ob_names ); $i++ ) {
+                $fin_years['ob_names'][] = $ob_names[$i];
+            }
+        }
+
+        if ( !empty( $ob_starts ) ) {
+            for ( $i = 0; $i < count( $ob_starts ); $i++ ) {
+                $fin_years['ob_starts'][] = $ob_starts[$i];
+            }
+        }
+
+        if ( !empty( $ob_ends ) ) {
+            for ( $i = 0; $i < count( $ob_ends ); $i++ ) {
+                $fin_years['ob_ends'][] = $ob_ends[$i];
+            }
+        }
+
+        update_option( 'erp_acct_fisc_years', maybe_serialize( $fin_years ) );
     }
 }

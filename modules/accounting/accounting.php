@@ -109,6 +109,7 @@ final class Accounting {
         define( 'ERP_ACCOUNTING_API', ERP_ACCOUNTING_PATH . '/api' );
         define( 'ERP_ACCOUNTING_URL', plugins_url( '', ERP_ACCOUNTING_FILE ) );
         define( 'ERP_ACCOUNTING_ASSETS', ERP_ACCOUNTING_URL . '/assets' );
+        define( 'ERP_ACCOUNTING_VIEWS', ERP_ACCOUNTING_PATH . '/includes/views' );
     }
 
     /**
