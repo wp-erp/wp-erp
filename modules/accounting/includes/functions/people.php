@@ -117,65 +117,6 @@ function erp_people_filter_transaction( $people_id, $args = [] ) {
     return $rows;
 }
 
-///**
-// * Insert transaction data of a people
-// *
-// * @param $trn_data
-// * @param $people_id
-// * @param $voucher_type
-// *
-// * @return mixed
-// */
-//
-//function erp_acct_insert_people_trn_data( $trn_data, $people_id, $voucher_type ) {
-//    global $wpdb;
-//
-//    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_trn', array(
-//        'people_id'    => $people_id,
-//        'voucher_no'   => $trn_data['voucher_no'],
-//        'amount'       => $trn_data['amount'],
-//        'trn_date'     => $trn_data['trn_date'],
-//        'trn_by'       => $trn_data['trn_by'],
-//        'particulars'  => $trn_data['particulars'],
-//        'voucher_type' => $voucher_type,
-//        'created_at'   => $trn_data['created_at'],
-//        'created_by'   => $trn_data['created_by'],
-//        'updated_at'   => $trn_data['updated_at'],
-//        'updated_by'   => $trn_data['updated_by'],
-//    ) );
-//
-//}
-//
-///**
-// * Update transaction data of a people
-// *
-// * @param $trn_data
-// * @param $people_id
-// * @param $voucher_type
-// *
-// * @return mixed
-// */
-//
-//function erp_acct_update_people_trn_data( $trn_data, $people_id, $voucher_type ) {
-//    global $wpdb;
-//
-//    $wpdb->update( $wpdb->prefix . 'erp_acct_people_trn', array(
-//        'people_id'    => $people_id,
-//        'amount'       => $trn_data['amount'],
-//        'trn_date'     => $trn_data['trn_date'],
-//        'trn_by'       => $trn_data['trn_by'],
-//        'particulars'  => $trn_data['particulars'],
-//        'voucher_type' => $voucher_type,
-//        'created_at'   => $trn_data['created_at'],
-//        'created_by'   => $trn_data['created_by'],
-//        'updated_at'   => $trn_data['updated_at'],
-//        'updated_by'   => $trn_data['updated_by'],
-//    ), array(
-//        'voucher_no'      => $trn_data['voucher_no']
-//    ) );
-//
-//}
-
 /**
  * Get address of a people
  *
@@ -286,7 +227,6 @@ function erp_acct_get_people_transactions( $args = [] ) {
 
     $results =  $wpdb->get_results( $sql, ARRAY_A );
 
-    $temp = '';
     $total = $o_balance = erp_acct_get_people_opening_balance( $args );
     $dr_total = $cr_total = 0;
     if ( $o_balance > 0 ) {
@@ -411,7 +351,6 @@ function erp_acct_get_people_type_by_type_id( $type_id ) {
 /**
  * Get people id by user id
  *
- * @param $type_id
  * @return mixed
  */
 function erp_acct_get_people_id_by_user_id( $user_id ) {
@@ -420,4 +359,17 @@ function erp_acct_get_people_id_by_user_id( $user_id ) {
     $row = $wpdb->get_row( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE user_id = {$user_id} LIMIT 1" );
 
     return $row->id;
+}
+
+/**
+ * Get people id by people_id
+ *
+ * @return mixed
+ */
+function erp_acct_get_people_name_by_people_id( $people_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT first_name, last_name FROM {$wpdb->prefix}erp_peoples WHERE id = {$people_id} LIMIT 1" );
+
+    return $row->first_name . ' ' . $row->last_name;
 }
