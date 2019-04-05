@@ -10,14 +10,64 @@
             </div>
         </div> <!-- End .header-section -->
 
+        <show-errors :error_msgs="form_errors" ></show-errors>
+
         <form action="" method="post" @submit.prevent="submitOBForm">
-            <h2>Financial Year</h2>
             <div class="wperp-custom-select">
-                <select class="text-right">
+                <label>Financial Year</label>
+                <select v-model="fin_year">
                     <option v-for="year in years" :value="year">{{ year }}</option>
                 </select>
-                <i class="flaticon-arrow-down-sign-to-navigate"></i>
             </div>
+
+            <div  v-if="virtual_accts" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open8=!open8"
+                     :class="open8?'active':'before-border'">
+                    <span class="wp-erp-ob-title">Accounts Receivable</span>
+                </div>
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open8">
+                    <thead>
+                    <tr>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ virtual_accts.acct_receivable }}</td>
+                        <td><input :value="virtual_accts.acct_receivable" disabled></td>
+                        <td><input :value="0" disabled=""></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div v-if="virtual_accts" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open9=!open9"
+                     :class="open9?'active':'before-border'">
+                    <span class="wp-erp-ob-title">Accounts Payable</span>
+                </div>
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open9">
+                    <thead>
+                    <tr>
+                        <th>Balance</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ virtual_accts.acct_payable }}</td>
+                        <td><input :value="0" disabled></td>
+                        <td><input :value="virtual_accts.acct_payable" disabled></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <div v-if="chartAccounts[0]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open1=!open1"
@@ -43,6 +93,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div v-if="chartAccounts[1]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open2=!open2"
@@ -67,8 +118,8 @@
                     </tr>
                     </tbody>
                 </table>
-
             </div>
+
             <div v-if="chartAccounts[2]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open3=!open3"
@@ -94,6 +145,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div v-if="chartAccounts[3]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open4=!open4"
@@ -119,6 +171,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div v-if="chartAccounts[4]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open5=!open5"
@@ -144,13 +197,14 @@
                     </tbody>
                 </table>
             </div>
-            <div v-if="chartAccounts[5]" class="erp-accordion">
+
+            <div v-if="chartAccounts[5] && ledgers[6]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open6=!open6"
                      :class="open6?'active':'before-border'">
                     <span class="wp-erp-ob-title">{{chartAccounts[5].label}}</span>
                 </div>
-                <table v-if="ledgers[6]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open6">
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open6">
                     <thead>
                     <tr>
                         <th>Account</th>
@@ -169,6 +223,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div v-if="chartAccounts[6]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open7=!open7"
@@ -193,28 +248,21 @@
                     </tr>
                     </tbody>
                 </table>
-                <table class="wperp-table wperp-form-table">
-                    <tbody>
-                        <tr class="total-amount-row">
-                            <td></td>
-                            <td colspan="2" class="pl-10 text-right col--total-amount">
-                                <span>Total Amount</span>
-                            </td>
-                            <td data-colname="Total Debit"><input type="text" class="text-right" :value="debit_total" readonly ></td>
-                            <td data-colname="Total Credit"><input type="text" class="text-right" :value="credit_total" readonly ></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table>
-                    <tfoot>
-                        <tr>
-                            <td colspan="9" class="text-right">
-                                <submit-button text="Submit"></submit-button>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
             </div>
+
+            <table class="wperp-table wperp-form-table">
+                <tbody>
+                <tr class="total-amount-row">
+                    <td class="pl-10 text-right col--total-amount" style="width: 60%;">
+                        <span>Total Amount</span>
+                    </td>
+                    <td data-colname="Total Debit"><input type="text" class="text-right" :value="debit_total" readonly ></td>
+                    <td data-colname="Total Credit"><input type="text" class="text-right" :value="credit_total" readonly ></td>
+                </tr>
+                </tbody>
+            </table>
+            <submit-button text="Add Opening Balance"></submit-button>
+
         </form>
     </div>
 </template>
@@ -223,6 +271,7 @@
     import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: "OpeningBalance",
@@ -230,7 +279,8 @@
         components: {
             HTTP,
             MultiSelect,
-            SubmitButton
+            SubmitButton,
+            ShowErrors
         },
 
         props: {
@@ -253,6 +303,9 @@
                 open5: false,
                 open6: false,
                 open7: false,
+                open8: false,
+                open9: false,
+                form_errors: [],
                 chartAccounts: [],
                 ledgers: [],
                 fin_year: '',
@@ -261,12 +314,12 @@
                 credit_total: 0,
                 debit_total: 0,
                 isWorking: false,
+                virtual_accts: null
             }
         },
 
         mounted() {
-            this.fetchChartAccounts();
-            this.getYears();
+            this.fetchData();
         },
 
         methods: {
@@ -277,17 +330,20 @@
                 }, {})
             },
 
-            fetchChartAccounts() {
+            fetchData() {
                 this.chartAccounts = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
+                this.getYears();
+                this.fetchLedgers();
+                this.getVirtualAccts();
                 HTTP.get('/ledgers/accounts').then( response => {
                     this.chartAccounts = response.data;
 
-                    this.fetchLedgers();
+
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
+                });
             },
 
             fetchLedgers() {
@@ -335,8 +391,8 @@
             validateForm() {
                 this.form_errors = [];
 
-                if ( !this.basic_fields.trn_date ) {
-                    this.form_errors.push('Transaction Date is required.');
+                if ( !this.fin_year ) {
+                    this.form_errors.push('Financial year is required.');
                 }
 
                 if ( this.isWorking ) {
@@ -358,10 +414,8 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.post('/opening-balances', {
-                    trn_date   : this.basic_fields.trn_date,
-                    ref        : this.basic_fields.trn_ref,
-                    line_items : this.formatLineItems(),
-                    attachments: this.attachments,
+                    year: this.fin_year,
+                    ledgers: this.ledgers,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Opening Balance Created!' );
@@ -372,15 +426,16 @@
                 });
             },
 
+            getYears() {
+                HTTP.get('/opening-balances/names').then( response => {
+                    this.years = response.data;
+                });
+            },
 
-            getYears(startYear) {
-                let currentYear = new Date().getFullYear();
-                startYear = startYear || 1980;
-                while ( startYear <= currentYear ) {
-                    this.years.push(startYear++);
-                }
-
-                return this.years;
+            getVirtualAccts() {
+                HTTP.get('/opening-balances/virtual-accts').then( response => {
+                    this.virtual_accts = response.data;
+                });
             }
         },
 
@@ -392,9 +447,58 @@
     }
 </script>
 
-<style scoped>
+<style>
+    .accordion-container .erp-accordion table {
+        width: calc(100% - 40px);
+    }
+</style>
+
+<style scoped lang="less">
     .accordion-container {
         padding-top: 10px;
+        .wperp-custom-select {
+            label {
+                display: inline;
+                font-weight: bold;
+                padding-right : 5px;
+            }
+            select {
+                background: #fff;
+                border: none;
+                box-shadow: none;
+                margin-bottom: 10px;
+                padding: 5px 15px;
+                height: auto;
+                width: 15%;
+            }
+        }
+        .erp-accordion {
+            background: #fff;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 18px -11px rgba(0,0,0,.25);
+            table {
+                padding: 0;
+                margin: 20px;
+                thead {
+                    th {
+                        &:first-child {
+                            width: 40%;
+                        }
+                        &:not(:first-child) {
+                            width: 20%;
+                        }
+
+                    }
+                }
+                tbody {
+                    td input {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+
     }
     .wp-erp-ob-title{
         font-weight: bolder;
@@ -412,21 +516,10 @@
         left: 0;
         bottom: -1px;
     }
-    .erp-accordion {
-        background: #fff;
-        box-shadow: 0 1px 12px 1PX rgba(0,0,0,0.25);
-        overflow: hidden;
-    }
     .erp-accordion-expand {
         cursor: pointer;
         padding: .5rem .75rem;
         border-bottom: 1px solid #efefef;
-    }
-    .erp-accordion-expand:hover {
-        color: #477dca;
-    }
-    .erp-accordion-expand.active {
-        border-bottom-color: #477dca;
     }
     .erp-accordion-expand-icon.open* {
         transform: rotate(180deg);

@@ -23,7 +23,10 @@ class Assets {
     public function register() {
         if ( is_admin() ) {
             $screen = get_current_screen();
-            if ( $screen->base != 'wp-erp_page_erp-accounting' ) {
+            if ( $screen->base == 'wp-erp_page_erp-settings') {
+                wp_enqueue_script( 'accounting-helper', ERP_ACCOUNTING_ASSETS . '/js/accounting.js', array( 'jquery' ), false, true );
+                return;
+            } elseif ( $screen->base != 'wp-erp_page_erp-accounting' ) {
                 return;
             }
         }
@@ -127,7 +130,7 @@ class Assets {
                 'deps'      => [ 'jquery', 'accounting-vendor' ],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/admin.js' ),
                 'in_footer' => true
-            ]
+            ],
         ];
 
         return $scripts;

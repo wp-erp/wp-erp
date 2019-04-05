@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs, ediamin, sabbir1991, asaquzzama
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.0.3
+Tested up to: 5.1.1
 Requires PHP: 5.6
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -166,7 +166,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 1. Download the plugin by clicking on the red button above.A ZIP file will be downloaded.
 2. Unzip the file.
-3. Launch your favorite FTP client. Such as FileZilla, FireFTP, CyberDuck etc. If you are a more advanced user, then you can use SSH too.
+3. Launch your favourite FTP client. Such as FileZilla, FireFTP, CyberDuck etc. If you are a more advanced user, then you can use SSH too.
 4. Upload the folder to wp-content/plugins/
 5. Log in to your WordPress dashboard.
 6. Navigate to Plugins -> Installed
@@ -181,7 +181,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 5. Employee details page.
 6. Employee profile job tab, keep track of every salary increment, status changes and department/location changes.
 7. See the leave history and balances.
-8. Analyze employee performance by rating in various metrics
+8. Analyse employee performance by rating in various metrics
 9. Manage permissions and who can do what.
 10. Departments management
 11. Designation management
@@ -191,7 +191,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 15. CRM dashboard
 16. Contacts list
 17. Contact details page, log calls, meetings, tasks and schedule everything from a single page.
-18. Search your contacts with a advanced search area, everything and save those searches.
+18. Search your contacts with an advanced search area, everything and save those searches.
 19. Filter contacts with saved searches.
 20. All the activities across your contacts and companies in a single page and filterable.
 21. Schedules page, see whom to call, have a meeting and manage them.
@@ -230,7 +230,7 @@ You can use HR module from the frontend by using “HR Frontend” extension. Th
 Yes! We have an extension- Attendance that has the check-in, check-out feature along with attendance report generator and much more.
 
 = Is WP ERP capable to handle a huge amount of data? =
-Yes, of course! Many of our clients are using WP ERP to manage their business with 3000+ employees,2000+ customers/contacts without any hessle.
+Yes, of course! Many of our clients are using WP ERP to manage their business with 3000+ employees,2000+ customers/contacts without any hassle.
 
 = What are your support timings? =
 Our general live support hours are Saturday to Thursday, 07:00 to 15:00 (GMT +6).
@@ -246,6 +246,15 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 == Changelog ==
 
+= v1.4.3 -> April 04, 2019 =
+[fix] CRM Agents should not delete contact groups. Closes #802
+[fix] Printing invoice getting the header informations along with the top menus. Closes #792
+[fix] Portugal states are missing. Closes #731
+[fix] Problem with CRM inbound email. Closes #787
+[fix] Modal select box style. Closes #794
+[fix] Can't select state on vendor create.
+[fix] Missing contact owner when importing contact.
+
 = v1.4.2 -> February 14, 2019 =
 [fix] Exclude terminated employees from Who is Out widget. Closes #727
 [fix] Fix upload company logo. Closes #732
@@ -257,7 +266,7 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 [fix] Fix contact list view and edit for crm agent
 [fix] Fix ninja contact form integration
 [fix] Fix issue with leave entitlement creation
-[new] Add employee blood groups in emmployee creation
+[new] Add employee blood groups in employee creation
 [new] Add project manager plugin in setup wizard to improve project management with employees
 
 = v1.4.1 -> November 06, 2018 =
@@ -295,7 +304,7 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 [new] Add memo for invoice pdf.
 [fix] Fix employee import problem.
 [fix] Expense chart information update.
-[fix] Leave entitlement remopve system add.
+[fix] Leave entitlement remove system add.
 [fix] Autofill customer address to the invoice billing address.
 [fix] Email Template is adding back slash (\) on edit with single and double quote. Closes #672
 [fix] Unable to apply for leave longer than 1 day. Closes #668
