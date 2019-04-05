@@ -300,8 +300,6 @@ class Admin {
             return;
         }
 
-        error_log(print_r( $_POST, true ) );
-
         $ob_names  = $_POST['ob_names'];
         $ob_starts = $_POST['ob_starts'];
         $ob_ends   = $_POST['ob_ends'];
