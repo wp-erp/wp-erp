@@ -271,6 +271,8 @@ function erp_acct_get_start_end_date( $ob_name ) {
  * Get virtual accts summary for opening balance
  */
 function erp_acct_get_ob_virtual_accts( $ob_data ) {
+    global $wpdb;
+
     $dates = []; $args = [];
     if ( !empty( $ob_data['year'] ) ) {
         $dates = erp_acct_get_start_end_date( $ob_data['year'] );
@@ -283,8 +285,23 @@ function erp_acct_get_ob_virtual_accts( $ob_data ) {
         $args['end_date'] = date('Y-m-d', strtotime('last day of december this year' ) );
     }
 
-    $vir_ac['acct_payable'] = abs( (float)erp_acct_get_account_payable( $args ) );
-    $vir_ac['acct_receivable'] = abs( (float)erp_acct_get_account_receivable( $args ));
+    $vir_ac['acct_payable']    = $wpdb->get_results( "select people_id, sum( `debit` ) - sum( `credit` ) as balance from {$wpdb->prefix}erp_acct_people_details where voucher_type != 'expense' group by people_id having balance < 0", ARRAY_A );
+    $vir_ac['acct_receivable'] = $wpdb->get_results( "select people_id, sum( `debit` ) - sum( `credit` ) as balance from {$wpdb->prefix}erp_acct_people_details where voucher_type != 'expense' group by people_id having balance > 0", ARRAY_A );
+    $vir_ac['tax_payable']     = $wpdb->get_results( "select in_tax.agency_id as agency, (in_tax.tax_amount - tax_pay.amount) as amount from {$wpdb->prefix}erp_acct_invoice_details_tax as in_tax left join {$wpdb->prefix}erp_acct_tax_pay as tax_pay on in_tax.agency_id = tax_pay.agency_id WHERE amount is not null", ARRAY_A );
+
+    for( $i = 0; $i < count( $vir_ac['acct_payable'] ); $i++ ) {
+        $vir_ac['acct_payable'][$i]['people_name'] = erp_acct_get_people_name_by_people_id( $vir_ac['acct_payable'][$i]['people_id'] );
+        $vir_ac['acct_payable'][$i]['balance'] = abs( $vir_ac['acct_payable'][$i]['balance'] );
+    }
+
+    for( $i = 0; $i < count( $vir_ac['acct_receivable'] ); $i++ ) {
+        $vir_ac['acct_receivable'][$i]['people_name'] = erp_acct_get_people_name_by_people_id( $vir_ac['acct_receivable'][$i]['people_id'] );
+        $vir_ac['acct_receivable'][$i]['balance'] = abs( $vir_ac['acct_receivable'][$i]['balance'] );
+    }
+
+    for( $i = 0; $i < count( $vir_ac['tax_payable'] ); $i++ ) {
+        $vir_ac['tax_payable'][$i]['agency_name'] = erp_acct_get_tax_agency_name_id( $vir_ac['tax_payable'][$i]['agency'] );
+    }
 
     return $vir_ac;
 

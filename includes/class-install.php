@@ -984,7 +984,9 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_opening_balances` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `financial_year_id` int(11) DEFAULT NULL,
+                `chart_id` int(11) DEFAULT NULL,
                 `ledger_id` int(11) DEFAULT NULL,
+                `people_id` int(11) DEFAULT NULL,
                 `debit` decimal(10,2) DEFAULT 0,
                 `credit` decimal(10,2) DEFAULT 0,
                 `created_at` date DEFAULT NULL,

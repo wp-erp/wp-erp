@@ -20,7 +20,7 @@
                 </select>
             </div>
 
-            <div  v-if="virtual_accts" class="erp-accordion">
+            <div  v-if="acct_rec" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open8=!open8"
                      :class="open8?'active':'before-border'">
@@ -29,22 +29,24 @@
                 <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open8">
                     <thead>
                     <tr>
+                        <th>People</th>
                         <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>{{ virtual_accts.acct_receivable }}</td>
-                        <td><input :value="virtual_accts.acct_receivable" disabled></td>
+                    <tr :key="idx" v-for="(acct,idx) in acct_rec">
+                        <td>{{ acct.people_name }}</td>
+                        <td><input :value="acct.balance" disabled></td>
+                        <td><input :value="acct.balance"></td>
                         <td><input :value="0" disabled=""></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div v-if="virtual_accts" class="erp-accordion">
+            <div v-if="acct_pay" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open9=!open9"
                      :class="open9?'active':'before-border'">
@@ -53,16 +55,40 @@
                 <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open9">
                     <thead>
                     <tr>
+                        <th>People</th>
                         <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
                     </tr>
                     </thead>
                     <tbody>
+                    <tr :key="idx" v-for="(acct,idx) in acct_pay">
+                        <td>{{ acct.people_name }}</td>
+                        <td><input :value="acct.balance" disabled></td>
+                        <td><input :value="0" disabled=""></td>
+                        <td><input :value="acct.balance"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div v-if="tax_pay" class="erp-accordion">
+                <div class="erp-accordion-expand"
+                     @click="open10=!open10"
+                     :class="open10?'active':'before-border'">
+                    <span class="wp-erp-ob-title">Tax Payable</span>
+                </div>
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open10">
+                    <thead>
                     <tr>
-                        <td>{{ virtual_accts.acct_payable }}</td>
-                        <td><input :value="0" disabled></td>
-                        <td><input :value="virtual_accts.acct_payable" disabled></td>
+                        <th>Agency</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr :key="idx" v-for="(t_pay,idx) in tax_pay">
+                        <td>{{ t_pay.agency_name }}</td>
+                        <td><input :value="t_pay.amount"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -305,6 +331,7 @@
                 open7: false,
                 open8: false,
                 open9: false,
+                open10: false,
                 form_errors: [],
                 chartAccounts: [],
                 ledgers: [],
@@ -314,7 +341,9 @@
                 credit_total: 0,
                 debit_total: 0,
                 isWorking: false,
-                virtual_accts: null
+                acct_rec: null,
+                acct_pay: null,
+                tax_pay: null,
             }
         },
 
@@ -434,7 +463,9 @@
 
             getVirtualAccts() {
                 HTTP.get('/opening-balances/virtual-accts').then( response => {
-                    this.virtual_accts = response.data;
+                    this.acct_pay = response.data.acct_payable;
+                    this.acct_rec = response.data.acct_receivable;
+                    this.tax_pay  = response.data.tax_payable;
                 });
             }
         },
