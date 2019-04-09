@@ -132,6 +132,7 @@ class Settings extends ERP_Settings_Page {
     }
 
     function acct_opening_balance() {
+        $ob_values = maybe_unserialize( get_option( 'erp_acct_fisc_years' ) );
         require_once ERP_ACCOUNTING_VIEWS . '/settings/opening_balance.php';
     }
 

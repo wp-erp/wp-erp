@@ -44,7 +44,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_journal' );
                 },
             ],
-            'schema' => [ $this, 'get_item_schema' ],
+//            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/virtual-accts', [
@@ -92,6 +92,20 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
             ],
             'schema' => [ $this, 'get_item_schema' ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/virtual-accts' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_virtual_accts_by_year' ],
+                'args'                => [
+                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_journal' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
     }
 
     /**
@@ -128,7 +142,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Get a specific opening_balance
+     * Get opening balances of a year
      *
      * @param WP_REST_Request $request
      *
@@ -142,6 +156,34 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $item = erp_acct_get_opening_balance( $id );
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
+
+        $response = rest_ensure_response( $item );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get a virtual accounts of a year
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_virtual_accts_by_year( $request ) {
+        $id   = (int) $request['id']; $additional_fields = [];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $item = erp_acct_get_virtual_acct( $id );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -296,6 +338,15 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
         if ( isset( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
+        }
+        if ( isset( $request['acct_pay'] ) ) {
+            $prepared_item['acct_pay'] = $request['acct_pay'];
+        }
+        if ( isset( $request['acct_rec'] ) ) {
+            $prepared_item['acct_rec'] = $request['acct_rec'];
+        }
+        if ( isset( $request['tax_pay'] ) ) {
+            $prepared_item['tax_pay'] = $request['tax_pay'];
         }
 
         return $prepared_item;

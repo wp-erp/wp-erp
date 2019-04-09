@@ -78,7 +78,7 @@ function erp_acct_trial_balance_bank_balance( $args, $type ) {
  *
  * @return int
  */
-function erp_acct_trial_balance_sales_tax_query( $args, $type ) {
+function erp_acct_trial_balance_sales_tax_query( $args, $type = 'payable' ) {
     global $wpdb;
 
     if ( 'payable' === $type ) {
