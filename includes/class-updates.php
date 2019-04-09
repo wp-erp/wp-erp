@@ -130,6 +130,9 @@ class Updates {
      * @return void
      */
     public function do_updates() {
+        global $bg_process;
+        $bg_process = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
+
         if ( isset( $_GET['wperp_do_update'] ) && $_GET['wperp_do_update'] ) {
             $this->perform_updates();
         }
