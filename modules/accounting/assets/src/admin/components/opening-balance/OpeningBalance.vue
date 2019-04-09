@@ -15,11 +15,12 @@
         <form action="" method="post" @submit.prevent="submitOBForm">
             <div class="wperp-custom-select">
                 <label>Financial Year</label>
-                <select v-model="fin_year">
+                <select v-model="fin_year" @input="getSelectedOB">
                     <option v-for="year in years" :value="year">{{ year }}</option>
                 </select>
             </div>
 
+            <!-- Accounts Receivable Section -->
             <div  v-if="acct_rec" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open8=!open8"
@@ -30,7 +31,6 @@
                     <thead>
                     <tr>
                         <th>People</th>
-                        <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
                     </tr>
@@ -38,14 +38,15 @@
                     <tbody>
                     <tr :key="idx" v-for="(acct,idx) in acct_rec">
                         <td>{{ acct.people_name }}</td>
-                        <td><input :value="acct.balance" disabled></td>
-                        <td><input :value="acct.balance"></td>
-                        <td><input :value="0" disabled=""></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="acct.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
+
+            <!-- Accounts Payable Section -->
             <div v-if="acct_pay" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open9=!open9"
@@ -64,14 +65,15 @@
                     <tbody>
                     <tr :key="idx" v-for="(acct,idx) in acct_pay">
                         <td>{{ acct.people_name }}</td>
-                        <td><input :value="acct.balance" disabled></td>
-                        <td><input :value="0" disabled=""></td>
-                        <td><input :value="acct.balance"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="acct.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
+
+            <!-- Tax Payable Section -->
             <div v-if="tax_pay" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open10=!open10"
@@ -82,13 +84,15 @@
                     <thead>
                     <tr>
                         <th>Agency</th>
-                        <th>Amount</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr :key="idx" v-for="(t_pay,idx) in tax_pay">
                         <td>{{ t_pay.agency_name }}</td>
-                        <td><input :value="t_pay.amount"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="t_pay.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="t_pay.credit"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -104,7 +108,6 @@
                     <thead>
                     <tr>
                         <th>Account</th>
-                        <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
                     </tr>
@@ -112,7 +115,6 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[1]">
                         <td>{{ledger.name}}</td>
-                        <td>{{ledger.balance}}</td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
@@ -130,7 +132,6 @@
                     <thead>
                     <tr>
                         <th>Account</th>
-                        <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
                     </tr>
@@ -138,7 +139,6 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[2]">
                         <td>{{ledger.name}}</td>
-                        <td>{{ledger.balance}}</td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
@@ -156,7 +156,6 @@
                     <thead>
                     <tr>
                         <th>Account</th>
-                        <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
                     </tr>
@@ -164,7 +163,6 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[3]">
                         <td>{{ledger.name}}</td>
-                        <td>{{ledger.balance}}</td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
@@ -182,7 +180,6 @@
                     <thead>
                     <tr>
                         <th>Account</th>
-                        <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
                     </tr>
@@ -190,7 +187,6 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[4]">
                         <td>{{ledger.name}}</td>
-                        <td>{{ledger.balance}}</td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
@@ -208,7 +204,6 @@
                     <thead>
                     <tr>
                         <th>Account</th>
-                        <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
                     </tr>
@@ -216,7 +211,6 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[2]">
                         <td>{{ledger.name}}</td>
-                        <td>{{ledger.balance}}</td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
@@ -234,7 +228,6 @@
                     <thead>
                     <tr>
                         <th>Account</th>
-                        <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
                     </tr>
@@ -242,7 +235,6 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[6]">
                         <td>{{ledger.name}}</td>
-                        <td>{{ledger.balance}}</td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
@@ -260,7 +252,6 @@
                     <thead>
                     <tr>
                         <th>Account</th>
-                        <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
                     </tr>
@@ -268,7 +259,6 @@
                     <tbody>
                     <tr :key="idx" v-if="ledgers[7]" v-for="(ledger,idx) in ledgers[7]">
                         <td>{{ledger.name}}</td>
-                        <td>{{ledger.balance}}</td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
@@ -368,7 +358,6 @@
                 HTTP.get('/ledgers/accounts').then( response => {
                     this.chartAccounts = response.data;
 
-
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
@@ -399,6 +388,7 @@
 
             calculateAmount() {
                 this.debit_total = 0; this.credit_total = 0;
+
                 for (let key in this.ledgers) {
                     for ( let idx = 0; idx < this.ledgers[key].length; idx++ ) {
                         if ( this.ledgers[key][idx].hasOwnProperty('debit') ) {
@@ -407,6 +397,33 @@
                         if ( this.ledgers[key][idx].hasOwnProperty('credit') ) {
                             this.credit_total += parseFloat(this.ledgers[key][idx].credit);
                         }
+                    }
+                }
+
+                for (let key in this.acct_rec) {
+                    if ( this.acct_rec[key].hasOwnProperty('debit') ) {
+                        this.debit_total += parseFloat(this.acct_rec[key].debit);
+                    }
+                    if ( this.acct_rec[key].hasOwnProperty('credit') ) {
+                        this.credit_total += parseFloat(this.acct_rec[key].credit);
+                    }
+                }
+
+                for (let key in this.acct_pay) {
+                    if ( this.acct_pay[key][idx].hasOwnProperty('debit') ) {
+                        this.debit_total += parseFloat(this.acct_pay[key][idx].debit);
+                    }
+                    if ( this.acct_pay[key][idx].hasOwnProperty('credit') ) {
+                        this.credit_total += parseFloat(this.acct_pay[key][idx].credit);
+                    }
+                }
+
+                for (let key in this.tax_pay) {
+                    if ( this.tax_pay[key][idx].hasOwnProperty('debit') ) {
+                        this.debit_total += parseFloat(this.tax_pay[key][idx].debit);
+                    }
+                    if ( this.tax_pay[key][idx].hasOwnProperty('credit') ) {
+                        this.credit_total += parseFloat(this.tax_pay[key][idx].credit);
                     }
                 }
 
@@ -445,6 +462,9 @@
                 HTTP.post('/opening-balances', {
                     year: this.fin_year,
                     ledgers: this.ledgers,
+                    acct_pay: this.acct_pay,
+                    acct_rec: this.acct_rec,
+                    tax_pay: this.tax_pay,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Opening Balance Created!' );
@@ -466,7 +486,24 @@
                     this.acct_pay = response.data.acct_payable;
                     this.acct_rec = response.data.acct_receivable;
                     this.tax_pay  = response.data.tax_payable;
+                })
+            },
+
+            getSelectedOB() {
+                this.years = []; this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
+
+                HTTP.get('/ledgers').then( response => {
+                    response.data.forEach( (ledger) => {
+                        ledger.balance = this.transformBalance( ledger.balance );
+                    });
+                    this.ledgers = this.groupBy(response.data, 'chart_id');
                 });
+
+                HTTP.get(`/opening-balances/virtual-accts/${this.fin_year}`).then( response => {
+                    this.acct_pay = response.data.acct_payable;
+                    this.acct_rec = response.data.acct_receivable;
+                    this.tax_pay  = response.data.tax_payable;
+                })
             }
         },
 
