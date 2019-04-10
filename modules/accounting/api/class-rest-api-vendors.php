@@ -219,6 +219,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $vendor = (array) erp_get_people( $id );
         $vendor['id'] = $id;
 
+        $this->add_log( $vendor, 'add' );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -250,6 +252,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $vendor = (array) erp_get_people( $id );
         $vendor['id'] = $id;
+
+        $this->add_log( $vendor, 'add' );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -339,6 +343,25 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response       =   rest_ensure_response( $transactions );
 
         return $response;
+    }
+
+    /**
+     * Log when vendor insert or update
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Vendor', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => $data['first_name'] . ' ' . $data['last_name'] . __( ' vendor has been created', 'erp' ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
     }
 
     /**

@@ -225,6 +225,8 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $expense = erp_acct_insert_expense( $expense_data );
 
+        $this->add_log( $expense, 'add' );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -313,6 +315,25 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         erp_acct_void_expense( $id );
 
         return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Log when expense
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Expense', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => sprintf( __( 'An expense of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
     }
 
     /**

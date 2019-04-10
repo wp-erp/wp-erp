@@ -180,6 +180,8 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $pay_purchase_data = erp_acct_insert_pay_purchase( $pay_purchase_data );
 
+        $this->add_log( $pay_purchase_data, 'add' );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -261,6 +263,25 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         erp_acct_void_pay_purchase( $id );
 
         return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Log when purchase payment is created
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Pay Purchase', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => sprintf( __( 'A purchase payment of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
     }
 
     /**

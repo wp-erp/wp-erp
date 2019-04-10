@@ -230,6 +230,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $customer = (array) erp_get_people( $id );
         $customer['id'] = $id;
 
+        $this->add_log( $customer, 'add' );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -261,6 +263,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $customer = (array) erp_get_people( $id );
         $customer['id'] = $id;
+
+        $this->add_log( $customer, 'update' );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -365,6 +369,26 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
+
+    /**
+     * Log when customer insert or update
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Customer', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => $data['first_name'] . ' ' . $data['last_name'] . __( ' customer has been created', 'erp' ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
+    }
+
     /**
      * Prepare a single item for create or update
      *

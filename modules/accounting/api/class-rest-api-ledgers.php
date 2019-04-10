@@ -272,6 +272,8 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $result = erp_acct_insert_ledger( $item );
 
+        $this->add_log( $result, 'add' );
+
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $result, $request );
         $response = rest_ensure_response( $response );
@@ -482,6 +484,25 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         erp_acct_delete_ledger_category( $id );
 
         return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Log when ledger is created
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Ledger Account', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => sprintf( __( 'A ledger account of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
     }
 
     /**

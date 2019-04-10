@@ -270,6 +270,8 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $opening_balance = erp_acct_insert_opening_balance( $opening_balance_data );
 
+        $this->add_log( $opening_balance, 'add' );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -318,6 +320,25 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response->set_status( 201 );
 
         return $response;
+    }
+
+    /**
+     * Log when opening balance is created
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Opening Balance', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => sprintf( __( 'A opening balance of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
     }
 
     /**
