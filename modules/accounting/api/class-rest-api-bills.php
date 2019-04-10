@@ -219,6 +219,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $bill = erp_acct_insert_bill( $bill_data );
 
+        $this->add_log( $bill, 'add' );
+
         // $bill_data['voucher_no'] = $bill_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -260,6 +262,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $bill_data['amount']          = array_sum( $item_total );
 
         $bill = erp_acct_update_bill( $bill_data, $id );
+
+        $this->add_log( $bill, 'update' );
 
         // $bill_data['voucher_no'] = $bill_id;
         $additional_fields['namespace']  = $this->namespace;
@@ -390,6 +394,25 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response->set_status( 200 );
 
         return $response;
+    }
+
+    /**
+     * Log when bill is created
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Bill', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => sprintf( __( 'An bill of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
     }
 
     /**
