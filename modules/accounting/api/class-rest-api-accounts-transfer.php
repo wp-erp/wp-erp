@@ -219,6 +219,8 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             return $id;
         }
 
+        $this->add_log( $item, 'transfer' );
+
         return new WP_REST_Response( true, 201 );
     }
 
@@ -362,6 +364,25 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response->set_status( 201 );
 
         return $response;
+    }
+
+    /**
+     * Log when transfer
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Transfer', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => sprintf( __(  '%s has been transfered from %s to %s', 'erp' ), $data['amount'], $data['from_account_id'], $data['to_account_id'] ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
     }
 
     /**

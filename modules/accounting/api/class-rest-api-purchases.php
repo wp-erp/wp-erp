@@ -246,6 +246,8 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $purchase_data = erp_acct_insert_purchase( $purchase_data );
 
+        $this->add_log( $purchase_data, 'add' );
+
         $purchase_data = $this->prepare_item_for_response( $purchase_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $purchase_data );
@@ -282,6 +284,8 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
             erp_acct_update_purchase( $purchase_data, $purchase_id[$key] );
         }
+
+        $this->add_log( $purchase_data, 'update' );
 
         $response = rest_ensure_response( $purchase_data );
         $response = $this->format_collection_response( $response, $request, count( $items ) );
@@ -325,6 +329,25 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         erp_acct_void_purchase( $id );
 
         return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Log when bill payment is created
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Pay Bill', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => sprintf( __( 'A bill payment of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
     }
 
     /**

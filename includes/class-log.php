@@ -118,6 +118,7 @@ class Log {
 	        wp_cache_set( $cache_key, $results, 'erp', HOUR_IN_SECONDS );
 
 	    } else if ( $count ) {
+            $args['offset'] = 0;
             return $audit_log->skip( $args['offset'] )->take( $args['number'] )->count();
         }
 
