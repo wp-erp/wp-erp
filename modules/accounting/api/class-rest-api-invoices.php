@@ -234,6 +234,8 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $invoice_data['id'] = $invoice_id;
 
+        $this->add_log( $invoice_data, 'add' );
+
         $invoice_data = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
 
         $response = rest_ensure_response( $invoice_data );
@@ -291,6 +293,8 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $invoice_id = erp_acct_update_invoice( $invoice_data, $id );
 
         $invoice_data['id'] = $invoice_id;
+
+        $this->add_log( $invoice_data, 'update' );
 
         $invoice_data = $this->prepare_item_for_response( $invoice_data, $request, $additional_fields );
 
@@ -418,6 +422,25 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response->set_status( 200 );
 
         return $response;
+    }
+
+    /**
+     * Log when invoice is created
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Invoice', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => sprintf( __( 'An invoice of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
     }
 
     /**

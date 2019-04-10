@@ -184,6 +184,8 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $journal = erp_acct_insert_journal( $trans_data );
 
+        $this->add_log( $journal, 'add' );
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -193,6 +195,25 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response->set_status( 201 );
 
         return $response;
+    }
+
+    /**
+     * Log when journal is created
+     *
+     * @param $data
+     * @param $action
+     */
+    public function add_log( $data, $action ) {
+        erp_log()->add([
+            'component'     => 'Accounting',
+            'sub_component' => __( 'Journal', 'erp' ),
+            'old_value'     => '',
+            'new_value'     => '',
+            'message'       => sprintf( __( 'An journal of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'changetype'    => $action,
+            'created_by'    => get_current_user_id()
+
+        ]);
     }
 
     /**
