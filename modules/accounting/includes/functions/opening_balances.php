@@ -146,9 +146,9 @@ function erp_acct_insert_opening_balance( $data ) {
         $date = erp_acct_get_start_end_date( $opening_balance_data['year'] );
 
         $year = $wpdb->get_row( "SELECT id, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE `name` = '{$opening_balance_data['year']}'" );
-        $year_id = $year->id;
 
         if ( !empty( $year ) ) {
+            $year_id = $year->id;
             $wpdb->query("DELETE FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = {$year->id}" );
         } else {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
@@ -368,8 +368,15 @@ function erp_acct_get_formatted_opening_balance_data( $data ) {
  * Get opening balance names
  */
 function erp_acct_get_opening_balance_names() {
+    $result = [];
     $ob_names = maybe_unserialize( get_option( 'erp_acct_fisc_years' ) );
-    return $ob_names['ob_names'];
+
+    for ( $i = 0; $i < count( $ob_names['ob_names'] ); $i++ ) {
+        $result[$i]['id'] = $i + 1;
+        $result[$i]['name'] = $ob_names['ob_names'][$i];
+    }
+
+    return $result;
 }
 
 /**
