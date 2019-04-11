@@ -294,7 +294,7 @@ class Admin {
     }
 
     public function save_accounting_settings() {
-        $fin_years = [];
+        global $wpdb; $fin_years = [];
 
         if ( empty( $_POST['ob_names'] ) || empty( $_POST['ob_starts'] ) || empty( $_POST['ob_ends'] ) ) {
             return;
@@ -303,6 +303,8 @@ class Admin {
         $ob_names  = $_POST['ob_names'];
         $ob_starts = $_POST['ob_starts'];
         $ob_ends   = $_POST['ob_ends'];
+        $opening_balance_data['created_at'] = date("Y-m-d H:i:s");
+        $opening_balance_data['created_by'] = get_current_user_id();;
 
         if ( !empty( $ob_names ) ) {
             for ( $i = 0; $i < count( $ob_names ); $i++ ) {
@@ -322,6 +324,16 @@ class Admin {
             }
         }
 
-        update_option( 'erp_acct_fisc_years', maybe_serialize( $fin_years ) );
+        $wpdb->query('TRUNCATE TABLE ' . $wpdb->prefix . 'erp_acct_financial_years' );
+
+        for ( $i = 0; $i < count( $ob_names ); $i++ ) {
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
+                'name' => $fin_years['ob_names'][$i],
+                'start_date' => $fin_years['ob_starts'][$i],
+                'end_date' => $fin_years['ob_ends'][$i],
+                'created_at' => $opening_balance_data['created_at'],
+                'created_by' => $opening_balance_data['created_by']
+            ) );
+        }
     }
 }

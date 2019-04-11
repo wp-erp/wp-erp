@@ -478,7 +478,7 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.post('/opening-balances', {
-                    year: this.fin_year.name,
+                    year: this.fin_year.id,
                     ledgers: this.ledgers,
                     acct_pay: this.acct_pay,
                     acct_rec: this.acct_rec,
@@ -509,9 +509,9 @@
             },
 
             getSelectedOB() {
-                this.years = []; this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
+                this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
 
-                HTTP.get('/ledgers').then( response => {
+                HTTP.get(`/opening-balances/${this.fin_year.id}`).then( response => {
                     response.data.forEach( (ledger) => {
                         ledger.balance = this.transformBalance( ledger.balance );
                     });
