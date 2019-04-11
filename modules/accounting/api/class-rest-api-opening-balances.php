@@ -155,14 +155,20 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item = erp_acct_get_opening_balance( $id );
+        $ledgers = erp_acct_get_opening_balance( $id );
+
+        $formatted_items = []; $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        foreach ( $ledgers as $ledger) {
+            $data = $this->prepare_item_for_response( $ledger, $request, $additional_fields );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
 
-        $response = rest_ensure_response( $item );
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, count( $ledgers ) );
 
         $response->set_status( 200 );
 
