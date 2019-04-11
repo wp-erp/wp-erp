@@ -27376,10 +27376,21 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_SimpleSelect_vue__ = __webpack_require__(619);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_ShowErrors_vue__ = __webpack_require__(8);
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -27673,7 +27684,7 @@ setTimeout(function () {
   name: "OpeningBalance",
   components: {
     HTTP: __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */],
-    MultiSelect: __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__["a" /* default */],
+    SimpleSelect: __WEBPACK_IMPORTED_MODULE_2_admin_components_select_SimpleSelect_vue__["a" /* default */],
     SubmitButton: __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__["a" /* default */],
     ShowErrors: __WEBPACK_IMPORTED_MODULE_4_admin_components_base_ShowErrors_vue__["a" /* default */]
   },
@@ -27702,8 +27713,9 @@ setTimeout(function () {
       form_errors: [],
       chartAccounts: [],
       ledgers: [],
-      fin_year: '',
+      fin_year: {},
       years: [],
+      description: '',
       all_ledgers: [],
       credit_total: 0,
       debit_total: 0,
@@ -27713,8 +27725,18 @@ setTimeout(function () {
       tax_pay: null
     };
   },
-  mounted: function mounted() {
+  created: function created() {
+    var _this = this;
+
     this.fetchData();
+    this.$root.$on("SimpleSelectChange", function (data) {
+      console.log(_this.years);
+      _this.fin_year = _this.years.find(function (o) {
+        return o.id === data.selected;
+      });
+
+      _this.getSelectedOB();
+    });
   },
   methods: {
     groupBy: function groupBy(arr, fn) {
@@ -27727,7 +27749,7 @@ setTimeout(function () {
       }, {});
     },
     fetchData: function fetchData() {
-      var _this = this;
+      var _this2 = this;
 
       this.chartAccounts = [];
       this.$store.dispatch('spinner/setSpinner', true);
@@ -27735,22 +27757,22 @@ setTimeout(function () {
       this.fetchLedgers();
       this.getVirtualAccts();
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers/accounts').then(function (response) {
-        _this.chartAccounts = response.data;
+        _this2.chartAccounts = response.data;
 
-        _this.$store.dispatch('spinner/setSpinner', false);
+        _this2.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
-        _this.$store.dispatch('spinner/setSpinner', false);
+        _this2.$store.dispatch('spinner/setSpinner', false);
       });
     },
     fetchLedgers: function fetchLedgers() {
-      var _this2 = this;
+      var _this3 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers').then(function (response) {
         response.data.forEach(function (ledger) {
-          ledger.balance = _this2.transformBalance(ledger.balance);
+          ledger.balance = _this3.transformBalance(ledger.balance);
         });
-        _this2.ledgers = _this2.groupBy(response.data, 'chart_id');
-        _this2.all_ledgers = response.data;
+        _this3.ledgers = _this3.groupBy(response.data, 'chart_id');
+        _this3.all_ledgers = response.data;
       });
     },
     transformBalance: function transformBalance(val) {
@@ -27822,7 +27844,7 @@ setTimeout(function () {
     validateForm: function validateForm() {
       this.form_errors = [];
 
-      if (!this.fin_year) {
+      if (!this.fin_year.hasOwnProperty('id')) {
         this.form_errors.push('Financial year is required.');
       }
 
@@ -27831,7 +27853,7 @@ setTimeout(function () {
       }
     },
     submitOBForm: function submitOBForm() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.validateForm();
 
@@ -27845,54 +27867,54 @@ setTimeout(function () {
 
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].post('/opening-balances', {
-        year: this.fin_year,
+        year: this.fin_year.id,
         ledgers: this.ledgers,
         acct_pay: this.acct_pay,
         acct_rec: this.acct_rec,
-        tax_pay: this.tax_pay
+        tax_pay: this.tax_pay,
+        description: this.description
       }).then(function (res) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
+        _this4.$store.dispatch('spinner/setSpinner', false);
 
-        _this3.showAlert('success', 'Opening Balance Created!');
+        _this4.showAlert('success', 'Opening Balance Created!');
       }).catch(function (error) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
+        _this4.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
-        _this3.isWorking = false;
+        _this4.isWorking = false;
       });
     },
     getYears: function getYears() {
-      var _this4 = this;
+      var _this5 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/opening-balances/names').then(function (response) {
-        _this4.years = response.data;
+        _this5.years = response.data;
       });
     },
     getVirtualAccts: function getVirtualAccts() {
-      var _this5 = this;
-
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/opening-balances/virtual-accts').then(function (response) {
-        _this5.acct_pay = response.data.acct_payable;
-        _this5.acct_rec = response.data.acct_receivable;
-        _this5.tax_pay = response.data.tax_payable;
-      });
-    },
-    getSelectedOB: function getSelectedOB() {
       var _this6 = this;
 
-      this.years = [];
-      this.acct_pay = [];
-      this.acct_rec = [];
-      this.tax_pay = [];
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers').then(function (response) {
-        response.data.forEach(function (ledger) {
-          ledger.balance = _this6.transformBalance(ledger.balance);
-        });
-        _this6.ledgers = _this6.groupBy(response.data, 'chart_id');
-      });
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/virtual-accts/".concat(this.fin_year)).then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/opening-balances/virtual-accts').then(function (response) {
         _this6.acct_pay = response.data.acct_payable;
         _this6.acct_rec = response.data.acct_receivable;
         _this6.tax_pay = response.data.tax_payable;
+      });
+    },
+    getSelectedOB: function getSelectedOB() {
+      var _this7 = this;
+
+      this.acct_pay = [];
+      this.acct_rec = [];
+      this.tax_pay = [];
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(this.fin_year.id)).then(function (response) {
+        response.data.forEach(function (ledger) {
+          ledger.balance = _this7.transformBalance(ledger.balance);
+        });
+        _this7.ledgers = _this7.groupBy(response.data, 'chart_id');
+      });
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/virtual-accts/".concat(this.fin_year.id)).then(function (response) {
+        _this7.acct_pay = response.data.acct_payable;
+        _this7.acct_rec = response.data.acct_receivable;
+        _this7.tax_pay = response.data.tax_payable;
       });
     }
   },
@@ -52973,45 +52995,30 @@ var render = function() {
           }
         },
         [
-          _c("div", { staticClass: "wperp-custom-select" }, [
-            _c("label", [_vm._v("Financial Year")]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.fin_year,
-                    expression: "fin_year"
-                  }
-                ],
-                on: {
-                  input: _vm.getSelectedOB,
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.fin_year = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
+          _c(
+            "div",
+            {
+              staticClass: "wperp-col-sm-4 wperp-custom-select with-multiselect"
+            },
+            [
+              _c("label", [_vm._v("Financial Year")]),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c("simple-select", {
+                attrs: { width: 200, options: _vm.years },
+                on: { input: _vm.getSelectedOB },
+                model: {
+                  value: _vm.fin_year,
+                  callback: function($$v) {
+                    _vm.fin_year = $$v
+                  },
+                  expression: "fin_year"
                 }
-              },
-              _vm._l(_vm.years, function(year) {
-                return _c("option", { domProps: { value: year } }, [
-                  _vm._v(_vm._s(year))
-                ])
-              }),
-              0
-            )
-          ]),
+              })
+            ],
+            1
+          ),
           _vm._v(" "),
           _vm.acct_rec
             ? _c("div", { staticClass: "erp-accordion" }, [
@@ -54087,6 +54094,41 @@ var render = function() {
                     domProps: { value: _vm.credit_total }
                   })
                 ])
+              ]),
+              _vm._v(" "),
+              _c("tr", { staticClass: "wperp-form-group" }, [
+                _c(
+                  "td",
+                  {
+                    staticStyle: { "text-align": "left" },
+                    attrs: { colspan: "9" }
+                  },
+                  [
+                    _c("label", [_vm._v("Description")]),
+                    _vm._v(" "),
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.description,
+                          expression: "description"
+                        }
+                      ],
+                      staticClass: "wperp-form-field display-flex",
+                      attrs: { rows: "4", placeholder: "Internal Information" },
+                      domProps: { value: _vm.description },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.description = $event.target.value
+                        }
+                      }
+                    })
+                  ]
+                )
               ])
             ])
           ]),
@@ -54757,6 +54799,332 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
+
+/***/ }),
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */,
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */,
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */,
+/* 602 */,
+/* 603 */,
+/* 604 */,
+/* 605 */,
+/* 606 */,
+/* 607 */,
+/* 608 */,
+/* 609 */,
+/* 610 */,
+/* 611 */,
+/* 612 */,
+/* 613 */,
+/* 614 */,
+/* 615 */,
+/* 616 */,
+/* 617 */,
+/* 618 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: "SimpleSelect",
+  props: {
+    selected: {
+      type: Number,
+      default: null
+    },
+    width: {
+      type: Number,
+      default: null
+    },
+    options: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    }
+  },
+  data: function data() {
+    return {
+      select_val: null
+    };
+  },
+  computed: {
+    checkOptions: function checkOptions() {
+      if (this.options) {
+        return this.options;
+      } else {
+        window.console.error(this.name + " couldn't render without options");
+      }
+    }
+  },
+  methods: {
+    onChange: function onChange() {
+      this.$root.$emit("SimpleSelectChange", {
+        selected: this.select_val
+      });
+    }
+  }
+});
+
+/***/ }),
+/* 619 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SimpleSelect_vue__ = __webpack_require__(618);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bf2888be_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SimpleSelect_vue__ = __webpack_require__(621);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(620)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-bf2888be"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SimpleSelect_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_bf2888be_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SimpleSelect_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "assets/src/admin/components/select/SimpleSelect.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-bf2888be", Component.options)
+  } else {
+    hotAPI.reload("data-v-bf2888be", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 620 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 621 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.checkOptions
+    ? _c(
+        "div",
+        { staticClass: "vue-select", style: "width:" + _vm.width + "px" },
+        [
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.select_val,
+                  expression: "select_val"
+                }
+              ],
+              on: {
+                change: [
+                  function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.select_val = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  },
+                  _vm.onChange
+                ]
+              }
+            },
+            _vm._l(_vm.options, function(option) {
+              return _c("option", { domProps: { value: option.id } }, [
+                _vm._v(_vm._s(option.name))
+              ])
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _c("i", { staticClass: "select--icon" })
+        ]
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-bf2888be", esExports)
+  }
+}
 
 /***/ })
 ],[175]);

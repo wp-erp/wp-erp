@@ -69,21 +69,19 @@ function erp_acct_get_opening_balance( $year_id ) {
 
     $sql = "SELECT
 
-    opening_balance.id,
-    opening_balance.financial_year_id,
-    opening_balance.ledger_id,
-    opening_balance.debit,
-    opening_balance.credit,
-    financial_year.name,
-    financial_year.description,
-    financial_year.created_at,
-    financial_year.created_by,
-    financial_year.updated_at,
-    financial_year.updated_by
+    id,
+    financial_year_id,
+    ledger_id,
+    chart_id,
+    debit,
+    credit,
+    created_at,
+    created_by,
+    updated_at,
+    updated_by
 
-    FROM {$wpdb->prefix}erp_acct_opening_balances as opening_balance
-    LEFT JOIN {$wpdb->prefix}erp_acct_financial_years as financial_year ON opening_balance.financial_year_id = financial_year.id
-    WHERE financial_year.id = {$year_id} AND opening_balance.virtual_acct IS NULL";
+    FROM {$wpdb->prefix}erp_acct_opening_balances
+    WHERE financial_year_id = {$year_id} AND virtual_acct IS NULL";
 
     $rows = $wpdb->get_results( $sql, ARRAY_A );
 
@@ -122,6 +120,8 @@ function erp_acct_get_virtual_acct( $year_id ) {
 
     $rows = $wpdb->get_results( $sql, ARRAY_A );
 
+    if ( empty( $rows ) )
+
     return $rows;
 
 }
@@ -143,27 +143,6 @@ function erp_acct_insert_opening_balance( $data ) {
         $wpdb->query( 'START TRANSACTION' );
 
         $opening_balance_data = erp_acct_get_formatted_opening_balance_data( $data );
-        $date = erp_acct_get_start_end_date( $opening_balance_data['year'] );
-
-        $year = $wpdb->get_row( "SELECT id, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE `name` = '{$opening_balance_data['year']}'" );
-        $year_id = $year->id;
-
-        if ( !empty( $year ) ) {
-            $wpdb->query("DELETE FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = {$year->id}" );
-        } else {
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
-                'name' => $opening_balance_data['year'],
-                'start_date' => $date['start'],
-                'end_date' => $date['end'],
-                'description'=> $opening_balance_data['description'],
-                'created_at' => $opening_balance_data['created_at'],
-                'created_by' => $opening_balance_data['created_by'],
-                'updated_at' => $opening_balance_data['updated_at'],
-                'updated_by' => $opening_balance_data['updated_by'],
-            ) );
-
-            $year_id = $wpdb->insert_id;
-        }
 
         $items = $opening_balance_data['ledgers'];
 
@@ -173,10 +152,15 @@ function erp_acct_insert_opening_balance( $data ) {
             $ledgers = array_merge( $ledgers, $item );
         }
 
+        $year_id = $opening_balance_data['year'];
+
+        $wpdb->query("DELETE FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = {$year_id}" );
+
         foreach ( $ledgers as $ledger ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
                 'financial_year_id' => $year_id,
                 'ledger_id' => $ledger['id'],
+                'chart_id' => $ledger['chart_id'],
                 'people_id' => 0,
                 'agency_id' => 0,
                 'debit' => isset( $ledger['debit'] ) ? $ledger['debit'] : 0,
@@ -266,16 +250,6 @@ function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
 }
 
 /**
- *
- *
- * @param $data
- * @param $ob_id
- */
-function erp_acct_update_ob_vir_accounts( $data, $ob_id ) {
-
-}
-
-/**
  * Update opening_balance data
  *
  * @param $data
@@ -292,19 +266,6 @@ function erp_acct_update_opening_balance( $data, $opening_balance_no ) {
         $wpdb->query( 'START TRANSACTION' );
 
         $opening_balance_data = erp_acct_get_formatted_opening_balance_data( $data );
-        $date = erp_acct_get_start_end_date( $opening_balance_data['year'] );
-
-        $wpdb->update( $wpdb->prefix . 'erp_acct_financial_years', array(
-            'description' => $opening_balance_data['description'],
-            'start' => $date['start'],
-            'end' => $date['end'],
-            'created_at' => $opening_balance_data['created_at'],
-            'created_by' => $opening_balance_data['created_by'],
-            'updated_at' => $opening_balance_data['updated_at'],
-            'updated_by' => $opening_balance_data['updated_by'],
-        ), array(
-            'name' => $opening_balance_data['year'],
-        ) );
 
         $items = $opening_balance_data['ledgers'];
 
@@ -317,6 +278,7 @@ function erp_acct_update_opening_balance( $data, $opening_balance_no ) {
         foreach ( $ledgers as $ledger ) {
             $wpdb->update( $wpdb->prefix . 'erp_acct_opening_balances', array(
                 'ledger_id' => $ledger['id'],
+                'chart_id' => $ledger['chart_id'],
                 'debit' => isset( $ledger['debit'] ) ? $ledger['debit'] : 0,
                 'credit' => isset( $ledger['credit'] ) ? $ledger['credit'] : 0,
                 'created_at' => $opening_balance_data['created_at'],
@@ -368,8 +330,13 @@ function erp_acct_get_formatted_opening_balance_data( $data ) {
  * Get opening balance names
  */
 function erp_acct_get_opening_balance_names() {
-    $ob_names = maybe_unserialize( get_option( 'erp_acct_fisc_years' ) );
-    return $ob_names['ob_names'];
+    global $wpdb;
+
+    $sql = "SELECT id, name FROM {$wpdb->prefix}erp_acct_financial_years";
+
+    $rows = $wpdb->get_results( $sql, ARRAY_A );
+
+    return $rows;
 }
 
 /**
@@ -379,13 +346,16 @@ function erp_acct_get_opening_balance_names() {
  *
  * @return array
  */
-function erp_acct_get_start_end_date( $ob_name ) {
+function erp_acct_get_start_end_date( $year_id ) {
     $dates = [];
-    $ob_names = maybe_unserialize( get_option( 'erp_acct_fisc_years' ) );
-    $idx = array_search( $ob_name, $ob_names['ob_names'] );
+    global $wpdb;
 
-    $dates['start'] = $ob_names['ob_starts'][$idx];
-    $dates['end'] = $ob_names['ob_ends'][$idx];
+    $sql = "SELECT start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE id = {$year_id}";
+
+    $rows = $wpdb->get_row( $sql, ARRAY_A );
+
+    $dates['start'] = $rows['start_date'];
+    $dates['end'] = $rows['end_date'];
 
     return $dates;
 }

@@ -132,7 +132,12 @@ class Settings extends ERP_Settings_Page {
     }
 
     function acct_opening_balance() {
-        $ob_values = maybe_unserialize( get_option( 'erp_acct_fisc_years' ) );
+        global $wpdb;
+
+        $sql = "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years";
+
+        $rows = $wpdb->get_results( $sql, ARRAY_A );
+
         require_once ERP_ACCOUNTING_VIEWS . '/settings/opening_balance.php';
     }
 

@@ -13,11 +13,16 @@
         <show-errors :error_msgs="form_errors" ></show-errors>
 
         <form action="" method="post" @submit.prevent="submitOBForm">
-            <div class="wperp-custom-select">
+            <div class="wperp-col-sm-4 wperp-custom-select with-multiselect">
                 <label>Financial Year</label>
-                <select v-model="fin_year" @input="getSelectedOB">
-                    <option v-for="year in years" :value="year">{{ year }}</option>
-                </select>
+                <br>
+                <simple-select
+                    v-model="fin_year"
+                    @input="getSelectedOB"
+                    :width="200"
+                    :options="years"
+                >
+                </simple-select>
             </div>
 
             <!-- Accounts Receivable Section -->
@@ -275,6 +280,12 @@
                     <td data-colname="Total Debit"><input type="text" class="text-right" :value="debit_total" readonly ></td>
                     <td data-colname="Total Credit"><input type="text" class="text-right" :value="credit_total" readonly ></td>
                 </tr>
+                <tr class="wperp-form-group">
+                    <td colspan="9" style="text-align: left;">
+                        <label>Description</label>
+                        <textarea v-model="description" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                    </td>
+                </tr>
                 </tbody>
             </table>
             <submit-button text="Add Opening Balance"></submit-button>
@@ -285,7 +296,7 @@
 
 <script>
     import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+    import SimpleSelect from 'admin/components/select/SimpleSelect.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
@@ -294,7 +305,7 @@
 
         components: {
             HTTP,
-            MultiSelect,
+            SimpleSelect,
             SubmitButton,
             ShowErrors
         },
@@ -325,8 +336,9 @@
                 form_errors: [],
                 chartAccounts: [],
                 ledgers: [],
-                fin_year: '',
+                fin_year: {},
                 years: [],
+                description: '',
                 all_ledgers: [],
                 credit_total: 0,
                 debit_total: 0,
@@ -337,8 +349,14 @@
             }
         },
 
-        mounted() {
+        created() {
             this.fetchData();
+
+            this.$root.$on( "SimpleSelectChange", (data) => {
+                console.log( this.years );
+                this.fin_year = this.years.find(o => o.id === data.selected);
+                this.getSelectedOB();
+            });
         },
 
         methods: {
@@ -374,7 +392,7 @@
                 });
             },
 
-            transformBalance( val ){
+            transformBalance( val ) {
                 if ( null === val && typeof val === 'object' ) {
                     val = 0;
                 }
@@ -437,7 +455,7 @@
             validateForm() {
                 this.form_errors = [];
 
-                if ( !this.fin_year ) {
+                if ( !this.fin_year.hasOwnProperty('id') ) {
                     this.form_errors.push('Financial year is required.');
                 }
 
@@ -460,11 +478,12 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.post('/opening-balances', {
-                    year: this.fin_year,
+                    year: this.fin_year.id,
                     ledgers: this.ledgers,
                     acct_pay: this.acct_pay,
                     acct_rec: this.acct_rec,
                     tax_pay: this.tax_pay,
+                    description: this.description,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Opening Balance Created!' );
@@ -490,16 +509,16 @@
             },
 
             getSelectedOB() {
-                this.years = []; this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
+                this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
 
-                HTTP.get('/ledgers').then( response => {
+                HTTP.get(`/opening-balances/${this.fin_year.id}`).then( response => {
                     response.data.forEach( (ledger) => {
                         ledger.balance = this.transformBalance( ledger.balance );
                     });
                     this.ledgers = this.groupBy(response.data, 'chart_id');
                 });
 
-                HTTP.get(`/opening-balances/virtual-accts/${this.fin_year}`).then( response => {
+                HTTP.get(`/opening-balances/virtual-accts/${this.fin_year.id}`).then( response => {
                     this.acct_pay = response.data.acct_payable;
                     this.acct_rec = response.data.acct_receivable;
                     this.tax_pay  = response.data.tax_payable;
