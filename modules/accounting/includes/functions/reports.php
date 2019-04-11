@@ -175,25 +175,16 @@ function erp_acct_get_owners_equity( $args, $type ) {
 function erp_acct_get_trial_balance( $args ) {
     global $wpdb;
 
-    if ( empty( $args['start_date'] ) ) {
-        $args['start_date'] = date('Y-m-d', strtotime('first day of this month') );
-    }
-
-    if ( empty( $args['end_date'] ) ) {
-        $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
-    }
-
-    $sql = $wpdb->prepare("SELECT
-        ledger.name,
-        SUM(ledger_detail.debit - ledger_detail.credit) AS balance
+    $sql = "SELECT
+        ledger.id, ledger.name, SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
-        WHERE ledger.chart_id <> 7 AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id",
-        $args['start_date'], $args['end_date']
-    );
+        WHERE ledger.chart_id <> 7 AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id";
 
-    // All DB results are inside `rows` key
-    $results['rows'] = $wpdb->get_results($sql, ARRAY_A);
+    $data = $wpdb->get_results( $wpdb->prepare($sql, $args['start_date'], $args['end_date']), ARRAY_A );
+
+    // All calculated DB results are inside `rows` key
+    $results['rows'] = erp_acct_trial_balance_calculate_with_opening_balance( $args['start_date'], $data, $sql );
 
     /**
      * Let's create some virtual ledgers
@@ -269,6 +260,130 @@ function erp_acct_get_trial_balance( $args ) {
 
     return $results;
 }
+
+/**
+ * Get trial balance calculate with_opening balance within financial year date range
+ *
+ * @param string $tb_start_date
+ * @param array $data => ledger details data on trial balance date range
+ * @param string $sql
+ *
+ * @return array
+ */
+function erp_acct_trial_balance_calculate_with_opening_balance( $tb_start_date, $data, $sql ) {
+    global $wpdb;
+
+    // get closest financial year id and start date
+    $closest_fy_date = erp_acct_get_closest_fn_year_date( $tb_start_date );
+
+    // get opening balance data within that(^) financial year
+    $opening_balance = erp_acct_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
+
+    $temp_data = [];
+    $result    = [];
+
+    foreach ( $data as $row ) {
+        foreach ( $opening_balance as $op_balance ) {
+            if ( $row['id'] == $op_balance['ledger_id'] ) {
+                $balance           = (float) $row['balance'];
+                $op_balance_debit  = (float) $op_balance['debit'];
+                $op_balance_credit = (float) $op_balance['credit'];
+
+                // add `debit` with balance if opening_balance is positive
+                // add `credit` with balance if opening_balance is negative
+                $balance += ( $op_balance_debit >= 0 ) ? $op_balance_debit : $op_balance_credit;
+
+                // fill temporary array for later use
+                $temp_data[] = [
+                    'id'      => $row['id'],
+                    'name'    => $row['name'],
+                    'balance' => $balance
+                ];
+            }
+        }
+    }
+
+    // should we go further calculation, check the diff
+    $date1    = date_create($tb_start_date);
+    $date2    = date_create($closest_fy_date['start_date']);
+    $interval = date_diff($date1, $date2);
+
+    if ( '1' > $interval->format('%a') ) {
+        return $temp_data;
+    }
+
+    // get previous date from trial balance start date
+    $date_before_trial_balance_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
+
+    // get ledger details data between
+    //     `financial year start date`
+    // and
+    //     `previous date from trial balance start date`
+    $ledger_details = $wpdb->get_results(
+                $wpdb->prepare($sql, $closest_fy_date['start_date'], $date_before_trial_balance_start),
+            ARRAY_A );
+
+    // clacultae with temporary array data and ledger_details(^) data
+    // and format for trial balance
+    foreach ( $ledger_details as $row ) {
+        foreach ( $temp_data as $temp ) {
+            if ( $row['id'] == $temp['id'] ) {
+                $balance  = (float) $row['balance'];
+                $balance += (float) $temp['balance'];
+
+                $result[] = [
+                    'id'      => $row['id'],
+                    'name'    => $row['name'],
+                    'balance' => $balance
+                ];
+            }
+        }
+    }
+
+    return $result;
+}
+
+/**
+ * Get closest date from financial year
+ *
+ * @param string $date
+ *
+ * @return string
+ */
+function erp_acct_get_closest_fn_year_date( $date ) {
+    global $wpdb;
+
+    $sql = "SELECT id, start_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date <= '%s' ORDER BY start_date DESC LIMIT 1";
+
+    return $wpdb->get_row( $wpdb->prepare($sql, $date), ARRAY_A );
+}
+
+/**
+ * Get opening balance data by financial year id
+ *
+ * @param int $id
+ *
+ * @return string
+ */
+function erp_acct_opening_balance_by_fn_year_id( $id ) {
+    global $wpdb;
+
+    $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = %d";
+
+    return $wpdb->get_results( $wpdb->prepare($sql, $id), ARRAY_A );
+}
+
+/**
+ * Get diff date between financial year and trial balance
+ *
+ * @param string $fn_date
+ * @param string $tb_date
+ *
+ * @return string
+ */
+// function erp_acct_get_diff_date_between_fn_year_and_trial_balance( $fn_date, $tb_date ) {
+
+// }
 
 
 /**
