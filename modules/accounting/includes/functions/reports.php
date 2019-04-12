@@ -282,25 +282,34 @@ function erp_acct_trial_balance_calculate_with_opening_balance( $tb_start_date, 
     $temp_data = [];
     $result    = [];
 
-    foreach ( $data as $row ) {
-        foreach ( $opening_balance as $op_balance ) {
-            if ( $row['id'] == $op_balance['ledger_id'] ) {
-                $balance           = (float) $row['balance'];
-                $op_balance_debit  = (float) $op_balance['debit'];
-                $op_balance_credit = (float) $op_balance['credit'];
+    $ledger_sql = "SELECT ledger.id, ledger.name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        WHERE ledger.chart_id <> 7 AND ledger.slug <> 'owner_s_equity'";
 
-                // add `debit` with balance if opening_balance is positive
-                // add `credit` with balance if opening_balance is negative
-                $balance += ( $op_balance_debit >= 0 ) ? $op_balance_debit : $op_balance_credit;
+    $ledgers = $wpdb->get_results( $ledger_sql, ARRAY_A );
 
-                // fill temporary array for later use
-                $temp_data[] = [
-                    'id'      => $row['id'],
-                    'name'    => $row['name'],
-                    'balance' => $balance
-                ];
+    /**
+     * Start writing a very `inefficient :(` foreach loop
+     */
+    foreach ( $ledgers as $ledger ) {
+        $balance = 0;
+
+        foreach ( $data as $row ) {
+            if ( $row['id'] == $ledger['id'] ) {
+                $balance += (float) $row['balance'];
             }
         }
+
+        foreach ( $opening_balance as $op_balance ) {
+            if ( $op_balance['id'] == $ledger['id'] ) {
+                $balance += (float) $op_balance['balance'];
+            }
+        }
+
+        $temp_data[] = [
+            'id'      => $ledger['id'],
+            'name'    => $ledger['name'],
+            'balance' => $balance
+        ];
     }
 
     // should we go further calculation, check the diff
@@ -308,36 +317,37 @@ function erp_acct_trial_balance_calculate_with_opening_balance( $tb_start_date, 
     $date2    = date_create($closest_fy_date['start_date']);
     $interval = date_diff($date1, $date2);
 
-    if ( '1' > $interval->format('%a') ) {
+    // if difference is `0` OR `1` day
+    if ( '2' > $interval->format('%a') ) {
         return $temp_data;
+    } else {
+        // get previous date from trial balance start date
+        $date_before_trial_balance_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
+        $tb_date = $date_before_trial_balance_start;
     }
-
-    // get previous date from trial balance start date
-    $date_before_trial_balance_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
 
     // get ledger details data between
     //     `financial year start date`
     // and
     //     `previous date from trial balance start date`
     $ledger_details = $wpdb->get_results(
-                $wpdb->prepare($sql, $closest_fy_date['start_date'], $date_before_trial_balance_start),
-            ARRAY_A );
+        $wpdb->prepare($sql, $closest_fy_date['start_date'], $tb_date), ARRAY_A
+    );
 
-    // clacultae with temporary array data and ledger_details(^) data
-    // and format for trial balance
-    foreach ( $ledger_details as $row ) {
-        foreach ( $temp_data as $temp ) {
-            if ( $row['id'] == $temp['id'] ) {
-                $balance  = (float) $row['balance'];
-                $balance += (float) $temp['balance'];
+    foreach ( $temp_data as $temp ) {
+        $balance = $temp['balance'];
 
-                $result[] = [
-                    'id'      => $row['id'],
-                    'name'    => $row['name'],
-                    'balance' => $balance
-                ];
+        foreach ( $ledger_details as $detail ) {
+            if ( $temp['id'] == $detail['id'] ) {
+                $balance += (float) $detail['balance'];
             }
         }
+
+        $result[] = [
+            'id'      => $temp['id'],
+            'name'    => $temp['name'],
+            'balance' => $balance
+        ];
     }
 
     return $result;
@@ -368,7 +378,10 @@ function erp_acct_get_closest_fn_year_date( $date ) {
 function erp_acct_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
 
-    $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = %d";
+    $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
+        WHERE opb.financial_year_id = %d GROUP BY opb.ledger_id";
 
     return $wpdb->get_results( $wpdb->prepare($sql, $id), ARRAY_A );
 }
