@@ -36,9 +36,10 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         $has_inventory = ! empty( $product_ids ) ? true : false;
 
         // Keep various id`s
-        $invoices = [];
-        $payments = [];
-        $expenses = [];
+        $invoices  = [];
+        $payments  = [];
+        $expenses  = [];
+        $transfers = [];
 
         $people = erp_get_people( $trn['user_id'] );
 
@@ -166,7 +167,26 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
             $this->_helper_payment_voucher_expense_people_details_migration($trn, $voucher_no);
             $this->_helper_payment_voucher_expense_ledger_details_migration($trn, $voucher_no);
-        }
+        } //payment_voucher
+
+        elseif ( 'bank' === $trn['form_type'] && ! $has_inventory ) {
+            $trn = $wpdb->get_row(
+                $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_ac_transactions WHERE id = %d", $trn_id),
+                ARRAY_A );
+            $wpdb->insert(
+            // `erp_acct_voucher_no`
+                "{$wpdb->prefix}erp_acct_voucher_no", [
+                    'type'       => 'transfer_voucher',
+                    'currency'   => $this->get_currecny_id( $trn['currency'] ),
+                    'created_at' => $this->get_created_at( $trn['created_at'] ),
+                    'created_by' => $trn['created_by']
+                ]
+            );
+
+            $voucher_no = $wpdb->insert_id;
+
+            $this->_helper_bank_transfers_migration($trn, $voucher_no, $trn_id);
+        } // transfer
 
         if ( ! empty( $invoices ) ) {
             $this->_helper_invoice_details_migration($invoices);
@@ -588,6 +608,67 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 $wpdb->query( $wpdb->prepare( $sql, $trn_no) );
             }
         }
+    }
+
+    /**
+     * Helper of bank ledger details migration
+     *
+     * @param array $trn
+     * @param int $voucher_no
+     *
+     * @return void
+     */
+    protected function _helper_bank_transfers_migration( $transfer, $voucher_no, $trn_id ) {
+        global $wpdb;
+
+        $trns = $wpdb->get_results(
+            $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_ac_journals WHERE transaction_id = %d AND NOT(debit IS NULL AND credit IS NULL)", $trn_id),
+            ARRAY_A );
+
+        foreach ( $trns as $trn ) {
+            if ( 'main' == $trn['type'] ) {
+                $transfer['from_account_id'] = $trn['ledger_id'];
+
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
+                    'ledger_id'   => $trn['ledger_id'],
+                    'trn_no'      => $voucher_no,
+                    'particulars' => $transfer['summary'],
+                    'debit'       => 0,
+                    'credit'      => $transfer['total'],
+                    'trn_date'    => $transfer['issue_date'],
+                    'created_at'  => $this->get_created_at( $transfer['created_at'] ),
+                    'created_by'  => get_current_user_id(),
+                ) );
+            }
+
+            if ( 'line_item' == $trn['type'] ) {
+                $transfer['to_account_id'] = $trn['ledger_id'];
+
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
+                    'ledger_id'   => $trn['ledger_id'],
+                    'trn_no'      => $voucher_no,
+                    'particulars' => $transfer['summary'],
+                    'debit'       => $transfer['total'],
+                    'credit'      => 0,
+                    'trn_date'    => $transfer['issue_date'],
+                    'created_at'  => $this->get_created_at( $transfer['created_at'] ),
+                    'created_by'  => get_current_user_id(),
+                ) );
+            }
+        }
+
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_transfer_voucher', array(
+            'voucher_no' => $voucher_no,
+            'amount'     => $transfer['total'],
+            'ac_from'    => $transfer['from_account_id'],
+            'ac_to'      => $transfer['to_account_id'],
+            'particulars'=> $transfer['summary'],
+            'trn_date'   => $transfer['issue_date'],
+            'created_at' => $this->get_created_at( $transfer['created_at'] ),
+            'created_by' => get_current_user_id(),
+        ) );
+
+        $transfers[$voucher_no] = $wpdb->insert_id;
     }
 
 }
