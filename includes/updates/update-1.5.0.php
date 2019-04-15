@@ -939,8 +939,39 @@ function erp_acct_populate_transactions() {
     $bg_process->save()->dispatch();
 }
 
+/**
+ * Populate ledger categories and ledgers
+ */
+function erp_acct_populate_charts_ledgers() {
+    global $wpdb;
+
+    $old_ledgers = $wpdb->get_results( "SELECT 
+        ledger.id, chart.id as chart_id, chart_cat.id category_id, ledger.name, ledger.code, ledger.system 
+        FROM wp_erp_ac_ledger as ledger
+        LEFT JOIN wp_erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id
+        LEFT JOIN wp_erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
 
 
+
+    foreach ( array_keys( $ledgers ) as $array_key ) {
+        foreach ( $ledgers[$array_key] as $value ) {
+            $wpdb->insert(
+                "{$wpdb->prefix}erp_acct_ledgers",
+                [
+                    'chart_id' => $this->get_chart_id_by_slug($array_key),
+                    'name'     => $value['name'],
+                    'slug'     => slugify( $value['name'] ),
+                    'code'     => $value['code'],
+                    'system'   => $value['system']
+                ]
+            );
+        }
+    }
+}
+
+function erp_acct_old_to_new_ledgers_mapping( $old_ledger ) {
+
+}
 
 /**
  * Call other function related to this update
@@ -956,6 +987,8 @@ function wperp_update_accounting_module_1_5_0() {
     erp_acct_populate_tax_data();
 
     erp_acct_populate_transactions();
+
+    erp_acct_populate_charts_ledgers();
 }
 
 wperp_update_accounting_module_1_5_0();
