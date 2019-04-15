@@ -13,17 +13,26 @@
         <show-errors :error_msgs="form_errors" ></show-errors>
 
         <form action="" method="post" @submit.prevent="submitOBForm">
-            <div class="wperp-col-sm-4 wperp-custom-select with-multiselect">
-                <label>Financial Year</label>
-                <br>
-                <simple-select
-                    v-model="fin_year"
-                    @input="getSelectedOB"
-                    :width="200"
-                    :options="years"
-                >
-                </simple-select>
+            <div class="wperp-row">
+                <div class="wperp-col-sm-6">
+                    <label>Financial Year</label>
+                    <simple-select
+                        v-model="fin_year"
+                        @input="getSelectedOB"
+                        :width="200"
+                        :options="years"
+                    >
+                    </simple-select>
+                </div>
+
+                <div class="wperp-col-sm-6">
+                    <a href="#" class="wperp-col-sm-4 wperp-btn btn--default print-btn" @click.prevent="printPopup">
+                        <i class="flaticon-printer-1"></i>
+                        &nbsp; Print
+                    </a>
+                </div>
             </div>
+
 
             <!-- Accounts Receivable Section -->
             <div  v-if="acct_rec" class="erp-accordion">
@@ -523,6 +532,10 @@
                     this.acct_rec = response.data.acct_receivable;
                     this.tax_pay  = response.data.tax_payable;
                 })
+            },
+
+            printPopup() {
+                window.print();
             }
         },
 
@@ -543,6 +556,9 @@
 <style scoped lang="less">
     .accordion-container {
         padding-top: 10px;
+        .print-btn {
+            float: right;
+        }
         .wperp-custom-select {
             label {
                 display: inline;
