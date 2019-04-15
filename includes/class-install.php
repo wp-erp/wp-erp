@@ -1472,6 +1472,29 @@ Company'
             }
         }
 
+        // insert ledger categories
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledger_categories` LIMIT 0, 1" ) ) {
+            $wpdb->query("INSERT INTO `{$wpdb->prefix}erp_acct_ledger_categories` 
+                (id,name,chart_id) 
+                    VALUES 
+                (1,'Current Asset',1),
+                (2,'Fixed Asset',1),
+                (3,'Inventory',1),
+                (4,'Non-current Asset',1),
+                (5,'Prepayment',1),
+                (6,'Bank & Cash',1),
+                (7,'Current Liability',2),
+                (8,'Liability',2),
+                (9,'Non-current Liability',2),
+                (10,'Depreciation',3),
+                (11,'Direct Costs',3),
+                (12,'Expense',3),
+                (13,'Revenue',4),
+                (14,'Sales',4),
+                (15,'Other Income',4),
+                (16,'Equity',5);");
+        }
+
         // insert payment methods
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_payment_methods` LIMIT 0, 1" ) ) {
             $methods = ['Cash', 'Bank', 'Check'];
