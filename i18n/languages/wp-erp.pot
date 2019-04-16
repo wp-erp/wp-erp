@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.4.2\n"
+"Project-Id-Version: WP ERP 1.4.3\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2019-02-14 06:43:08+00:00\n"
+"POT-Creation-Date: 2019-04-04 06:52:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -989,6 +989,102 @@ msgstr ""
 msgid "Zimbabwe"
 msgstr ""
 
+#: i18n/states/AR.php:11
+msgid "Ciudad de Buenos Aires"
+msgstr ""
+
+#: i18n/states/AR.php:12
+msgid "Buenos Aires"
+msgstr ""
+
+#: i18n/states/AR.php:13
+msgid "Catamarca"
+msgstr ""
+
+#: i18n/states/AR.php:14
+msgid "Chaco"
+msgstr ""
+
+#: i18n/states/AR.php:15
+msgid "Chubut"
+msgstr ""
+
+#: i18n/states/AR.php:16
+msgid "Cordoba"
+msgstr ""
+
+#: i18n/states/AR.php:17
+msgid "Corrientes"
+msgstr ""
+
+#: i18n/states/AR.php:18
+msgid "Entre Rios"
+msgstr ""
+
+#: i18n/states/AR.php:19
+msgid "Formosa"
+msgstr ""
+
+#: i18n/states/AR.php:20
+msgid "Jujuy"
+msgstr ""
+
+#: i18n/states/AR.php:21
+msgid "La Pampa"
+msgstr ""
+
+#: i18n/states/AR.php:22 i18n/states/ES.php:37
+msgid "La Rioja"
+msgstr ""
+
+#: i18n/states/AR.php:23
+msgid "Mendoza"
+msgstr ""
+
+#: i18n/states/AR.php:24
+msgid "Misiones"
+msgstr ""
+
+#: i18n/states/AR.php:25
+msgid "Neuquen"
+msgstr ""
+
+#: i18n/states/AR.php:26
+msgid "Rio Negro"
+msgstr ""
+
+#: i18n/states/AR.php:27
+msgid "Salta"
+msgstr ""
+
+#: i18n/states/AR.php:28
+msgid "San Juan"
+msgstr ""
+
+#: i18n/states/AR.php:29
+msgid "San Luis"
+msgstr ""
+
+#: i18n/states/AR.php:30
+msgid "Santa Cruz"
+msgstr ""
+
+#: i18n/states/AR.php:31
+msgid "Santa Fe"
+msgstr ""
+
+#: i18n/states/AR.php:32
+msgid "Santiago del Estero"
+msgstr ""
+
+#: i18n/states/AR.php:33
+msgid "Tierra del Fuego"
+msgstr ""
+
+#: i18n/states/AR.php:34
+msgid "Tucuman"
+msgstr ""
+
 #: i18n/states/AU.php:11
 msgid "Australian Capital Territory"
 msgstr ""
@@ -1779,10 +1875,6 @@ msgstr ""
 
 #: i18n/states/ES.php:36
 msgid "Ja&eacute;n"
-msgstr ""
-
-#: i18n/states/ES.php:37
-msgid "La Rioja"
 msgstr ""
 
 #: i18n/states/ES.php:38
@@ -3657,6 +3749,82 @@ msgstr ""
 msgid "Ucayali"
 msgstr ""
 
+#: i18n/states/PT.php:11
+msgid "Aveiro"
+msgstr ""
+
+#: i18n/states/PT.php:12
+msgid "Azores"
+msgstr ""
+
+#: i18n/states/PT.php:13
+msgid "Beja"
+msgstr ""
+
+#: i18n/states/PT.php:14
+msgid "Braga"
+msgstr ""
+
+#: i18n/states/PT.php:15
+msgid "Braganca"
+msgstr ""
+
+#: i18n/states/PT.php:16
+msgid "Castelo Branco"
+msgstr ""
+
+#: i18n/states/PT.php:17
+msgid "Coimbra"
+msgstr ""
+
+#: i18n/states/PT.php:18
+msgid "Evora"
+msgstr ""
+
+#: i18n/states/PT.php:19
+msgid "Faro"
+msgstr ""
+
+#: i18n/states/PT.php:20
+msgid "Guarda"
+msgstr ""
+
+#: i18n/states/PT.php:21
+msgid "Leiria"
+msgstr ""
+
+#: i18n/states/PT.php:22
+msgid "Lisboa"
+msgstr ""
+
+#: i18n/states/PT.php:23
+msgid "Madeira"
+msgstr ""
+
+#: i18n/states/PT.php:24
+msgid "Portalegre"
+msgstr ""
+
+#: i18n/states/PT.php:25
+msgid "Porto"
+msgstr ""
+
+#: i18n/states/PT.php:26
+msgid "Santarem"
+msgstr ""
+
+#: i18n/states/PT.php:27
+msgid "Viana Do Castelo"
+msgstr ""
+
+#: i18n/states/PT.php:28
+msgid "Vila Real"
+msgstr ""
+
+#: i18n/states/PT.php:29
+msgid "Viseu"
+msgstr ""
+
 #: i18n/states/SA.php:11
 msgid "Riyadh"
 msgstr ""
@@ -4907,7 +5075,7 @@ msgstr ""
 
 #: includes/admin/class-menu.php:136 includes/admin/class-menu.php:138
 #: includes/admin/views/tools/general.php:23
-#: modules/crm/includes/admin/class-settings.php:660 wp-erp.php:297
+#: modules/crm/includes/admin/class-settings.php:659 wp-erp.php:297
 msgid "Settings"
 msgstr ""
 
@@ -5271,7 +5439,7 @@ msgstr ""
 
 #: includes/admin/views/address.php:51
 #: includes/admin/views/company-editor.php:93 includes/class-countries.php:58
-#: includes/class-countries.php:150
+#: includes/class-countries.php:149
 #: modules/accounting/includes/views/common/transaction-table-tr-render.php:101
 #: modules/accounting/includes/views/user-form-rows.php:232
 #: modules/crm/views/js-templates/new-customer.php:231
@@ -5419,9 +5587,9 @@ msgstr ""
 #: modules/accounting/includes/views/settings/tax.php:24
 #: modules/accounting/includes/views/settings/tax.php:47
 #: modules/accounting/includes/views/vendor/single.php:9
-#: modules/crm/includes/admin/class-settings.php:764
+#: modules/crm/includes/admin/class-settings.php:763
 #: modules/crm/includes/class-campaigns-list-table.php:89
-#: modules/crm/includes/class-contact-group-list-table.php:113
+#: modules/crm/includes/class-contact-group-list-table.php:118
 #: modules/crm/includes/class-contact-subscriber-list-table.php:199
 #: modules/crm/includes/functions-localize.php:13
 #: modules/hrm/includes/class-announcement-list-table.php:45
@@ -5527,9 +5695,9 @@ msgid "Inactive (%s)"
 msgstr ""
 
 #: includes/admin/views/module.php:30 includes/admin/views/module.php:38
-#: modules/crm/includes/admin/class-settings.php:197
-#: modules/crm/includes/admin/class-settings.php:216
-#: modules/crm/includes/admin/class-settings.php:235
+#: modules/crm/includes/admin/class-settings.php:196
+#: modules/crm/includes/admin/class-settings.php:215
+#: modules/crm/includes/admin/class-settings.php:234
 #: modules/crm/includes/class-campaigns-list-table.php:69
 #: modules/crm/includes/class-subscription-widget.php:64
 #: modules/hrm/includes/class-announcement-list-table.php:34
@@ -5548,7 +5716,7 @@ msgstr ""
 #: modules/accounting/includes/views/journal/new.php:55
 #: modules/accounting/includes/views/sales/invoice-single.php:153
 #: modules/accounting/includes/views/sales/payment-single.php:118
-#: modules/crm/includes/admin/class-settings.php:616
+#: modules/crm/includes/admin/class-settings.php:615
 #: modules/crm/includes/class-subscription-widget.php:71
 #: modules/crm/views/js-templates/new-contact-group.php:16
 #: modules/hrm/views/employee/tab-leave.php:91
@@ -5812,8 +5980,8 @@ msgstr ""
 #: modules/accounting/includes/views/common/partial-payments.php:13
 #: modules/accounting/includes/views/common/transaction-chart.php:368
 #: modules/accounting/includes/views/js-templates/trash.php:1
-#: modules/crm/includes/admin/class-settings.php:528
-#: modules/crm/includes/admin/class-settings.php:617
+#: modules/crm/includes/admin/class-settings.php:527
+#: modules/crm/includes/admin/class-settings.php:616
 #: modules/crm/includes/class-contact-subscriber-list-table.php:176
 #: modules/hrm/includes/class-employee-list-table.php:150
 #: modules/hrm/includes/class-leave-request-list-table.php:168
@@ -6251,13 +6419,13 @@ msgstr ""
 msgid "No country provided."
 msgstr ""
 
-#: includes/class-countries.php:175
+#: includes/class-countries.php:174
 msgid "Any State"
 msgstr ""
 
 #: includes/class-email.php:454
 #: modules/accounting/includes/views/js-templates/send-invoice.php:18
-#: modules/crm/includes/admin/class-settings.php:730
+#: modules/crm/includes/admin/class-settings.php:729
 #: modules/crm/includes/functions-localize.php:20
 #: modules/crm/views/js-templates/customer-add-schedules.php:127
 #: modules/crm/views/js-templates/customer-email-note.php:39
@@ -6310,13 +6478,13 @@ msgid "ERP Subscription"
 msgstr ""
 
 #: includes/class-install.php:962 includes/updates/update-1.1.17.php:33
-#: modules/crm/includes/admin/class-settings.php:167
+#: modules/crm/includes/admin/class-settings.php:166
 #: modules/crm/includes/class-subscription.php:455
 msgid "Confirm your subscription to %s"
 msgstr ""
 
 #: includes/class-install.php:964 includes/updates/update-1.1.17.php:35
-#: modules/crm/includes/admin/class-settings.php:175
+#: modules/crm/includes/admin/class-settings.php:174
 #: modules/crm/includes/class-subscription.php:457
 msgid ""
 "Hello!\n"
@@ -6333,25 +6501,25 @@ msgid ""
 msgstr ""
 
 #: includes/class-install.php:968 includes/updates/update-1.1.17.php:39
-#: modules/crm/includes/admin/class-settings.php:200
+#: modules/crm/includes/admin/class-settings.php:199
 #: modules/crm/includes/class-subscription.php:684
 msgid "You are now subscribed!"
 msgstr ""
 
 #: includes/class-install.php:969 includes/updates/update-1.1.17.php:40
-#: modules/crm/includes/admin/class-settings.php:207
+#: modules/crm/includes/admin/class-settings.php:206
 #: modules/crm/includes/class-subscription.php:719
 msgid "We've added you to our email list. You'll hear from us shortly."
 msgstr ""
 
 #: includes/class-install.php:970 includes/updates/update-1.1.17.php:41
-#: modules/crm/includes/admin/class-settings.php:219
+#: modules/crm/includes/admin/class-settings.php:218
 #: modules/crm/includes/class-subscription.php:693
 msgid "You are now unsubscribed"
 msgstr ""
 
 #: includes/class-install.php:971 includes/updates/update-1.1.17.php:42
-#: modules/crm/includes/admin/class-settings.php:226
+#: modules/crm/includes/admin/class-settings.php:225
 #: modules/crm/includes/class-subscription.php:736
 msgid "You are successfully unsubscribed from list(s):"
 msgstr ""
@@ -6605,7 +6773,7 @@ msgstr ""
 
 #: includes/framework/settings/email.php:122
 #: includes/framework/settings/email.php:346
-#: modules/crm/includes/admin/class-settings.php:427
+#: modules/crm/includes/admin/class-settings.php:426
 msgid "Mail Server"
 msgstr ""
 
@@ -6615,7 +6783,7 @@ msgstr ""
 
 #: includes/framework/settings/email.php:132
 #: includes/framework/settings/email.php:382
-#: modules/crm/includes/admin/class-settings.php:463
+#: modules/crm/includes/admin/class-settings.php:462
 msgid "Port"
 msgstr ""
 
@@ -6625,55 +6793,55 @@ msgstr ""
 
 #: includes/framework/settings/email.php:139
 #: includes/framework/settings/email.php:389
-#: modules/crm/includes/admin/class-settings.php:470
+#: modules/crm/includes/admin/class-settings.php:469
 msgid "Authentication"
 msgstr ""
 
 #: includes/framework/settings/email.php:142
 #: includes/framework/settings/email.php:394
-#: modules/crm/includes/admin/class-settings.php:475
+#: modules/crm/includes/admin/class-settings.php:474
 msgid "Authentication type."
 msgstr ""
 
 #: includes/framework/settings/email.php:143
 #: includes/framework/settings/email.php:392
-#: modules/crm/includes/admin/class-settings.php:473
+#: modules/crm/includes/admin/class-settings.php:472
 msgid "None"
 msgstr ""
 
 #: includes/framework/settings/email.php:143
 #: includes/framework/settings/email.php:392
-#: modules/crm/includes/admin/class-settings.php:473
+#: modules/crm/includes/admin/class-settings.php:472
 msgid "SSL"
 msgstr ""
 
 #: includes/framework/settings/email.php:143
 #: includes/framework/settings/email.php:392
-#: modules/crm/includes/admin/class-settings.php:473
+#: modules/crm/includes/admin/class-settings.php:472
 msgid "TLS"
 msgstr ""
 
 #: includes/framework/settings/email.php:147
 #: includes/framework/settings/email.php:356
-#: modules/crm/includes/admin/class-settings.php:437
+#: modules/crm/includes/admin/class-settings.php:436
 msgid "Username"
 msgstr ""
 
 #: includes/framework/settings/email.php:153
 #: includes/framework/settings/email.php:359
-#: modules/crm/includes/admin/class-settings.php:440
+#: modules/crm/includes/admin/class-settings.php:439
 msgid "Your email id."
 msgstr ""
 
 #: includes/framework/settings/email.php:157
 #: includes/framework/settings/email.php:366
-#: modules/crm/includes/admin/class-settings.php:447
+#: modules/crm/includes/admin/class-settings.php:446
 msgid "Password"
 msgstr ""
 
 #: includes/framework/settings/email.php:160
 #: includes/framework/settings/email.php:369
-#: modules/crm/includes/admin/class-settings.php:450
+#: modules/crm/includes/admin/class-settings.php:449
 msgid "Your email password."
 msgstr ""
 
@@ -6710,19 +6878,19 @@ msgid "An email address to test the connection."
 msgstr ""
 
 #: includes/framework/settings/email.php:283
-#: modules/crm/includes/admin/class-settings.php:511
+#: modules/crm/includes/admin/class-settings.php:510
 msgid "Click on the above button before saving the settings."
 msgstr ""
 
 #: includes/framework/settings/email.php:299
 #: includes/framework/settings/email.php:312
-#: modules/crm/includes/admin/class-settings.php:396
-#: modules/crm/includes/admin/class-settings.php:409
+#: modules/crm/includes/admin/class-settings.php:395
+#: modules/crm/includes/admin/class-settings.php:408
 msgid "IMAP/POP3 Options"
 msgstr ""
 
 #: includes/framework/settings/email.php:302
-#: modules/crm/includes/admin/class-settings.php:399
+#: modules/crm/includes/admin/class-settings.php:398
 msgid ""
 "Your server does not have PHP IMAP extension loaded. To enable this "
 "feature, please contact your hosting provider and ask to enable PHP IMAP "
@@ -6730,13 +6898,13 @@ msgid ""
 msgstr ""
 
 #: includes/framework/settings/email.php:314
-#: modules/crm/includes/admin/class-settings.php:411
+#: modules/crm/includes/admin/class-settings.php:410
 msgid "Email incoming settings for ERP."
 msgstr ""
 
 #: includes/framework/settings/email.php:322
 #: includes/framework/views/status-report.php:174
-#: modules/crm/includes/admin/class-settings.php:419
+#: modules/crm/includes/admin/class-settings.php:418
 msgid "Enable IMAP"
 msgstr ""
 
@@ -6749,32 +6917,32 @@ msgid "Interval time to run cron."
 msgstr ""
 
 #: includes/framework/settings/email.php:352
-#: modules/crm/includes/admin/class-settings.php:433
+#: modules/crm/includes/admin/class-settings.php:432
 msgid "IMAP/POP3 host address."
 msgstr ""
 
 #: includes/framework/settings/email.php:373
-#: modules/crm/includes/admin/class-settings.php:454
+#: modules/crm/includes/admin/class-settings.php:453
 msgid "Protocol"
 msgstr ""
 
 #: includes/framework/settings/email.php:376
-#: modules/crm/includes/admin/class-settings.php:457
+#: modules/crm/includes/admin/class-settings.php:456
 msgid "Protocol type."
 msgstr ""
 
 #: includes/framework/settings/email.php:377
-#: modules/crm/includes/admin/class-settings.php:458
+#: modules/crm/includes/admin/class-settings.php:457
 msgid "IMAP"
 msgstr ""
 
 #: includes/framework/settings/email.php:377
-#: modules/crm/includes/admin/class-settings.php:458
+#: modules/crm/includes/admin/class-settings.php:457
 msgid "POP3"
 msgstr ""
 
 #: includes/framework/settings/email.php:385
-#: modules/crm/includes/admin/class-settings.php:466
+#: modules/crm/includes/admin/class-settings.php:465
 msgid "IMAP: 993<br> POP3: 995"
 msgstr ""
 
@@ -6793,14 +6961,14 @@ msgstr ""
 #: includes/framework/settings/general.php:82
 #: includes/framework/settings/general.php:91
 #: modules/accounting/includes/class-settings.php:105
-#: modules/crm/includes/admin/class-settings.php:81
+#: modules/crm/includes/admin/class-settings.php:80
 msgid "On"
 msgstr ""
 
 #: includes/framework/settings/general.php:82
 #: includes/framework/settings/general.php:91
 #: modules/accounting/includes/class-settings.php:105
-#: modules/crm/includes/admin/class-settings.php:81
+#: modules/crm/includes/admin/class-settings.php:80
 msgid "Off"
 msgstr ""
 
@@ -6937,7 +7105,7 @@ msgstr ""
 
 #: includes/framework/views/status-report.php:83
 #: modules/crm/includes/admin/class-menu.php:44
-#: modules/crm/includes/admin/class-settings.php:49
+#: modules/crm/includes/admin/class-settings.php:48
 #: modules/crm/includes/functions-dashboard.php:303
 #: modules/crm/views/company/single.php:181
 #: modules/crm/views/contact-tag/contacts.php:3
@@ -8455,11 +8623,11 @@ msgstr ""
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1886
+#: includes/functions.php:1882
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1889
+#: includes/functions.php:1885
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -8588,11 +8756,11 @@ msgstr ""
 msgid "Copied"
 msgstr ""
 
-#: modules/accounting/includes/class-admin-menu.php:396
-#: modules/accounting/includes/class-admin-menu.php:453
-#: modules/accounting/includes/class-admin-menu.php:500
-#: modules/accounting/includes/class-admin-menu.php:636
-#: modules/accounting/includes/class-admin-menu.php:681
+#: modules/accounting/includes/class-admin-menu.php:399
+#: modules/accounting/includes/class-admin-menu.php:456
+#: modules/accounting/includes/class-admin-menu.php:503
+#: modules/accounting/includes/class-admin-menu.php:639
+#: modules/accounting/includes/class-admin-menu.php:684
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
@@ -8707,11 +8875,11 @@ msgstr ""
 #: modules/accounting/includes/views/accounts/chart-table.php:46
 #: modules/accounting/includes/views/settings/tax.php:25
 #: modules/accounting/includes/views/settings/tax.php:48
-#: modules/crm/includes/admin/class-settings.php:765
+#: modules/crm/includes/admin/class-settings.php:764
 #: modules/crm/includes/class-campaigns-list-table.php:90
 #: modules/crm/includes/class-campaigns-list-table.php:116
-#: modules/crm/includes/class-contact-group-list-table.php:119
-#: modules/crm/includes/class-contact-group-list-table.php:152
+#: modules/crm/includes/class-contact-group-list-table.php:124
+#: modules/crm/includes/class-contact-group-list-table.php:160
 #: modules/crm/includes/class-contact-subscriber-list-table.php:200
 #: modules/crm/includes/class-contact-subscriber-list-table.php:217
 #: modules/crm/includes/functions-localize.php:14
@@ -9363,7 +9531,7 @@ msgid "Settings for Accounting customers."
 msgstr ""
 
 #: modules/accounting/includes/class-settings.php:101
-#: modules/crm/includes/admin/class-settings.php:77
+#: modules/crm/includes/admin/class-settings.php:76
 msgid "Auto Import"
 msgstr ""
 
@@ -11213,159 +11381,159 @@ msgstr ""
 msgid "Company not found!"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:50
+#: modules/crm/includes/admin/class-settings.php:49
 msgid "Templates"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:51
+#: modules/crm/includes/admin/class-settings.php:50
 msgid "Subscription"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:52
+#: modules/crm/includes/admin/class-settings.php:51
 msgid "Email Connectivity"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:70
+#: modules/crm/includes/admin/class-settings.php:69
 msgid "Contact Settings"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:72
+#: modules/crm/includes/admin/class-settings.php:71
 msgid "Settings for CRM Contact."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:80
+#: modules/crm/includes/admin/class-settings.php:79
 msgid "Allow to auto import new user as crm contact."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:89
+#: modules/crm/includes/admin/class-settings.php:88
 msgid "User's Roles"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:92
+#: modules/crm/includes/admin/class-settings.php:91
 msgid "Selected user roles are considered to auto import."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:100
+#: modules/crm/includes/admin/class-settings.php:99
 #: modules/crm/views/import-user-to-crm.php:18
 msgid "&mdash; Select Owner &mdash;"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:107
+#: modules/crm/includes/admin/class-settings.php:106
 msgid "Default Contact Owner"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:110
+#: modules/crm/includes/admin/class-settings.php:109
 msgid "Default contact owner for contact."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:115
+#: modules/crm/includes/admin/class-settings.php:114
 msgid "Default Life Stage"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:118
+#: modules/crm/includes/admin/class-settings.php:117
 msgid "Default life stage for contact."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:128
+#: modules/crm/includes/admin/class-settings.php:127
 msgid "Saved Replies"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:146
+#: modules/crm/includes/admin/class-settings.php:145
 msgid "Contact Group subscription settings"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:152
+#: modules/crm/includes/admin/class-settings.php:151
 msgid "Enable signup confirmation"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:155
-#: modules/crm/includes/admin/class-settings.php:157
+#: modules/crm/includes/admin/class-settings.php:154
+#: modules/crm/includes/admin/class-settings.php:156
 #: modules/crm/views/js-templates/new-contact-group.php:33
 #: modules/hrm/includes/functions-employee.php:581
 msgid "Yes"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:160
+#: modules/crm/includes/admin/class-settings.php:159
 msgid ""
 "If you enable this option, your subscribers will first receive a "
 "confirmation email after they subscribe. Once they confirm their "
 "subscription (via this email), they will be marked as 'subscribed'."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:164
+#: modules/crm/includes/admin/class-settings.php:163
 msgid "Email subject"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:171
+#: modules/crm/includes/admin/class-settings.php:170
 msgid "Email content"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:182
+#: modules/crm/includes/admin/class-settings.php:181
 msgid ""
 "Don't forget to include: <code>[activation_link]Confirm your "
 "subscription.[/activation_link]</code>. <br><br>Optional: "
 "<code>[contact_groups_to_confirm]</code>."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:188
+#: modules/crm/includes/admin/class-settings.php:187
 msgid "Subscription Page"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:192
+#: modules/crm/includes/admin/class-settings.php:191
 msgid ""
 "When subscribers click on the activation link, they will be redirected to "
 "this page."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:196
+#: modules/crm/includes/admin/class-settings.php:195
 msgid "Confirmation Page"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:204
-#: modules/crm/includes/admin/class-settings.php:223
-#: modules/crm/includes/admin/class-settings.php:242
+#: modules/crm/includes/admin/class-settings.php:203
+#: modules/crm/includes/admin/class-settings.php:222
+#: modules/crm/includes/admin/class-settings.php:241
 msgid "Content"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:215
+#: modules/crm/includes/admin/class-settings.php:214
 msgid "Unsubscribe Page"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:234
+#: modules/crm/includes/admin/class-settings.php:233
 msgid "Edit Subscription Page"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:238
+#: modules/crm/includes/admin/class-settings.php:237
 #: modules/crm/includes/class-subscription.php:688
 msgid "Edit Your Subscription"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:245
+#: modules/crm/includes/admin/class-settings.php:244
 #: modules/crm/includes/class-subscription.php:723
 msgid "Update your preferences"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:276
+#: modules/crm/includes/admin/class-settings.php:275
 msgid "Email Connection Settings"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:278
+#: modules/crm/includes/admin/class-settings.php:277
 msgid "Settings for CRM Contact Emails Connectivity."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:283
+#: modules/crm/includes/admin/class-settings.php:282
 msgid "Check Emails "
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:286
+#: modules/crm/includes/admin/class-settings.php:285
 msgid "Interval time to run cron for checking inbound emails."
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:330
+#: modules/crm/includes/admin/class-settings.php:329
 msgid "Gmail / G suite Authentication"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:332
+#: modules/crm/includes/admin/class-settings.php:331
 msgid ""
 "<a target=\"_blank\" "
 "href=\"https://console.developers.google.com/flows/enableapi?apiid=gmail&"
@@ -11377,88 +11545,88 @@ msgid ""
 "content=Backend&utm_campaign=Docs\">Documentation</a> to get started"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:350
+#: modules/crm/includes/admin/class-settings.php:349
 msgid "Client ID"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:353
+#: modules/crm/includes/admin/class-settings.php:352
 msgid "Your APP Client ID"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:357
+#: modules/crm/includes/admin/class-settings.php:356
 msgid "Client Secret"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:360
+#: modules/crm/includes/admin/class-settings.php:359
 msgid "Your APP Client Secret"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:509
+#: modules/crm/includes/admin/class-settings.php:508
 msgid "Test Connection"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:532
-#: modules/crm/includes/admin/class-settings.php:572
+#: modules/crm/includes/admin/class-settings.php:531
+#: modules/crm/includes/admin/class-settings.php:571
 msgid "Connected"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:532
+#: modules/crm/includes/admin/class-settings.php:531
 msgid "Not Connected"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:554
+#: modules/crm/includes/admin/class-settings.php:553
 msgid "Redirect URL to use"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:559
+#: modules/crm/includes/admin/class-settings.php:558
 msgid "Copy and Use this url when oAuth consent asks for Authorized Redirect URL"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:582
+#: modules/crm/includes/admin/class-settings.php:581
 msgid "Disconnect"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:592
+#: modules/crm/includes/admin/class-settings.php:591
 msgid "Gmail Connect"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:593
+#: modules/crm/includes/admin/class-settings.php:592
 msgid "Connect your Gmail or Gsuite account"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:599
+#: modules/crm/includes/admin/class-settings.php:598
 msgid "IMAP Connection"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:600
+#: modules/crm/includes/admin/class-settings.php:599
 msgid "Connect to Custom IMAP server"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:615
+#: modules/crm/includes/admin/class-settings.php:614
 msgid "Provider"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:647
+#: modules/crm/includes/admin/class-settings.php:646
 msgid "Disabled"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:650
+#: modules/crm/includes/admin/class-settings.php:649
 msgid "Enabled"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:721
+#: modules/crm/includes/admin/class-settings.php:720
 msgid "Add new Template"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:721
+#: modules/crm/includes/admin/class-settings.php:720
 msgid "Add Templates"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:729
+#: modules/crm/includes/admin/class-settings.php:728
 msgid "Template Name"
 msgstr ""
 
-#: modules/crm/includes/admin/class-settings.php:777
+#: modules/crm/includes/admin/class-settings.php:776
 msgid "No templates found"
 msgstr ""
 
@@ -11816,12 +11984,12 @@ msgid "Lists"
 msgstr ""
 
 #: modules/crm/includes/class-campaigns-list-table.php:89
-#: modules/crm/includes/class-contact-group-list-table.php:113
+#: modules/crm/includes/class-contact-group-list-table.php:118
 msgid "Edit this Contact Group"
 msgstr ""
 
 #: modules/crm/includes/class-campaigns-list-table.php:90
-#: modules/crm/includes/class-contact-group-list-table.php:119
+#: modules/crm/includes/class-contact-group-list-table.php:124
 msgid "Delete this Contact Group"
 msgstr ""
 
@@ -11843,15 +12011,15 @@ msgstr ""
 msgid "Unsubscribed"
 msgstr ""
 
-#: modules/crm/includes/class-contact-group-list-table.php:116
+#: modules/crm/includes/class-contact-group-list-table.php:121
 msgid "View Subscriber in this group"
 msgstr ""
 
-#: modules/crm/includes/class-contact-group-list-table.php:116
+#: modules/crm/includes/class-contact-group-list-table.php:121
 msgid "View Subscriber"
 msgstr ""
 
-#: modules/crm/includes/class-contact-group-list-table.php:123
+#: modules/crm/includes/class-contact-group-list-table.php:128
 msgid "This group is private"
 msgstr ""
 
