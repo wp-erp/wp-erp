@@ -3878,3 +3878,13 @@ function erp_crm_sync_is_active() {
 
     return false;
 }
+
+/**
+ * Send birthday greetings to contact
+ *
+ * @return void
+ */
+function erp_crm_send_birthday_greetings() {
+    $email =  new WeDevs\ERP\CRM\Emails\Birthday_Greetings();
+    $email->trigger();
+}
