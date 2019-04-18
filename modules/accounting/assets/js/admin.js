@@ -27927,6 +27927,11 @@ setTimeout(function () {
         });
         _this7.ledgers = _this7.groupBy(response.data, 'chart_id');
       });
+
+      if (Object.keys(this.ledgers).length) {
+        this.fetchData();
+      }
+
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/virtual-accts/".concat(this.fin_year.id)).then(function (response) {
         _this7.acct_pay = response.data.acct_payable;
         _this7.acct_rec = response.data.acct_receivable;

@@ -534,6 +534,10 @@
                     });
                     this.ledgers = this.groupBy(response.data, 'chart_id');
                 });
+                
+                if ( Object.keys(this.ledgers).length ) {
+                    this.fetchData();
+                }
 
                 HTTP.get(`/opening-balances/virtual-accts/${this.fin_year.id}`).then( response => {
                     this.acct_pay = response.data.acct_payable;
@@ -544,7 +548,7 @@
 
             printPopup() {
                 window.print();
-            }
+            },
         },
 
         watch: {
