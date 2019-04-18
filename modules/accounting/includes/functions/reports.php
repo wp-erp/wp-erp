@@ -339,6 +339,9 @@ function erp_acct_get_income_statement( $args ) {
 
 /**
  * Get balance sheet
+ *
+ * @param $args
+ * @return mixed
  */
 function erp_acct_get_balance_sheet( $args ) {
     global $wpdb;
@@ -356,29 +359,36 @@ function erp_acct_get_balance_sheet( $args ) {
     }
 
     $sql1 = "SELECT
+        ledger.id,
         ledger.name,
         ABS(SUM(ledger_detail.debit - ledger_detail.credit)) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=1 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=1 AND ledger_detail.trn_date BETWEEN '%s' AND '%s'
         GROUP BY ledger_detail.ledger_id";
 
     $sql2 = "SELECT
+        ledger.id,
         ledger.name,
         ABS(SUM(ledger_detail.debit - ledger_detail.credit)) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=2 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=2 AND ledger_detail.trn_date BETWEEN '%s' AND '%s'
         GROUP BY ledger_detail.ledger_id";
 
     $sql3 = "SELECT
+        ledger.id,
         ledger.name,
         ABS(SUM(ledger_detail.debit - ledger_detail.credit)) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=3 AND ledger.slug != 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=3 AND ledger.slug != 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s'
         GROUP BY ledger_detail.ledger_id";
 
-    $results['rows1'] = $wpdb->get_results( $sql1, ARRAY_A );
-    $results['rows2'] = $wpdb->get_results( $sql2, ARRAY_A );
-    $results['rows3'] = $wpdb->get_results( $sql3, ARRAY_A );
+    $data1 = $wpdb->get_results( $sql1, ARRAY_A );
+    $data2 = $wpdb->get_results( $sql2, ARRAY_A );
+    $data3 = $wpdb->get_results( $sql3, ARRAY_A );
+
+    $results['rows1'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data1, $sql1, 1 );
+    $results['rows2'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data2, $sql2, 2 );
+    $results['rows3'] = erp_acct_balance_sheet_calculate_with_opening_balance( $args['start_date'], $data3, $sql3, 3 );
 
     $results['rows1'][] = [
         'name' => 'Accounts Receivable',
@@ -480,7 +490,103 @@ function erp_acct_get_balance_sheet( $args ) {
 }
 
 /**
- * @param $results
+ * Balance sheet with opening balance helper
+ *
+ * @param $bs_start_date
+ * @param $data
+ * @param $sql
+ * @param $chart_id
+ * @return array
+ */
+
+function erp_acct_balance_sheet_calculate_with_opening_balance( $bs_start_date, $data, $sql, $chart_id ) {
+    global $wpdb;
+
+    // get closest financial year id and start date
+    $closest_fy_date = erp_acct_get_closest_fn_year_date( $bs_start_date );
+
+    // get opening balance data within that(^) financial year
+    $opening_balance = erp_acct_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
+
+    $temp_data = [];
+    $result    = [];
+
+    $ledger_sql = "SELECT ledger.id, ledger.name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        WHERE ledger.chart_id={$chart_id} AND ledger.slug <> 'owner_s_equity'";
+
+    $ledgers = $wpdb->get_results( $ledger_sql, ARRAY_A );
+
+    /**
+     * combine with opening balance data
+     */
+    foreach ( $ledgers as $ledger ) {
+        $balance = 0;
+
+        foreach ( $data as $row ) {
+            if ( $row['id'] == $ledger['id'] ) {
+                $balance += (float) $row['balance'];
+            }
+        }
+
+        foreach ( $opening_balance as $op_balance ) {
+            if ( $op_balance['id'] == $ledger['id'] ) {
+                $balance += (float) $op_balance['balance'];
+            }
+        }
+
+        $temp_data[] = [
+            'id'      => $ledger['id'],
+            'name'    => $ledger['name'],
+            'balance' => $balance
+        ];
+    }
+
+    // should we go further calculation, check the diff
+    $date1    = date_create($bs_start_date);
+    $date2    = date_create($closest_fy_date['start_date']);
+    $interval = date_diff($date1, $date2);
+
+    // if difference is `0` OR `1` day
+    if ( '2' > $interval->format('%a') ) {
+        return $temp_data;
+    } else {
+        // get previous date from balance sheet start date
+        $date_before_balance_sheet_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($bs_start_date) ) );
+        $bs_date = $date_before_balance_sheet_start;
+    }
+
+    // get ledger details data between
+    //     `financial year start date`
+    // and
+    //     `previous date from balance sheet start date`
+    $ledger_details = $wpdb->get_results(
+        $wpdb->prepare($sql, $closest_fy_date['start_date'], $bs_date), ARRAY_A
+    );
+
+    foreach ( $temp_data as $temp ) {
+        $balance = $temp['balance'];
+
+        foreach ( $ledger_details as $detail ) {
+            if ( $temp['id'] == $detail['id'] ) {
+                $balance += (float) $detail['balance'];
+            }
+        }
+
+        $result[] = [
+            'id'      => $temp['id'],
+            'name'    => $temp['name'],
+            'balance' => $balance
+        ];
+    }
+
+    return $result;
+}
+
+/**
+ * Get profit-loss
+ *
+ * @param $args
+ *
  * @return array
  */
 function erp_acct_get_profit_loss( $args ) {

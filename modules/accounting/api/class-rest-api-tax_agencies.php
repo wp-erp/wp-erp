@@ -86,6 +86,20 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'bulk_delete' ],
+                'args'                => [
+                    'ids'   => [ 'required' => true ]
+                ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/pay', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -258,7 +272,7 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @param WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|WP_REST_Response
      */
     public function delete_tax_agency( $request ) {
         $id = (int) $request['id'];
@@ -268,6 +282,27 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         erp_acct_delete_tax_agency( $id );
+
+        return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Bulk delete action
+     *
+     * @param  object $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function bulk_delete( $request ) {
+        $ids    =   $request['ids'];
+        $ids    =   explode( ',', $ids );
+
+        if ( ! $ids ) {
+            return;
+        }
+        foreach ( $ids as $id ) {
+            erp_acct_delete_tax_agency( $id );
+        }
 
         return new WP_REST_Response( true, 204 );
     }
