@@ -24,11 +24,11 @@ function erp_acct_get_all_charts() {
  *
  * @return array
  */
-function erp_acct_get_chart_count() {
-    global $wpdb;
+// function erp_acct_get_chart_count() {
+//     global $wpdb;
 
-    return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . 'erp_acct_ledger' );
-}
+//     return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . 'erp_acct_ledger' );
+// }
 
 
 /**
@@ -133,7 +133,7 @@ function erp_acct_get_ledger_trn_count( $ledger_id ) {
 
     $sql = "SELECT
         COUNT(*) as count
-        FROM {$wpdb->prefix}erp_acct_ledger_details 
+        FROM {$wpdb->prefix}erp_acct_ledger_details
         WHERE ledger_id = {$ledger_id}";
 
     $ledger = $wpdb->get_row( $sql, ARRAY_A );
@@ -155,8 +155,8 @@ function erp_acct_get_ledger_balance( $ledger_id ) {
         ledger.name,
         SUM(ld.debit - ld.credit) as balance
 
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger 
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ld ON ledger.id = ld.ledger_id 
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ld ON ledger.id = ld.ledger_id
         WHERE ledger.id = {$ledger_id}";
 
     $ledger = $wpdb->get_row($sql, ARRAY_A);
