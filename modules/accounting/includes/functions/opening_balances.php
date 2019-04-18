@@ -81,12 +81,11 @@ function erp_acct_get_opening_balance( $year_id ) {
     updated_by
 
     FROM {$wpdb->prefix}erp_acct_opening_balances
-    WHERE financial_year_id = {$year_id} AND virtual_acct IS NULL";
+    WHERE financial_year_id = {$year_id}";
 
     $rows = $wpdb->get_results( $sql, ARRAY_A );
 
     return $rows;
-
 }
 
 /**
@@ -116,7 +115,7 @@ function erp_acct_get_virtual_acct( $year_id ) {
 
     FROM {$wpdb->prefix}erp_acct_opening_balances as opening_balance
     LEFT JOIN {$wpdb->prefix}erp_acct_financial_years as financial_year ON opening_balance.financial_year_id = financial_year.id
-    WHERE financial_year.id = {$year_id} AND opening_balance.virtual_acct IS NOT NULL";
+    WHERE financial_year.id = {$year_id}";
 
     $rows = $wpdb->get_results( $sql, ARRAY_A );
 
@@ -161,8 +160,7 @@ function erp_acct_insert_opening_balance( $data ) {
                 'financial_year_id' => $year_id,
                 'ledger_id' => $ledger['id'],
                 'chart_id' => $ledger['chart_id'],
-                'people_id' => 0,
-                'agency_id' => 0,
+                'type' => 'ledger',
                 'debit' => isset( $ledger['debit'] ) ? $ledger['debit'] : 0,
                 'credit' => isset( $ledger['credit'] ) ? $ledger['credit'] : 0,
                 'created_at' => $opening_balance_data['created_at'],
@@ -198,12 +196,10 @@ function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
         foreach ( $data['acct_pay'] as $acct_pay ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
                 'financial_year_id' => $year_id,
-                'ledger_id' => 0,
-                'people_id' => $acct_pay['people_id'],
-                'agency_id' => 0,
+                'ledger_id' => $acct_pay['people_id'],
+                'type' => 'people',
                 'debit' => 0,
                 'credit' => isset( $acct_pay['balance'] ) ? $acct_pay['balance'] : 0,
-                'virtual_acct' => 'acct_pay',
                 'created_at' => $data['created_at'],
                 'created_by' => $data['created_by'],
                 'updated_at' => $data['updated_at'],
@@ -216,12 +212,10 @@ function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
         foreach ( $data['acct_rec'] as $acct_rec ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
                 'financial_year_id' => $year_id,
-                'ledger_id' => 0,
-                'people_id' => $acct_rec['people_id'],
-                'agency_id' => 0,
+                'ledger_id' => $acct_rec['people_id'],
+                'type' => 'people',
                 'debit' => isset( $acct_rec['balance'] ) ?$acct_rec['balance'] : 0,
                 'credit' => 0,
-                'virtual_acct' => 'acct_rec',
                 'created_at' => $data['created_at'],
                 'created_by' => $data['created_by'],
                 'updated_at' => $data['updated_at'],
@@ -234,12 +228,10 @@ function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
         foreach ( $data['tax_pay'] as $tax_pay ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
                 'financial_year_id' => $year_id,
-                'ledger_id' => 0,
-                'people_id' => 0,
-                'agency_id' => $tax_pay['agency'],
+                'ledger_id' => $tax_pay['agency'],
+                'type' => 'tax_agency',
                 'debit' => isset( $tax_pay['amount'] ) ? $tax_pay['amount'] : 0,
                 'credit' => 0,
-                'virtual_acct' => 'tax_pay',
                 'created_at' => $data['created_at'],
                 'created_by' => $data['created_by'],
                 'updated_at' => $data['updated_at'],
