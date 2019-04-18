@@ -27709,16 +27709,16 @@ setTimeout(function () {
   },
   data: function data() {
     return {
-      open1: false,
-      open2: false,
-      open3: false,
-      open4: false,
-      open5: false,
-      open6: false,
-      open7: false,
-      open8: false,
-      open9: false,
-      open10: false,
+      open1: true,
+      open2: true,
+      open3: true,
+      open4: true,
+      open5: true,
+      open6: true,
+      open7: true,
+      open8: true,
+      open9: true,
+      open10: true,
       form_errors: [],
       chartAccounts: [],
       ledgers: [],
@@ -27731,7 +27731,9 @@ setTimeout(function () {
       isWorking: false,
       acct_rec: null,
       acct_pay: null,
-      tax_pay: null
+      tax_pay: null,
+      totalDebit: 0,
+      totalCredit: 0
     };
   },
   created: function created() {
@@ -27739,7 +27741,6 @@ setTimeout(function () {
 
     this.fetchData();
     this.$root.$on("SimpleSelectChange", function (data) {
-      console.log(_this.years);
       _this.fin_year = _this.years.find(function (o) {
         return o.id === data.selected;
       });
@@ -27844,6 +27845,8 @@ setTimeout(function () {
       }
 
       var diff = Math.abs(this.debit_total - this.credit_total);
+      this.totalDebit = this.debit_total;
+      this.totalCredit = this.credit_total;
       this.isWorking = true;
 
       if (0 == diff) {
@@ -27915,8 +27918,12 @@ setTimeout(function () {
       this.acct_rec = [];
       this.tax_pay = [];
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(this.fin_year.id)).then(function (response) {
+        _this7.totalDebit = 0;
+        _this7.totalCredit = 0;
         response.data.forEach(function (ledger) {
           ledger.balance = _this7.transformBalance(ledger.balance);
+          _this7.totalDebit += parseFloat(ledger.debit);
+          _this7.totalCredit += parseFloat(ledger.credit);
         });
         _this7.ledgers = _this7.groupBy(response.data, 'chart_id');
       });
@@ -54336,7 +54343,7 @@ var render = function() {
                   _c("input", {
                     staticClass: "text-right",
                     attrs: { type: "text", readonly: "" },
-                    domProps: { value: _vm.debit_total }
+                    domProps: { value: _vm.totalDebit }
                   })
                 ]),
                 _vm._v(" "),
@@ -54344,7 +54351,7 @@ var render = function() {
                   _c("input", {
                     staticClass: "text-right",
                     attrs: { type: "text", readonly: "" },
-                    domProps: { value: _vm.credit_total }
+                    domProps: { value: _vm.totalCredit }
                   })
                 ])
               ]),

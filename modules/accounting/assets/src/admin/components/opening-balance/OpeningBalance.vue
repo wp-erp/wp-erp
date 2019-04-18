@@ -286,8 +286,8 @@
                     <td class="pl-10 text-right col--total-amount" style="width: 60%;">
                         <span>Total Amount</span>
                     </td>
-                    <td data-colname="Total Debit"><input type="text" class="text-right" :value="debit_total" readonly ></td>
-                    <td data-colname="Total Credit"><input type="text" class="text-right" :value="credit_total" readonly ></td>
+                    <td data-colname="Total Debit"><input type="text" class="text-right" :value="totalDebit" readonly ></td>
+                    <td data-colname="Total Credit"><input type="text" class="text-right" :value="totalCredit" readonly ></td>
                 </tr>
                 <tr class="wperp-form-group">
                     <td colspan="9" style="text-align: left;">
@@ -332,16 +332,16 @@
 
         data() {
             return {
-                open1: false,
-                open2: false,
-                open3: false,
-                open4: false,
-                open5: false,
-                open6: false,
-                open7: false,
-                open8: false,
-                open9: false,
-                open10: false,
+                open1: true,
+                open2: true,
+                open3: true,
+                open4: true,
+                open5: true,
+                open6: true,
+                open7: true,
+                open8: true,
+                open9: true,
+                open10: true,
                 form_errors: [],
                 chartAccounts: [],
                 ledgers: [],
@@ -355,6 +355,8 @@
                 acct_rec: null,
                 acct_pay: null,
                 tax_pay: null,
+                totalDebit: 0,
+                totalCredit: 0
             }
         },
 
@@ -362,7 +364,6 @@
             this.fetchData();
 
             this.$root.$on( "SimpleSelectChange", (data) => {
-                console.log( this.years );
                 this.fin_year = this.years.find(o => o.id === data.selected);
                 this.getSelectedOB();
             });
@@ -455,6 +456,9 @@
                 }
 
                 let diff = Math.abs( this.debit_total - this.credit_total );
+
+                this.totalDebit = this.debit_total;
+                this.totalCredit = this.credit_total;
                 this.isWorking = true;
                 if( 0 == diff ) {
                     this.isWorking = false;
@@ -521,8 +525,12 @@
                 this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
 
                 HTTP.get(`/opening-balances/${this.fin_year.id}`).then( response => {
+                    this.totalDebit = 0;
+                    this.totalCredit = 0;
                     response.data.forEach( (ledger) => {
                         ledger.balance = this.transformBalance( ledger.balance );
+                        this.totalDebit += parseFloat( ledger.debit );
+                        this.totalCredit += parseFloat( ledger.credit);
                     });
                     this.ledgers = this.groupBy(response.data, 'chart_id');
                 });
