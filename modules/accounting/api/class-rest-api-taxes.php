@@ -75,6 +75,20 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'bulk_delete' ],
+                'args'                => [
+                    'ids'   => [ 'required' => true ]
+                ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_invoice' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/quick-edit', [
 
             [
@@ -573,6 +587,27 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response->set_status( 200 );
 
         return $response;
+    }
+
+    /**
+     * Bulk delete action
+     *
+     * @param  object $request
+     *
+     * @return object
+     */
+    public function bulk_delete( $request ) {
+        $ids    =   $request['ids'];
+        $ids    =   explode( ',', $ids );
+
+        if ( ! $ids ) {
+            return;
+        }
+        foreach ( $ids as $id ) {
+            erp_acct_delete_tax_rate( $id );
+        }
+
+        return new WP_REST_Response( true, 204 );
     }
 
     /**

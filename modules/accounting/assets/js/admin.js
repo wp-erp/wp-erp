@@ -27677,6 +27677,14 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -27731,10 +27739,12 @@ setTimeout(function () {
 
     this.fetchData();
     this.$root.$on("SimpleSelectChange", function (data) {
+      console.log(_this.years);
       _this.fin_year = _this.years.find(function (o) {
         return o.id === data.selected;
       });
-      console.log(_this.years); // this.getSelectedOB();
+
+      _this.getSelectedOB();
     });
   },
   methods: {
@@ -27866,7 +27876,7 @@ setTimeout(function () {
 
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].post('/opening-balances', {
-        year: this.fin_year.name,
+        year: this.fin_year.id,
         ledgers: this.ledgers,
         acct_pay: this.acct_pay,
         acct_rec: this.acct_rec,
@@ -27901,11 +27911,10 @@ setTimeout(function () {
     getSelectedOB: function getSelectedOB() {
       var _this7 = this;
 
-      this.years = [];
       this.acct_pay = [];
       this.acct_rec = [];
       this.tax_pay = [];
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers').then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(this.fin_year.id)).then(function (response) {
         response.data.forEach(function (ledger) {
           ledger.balance = _this7.transformBalance(ledger.balance);
         });
@@ -27916,6 +27925,9 @@ setTimeout(function () {
         _this7.acct_rec = response.data.acct_receivable;
         _this7.tax_pay = response.data.tax_payable;
       });
+    },
+    printPopup: function printPopup() {
+      window.print();
     }
   },
   watch: {
@@ -29332,7 +29344,7 @@ var render = function() {
                     key: bulkAction.key,
                     on: {
                       click: function($event) {
-                        _vm.bulkActionSelect(bulkAction.key)
+                        return _vm.bulkActionSelect(bulkAction.key)
                       }
                     }
                   },
@@ -29512,7 +29524,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          _vm.goToPage(1)
+                          return _vm.goToPage(1)
                         }
                       }
                     },
@@ -29540,7 +29552,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          _vm.goToPage(_vm.currentPage - 1)
+                          return _vm.goToPage(_vm.currentPage - 1)
                         }
                       }
                     },
@@ -29565,7 +29577,7 @@ var render = function() {
                     on: {
                       keyup: function($event) {
                         if (
-                          !("button" in $event) &&
+                          !$event.type.indexOf("key") &&
                           _vm._k(
                             $event.keyCode,
                             "enter",
@@ -29604,7 +29616,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          _vm.goToPage(_vm.currentPage + 1)
+                          return _vm.goToPage(_vm.currentPage + 1)
                         }
                       }
                     },
@@ -29632,7 +29644,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          _vm.goToPage(_vm.totalPages)
+                          return _vm.goToPage(_vm.totalPages)
                         }
                       }
                     },
@@ -29755,7 +29767,7 @@ var render = function() {
                                 on: {
                                   click: function($event) {
                                     $event.preventDefault()
-                                    _vm.handleSortBy(key)
+                                    return _vm.handleSortBy(key)
                                   }
                                 }
                               },
@@ -29990,7 +30002,7 @@ var render = function() {
                                   on: {
                                     click: function($event) {
                                       $event.preventDefault()
-                                      _vm.toggleRow(row)
+                                      return _vm.toggleRow(row)
                                     }
                                   }
                                 },
@@ -30064,7 +30076,7 @@ var render = function() {
                                                                 $event
                                                               ) {
                                                                 $event.preventDefault()
-                                                                _vm.actionClicked(
+                                                                return _vm.actionClicked(
                                                                   action.key,
                                                                   row,
                                                                   i
@@ -30148,7 +30160,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          _vm.goToPage(1)
+                          return _vm.goToPage(1)
                         }
                       }
                     },
@@ -30176,7 +30188,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          _vm.goToPage(_vm.currentPage - 1)
+                          return _vm.goToPage(_vm.currentPage - 1)
                         }
                       }
                     },
@@ -30215,7 +30227,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          _vm.goToPage(_vm.currentPage + 1)
+                          return _vm.goToPage(_vm.currentPage + 1)
                         }
                       }
                     },
@@ -30243,7 +30255,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          _vm.goToPage(_vm.totalPages)
+                          return _vm.goToPage(_vm.totalPages)
                         }
                       }
                     },
@@ -30413,7 +30425,7 @@ var render = function() {
                     staticClass: "flaticon-close",
                     on: {
                       click: function($event) {
-                        _vm.$emit("close")
+                        return _vm.$emit("close")
                       }
                     }
                   })
@@ -30984,7 +30996,7 @@ var render = function() {
                                         },
                                         on: {
                                           input: function($event) {
-                                            _vm.getState(
+                                            return _vm.getState(
                                               _vm.peopleFields.country
                                             )
                                           }
@@ -31129,7 +31141,7 @@ var render = function() {
                           attrs: { type: "reset" },
                           on: {
                             click: function($event) {
-                              _vm.$parent.$emit("modal-close")
+                              return _vm.$parent.$emit("modal-close")
                             }
                           }
                         },
@@ -31504,7 +31516,7 @@ var render = function() {
                   staticClass: "modal-close",
                   on: {
                     click: function($event) {
-                      _vm.$emit("close")
+                      return _vm.$emit("close")
                     }
                   }
                 },
@@ -31570,7 +31582,7 @@ var render = function() {
                   on: {
                     click: function($event) {
                       $event.preventDefault()
-                      _vm.$parent.$emit("close")
+                      return _vm.$parent.$emit("close")
                     }
                   }
                 })
@@ -31910,7 +31922,7 @@ var render = function() {
                         on: {
                           click: function($event) {
                             $event.preventDefault()
-                            _vm.$parent.$emit("close")
+                            return _vm.$parent.$emit("close")
                           }
                         }
                       },
@@ -33833,6 +33845,9 @@ var render = function() {
           ])
         },
         [
+          _vm._v(" "),
+          _vm._v(" "),
+          _vm._v(" "),
           _c("template", { slot: "tfoot" }, [
             _c("tr", { staticClass: "t-foot" }, [
               _c("td", [_vm._v("Total")]),
@@ -34158,6 +34173,10 @@ var render = function() {
           ])
         },
         [
+          _vm._v(" "),
+          _vm._v(" "),
+          _vm._v(" "),
+          _vm._v(" "),
           _c("template", { slot: "tfoot" }, [
             _c("tr", { staticClass: "tfoot" }, [
               _c("td", { attrs: { colspan: "3" } }),
@@ -34458,6 +34477,10 @@ var render = function() {
           ])
         },
         [
+          _vm._v(" "),
+          _vm._v(" "),
+          _vm._v(" "),
+          _vm._v(" "),
           _c("template", { slot: "tfoot" }, [
             _c("tr", { staticClass: "tfoot" }, [
               _c("td", { attrs: { colspan: "4" } }),
@@ -34758,7 +34781,7 @@ var render = function() {
           },
           on: {
             change: function($event) {
-              _vm.filesChange($event)
+              return _vm.filesChange($event)
             }
           }
         }),
@@ -34827,7 +34850,7 @@ var render = function() {
             staticClass: "left-part",
             on: {
               click: function($event) {
-                _vm.optionSelected(_vm.options[0])
+                return _vm.optionSelected(_vm.options[0])
               }
             }
           },
@@ -34867,7 +34890,7 @@ var render = function() {
               key: index,
               on: {
                 click: function($event) {
-                  _vm.optionSelected(option)
+                  return _vm.optionSelected(option)
                 }
               }
             },
@@ -35722,7 +35745,7 @@ var render = function() {
                                     staticClass: "remove-file",
                                     on: {
                                       click: function($event) {
-                                        _vm.removeFile(index)
+                                        return _vm.removeFile(index)
                                       }
                                     }
                                   },
@@ -36000,77 +36023,80 @@ var render = function() {
                 rows: _vm.ledgers[parseInt(chart.id)]
               },
               on: { "action:click": _vm.onActionClick },
-              scopedSlots: _vm._u([
-                {
-                  key: "ledger_name",
-                  fn: function(data) {
-                    return [
-                      _c(
-                        "router-link",
-                        {
-                          attrs: {
-                            to: {
-                              name: "LedgerSingle",
-                              params: {
-                                id: data.row.id,
-                                ledgerID: data.row.id,
-                                ledgerName: data.row.name,
-                                ledgerCode: data.row.code
+              scopedSlots: _vm._u(
+                [
+                  {
+                    key: "ledger_name",
+                    fn: function(data) {
+                      return [
+                        _c(
+                          "router-link",
+                          {
+                            attrs: {
+                              to: {
+                                name: "LedgerSingle",
+                                params: {
+                                  id: data.row.id,
+                                  ledgerID: data.row.id,
+                                  ledgerName: data.row.name,
+                                  ledgerCode: data.row.code
+                                }
                               }
                             }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(data.row.name) + "\n                    "
-                          )
-                        ]
-                      )
-                    ]
-                  }
-                },
-                {
-                  key: "trn_count",
-                  fn: function(data) {
-                    return [
-                      _c(
-                        "router-link",
-                        {
-                          attrs: {
-                            to: {
-                              name: "LedgerReport",
-                              params: {
-                                id: data.row.id,
-                                ledgerID: data.row.id,
-                                ledgerName: data.row.name,
-                                ledgerCode: data.row.code
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(data.row.name) + "\n                    "
+                            )
+                          ]
+                        )
+                      ]
+                    }
+                  },
+                  {
+                    key: "trn_count",
+                    fn: function(data) {
+                      return [
+                        _c(
+                          "router-link",
+                          {
+                            attrs: {
+                              to: {
+                                name: "LedgerReport",
+                                params: {
+                                  id: data.row.id,
+                                  ledgerID: data.row.id,
+                                  ledgerName: data.row.name,
+                                  ledgerCode: data.row.code
+                                }
                               }
                             }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(data.row.trn_count) +
-                              "\n                    "
-                          )
-                        ]
-                      )
-                    ]
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(data.row.trn_count) +
+                                "\n                    "
+                            )
+                          ]
+                        )
+                      ]
+                    }
+                  },
+                  {
+                    key: "row-actions",
+                    fn: function(data) {
+                      return data.row.system != null
+                        ? [
+                            _c("strong", { staticClass: "sys-acc" }, [
+                              _vm._v("System")
+                            ])
+                          ]
+                        : undefined
+                    }
                   }
-                },
-                {
-                  key: "row-actions",
-                  fn: function(data) {
-                    return data.row.system != null
-                      ? [
-                          _c("strong", { staticClass: "sys-acc" }, [
-                            _vm._v("System")
-                          ])
-                        ]
-                      : undefined
-                  }
-                }
-              ])
+                ],
+                true
+              )
             })
           ],
           1
@@ -36925,60 +36951,63 @@ var render = function() {
                     "action:click": _vm.onActionClick,
                     "bulk:click": _vm.onBulkAction
                   },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "name",
-                      fn: function(data) {
-                        return data.row.isEdit
-                          ? [
-                              _c("input", {
-                                attrs: {
-                                  type: "text",
-                                  id: "cat-" + data.row.id
-                                },
-                                domProps: { value: data.row.name }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "buttons-wrapper text-right",
-                                  staticStyle: { "margin-top": "10px" }
-                                },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "wperp-btn btn--primary",
-                                      on: {
-                                        click: function($event) {
-                                          _vm.updateCategory(data.row)
+                  scopedSlots: _vm._u(
+                    [
+                      {
+                        key: "name",
+                        fn: function(data) {
+                          return data.row.isEdit
+                            ? [
+                                _c("input", {
+                                  attrs: {
+                                    type: "text",
+                                    id: "cat-" + data.row.id
+                                  },
+                                  domProps: { value: data.row.name }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "buttons-wrapper text-right",
+                                    staticStyle: { "margin-top": "10px" }
+                                  },
+                                  [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass: "wperp-btn btn--primary",
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.updateCategory(data.row)
+                                          }
                                         }
-                                      }
-                                    },
-                                    [_vm._v("Update")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "wperp-btn btn--default",
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          data.row.isEdit = false
+                                      },
+                                      [_vm._v("Update")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass: "wperp-btn btn--default",
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            data.row.isEdit = false
+                                          }
                                         }
-                                      }
-                                    },
-                                    [_vm._v("Cancel")]
-                                  )
-                                ]
-                              )
-                            ]
-                          : undefined
+                                      },
+                                      [_vm._v("Cancel")]
+                                    )
+                                  ]
+                                )
+                              ]
+                            : undefined
+                        }
                       }
-                    }
-                  ])
+                    ],
+                    true
+                  )
                 },
                 [_vm._v("\n                    >\n                    ")]
               )
@@ -37385,7 +37414,7 @@ var render = function() {
                                 )
                               },
                               blur: function($event) {
-                                _vm.$forceUpdate()
+                                return _vm.$forceUpdate()
                               }
                             }
                           })
@@ -37503,7 +37532,7 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
-                                  _vm.removeRow(key)
+                                  return _vm.removeRow(key)
                                 }
                               }
                             },
@@ -37621,7 +37650,7 @@ var render = function() {
                             staticClass: "remove-file",
                             on: {
                               click: function($event) {
-                                _vm.removeFile(index)
+                                return _vm.removeFile(index)
                               }
                             }
                           },
@@ -38163,7 +38192,7 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
-                                  _vm.removeRow(key)
+                                  return _vm.removeRow(key)
                                 }
                               }
                             },
@@ -38313,7 +38342,7 @@ var render = function() {
                                 staticClass: "remove-file",
                                 on: {
                                   click: function($event) {
-                                    _vm.removeFile(index)
+                                    return _vm.removeFile(index)
                                   }
                                 }
                               },
@@ -39303,7 +39332,7 @@ var render = function() {
                             )
                           },
                           blur: function($event) {
-                            _vm.$forceUpdate()
+                            return _vm.$forceUpdate()
                           }
                         }
                       })
@@ -39423,7 +39452,7 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
-                                  _vm.removeRow(key)
+                                  return _vm.removeRow(key)
                                 }
                               }
                             },
@@ -40618,7 +40647,7 @@ var render = function() {
                                 staticClass: "remove-file",
                                 on: {
                                   click: function($event) {
-                                    _vm.removeFile(index)
+                                    return _vm.removeFile(index)
                                   }
                                 }
                               },
@@ -41385,7 +41414,7 @@ var render = function() {
                             )
                           },
                           blur: function($event) {
-                            _vm.$forceUpdate()
+                            return _vm.$forceUpdate()
                           }
                         }
                       })
@@ -41506,7 +41535,7 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
-                                  _vm.remove_item(key)
+                                  return _vm.remove_item(key)
                                 }
                               }
                             },
@@ -42611,7 +42640,7 @@ var render = function() {
                               domProps: { value: _vm.debitLine[key] },
                               on: {
                                 keyup: function($event) {
-                                  _vm.calculateAmount(key)
+                                  return _vm.calculateAmount(key)
                                 },
                                 input: function($event) {
                                   if ($event.target.composing) {
@@ -42649,7 +42678,7 @@ var render = function() {
                               domProps: { value: _vm.creditLine[key] },
                               on: {
                                 keyup: function($event) {
-                                  _vm.calculateAmount(key)
+                                  return _vm.calculateAmount(key)
                                 },
                                 input: function($event) {
                                   if ($event.target.composing) {
@@ -42680,7 +42709,7 @@ var render = function() {
                                 on: {
                                   click: function($event) {
                                     $event.preventDefault()
-                                    _vm.remove_item(key)
+                                    return _vm.remove_item(key)
                                   }
                                 }
                               },
@@ -44219,7 +44248,7 @@ var render = function() {
                                 )
                               },
                               blur: function($event) {
-                                _vm.$forceUpdate()
+                                return _vm.$forceUpdate()
                               }
                             }
                           })
@@ -44363,7 +44392,7 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
-                                  _vm.removeRow(key)
+                                  return _vm.removeRow(key)
                                 }
                               }
                             },
@@ -44513,7 +44542,7 @@ var render = function() {
                                 staticClass: "remove-file",
                                 on: {
                                   click: function($event) {
-                                    _vm.removeFile(index)
+                                    return _vm.removeFile(index)
                                   }
                                 }
                               },
@@ -45504,7 +45533,7 @@ var render = function() {
               staticClass: "wperp-selected-option",
               on: {
                 click: function($event) {
-                  _vm.toggleMenu()
+                  return _vm.toggleMenu()
                 }
               }
             },
@@ -45526,7 +45555,7 @@ var render = function() {
               staticClass: "wperp-selected-option",
               on: {
                 click: function($event) {
-                  _vm.toggleMenu()
+                  return _vm.toggleMenu()
                 }
               }
             },
@@ -45561,7 +45590,7 @@ var render = function() {
                           on: {
                             click: function($event) {
                               $event.preventDefault()
-                              _vm.updateOption(option)
+                              return _vm.updateOption(option)
                             }
                           }
                         },
@@ -45995,7 +46024,11 @@ var render = function() {
                           on: {
                             click: function($event) {
                               $event.preventDefault()
-                              _vm.onActionClick(action.key, data.row, index)
+                              return _vm.onActionClick(
+                                action.key,
+                                data.row,
+                                index
+                              )
                             }
                           }
                         },
@@ -46642,7 +46675,11 @@ var render = function() {
                           on: {
                             click: function($event) {
                               $event.preventDefault()
-                              _vm.onActionClick(action.key, data.row, index)
+                              return _vm.onActionClick(
+                                action.key,
+                                data.row,
+                                index
+                              )
                             }
                           }
                         },
@@ -47621,7 +47658,11 @@ var render = function() {
                           on: {
                             click: function($event) {
                               $event.preventDefault()
-                              _vm.onActionClick(action.key, data.row, index)
+                              return _vm.onActionClick(
+                                action.key,
+                                data.row,
+                                index
+                              )
                             }
                           }
                         },
@@ -48545,7 +48586,7 @@ var render = function() {
                                       on: {
                                         click: function($event) {
                                           $event.preventDefault()
-                                          _vm.removeRow(key)
+                                          return _vm.removeRow(key)
                                         }
                                       }
                                     },
@@ -49645,7 +49686,7 @@ var render = function() {
                           on: {
                             click: function($event) {
                               $event.preventDefault()
-                              _vm.singleTaxRate(
+                              return _vm.singleTaxRate(
                                 data.row.tax_id,
                                 data.row.tax_rate_name
                               )
@@ -50403,7 +50444,7 @@ var render = function() {
                                               on: {
                                                 click: function($event) {
                                                   $event.preventDefault()
-                                                  _vm.actionClicked(
+                                                  return _vm.actionClicked(
                                                     action.key,
                                                     account.id
                                                   )
@@ -50679,7 +50720,7 @@ var render = function() {
                               )
                             },
                             blur: function($event) {
-                              _vm.$forceUpdate()
+                              return _vm.$forceUpdate()
                             }
                           }
                         })
@@ -50824,7 +50865,7 @@ var render = function() {
                               on: {
                                 click: function($event) {
                                   $event.preventDefault()
-                                  _vm.removeRow(key)
+                                  return _vm.removeRow(key)
                                 }
                               }
                             },
@@ -50974,7 +51015,7 @@ var render = function() {
                                 staticClass: "remove-file",
                                 on: {
                                   click: function($event) {
-                                    _vm.removeFile(index)
+                                    return _vm.removeFile(index)
                                   }
                                 }
                               },
@@ -52431,6 +52472,7 @@ var render = function() {
           ])
         },
         [
+          _vm._v(" "),
           _c("template", { slot: "tfoot" }, [
             _c("tr", { staticClass: "t-foot" }, [
               _c("td", [_vm._v("Total Income")]),
@@ -52469,6 +52511,7 @@ var render = function() {
           ])
         },
         [
+          _vm._v(" "),
           _c("template", { slot: "tfoot" }, [
             _c("tr", { staticClass: "t-foot" }, [
               _c("td", [_vm._v("Total Expense")]),
@@ -52742,6 +52785,8 @@ var render = function() {
                 ])
               },
               [
+                _vm._v(" "),
+                _vm._v(" "),
                 _c("template", { slot: "tfoot" }, [
                   _c("tr", { staticClass: "t-foot" }, [
                     _c("td", [_vm._v("Total Asset")]),
@@ -52804,6 +52849,8 @@ var render = function() {
                 ])
               },
               [
+                _vm._v(" "),
+                _vm._v(" "),
                 _c("template", { slot: "tfoot" }, [
                   _c("tr", { staticClass: "t-foot" }, [
                     _c("td", [_vm._v("Total Liability")]),
@@ -52870,6 +52917,8 @@ var render = function() {
                 ])
               },
               [
+                _vm._v(" "),
+                _vm._v(" "),
                 _c("template", { slot: "tfoot" }, [
                   _c("tr", { staticClass: "t-foot" }, [
                     _c("td", [_vm._v("Total Equity")]),
@@ -53180,30 +53229,49 @@ var render = function() {
           }
         },
         [
-          _c(
-            "div",
-            {
-              staticClass: "wperp-col-sm-4 wperp-custom-select with-multiselect"
-            },
-            [
-              _c("label", [_vm._v("Financial Year")]),
-              _vm._v(" "),
-              _c("br"),
-              _vm._v("\n            " + _vm._s(_vm.years) + "\n            "),
-              _c("simple-select", {
-                attrs: { width: 200, options: _vm.years },
-                on: { input: _vm.getSelectedOB },
-                model: {
-                  value: _vm.fin_year,
-                  callback: function($$v) {
-                    _vm.fin_year = $$v
-                  },
-                  expression: "fin_year"
-                }
-              })
-            ],
-            1
-          ),
+          _c("div", { staticClass: "wperp-row" }, [
+            _c(
+              "div",
+              { staticClass: "wperp-col-sm-6" },
+              [
+                _c("label", [_vm._v("Financial Year")]),
+                _vm._v(" "),
+                _c("simple-select", {
+                  attrs: { width: 200, options: _vm.years },
+                  on: { input: _vm.getSelectedOB },
+                  model: {
+                    value: _vm.fin_year,
+                    callback: function($$v) {
+                      _vm.fin_year = $$v
+                    },
+                    expression: "fin_year"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "wperp-col-sm-6" }, [
+              _c(
+                "a",
+                {
+                  staticClass:
+                    "wperp-col-sm-4 wperp-btn btn--default print-btn",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.printPopup($event)
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "flaticon-printer-1" }),
+                  _vm._v("\n                      Print\n                ")
+                ]
+              )
+            ])
+          ]),
           _vm._v(" "),
           _vm.acct_rec
             ? _c("div", { staticClass: "erp-accordion" }, [

@@ -285,6 +285,7 @@ class Ajax_Handler {
 
         $current_user_id = get_current_user_id();
         $posted = array_map( 'strip_tags_deep', $_POST );
+
         $data   = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
         if ( ! $data['id'] && ! current_user_can( 'erp_crm_add_contact' ) ) {
@@ -299,6 +300,11 @@ class Ajax_Handler {
 
         if ( is_wp_error( $customer_id ) ) {
             $this->send_error( $customer_id->get_error_message() );
+        }
+
+        if ( $current_user_id != $data['contact_owner'] ) {
+            $email = new \WeDevs\ERP\CRM\Emails\New_Contact_Assigned();
+            $email->trigger( $customer_id );
         }
 
         $customer = new Contact( intval( $customer_id ) );

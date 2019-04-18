@@ -17,6 +17,7 @@ class Emailer {
     function register_emails( $emails ) {
 
         $emails['New_Task_Assigned']   = new Emails\New_Task_Assigned();
+        $emails['New_Contact_Assigned']   = new Emails\New_Contact_Assigned();
 
         return apply_filters( 'erp_crm_email_classes', $emails );
     }
