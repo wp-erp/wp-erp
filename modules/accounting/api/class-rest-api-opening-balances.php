@@ -390,6 +390,8 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
 
+        $item = (array) $item;
+
         $data = array_merge( $item, $additional_fields );
 
         // Wrap the data in a response object
