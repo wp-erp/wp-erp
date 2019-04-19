@@ -356,7 +356,7 @@ function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $s
 
     // should we go further calculation, check the diff
     if ( ! erp_acct_has_date_diff($tb_start_date, $closest_fy_date['start_date']) ) {
-        return $temp_data;
+        return $balance;
     } else {
         $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
     }
@@ -440,7 +440,7 @@ function erp_acct_sales_tax_calc_with_opening_balance( $tb_start_date, $data, $s
 
     // should we go further calculation, check the diff
     if ( ! erp_acct_has_date_diff($tb_start_date, $closest_fy_date['start_date']) ) {
-        return $temp_data;
+        return $balance;
     } else {
         $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
     }
