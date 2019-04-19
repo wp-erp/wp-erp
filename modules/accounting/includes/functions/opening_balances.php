@@ -69,18 +69,17 @@ function erp_acct_get_opening_balance( $year_id ) {
 
     $sql = "SELECT
 
-    id,
-    financial_year_id,
-    ledger_id,
-    chart_id,
+    ob.id,
+    ob.financial_year_id,
+    ob.ledger_id,
+    ledger.name,
+    ob.chart_id,
     debit,
-    credit,
-    created_at,
-    created_by,
-    updated_at,
-    updated_by
+    credit
 
-    FROM {$wpdb->prefix}erp_acct_opening_balances
+    FROM {$wpdb->prefix}erp_acct_opening_balances as ob
+    LEFT JOIN {$wpdb->prefix}erp_acct_ledgers as ledger 
+    ON ledger.id = ob.ledger_id
     WHERE financial_year_id = {$year_id}";
 
     $rows = $wpdb->get_results( $sql, ARRAY_A );
