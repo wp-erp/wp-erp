@@ -27377,8 +27377,9 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_SimpleSelect_vue__ = __webpack_require__(504);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_ShowErrors_vue__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_ShowErrors_vue__ = __webpack_require__(8);
 
 //
 //
@@ -27658,33 +27659,7 @@ setTimeout(function () {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 
@@ -27694,8 +27669,9 @@ setTimeout(function () {
   components: {
     HTTP: __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */],
     SimpleSelect: __WEBPACK_IMPORTED_MODULE_2_admin_components_select_SimpleSelect_vue__["a" /* default */],
-    SubmitButton: __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__["a" /* default */],
-    ShowErrors: __WEBPACK_IMPORTED_MODULE_4_admin_components_base_ShowErrors_vue__["a" /* default */]
+    MultiSelect: __WEBPACK_IMPORTED_MODULE_3_admin_components_select_MultiSelect_vue__["a" /* default */],
+    SubmitButton: __WEBPACK_IMPORTED_MODULE_4_admin_components_base_SubmitButton_vue__["a" /* default */],
+    ShowErrors: __WEBPACK_IMPORTED_MODULE_5_admin_components_base_ShowErrors_vue__["a" /* default */]
   },
   props: {
     title: {
@@ -27716,12 +27692,13 @@ setTimeout(function () {
       open5: true,
       open6: true,
       open7: true,
-      open8: true,
-      open9: true,
-      open10: true,
       form_errors: [],
       chartAccounts: [],
       ledgers: [],
+      agencies: null,
+      banks: [],
+      people: [],
+      options: [],
       fin_year: {},
       years: [],
       description: '',
@@ -27729,9 +27706,9 @@ setTimeout(function () {
       credit_total: 0,
       debit_total: 0,
       isWorking: false,
-      acct_rec: null,
-      acct_pay: null,
-      tax_pay: null,
+      acct_rec: [],
+      acct_pay: [],
+      tax_pay: [],
       totalDebit: 0,
       totalCredit: 0
     };
@@ -27765,7 +27742,9 @@ setTimeout(function () {
       this.$store.dispatch('spinner/setSpinner', true);
       this.getYears();
       this.fetchLedgers();
-      this.getVirtualAccts();
+      this.fetchAgencies();
+      this.fetchBanks();
+      this.getPeople();
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers/accounts').then(function (response) {
         _this2.chartAccounts = response.data;
 
@@ -27783,6 +27762,24 @@ setTimeout(function () {
         });
         _this3.ledgers = _this3.groupBy(response.data, 'chart_id');
         _this3.all_ledgers = response.data;
+      });
+    },
+    fetchAgencies: function fetchAgencies() {
+      var _this4 = this;
+
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/tax-agencies').then(function (response) {
+        _this4.agencies = response.data;
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    fetchBanks: function fetchBanks() {
+      var _this5 = this;
+
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers/7/accounts').then(function (response) {
+        _this5.banks = response.data;
+      }).catch(function (error) {
+        console.log(error);
       });
     },
     transformBalance: function transformBalance(val) {
@@ -27803,45 +27800,27 @@ setTimeout(function () {
       this.credit_total = 0;
 
       for (var key in this.ledgers) {
-        for (var _idx = 0; _idx < this.ledgers[key].length; _idx++) {
-          if (this.ledgers[key][_idx].hasOwnProperty('debit')) {
-            this.debit_total += parseFloat(this.ledgers[key][_idx].debit);
+        for (var idx = 0; idx < this.ledgers[key].length; idx++) {
+          if (this.ledgers[key][idx].hasOwnProperty('debit')) {
+            this.debit_total += parseFloat(this.ledgers[key][idx].debit);
           }
 
-          if (this.ledgers[key][_idx].hasOwnProperty('credit')) {
-            this.credit_total += parseFloat(this.ledgers[key][_idx].credit);
+          if (this.ledgers[key][idx].hasOwnProperty('credit')) {
+            this.credit_total += parseFloat(this.ledgers[key][idx].credit);
           }
         }
       }
 
       for (var _key in this.acct_rec) {
-        if (this.acct_rec[_key].hasOwnProperty('debit')) {
-          this.debit_total += parseFloat(this.acct_rec[_key].debit);
-        }
-
-        if (this.acct_rec[_key].hasOwnProperty('credit')) {
-          this.credit_total += parseFloat(this.acct_rec[_key].credit);
-        }
+        this.debit_total += parseFloat(this.acct_rec[_key].debit);
       }
 
       for (var _key2 in this.acct_pay) {
-        if (this.acct_pay[_key2][idx].hasOwnProperty('debit')) {
-          this.debit_total += parseFloat(this.acct_pay[_key2][idx].debit);
-        }
-
-        if (this.acct_pay[_key2][idx].hasOwnProperty('credit')) {
-          this.credit_total += parseFloat(this.acct_pay[_key2][idx].credit);
-        }
+        this.credit_total += parseFloat(this.acct_pay[_key2].credit);
       }
 
       for (var _key3 in this.tax_pay) {
-        if (this.tax_pay[_key3][idx].hasOwnProperty('debit')) {
-          this.debit_total += parseFloat(this.tax_pay[_key3][idx].debit);
-        }
-
-        if (this.tax_pay[_key3][idx].hasOwnProperty('credit')) {
-          this.credit_total += parseFloat(this.tax_pay[_key3][idx].credit);
-        }
+        this.credit_total += parseFloat(this.tax_pay[_key3].credit);
       }
 
       var diff = Math.abs(this.debit_total - this.credit_total);
@@ -27849,7 +27828,7 @@ setTimeout(function () {
       this.totalCredit = this.credit_total;
       this.isWorking = true;
 
-      if (0 == diff) {
+      if (0 === diff) {
         this.isWorking = false;
       }
     },
@@ -27865,7 +27844,7 @@ setTimeout(function () {
       }
     },
     submitOBForm: function submitOBForm() {
-      var _this4 = this;
+      var _this6 = this;
 
       this.validateForm();
 
@@ -27886,59 +27865,77 @@ setTimeout(function () {
         tax_pay: this.tax_pay,
         description: this.description
       }).then(function (res) {
-        _this4.$store.dispatch('spinner/setSpinner', false);
+        _this6.$store.dispatch('spinner/setSpinner', false);
 
-        _this4.showAlert('success', 'Opening Balance Created!');
+        _this6.showAlert('success', 'Opening Balance Created!');
       }).catch(function (error) {
-        _this4.$store.dispatch('spinner/setSpinner', false);
+        _this6.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
-        _this4.isWorking = false;
+        _this6.isWorking = false;
       });
     },
     getYears: function getYears() {
-      var _this5 = this;
+      var _this7 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/opening-balances/names').then(function (response) {
-        _this5.years = response.data;
+        _this7.years = response.data;
       });
     },
-    getVirtualAccts: function getVirtualAccts() {
-      var _this6 = this;
+    getPeople: function getPeople() {
+      var _this8 = this;
 
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/opening-balances/virtual-accts').then(function (response) {
-        _this6.acct_pay = response.data.acct_payable;
-        _this6.acct_rec = response.data.acct_receivable;
-        _this6.tax_pay = response.data.tax_payable;
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/people', {
+        params: {
+          type: 'all'
+        }
+      }).then(function (response) {
+        _this8.options = response.data;
       });
     },
     getSelectedOB: function getSelectedOB() {
-      var _this7 = this;
+      var _this9 = this;
 
       this.acct_pay = [];
       this.acct_rec = [];
       this.tax_pay = [];
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(this.fin_year.id)).then(function (response) {
-        _this7.totalDebit = 0;
-        _this7.totalCredit = 0;
+        _this9.totalDebit = 0;
+        _this9.totalCredit = 0;
         response.data.forEach(function (ledger) {
-          ledger.balance = _this7.transformBalance(ledger.balance);
-          _this7.totalDebit += parseFloat(ledger.debit);
-          _this7.totalCredit += parseFloat(ledger.credit);
+          ledger.balance = _this9.transformBalance(ledger.balance);
+          _this9.totalDebit += parseFloat(ledger.debit);
+          _this9.totalCredit += parseFloat(ledger.credit);
         });
-        _this7.ledgers = _this7.groupBy(response.data, 'chart_id');
+        _this9.ledgers = _this9.groupBy(response.data, 'chart_id');
       }).then(function () {
-        if (Object.keys(_this7.ledgers).length === 0) {
-          _this7.fetchData();
+        if (Object.keys(_this9.ledgers).length === 0) {
+          _this9.fetchLedgers();
         }
       });
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/virtual-accts/".concat(this.fin_year.id)).then(function (response) {
-        _this7.acct_pay = response.data.acct_payable;
-        _this7.acct_rec = response.data.acct_receivable;
-        _this7.tax_pay = response.data.tax_payable;
+        _this9.acct_pay = response.data.acct_payable;
+        _this9.acct_rec = response.data.acct_receivable;
+        _this9.tax_pay = response.data.tax_payable;
       });
     },
     printPopup: function printPopup() {
       window.print();
+    },
+    removeAcctRecRow: function removeAcctRecRow(index) {
+      this.$delete(this.acct_rec, index);
+      this.calculateAmount();
+    },
+    removeAcctPayRow: function removeAcctPayRow(index) {
+      this.$delete(this.acct_pay, index);
+      this.calculateAmount();
+    },
+    removeTaxPayRow: function removeTaxPayRow(index) {
+      this.$delete(this.tax_pay, index);
+      this.calculateAmount();
+    },
+    removeBankRow: function removeBankRow(index) {
+      this.$delete(this.banks, index);
+      this.calculateAmount();
     }
   },
   watch: {
@@ -53023,7 +53020,7 @@ if (false) {
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(502)
+  __webpack_require__(631)
   __webpack_require__(503)
 }
 var normalizeComponent = __webpack_require__(0)
@@ -53070,12 +53067,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 502 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 502 */,
 /* 503 */
 /***/ (function(module, exports) {
 
@@ -53284,104 +53276,179 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _vm.acct_rec
-            ? _c("div", { staticClass: "erp-accordion" }, [
-                _c(
-                  "div",
+          _c("div", { staticClass: "erp-accordion" }, [
+            _c(
+              "div",
+              {
+                staticClass: "erp-accordion-expand",
+                class: _vm.open5 ? "active" : "before-border",
+                on: {
+                  click: function($event) {
+                    _vm.open5 = !_vm.open5
+                  }
+                }
+              },
+              [
+                _c("span", { staticClass: "wp-erp-ob-title" }, [
+                  _vm._v("Accounts Receivable")
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "table",
+              {
+                directives: [
                   {
-                    staticClass: "erp-accordion-expand",
-                    class: _vm.open8 ? "active" : "before-border",
-                    on: {
-                      click: function($event) {
-                        _vm.open8 = !_vm.open8
-                      }
-                    }
-                  },
-                  [
-                    _c("span", { staticClass: "wp-erp-ob-title" }, [
-                      _vm._v("Accounts Receivable")
-                    ])
-                  ]
-                ),
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.open5,
+                    expression: "open5"
+                  }
+                ],
+                staticClass:
+                  "wperp-table wperp-form-table erp-accordion-expand-body"
+              },
+              [
+                _vm._m(1),
                 _vm._v(" "),
                 _c(
-                  "table",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.open8,
-                        expression: "open8"
-                      }
-                    ],
-                    staticClass:
-                      "wperp-table wperp-form-table erp-accordion-expand-body"
-                  },
+                  "tbody",
                   [
-                    _vm._m(1),
+                    _vm._l(_vm.acct_rec, function(acct, idx) {
+                      return _c("tr", { key: idx }, [
+                        _c("td", [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "wperp-form-group ob-people with-multiselect"
+                            },
+                            [
+                              _c("multi-select", {
+                                attrs: { options: _vm.options },
+                                model: {
+                                  value: acct.people,
+                                  callback: function($$v) {
+                                    _vm.$set(acct, "people", $$v)
+                                  },
+                                  expression: "acct.people"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: acct.debit,
+                                expression: "acct.debit"
+                              }
+                            ],
+                            attrs: { type: "number" },
+                            domProps: { value: acct.debit },
+                            on: {
+                              keyup: _vm.calculateAmount,
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(acct, "debit", $event.target.value)
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: acct.credit,
+                                expression: "acct.credit"
+                              }
+                            ],
+                            attrs: { type: "number", disabled: "" },
+                            domProps: { value: acct.credit },
+                            on: {
+                              keyup: _vm.calculateAmount,
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(acct, "credit", $event.target.value)
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          {
+                            staticClass: "delete-row",
+                            attrs: { "data-colname": "Remove" }
+                          },
+                          [
+                            _c(
+                              "a",
+                              {
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.removeAcctRecRow(idx)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "flaticon-trash" })]
+                            )
+                          ]
+                        )
+                      ])
+                    }),
                     _vm._v(" "),
-                    _c(
-                      "tbody",
-                      _vm._l(_vm.acct_rec, function(acct, idx) {
-                        return _c("tr", { key: idx }, [
-                          _c("td", [_vm._v(_vm._s(acct.people_name))]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: acct.debit,
-                                  expression: "acct.debit"
-                                }
-                              ],
-                              attrs: { type: "number" },
-                              domProps: { value: acct.debit },
+                    _c("tr", { staticClass: "add-new-line" }, [
+                      _c(
+                        "td",
+                        {
+                          staticStyle: { "text-align": "left" },
+                          attrs: { colspan: "9" }
+                        },
+                        [
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "wperp-btn btn--primary add-line-trigger",
                               on: {
-                                keyup: _vm.calculateAmount,
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(acct, "debit", $event.target.value)
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.acct_rec.push({})
                                 }
                               }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: acct.credit,
-                                  expression: "acct.credit"
-                                }
-                              ],
-                              attrs: { type: "number" },
-                              domProps: { value: acct.credit },
-                              on: {
-                                keyup: _vm.calculateAmount,
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(acct, "credit", $event.target.value)
-                                }
-                              }
-                            })
-                          ])
-                        ])
-                      }),
-                      0
-                    )
-                  ]
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "flaticon-add-plus-button"
+                              }),
+                              _vm._v("Add People")
+                            ]
+                          )
+                        ]
+                      )
+                    ])
+                  ],
+                  2
                 )
-              ])
-            : _vm._e(),
+              ]
+            )
+          ]),
           _vm._v(" "),
           _vm.acct_pay
             ? _c("div", { staticClass: "erp-accordion" }, [
@@ -53389,10 +53456,10 @@ var render = function() {
                   "div",
                   {
                     staticClass: "erp-accordion-expand",
-                    class: _vm.open9 ? "active" : "before-border",
+                    class: _vm.open6 ? "active" : "before-border",
                     on: {
                       click: function($event) {
-                        _vm.open9 = !_vm.open9
+                        _vm.open6 = !_vm.open6
                       }
                     }
                   },
@@ -53410,8 +53477,8 @@ var render = function() {
                       {
                         name: "show",
                         rawName: "v-show",
-                        value: _vm.open9,
-                        expression: "open9"
+                        value: _vm.open6,
+                        expression: "open6"
                       }
                     ],
                     staticClass:
@@ -53422,60 +53489,141 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "tbody",
-                      _vm._l(_vm.acct_pay, function(acct, idx) {
-                        return _c("tr", { key: idx }, [
-                          _c("td", [_vm._v(_vm._s(acct.people_name))]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
+                      [
+                        _vm._l(_vm.acct_pay, function(acct, idx) {
+                          return _c("tr", { key: idx }, [
+                            _c("td", [
+                              _c(
+                                "div",
                                 {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: acct.debit,
-                                  expression: "acct.debit"
-                                }
-                              ],
-                              attrs: { type: "number" },
-                              domProps: { value: acct.debit },
-                              on: {
-                                keyup: _vm.calculateAmount,
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
+                                  staticClass:
+                                    "wperp-form-group ob-people with-multiselect"
+                                },
+                                [
+                                  _c("multi-select", {
+                                    attrs: { options: _vm.options },
+                                    model: {
+                                      value: acct.people,
+                                      callback: function($$v) {
+                                        _vm.$set(acct, "people", $$v)
+                                      },
+                                      expression: "acct.people"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: acct.debit,
+                                    expression: "acct.debit"
                                   }
-                                  _vm.$set(acct, "debit", $event.target.value)
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: acct.credit,
-                                  expression: "acct.credit"
-                                }
-                              ],
-                              attrs: { type: "number" },
-                              domProps: { value: acct.credit },
-                              on: {
-                                keyup: _vm.calculateAmount,
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
+                                ],
+                                attrs: { type: "number", disabled: "" },
+                                domProps: { value: acct.debit },
+                                on: {
+                                  keyup: _vm.calculateAmount,
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(acct, "debit", $event.target.value)
                                   }
-                                  _vm.$set(acct, "credit", $event.target.value)
                                 }
-                              }
-                            })
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: acct.credit,
+                                    expression: "acct.credit"
+                                  }
+                                ],
+                                attrs: { type: "number" },
+                                domProps: { value: acct.credit },
+                                on: {
+                                  keyup: _vm.calculateAmount,
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      acct,
+                                      "credit",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticClass: "delete-row",
+                                attrs: { "data-colname": "Remove" }
+                              },
+                              [
+                                _c(
+                                  "a",
+                                  {
+                                    attrs: { href: "#" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.removeAcctPayRow(idx)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "flaticon-trash" })]
+                                )
+                              ]
+                            )
                           ])
+                        }),
+                        _vm._v(" "),
+                        _c("tr", { staticClass: "add-new-line" }, [
+                          _c(
+                            "td",
+                            {
+                              staticStyle: { "text-align": "left" },
+                              attrs: { colspan: "9" }
+                            },
+                            [
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "wperp-btn btn--primary add-line-trigger",
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.acct_pay.push({})
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass: "flaticon-add-plus-button"
+                                  }),
+                                  _vm._v("Add People")
+                                ]
+                              )
+                            ]
+                          )
                         ])
-                      }),
-                      0
+                      ],
+                      2
                     )
                   ]
                 )
@@ -53488,10 +53636,10 @@ var render = function() {
                   "div",
                   {
                     staticClass: "erp-accordion-expand",
-                    class: _vm.open10 ? "active" : "before-border",
+                    class: _vm.open7 ? "active" : "before-border",
                     on: {
                       click: function($event) {
-                        _vm.open10 = !_vm.open10
+                        _vm.open7 = !_vm.open7
                       }
                     }
                   },
@@ -53509,8 +53657,8 @@ var render = function() {
                       {
                         name: "show",
                         rawName: "v-show",
-                        value: _vm.open10,
-                        expression: "open10"
+                        value: _vm.open7,
+                        expression: "open7"
                       }
                     ],
                     staticClass:
@@ -53521,60 +53669,138 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "tbody",
-                      _vm._l(_vm.tax_pay, function(t_pay, idx) {
-                        return _c("tr", { key: idx }, [
-                          _c("td", [_vm._v(_vm._s(t_pay.agency_name))]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: t_pay.debit,
-                                  expression: "t_pay.debit"
-                                }
-                              ],
-                              attrs: { type: "number" },
-                              domProps: { value: t_pay.debit },
-                              on: {
-                                keyup: _vm.calculateAmount,
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
+                      [
+                        _vm._l(_vm.tax_pay, function(acct, idx) {
+                          return _c("tr", { key: idx }, [
+                            _c("td", [
+                              _c(
+                                "div",
+                                { staticClass: "with-multiselect" },
+                                [
+                                  _c("multi-select", {
+                                    attrs: { options: _vm.agencies },
+                                    model: {
+                                      value: acct.agency,
+                                      callback: function($$v) {
+                                        _vm.$set(acct, "agency", $$v)
+                                      },
+                                      expression: "acct.agency"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: acct.debit,
+                                    expression: "acct.debit"
                                   }
-                                  _vm.$set(t_pay, "debit", $event.target.value)
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: t_pay.credit,
-                                  expression: "t_pay.credit"
-                                }
-                              ],
-                              attrs: { type: "number" },
-                              domProps: { value: t_pay.credit },
-                              on: {
-                                keyup: _vm.calculateAmount,
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
+                                ],
+                                attrs: { type: "number", disabled: "" },
+                                domProps: { value: acct.debit },
+                                on: {
+                                  keyup: _vm.calculateAmount,
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(acct, "debit", $event.target.value)
                                   }
-                                  _vm.$set(t_pay, "credit", $event.target.value)
                                 }
-                              }
-                            })
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: acct.credit,
+                                    expression: "acct.credit"
+                                  }
+                                ],
+                                attrs: { type: "number" },
+                                domProps: { value: acct.credit },
+                                on: {
+                                  keyup: _vm.calculateAmount,
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      acct,
+                                      "credit",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticClass: "delete-row",
+                                attrs: { "data-colname": "Remove" }
+                              },
+                              [
+                                _c(
+                                  "a",
+                                  {
+                                    attrs: { href: "#" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.removeAcctPayRow(idx)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "flaticon-trash" })]
+                                )
+                              ]
+                            )
                           ])
+                        }),
+                        _vm._v(" "),
+                        _c("tr", { staticClass: "add-new-line" }, [
+                          _c(
+                            "td",
+                            {
+                              staticStyle: { "text-align": "left" },
+                              attrs: { colspan: "9" }
+                            },
+                            [
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "wperp-btn btn--primary add-line-trigger",
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.tax_pay.push({})
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass: "flaticon-add-plus-button"
+                                  }),
+                                  _vm._v("Add People")
+                                ]
+                              )
+                            ]
+                          )
                         ])
-                      }),
-                      0
+                      ],
+                      2
                     )
                   ]
                 )
@@ -53908,7 +54134,7 @@ var render = function() {
               ])
             : _vm._e(),
           _vm._v(" "),
-          _vm.chartAccounts[3]
+          _vm.chartAccounts[6]
             ? _c("div", { staticClass: "erp-accordion" }, [
                 _c(
                   "div",
@@ -53918,327 +54144,6 @@ var render = function() {
                     on: {
                       click: function($event) {
                         _vm.open4 = !_vm.open4
-                      }
-                    }
-                  },
-                  [
-                    _c("span", { staticClass: "wp-erp-ob-title" }, [
-                      _vm._v(_vm._s(_vm.chartAccounts[3].label))
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _vm.ledgers[4]
-                  ? _c(
-                      "table",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.open4,
-                            expression: "open4"
-                          }
-                        ],
-                        staticClass:
-                          "wperp-table wperp-form-table erp-accordion-expand-body"
-                      },
-                      [
-                        _vm._m(7),
-                        _vm._v(" "),
-                        _c(
-                          "tbody",
-                          _vm._l(_vm.ledgers[4], function(ledger, idx) {
-                            return _c("tr", { key: idx }, [
-                              _c("td", [_vm._v(_vm._s(ledger.name))]),
-                              _vm._v(" "),
-                              _c("td", [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: ledger.debit,
-                                      expression: "ledger.debit"
-                                    }
-                                  ],
-                                  attrs: { type: "number" },
-                                  domProps: { value: ledger.debit },
-                                  on: {
-                                    keyup: _vm.calculateAmount,
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        ledger,
-                                        "debit",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                })
-                              ]),
-                              _vm._v(" "),
-                              _c("td", [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: ledger.credit,
-                                      expression: "ledger.credit"
-                                    }
-                                  ],
-                                  attrs: { type: "number" },
-                                  domProps: { value: ledger.credit },
-                                  on: {
-                                    keyup: _vm.calculateAmount,
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        ledger,
-                                        "credit",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                })
-                              ])
-                            ])
-                          }),
-                          0
-                        )
-                      ]
-                    )
-                  : _vm._e()
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.chartAccounts[4]
-            ? _c("div", { staticClass: "erp-accordion" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "erp-accordion-expand",
-                    class: _vm.open5 ? "active" : "before-border",
-                    on: {
-                      click: function($event) {
-                        _vm.open5 = !_vm.open5
-                      }
-                    }
-                  },
-                  [
-                    _c("span", { staticClass: "wp-erp-ob-title" }, [
-                      _vm._v(_vm._s(_vm.chartAccounts[4].label))
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _vm.ledgers[5]
-                  ? _c(
-                      "table",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.open5,
-                            expression: "open5"
-                          }
-                        ],
-                        staticClass:
-                          "wperp-table wperp-form-table erp-accordion-expand-body"
-                      },
-                      [
-                        _vm._m(8),
-                        _vm._v(" "),
-                        _c(
-                          "tbody",
-                          _vm._l(_vm.ledgers[2], function(ledger, idx) {
-                            return _c("tr", { key: idx }, [
-                              _c("td", [_vm._v(_vm._s(ledger.name))]),
-                              _vm._v(" "),
-                              _c("td", [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: ledger.debit,
-                                      expression: "ledger.debit"
-                                    }
-                                  ],
-                                  attrs: { type: "number" },
-                                  domProps: { value: ledger.debit },
-                                  on: {
-                                    keyup: _vm.calculateAmount,
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        ledger,
-                                        "debit",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                })
-                              ]),
-                              _vm._v(" "),
-                              _c("td", [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: ledger.credit,
-                                      expression: "ledger.credit"
-                                    }
-                                  ],
-                                  attrs: { type: "number" },
-                                  domProps: { value: ledger.credit },
-                                  on: {
-                                    keyup: _vm.calculateAmount,
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        ledger,
-                                        "credit",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                })
-                              ])
-                            ])
-                          }),
-                          0
-                        )
-                      ]
-                    )
-                  : _vm._e()
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.chartAccounts[5] && _vm.ledgers[6]
-            ? _c("div", { staticClass: "erp-accordion" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "erp-accordion-expand",
-                    class: _vm.open6 ? "active" : "before-border",
-                    on: {
-                      click: function($event) {
-                        _vm.open6 = !_vm.open6
-                      }
-                    }
-                  },
-                  [
-                    _c("span", { staticClass: "wp-erp-ob-title" }, [
-                      _vm._v(_vm._s(_vm.chartAccounts[5].label))
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "table",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.open6,
-                        expression: "open6"
-                      }
-                    ],
-                    staticClass:
-                      "wperp-table wperp-form-table erp-accordion-expand-body"
-                  },
-                  [
-                    _vm._m(9),
-                    _vm._v(" "),
-                    _c(
-                      "tbody",
-                      _vm._l(_vm.ledgers[6], function(ledger, idx) {
-                        return _c("tr", { key: idx }, [
-                          _c("td", [_vm._v(_vm._s(ledger.name))]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: ledger.debit,
-                                  expression: "ledger.debit"
-                                }
-                              ],
-                              attrs: { type: "number" },
-                              domProps: { value: ledger.debit },
-                              on: {
-                                keyup: _vm.calculateAmount,
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(ledger, "debit", $event.target.value)
-                                }
-                              }
-                            })
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: ledger.credit,
-                                  expression: "ledger.credit"
-                                }
-                              ],
-                              attrs: { type: "number" },
-                              domProps: { value: ledger.credit },
-                              on: {
-                                keyup: _vm.calculateAmount,
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    ledger,
-                                    "credit",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ])
-                        ])
-                      }),
-                      0
-                    )
-                  ]
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.chartAccounts[6]
-            ? _c("div", { staticClass: "erp-accordion" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "erp-accordion-expand",
-                    class: _vm.open7 ? "active" : "before-border",
-                    on: {
-                      click: function($event) {
-                        _vm.open7 = !_vm.open7
                       }
                     }
                   },
@@ -54256,82 +54161,150 @@ var render = function() {
                       {
                         name: "show",
                         rawName: "v-show",
-                        value: _vm.open7,
-                        expression: "open7"
+                        value: _vm.open4,
+                        expression: "open4"
                       }
                     ],
                     staticClass:
                       "wperp-table wperp-form-table erp-accordion-expand-body"
                   },
                   [
-                    _vm._m(10),
+                    _vm._m(7),
                     _vm._v(" "),
                     _c(
                       "tbody",
-                      _vm._l(_vm.ledgers[7], function(ledger, idx) {
-                        return _vm.ledgers[7]
-                          ? _c("tr", { key: idx }, [
-                              _c("td", [_vm._v(_vm._s(ledger.name))]),
-                              _vm._v(" "),
-                              _c("td", [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: ledger.debit,
-                                      expression: "ledger.debit"
+                      [
+                        _vm._l(_vm.ledgers[7], function(acct, idx) {
+                          return _c("tr", { key: idx }, [
+                            _c("td", [
+                              _c(
+                                "div",
+                                { staticClass: "with-multiselect" },
+                                [
+                                  _c("multi-select", {
+                                    attrs: { options: _vm.banks },
+                                    model: {
+                                      value: acct.bank,
+                                      callback: function($$v) {
+                                        _vm.$set(acct, "bank", $$v)
+                                      },
+                                      expression: "acct.bank"
                                     }
-                                  ],
-                                  attrs: { type: "number" },
-                                  domProps: { value: ledger.debit },
-                                  on: {
-                                    keyup: _vm.calculateAmount,
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
+                                  })
+                                ],
+                                1
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: acct.debit,
+                                    expression: "acct.debit"
+                                  }
+                                ],
+                                attrs: { type: "number" },
+                                domProps: { value: acct.debit },
+                                on: {
+                                  keyup: _vm.calculateAmount,
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(acct, "debit", $event.target.value)
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: acct.credit,
+                                    expression: "acct.credit"
+                                  }
+                                ],
+                                attrs: { type: "number" },
+                                domProps: { value: acct.credit },
+                                on: {
+                                  keyup: _vm.calculateAmount,
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      acct,
+                                      "credit",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticClass: "delete-row",
+                                attrs: { "data-colname": "Remove" }
+                              },
+                              [
+                                _c(
+                                  "a",
+                                  {
+                                    attrs: { href: "#" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.removeBankRow(idx)
                                       }
-                                      _vm.$set(
-                                        ledger,
-                                        "debit",
-                                        $event.target.value
-                                      )
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "flaticon-trash" })]
+                                )
+                              ]
+                            )
+                          ])
+                        }),
+                        _vm._v(" "),
+                        _c("tr", { staticClass: "add-new-line" }, [
+                          _c(
+                            "td",
+                            {
+                              staticStyle: { "text-align": "left" },
+                              attrs: { colspan: "9" }
+                            },
+                            [
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "wperp-btn btn--primary add-line-trigger",
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.ledgers[7].push({})
                                     }
                                   }
-                                })
-                              ]),
-                              _vm._v(" "),
-                              _c("td", [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: ledger.credit,
-                                      expression: "ledger.credit"
-                                    }
-                                  ],
-                                  attrs: { type: "number" },
-                                  domProps: { value: ledger.credit },
-                                  on: {
-                                    keyup: _vm.calculateAmount,
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        ledger,
-                                        "credit",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                })
-                              ])
-                            ])
-                          : _vm._e()
-                      }),
-                      0
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass: "flaticon-add-plus-button"
+                                  }),
+                                  _vm._v("Add Bank")
+                                ]
+                              )
+                            ]
+                          )
+                        ])
+                      ],
+                      2
                     )
                   ]
                 )
@@ -54341,7 +54314,7 @@ var render = function() {
           _c("table", { staticClass: "wperp-table wperp-form-table" }, [
             _c("tbody", [
               _c("tr", { staticClass: "total-amount-row" }, [
-                _vm._m(11),
+                _vm._m(8),
                 _vm._v(" "),
                 _c("td", { attrs: { "data-colname": "Total Debit" } }, [
                   _c("input", {
@@ -54430,7 +54403,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Debit")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Credit")])
+        _c("th", [_vm._v("Credit")]),
+        _vm._v(" "),
+        _c("th")
       ])
     ])
   },
@@ -54442,11 +54417,11 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("People")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Balance")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Debit")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Credit")])
+        _c("th", [_vm._v("Credit")]),
+        _vm._v(" "),
+        _c("th")
       ])
     ])
   },
@@ -54460,7 +54435,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Debit")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Credit")])
+        _c("th", [_vm._v("Credit")]),
+        _vm._v(" "),
+        _c("th")
       ])
     ])
   },
@@ -54516,49 +54493,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Debit")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Credit")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Account")]),
+        _c("th", [_vm._v("Credit")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Debit")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Credit")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Account")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Debit")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Credit")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Account")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Debit")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Credit")])
+        _c("th")
       ])
     ])
   },
@@ -55063,6 +55000,125 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
+
+/***/ }),
+/* 518 */,
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */,
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */,
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */,
+/* 602 */,
+/* 603 */,
+/* 604 */,
+/* 605 */,
+/* 606 */,
+/* 607 */,
+/* 608 */,
+/* 609 */,
+/* 610 */,
+/* 611 */,
+/* 612 */,
+/* 613 */,
+/* 614 */,
+/* 615 */,
+/* 616 */,
+/* 617 */,
+/* 618 */,
+/* 619 */,
+/* 620 */,
+/* 621 */,
+/* 622 */,
+/* 623 */,
+/* 624 */,
+/* 625 */,
+/* 626 */,
+/* 627 */,
+/* 628 */,
+/* 629 */,
+/* 630 */,
+/* 631 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 ],[176]);

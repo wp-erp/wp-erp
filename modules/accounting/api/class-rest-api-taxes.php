@@ -780,7 +780,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'           => (int) $item->id,
             'voucher_no'   => $item->voucher_no,
-            'agency_id'    => erp_acct_get_tax_agency_name_id( $item->agency_id ),
+            'agency_id'    => erp_acct_get_tax_agency_name_by_id( $item->agency_id ),
             'trn_date'     => $item->trn_date,
             'particulars'  => $item->particulars,
             'amount'       => $item->amount,

@@ -35,25 +35,35 @@
 
 
             <!-- Accounts Receivable Section -->
-            <div  v-if="acct_rec" class="erp-accordion">
+            <div class="erp-accordion">
                 <div class="erp-accordion-expand"
-                     @click="open8=!open8"
-                     :class="open8?'active':'before-border'">
+                     @click="open5=!open5"
+                     :class="open5?'active':'before-border'">
                     <span class="wp-erp-ob-title">Accounts Receivable</span>
                 </div>
-                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open8">
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open5">
                     <thead>
                     <tr>
                         <th>People</th>
                         <th>Debit</th>
                         <th>Credit</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr :key="idx" v-for="(acct,idx) in acct_rec">
-                        <td>{{ acct.people_name }}</td>
+                        <td><div class="wperp-form-group ob-people with-multiselect">
+                            <multi-select v-model="acct.people" :options="options" /></div></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="acct.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
+                        <td><input type="number" @keyup="calculateAmount" disabled v-model="acct.credit"></td>
+                        <td class="delete-row" data-colname="Remove">
+                            <a @click.prevent="removeAcctRecRow(idx)" href="#"><i class="flaticon-trash"></i></a>
+                        </td>
+                    </tr>
+                    <tr class="add-new-line">
+                        <td colspan="9" style="text-align: left;">
+                            <button @click.prevent="acct_rec.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add People</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -63,24 +73,33 @@
             <!-- Accounts Payable Section -->
             <div v-if="acct_pay" class="erp-accordion">
                 <div class="erp-accordion-expand"
-                     @click="open9=!open9"
-                     :class="open9?'active':'before-border'">
+                     @click="open6=!open6"
+                     :class="open6?'active':'before-border'">
                     <span class="wp-erp-ob-title">Accounts Payable</span>
                 </div>
-                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open9">
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open6">
                     <thead>
                     <tr>
                         <th>People</th>
-                        <th>Balance</th>
                         <th>Debit</th>
                         <th>Credit</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr :key="idx" v-for="(acct,idx) in acct_pay">
-                        <td>{{ acct.people_name }}</td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="acct.debit"></td>
+                        <td><div class="wperp-form-group ob-people with-multiselect">
+                            <multi-select v-model="acct.people" :options="options" /></div></td>
+                        <td><input type="number" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
+                        <td class="delete-row" data-colname="Remove">
+                            <a @click.prevent="removeAcctPayRow(idx)" href="#"><i class="flaticon-trash"></i></a>
+                        </td>
+                    </tr>
+                    <tr class="add-new-line">
+                        <td colspan="9" style="text-align: left;">
+                            <button @click.prevent="acct_pay.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add People</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -90,28 +109,39 @@
             <!-- Tax Payable Section -->
             <div v-if="tax_pay" class="erp-accordion">
                 <div class="erp-accordion-expand"
-                     @click="open10=!open10"
-                     :class="open10?'active':'before-border'">
+                     @click="open7=!open7"
+                     :class="open7?'active':'before-border'">
                     <span class="wp-erp-ob-title">Tax Payable</span>
                 </div>
-                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open10">
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open7">
                     <thead>
                     <tr>
                         <th>Agency</th>
                         <th>Debit</th>
                         <th>Credit</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr :key="idx" v-for="(t_pay,idx) in tax_pay">
-                        <td>{{ t_pay.agency_name }}</td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="t_pay.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="t_pay.credit"></td>
+                    <tr :key="idx" v-for="(acct,idx) in tax_pay">
+                        <td><div class="with-multiselect"><multi-select v-model="acct.agency" :options="agencies"/></div></td>
+                        <td><input type="number" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
+                        <td class="delete-row" data-colname="Remove">
+                            <a @click.prevent="removeAcctPayRow(idx)" href="#"><i class="flaticon-trash"></i></a>
+                        </td>
+                    </tr>
+                    <tr class="add-new-line">
+                        <td colspan="9" style="text-align: left;">
+                            <button @click.prevent="tax_pay.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add People</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
+
+            <!-- Assets Section -->
             <div v-if="chartAccounts[0]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open1=!open1"
@@ -136,6 +166,8 @@
                 </table>
             </div>
 
+
+            <!-- Liability Section -->
             <div v-if="chartAccounts[1]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open2=!open2"
@@ -160,6 +192,8 @@
                 </table>
             </div>
 
+
+            <!-- Equity Section -->
             <div v-if="chartAccounts[2]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open3=!open3"
@@ -184,97 +218,36 @@
                 </table>
             </div>
 
-            <div v-if="chartAccounts[3]" class="erp-accordion">
+
+            <!-- Bank Section -->
+            <div v-if="chartAccounts[6]" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open4=!open4"
                      :class="open4?'active':'before-border'">
-                    <span class="wp-erp-ob-title">{{chartAccounts[3].label}}</span>
-                </div>
-                <table v-if="ledgers[4]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open4">
-                    <thead>
-                    <tr>
-                        <th>Account</th>
-                        <th>Debit</th>
-                        <th>Credit</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr :key="idx" v-for="(ledger,idx) in ledgers[4]">
-                        <td>{{ledger.name}}</td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div v-if="chartAccounts[4]" class="erp-accordion">
-                <div class="erp-accordion-expand"
-                     @click="open5=!open5"
-                     :class="open5?'active':'before-border'">
-                    <span class="wp-erp-ob-title">{{chartAccounts[4].label}}</span>
-                </div>
-                <table v-if="ledgers[5]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open5">
-                    <thead>
-                    <tr>
-                        <th>Account</th>
-                        <th>Debit</th>
-                        <th>Credit</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr :key="idx" v-for="(ledger,idx) in ledgers[2]">
-                        <td>{{ledger.name}}</td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div v-if="chartAccounts[5] && ledgers[6]" class="erp-accordion">
-                <div class="erp-accordion-expand"
-                     @click="open6=!open6"
-                     :class="open6?'active':'before-border'">
-                    <span class="wp-erp-ob-title">{{chartAccounts[5].label}}</span>
-                </div>
-                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open6">
-                    <thead>
-                    <tr>
-                        <th>Account</th>
-                        <th>Debit</th>
-                        <th>Credit</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr :key="idx" v-for="(ledger,idx) in ledgers[6]">
-                        <td>{{ledger.name}}</td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div v-if="chartAccounts[6]" class="erp-accordion">
-                <div class="erp-accordion-expand"
-                     @click="open7=!open7"
-                     :class="open7?'active':'before-border'">
                     <span class="wp-erp-ob-title">{{chartAccounts[6].label}}</span>
                 </div>
-                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open7">
+                <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open4">
                     <thead>
                     <tr>
                         <th>Account</th>
                         <th>Debit</th>
                         <th>Credit</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr :key="idx" v-if="ledgers[7]" v-for="(ledger,idx) in ledgers[7]">
-                        <td>{{ledger.name}}</td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                    <tr :key="idx" v-for="(acct,idx) in ledgers[7]">
+                        <td><div class="with-multiselect"><multi-select v-model="acct.bank" :options="banks"/></div></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="acct.debit"></td>
+                        <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
+                        <td class="delete-row" data-colname="Remove">
+                            <a @click.prevent="removeBankRow(idx)" href="#"><i class="flaticon-trash"></i></a>
+                        </td>
+                    </tr>
+                    <tr class="add-new-line">
+                        <td colspan="9" style="text-align: left;">
+                            <button @click.prevent="ledgers[7].push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Bank</button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -306,6 +279,7 @@
 <script>
     import HTTP from 'admin/http'
     import SimpleSelect from 'admin/components/select/SimpleSelect.vue'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
     import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
@@ -315,6 +289,7 @@
         components: {
             HTTP,
             SimpleSelect,
+            MultiSelect,
             SubmitButton,
             ShowErrors
         },
@@ -339,12 +314,13 @@
                 open5: true,
                 open6: true,
                 open7: true,
-                open8: true,
-                open9: true,
-                open10: true,
                 form_errors: [],
                 chartAccounts: [],
                 ledgers: [],
+                agencies: null,
+                banks: [],
+                people: [],
+                options: [],
                 fin_year: {},
                 years: [],
                 description: '',
@@ -352,9 +328,9 @@
                 credit_total: 0,
                 debit_total: 0,
                 isWorking: false,
-                acct_rec: null,
-                acct_pay: null,
-                tax_pay: null,
+                acct_rec: [],
+                acct_pay: [],
+                tax_pay: [],
                 totalDebit: 0,
                 totalCredit: 0
             }
@@ -382,7 +358,9 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 this.getYears();
                 this.fetchLedgers();
-                this.getVirtualAccts();
+                this.fetchAgencies();
+                this.fetchBanks();
+                this.getPeople();
                 HTTP.get('/ledgers/accounts').then( response => {
                     this.chartAccounts = response.data;
 
@@ -399,6 +377,22 @@
                     });
                     this.ledgers = this.groupBy(response.data, 'chart_id');
                     this.all_ledgers = response.data;
+                });
+            },
+
+            fetchAgencies() {
+                HTTP.get('/tax-agencies').then((response) => {
+                    this.agencies = response.data;
+                }).catch(error => {
+                    console.log(error);
+                });
+            },
+
+            fetchBanks() {
+                HTTP.get('/ledgers/7/accounts').then((response) => {
+                    this.banks = response.data;
+                }).catch(error => {
+                    console.log(error);
                 });
             },
 
@@ -429,30 +423,15 @@
                 }
 
                 for (let key in this.acct_rec) {
-                    if ( this.acct_rec[key].hasOwnProperty('debit') ) {
-                        this.debit_total += parseFloat(this.acct_rec[key].debit);
-                    }
-                    if ( this.acct_rec[key].hasOwnProperty('credit') ) {
-                        this.credit_total += parseFloat(this.acct_rec[key].credit);
-                    }
+                    this.debit_total += parseFloat(this.acct_rec[key].debit);
                 }
 
                 for (let key in this.acct_pay) {
-                    if ( this.acct_pay[key][idx].hasOwnProperty('debit') ) {
-                        this.debit_total += parseFloat(this.acct_pay[key][idx].debit);
-                    }
-                    if ( this.acct_pay[key][idx].hasOwnProperty('credit') ) {
-                        this.credit_total += parseFloat(this.acct_pay[key][idx].credit);
-                    }
+                    this.credit_total += parseFloat(this.acct_pay[key].credit);
                 }
 
                 for (let key in this.tax_pay) {
-                    if ( this.tax_pay[key][idx].hasOwnProperty('debit') ) {
-                        this.debit_total += parseFloat(this.tax_pay[key][idx].debit);
-                    }
-                    if ( this.tax_pay[key][idx].hasOwnProperty('credit') ) {
-                        this.credit_total += parseFloat(this.tax_pay[key][idx].credit);
-                    }
+                    this.credit_total += parseFloat(this.tax_pay[key].credit);
                 }
 
                 let diff = Math.abs( this.debit_total - this.credit_total );
@@ -460,7 +439,7 @@
                 this.totalDebit = this.debit_total;
                 this.totalCredit = this.credit_total;
                 this.isWorking = true;
-                if( 0 == diff ) {
+                if( 0 === diff ) {
                     this.isWorking = false;
                 }
             },
@@ -513,12 +492,14 @@
                 });
             },
 
-            getVirtualAccts() {
-                HTTP.get('/opening-balances/virtual-accts').then( response => {
-                    this.acct_pay = response.data.acct_payable;
-                    this.acct_rec = response.data.acct_receivable;
-                    this.tax_pay  = response.data.tax_payable;
-                })
+            getPeople() {
+                HTTP.get('/people', {
+                    params: {
+                        type: 'all'
+                    }
+                }).then(response => {
+                    this.options = response.data;
+                });
             },
 
             getSelectedOB() {
@@ -535,7 +516,7 @@
                     this.ledgers = this.groupBy(response.data, 'chart_id');
                 }).then(()=>{
                     if ( Object.keys(this.ledgers).length === 0 ) {
-                        this.fetchData();
+                        this.fetchLedgers();
                     }
                 });
 
@@ -549,6 +530,26 @@
             printPopup() {
                 window.print();
             },
+
+            removeAcctRecRow(index) {
+                this.$delete(this.acct_rec, index);
+                this.calculateAmount();
+            },
+
+            removeAcctPayRow(index) {
+                this.$delete(this.acct_pay, index);
+                this.calculateAmount();
+            },
+
+            removeTaxPayRow(index) {
+                this.$delete(this.tax_pay, index);
+                this.calculateAmount();
+            },
+
+            removeBankRow(index) {
+                this.$delete(this.banks, index);
+                this.calculateAmount();
+            }
         },
 
         watch: {
@@ -559,9 +560,12 @@
     }
 </script>
 
-<style>
+<style scoped>
     .accordion-container .erp-accordion table {
         width: calc(100% - 40px);
+    }
+    .wperp-form-group {
+        margin: 0px !important;
     }
 </style>
 
