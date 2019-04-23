@@ -262,6 +262,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             'id'          => (int) $item->id,
             'first_name'  => $item->first_name,
             'last_name'   => $item->last_name,
+            'name'        => $item->first_name . ' ' . $item->last_name,
             'email'       => $item->email,
             'phone'       => $item->phone,
             'mobile'      => $item->mobile,
