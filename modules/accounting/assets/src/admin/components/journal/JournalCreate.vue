@@ -28,7 +28,7 @@
                     <div class="wperp-col-sm-4">
                         <div class="wperp-form-group">
                             <label>Ref.</label>
-                            <input type="text" v-model="basic_fields.trn_ref">
+                            <input type="text" class="wperp-form-field" v-model="basic_fields.trn_ref">
                         </div>
                     </div>
                     <div class="wperp-col-sm-4">
@@ -304,18 +304,22 @@
     }
 </script>
 
-<style lang="less">
-.journal-create {
-    .dropdown {
-        width: 100%;
-    }
+<style lang="less" scoped>
+    .journal-create {
+        input[type="text"] {
+            width: 90%;
+        }
 
-    .col--account {
-        width: 300px;
-    }
+        .dropdown {
+            width: 100%;
+        }
 
-    .col--particulars {
-        width: 400px;
+        .col--account {
+            width: 300px;
+        }
+
+        .col--particulars {
+            width: 400px;
+        }
     }
-}
 </style>

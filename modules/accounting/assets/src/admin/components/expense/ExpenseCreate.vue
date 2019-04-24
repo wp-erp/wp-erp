@@ -28,7 +28,7 @@
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
                                     <label>Reference<span class="wperp-required-sign">*</span></label>
-                                    <input type="text" v-model="basic_fields.trn_ref" class="wperp-form-field">
+                                    <input type="text" class="wperp-form-field" v-model="basic_fields.trn_ref">
                                 </div>
                             </div>
                             <div class="wperp-col-sm-4">

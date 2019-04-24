@@ -3,7 +3,7 @@
         <product-modal v-if="showModal" :product.sync="product"></product-modal>
         <h2 class="add-new-product">
             <span>Products</span>
-            <a href="" id="erp-product-new" @click.prevent="showModal = true">+ Add New Product</a>
+            <a href="" id="erp-product-new" @click.prevent="showModal = true">Add New Product</a>
         </h2>
 
         <list-table

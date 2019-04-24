@@ -28,7 +28,7 @@
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label>Check No<span class="wperp-required-sign">*</span></label>
-                                <input type="text" v-model="basic_fields.check_no"/>
+                                <input type="text" class="wperp-form-field" v-model="basic_fields.check_no"/>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
