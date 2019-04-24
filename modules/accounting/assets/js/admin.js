@@ -16574,13 +16574,15 @@ if (false) {(function () {
         this.form_errors.push('Due Date is required.');
       }
     },
-    formatTrnLines: function formatTrnLines(trl_lines) {
-      trl_lines.forEach(function (element) {
-        if (element.length) {
+    formatTrnLines: function formatTrnLines(trn_lines) {
+      var line_items = [];
+      trn_lines.forEach(function (element) {
+        if (element.hasOwnProperty('ledger_id')) {
           element.ledger_id = element.ledger_id.id;
+          line_items.push(element);
         }
       });
-      return trl_lines;
+      return line_items;
     },
     removeRow: function removeRow(index) {
       this.$delete(this.transactionLines, index);
