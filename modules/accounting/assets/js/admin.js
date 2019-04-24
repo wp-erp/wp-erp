@@ -20034,18 +20034,6 @@ if (false) {(function () {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -20074,6 +20062,15 @@ if (false) {(function () {
   },
   created: function created() {
     this.fetchAccounts();
+  },
+  mounted: function mounted() {
+    // `transfer` request from account list row action
+    if (this.$route.params.ac_id) {
+      this.transferFrom = {
+        id: parseInt(this.$route.params.ac_id),
+        name: this.$route.params.ac_name
+      };
+    }
   },
   methods: {
     fetchAccounts: function fetchAccounts() {
@@ -25674,10 +25671,16 @@ setTimeout(function () {
 
       return "Dr. ".concat(currency, " ").concat(val);
     },
-    actionClicked: function actionClicked(action, acct_id) {
+    actionClicked: function actionClicked(action, account) {
       switch (action) {
         case 'transfer':
-          this.$router.push('transfers/new');
+          this.$router.push({
+            name: 'NewTransfer',
+            params: {
+              ac_id: account.id,
+              ac_name: account.name
+            }
+          });
           break;
 
         default:
@@ -50454,7 +50457,7 @@ var render = function() {
                                                   $event.preventDefault()
                                                   return _vm.actionClicked(
                                                     action.key,
-                                                    account.id
+                                                    account
                                                   )
                                                 }
                                               }
