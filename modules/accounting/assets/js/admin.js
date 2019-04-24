@@ -18035,13 +18035,15 @@ if (false) {(function () {
     formatLineItems: function formatLineItems() {
       var lineItems = [];
       this.transactionLines.forEach(function (line) {
-        lineItems.push({
-          product_id: line.selectedProduct.id,
-          product_type: 'service',
-          qty: line.qty,
-          unit_price: line.unitPrice,
-          item_total: line.amount
-        });
+        if (line.hasOwnProperty('selectedProduct')) {
+          lineItems.push({
+            product_id: line.selectedProduct.id,
+            product_type: 'service',
+            qty: line.qty,
+            unit_price: line.unitPrice,
+            item_total: line.amount
+          });
+        }
       });
       return lineItems;
     },
@@ -20917,11 +20919,15 @@ if (false) {(function () {
       this.$delete(this.transactionLines, index);
       this.updateFinalAmount();
     },
-    formatTrnLines: function formatTrnLines(trl_lines) {
-      trl_lines.forEach(function (element) {
-        element.ledger_id = element.ledger_id.id;
+    formatTrnLines: function formatTrnLines(trn_lines) {
+      var line_items = [];
+      trn_lines.forEach(function (element) {
+        if (element.hasOwnProperty('ledger_id')) {
+          element.ledger_id = element.ledger_id.id;
+          line_items.push(element);
+        }
       });
-      return trl_lines;
+      return line_items;
     }
   }
 });
@@ -26260,13 +26266,15 @@ setTimeout(function () {
       this.$delete(this.transactionLines, index);
       this.updateFinalAmount();
     },
-    formatTrnLines: function formatTrnLines(trl_lines) {
-      trl_lines.forEach(function (element) {
-        if (element.amount) {
+    formatTrnLines: function formatTrnLines(trn_lines) {
+      var line_items = [];
+      trn_lines.forEach(function (element) {
+        if (element.hasOwnProperty('ledger_id')) {
           element.ledger_id = element.ledger_id.id;
+          line_items.push(element);
         }
       });
-      return trl_lines;
+      return line_items;
     }
   },
   watch: {
