@@ -49,7 +49,7 @@
                                             <template slot="dropdown">
                                                 <ul slot="action-items" role="menu">
                                                     <li v-for="action in actions" :key="action.key" :class="action.key">
-                                                        <a href="#" @click.prevent="actionClicked(action.key, account.id)"><i :class="action.iconClass"></i>{{ action.label }}</a>
+                                                        <a href="#" @click.prevent="actionClicked(action.key, account)"><i :class="action.iconClass"></i>{{ action.label }}</a>
                                                     </li>
                                                 </ul>
                                             </template>
@@ -121,10 +121,13 @@
                 return `Dr. ${currency} ${val}`;
             },
 
-            actionClicked( action, acct_id ) {
+            actionClicked( action, account ) {
                 switch ( action ) {
                     case 'transfer':
-                        this.$router.push( 'transfers/new' );
+                        this.$router.push({ name: 'NewTransfer', params: {
+                                ac_id   : account.id,
+                                ac_name : account.name
+                            }});
                         break;
 
                     default :
