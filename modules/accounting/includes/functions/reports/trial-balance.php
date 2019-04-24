@@ -20,6 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_cash_at_bank( $args, $type ) {
     global $wpdb;
 
+    $balance = null;
+
     if ( 'loan' === $type ) {
         $having = "HAVING balance < 0";
     } elseif ( 'balance' === $type ) {
@@ -38,10 +40,10 @@ function erp_acct_cash_at_bank( $args, $type ) {
 
         $data = $wpdb->get_var( $wpdb->prepare( $sql2, $args['start_date'], $args['end_date'] ) );
 
-        return erp_acct_bank_cash_calc_with_opening_balance( $args['start_date'], $data, $sql2, $type );
+        $balance = erp_acct_bank_cash_calc_with_opening_balance( $args['start_date'], $data, $sql2, $type );
     }
 
-    return null;
+    return $balance;
 }
 
 /**
@@ -53,6 +55,8 @@ function erp_acct_cash_at_bank( $args, $type ) {
  */
 function erp_acct_bank_balance( $args, $type ) {
     global $wpdb;
+
+    $balance = null;
 
     if ( 'loan' === $type ) {
         $having = "HAVING balance < 0";
@@ -67,9 +71,11 @@ function erp_acct_bank_balance( $args, $type ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
         WHERE ledger.chart_id = %d AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger.id {$having}";
 
-    $data = $wpdb->get_results( $wpdb->prepare( $sql, $chart_bank, $args['start_date'], $args['end_date'] ) );
+    $data = $wpdb->get_results( $wpdb->prepare( $sql, $chart_bank, $args['start_date'], $args['end_date'] ), ARRAY_A );
 
-    return erp_acct_bank_balance_calc_with_opening_balance( $args['start_date'], $data, $sql, $type );
+    $balance = erp_acct_bank_balance_calc_with_opening_balance( $args['start_date'], $data, $sql, $type );
+
+    return $balance;
 }
 
 /**
