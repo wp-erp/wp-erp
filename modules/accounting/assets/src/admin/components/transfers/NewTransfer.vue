@@ -42,18 +42,6 @@
                                 <label for="particulars">Particulars</label>
                                 <textarea name="particulars" id="particulars" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="particulars"></textarea>
                             </div>
-                            <!--<div class="wperp-col-xs-12">-->
-                                <!--<div class="attachment-container">-->
-                                    <!--<label class="col&#45;&#45;attachement">Attachment</label>-->
-                                    <!--<div class="attachment-preview">-->
-                                        <!--<img src="assets/images/img-thumb.png" alt="attachment image">-->
-                                        <!--<i class="flaticon-close remove-attachment"></i>-->
-                                    <!--</div>-->
-                                    <!--<div class="attachment-placeholder">-->
-                                        <!--To attach <input type="file" id="attachment" name="attachment" class="display-none"> <label class="mt-0" for="attachment">Select files</label> from your computer-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
                         </div>
 
                     </div>
@@ -72,6 +60,7 @@
     import MultiSelect from "admin/components/select/MultiSelect.vue"
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
+
     export default {
         name: "Transfer",
         components: {
@@ -79,6 +68,7 @@
             HTTP,
             Datepicker
         },
+
         data() {
             return {
                 transferFrom: { balance : 0 },
@@ -91,24 +81,38 @@
                 amount: '',
             };
         },
+
         created(){
             this.fetchAccounts();
         },
+
+        mounted() {
+            // `transfer` request from account list row action
+            if ( this.$route.params.ac_id ) {
+                this.transferFrom  = {
+                    id  : parseInt(this.$route.params.ac_id),
+                    name: this.$route.params.ac_name
+                };
+            }
+        },
+        
         methods: {
-            fetchAccounts(){
+            fetchAccounts() {
                 HTTP.get('accounts').then( (response) => {
                     this.accounts = response.data;
                     this.fa = response.data;
                     this.ta = response.data;
                 } );
             },
-            transformBalance( val ){
+
+            transformBalance( val ) {
                 let currency = '$';
                 if ( val < 0 ){
                     return `Cr. ${currency} ${Math.abs(val)}`;
                 }
                 return `Dr. ${currency} ${val}`;
             },
+
             submitTransfer(){
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post( '/accounts/transfer', {
@@ -117,18 +121,19 @@
                     to_account_id : this.transferTo.id,
                     amount : this.amount,
                     particulars : this.particulars,
-                } ).then( res => {
+                }).then( res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Transfer Successful!' );
                     this.fetchAccounts();
                     this.resetData();
                     this.$router.push('/transfers');
-                } ).catch( err => {
+                }).catch( err => {
                     let msg = err.response.data.message;
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'error', msg );
-                } );
+                });
             },
+
             resetData(){
                 this.transferFrom = { balance : 0 };
                 this.transferTo = { balance : 0 };
@@ -145,6 +150,7 @@
                     return e.id != id;
                 });
             },
+
             'transferTo'(){
                 let id = this.transferTo.id;
                 this.fa = jQuery.grep(this.accounts, function(e){

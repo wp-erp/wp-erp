@@ -140,7 +140,7 @@ function erp_acct_delete_tax_agency( $id ) {
  *
  * @return mixed
  */
-function erp_acct_get_tax_agency_name_id( $agency_id ) {
+function erp_acct_get_tax_agency_name_by_id( $agency_id ) {
     global $wpdb;
 
     $sql = "SELECT name FROM {$wpdb->prefix}erp_acct_tax_agencies

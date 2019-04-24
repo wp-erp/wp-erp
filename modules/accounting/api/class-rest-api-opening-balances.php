@@ -47,17 +47,6 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 //            'schema' => [ $this, 'get_item_schema' ],
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/virtual-accts', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_virtual_accts' ],
-                'args'                => [],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_journal' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/names', [
             [
@@ -80,14 +69,6 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_journal' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_opening_balance' ],
-                'args'                => [],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_create_journal' );
                 },
             ],
             'schema' => [ $this, 'get_item_schema' ],
@@ -191,11 +172,6 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item = erp_acct_get_virtual_acct( $id );
 
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
-
         $response = rest_ensure_response( $item );
 
         $response->set_status( 200 );
@@ -225,25 +201,6 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
-    /**
-     * Get a collection of opening_balance_names
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Response
-     */
-    public function get_virtual_accts( $request ) {
-
-        $opening_balance_data = $this->prepare_item_for_database( $request );
-
-        $item     = erp_acct_get_ob_virtual_accts( $opening_balance_data );
-
-        $response = rest_ensure_response( $item );
-
-        $response->set_status( 200 );
-
-        return $response;
-    }
 
     /**
      * Create a opening_balance
@@ -289,44 +246,6 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
-    /**
-     * Create a opening_balance
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Request
-     */
-    public function update_opening_balance( $request ) {
-        $trans_data = $this->prepare_item_for_database( $request );
-
-        $items = $request['line_items'];
-
-        foreach ( $items as $key => $item ) {
-            $vocher_amount_dr[$key] = $item['debit'];
-            $vocher_amount_cr[$key] = $item['credit'];
-        }
-
-        $total_dr = array_sum( $vocher_amount_dr );
-        $total_cr = array_sum( $vocher_amount_cr );
-
-        if ( $total_dr != $total_cr ) {
-            return new WP_Error( 'rest_opening_balance_invalid_amount', __( 'Summation of debit and credit must be equal.' ), [ 'status' => 400 ] );
-        }
-
-        $trans_data['voucher_amount'] = $total_dr;
-
-        $opening_balance = erp_acct_insert_opening_balance( $trans_data );
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $response = $this->prepare_item_for_response( $opening_balance, $request, $additional_fields );
-        $response = rest_ensure_response( $response );
-
-        $response->set_status( 201 );
-
-        return $response;
-    }
 
     /**
      * Log when opening balance is created
@@ -335,6 +254,8 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $action
      */
     public function add_log( $data, $action ) {
+        $data = (array) $data;
+
         erp_log()->add([
             'component'     => 'Accounting',
             'sub_component' => __( 'Opening Balance', 'erp' ),

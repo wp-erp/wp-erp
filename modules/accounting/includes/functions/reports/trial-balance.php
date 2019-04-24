@@ -20,6 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_cash_at_bank( $args, $type ) {
     global $wpdb;
 
+    $balance = null;
+
     if ( 'loan' === $type ) {
         $having = "HAVING balance < 0";
     } elseif ( 'balance' === $type ) {
@@ -38,10 +40,10 @@ function erp_acct_cash_at_bank( $args, $type ) {
 
         $data = $wpdb->get_var( $wpdb->prepare( $sql2, $args['start_date'], $args['end_date'] ) );
 
-        return erp_acct_bank_cash_calc_with_opening_balance( $args['start_date'], $data, $sql2, $type );
+        $balance = erp_acct_bank_cash_calc_with_opening_balance( $args['start_date'], $data, $sql2, $type );
     }
 
-    return null;
+    return $balance;
 }
 
 /**
@@ -49,10 +51,12 @@ function erp_acct_cash_at_bank( $args, $type ) {
  *
  * @param array $args
  *
- * @return int
+ * @return mixed
  */
 function erp_acct_bank_balance( $args, $type ) {
     global $wpdb;
+
+    $balance = null;
 
     if ( 'loan' === $type ) {
         $having = "HAVING balance < 0";
@@ -67,9 +71,11 @@ function erp_acct_bank_balance( $args, $type ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
         WHERE ledger.chart_id = %d AND trn_date BETWEEN '%s' AND '%s' GROUP BY ledger.id {$having}";
 
-    $data = $wpdb->get_results( $wpdb->prepare( $sql, $chart_bank, $args['start_date'], $args['end_date'] ) );
+    $data = $wpdb->get_results( $wpdb->prepare( $sql, $chart_bank, $args['start_date'], $args['end_date'] ), ARRAY_A );
 
-    return erp_acct_bank_balance_calc_with_opening_balance( $args['start_date'], $data, $sql, $type );
+    $balance = erp_acct_bank_balance_calc_with_opening_balance( $args['start_date'], $data, $sql, $type );
+
+    return $balance;
 }
 
 /**
@@ -261,7 +267,7 @@ function erp_acct_get_balance_with_opening_balance($ledgers, $data, $opening_bal
  * and
  * `previous date from trial balance start date`
  *
- * @return void
+ * @return array
  */
 function erp_acct_get_balance_within_ledger_details_and_trial_balance($sql, $temp_data) {
     global $wpdb;
@@ -337,7 +343,7 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
  * @param string $sql
  * @param string $type
  *
- * @return array
+ * @return float
  */
 function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
@@ -421,7 +427,7 @@ function erp_acct_bank_balance_calc_with_opening_balance( $tb_start_date, $data,
  * @param string $sql
  * @param string $type
  *
- * @return array
+ * @return float
  */
 function erp_acct_sales_tax_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
@@ -511,7 +517,7 @@ function erp_acct_people_calc_with_opening_balance( $tb_start_date, $data, $type
  * @param string $sql
  * @param string $type
  *
- * @return array
+ * @return float
  */
 function erp_acct_owners_equity_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
@@ -668,7 +674,7 @@ function erp_acct_bank_balance_opening_balance_by_fn_year_id( $id, $type ) {
  * @param int $id
  * @param string $type
  *
- * @return array
+ * @return mixed
  */
 function erp_acct_owners_equity_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
