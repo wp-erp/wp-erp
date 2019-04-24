@@ -1,6 +1,9 @@
 <template>
     <div>
-        <h2 class="content-header__title">Balance Sheet</h2>
+        <h2 class="content-header__title">
+            <span>Balance Sheet</span>
+            <a class="wperp-btn btn--primary" href="#" @click.prevent="checkClosingPossibility">Close Now</a>
+        </h2>
 
         <form action="" method="" @submit.prevent="fetchItems" class="query-options no-print">
 
@@ -27,7 +30,7 @@
                         :showItemNumbers="false"
                         :showCb="false">
                         <template slot="name" slot-scope="data">
-                            <span v-html="data.row.name"> </span>
+                            <span v-html="data.row.name"></span>
                         </template>
                         <template slot="balance" slot-scope="data">
                             <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
@@ -147,12 +150,12 @@
                     'name': { label: 'Equity' },
                     'balance': { label: 'Amount' }
                 },
-                rows1: [],
-                rows2: [],
-                rows3: [],
-                totalAsset: 0,
+                rows1         : [],
+                rows2         : [],
+                rows3         : [],
+                totalAsset    : 0,
                 totalLiability: 0,
-                totalEquity: 0
+                totalEquity   : 0
             }
         },
 
@@ -192,6 +195,38 @@
 
             printPopup() {
                 window.print();
+            },
+
+            checkClosingPossibility() {
+                this.$store.dispatch( 'spinner/setSpinner', false );
+
+                HTTP.get( '/closing-balance/next-fn-year', {
+                    params: {
+                        date : this.end_date
+                    }
+                }).then(response => {
+                    if ( null === response.data ) {
+                        alert( `Please create a financial year which start after '${this.end_date}'` );
+                    }
+
+                    this.closeBalancesheet( response.data.id );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                });
+            },
+
+            closeBalancesheet(f_year_id) {
+                HTTP.post( '/closing-balance', {
+                    f_year_id : f_year_id,
+                    start_date: this.start_date,
+                    end_date  : this.end_date
+                }).then(response => {}).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } ).then(() => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                });
             }
         }
     }
@@ -200,6 +235,10 @@
 <style lang="less">
     .content-header__title {
         padding-top: 5px !important;
+
+        a {
+            margin-left: 15px;
+        }
     }
     .query-options {
         display: flex;

@@ -84,6 +84,17 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/close-balance-sheet', [
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'close_balance_sheet' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_sales_payment' );
+                },
+            ],
+        ] );
+
     }
 
     /**
@@ -221,6 +232,31 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
         $start_date = $request['start_date'];
         $end_date   = $request['end_date'];
         $args       = [
+            'start_date' => $start_date,
+            'end_date'   => $end_date
+        ];
+
+        $data = erp_acct_get_balance_sheet( $args );
+
+        $response = rest_ensure_response( $data );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * close balance sheet
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function close_balance_sheet( $request ) {
+        $start_date = $request['start_date'];
+        $end_date   = $request['end_date'];
+
+        $args = [
             'start_date' => $start_date,
             'end_date'   => $end_date
         ];

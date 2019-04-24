@@ -302,17 +302,17 @@ function erp_acct_update_opening_balance( $data, $opening_balance_no ) {
 function erp_acct_get_formatted_opening_balance_data( $data ) {
     $opening_balance_data = [];
 
-    $opening_balance_data['year'] = isset($data['year']) ? $data['year'] : '';
-    $opening_balance_data['ledgers'] = isset($data['ledgers']) ? $data['ledgers'] : [];
+    $opening_balance_data['year']         = isset($data['year']) ? $data['year'] : '';
+    $opening_balance_data['ledgers']      = isset($data['ledgers']) ? $data['ledgers'] : [];
     $opening_balance_data['descriptions'] = isset($data['descriptions']) ? $data['descriptions'] : '';
-    $opening_balance_data['amount'] = isset($data['amount']) ? $data['amount'] : '';
-    $opening_balance_data['acct_pay'] = isset($data['acct_pay']) ? $data['acct_pay'] : [];
-    $opening_balance_data['acct_rec'] = isset($data['acct_rec']) ? $data['acct_rec'] : [];
-    $opening_balance_data['tax_pay'] = isset($data['tax_pay']) ? $data['tax_pay'] : [];
-    $opening_balance_data['created_at'] = isset($data['created_at']) ? $data['created_at'] : '';
-    $opening_balance_data['created_by'] = isset($data['created_by']) ? $data['created_by'] : '';
-    $opening_balance_data['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : '';
-    $opening_balance_data['updated_by'] = isset($data['updated_by']) ? $data['updated_by'] : '';
+    $opening_balance_data['amount']       = isset($data['amount']) ? $data['amount'] : '';
+    $opening_balance_data['acct_pay']     = isset($data['acct_pay']) ? $data['acct_pay'] : [];
+    $opening_balance_data['acct_rec']     = isset($data['acct_rec']) ? $data['acct_rec'] : [];
+    $opening_balance_data['tax_pay']      = isset($data['tax_pay']) ? $data['tax_pay'] : [];
+    $opening_balance_data['created_at']   = isset($data['created_at']) ? $data['created_at'] : '';
+    $opening_balance_data['created_by']   = isset($data['created_by']) ? $data['created_by'] : '';
+    $opening_balance_data['updated_at']   = isset($data['updated_at']) ? $data['updated_at'] : '';
+    $opening_balance_data['updated_by']   = isset($data['updated_by']) ? $data['updated_by'] : '';
 
     return $opening_balance_data;
 }
