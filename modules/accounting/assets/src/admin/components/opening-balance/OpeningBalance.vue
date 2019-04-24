@@ -332,31 +332,31 @@
 
         data() {
             return {
-                open1: true,
-                open2: true,
-                open3: true,
-                open4: true,
-                open5: true,
-                open6: true,
-                open7: true,
-                open8: true,
-                open9: true,
-                open10: true,
-                form_errors: [],
+                open1        : true,
+                open2        : true,
+                open3        : true,
+                open4        : true,
+                open5        : true,
+                open6        : true,
+                open7        : true,
+                open8        : true,
+                open9        : true,
+                open10       : true,
+                form_errors  : [],
                 chartAccounts: [],
-                ledgers: [],
-                fin_year: {},
-                years: [],
-                description: '',
-                all_ledgers: [],
-                credit_total: 0,
-                debit_total: 0,
-                isWorking: false,
-                acct_rec: null,
-                acct_pay: null,
-                tax_pay: null,
-                totalDebit: 0,
-                totalCredit: 0
+                ledgers      : [],
+                fin_year     : {},
+                years        : [],
+                description  : '',
+                all_ledgers  : [],
+                credit_total : 0,
+                debit_total  : 0,
+                isWorking    : false,
+                acct_rec     : null,
+                acct_pay     : null,
+                tax_pay      : null,
+                totalDebit   : 0,
+                totalCredit  : 0
             }
         },
 
@@ -538,6 +538,10 @@
                         this.fetchData();
                     }
                 });
+
+                if ( Object.keys(this.ledgers).length ) {
+                    this.fetchData();
+                }
 
                 HTTP.get(`/opening-balances/virtual-accts/${this.fin_year.id}`).then( response => {
                     this.acct_pay = response.data.acct_payable;

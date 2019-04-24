@@ -414,13 +414,14 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['rows2'][] = [
         'name' => 'Sales Tax Payable',
         'slug' => 'sales_tax',
-        'balance' => abs ( erp_acct_sales_tax_query( $args, 'payable' ) )
+        'balance' => abs( erp_acct_sales_tax_query( $args, 'payable' ) )
     ];
 
     $capital = erp_acct_get_owners_equity( $args, 'capital' );
     $drawings = erp_acct_get_owners_equity( $args, 'drawings' );
 
     $results['rows3'][] = [
+        'id'      => 30,
         'name'    => 'Owner\'s Equity',
         'balance' => $capital - $drawings
     ];

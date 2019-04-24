@@ -21,6 +21,7 @@ class REST_API {
             '\WeDevs\ERP\Accounting\API\Inventory_Product_Cats_Controller',
             '\WeDevs\ERP\Accounting\API\Ledgers_Accounts_Controller',
             '\WeDevs\ERP\Accounting\API\Opening_Balances_Controller',
+            '\WeDevs\ERP\Accounting\API\Closing_Balance_Controller',
             '\WeDevs\ERP\Accounting\API\Invoices_Controller',
             '\WeDevs\ERP\Accounting\API\Payments_Controller',
             '\WeDevs\ERP\Accounting\API\Bills_Controller',
