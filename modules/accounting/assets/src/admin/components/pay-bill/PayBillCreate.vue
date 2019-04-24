@@ -27,7 +27,7 @@
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
                                 <label>Reference</label>
-                                <input type="text" v-model="basic_fields.trn_ref"/>
+                                <input type="text" class="wperp-form-field" v-model="basic_fields.trn_ref"/>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
@@ -441,8 +441,12 @@
     }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .pay-bill-create {
+    input[type="text"] {
+        width: 90%;
+    }
+
     .dropdown {
         width: 100%;
     }
