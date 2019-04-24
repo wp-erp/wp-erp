@@ -339,13 +339,15 @@
                 var lineItems = [];
 
                 this.transactionLines.forEach(line => {
-                    lineItems.push({
-                        product_id  : line.selectedProduct.id,
-                        product_type: 'service',
-                        qty         : line.qty,
-                        unit_price  : line.unitPrice,
-                        item_total  : line.amount,
-                    });
+                    if ( line.hasOwnProperty('selectedProduct') ) {
+                        lineItems.push({
+                            product_id: line.selectedProduct.id,
+                            product_type: 'service',
+                            qty: line.qty,
+                            unit_price: line.unitPrice,
+                            item_total: line.amount,
+                        });
+                    }
                 });
 
                 return lineItems;

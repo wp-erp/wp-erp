@@ -504,14 +504,17 @@
                 this.updateFinalAmount();
             },
 
-            formatTrnLines( trl_lines ) {
-                trl_lines.forEach(element => {
-                    if ( element.amount ) {
+            formatTrnLines( trn_lines ) {
+                let line_items = [];
+
+                trn_lines.forEach(element => {
+                    if ( element.hasOwnProperty('ledger_id') ) {
                         element.ledger_id = element.ledger_id.id;
+                        line_items.push( element );
                     }
                 });
 
-                return trl_lines;
+                return line_items;
             }
 
         },
