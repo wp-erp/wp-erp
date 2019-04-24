@@ -49,7 +49,7 @@ function erp_acct_cash_at_bank( $args, $type ) {
  *
  * @param array $args
  *
- * @return int
+ * @return mixed
  */
 function erp_acct_bank_balance( $args, $type ) {
     global $wpdb;
@@ -261,7 +261,7 @@ function erp_acct_get_balance_with_opening_balance($ledgers, $data, $opening_bal
  * and
  * `previous date from trial balance start date`
  *
- * @return void
+ * @return array
  */
 function erp_acct_get_balance_within_ledger_details_and_trial_balance($sql, $temp_data) {
     global $wpdb;
@@ -337,7 +337,7 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
  * @param string $sql
  * @param string $type
  *
- * @return array
+ * @return float
  */
 function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
@@ -421,7 +421,7 @@ function erp_acct_bank_balance_calc_with_opening_balance( $tb_start_date, $data,
  * @param string $sql
  * @param string $type
  *
- * @return array
+ * @return float
  */
 function erp_acct_sales_tax_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
@@ -511,7 +511,7 @@ function erp_acct_people_calc_with_opening_balance( $tb_start_date, $data, $type
  * @param string $sql
  * @param string $type
  *
- * @return array
+ * @return float
  */
 function erp_acct_owners_equity_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
@@ -668,7 +668,7 @@ function erp_acct_bank_balance_opening_balance_by_fn_year_id( $id, $type ) {
  * @param int $id
  * @param string $type
  *
- * @return array
+ * @return mixed
  */
 function erp_acct_owners_equity_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
