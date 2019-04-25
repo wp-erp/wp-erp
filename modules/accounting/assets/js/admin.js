@@ -25078,7 +25078,9 @@ setTimeout(function () {
       this.fetchItems();
     },
     newTaxRate: function newTaxRate() {
-      this.$router.push('taxes/new');
+      this.$router.push({
+        name: 'NewTaxRate'
+      });
     },
     singleTaxRate: function singleTaxRate(tax_id, tax_rate_name) {
       this.$router.push({
@@ -25914,7 +25916,7 @@ setTimeout(function () {
       form_errors: [],
       createButtons: [{
         id: 'save',
-        text: 'Create Check'
+        text: 'Pay By Check'
       }, //{id: 'send_create', text: 'Create and Send'},
       {
         id: 'new_create',
@@ -27980,21 +27982,40 @@ setTimeout(function () {
           _this9.totalCredit += parseFloat(ledger.credit);
         });
         _this9.ledgers = _this9.groupBy(response.data, 'chart_id');
+
+        _this9.fetchVirtualAccts(year);
       }).then(function () {
         if (Object.keys(_this9.ledgers).length === 0) {
           _this9.fetchLedgers();
         }
       });
 
-      if (!Object.keys(this.ledgers).length) {
+      if (Object.keys(this.ledgers).length === 0) {
         this.fetchData();
-      } else {
-        __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/virtual-accts/".concat(year.id)).then(function (response) {
-          _this9.acct_pay = response.data.acct_payable;
-          _this9.acct_rec = response.data.acct_receivable;
-          _this9.tax_pay = response.data.tax_payable;
-        });
       }
+    },
+    fetchVirtualAccts: function fetchVirtualAccts(year) {
+      var _this10 = this;
+
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/virtual-accts/".concat(year.id)).then(function (response) {
+        _this10.acct_pay = response.data.acct_payable;
+        _this10.acct_rec = response.data.acct_receivable;
+        _this10.tax_pay = response.data.tax_payable;
+      }).then(function () {
+        _this10.acct_pay.forEach(function (ledger) {
+          _this10.totalCredit += parseFloat(ledger.credit);
+        });
+
+        _this10.acct_rec.forEach(function (ledger) {
+          _this10.totalDebit += parseFloat(ledger.debit);
+        });
+
+        _this10.tax_pay.forEach(function (ledger) {
+          _this10.totalCredit += parseFloat(ledger.credit);
+        });
+
+        _this10.$store.dispatch('spinner/setSpinner', false);
+      });
     },
     printPopup: function printPopup() {
       window.print();
@@ -37850,7 +37871,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
           _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v("Receive Payment")
+            _vm._v("New Payment Receipt")
           ])
         ])
       ])
@@ -38548,7 +38569,9 @@ var staticRenderFns = [
     return _c("div", { staticClass: "content-header-section separator" }, [
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
-          _c("h2", { staticClass: "content-header__title" }, [_vm._v("Bill")])
+          _c("h2", { staticClass: "content-header__title" }, [
+            _vm._v("New Bill")
+          ])
         ])
       ])
     ])
@@ -39713,7 +39736,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
           _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v("Pay Bill")
+            _vm._v("New Bill Payment")
           ])
         ])
       ])
@@ -41818,7 +41841,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
           _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v("Pay Purchase")
+            _vm._v("New Purchase Payment")
           ])
         ])
       ])
@@ -53375,7 +53398,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("simple-select", {
                   attrs: { width: 200, options: _vm.years },
-                  on: { change: _vm.getSelectedOB },
+                  on: { input: _vm.getSelectedOB },
                   model: {
                     value: _vm.fin_year,
                     callback: function($$v) {
