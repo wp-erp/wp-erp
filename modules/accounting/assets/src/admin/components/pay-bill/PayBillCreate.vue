@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Pay Bill</h2>
+                    <h2 class="content-header__title">New Bill Payment</h2>
                 </div>
             </div>
         </div>
