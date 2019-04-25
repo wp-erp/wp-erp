@@ -73,7 +73,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
             'end_date'   => $request['end_date']
         ];
 
-        $data     = erp_acct_close_balance_sheet_now( $args );
+        $data     = erp_acct_clsbl_close_balance_sheet_now( $args );
         $response = rest_ensure_response( $data );
 
         $response->set_status( 200 );
@@ -93,7 +93,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_invalid_date', __( 'Invalid resource date.' ), [ 'status' => 404 ] );
         }
 
-        $data     = erp_acct_get_closest_next_fn_year( $request['date'] );
+        $data     = erp_acct_clsbl_get_closest_next_fn_year( $request['date'] );
         $response = rest_ensure_response( $data );
 
         $response->set_status( 200 );
