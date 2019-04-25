@@ -18,7 +18,7 @@
                     <label>Financial Year</label>
                     <simple-select
                         v-model="fin_year"
-                        @input="getSelectedOB"
+                        @change="getSelectedOB"
                         :width="200"
                         :options="years"
                     >
@@ -237,7 +237,8 @@
                     </thead>
                     <tbody>
                     <tr :key="idx" v-for="(acct,idx) in ledgers[7]">
-                        <td><div class="with-multiselect"><multi-select v-model="acct.bank" :options="banks"/></div></td>
+                        <td><div class="wperp-form-group ob-people with-multiselect">
+                            <multi-select v-model="acct.bank" :options="banks" /></div></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="acct.debit"></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
                         <td class="delete-row" data-colname="Remove">
@@ -341,7 +342,7 @@
 
             this.$root.$on( 'SimpleSelectChange', (data) => {
                 this.fin_year = this.years.find(o => o.id === data.selected);
-                this.getSelectedOB();
+                this.getSelectedOB(this.fin_year);
             });
         },
 
@@ -373,6 +374,7 @@
             fetchLedgers() {
                 HTTP.get('/ledgers').then( response => {
                     response.data.forEach( (ledger) => {
+                        ledger.ledger_id = ledger.id;
                         ledger.balance = this.transformBalance( ledger.balance );
                     });
                     this.ledgers = this.groupBy(response.data, 'chart_id');
@@ -475,7 +477,10 @@
                     acct_pay: this.acct_pay,
                     acct_rec: this.acct_rec,
                     tax_pay: this.tax_pay,
+                    total_dr: this.totalDebit,
+                    total_cr: this.totalCredit,
                     description: this.description,
+
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Opening Balance Created!' );
@@ -502,33 +507,34 @@
                 });
             },
 
-            getSelectedOB() {
+            getSelectedOB(year) {
                 this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
 
-                HTTP.get(`/opening-balances/${this.fin_year.id}`).then( response => {
+                HTTP.get(`/opening-balances/${year.id}`).then( response => {
                     this.totalDebit = 0;
                     this.totalCredit = 0;
                     response.data.forEach( (ledger) => {
+                        ledger.id = ledger.ledger_id;
                         ledger.balance = this.transformBalance( ledger.balance );
                         this.totalDebit += parseFloat( ledger.debit );
                         this.totalCredit += parseFloat( ledger.credit);
                     });
                     this.ledgers = this.groupBy(response.data, 'chart_id');
-                }).then(()=>{
+                }).then(() => {
                     if ( Object.keys(this.ledgers).length === 0 ) {
                         this.fetchLedgers();
                     }
                 });
 
-                if ( Object.keys(this.ledgers).length ) {
+                if ( !Object.keys(this.ledgers).length ) {
                     this.fetchData();
+                } else {
+                    HTTP.get(`/opening-balances/virtual-accts/${year.id}`).then( response => {
+                        this.acct_pay = response.data.acct_payable;
+                        this.acct_rec = response.data.acct_receivable;
+                        this.tax_pay  = response.data.tax_payable;
+                    })
                 }
-
-                HTTP.get(`/opening-balances/virtual-accts/${this.fin_year.id}`).then( response => {
-                    this.acct_pay = response.data.acct_payable;
-                    this.acct_rec = response.data.acct_receivable;
-                    this.tax_pay  = response.data.tax_payable;
-                })
             },
 
             printPopup() {
