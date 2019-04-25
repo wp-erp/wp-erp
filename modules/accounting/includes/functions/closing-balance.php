@@ -78,9 +78,18 @@ function erp_acct_close_balance_sheet_now( $args ) {
     // get accounts receivable
     $accounts_receivable = erp_acct_get_accounts_receivable_balance_with_people( $args );
 
-    foreach ( $accounts_receivable as $key => $acc_receivable ) {
+    foreach ( $accounts_receivable as $acc_receivable ) {
         erp_acct_insert_into_opening_balance(
-            $next_f_year_id, null, $key, 'people', $acc_receivable, 0.00
+            $next_f_year_id, null, $acc_receivable['id'], 'people', $acc_receivable['balance'], 0.00
+        );
+    }
+
+    // get accounts payable
+    $accounts_payable = erp_acct_get_accounts_payable_balance_with_people( $args );
+
+    foreach ( $accounts_payable as $acc_payable ) {
+        erp_acct_insert_into_opening_balance(
+            $next_f_year_id, null, $acc_payable['id'], 'people', 0.00, abs($acc_payable['balance'])
         );
     }
 }
@@ -119,13 +128,15 @@ function erp_acct_insert_into_opening_balance($f_year_id, $chart_id, $ledger_id,
 /**
  * Get accounts receivable balance with people
  *
- * @return void
+ * @param array $args
+ *
+ * @return array
  */
 function erp_acct_get_accounts_receivable_balance_with_people( $args ) {
     global $wpdb;
 
-    // mainly customer_id and ( debit - credit )
-    $sql = "SELECT invoice.customer_id, SUM( debit - credit ) AS balance
+    // mainly ( debit - credit )
+    $sql = "SELECT invoice.customer_id AS id, SUM( debit - credit ) AS balance
         FROM {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_acd
         LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice_acd.invoice_no = invoice.voucher_no
         WHERE invoice_acd.trn_date BETWEEN '%s' AND '%s' GROUP BY invoice_acd.invoice_no HAVING balance > 0";
@@ -136,14 +147,42 @@ function erp_acct_get_accounts_receivable_balance_with_people( $args ) {
 }
 
 /**
- * Get people account_payable/account_receivable calculate with opening balance within financial year date range
+ * Get accounts payable balance with people
+ *
+ * @param array $args
+ *
+ * @return array
+ */
+function erp_acct_get_accounts_payable_balance_with_people( $args ) {
+    global $wpdb;
+
+    $bill_sql = "SELECT bill.vendor_id AS id, SUM( debit - credit ) AS balance
+        FROM {$wpdb->prefix}erp_acct_bill_account_details AS bill_acd
+        LEFT JOIN {$wpdb->prefix}erp_acct_bills AS bill ON bill_acd.bill_no = bill.voucher_no
+        WHERE bill_acd.trn_date BETWEEN '%s' AND '%s' GROUP BY bill_acd.bill_no HAVING balance < 0";
+
+    $purchase_sql = "SELECT purchase.vendor_id AS id, SUM( debit - credit ) AS balance
+        FROM {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acd
+        LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS purchase ON purchase_acd.purchase_no = purchase.voucher_no
+        WHERE purchase_acd.trn_date BETWEEN '%s' AND '%s' GROUP BY purchase_acd.purchase_no HAVING balance < 0";
+
+    $bill_data     = $wpdb->get_results( $wpdb->prepare( $bill_sql, $args['start_date'], $args['end_date'] ), ARRAY_A );
+    $purchase_data = $wpdb->get_results( $wpdb->prepare( $purchase_sql, $args['start_date'], $args['end_date'] ), ARRAY_A );
+
+    return erp_acct_vendor_ap_calc_with_opening_balance(
+        $args['start_date'], $bill_data, $purchase_data, $bill_sql, $purchase_sql
+    );
+}
+
+/**
+ * Get people account receivable calculate with opening balance within financial year date range
  *
  * @param string $bs_start_date
  * @param float $data => account details data on balance sheet date range
  * @param string $sql
  * @param string $type
  *
- * @return float
+ * @return array
  */
 function erp_acct_people_ar_calc_with_opening_balance( $bs_start_date, $data, $sql ) {
     global $wpdb;
@@ -152,42 +191,59 @@ function erp_acct_people_ar_calc_with_opening_balance( $bs_start_date, $data, $s
     $closest_fy_date = erp_acct_get_closest_fn_year_date( $bs_start_date );
 
     // get opening balance data within that(^) financial year
-    $opening_balance = erp_acct_people_ar_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
+    $opening_balance = erp_acct_customer_ar_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
 
-    $temp = [];
+    $merged = array_merge($data, $opening_balance);
+    $result = erp_acct_get_formatted_people_balance( $merged );
 
-    $merged = array_merge( $data, $opening_balance );
-
-    foreach ( $merged as $entry ) {
-        $id = $entry['customer_id'];
-
-        if ( empty( $temp[$id] ) ) {
-            $temp[$id] = 0;
-        }
-
-        $temp[ $id ] += $entry['balance'];
+    // should we go further calculation, check the diff
+    if ( ! erp_acct_has_date_diff($bs_start_date, $closest_fy_date['start_date']) ) {
+        return $result;
+    } else {
+        $prev_date_of_bs_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($bs_start_date) ) );
     }
 
-    return $temp;
+    $query  = $wpdb->get_results( $wpdb->prepare($sql, $closest_fy_date['start_date'], $prev_date_of_bs_start), ARRAY_A );
+    $merged = array_merge($result, $query);
+
+    return erp_acct_get_formatted_people_balance( $merged );
+}
+
+/**
+ * Get people account payable calculate with opening balance within financial year date range
+ *
+ * @param string $bs_start_date
+ * @param float $data => account details data on balance sheet date range
+ * @param string $sql
+ * @param string $type
+ *
+ * @return array
+ */
+
+function erp_acct_vendor_ap_calc_with_opening_balance($bs_start_date, $bill_data, $purchase_data, $bill_sql, $purchase_sql) {
+    global $wpdb;
+
+    // get closest financial year id and start date
+    $closest_fy_date = erp_acct_get_closest_fn_year_date( $bs_start_date );
+
+    // get opening balance data within that(^) financial year
+    $opening_balance = erp_acct_vendor_ap_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
+
+    $merged = array_merge($bill_data, $purchase_data, $opening_balance);
+    $result = erp_acct_get_formatted_people_balance($merged);
 
     // should we go further calculation, check the diff
     if ( ! erp_acct_has_date_diff($bs_start_date, $closest_fy_date['start_date']) ) {
         return $temp;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
+        $prev_date_of_bs_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($bs_start_date) ) );
     }
 
-    // $start_date = $closest_fy_date['start_date'];
-    // $end_date   = $prev_date_of_tb_start;
+    $query1 = $wpdb->get_results( $wpdb->prepare($bill_sql, $closest_fy_date['start_date'], $prev_date_of_bs_start), ARRAY_A );
+    $query2 = $wpdb->get_results( $wpdb->prepare($purchase_sql, $closest_fy_date['start_date'], $prev_date_of_bs_start), ARRAY_A );
+    $merged = array_merge($result, $query1, $query2);
 
-    // if ( 'payable' === $type ) {
-    //     $balance += erp_acct_calculate_people_balance($sql1, $start_date, $end_date);
-    //     $balance += erp_acct_calculate_people_balance($sql2, $start_date, $end_date);
-    // } elseif ( 'receivable' === $type ) {
-    //     $balance += erp_acct_calculate_people_balance($sql1, $start_date, $end_date);
-    // }
-
-    // return $balance;
+    return erp_acct_get_formatted_people_balance($merged);
 }
 
 /**
@@ -197,12 +253,57 @@ function erp_acct_people_ar_calc_with_opening_balance( $bs_start_date, $data, $s
  *
  * @return void
  */
-function erp_acct_people_ar_opening_balance_by_fn_year_id( $id ) {
+function erp_acct_customer_ar_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
 
-    $sql = "SELECT ledger_id AS customer_id, SUM( debit - credit ) AS balance
+    $sql = "SELECT ledger_id AS id, SUM( debit - credit ) AS balance
         FROM {$wpdb->prefix}erp_acct_opening_balances
         WHERE financial_year_id = %d AND type = 'people' GROUP BY ledger_id HAVING balance > 0";
 
     return $wpdb->get_results( $wpdb->prepare($sql, $id), ARRAY_A );
+}
+
+/**
+ * People accounts payable from opening balance
+ *
+ * @param int $id
+ *
+ * @return void
+ */
+function erp_acct_vendor_ap_opening_balance_by_fn_year_id( $id ) {
+    global $wpdb;
+
+    $sql = "SELECT ledger_id AS id, SUM( debit - credit ) AS balance
+        FROM {$wpdb->prefix}erp_acct_opening_balances
+        WHERE financial_year_id = %d AND type = 'people' GROUP BY ledger_id HAVING balance < 0";
+
+    return $wpdb->get_results( $wpdb->prepare($sql, $id), ARRAY_A );
+}
+
+/**
+ * Accounts receivable array merge
+ *
+ * @param array $arr1
+ * @param array $arr2
+ *
+ * @return void
+ */
+function erp_acct_get_formatted_people_balance($arr) {
+    $temp = [];
+
+    foreach ( $arr as $entry ) {
+        // get index by id from a multidimensional array
+        $index = array_search( $entry['id'], array_column($arr, 'id') );
+
+        if ( ! empty( $temp[$index] ) ) {
+            $temp[$index]['balance'] += $entry['balance'];
+        } else {
+            $temp[] = [
+                'id'      => $entry['id'],
+                'balance' => $entry['balance']
+            ];
+        }
+    }
+
+    return $temp;
 }

@@ -198,7 +198,7 @@
             },
 
             checkClosingPossibility() {
-                this.$store.dispatch( 'spinner/setSpinner', false );
+                this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.get( '/closing-balance/next-fn-year', {
                     params: {
