@@ -16,6 +16,7 @@
             :total-pages="paginationData.totalPages"
             :per-page="paginationData.perPage"
             :current-page="paginationData.currentPage"
+            :showCb="false"
             @pagination="goToPage">
             <template slot="l_id" slot-scope="data">
                 <strong>

@@ -417,6 +417,11 @@ function erp_acct_quick_access_menu() {
             'title' => 'Tax Payment',
             'slug'  => 'pay_tax',
             'url'   => 'pay-tax'
+        ],
+        "opening_balance" => [
+            'title'      =>  __( 'Opening Balance', 'erp' ),
+            'slug'       => 'opening_balance',
+            'url'        => 'opening-balance',
         ]
     ];
 }
