@@ -206,12 +206,12 @@
     }
 
     .app-tax-zones {
-        .check-column {
-            padding: 20px !important;
+        .col--actions {
+            text-align: left !important;
         }
 
-        .actions {
-            text-align: right;
+        .check-column {
+            padding: 20px !important;
         }
 
         tbody .column.default {

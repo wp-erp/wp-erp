@@ -2,7 +2,7 @@
     <div class="app-customers">
         <h2 class="add-new-people">
             <span>{{ pageTitle }}</span>
-            <a href="" id="erp-customer-new" @click.prevent="showModal = true">+ Add New {{ buttonTitle }}</a>
+            <a href="" id="erp-customer-new" @click.prevent="showModal = true">Add New {{ buttonTitle }}</a>
         </h2>
         <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false"></people-modal>
         <list-table
