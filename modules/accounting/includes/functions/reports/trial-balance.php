@@ -451,7 +451,7 @@ function erp_acct_sales_tax_calc_with_opening_balance( $tb_start_date, $data, $s
         $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
     }
 
-    // get ledger details data between
+    // get agency details data between
     //     `financial year start date`
     // and
     //     `previous date from trial balance start date`
