@@ -307,6 +307,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_cash_at_bank( $request ) {
+        $formatted_items =[];
         $items = erp_acct_get_dashboard_banks();
 
         if ( empty( $items ) ) {
