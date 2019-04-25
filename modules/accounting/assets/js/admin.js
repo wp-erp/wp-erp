@@ -15595,6 +15595,7 @@ if (false) {(function () {
         trn_by: ''
       },
       check_data: {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       },
@@ -15839,7 +15840,8 @@ if (false) {(function () {
         deposit_to: this.basic_fields.deposit_to.id,
         trn_by: this.basic_fields.trn_by.id,
         check_no: parseInt(this.check_data.check_no),
-        name: this.check_data.payer_name
+        name: this.check_data.payer_name,
+        bank: this.check_data.bank_name
       }).then(function (res) {
         _this4.$store.dispatch('spinner/setSpinner', false);
 
@@ -15919,6 +15921,7 @@ if (false) {(function () {
         trn_by: ''
       };
       this.check_data = {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       };
@@ -16055,11 +16058,16 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'CheckFields',
   data: function data() {
     return {
       check_fields: {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       }
@@ -17186,6 +17194,7 @@ if (false) {(function () {
         trn_by: ''
       },
       check_data: {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       },
@@ -17346,7 +17355,8 @@ if (false) {(function () {
         deposit_to: this.basic_fields.deposit_to.id,
         trn_by: this.basic_fields.trn_by.id,
         check_no: parseInt(this.check_data.check_no),
-        name: this.check_data.payer_name
+        name: this.check_data.payer_name,
+        bank: this.check_data.bank_name
       }).then(function (res) {
         _this5.$store.dispatch('spinner/setSpinner', false);
 
@@ -17437,6 +17447,7 @@ if (false) {(function () {
         trn_by: ''
       };
       this.check_data = {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       };
@@ -18775,6 +18786,7 @@ if (false) {(function () {
         check: '3'
       },
       check_data: {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       },
@@ -19037,6 +19049,7 @@ if (false) {(function () {
         check: '3'
       };
       this.check_data = {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       };
@@ -20521,6 +20534,7 @@ if (false) {(function () {
         billing_address: ''
       },
       check_data: {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       },
@@ -20834,7 +20848,8 @@ if (false) {(function () {
         status: trn_status,
         particulars: this.particulars,
         check_no: parseInt(this.check_data.check_no),
-        name: this.check_data.payer_name
+        name: this.check_data.payer_name,
+        bank: this.check_data.bank_name
       };
 
       if (this.editMode) {
@@ -20882,6 +20897,7 @@ if (false) {(function () {
         billing_address: ''
       };
       this.check_data = {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       };
@@ -25891,6 +25907,7 @@ setTimeout(function () {
         billing_address: ''
       },
       check_data: {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       },
@@ -26252,6 +26269,7 @@ setTimeout(function () {
         billing_address: ''
       };
       this.check_data = {
+        bank_name: '',
         payer_name: '',
         check_no: ''
       };
@@ -37219,7 +37237,35 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wperp-col-sm-8" }, [
+  return _c("div", { staticClass: "wperp-col-sm-12" }, [
+    _c("div", { staticClass: "check-fields" }, [
+      _c("label", [_vm._v("Bank Name")]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.check_fields.bank_name,
+            expression: "check_fields.bank_name"
+          }
+        ],
+        attrs: { type: "text" },
+        domProps: { value: _vm.check_fields.bank_name },
+        on: {
+          input: [
+            function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.check_fields, "bank_name", $event.target.value)
+            },
+            _vm.updateCheckData
+          ]
+        }
+      })
+    ]),
+    _vm._v(" "),
     _c("div", { staticClass: "check-fields" }, [
       _c("label", [_vm._v("Check Name")]),
       _vm._v(" "),

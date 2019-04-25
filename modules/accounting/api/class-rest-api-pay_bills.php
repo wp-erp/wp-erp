@@ -373,6 +373,9 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['name'] ) ) {
             $prepared_item['name'] = $request['name'];
         }
+        if ( isset( $request['bank'] ) ) {
+            $prepared_item['bank'] = $request['bank'];
+        }
 
         return $prepared_item;
     }

@@ -1380,6 +1380,7 @@ Company'
                 `check_no` int(11) DEFAULT NULL,
                 `voucher_type` varchar(255) DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,
+                `bank` varchar(255) DEFAULT NULL,
                 `name` varchar(255) DEFAULT NULL,
                 `pay_to` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,

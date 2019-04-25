@@ -164,6 +164,7 @@
                 },
 
                 check_data: {
+                    bank_name: '',
                     payer_name: '',
                     check_no: ''
                 },
@@ -420,6 +421,7 @@
                 };
 
                 this.check_data = {
+                    bank_name: '',
                     payer_name: '',
                     check_no  : ''
                 };
