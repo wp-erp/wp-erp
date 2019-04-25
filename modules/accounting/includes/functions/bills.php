@@ -62,7 +62,6 @@ function erp_acct_get_bill( $bill_no ) {
     bill.trn_date,
     bill.due_date,
     bill.amount,
-    bill.ref,
     bill.particulars,
     bill.status,
     bill.attachments
