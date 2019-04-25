@@ -186,7 +186,7 @@ function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
         foreach ( $data['acct_rec'] as $acct_rec ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
                 'financial_year_id' => $year_id,
-                'ledger_id' => $acct_rec['people_id'],
+                'ledger_id' => $acct_rec['people']['id'],
                 'type' => 'people',
                 'debit' => $acct_rec['debit'],
                 'credit' => 0,
@@ -202,7 +202,7 @@ function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
         foreach ( $data['acct_pay'] as $acct_pay ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
                 'financial_year_id' => $year_id,
-                'ledger_id' => $acct_pay['people_id'],
+                'ledger_id' => $acct_pay['people']['id'],
                 'type' => 'people',
                 'debit' => 0,
                 'credit' => $acct_pay['credit'],

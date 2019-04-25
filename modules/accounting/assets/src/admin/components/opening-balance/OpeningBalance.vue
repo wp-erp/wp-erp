@@ -18,7 +18,7 @@
                     <label>Financial Year</label>
                     <simple-select
                         v-model="fin_year"
-                        @change="getSelectedOB"
+                        @input="getSelectedOB"
                         :width="200"
                         :options="years"
                     >
@@ -520,21 +520,35 @@
                         this.totalCredit += parseFloat( ledger.credit);
                     });
                     this.ledgers = this.groupBy(response.data, 'chart_id');
+                    this.fetchVirtualAccts(year);
                 }).then(() => {
                     if ( Object.keys(this.ledgers).length === 0 ) {
                         this.fetchLedgers();
                     }
                 });
 
-                if ( !Object.keys(this.ledgers).length ) {
+                if ( Object.keys(this.ledgers).length === 0 ) {
                     this.fetchData();
-                } else {
-                    HTTP.get(`/opening-balances/virtual-accts/${year.id}`).then( response => {
-                        this.acct_pay = response.data.acct_payable;
-                        this.acct_rec = response.data.acct_receivable;
-                        this.tax_pay  = response.data.tax_payable;
-                    })
                 }
+            },
+
+            fetchVirtualAccts(year) {
+                HTTP.get(`/opening-balances/virtual-accts/${year.id}`).then( response => {
+                    this.acct_pay = response.data.acct_payable;
+                    this.acct_rec = response.data.acct_receivable;
+                    this.tax_pay  = response.data.tax_payable;
+                }).then(() =>{
+                    this.acct_pay.forEach( (ledger) => {
+                        this.totalCredit += parseFloat( ledger.credit);
+                    });
+                    this.acct_rec.forEach( (ledger) => {
+                        this.totalDebit += parseFloat( ledger.debit );
+                    });
+                    this.tax_pay.forEach( (ledger) => {
+                        this.totalCredit += parseFloat( ledger.credit);
+                    });
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                });
             },
 
             printPopup() {
