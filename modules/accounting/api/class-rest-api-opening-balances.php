@@ -144,6 +144,10 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         foreach ( $ledgers as $ledger) {
+            if ( $ledger['chart_id'] == 7 ) {
+                $ledger['bank']['id'] = $ledger['ledger_id'];
+                $ledger['bank']['name'] = $ledger['name'];
+            }
             $data = $this->prepare_item_for_response( $ledger, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
@@ -216,14 +220,8 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $ledgers = []; $total_dr = 0 ; $total_cr = 0;
 
-        foreach ( $items as $item ) {
-            $ledgers = array_merge( $ledgers, $item );
-        }
-
-        foreach ( $ledgers as $ledger ) {
-            $total_dr += ( isset( $ledger['debit'] ) ? $ledger['debit'] : 0 );
-            $total_cr += ( isset( $ledger['credit'] ) ? $ledger['credit'] : 0 );
-        }
+        $total_dr = ( isset( $request['total_dr'] ) ? $request['total_dr'] : 0 );
+        $total_cr = ( isset( $request['total_dr'] ) ? $request['total_dr'] : 0 );
 
         if ( $total_dr != $total_cr ) {
             return new WP_Error( 'rest_opening_balance_invalid_amount', __( 'Summation of debit and credit must be equal.' ), [ 'status' => 400 ] );
@@ -233,7 +231,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $opening_balance = erp_acct_insert_opening_balance( $opening_balance_data );
 
-        $this->add_log( $opening_balance, 'add' );
+        $this->add_log( $opening_balance_data, 'add' );
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -261,7 +259,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
             'sub_component' => __( 'Opening Balance', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => sprintf( __( 'A opening balance of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'message'       => sprintf( __( 'A opening balance of %s has been created by %s', 'erp' ), $data['amount'], get_current_user_id() ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 
