@@ -184,7 +184,7 @@
                 form_errors: [],
 
                 createButtons: [
-                    {id: 'save', text: 'Create Check'},
+                    {id: 'save', text: 'Pay By Check'},
                     //{id: 'send_create', text: 'Create and Send'},
                     {id: 'new_create', text: 'Create and New'},
                     {id: 'draft', text: 'Save as Draft'},
