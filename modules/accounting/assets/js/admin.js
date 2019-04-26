@@ -27988,6 +27988,10 @@ setTimeout(function () {
         if (Object.keys(_this9.ledgers).length === 0) {
           _this9.fetchLedgers();
         }
+
+        if (!_this9.ledgers.hasOwnProperty('7')) {
+          _this9.ledgers[7] = _this9.banks;
+        }
       });
 
       if (Object.keys(this.ledgers).length === 0) {
@@ -37871,7 +37875,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
           _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v("New Payment Receipt")
+            _vm._v("Receive Payment")
           ])
         ])
       ])

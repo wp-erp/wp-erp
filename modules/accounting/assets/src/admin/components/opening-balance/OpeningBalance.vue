@@ -525,6 +525,10 @@
                     if ( Object.keys(this.ledgers).length === 0 ) {
                         this.fetchLedgers();
                     }
+
+                    if( !this.ledgers.hasOwnProperty('7') ) {
+                        this.ledgers[7] = this.banks;
+                    }
                 });
 
                 if ( Object.keys(this.ledgers).length === 0 ) {
