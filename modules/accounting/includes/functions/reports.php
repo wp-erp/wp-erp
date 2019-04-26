@@ -307,7 +307,7 @@ function erp_acct_get_income_statement( $args ) {
         $results['total_credit'] += (float)$result['credit'];
     }
     foreach ($results['rows2'] as $result) {
-        $results['total_debit']  += (float)$result['debit'];
+        $results['total_debit'] += (float)$result['debit'];
     }
 
     $dr_cr_diff = $results['total_debit'] - $results['total_credit'];
