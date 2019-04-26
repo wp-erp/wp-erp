@@ -1,13 +1,17 @@
 <template>
-    <div class="wperp-col-sm-8">
-            <div class="check-fields">
-                <label>Check Name</label>
-                <input type="text" @input="updateCheckData" v-model="check_fields.payer_name"/>
-            </div>
-            <div class="check-fields">
-                <label>Check No</label>
-                <input type="text" @input="updateCheckData" v-model="check_fields.check_no"/>
-            </div>
+    <div class="wperp-col-sm-12">
+        <div class="check-fields">
+            <label>Bank Name</label>
+            <input type="text" @input="updateCheckData" v-model="check_fields.bank_name"/>
+        </div>
+        <div class="check-fields">
+            <label>Check Name</label>
+            <input type="text" @input="updateCheckData" v-model="check_fields.payer_name"/>
+        </div>
+        <div class="check-fields">
+            <label>Check No</label>
+            <input type="text" @input="updateCheckData" v-model="check_fields.check_no"/>
+        </div>
     </div>
 </template>
 
@@ -18,6 +22,7 @@
         data() {
             return {
                 check_fields: {
+                    bank_name: '',
                     payer_name: '',
                     check_no: ''
                 }
@@ -35,7 +40,7 @@
 <style scoped>
     .check-fields {
         margin-bottom: 20px;
-        width: 46%;
+        width: 30%;
         float: left;
         margin-right: 25px;
     }

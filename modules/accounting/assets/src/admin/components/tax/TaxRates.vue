@@ -191,7 +191,7 @@
             },
 
             newTaxRate() {
-                this.$router.push('taxes/new');
+                this.$router.push({name: 'NewTaxRate' });
             },
 
             singleTaxRate(tax_id, tax_rate_name) {

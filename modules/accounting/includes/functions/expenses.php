@@ -110,6 +110,7 @@ function erp_acct_get_check( $expense_no ) {
     expense.updated_at,
     expense.updated_by,
 
+    cheque.bank,
     cheque.name,
     cheque.check_no,
     cheque.pay_to,
@@ -149,7 +150,8 @@ function erp_acct_format_check_line_items( $voucher_no ) {
         expense_detail.particulars,
 
         ledger.name AS ledger_name,
-
+        
+        cheque.bank,
         cheque.name,
         cheque.check_no,
         cheque.pay_to,
@@ -438,6 +440,7 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data['updated_by'] = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
     $expense_data['pay_to'] = isset( $people ) ?  $people->first_name . ' ' . $people->last_name : '';
     $expense_data['name'] = isset( $data['name'] ) ?  $data['name'] : $company->name;
+    $expense_data['bank'] = isset( $data['bank'] ) ?  $data['bank'] : '';
     $expense_data['voucher_type'] = isset( $data['voucher_type'] ) ?  $data['voucher_type'] : '';
 
     return $expense_data;

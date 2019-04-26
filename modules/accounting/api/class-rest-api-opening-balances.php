@@ -130,6 +130,8 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_opening_balance( $request ) {
+        global $wpdb;
+
         $id   = (int) $request['id']; $additional_fields = [];
 
         if ( empty( $id ) ) {
@@ -262,7 +264,6 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
             'message'       => sprintf( __( 'A opening balance of %s has been created by %s', 'erp' ), $data['amount'], get_current_user_id() ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
-
         ]);
     }
 
