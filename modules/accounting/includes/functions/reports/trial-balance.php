@@ -590,7 +590,7 @@ function erp_acct_opening_balance_by_fn_year_id( $id, $chart_id = null ) {
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
         WHERE opb.financial_year_id = %d {$where} AND opb.type = 'ledger' AND ledger.slug <> 'owner_s_equity'
-        GROUP BY opb.ledger_id HAVING balance > 0";
+        GROUP BY opb.ledger_id";
 
     return $wpdb->get_results( $wpdb->prepare($sql, $id), ARRAY_A );
 }
@@ -704,7 +704,7 @@ function erp_acct_people_opening_balance_by_fn_year_id( $id, $type ) {
 
     $sql = "SELECT SUM(opb.balance) AS balance FROM ( SELECT SUM( debit - credit ) AS balance
         FROM {$wpdb->prefix}erp_acct_opening_balances
-        WHERE financial_year_id = %d AND type = 'people' {$having} ) AS opb";
+        WHERE financial_year_id = %d AND type = 'people' GROUP BY ledger_id {$having} ) AS opb";
 
     return $wpdb->get_var( $wpdb->prepare($sql, $id) );
 }
