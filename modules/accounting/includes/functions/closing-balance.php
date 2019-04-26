@@ -28,12 +28,10 @@ function erp_acct_clsbl_get_closest_next_fn_year( $date ) {
  * @return void
  */
 function erp_acct_clsbl_close_balance_sheet_now( $args ) {
-    $balance_sheet    = erp_acct_clsbl_get_balance_sheet($args);
-    $assets           = $balance_sheet['rows1'];
-    $liability_equity = array_merge( $balance_sheet['rows2'], $balance_sheet['rows3'] );
-    $next_f_year_id   = $args['f_year_id'];
-
-    error_log(print_r($balance_sheet, true)); die;
+    $balance_sheet  = erp_acct_get_balance_sheet($args);
+    $assets         = $balance_sheet['rows1'];
+    $liability      = $balance_sheet['rows2'];
+    $next_f_year_id = $args['f_year_id'];
 
     // ledgers
     global $wpdb;
@@ -52,8 +50,8 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
             }
         } // assets loop
 
-        // liability + equity
-        foreach ( $liability_equity as $liab_equ ) {
+        // liability
+        foreach ( $liability as $liab_equ ) {
             if ( ! empty( $liab_equ['id'] ) ) {
                 if ( $liab_equ['id'] === $ledger['id'] ) {
                     erp_acct_insert_into_opening_balance(
@@ -61,7 +59,7 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
                     );
                 }
             }
-        } // liability + equity loop
+        } // liability loop
     } // ledger loop
 
     // get accounts receivable
@@ -97,6 +95,19 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
     foreach ( $tax_payable as $payable_agency ) {
         erp_acct_clsbl_insert_into_opening_balance(
             $next_f_year_id, null, $payable_agency['id'], 'tax_agency', 0.00, abs($payable_agency['balance'])
+        );
+    }
+
+    // owner's equity ( ledger_id: 30 ) with profit/loss
+    $owners_equity_ledger = 30;
+
+    if ( $balance_sheet['owners_equity'] > 0 ) {
+        erp_acct_clsbl_insert_into_opening_balance(
+            $next_f_year_id, null, $owners_equity_ledger, 'ledger', $balance_sheet['owners_equity'], 0.00
+        );
+    } else {
+        erp_acct_clsbl_insert_into_opening_balance(
+            $next_f_year_id, null, $owners_equity_ledger, 'ledger', 0.00, $balance_sheet['owners_equity']
         );
     }
 }
