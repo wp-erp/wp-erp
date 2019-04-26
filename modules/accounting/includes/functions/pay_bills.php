@@ -346,6 +346,7 @@ function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
     $pay_bill_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : 0;
     $pay_bill_data['pay_to'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
     $pay_bill_data['name'] = isset( $data['name'] ) ?  $data['name'] : $company->name;
+    $pay_bill_data['bank'] = isset( $data['bank'] ) ?  $data['bank'] : '';
     $pay_bill_data['voucher_type'] = isset( $data['voucher_type'] ) ?  $data['voucher_type'] : '';
     $pay_bill_data['created_at']   = date( "Y-m-d" );
     $pay_bill_data['created_by']   = isset( $data['created_by'] ) ? $data['created_by'] : '';

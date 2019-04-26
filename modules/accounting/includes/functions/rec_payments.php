@@ -365,6 +365,7 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $payment_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : 0;
     $payment_data['pay_to'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
     $payment_data['name'] = isset( $data['name'] ) ?  $data['name'] : $company->name;
+    $payment_data['bank'] = isset( $data['bank'] ) ?  $data['bank'] : '';
     $payment_data['voucher_type'] = isset( $data['type'] ) ?  $data['type'] : '';
     $payment_data['created_at']  = isset( $data['created_at'] ) ? $data['created_at'] : null;
     $payment_data['created_by']  = isset( $data['created_by'] ) ? $data['created_by'] : '';

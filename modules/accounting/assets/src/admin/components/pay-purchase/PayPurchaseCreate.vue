@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Pay Purchase</h2>
+                    <h2 class="content-header__title">New Purchase Payment</h2>
                 </div>
             </div>
         </div>
@@ -164,6 +164,7 @@
                 },
 
                 check_data: {
+                    bank_name: '',
                     payer_name: '',
                     check_no: ''
                 },
@@ -420,6 +421,7 @@
                 };
 
                 this.check_data = {
+                    bank_name: '',
                     payer_name: '',
                     check_no  : ''
                 };

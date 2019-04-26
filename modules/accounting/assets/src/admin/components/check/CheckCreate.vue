@@ -176,6 +176,7 @@
                 },
 
                 check_data: {
+                    bank_name: '',
                     payer_name: '',
                     check_no: ''
                 },
@@ -183,7 +184,7 @@
                 form_errors: [],
 
                 createButtons: [
-                    {id: 'save', text: 'Create Check'},
+                    {id: 'save', text: 'Pay By Check'},
                     //{id: 'send_create', text: 'Create and Send'},
                     {id: 'new_create', text: 'Create and New'},
                     {id: 'draft', text: 'Save as Draft'},
@@ -483,6 +484,7 @@
                 };
 
                 this.check_data = {
+                    bank_name: '',
                     payer_name: '',
                     check_no  : ''
                 };

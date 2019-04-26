@@ -352,6 +352,9 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['ref'] ) ) {
             $prepared_item['ref'] = $request['ref'];
         }
+        if ( isset( $request['bank'] ) ) {
+            $prepared_item['bank'] = $request['bank'];
+        }
         if ( isset( $request['check_no'] ) ) {
             $prepared_item['check_no'] = $request['check_no'];
         }

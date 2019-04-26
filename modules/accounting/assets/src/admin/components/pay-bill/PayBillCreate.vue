@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Pay Bill</h2>
+                    <h2 class="content-header__title">New Bill Payment</h2>
                 </div>
             </div>
         </div>
@@ -158,6 +158,7 @@
                 },
 
                 check_data: {
+                    bank_name: '',
                     payer_name: '',
                     check_no: ''
                 },
@@ -318,7 +319,8 @@
                     deposit_to  : this.basic_fields.deposit_to.id,
                     trn_by      : this.basic_fields.trn_by.id,
                     check_no    : parseInt(this.check_data.check_no),
-                    name        : this.check_data.payer_name
+                    name        : this.check_data.payer_name,
+                    bank        : this.check_data.bank_name,
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Pay-Bill Created!' );
@@ -401,6 +403,7 @@
                 };
 
                 this.check_data = {
+                    bank_name: '',
                     payer_name: '',
                     check_no: ''
                 };

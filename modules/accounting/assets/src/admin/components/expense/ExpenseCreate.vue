@@ -186,6 +186,7 @@
                 },
 
                 check_data: {
+                    bank_name: '',
                     payer_name: '',
                     check_no: ''
                 },
@@ -458,7 +459,8 @@
                     status         : trn_status,
                     particulars    : this.particulars,
                     check_no       : parseInt(this.check_data.check_no),
-                    name           : this.check_data.payer_name
+                    name           : this.check_data.payer_name,
+                    bank           : this.check_data.bank_name,
                 };
 
                 if ( this.editMode ) {
@@ -503,6 +505,7 @@
                 };
 
                 this.check_data = {
+                    bank_name: '',
                     payer_name: '',
                     check_no  : ''
                 };
