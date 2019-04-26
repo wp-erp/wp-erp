@@ -427,6 +427,7 @@ function erp_acct_get_balance_sheet( $args ) {
     ];
 
     $profit_loss = erp_acct_get_profit_loss( $args );
+    $profit = 0; $loss = 0;
 
     $dr_cr_diff = abs( $profit_loss['total_debit'] ) - abs( $profit_loss['total_credit'] );
 
@@ -439,6 +440,7 @@ function erp_acct_get_balance_sheet( $args ) {
             'slug' => 'profit',
             'balance' => $dr_cr_diff
         ];
+        $profit = $dr_cr_diff;
     } else {
         if ( $dr_cr_diff > 0 ) {
             $balance = - $dr_cr_diff;
@@ -451,6 +453,7 @@ function erp_acct_get_balance_sheet( $args ) {
             'slug' => 'loss',
             'balance' => $balance
         ];
+        $loss = $balance;
     }
 
     $results['total_asset'] = 0;
@@ -489,6 +492,8 @@ function erp_acct_get_balance_sheet( $args ) {
             $results['total_equity'] += (float) $result['balance'];
         }
     }
+
+    $results['owners_equity'] = $capital - $drawings + $profit - $loss ;
 
     return $results;
 }
