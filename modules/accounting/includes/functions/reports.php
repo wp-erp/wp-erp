@@ -546,10 +546,7 @@ function erp_acct_balance_sheet_calculate_with_opening_balance( $bs_start_date, 
         $bs_date = $date_before_balance_sheet_start;
     }
 
-    // get ledger details data between
-    //     `financial year start date`
-    // and
-    //     `previous date from balance sheet start date`
+    // get ledger details data between `financial year start date` and `previous date from balance sheet start date`
     $ledger_details = $wpdb->get_results(
         $wpdb->prepare($sql, $closest_fy_date['start_date'], $bs_date), ARRAY_A
     );
@@ -583,12 +580,8 @@ function erp_acct_balance_sheet_calculate_with_opening_balance( $bs_start_date, 
  * @return array
  */
 function erp_acct_get_bs_balance_with_opening_balance($ledgers, $data, $opening_balance) {
-
     $temp_data = [];
 
-    /**
-     * Start writing a very `inefficient :(` foreach loop
-     */
     foreach ( $ledgers as $ledger ) {
         $balance = 0;
         foreach ( $data as $row ) {
