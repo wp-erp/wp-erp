@@ -27730,6 +27730,12 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -53435,6 +53441,22 @@ var render = function() {
                 ]
               )
             ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "wperp-row" }, [
+            null !== _vm.fin_year
+              ? _c("ul", { staticClass: "report-header" }, [
+                  _c("li", [
+                    _c("strong", [
+                      _vm._v("For the period of ( Opening Balance date ):")
+                    ]),
+                    _vm._v(" "),
+                    _c("em", [_vm._v(_vm._s(_vm.fin_year.start_date))]),
+                    _vm._v(" to "),
+                    _c("em", [_vm._v(_vm._s(_vm.fin_year.end_date))])
+                  ])
+                ])
+              : _vm._e()
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "erp-accordion" }, [
