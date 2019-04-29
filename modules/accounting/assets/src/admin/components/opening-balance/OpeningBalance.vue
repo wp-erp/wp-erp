@@ -33,6 +33,12 @@
                 </div>
             </div>
 
+            <div class="wperp-row">
+                <ul class="report-header" v-if="null !== fin_year">
+                    <li><strong>For the period of ( Opening Balance date ):</strong> <em>{{ fin_year.start_date }}</em> to <em>{{ fin_year.end_date }}</em></li>
+                </ul>
+            </div>
+
 
             <!-- Accounts Receivable Section -->
             <div class="erp-accordion">
@@ -598,6 +604,16 @@
 </style>
 
 <style scoped lang="less">
+    .report-header {
+        width: 500px;
+        padding: 10px;
+        margin: 10px 0 0 0;
+
+        li {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
     .accordion-container {
         padding-top: 10px;
         .print-btn {
