@@ -688,7 +688,7 @@ function erp_acct_owners_equity_opening_balance_by_fn_year_id( $id, $type ) {
     $sql = "SELECT SUM(opb.debit - opb.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
-        WHERE opb.financial_year_id = %d AND ledger.slug = 'owner_s_equity' {$having}";
+        WHERE opb.financial_year_id = %d AND opb.type = 'ledger' AND ledger.slug = 'owner_s_equity' {$having}";
 
     return $wpdb->get_var( $wpdb->prepare($sql, $id) );
 }
