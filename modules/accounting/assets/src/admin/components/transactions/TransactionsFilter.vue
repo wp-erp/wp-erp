@@ -15,6 +15,11 @@
                             <div class="wperp-panel wperp-panel-default wperp-filter-panel">
                                 <h3>Filter</h3>
                                 <div class="wperp-panel-body">
+                                    <h3>Status</h3>
+                                    <div class="form-fields">
+                                        <!-- ... -->
+                                    </div>
+
                                     <h3>Date</h3>
                                     <div class="form-fields">
                                         <div class="start-date has-addons">

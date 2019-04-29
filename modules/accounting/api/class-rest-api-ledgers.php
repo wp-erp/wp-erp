@@ -169,31 +169,18 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_all_ledger_accounts( $request ) {
-        global $wpdb;
-        $chart_ids = [];
-
-        $sql = "SELECT
-            ledger.id,
-            ledger.chart_id,
-            ledger.category_id,
-            ledger.name,
-            ledger.slug,
-            ledger.code,
-            ledger.system,
-            chart_of_account.name as account_name
-
-            FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-            LEFT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id";
-
-        $formatted_items = []; $additional_fields = [];
+        $formatted_items   = [];
+        $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $ledgers = $wpdb->get_results( $sql, ARRAY_A );
+        $ledgers = erp_acct_get_ledgers_with_balances();
 
-        foreach ( $ledgers as $ledger) {
-            $data = $this->prepare_item_for_response( $ledger, $request, $additional_fields );
+        error_log(print_r($ledgers, true));
+
+        foreach ( $ledgers as $ledger ) {
+            $data = $this->prepare_ledger_for_response( $ledger, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -546,6 +533,38 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'trn_count'   => erp_acct_get_ledger_trn_count( $item->id ),
             'system'      => $item->system,
             'balance'     => erp_acct_get_ledger_balance( $item->id )
+        ];
+
+        $data = array_merge( $data, $additional_fields );
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        return $response;
+    }
+
+    /**
+     * Prepare a single user output for response
+     *
+     * @param object $item
+     * @param WP_REST_Request $request Request object.
+     * @param array $additional_fields (optional)
+     *
+     * @return WP_REST_Response $response Response data.
+     */
+    public function prepare_ledger_for_response( $item, $request, $additional_fields = [] ) {
+        $item = (object) $item;
+
+        $data = [
+            'id'          => $item->id,
+            'chart_id'    => $item->chart_id,
+            'category_id' => $item->category_id,
+            'name'        => $item->name,
+            'slug'        => $item->slug,
+            'code'        => $item->code,
+            'trn_count'   => erp_acct_get_ledger_trn_count( $item->id ),
+            'system'      => $item->system,
+            'balance'     => $item->balance
         ];
 
         $data = array_merge( $data, $additional_fields );
