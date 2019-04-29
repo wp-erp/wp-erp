@@ -10941,9 +10941,6 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
 //
 //
 //
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -10970,9 +10967,6 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         },
         'phone': {
           label: 'Phone'
-        },
-        'actions': {
-          label: 'Actions'
         }
       },
       rows: [],
@@ -10981,14 +10975,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         totalPages: 0,
         perPage: 10,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
-      },
-      actions: [{
-        key: 'edit',
-        label: 'Edit'
-      }, {
-        key: 'trash',
-        label: 'Delete'
-      }]
+      }
     };
   },
   created: function created() {
@@ -11028,41 +11015,6 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       }).catch(function (error) {
         _this.$store.dispatch('spinner/setSpinner', false);
       });
-    },
-    onActionClick: function onActionClick(action, row, index) {
-      var _this2 = this;
-
-      switch (action) {
-        case 'trash':
-          if (confirm('Are you sure to delete?')) {
-            __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].delete('employees/' + row.id).then(function (response) {
-              _this2.$delete(_this2.rows, index);
-            });
-          }
-
-          break;
-
-        default:
-          break;
-      }
-    },
-    onBulkAction: function onBulkAction(action, items) {
-      var _this3 = this;
-
-      if ('trash' === action) {
-        if (confirm('Are you sure to delete?')) {
-          __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].delete('employees/delete/' + items.join(',')).then(function (response) {
-            var toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-            if (toggleCheckbox.checked) {
-              // simulate click event to remove checked state
-              toggleCheckbox.click();
-            }
-
-            _this3.fetchItems();
-          });
-        }
-      }
     },
     goToPage: function goToPage(page) {
       var queries = Object.assign({}, this.$route.query);
@@ -32340,18 +32292,13 @@ var render = function() {
           "action-column": "actions",
           columns: _vm.columns,
           rows: _vm.row_data,
-          "bulk-actions": _vm.bulkActions,
           "total-items": _vm.paginationData.totalItems,
           "total-pages": _vm.paginationData.totalPages,
           "per-page": _vm.paginationData.perPage,
           "current-page": _vm.paginationData.currentPage,
-          actions: _vm.actions
+          showCb: false
         },
-        on: {
-          pagination: _vm.goToPage,
-          "action:click": _vm.onActionClick,
-          "bulk:click": _vm.onBulkAction
-        },
+        on: { pagination: _vm.goToPage },
         scopedSlots: _vm._u([
           {
             key: "title",

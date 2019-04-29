@@ -8,15 +8,12 @@
             action-column="actions"
             :columns="columns"
             :rows="row_data"
-            :bulk-actions="bulkActions"
             :total-items="paginationData.totalItems"
             :total-pages="paginationData.totalPages"
             :per-page="paginationData.perPage"
             :current-page="paginationData.currentPage"
             @pagination="goToPage"
-            :actions="actions"
-            @action:click="onActionClick"
-            @bulk:click="onBulkAction">
+            :showCb="false">
             <template slot="title" slot-scope="data">
                 <strong><a href="#">{{ data.row.title }}</a></strong>
             </template>
@@ -54,7 +51,6 @@
                     'designation': {label: 'Designation'},
                     'email': {label: 'Email'},
                     'phone': {label: 'Phone'},
-                    'actions': {label: 'Actions'}
                 },
                 rows: [],
                 paginationData: {
@@ -63,10 +59,6 @@
                     perPage: 10,
                     currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
                 },
-                actions : [
-                    { key: 'edit', label: 'Edit' },
-                    { key: 'trash', label: 'Delete' }
-                ]
             };
         },
         created() {
@@ -107,38 +99,6 @@
                 }).catch((error) => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 });
-            },
-
-            onActionClick(action, row, index) {
-
-                switch ( action ) {
-                    case 'trash':
-                        if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete('employees/' + row.id).then( response => {
-                                this.$delete(this.rows, index);
-                            });
-                        }
-                        break;
-                    default :
-                        break;
-                }
-            },
-
-            onBulkAction(action, items) {
-                if ( 'trash' === action ) {
-                    if ( confirm('Are you sure to delete?') ) {
-                        HTTP.delete('employees/delete/' + items.join(',')).then(response => {
-                            let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-                            if ( toggleCheckbox.checked ) {
-                                // simulate click event to remove checked state
-                                toggleCheckbox.click();
-                            }
-
-                            this.fetchItems();
-                        });
-                    }
-                }
             },
 
             goToPage(page) {
@@ -201,22 +161,6 @@
                     }
                 }
             }
-            .check-column input {
-                border-color: #E7E7E7;
-                box-shadow: none;
-                border-radius: 3px;
-                &:checked {
-                    background: #1ABC9C;
-                    border-color: #1ABC9C;
-                    border-radius: 3px;
-                    &:before {
-                        color: #fff;
-                    }
-                }
-            }
-            .row-actions {
-                padding-left: 20px;
-            }
         }
         .widefat {
             tfoot td,
@@ -225,11 +169,6 @@
             }
             tbody td {
                 line-height: 3em;
-            }
-        }
-        .employee-list {
-            .col--actions {
-                float: left !important;
             }
         }
     }
