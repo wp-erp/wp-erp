@@ -202,11 +202,11 @@ function erp_acct_get_purchase_chart_data( $args = [] ) {
     $where = ' WHERE purchase.purchase_order = 0 AND purchase.status != 1';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= "WHERE purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND bill.vendor_id = {$args['people_id']} ";
+        $where .= " AND purchase.vendor_id = {$args['people_id']} ";
     }
 
     $sql = "SELECT SUM(debit) as paid, ABS(SUM(balance)) AS payable
