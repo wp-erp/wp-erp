@@ -315,7 +315,6 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
     // get opening balance data within that(^) financial year
     $opening_balance = erp_acct_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
 
-
     $ledgers = $wpdb->get_results( "SELECT ledger.id, ledger.name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
                 WHERE ledger.chart_id <> 7 AND ledger.slug <> 'owner_s_equity'", ARRAY_A );
 

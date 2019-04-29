@@ -115,7 +115,7 @@
                 });
             },
 
-            transformBalance( val ){
+            transformBalance( val ) {
                 if ( null === val && typeof val === 'object' ) {
                     val = 0;
                 }
