@@ -205,9 +205,5 @@
     .check-column {
         padding: 20px !important;
     }
-
-    .actions {
-        text-align: right;
-    }
 }
 </style>

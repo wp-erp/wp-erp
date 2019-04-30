@@ -196,17 +196,17 @@
 
 <style lang="less">
 .app-tax-agencies {
-
     .table-container {
         width: 600px;
     }
-
     .check-column {
         padding: 20px !important;
     }
-
     .actions {
         text-align: right;
+    }
+    .col--actions {
+        float: right !important;
     }
 }
 </style>
