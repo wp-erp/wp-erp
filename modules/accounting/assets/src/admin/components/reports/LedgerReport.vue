@@ -35,7 +35,7 @@
             <template slot="trn_no" slot-scope="data">
                 <strong>
                     <router-link :to="{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}">
-                        #{{ data.row.trn_no }}
+                        <span v-if="data.row.trn_no">#{{ data.row.trn_no }}</span>
                     </router-link>
                 </strong>
             </template>
@@ -110,21 +110,27 @@
         },
 
         created() {
-            if ( this.$route.params.ledgerName ) {
-                // Directly coming from chart of acounts
-                this.selectedLedger = {
-                    id  : parseInt( this.$route.params.ledgerID ),
-                    name: this.$route.params.ledgerName,
-                    code: this.$route.params.ledgerCode
-                };
-
-                this.getLedgerReport();
-            }
-
             this.getLedgers();
 
-            this.start_date = erp_acct_var.current_date;
-            this.end_date   = erp_acct_var.current_date;
+            //? why is nextTick here ...? i don't know.
+            this.$nextTick(function () {
+                // with leading zero, and JS month are zero index based
+                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
+
+                this.start_date = `2019-${month}-01`;
+                this.end_date   = erp_acct_var.current_date;
+
+                if ( this.$route.params.ledgerName ) {
+                    // Directly coming from chart of acounts
+                    this.selectedLedger = {
+                        id  : parseInt( this.$route.params.ledgerID ),
+                        name: this.$route.params.ledgerName,
+                        code: this.$route.params.ledgerCode
+                    };
+
+                    this.getLedgerReport();
+                }
+            });
         },
 
         methods: {

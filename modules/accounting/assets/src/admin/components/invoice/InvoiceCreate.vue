@@ -15,7 +15,7 @@
 
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
 
-            <show-errors :error_msgs="form_errors" ></show-errors>
+            <show-errors :error_msgs="form_errors"></show-errors>
 
             <div class="wperp-panel-body">
                     <div class="wperp-row">
