@@ -102,7 +102,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Create Journal"></submit-button>
+                            <submit-button text="Submit"></submit-button>
                         </td>
                     </tr>
                     </tfoot>

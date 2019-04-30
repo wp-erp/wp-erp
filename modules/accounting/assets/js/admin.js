@@ -9782,8 +9782,13 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
     }
   },
   created: function created() {
+    var _this = this;
+
     // Create non-reactive property
     this._popper = null;
+    this.$parent.$on('action:click', function () {
+      _this.visible = !_this.visible;
+    });
   },
   mounted: function mounted() {
     window.addEventListener('click', this.closeDropdown);
@@ -29514,7 +29519,7 @@ var render = function() {
               "aria-expanded": "false"
             }
           },
-          [_vm._v("\n\t\t\tDropdown\n\t\t")]
+          [_vm._v("\n            Dropdown\n        ")]
         )
       ]),
       _vm._v(" "),
@@ -42923,11 +42928,7 @@ var render = function() {
                         staticStyle: { "text-align": "right" },
                         attrs: { colspan: "9" }
                       },
-                      [
-                        _c("submit-button", {
-                          attrs: { text: "Create Journal" }
-                        })
-                      ],
+                      [_c("submit-button", { attrs: { text: "Submit" } })],
                       1
                     )
                   ])
