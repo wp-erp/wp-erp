@@ -9787,7 +9787,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
     // Create non-reactive property
     this._popper = null;
     this.$parent.$on('action:click', function () {
-      _this.visible = !_this.visible;
+      _this.visible = false;
     });
   },
   mounted: function mounted() {
