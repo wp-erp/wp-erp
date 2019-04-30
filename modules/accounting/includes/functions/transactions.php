@@ -21,6 +21,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         'count'       => false,
         'customer_id' => false,
         's'           => '',
+        'status'      => ''
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -34,6 +35,9 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     }
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+    if ( ! empty( $args['status'] ) ) {
+        $where .= " AND invoice.status={$args['status']} OR invoice_receipt.status={$args['status']} ";
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
@@ -70,6 +74,8 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         $wpdb->get_results($sql);
         return $wpdb->num_rows;
     }
+
+    //error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
@@ -109,9 +115,8 @@ function erp_acct_get_sales_chart_payment( $args = [] ) {
     $where = ' WHERE invoice.estimate = 0 AND invoice.status != 1';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
-
 
     if ( ! empty( $args['people_id'] ) ) {
         $where .= " AND invoice.customer_id = {$args['people_id']} ";
@@ -141,7 +146,7 @@ function erp_acct_get_bill_chart_data( $args = [] ) {
     $where = ' WHERE bill.status != 1';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
 
     if ( ! empty( $args['people_id'] ) ) {
@@ -202,7 +207,7 @@ function erp_acct_get_purchase_chart_data( $args = [] ) {
     $where = ' WHERE purchase.purchase_order = 0 AND purchase.status != 1';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
 
     if ( ! empty( $args['people_id'] ) ) {
@@ -437,6 +442,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         'count'       => false,
         'vendor_id'   => false,
         's'           => '',
+        'status'      => ''
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -450,6 +456,9 @@ function erp_acct_get_expense_transactions( $args = [] ) {
     }
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+    if ( ! empty( $args['status'] ) ) {
+        $where .= " AND bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} ";
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
@@ -515,6 +524,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
         'count'       => false,
         'vendor_id'   => false,
         's'           => '',
+        'status'      => ''
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -528,6 +538,9 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     }
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+    }
+    if ( ! empty( $args['status'] ) ) {
+        $where .= " AND purchase.status={$args['status']} OR pay_purchase.status={$args['status']} ";
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";

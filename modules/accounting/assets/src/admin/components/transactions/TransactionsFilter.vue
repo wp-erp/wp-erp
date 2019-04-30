@@ -15,11 +15,6 @@
                             <div class="wperp-panel wperp-panel-default wperp-filter-panel">
                                 <h3>Filter</h3>
                                 <div class="wperp-panel-body">
-                                    <h3>Status</h3>
-                                    <div class="form-fields">
-                                        <!-- ... -->
-                                    </div>
-
                                     <h3>Date</h3>
                                     <div class="form-fields">
                                         <div class="start-date has-addons">
@@ -31,6 +26,15 @@
                                             <datepicker v-model="filters.end_date"></datepicker>
                                             <span class="flaticon-calendar"></span>
                                         </div>
+                                    </div>
+                                    <br>
+                                    <h3>Status</h3>
+                                    <div class="form-fields">
+                                        <simple-select
+                                            v-model="filters.status"
+                                            :options="statuses"
+                                        >
+                                        </simple-select>
                                     </div>
                                 </div>
                                 <div class="wperp-panel-footer">
@@ -51,13 +55,17 @@
 </template>
 
 <script>
-    import Datepicker from 'admin/components/base/Datepicker.vue';
+    import HTTP from 'admin/http'
+    import Datepicker from 'admin/components/base/Datepicker.vue'
+    import SimpleSelect from 'admin/components/select/SimpleSelect.vue'
 
     export default {
         name: 'TransactionsFilter',
 
         components: {
+            HTTP,
             Datepicker,
+            SimpleSelect
         },
 
         data() {
@@ -65,9 +73,24 @@
                 showFilters: false,
                 filters: {
                     start_date: '',
-                    end_date: ''
-                }
+                    end_date: '',
+                    status: ''
+                },
+                statuses: [],
             }
+        },
+
+        created() {
+            HTTP.get('/transactions/statuses').then(response => {
+                this.statuses = response.data;
+            }).catch(error => {
+                console.log(error);
+            });
+
+            this.$root.$on( 'SimpleSelectChange', (data) => {
+                let status = this.statuses.find(o => o.id === data.selected);
+                this.filters.status = parseInt(status.id);
+            });
         },
 
         methods: {
@@ -79,7 +102,9 @@
                 this.toggleFilter();
 
                 this.$root.$emit('transactions-filter', this.filters);
-            }
+            },
+
+
         }
     }
 </script>

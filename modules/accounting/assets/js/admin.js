@@ -21701,7 +21701,8 @@ if (false) {(function () {
         path: '/transactions/sales',
         query: {
           start: filters.start_date,
-          end: filters.end_date
+          end: filters.end_date,
+          status: filters.status
         }
       });
 
@@ -21712,6 +21713,10 @@ if (false) {(function () {
     if (this.$route.query.start && this.$route.query.end) {
       filters.start_date = this.$route.query.start;
       filters.end_date = this.$route.query.end;
+    }
+
+    if (this.$route.query.status) {
+      filters.status = this.$route.query.status;
     }
 
     this.fetchItems(filters);
@@ -21730,7 +21735,8 @@ if (false) {(function () {
           per_page: this.paginationData.perPage,
           page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
           start_date: filters.start_date,
-          end_date: filters.end_date
+          end_date: filters.end_date,
+          status: filters.status
         }
       }).then(function (response) {
         var mappedData = response.data.map(function (item) {
@@ -21849,7 +21855,13 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_SimpleSelect_vue__ = __webpack_require__(504);
+//
+//
+//
+//
 //
 //
 //
@@ -21903,19 +21915,41 @@ if (false) {(function () {
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'TransactionsFilter',
   components: {
-    Datepicker: __WEBPACK_IMPORTED_MODULE_0_admin_components_base_Datepicker_vue__["a" /* default */]
+    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
+    Datepicker: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__["a" /* default */],
+    SimpleSelect: __WEBPACK_IMPORTED_MODULE_2_admin_components_select_SimpleSelect_vue__["a" /* default */]
   },
   data: function data() {
     return {
       showFilters: false,
       filters: {
         start_date: '',
-        end_date: ''
-      }
+        end_date: '',
+        status: ''
+      },
+      statuses: []
     };
+  },
+  created: function created() {
+    var _this = this;
+
+    __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/transactions/statuses').then(function (response) {
+      _this.statuses = response.data;
+    }).catch(function (error) {
+      console.log(error);
+    });
+    this.$root.$on('SimpleSelectChange', function (data) {
+      var status = _this.statuses.find(function (o) {
+        return o.id === data.selected;
+      });
+
+      _this.filters.status = parseInt(status.id);
+    });
   },
   methods: {
     toggleFilter: function toggleFilter() {
@@ -22282,7 +22316,8 @@ setTimeout(function () {
         perPage: 10,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
-      actions: []
+      actions: [],
+      fetched: false
     };
   },
   created: function created() {
@@ -22291,14 +22326,17 @@ setTimeout(function () {
     this.$store.dispatch('spinner/setSpinner', true);
     this.$root.$on('transactions-filter', function (filters) {
       _this.$router.push({
-        path: '/transactions/sales',
+        path: '/transactions/expenses',
         query: {
           start: filters.start_date,
-          end: filters.end_date
+          end: filters.end_date,
+          status: filters.status
         }
       });
 
       _this.fetchItems(filters);
+
+      _this.fetched = true;
     });
     var filters = {}; // Get start & end date from url on page load
 
@@ -22307,7 +22345,13 @@ setTimeout(function () {
       filters.end_date = this.$route.query.end;
     }
 
-    this.fetchItems(filters);
+    if (this.$route.query.status) {
+      filters.status = this.$route.query.status;
+    }
+
+    if (!this.fetched) {
+      this.fetchItems(filters);
+    }
   },
   watch: {
     '$route': 'fetchItems'
@@ -22323,7 +22367,8 @@ setTimeout(function () {
           per_page: this.paginationData.perPage,
           page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
           start_date: filters.start_date,
-          end_date: filters.end_date
+          end_date: filters.end_date,
+          status: filters.status
         }
       }).then(function (response) {
         _this2.rows = response.data;
@@ -23033,7 +23078,8 @@ setTimeout(function () {
         perPage: 10,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
-      actions: []
+      actions: [],
+      fetched: false
     };
   },
   created: function created() {
@@ -23045,11 +23091,14 @@ setTimeout(function () {
         path: '/transactions/purchases',
         query: {
           start: filters.start_date,
-          end: filters.end_date
+          end: filters.end_date,
+          status: filters.status
         }
       });
 
       _this.fetchItems(filters);
+
+      _this.fetched = true;
     });
     var filters = {}; // Get start & end date from url on page load
 
@@ -23058,7 +23107,13 @@ setTimeout(function () {
       filters.end_date = this.$route.query.end;
     }
 
-    this.fetchItems(filters);
+    if (this.$route.query.status) {
+      filters.status = this.$route.query.status;
+    }
+
+    if (!this.fetched) {
+      this.fetchItems(filters);
+    }
   },
   watch: {
     '$route': 'fetchItems'
@@ -23074,7 +23129,8 @@ setTimeout(function () {
           per_page: this.paginationData.perPage,
           page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
           start_date: filters.start_date,
-          end_date: filters.end_date
+          end_date: filters.end_date,
+          status: filters.status
         }
       }).then(function (response) {
         var mappedData = response.data.map(function (item) {
@@ -44234,7 +44290,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "wperp-col-sm-4" }, [
                           _c("div", { staticClass: "wperp-form-group" }, [
-                            _vm._m(1),
+                            _c("label", [_vm._v("Reference")]),
                             _vm._v(" "),
                             _c("input", {
                               directives: [
@@ -44269,7 +44325,7 @@ var render = function() {
                             "div",
                             { staticClass: "wperp-form-group" },
                             [
-                              _vm._m(2),
+                              _vm._m(1),
                               _vm._v(" "),
                               _c("datepicker", {
                                 model: {
@@ -44289,7 +44345,7 @@ var render = function() {
                           "div",
                           { staticClass: "wperp-col-sm-4 with-multiselect" },
                           [
-                            _vm._m(3),
+                            _vm._m(2),
                             _vm._v(" "),
                             _c("multi-select", {
                               attrs: { options: _vm.pay_methods },
@@ -44309,7 +44365,7 @@ var render = function() {
                           "div",
                           { staticClass: "wperp-col-sm-4 with-multiselect" },
                           [
-                            _vm._m(4),
+                            _vm._m(3),
                             _vm._v(" "),
                             _c("select-accounts", {
                               attrs: { override_accts: _vm.accts_by_chart },
@@ -44380,7 +44436,7 @@ var render = function() {
         _c("div", { staticClass: "wperp-table-responsive" }, [
           _c("div", { staticClass: "table-container" }, [
             _c("table", { staticClass: "wperp-table wperp-form-table" }, [
-              _vm._m(5),
+              _vm._m(4),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -44743,15 +44799,6 @@ var staticRenderFns = [
           ])
         ])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Reference"),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
     ])
   },
   function() {
@@ -46262,10 +46309,6 @@ var render = function() {
                           _c("h3", [_vm._v("Filter")]),
                           _vm._v(" "),
                           _c("div", { staticClass: "wperp-panel-body" }, [
-                            _c("h3", [_vm._v("Status")]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-fields" }),
-                            _vm._v(" "),
                             _c("h3", [_vm._v("Date")]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-fields" }, [
@@ -46314,7 +46357,29 @@ var render = function() {
                                 ],
                                 1
                               )
-                            ])
+                            ]),
+                            _vm._v(" "),
+                            _c("br"),
+                            _vm._v(" "),
+                            _c("h3", [_vm._v("Status")]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "form-fields" },
+                              [
+                                _c("simple-select", {
+                                  attrs: { options: _vm.statuses },
+                                  model: {
+                                    value: _vm.filters.status,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.filters, "status", $$v)
+                                    },
+                                    expression: "filters.status"
+                                  }
+                                })
+                              ],
+                              1
+                            )
                           ]),
                           _vm._v(" "),
                           _c("div", { staticClass: "wperp-panel-footer" }, [
