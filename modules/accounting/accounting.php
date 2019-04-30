@@ -221,15 +221,32 @@ final class Accounting {
             case 'ajax' :
                 return defined( 'DOING_AJAX' );
 
-            case 'rest' :
-                return defined( 'REST_REQUEST' );
-
             case 'cron' :
                 return defined( 'DOING_CRON' );
 
             case 'frontend' :
                 return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
         }
+    }
+
+    /**
+     * Returns true if the request is a non-legacy REST API request.
+     *
+     * Legacy REST requests should still run some extra code for backwards compatibility.
+     *
+     * @todo: replace this function once core WP function is available: https://core.trac.wordpress.org/ticket/42061.
+     *
+     * @return bool
+     */
+    public function is_rest_api_request() {
+        if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+            return false;
+        }
+
+        $rest_prefix         = trailingslashit( rest_get_url_prefix() );
+        $is_rest_api_request = ( false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix ) );
+
+        return apply_filters( 'wperp_acct_is_rest_api_request', $is_rest_api_request );
     }
 
     /**

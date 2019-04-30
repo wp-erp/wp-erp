@@ -64,7 +64,7 @@
             this._popper = null;
 
             this.$parent.$on( 'action:click', () => {
-                this.visible = !this.visible;
+                this.visible = false;
             });
         },
 
