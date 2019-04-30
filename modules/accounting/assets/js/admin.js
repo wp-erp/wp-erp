@@ -13456,18 +13456,18 @@ if (false) {(function () {
       },
       createButtons: [{
         id: 'save',
-        text: 'Create Invoice'
+        text: 'Save'
       }, // {id: 'send_create', text: 'Create and Send'},
       {
         id: 'new_create',
-        text: 'Create and New'
+        text: 'Save and New'
       }, {
         id: 'draft',
         text: 'Save as Draft'
       }],
       updateButtons: [{
         id: 'update',
-        text: 'Update Invoice'
+        text: 'Update'
       }, // {id: 'send_update', text: 'Update and Send'},
       {
         id: 'new_update',
@@ -15553,10 +15553,10 @@ if (false) {(function () {
       },
       createButtons: [{
         id: 'save',
-        text: 'Receive Payment'
+        text: 'Save'
       }, {
         id: 'new_create',
-        text: 'Receive and New'
+        text: 'Save and New'
       }, {
         id: 'draft',
         text: 'Save as Draft'
@@ -16214,18 +16214,18 @@ if (false) {(function () {
       form_errors: [],
       createButtons: [{
         id: 'save',
-        text: 'Create Bill'
+        text: 'Save'
       }, // {id: 'send_create', text: 'Create and Send'},
       {
         id: 'new_create',
-        text: 'Create and New'
+        text: 'Save and New'
       }, {
         id: 'draft',
         text: 'Save as Draft'
       }],
       updateButtons: [{
         id: 'update',
-        text: 'Update Bill'
+        text: 'Update'
       }, // {id: 'send_update', text: 'Update and Send'},
       {
         id: 'new_update',
@@ -17152,10 +17152,10 @@ if (false) {(function () {
       },
       createButtons: [{
         id: 'save',
-        text: 'Pay Bill'
+        text: 'Save'
       }, {
         id: 'new_create',
-        text: 'Pay and New'
+        text: 'Save and New'
       }, {
         id: 'draft',
         text: 'Save as Draft'
@@ -17793,11 +17793,11 @@ if (false) {(function () {
       },
       createButtons: [{
         id: 'save',
-        text: 'Create Purchase'
+        text: 'Save'
       }, //{id: 'send_create', text: 'Create and Send'},
       {
         id: 'new_create',
-        text: 'Create and New'
+        text: 'Save and New'
       }, {
         id: 'draft',
         text: 'Save as Draft'
@@ -18744,10 +18744,10 @@ if (false) {(function () {
       },
       createButtons: [{
         id: 'save',
-        text: 'Pay Purchase'
+        text: 'Save'
       }, {
         id: 'new_create',
-        text: 'Pay and New'
+        text: 'Save and New'
       }, {
         id: 'draft',
         text: 'Save as Draft'
@@ -20493,18 +20493,18 @@ if (false) {(function () {
       form_errors: [],
       createButtons: [{
         id: 'save',
-        text: 'Create Expense'
+        text: 'Save'
       }, // {id: 'send_create', text: 'Create and Send'},
       {
         id: 'new_create',
-        text: 'Create and New'
+        text: 'Save and New'
       }, {
         id: 'draft',
         text: 'Save as Draft'
       }],
       updateButtons: [{
         id: 'update',
-        text: 'Update Expense'
+        text: 'Update'
       }, // {id: 'send_update', text: 'Update and Send'},
       {
         id: 'new_update',
@@ -21845,6 +21845,11 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -25868,18 +25873,18 @@ setTimeout(function () {
       form_errors: [],
       createButtons: [{
         id: 'save',
-        text: 'Pay By Check'
+        text: 'Save'
       }, //{id: 'send_create', text: 'Create and Send'},
       {
         id: 'new_create',
-        text: 'Create and New'
+        text: 'Save and New'
       }, {
         id: 'draft',
         text: 'Save as Draft'
       }],
       updateButtons: [{
         id: 'update',
-        text: 'Update Check'
+        text: 'Update'
       }, //{id: 'send_update', text: 'Update and Send'},
       {
         id: 'new_update',
@@ -46256,6 +46261,10 @@ var render = function() {
                           _c("h3", [_vm._v("Filter")]),
                           _vm._v(" "),
                           _c("div", { staticClass: "wperp-panel-body" }, [
+                            _c("h3", [_vm._v("Status")]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-fields" }),
+                            _vm._v(" "),
                             _c("h3", [_vm._v("Date")]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-fields" }, [

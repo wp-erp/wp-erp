@@ -170,8 +170,8 @@
                 },
 
                 createButtons: [
-                    {id: 'save', text: 'Pay Purchase'},
-                    {id: 'new_create', text: 'Pay and New'},
+                    {id: 'save', text: 'Save'},
+                    {id: 'new_create', text: 'Save and New'},
                     {id: 'draft', text: 'Save as Draft'},
                 ],
 
