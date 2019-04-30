@@ -194,14 +194,14 @@
                 form_errors: [],
 
                 createButtons: [
-                    {id: 'save', text: 'Create Expense'},
+                    {id: 'save', text: 'Save'},
                     // {id: 'send_create', text: 'Create and Send'},
-                    {id: 'new_create', text: 'Create and New'},
+                    {id: 'new_create', text: 'Save and New'},
                     {id: 'draft', text: 'Save as Draft'},
                 ],
 
                 updateButtons: [
-                    {id: 'update', text: 'Update Expense'},
+                    {id: 'update', text: 'Update'},
                     // {id: 'send_update', text: 'Update and Send'},
                     {id: 'new_update', text: 'Update and New'},
                     {id: 'draft', text: 'Save as Draft'},

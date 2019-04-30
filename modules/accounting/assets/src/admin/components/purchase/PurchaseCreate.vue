@@ -154,9 +154,9 @@
                 },
 
                 createButtons: [
-                    {id: 'save', text: 'Create Purchase'},
+                    {id: 'save', text: 'Save'},
                     //{id: 'send_create', text: 'Create and Send'},
-                    {id: 'new_create', text: 'Create and New'},
+                    {id: 'new_create', text: 'Save and New'},
                     {id: 'draft', text: 'Save as Draft'},
                 ],
 

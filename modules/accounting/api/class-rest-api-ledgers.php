@@ -177,8 +177,6 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $ledgers = erp_acct_get_ledgers_with_balances();
 
-        error_log(print_r($ledgers, true));
-
         foreach ( $ledgers as $ledger ) {
             $data = $this->prepare_ledger_for_response( $ledger, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
