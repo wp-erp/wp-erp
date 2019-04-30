@@ -40,6 +40,17 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/statuses', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_trn_statuses' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -238,6 +249,25 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
+     * Get transaction statuses
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_trn_statuses( $request ) {
+        global $wpdb;
+
+        $statuses = $wpdb->get_results( "SELECT id, type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A );
+
+        $response = rest_ensure_response( $statuses );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
      * Get sales transactions
      *
      * @param WP_REST_Request $request
@@ -249,7 +279,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number' => empty( $request['per_page'] ) ? 20 : $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'],
+            'status' => empty( $request['status'] ) ? '' : $request['status']
         ];
 
         $formatted_items = [];
@@ -398,7 +429,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number' => empty( $request['per_page'] ) ? 20 : $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'],
+            'status' => empty( $request['status'] ) ? '' : $request['status']
         ];
 
         $formatted_items = [];
@@ -479,7 +511,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number' => empty( $request['per_page'] ) ? 20 : $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'],
+            'status' => empty( $request['status'] ) ? '' : $request['status']
         ];
 
         $formatted_items = [];
@@ -621,8 +654,6 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $chart_payment['paid'] = $bill_payment['paid'] + $expense_payment['paid'] + $sales_payment['received'] + $purchase_payment['paid'];
         $chart_payment['payable'] = $bill_payment['payable'] + $expense_payment['payable'] + $sales_payment['outstanding'] + $purchase_payment['payable'];
 
-
-
         $response = rest_ensure_response( $chart_payment );
 
         $response->set_status( 200 );
@@ -695,7 +726,5 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
     }
-
-
 
 }

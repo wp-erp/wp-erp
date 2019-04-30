@@ -77,15 +77,17 @@
                     perPage    : 10,
                     currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
-                actions : []
+                actions : [],
+                fetched: false
             };
         },
 
         created() {
             this.$store.dispatch( 'spinner/setSpinner', true );
             this.$root.$on('transactions-filter', filters => {
-                this.$router.push({ path: '/transactions/sales', query: { start: filters.start_date, end: filters.end_date } });
+                this.$router.push({ path: '/transactions/expenses', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
                 this.fetchItems(filters);
+                this.fetched = true;
             });
 
             let filters = {};
@@ -95,8 +97,13 @@
                 filters.start_date = this.$route.query.start;
                 filters.end_date   = this.$route.query.end;
             }
+            if ( this.$route.query.status ) {
+                filters.status   = this.$route.query.status;
+            }
 
-            this.fetchItems(filters);
+            if ( !this.fetched ) {
+                this.fetchItems(filters);
+            }
         },
 
         watch: {
@@ -112,7 +119,8 @@
                         per_page: this.paginationData.perPage,
                         page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
                         start_date: filters.start_date,
-                        end_date: filters.end_date
+                        end_date: filters.end_date,
+                        status    : filters.status
                     }
                 }).then( (response) => {
                     this.rows = response.data;
