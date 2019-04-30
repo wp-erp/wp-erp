@@ -23,15 +23,25 @@ require_once ERP_ACCOUNTING_INCLUDES . '/functions/reports/trial-balance.php';
 function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     global $wpdb;
 
-    // opening balance
-    $sql1 = $wpdb->prepare("SELECT SUM(debit - credit) AS opening_balance
-        FROM {$wpdb->prefix}erp_acct_ledger_details
-        WHERE ledger_id = %d AND trn_date < '%s'",
-        $ledger_id, $start_date
-    );
+    // get closest financial year id and start date
+    $closest_fy_date = erp_acct_get_closest_fn_year_date( $start_date );
 
-    $db_opening_balance = $wpdb->get_var( $sql1 );
-    $opening_balance = (float) $db_opening_balance;
+    // get opening balance data within that(^) financial year
+    $opening_balance = (float) erp_acct_ledger_report_opening_balance_by_fn_year_id( $closest_fy_date['id'], $ledger_id );
+
+    // should we go further calculation, check the diff
+    if ( erp_acct_has_date_diff($start_date, $closest_fy_date['start_date']) ) {
+        $prev_date_of_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($start_date) ) );
+
+        $sql1 = $wpdb->prepare("SELECT SUM(debit - credit) AS balance
+            FROM {$wpdb->prefix}erp_acct_ledger_details
+            WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s'",
+            $ledger_id, $closest_fy_date['start_date'], $prev_date_of_start
+        );
+
+        $prev_ledger_details = $wpdb->get_var( $sql1 );
+        $opening_balance += (float) $prev_ledger_details;
+    }
 
     // ledger details
     $sql2 = $wpdb->prepare("SELECT
@@ -102,10 +112,10 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     }
 
     // Assign opening balance as first row
-    if ( (float) $db_opening_balance > 0 ) {
-        $balance = $db_opening_balance . ' Dr';
-    } elseif( (float) $db_opening_balance < 0 ) {
-        $balance = abs( $db_opening_balance ) . ' Cr';
+    if ( (float) $prev_ledger_details > 0 ) {
+        $balance = $prev_ledger_details . ' Dr';
+    } elseif( (float) $prev_ledger_details < 0 ) {
+        $balance = abs( $prev_ledger_details ) . ' Cr';
     } else {
         $balance = '0 Dr';
     }
@@ -127,6 +137,15 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
             'total_credit' => $total_credit
         ]
     ];
+}
+
+function erp_acct_ledger_report_opening_balance_by_fn_year_id( $id, $ledger_id ) {
+    global $wpdb;
+
+    $sql = "SELECT SUM(debit - credit) AS balance FROM {$wpdb->prefix}erp_acct_opening_balances
+        WHERE financial_year_id = %d AND ledger_id = %d AND type = 'ledger' GROUP BY ledger_id";
+
+    return $wpdb->get_var( $wpdb->prepare($sql, $id, $ledger_id) );
 }
 
 

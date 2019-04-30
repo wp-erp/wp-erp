@@ -223,6 +223,7 @@ function erp_acct_update_ledger( $item, $id ) {
 
 
 
+
 /**
  * =====================
  * =========================
@@ -230,6 +231,8 @@ function erp_acct_update_ledger( $item, $id ) {
  */
 /**
  * Get ledger with balances
+ *
+ * @return array
  */
 
  function erp_acct_get_ledgers_with_balances() {
@@ -237,16 +240,8 @@ function erp_acct_update_ledger( $item, $id ) {
 
     $today  = date('Y-m-d');
 
-    $sql = "SELECT
-        ledger.id,
-        ledger.chart_id,
-        ledger.category_id,
-        ledger.name,
-        ledger.slug,
-        ledger.code,
-        ledger.system,
-        chart_of_account.name as account_name
-
+    $sql = "SELECT ledger.id, ledger.chart_id, ledger.category_id, ledger.name,
+        ledger.slug, ledger.code, ledger.system, chart_of_account.name as account_name
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id";
 
