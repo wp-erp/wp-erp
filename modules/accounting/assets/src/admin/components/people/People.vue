@@ -289,5 +289,8 @@
         .check-column {
             padding: 20px !important;
         }
+        th.column {
+            color: #1A9ED4;
+        }
     }
 </style>
