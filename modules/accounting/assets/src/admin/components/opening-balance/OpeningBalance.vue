@@ -134,7 +134,7 @@
                         <td><input type="number" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
                         <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
                         <td class="delete-row" data-colname="Remove">
-                            <a @click.prevent="removeAcctPayRow(idx)" href="#"><i class="flaticon-trash"></i></a>
+                            <a @click.prevent="removeTaxPayRow(idx)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
                     </tr>
                     <tr class="add-new-line">
