@@ -20,6 +20,7 @@ $crm_users = erp_crm_get_crm_user();
                 </select>
             </div>
 
+            <?php if ( ! current_user_can( 'erp_crm_agent' ) ) : ?>
             <div class="filters">
                 <select style="width:260px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by" data-placeholder="<?php _e( 'Created by..', 'erp' ) ?>">
                     <option value="-1"><?php _e( 'All', 'erp' ) ?></option>
@@ -28,6 +29,7 @@ $crm_users = erp_crm_get_crm_user();
                     <?php endforeach ?>
                 </select>
             </div>
+            <?php endif ?>
 
             <div class="filters">
                 <select style="width:260px;" v-selecttwo="filterFeeds.customer_id" data-types="contact,company"  class="erp-crm-contact-list-dropdown" v-model="filterFeeds.customer_id" id="activity-created-for"  data-placeholder="<?php _e( 'Created for contact or company ..', 'erp' ) ?>">
