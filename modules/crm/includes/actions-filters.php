@@ -20,6 +20,7 @@ add_action( 'erp_crm_inbound_email_scheduled_events', 'erp_crm_poll_gmail' );
 add_action( 'updated_user_meta', 'erp_crm_sync_people_meta_data', 10, 4 );
 add_action( 'added_user_meta', 'erp_crm_sync_people_meta_data', 10, 4 );
 add_action( 'delete_user', 'erp_crm_contact_on_delete' );
+add_action( 'erp_daily_scheduled_events', 'erp_crm_send_birthday_greetings' );
 
 // Register the taxonomies
 add_action( 'init', 'erp_crm_add_tag_taxonomy' );

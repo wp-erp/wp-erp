@@ -190,6 +190,21 @@ Company'
         ];
 
         update_option( 'erp_email_settings_new-task-assigned', $new_task_assigned );
+
+        // New Contact Assigned
+        $new_contact_assigned = [
+            'subject' => 'New contact has been assigned to you',
+            'heading' => 'New Contact Assigned',
+            'body'    => 'Hello {employee_name},
+
+A new contact <strong>{contact_name}</strong> has been assigned to you by {created_by}.
+
+Regards
+Manager Name
+Company'
+        ];
+
+        update_option( 'erp_email_settings_new-contact-assigned', $new_contact_assigned );
     }
 
     /**
