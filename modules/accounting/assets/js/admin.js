@@ -14567,10 +14567,8 @@ if (false) {(function () {
       },
       actions: [{
         key: 'edit',
-        label: 'Edit'
-      }, {
-        key: 'trash',
-        label: 'Delete'
+        label: 'Edit' // { key: 'trash', label: 'Delete' }
+
       }],
       chartAccounts: [],
       ledgers: []

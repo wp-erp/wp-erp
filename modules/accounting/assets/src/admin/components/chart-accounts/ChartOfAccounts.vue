@@ -68,8 +68,8 @@
                     'actions'    : {label: 'Actions'},
                 },
                 actions : [
-                    { key: 'edit', label: 'Edit' },
-                    { key: 'trash', label: 'Delete' }
+                    { key: 'edit', label: 'Edit' }
+                    // { key: 'trash', label: 'Delete' }
                 ],
 
                 chartAccounts: [],
