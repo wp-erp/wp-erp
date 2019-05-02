@@ -651,17 +651,24 @@ function erp_crm_get_feed_activity( $postdata ) {
         '*',
         $db->raw( 'MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' )
     ] )
-                                              ->with( [
-                                                  'contact'    => function ( $query ) {
-                                                      $query->with( 'types' );
-                                                  },
-                                                  'created_by' => function ( $query1 ) {
-                                                      $query1->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
-                                                  }
-                                              ] );
+      ->with( [
+          'contact'    => function ( $query ) {
+              $query->with( 'types' );
+          },
+          'created_by' => function ( $query1 ) {
+              $query1->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
+          }
+      ] );
 
     if ( isset( $postdata['customer_id'] ) && ! empty( $postdata['customer_id'] ) ) {
         $results = $results->where( 'user_id', $postdata['customer_id'] );
+    }
+
+    if ( current_user_can( 'erp_crm_agent' ) ) {
+        $contact_owner = get_current_user_id();
+        $people_ids = array_keys( $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE contact_owner = {$contact_owner}", OBJECT_K ) );
+
+        $results = $results->whereIn( 'user_id', $people_ids );
     }
 
     if ( isset( $postdata['created_by'] ) && ! empty( $postdata['created_by'] ) ) {
@@ -3877,4 +3884,14 @@ function erp_crm_sync_is_active() {
     }
 
     return false;
+}
+
+/**
+ * Send birthday greetings to contact
+ *
+ * @return void
+ */
+function erp_crm_send_birthday_greetings() {
+    $email =  new WeDevs\ERP\CRM\Emails\Birthday_Greetings();
+    $email->trigger();
 }
