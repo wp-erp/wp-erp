@@ -43,7 +43,7 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
         foreach ( $assets as $asset ) {
             if ( ! empty( $asset['id'] ) ) {
                 if ( $asset['id'] === $ledger['id'] ) {
-                    erp_acct_insert_into_opening_balance(
+                    erp_acct_clsbl_insert_into_opening_balance(
                         $next_f_year_id, $ledger['chart_id'], $ledger['id'], 'ledger', $asset['balance'], 0.00
                     );
                 }
@@ -54,7 +54,7 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
         foreach ( $liability as $liab_equ ) {
             if ( ! empty( $liab_equ['id'] ) ) {
                 if ( $liab_equ['id'] === $ledger['id'] ) {
-                    erp_acct_insert_into_opening_balance(
+                    erp_acct_clsbl_insert_into_opening_balance(
                         $next_f_year_id, $ledger['chart_id'], $ledger['id'], 'ledger', 0.00, $liab_equ['balance']
                     );
                 }
