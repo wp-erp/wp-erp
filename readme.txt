@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.1.1
 Requires PHP: 5.6
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -95,7 +95,7 @@ With [WPERP Accounting](https://wperp.com/accounting/) module, you’ll get:
 * Transfer money with a simple click any time you want
 * Journal Entry feature for all the professional accountants out there
 
-Getting Started with WP ERP is only a matter of moments. 
+Getting Started with WP ERP is only a matter of moments.
 Check out the detailed [documentation](https://wperp.com/documentation/) created by us to help you out to run WP ERP in the best way.
 
 = ♦️Powerful Extensions available in Premium Plans♦️ =
@@ -245,6 +245,12 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.4.4 -> May 02, 2019 =
+[new] Added a new feature to send a notification email when a new contact is assigned to an agent.
+[new] Added a new feature to send birthday greetings to contacts with the customizable email template.
+[fix] Previously, CRM agents were able to see all the CRM activities including the activity of the contacts that he/she doesn't belong to. This has been limited now and CRM agents can see the activity that he/she own only. Closes #814
+[fix] Vendor details were taking to the Accounting overview page instead of taking to the Vendor profile. This has been fixed. Closes #815
 
 = v1.4.3 -> April 04, 2019 =
 [fix] CRM Agents should not delete contact groups. Closes #802
