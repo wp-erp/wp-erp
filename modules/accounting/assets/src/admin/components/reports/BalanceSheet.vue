@@ -222,7 +222,9 @@
                     f_year_id : f_year_id,
                     start_date: this.start_date,
                     end_date  : this.end_date
-                }).then(response => {}).catch( error => {
+                }).then(response => {
+                    this.showAlert('success', 'Balance Sheet Closed!');
+                }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } ).then(() => {
                     this.$store.dispatch( 'spinner/setSpinner', false );

@@ -27598,7 +27598,9 @@ setTimeout(function () {
         f_year_id: f_year_id,
         start_date: this.start_date,
         end_date: this.end_date
-      }).then(function (response) {}).catch(function (error) {
+      }).then(function (response) {
+        _this3.showAlert('success', 'Balance Sheet Closed!');
+      }).catch(function (error) {
         _this3.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
         _this3.$store.dispatch('spinner/setSpinner', false);
