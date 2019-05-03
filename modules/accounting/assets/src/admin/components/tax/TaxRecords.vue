@@ -159,7 +159,7 @@
             },
 
             addTaxPayment() {
-                this.$router.push('pay-tax');
+                this.$router.push('/pay-tax');
             },
 
             onActionClick(action, row, index) {

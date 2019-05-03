@@ -24153,6 +24153,11 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -24352,11 +24357,10 @@ setTimeout(function () {
 
       if (!this.tax_amount) {
         this.form_errors.push('Tax amount is required.');
-      }
+      } // if ( this.tax_amount > this.dueAmount ) {
+      //     this.form_errors.push('Please pay according to your due balance.');
+      // }
 
-      if (this.tax_amount > this.dueAmount) {
-        this.form_errors.push('Please pay according to your due balance.');
-      }
 
       if (parseFloat(this.deposit_to.balance) < parseFloat(this.finalTotalAmount)) {
         this.form_errors.push('Not enough balance in selected account.');
@@ -25492,7 +25496,7 @@ setTimeout(function () {
       this.fetchItems();
     },
     addTaxPayment: function addTaxPayment() {
-      this.$router.push('pay-tax');
+      this.$router.push('/pay-tax');
     },
     onActionClick: function onActionClick(action, row, index) {
       var _this2 = this;
@@ -49160,7 +49164,15 @@ var render = function() {
                 "div",
                 { staticClass: "wperp-col-sm-4 mb-20" },
                 [
-                  _vm._m(2),
+                  _c("label", [
+                    "debit" == _vm.voucher_type.id
+                      ? _c("span", [_vm._v("Payment From")])
+                      : _c("span", [_vm._v("Deposit To")]),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "wperp-required-sign" }, [
+                      _vm._v("*")
+                    ])
+                  ]),
                   _vm._v(" "),
                   _c("select-accounts", {
                     attrs: { override_accts: _vm.accts_by_chart },
@@ -49313,7 +49325,7 @@ var render = function() {
                   { staticClass: "wperp-form-group text-right mt-10 mb-0" },
                   [
                     _c("submit-button", {
-                      attrs: { text: "Pay Tax", working: _vm.isWorking },
+                      attrs: { text: "Save", working: _vm.isWorking },
                       nativeOn: {
                         click: function($event) {
                           $event.preventDefault()
@@ -49354,15 +49366,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("label", [
       _vm._v("Payment Method"),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Deposit to"),
       _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
     ])
   }
