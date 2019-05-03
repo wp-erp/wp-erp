@@ -442,7 +442,7 @@ function erp_acct_get_balance_sheet( $args ) {
     $results['rows3'][] = [
         'id'      => 30,
         'name'    => 'Owner\'s Equity',
-        'balance' => $capital - $drawings
+        'balance' => abs($capital) - $drawings
     ];
 
     $profit_loss = erp_acct_get_profit_loss( $args );

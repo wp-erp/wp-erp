@@ -187,7 +187,7 @@ function erp_acct_clsbl_get_accounts_payable_balance_with_people( $args ) {
     $bill_data     = $wpdb->get_results( $wpdb->prepare( $bill_sql, $args['start_date'], $args['end_date'] ), ARRAY_A );
     $purchase_data = $wpdb->get_results( $wpdb->prepare( $purchase_sql, $args['start_date'], $args['end_date'] ), ARRAY_A );
 
-    return erp_acct_vendor_ap_calc_with_opening_balance(
+    return erp_acct_clsbl_vendor_ap_calc_with_opening_balance(
         $args['start_date'], $bill_data, $purchase_data, $bill_sql, $purchase_sql
     );
 }
@@ -206,7 +206,7 @@ function erp_acct_clsbl_people_ar_calc_with_opening_balance( $bs_start_date, $da
     global $wpdb;
 
     // get closest financial year id and start date
-    $closest_fy_date = erp_acct_clsbl_get_closest_fn_year_date( $bs_start_date );
+    $closest_fy_date = erp_acct_get_closest_fn_year_date( $bs_start_date );
 
     // get opening balance data within that(^) financial year
     $opening_balance = erp_acct_clsbl_customer_ar_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
@@ -245,10 +245,10 @@ function erp_acct_clsbl_vendor_ap_calc_with_opening_balance($bs_start_date, $bil
     $closest_fy_date = erp_acct_get_closest_fn_year_date( $bs_start_date );
 
     // get opening balance data within that(^) financial year
-    $opening_balance = erp_acct_vendor_ap_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
+    $opening_balance = erp_acct_clsbl_vendor_ap_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
 
     $merged = array_merge($bill_data, $purchase_data, $opening_balance);
-    $result = erp_acct_get_formatted_people_balance($merged);
+    $result = erp_acct_clsbl_get_formatted_people_balance($merged);
 
     // should we go further calculation, check the diff
     if ( ! erp_acct_has_date_diff($bs_start_date, $closest_fy_date['start_date']) ) {
@@ -261,7 +261,7 @@ function erp_acct_clsbl_vendor_ap_calc_with_opening_balance($bs_start_date, $bil
     $query2 = $wpdb->get_results( $wpdb->prepare($purchase_sql, $closest_fy_date['start_date'], $prev_date_of_bs_start), ARRAY_A );
     $merged = array_merge($result, $query1, $query2);
 
-    return erp_acct_get_formatted_people_balance($merged);
+    return erp_acct_clsbl_get_formatted_people_balance($merged);
 }
 
 /**
@@ -335,11 +335,11 @@ function erp_acct_clsbl_sales_tax_agency( $args, $type ) {
         $having = 'HAVING balance > 0';
     }
 
-    $sql = "SELECT agency_id, SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_tax_agency_details
+    $sql = "SELECT agency_id AS id, SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_tax_agency_details
         WHERE trn_date BETWEEN '%s' AND '%s'
         GROUP BY agency_id {$having}";
 
-    $data = $wpdb->get_results( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ) );
+    $data = $wpdb->get_results( $wpdb->prepare( $sql, $args['start_date'], $args['end_date'] ), ARRAY_A );
 
     return erp_acct_clsbl_sales_tax_agency_with_opening_balance( $args['start_date'], $data, $sql, $type );
 }
@@ -364,13 +364,13 @@ function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $
     $opening_balance = erp_acct_clsbl_sales_tax_agency_opening_balance_by_fn_year_id( $closest_fy_date['id'], $type );
 
     $merged = array_merge($data, $opening_balance);
-    $result = erp_acct_get_formatted_people_balance( $merged );
+    $result = erp_acct_clsbl_get_formatted_people_balance( $merged );
 
     // should we go further calculation, check the diff
     if ( ! erp_acct_has_date_diff($bs_start_date, $closest_fy_date['start_date']) ) {
         return $balance;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
+        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($bs_start_date) ) );
     }
 
     // get agency details data between
@@ -392,7 +392,7 @@ function erp_acct_clsbl_sales_tax_agency_opening_balance_by_fn_year_id( $id, $ty
         $having = 'HAVING balance > 0';
     }
 
-    $sql = "SELECT agency_id, SUM( debit - credit ) AS balance
+    $sql = "SELECT ledger_id, SUM( debit - credit ) AS balance
             FROM {$wpdb->prefix}erp_acct_opening_balances
             WHERE type = 'tax_agency' GROUP BY ledger_id {$having}";
 
