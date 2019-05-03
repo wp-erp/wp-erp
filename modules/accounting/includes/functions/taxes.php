@@ -403,14 +403,22 @@ function erp_acct_pay_tax( $data ) {
         'updated_by'   => $tax_data['updated_by'],
     ));
 
+    if ( 'debit' == $tax_data['voucher_type'] ) {
+        $debit  = $tax_data['amount'];
+        $credit = 0;
+    } else {
+        $debit  = 0;
+        $credit = $tax_data['amount'];
+    }
+
     // insert data into wp_erp_acct_tax_agency_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_agency_details', [
         'agency_id'   => $tax_data['agency_id'],
         'trn_no'      => $voucher_no,
         'trn_date'    => $tax_data['trn_date'],
         'particulars' => $tax_data['particulars'],
-        'debit'       => $tax_data['amount'],
-        'credit'      => 0,
+        'debit'       => $debit,
+        'credit'      => $credit,
         'created_at'  => $tax_data['created_at'],
         'created_by'  => $tax_data['created_by']
     ] );
@@ -433,13 +441,21 @@ function erp_acct_pay_tax( $data ) {
 function erp_acct_insert_tax_pay_data_into_ledger( $tax_data ) {
     global $wpdb;
 
+    if ( 'debit' == $tax_data['voucher_type'] ) {
+        $debit  = 0;
+        $credit = $tax_data['amount'];
+    } else {
+        $debit  = $tax_data['amount'];
+        $credit = 0;
+    }
+
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $tax_data['ledger_id'],
         'trn_no'      => $tax_data['voucher_no'],
         'particulars' => $tax_data['particulars'],
-        'debit'       => 0,
-        'credit'      => $tax_data['amount'],
+        'debit'       => $debit,
+        'credit'      => $credit,
         'trn_date'    => $tax_data['trn_date'],
         'created_at'  => $tax_data['created_at'],
         'created_by'  => $tax_data['created_by'],
@@ -458,7 +474,7 @@ function erp_acct_insert_tax_pay_data_into_ledger( $tax_data ) {
 function erp_acct_format_tax_line_items( $tax = 'all' ) {
     global $wpdb;
 
-    $sql = "SELECT id as db_id, tax_id, component_name, agency_id, tax_cat_id, tax_rate ";
+    $sql = "SELECT id as db_id, tax_id, component_name, agency_id, tax_cat_id, tax_rate";
 
     if ( $tax == 'all' ) {
         $tax_sql = '';

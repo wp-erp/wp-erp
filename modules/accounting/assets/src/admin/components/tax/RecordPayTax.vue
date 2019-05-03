@@ -21,7 +21,12 @@
                             <multi-select v-model="trn_by" :options="pay_methods"></multi-select>
                         </div>
                         <div class="wperp-col-sm-4 mb-20">
-                            <label>Deposit to<span class="wperp-required-sign">*</span></label>
+                            <label>
+                                <span v-if="'debit' == voucher_type.id">Payment From</span>
+                                <span v-else>Deposit To</span>
+                                <span class="wperp-required-sign">*</span>
+                            </label>
+
                             <select-accounts v-model="deposit_to" :override_accts="accts_by_chart"></select-accounts>
                         </div>
 	                    <div class="wperp-col-sm-4 wperp-col-xs-12">
@@ -60,7 +65,7 @@
 	                    </div>
 	                    <div class="wperp-col-xs-12">
 	                    	<div class="wperp-form-group text-right mt-10 mb-0">
-                                <submit-button text="Pay Tax" @click.native.prevent="SubmitForTaxPay" :working="isWorking"></submit-button>
+                                <submit-button text="Save" @click.native.prevent="SubmitForTaxPay" :working="isWorking"></submit-button>
                             </div>
 	                    </div>
 	                </div>
@@ -243,9 +248,9 @@
                     this.form_errors.push('Tax amount is required.');
                 }
 
-                if ( this.tax_amount > this.dueAmount ) {
-                    this.form_errors.push('Please pay according to your due balance.');
-                }
+                // if ( this.tax_amount > this.dueAmount ) {
+                //     this.form_errors.push('Please pay according to your due balance.');
+                // }
 
                 if ( parseFloat(this.deposit_to.balance) < parseFloat(this.finalTotalAmount) ) {
                     this.form_errors.push('Not enough balance in selected account.');
