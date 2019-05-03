@@ -27501,6 +27501,7 @@ setTimeout(function () {
   },
   data: function data() {
     return {
+      closingBtnVisibility: true,
       start_date: null,
       end_date: null,
       bulkActions: [{
@@ -27604,6 +27605,8 @@ setTimeout(function () {
         end_date: this.end_date
       }).then(function (response) {
         _this3.showAlert('success', 'Balance Sheet Closed!');
+
+        _this3.closingBtnVisibility = false;
       }).catch(function (error) {
         _this3.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
@@ -52982,20 +52985,22 @@ var render = function() {
     _c("h2", { staticClass: "content-header__title" }, [
       _c("span", [_vm._v("Balance Sheet")]),
       _vm._v(" "),
-      _c(
-        "a",
-        {
-          staticClass: "wperp-btn btn--primary",
-          attrs: { href: "#" },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.checkClosingPossibility($event)
-            }
-          }
-        },
-        [_vm._v("Close Now")]
-      )
+      _vm.closingBtnVisibility
+        ? _c(
+            "a",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.checkClosingPossibility($event)
+                }
+              }
+            },
+            [_vm._v("Close Now")]
+          )
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c(

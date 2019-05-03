@@ -512,7 +512,7 @@ function erp_acct_get_balance_sheet( $args ) {
         }
     }
 
-    $results['owners_equity'] = $capital - $drawings + $profit - $loss ;
+    $results['owners_equity'] = abs($capital) - $drawings + $profit - $loss ;
 
     return $results;
 }
