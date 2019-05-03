@@ -479,9 +479,9 @@ function erp_acct_format_tax_line_items( $tax = 'all' ) {
     if ( $tax == 'all' ) {
         $tax_sql = '';
     } else {
-        $tax_sql = "WHERE tax_id = " .  $tax ;
+        $tax_sql = "WHERE tax_id = " .  $tax;
     }
-    $sql .= "FROM {$wpdb->prefix}erp_acct_tax_cat_agency {$tax_sql} ORDER BY tax_id";
+    $sql .= " FROM {$wpdb->prefix}erp_acct_tax_cat_agency {$tax_sql} ORDER BY tax_id";
 
     $results = $wpdb->get_results( $sql, ARRAY_A );
 
