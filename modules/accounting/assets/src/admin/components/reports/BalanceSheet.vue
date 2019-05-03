@@ -2,7 +2,7 @@
     <div>
         <h2 class="content-header__title">
             <span>Balance Sheet</span>
-            <a class="wperp-btn btn--primary" href="#" @click.prevent="checkClosingPossibility">Close Now</a>
+            <a class="wperp-btn btn--primary" v-if="closingBtnVisibility" href="#" @click.prevent="checkClosingPossibility">Close Now</a>
         </h2>
 
         <form action="" method="" @submit.prevent="fetchItems" class="query-options no-print">
@@ -129,8 +129,9 @@
 
         data() {
             return {
-                start_date    : null,
-                end_date      : null,
+                closingBtnVisibility: true,
+                start_date          : null,
+                end_date            : null,
                 bulkActions: [
                     {
                         key: 'trash',
@@ -224,6 +225,7 @@
                     end_date  : this.end_date
                 }).then(response => {
                     this.showAlert('success', 'Balance Sheet Closed!');
+                    this.closingBtnVisibility = false;
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } ).then(() => {

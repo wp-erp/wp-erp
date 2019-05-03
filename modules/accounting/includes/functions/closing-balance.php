@@ -33,8 +33,16 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
     $liability      = $balance_sheet['rows2'];
     $next_f_year_id = $args['f_year_id'];
 
-    // ledgers
     global $wpdb;
+
+    /* ================================================================================*/
+    //  TEST ..... start
+    $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_acct_opening_balances
+    WHERE financial_year_id = %d", $next_f_year_id ) );
+    //  TEST ..... end
+    /* ================================================================================*/
+
+    // ledgers
     $sql     = "SELECT id, chart_id, name, slug FROM {$wpdb->prefix}erp_acct_ledgers";
     $ledgers = $wpdb->get_results( $sql, ARRAY_A );
 
@@ -103,11 +111,11 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
 
     if ( $balance_sheet['owners_equity'] > 0 ) {
         erp_acct_clsbl_insert_into_opening_balance(
-            $next_f_year_id, null, $owners_equity_ledger, 'ledger', $balance_sheet['owners_equity'], 0.00
+            $next_f_year_id, null, $owners_equity_ledger, 'ledger', 0.00, $balance_sheet['owners_equity']
         );
     } else {
         erp_acct_clsbl_insert_into_opening_balance(
-            $next_f_year_id, null, $owners_equity_ledger, 'ledger', 0.00, $balance_sheet['owners_equity']
+            $next_f_year_id, null, $owners_equity_ledger, 'ledger', $balance_sheet['owners_equity'], 0.00
         );
     }
 }
@@ -392,7 +400,7 @@ function erp_acct_clsbl_sales_tax_agency_opening_balance_by_fn_year_id( $id, $ty
         $having = 'HAVING balance > 0';
     }
 
-    $sql = "SELECT ledger_id, SUM( debit - credit ) AS balance
+    $sql = "SELECT ledger_id AS id, SUM( debit - credit ) AS balance
             FROM {$wpdb->prefix}erp_acct_opening_balances
             WHERE type = 'tax_agency' GROUP BY ledger_id {$having}";
 
