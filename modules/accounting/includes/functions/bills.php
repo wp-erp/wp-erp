@@ -179,8 +179,6 @@ function erp_acct_insert_bill( $data ) {
             'created_by'  => $bill_data['created_by']
         ) );
 
-        erp_acct_insert_bill_data_people_details( $bill_data );
-
         $wpdb->query( 'COMMIT' );
 
     } catch (Exception $e) {
@@ -267,8 +265,6 @@ function erp_acct_update_bill( $data, $bill_id ) {
         ), array(
             'trn_no'     => $bill_id
         ) );
-
-        erp_acct_update_bill_data_people_details( $bill_data, $bill_id );
 
         $wpdb->query( 'COMMIT' );
 
@@ -493,52 +489,3 @@ function erp_acct_get_bill_due( $bill_no ) {
     return $result['due'];
 }
 
-/**
- * Insert bill data in people details
- *
- * @param $bill_data
- *
- */
-function erp_acct_insert_bill_data_people_details( $bill_data ) {
-    global $wpdb;
-
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
-        'people_id'   => $bill_data['vendor_id'],
-        'trn_no'      => $bill_data['voucher_no'],
-        'particulars' => $bill_data['particulars'],
-        'debit'       => 0,
-        'credit'      => $bill_data['amount'],
-        'voucher_type'=> erp_acct_get_trn_type_by_voucher_no( $bill_data['voucher_no'] ),
-        'trn_date'    => $bill_data['trn_date'],
-        'created_at'  => $bill_data['created_at'],
-        'created_by'  => $bill_data['created_by'],
-        'updated_at'  => $bill_data['updated_at'],
-        'updated_by'  => $bill_data['updated_by']
-    ) );
-}
-
-/**
- * Update bill data in people details
- *
- * @param $bill_data
- * @param $invoice_no
- *
- */
-function erp_acct_update_bill_data_people_details( $bill_data, $bill_no ) {
-    global $wpdb;
-
-    $wpdb->update( $wpdb->prefix . 'erp_acct_people_details', array(
-        'people_id'   => $bill_data['vendor_id'],
-        'particulars' => $bill_data['particulars'],
-        'debit'       => 0,
-        'credit'      => $bill_data['amount'],
-        'voucher_type'=> erp_acct_get_trn_type_by_voucher_no( $bill_no ),
-        'trn_date'    => $bill_data['trn_date'],
-        'created_at'  => $bill_data['created_at'],
-        'created_by'  => $bill_data['created_by'],
-        'updated_at'  => $bill_data['updated_at'],
-        'updated_by'  => $bill_data['updated_by']
-    ), array(
-        'trn_no' => $bill_no
-    ));
-}

@@ -193,7 +193,6 @@ function erp_acct_insert_invoice( $data ) {
 
         erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no );
         erp_acct_insert_invoice_data_into_ledger( $invoice_data );
-        erp_acct_insert_invoice_data_people_details( $invoice_data );
 
         $wpdb->query( 'COMMIT' );
 
@@ -375,8 +374,6 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
         ) );
 
         erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no );
-
-        erp_acct_update_invoice_data_people_details( $invoice_data, $invoice_no );
 
         $wpdb->query( 'COMMIT' );
 
@@ -733,53 +730,3 @@ function erp_acct_get_invoice_due( $invoice_no ) {
     return $result['due'];
 }
 
-/**
- * Insert invoice data in people details
- *
- * @param $invoice_data
- *
- */
-function erp_acct_insert_invoice_data_people_details( $invoice_data ) {
-    global $wpdb;
-
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
-        'people_id'   => $invoice_data['customer_id'],
-        'trn_no'      => $invoice_data['voucher_no'],
-        'particulars' => $invoice_data['particulars'],
-        'debit'       => $invoice_data['amount'] + $invoice_data['tax'] - $invoice_data['discount'],
-        'credit'      => 0,
-        'voucher_type'=> erp_acct_get_trn_type_by_voucher_no( $invoice_data['voucher_no'] ),
-        'trn_date'    => $invoice_data['trn_date'],
-        'created_at'  => $invoice_data['created_at'],
-        'created_by'  => $invoice_data['created_by'],
-        'updated_at'  => $invoice_data['updated_at'],
-        'updated_by'  => $invoice_data['updated_by']
-    ) );
-}
-
-/**
- * Update invoice data in people details
- *
- * @param $invoice_data
- * @param $invoice_no
- *
- */
-function erp_acct_update_invoice_data_people_details( $invoice_data, $invoice_no ) {
-    global $wpdb;
-
-    $wpdb->update( $wpdb->prefix . 'erp_acct_people_details', array(
-        'people_id'   => $invoice_data['customer_id'],
-        'particulars' => $invoice_data['particulars'],
-        'debit'       => $invoice_data['amount'] + $invoice_data['tax'] - $invoice_data['discount'],
-        'credit'      => 0,
-        'trn_date'    => $invoice_data['trn_date'],
-        'voucher_type'=> erp_acct_get_trn_type_by_voucher_no( $invoice_no ),
-        'created_at'  => $invoice_data['created_at'],
-        'created_by'  => $invoice_data['created_by'],
-        'updated_at'  => $invoice_data['updated_at'],
-        'updated_by'  => $invoice_data['updated_by']
-    ), array(
-        'trn_no' => $invoice_no
-    ));
-
-}

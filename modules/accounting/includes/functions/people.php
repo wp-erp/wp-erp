@@ -113,7 +113,7 @@ function erp_people_filter_transaction( $people_id, $args = [] ) {
     $start_date = isset( $args['start_date'] ) ? $args['start_date'] : '';
     $end_date = isset( $args['end_date'] ) ? $args['start_date'] : '';
 
-    $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_people_details WHERE trn_date >= '{$start_date}' AND trn_date <= '{$end_date}' AND people_id = {$people_id}", ARRAY_A );
+    $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_people_account_details WHERE trn_date >= '{$start_date}' AND trn_date <= '{$end_date}' AND people_id = {$people_id}", ARRAY_A );
     return $rows;
 }
 
@@ -217,7 +217,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
-        INNER JOIN {$wpdb->prefix}erp_acct_people_details AS people ON voucher.id = people.trn_no
+        INNER JOIN {$wpdb->prefix}erp_acct_people_account_details AS people ON voucher.id = people.trn_no
         {$where} ORDER BY people.trn_date {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
@@ -313,7 +313,7 @@ function erp_acct_get_people_opening_balance( $args = [] ) {
         $where .= " AND trn_date < '{$args['start_date']}'";
     }
 
-    $sql = "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_people_details {$where}";
+    $sql = "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_people_account_details {$where}";
 
     $result =  $wpdb->get_row( $sql, ARRAY_A );
 

@@ -534,7 +534,7 @@ function erp_acct_format_payment_line_items( $invoice = 'all' ) {
 function erp_acct_insert_payment_data_people_details( $payment_data ) {
     global $wpdb;
 
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
         'people_id'   => $payment_data['customer_id'],
         'trn_no'      => $payment_data['voucher_no'],
         'particulars' => $payment_data['particulars'],
@@ -559,7 +559,7 @@ function erp_acct_insert_payment_data_people_details( $payment_data ) {
 function erp_acct_update_payment_data_people_details( $payment_data, $invoice_no ) {
     global $wpdb;
 
-    $wpdb->update( $wpdb->prefix . 'erp_acct_people_details', array(
+    $wpdb->update( $wpdb->prefix . 'erp_acct_people_account_details', array(
         'people_id'   => $payment_data['customer_id'],
         'particulars' => $payment_data['particulars'],
         'debit'       => 0,
