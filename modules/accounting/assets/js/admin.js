@@ -24224,10 +24224,10 @@ setTimeout(function () {
       },
       voucher_types: [{
         id: 'debit',
-        name: 'Deposit to'
+        name: 'Debit'
       }, {
         id: 'credit',
-        name: 'Payment from'
+        name: 'Credit'
       }]
     };
   },

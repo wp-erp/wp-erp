@@ -112,8 +112,8 @@
                 trn_date      : erp_acct_var.current_date,
                 voucher_type  : { id: 'debit', name: 'Debit' },
                 voucher_types : [
-                    { id: 'debit', name: 'Deposit to' },
-                    { id: 'credit', name: 'Payment from' }
+                    { id: 'debit', name: 'Debit' },
+                    { id: 'credit', name: 'Credit' }
                 ]
             };
         },
