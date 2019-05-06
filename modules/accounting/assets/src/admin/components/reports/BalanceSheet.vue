@@ -2,23 +2,45 @@
     <div>
         <h2 class="content-header__title">
             <span>Balance Sheet</span>
-            <a class="wperp-btn btn--primary" v-if="closingBtnVisibility" href="#" @click.prevent="checkClosingPossibility">Close Now</a>
         </h2>
 
-        <form action="" method="" @submit.prevent="fetchItems" class="query-options no-print">
+        <div class="blnce-sheet-top">
+            <form action="" method="" @submit.prevent="fetchItems" class="query-options no-print">
 
-            <div class="wperp-date-group">
-                <datepicker v-model="start_date"></datepicker>
-                <datepicker v-model="end_date"></datepicker>
-                <button class="wperp-btn btn--primary add-line-trigger" type="submit">Filter</button>
+                <div v-if="!closingBtnVisibility" class="wperp-date-group">
+                    <datepicker v-model="start_date"></datepicker>
+                    <datepicker v-model="end_date"></datepicker>
+                    <button class="wperp-btn btn--primary add-line-trigger" type="submit">Filter</button>
+                </div>
+
+                <div v-else class="fn-year-info">
+                    <div scope="row" class="with-multiselect fyear-select">
+                        <multi-select v-model="selectedYear" :options="fyears" />
+                    </div>
+
+                    <div v-if="selectedYear">
+                        Balance showing from <em>{{ selectedYear.start_date }}</em> to <em>{{ selectedYear.end_date }}</em>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="closing-blnc">
+                <div class="close-check">
+                    <input type="checkbox" id="prepare-close" v-model="closingBtnVisibility">
+                    <label for="prepare-close">Prepare for closing</label>
+                </div>
+
+                <a @click.prevent="checkClosingPossibility"
+                    :class="[{ 'visible': closingBtnVisibility }, 'wperp-btn btn--primary close-now-btn']"
+                    href="#">Close Now</a>
+
+                <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
+                    <i class="flaticon-printer-1"></i>
+                    &nbsp; Print
+                </a>
             </div>
-
-            <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
-                <i class="flaticon-printer-1"></i>
-                &nbsp; Print
-            </a>
-
-        </form>
+        </div>
 
         <div class="wperp-panel-body">
             <div class="wperp-row">
@@ -116,6 +138,7 @@
 
 <script>
     import HTTP from 'admin/http'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import Datepicker  from 'admin/components/base/Datepicker.vue'
     import ListTable from 'admin/components/list-table/ListTable.vue'
 
@@ -123,13 +146,14 @@
         name: 'BalanceSheet',
 
         components: {
+            MultiSelect,
             ListTable,
             Datepicker
         },
 
         data() {
             return {
-                closingBtnVisibility: true,
+                closingBtnVisibility: false,
                 start_date          : null,
                 end_date            : null,
                 bulkActions: [
@@ -151,12 +175,14 @@
                     'name': { label: 'Equity' },
                     'balance': { label: 'Amount' }
                 },
-                rows1         : [],
-                rows2         : [],
-                rows3         : [],
-                totalAsset    : 0,
-                totalLiability: 0,
-                totalEquity   : 0
+                rows1         : [] ,
+                rows2         : [] ,
+                rows3         : [] ,
+                totalAsset    : 0 ,
+                totalLiability: 0 ,
+                totalEquity   : 0 ,
+                selectedYear  : null,
+                fyears        : []
             }
         },
 
@@ -171,11 +197,34 @@
 
                 this.fetchItems();
             });
+
+            this.fetchFnYears();
         },
 
         computed: {
             liability_equity() {
                 return parseFloat( Math.abs(this.totalLiability) ) + parseFloat(Math.abs(this.totalEquity));
+            }
+        },
+
+        watch: {
+            closingBtnVisibility(visible) {
+                if (visible) {
+                    this.start_date = this.selectedYear.start_date;
+                    this.end_date   = this.selectedYear.end_date;
+
+                    this.fetchItems();
+                }
+            },
+
+            selectedYear(newVal) {
+                // only whe `prepare close` is checked
+                if ( this.closingBtnVisibility ) {
+                    this.start_date = newVal.start_date;
+                    this.end_date   = newVal.end_date;
+
+                    this.fetchItems();
+                }
             }
         },
 
@@ -197,12 +246,25 @@
                     this.totalLiability = response.data.total_liability;
                     this.totalEquity    = response.data.total_equity;
 
-                    this.closingBtnVisibility = true;
-
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
+            },
+
+            fetchFnYears() {
+                HTTP.get( '/opening-balances/names').then(response => {
+                    // get only last 5
+                    this.fyears = response.data.reverse().slice(0).slice(-5);
+
+                    this.getCurrentFnYear();
+                });
+            },
+
+            getCurrentFnYear() {
+                HTTP.get( '/closing-balance/closest-fn-year').then(response => {
+                    this.selectedYear = response.data;
+                });
             },
 
             printPopup() {
@@ -255,13 +317,55 @@
             margin-left: 15px;
         }
     }
-    .query-options {
+
+    .blnce-sheet-top,
+    .query-options,
+    .close-check {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        width: 500px;
-        padding: 20px 0;
+        align-items: center;
+
+        em {
+            font-weight: bold;
+        }
     }
+
+    .fyear-select {
+        min-width: 200px;
+        margin-bottom: 15px;
+    }
+
+    .closing-blnc {
+        display: flex;
+    }
+
+    .close-now-btn {
+        margin: 0 15px;
+        visibility: hidden;
+
+        &.visible {
+            visibility: visible;
+        }
+    }
+
+    .close-check {
+        label {
+            margin: 0;
+        }
+
+        input {
+            box-shadow: none;
+            width: 20px;
+            margin-top: 1px;
+            height: 20px;
+            border-radius: 3px;
+
+            &[type=checkbox]:checked:before {
+                margin: -1px 0 0 -2px;
+            }
+        }
+    }
+
     .balance-sheet-asset {
         tbody {
             tr {
