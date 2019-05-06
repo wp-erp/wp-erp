@@ -209,7 +209,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
             'sub_component' => __( 'Journal', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => sprintf( __( 'An journal of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'message'       => sprintf( __( 'An journal of %s has been created', 'erp' ), $data['voucher_amount'] ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 
