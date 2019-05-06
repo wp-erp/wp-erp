@@ -3,8 +3,10 @@
     var ERP_Accounting = {
 
         initialize: function () {
+            window.erp_ob_dates = [];
             $('body').on('click', '.erp-ac-ob-add-more', this.ob.moreField);
             $('body').on('click', '.erp-ac-ob-remove-field', this.ob.removeField);
+            $('body').on('click', '.erp-ac-ob-fields input[type="date"]', this.ob.validateDate);
         },
 
         ob: {
@@ -24,6 +26,17 @@
 
                 if (row_length) {
                     self.closest('.row').remove();
+                }
+            },
+
+            validateDate(e) {
+                e.preventDefault();
+                let val = Date.parse(e.target.value);
+
+                if ( window.erp_ob_dates.includes(val) ) {
+                    console.log('Hello');
+                } else {
+                    window.erp_ob_dates.push(val);
                 }
             }
         },

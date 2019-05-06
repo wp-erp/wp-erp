@@ -19608,10 +19608,16 @@ if (false) {(function () {
         this.debitLine[key] = 0;
       }
 
+      this.debit_total = this.debitLine.reduce(function (a, b) {
+        return parseFloat(a) + parseFloat(b);
+      }, 0);
+      this.credit_total = this.creditLine.reduce(function (a, b) {
+        return parseFloat(a) + parseFloat(b);
+      }, 0);
       var diff = Math.abs(this.debit_total - this.credit_total);
       this.isWorking = true;
 
-      if (0 == diff) {
+      if (0 === diff) {
         this.isWorking = false;
       }
     },
@@ -42993,7 +42999,11 @@ var render = function() {
                         _c("input", {
                           staticClass: "text-right",
                           attrs: { type: "text", readonly: "" },
-                          domProps: { value: _vm.totalDebit }
+                          domProps: {
+                            value: isNaN(_vm.totalDebit)
+                              ? _vm.debit_total
+                              : _vm.totalDebit
+                          }
                         })
                       ]),
                       _vm._v(" "),
@@ -43001,7 +43011,11 @@ var render = function() {
                         _c("input", {
                           staticClass: "text-right",
                           attrs: { type: "text", readonly: "" },
-                          domProps: { value: _vm.totalCredit }
+                          domProps: {
+                            value: isNaN(_vm.totalCredit)
+                              ? _vm.credit_total
+                              : _vm.totalCredit
+                          }
                         })
                       ]),
                       _vm._v(" "),
