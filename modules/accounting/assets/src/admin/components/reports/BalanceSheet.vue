@@ -161,7 +161,16 @@
         },
 
         created() {
-            this.fetchItems();
+            //? why is nextTick here ...? i don't know.
+            this.$nextTick(function () {
+                // with leading zero, and JS month are zero index based
+                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
+
+                this.start_date = `2019-${month}-01`;
+                this.end_date   = erp_acct_var.current_date;
+
+                this.fetchItems();
+            });
         },
 
         computed: {
@@ -187,6 +196,8 @@
                     this.totalAsset     = response.data.total_asset;
                     this.totalLiability = response.data.total_liability;
                     this.totalEquity    = response.data.total_equity;
+
+                    this.closingBtnVisibility = true;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
