@@ -467,7 +467,7 @@ function erp_acct_change_purchase_status( $purchase_no ) {
 function erp_acct_insert_pay_purchase_data_people_details( $pay_purchase_data ) {
     global $wpdb;
 
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
         'people_id'   => $pay_purchase_data['vendor_id'],
         'trn_no'      => $pay_purchase_data['voucher_no'],
         'particulars' => $pay_purchase_data['particulars'],
@@ -492,7 +492,7 @@ function erp_acct_insert_pay_purchase_data_people_details( $pay_purchase_data ) 
 function erp_acct_update_pay_purchase_data_people_details( $pay_purchase_data, $pay_purchase_no ) {
     global $wpdb;
 
-    $wpdb->update( $wpdb->prefix . 'erp_acct_people_details', array(
+    $wpdb->update( $wpdb->prefix . 'erp_acct_people_account_details', array(
         'people_id'   => $pay_purchase_data['vendor_id'],
         'particulars' => $pay_purchase_data['particulars'],
         'debit'       => $pay_purchase_data['amount'],

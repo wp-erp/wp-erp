@@ -458,7 +458,7 @@ function erp_acct_change_bill_status( $bill_no ) {
 function erp_acct_insert_pay_bill_data_people_details( $pay_bill_data ) {
     global $wpdb;
 
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_details', array(
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
         'people_id'   => $pay_bill_data['vendor_id'],
         'trn_no'      => $pay_bill_data['voucher_no'],
         'particulars' => $pay_bill_data['particulars'],
@@ -483,7 +483,7 @@ function erp_acct_insert_pay_bill_data_people_details( $pay_bill_data ) {
 function erp_acct_update_pay_bill_data_people_details( $pay_bill_data, $pay_bill_no ) {
     global $wpdb;
 
-    $wpdb->update( $wpdb->prefix . 'erp_acct_people_details', array(
+    $wpdb->update( $wpdb->prefix . 'erp_acct_people_account_details', array(
         'people_id'   => $pay_bill_data['vendor_id'],
         'particulars' => $pay_bill_data['particulars'],
         'debit'       => $pay_bill_data['amount'],
