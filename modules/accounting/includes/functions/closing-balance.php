@@ -385,7 +385,7 @@ function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $
     //     `financial year start date`
     // and
     //     `previous date from trial balance start date`
-    $agency_details_balance = $wpdb->get_results( $wpdb->prepare($sql, $closest_fy_date['start_date'], $prev_date_of_tb_start) );
+    $agency_details_balance = $wpdb->get_results( $wpdb->prepare($sql, $closest_fy_date['start_date'], $prev_date_of_tb_start), ARRAY_A );
 
     $merged = array_merge($result, $agency_details_balance);
     return erp_acct_clsbl_get_formatted_people_balance( $merged );
