@@ -17,7 +17,7 @@
             </div>
 
             <div class="invoice-body">
-                <h4>Invoice</h4>
+                <h4>{{getInvoiceType()}}</h4>
                 <div class="wperp-row">
                     <div class="wperp-col-sm-6">
                         <h5>Bill to:</h5>
@@ -76,7 +76,7 @@
                                     <li><span>Subtotal:</span> {{ getCurrencySign() + invoice.amount }}</li>
                                     <li><span>Discount:</span> (-) {{ getCurrencySign() + invoice.discount }}</li>
                                     <li><span>Tax:</span> (+) {{ getCurrencySign() + invoice.tax }}</li>
-                                    <li><span>Total:</span> {{ getCurrencySign() + invoice.debit }}</li>
+                                    <li><span>Total:</span> {{ getCurrencySign() + invoice.amount }}</li>
                                 </ul>
                             </td>
                         </tr>
@@ -123,6 +123,16 @@
             return {
                 acct_var: erp_acct_var
             }
+        },
+
+        methods: {
+            getInvoiceType() {
+                if ( this.invoice !== null && '1' === this.invoice.estimate ) {
+                    return "Estimate";
+                } else {
+                    return "Invoice";
+                }
+            },
         }
 
     }
