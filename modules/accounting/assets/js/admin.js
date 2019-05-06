@@ -21043,6 +21043,13 @@ if (false) {(function () {
         this.getPayment();
       }
     },
+    getInvoiceType: function getInvoiceType() {
+      if (this.invoice !== null && '1' === this.invoice.estimate) {
+        return "Estimate";
+      } else {
+        return "Invoice";
+      }
+    },
     getInvoice: function getInvoice() {
       var _this4 = this;
 
@@ -21197,6 +21204,15 @@ if (false) {(function () {
     return {
       acct_var: erp_acct_var
     };
+  },
+  methods: {
+    getInvoiceType: function getInvoiceType() {
+      if (this.invoice !== null && '1' === this.invoice.estimate) {
+        return "Estimate";
+      } else {
+        return "Invoice";
+      }
+    }
   }
 });
 
@@ -45106,7 +45122,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "invoice-body" }, [
-        _c("h4", [_vm._v("Invoice")]),
+        _c("h4", [_vm._v(_vm._s(_vm.getInvoiceType()))]),
         _vm._v(" "),
         _c("div", { staticClass: "wperp-row" }, [
           _c("div", { staticClass: "wperp-col-sm-6" }, [
@@ -45222,7 +45238,7 @@ var render = function() {
                         _c("span", [_vm._v("Total:")]),
                         _vm._v(
                           " " +
-                            _vm._s(_vm.getCurrencySign() + _vm.invoice.debit)
+                            _vm._s(_vm.getCurrencySign() + _vm.invoice.amount)
                         )
                       ])
                     ])
@@ -45567,7 +45583,11 @@ var render = function() {
           null != _vm.type
             ? _c("h2", [
                 _vm._v(
-                  _vm._s("payment" == _vm.type ? "Receive Payment" : "Invoice")
+                  _vm._s(
+                    "payment" == _vm.type
+                      ? "Receive Payment"
+                      : _vm.getInvoiceType()
+                  )
                 )
               ])
             : _vm._e(),
