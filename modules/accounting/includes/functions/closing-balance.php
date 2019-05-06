@@ -108,14 +108,19 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
 
     // owner's equity ( ledger_id: 30 ) with profit/loss
     $owners_equity_ledger = 30;
+    $chart_equity_id      = 3;
+
+    if ( $balance_sheet['owners_equity'] == 0 ) {
+        return;
+    }
 
     if ( $balance_sheet['owners_equity'] > 0 ) {
         erp_acct_clsbl_insert_into_opening_balance(
-            $next_f_year_id, null, $owners_equity_ledger, 'ledger', 0.00, $balance_sheet['owners_equity']
+            $next_f_year_id, $chart_equity_id, $owners_equity_ledger, 'ledger', 0.00, $balance_sheet['owners_equity']
         );
     } else {
         erp_acct_clsbl_insert_into_opening_balance(
-            $next_f_year_id, null, $owners_equity_ledger, 'ledger', $balance_sheet['owners_equity'], 0.00
+            $next_f_year_id, $chart_equity_id, $owners_equity_ledger, 'ledger', $balance_sheet['owners_equity'], 0.00
         );
     }
 }
@@ -376,7 +381,7 @@ function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $
 
     // should we go further calculation, check the diff
     if ( ! erp_acct_has_date_diff($bs_start_date, $closest_fy_date['start_date']) ) {
-        return $balance;
+        return $result;
     } else {
         $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($bs_start_date) ) );
     }
@@ -391,6 +396,13 @@ function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $
     return erp_acct_clsbl_get_formatted_people_balance( $merged );
 }
 
+/**
+ *
+ * @param int $id
+ * @param string $type
+ *
+ * @return void
+ */
 function erp_acct_clsbl_sales_tax_agency_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
 
