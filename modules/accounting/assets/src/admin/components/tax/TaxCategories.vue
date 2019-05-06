@@ -88,6 +88,7 @@
         created() {
             this.$root.$on('refetch_tax_data',() => {
                 this.fetchItems();
+                this.is_update = false;
             });
 
             this.fetchItems();

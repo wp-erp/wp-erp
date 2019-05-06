@@ -24498,6 +24498,8 @@ setTimeout(function () {
     this.url = this.$route.name.toLowerCase();
     this.$root.$on('refetch_tax_data', function () {
       _this.fetchItems();
+
+      _this.is_update = false;
     });
     this.fetchItems();
   },
@@ -24711,6 +24713,8 @@ setTimeout(function () {
 
     this.$root.$on('refetch_tax_data', function () {
       _this.fetchItems();
+
+      _this.is_update = false;
     });
     this.fetchItems();
   },
@@ -24942,6 +24946,8 @@ setTimeout(function () {
 
     this.$root.$on('refetch_tax_data', function () {
       _this.fetchItems();
+
+      _this.is_update = false;
     });
     this.fetchItems();
   },
@@ -48145,7 +48151,9 @@ var render = function() {
       _c("div", { staticClass: "wperp-modal-dialog" }, [
         _c("div", { staticClass: "wperp-modal-content" }, [
           _c("div", { staticClass: "wperp-modal-header" }, [
-            _c("h3", [_vm._v("Add Tax Agency")]),
+            _c("h3", [
+              _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Agency")
+            ]),
             _vm._v(" "),
             _c(
               "span",
@@ -48273,7 +48281,9 @@ var render = function() {
       _c("div", { staticClass: "wperp-modal-dialog" }, [
         _c("div", { staticClass: "wperp-modal-content" }, [
           _c("div", { staticClass: "wperp-modal-header" }, [
-            _c("h3", [_vm._v("Add Tax Category")]),
+            _c("h3", [
+              _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Category")
+            ]),
             _vm._v(" "),
             _c(
               "span",
@@ -48433,7 +48443,9 @@ var render = function() {
       _c("div", { staticClass: "wperp-modal-dialog" }, [
         _c("div", { staticClass: "wperp-modal-content" }, [
           _c("div", { staticClass: "wperp-modal-header" }, [
-            _c("h3", [_vm._v("Add Tax Zone")]),
+            _c("h3", [
+              _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Zone")
+            ]),
             _vm._v(" "),
             _c(
               "span",
