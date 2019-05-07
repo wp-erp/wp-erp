@@ -250,7 +250,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
     ]);
 
     for ( $idx = 0; $idx < count( $results ) ; $idx++) {
-        if( $idx == 0 ) {
+        if ( $idx == 0 ) {
             continue;
         }
         $dr_total += (float)$results[$idx]['debit'];
@@ -372,4 +372,134 @@ function erp_acct_get_people_name_by_people_id( $people_id ) {
     $row = $wpdb->get_row( "SELECT first_name, last_name FROM {$wpdb->prefix}erp_peoples WHERE id = {$people_id} LIMIT 1" );
 
     return $row->first_name . ' ' . $row->last_name;
+}
+
+function erp_acct_get_all_people_trns( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+        's'          => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $limit = '';
+
+    if ( $args['number'] != '-1' ) {
+        $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
+    }
+
+    $sql = "SELECT";
+    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+
+    $sql .= "FROM wp_erp_acct_people_trn AS people_trn
+    RIGHT JOIN wp_erp_acct_people_account_details AS people_trn_acc ON people_trn.voucher_no = people_trn_acc.trn_no
+    GROUP BY people_trn_acc.trn_no";
+
+    if ( $args['count'] ) {
+        return $wpdb->get_var($sql);
+    }
+
+    return $wpdb->get_results( $sql, ARRAY_A );
+}
+
+function erp_acct_get_people_trn( $trn_no ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT
+
+    people_trn.people_id,
+    people_trn.voucher_no,
+    people_trn.amount,
+    people_trn.trn_date,
+    people_trn.trn_by,
+    people_trn.voucher_type,
+    people_trn.particulars,
+
+    people_trn_acc.people_id,
+    people_trn_acc.trn_no,
+    people_trn_acc.particulars,
+    people_trn_acc.debit,
+    people_trn_acc.credit
+
+    FROM wp_erp_acct_people_trn AS people_trn
+    RIGHT JOIN wp_erp_acct_people_account_details AS people_trn_acc ON people_trn.voucher_no = people_trn_acc.trn_no
+    WHERE people_trn_acc.trn_no = %d", $trn_no);
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $row;
+}
+
+function erp_acct_insert_people_trn( ) {
+    global $wpdb;
+
+    $created_by         = get_current_user_id();
+    $voucher_no         = 0;
+    $data['created_at'] = date("Y-m-d H:i:s");
+    $data['created_by'] = $created_by;
+    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_by'] = $created_by;
+
+    try {
+        $wpdb->query( 'START TRANSACTION' );
+
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
+            'type'       => 'people_trn',
+            'created_at' => $data['created_at'],
+            'created_by' => $created_by,
+            'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
+            'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : ''
+        ) );
+
+        $voucher_no = $wpdb->insert_id;
+
+        $debit = 0; $credit = 0;
+        if ( 'debit' == $data['voucher_type'] ) {
+            $debit = $data['amount'];
+        } elseif ( 'debit' == $data['voucher_type'] ) {
+            $credit = $data['amount'];
+        }
+
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
+            'people_id'   => $data['people_id'],
+            'trn_no'      => $voucher_no,
+            'particulars' => $data['particulars'],
+            'debit'       => $debit,
+            'credit'      => $credit,
+            'voucher_type'=> $data['voucher_type'],
+            'trn_date'    => $data['trn_date'],
+            'created_at'  => $data['created_at'],
+            'created_by'  => $data['created_by'],
+            'updated_at'  => $data['updated_at'],
+            'updated_by'  => $data['updated_by']
+        ) );
+
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_people_trn', array(
+            'people_id'   => $data['people_id'],
+            'voucher_no'  => $voucher_no,
+            'amount'      => $data['amount'],
+            'trn_date'    => $data['trn_date'],
+            'trn_by'      => $data['trn_by'],
+            'particulars' => $data['particulars'],
+            'voucher_type'=> $data['voucher_type'],
+            'created_at'  => $data['created_at'],
+            'created_by'  => $created_by,
+            'updated_at'  => $data['updated_at'],
+            'updated_by'  => $data['updated_by'],
+        ) );
+
+        $wpdb->query( 'COMMIT' );
+
+    } catch (Exception $e) {
+        $wpdb->query( 'ROLLBACK' );
+        return new WP_error( 'people_trn-exception', $e->getMessage() );
+    }
+
+    return erp_acct_get_purchase( $voucher_no );
 }
