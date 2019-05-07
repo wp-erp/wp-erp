@@ -14127,6 +14127,8 @@ var STATUS_INITIAL = 0,
 //
 //
 //
+//
+//
 
 
 
@@ -14157,7 +14159,8 @@ var STATUS_INITIAL = 0,
     return {
       taxRate: 0,
       taxAmount: 0,
-      taxCatID: 0
+      taxCatID: 0,
+      debugMode: erp_acct_var.erp_debug_mode
     };
   },
   watch: {
@@ -27400,8 +27403,9 @@ setTimeout(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
 //
 //
 //
@@ -27518,18 +27522,42 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'BalanceSheet',
   components: {
-    ListTable: __WEBPACK_IMPORTED_MODULE_2_admin_components_list_table_ListTable_vue__["a" /* default */],
-    Datepicker: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__["a" /* default */]
+    MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
+    ListTable: __WEBPACK_IMPORTED_MODULE_3_admin_components_list_table_ListTable_vue__["a" /* default */],
+    Datepicker: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__["a" /* default */]
   },
   data: function data() {
     return {
-      closingBtnVisibility: true,
+      closingBtnVisibility: false,
       start_date: null,
       end_date: null,
       bulkActions: [{
@@ -27566,7 +27594,9 @@ setTimeout(function () {
       rows3: [],
       totalAsset: 0,
       totalLiability: 0,
-      totalEquity: 0
+      totalEquity: 0,
+      selectedYear: null,
+      fyears: []
     };
   },
   created: function created() {
@@ -27578,10 +27608,28 @@ setTimeout(function () {
       this.end_date = erp_acct_var.current_date;
       this.fetchItems();
     });
+    this.fetchFnYears();
   },
   computed: {
     liability_equity: function liability_equity() {
       return parseFloat(Math.abs(this.totalLiability)) + parseFloat(Math.abs(this.totalEquity));
+    }
+  },
+  watch: {
+    closingBtnVisibility: function closingBtnVisibility(visible) {
+      if (visible) {
+        this.start_date = this.selectedYear.start_date;
+        this.end_date = this.selectedYear.end_date;
+        this.fetchItems();
+      }
+    },
+    selectedYear: function selectedYear(newVal) {
+      // only whe `prepare close` is checked
+      if (this.closingBtnVisibility) {
+        this.start_date = newVal.start_date;
+        this.end_date = newVal.end_date;
+        this.fetchItems();
+      }
     }
   },
   methods: {
@@ -27602,18 +27650,34 @@ setTimeout(function () {
         _this.totalAsset = response.data.total_asset;
         _this.totalLiability = response.data.total_liability;
         _this.totalEquity = response.data.total_equity;
-        _this.closingBtnVisibility = true;
 
         _this.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
         _this.$store.dispatch('spinner/setSpinner', false);
       });
     },
+    fetchFnYears: function fetchFnYears() {
+      var _this2 = this;
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/opening-balances/names').then(function (response) {
+        // get only last 5
+        _this2.fyears = response.data.reverse().slice(0).slice(-5);
+
+        _this2.getCurrentFnYear();
+      });
+    },
+    getCurrentFnYear: function getCurrentFnYear() {
+      var _this3 = this;
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/closing-balance/closest-fn-year').then(function (response) {
+        _this3.selectedYear = response.data;
+      });
+    },
     printPopup: function printPopup() {
       window.print();
     },
     checkClosingPossibility: function checkClosingPossibility() {
-      var _this2 = this;
+      var _this4 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/closing-balance/next-fn-year', {
@@ -27622,31 +27686,31 @@ setTimeout(function () {
         }
       }).then(function (response) {
         if (null === response.data) {
-          alert("Please create a financial year which start after '".concat(_this2.end_date, "'"));
+          alert("Please create a financial year which start after '".concat(_this4.end_date, "'"));
         }
 
-        _this2.closeBalancesheet(response.data.id);
+        _this4.closeBalancesheet(response.data.id);
       }).catch(function (error) {
-        _this2.$store.dispatch('spinner/setSpinner', false);
+        _this4.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
-        _this2.$store.dispatch('spinner/setSpinner', false);
+        _this4.$store.dispatch('spinner/setSpinner', false);
       });
     },
     closeBalancesheet: function closeBalancesheet(f_year_id) {
-      var _this3 = this;
+      var _this5 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/closing-balance', {
         f_year_id: f_year_id,
         start_date: this.start_date,
         end_date: this.end_date
       }).then(function (response) {
-        _this3.showAlert('success', 'Balance Sheet Closed!');
+        _this5.showAlert('success', 'Balance Sheet Closed!');
 
-        _this3.closingBtnVisibility = false;
+        _this5.closingBtnVisibility = false;
       }).catch(function (error) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
-        _this3.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
       });
     }
   }
@@ -35338,61 +35402,70 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _c("td", { staticClass: "col--tax", attrs: { "data-colname": "Tax" } }, [
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.line.applyTax,
-            expression: "line.applyTax"
-          }
-        ],
-        staticClass: "wperp-form-field",
-        attrs: { type: "checkbox" },
-        domProps: {
-          checked: Array.isArray(_vm.line.applyTax)
-            ? _vm._i(_vm.line.applyTax, null) > -1
-            : _vm.line.applyTax
-        },
-        on: {
-          change: [
-            function($event) {
-              var $$a = _vm.line.applyTax,
-                $$el = $event.target,
-                $$c = $$el.checked ? true : false
-              if (Array.isArray($$a)) {
-                var $$v = null,
-                  $$i = _vm._i($$a, $$v)
-                if ($$el.checked) {
-                  $$i < 0 && _vm.$set(_vm.line, "applyTax", $$a.concat([$$v]))
+    _c(
+      "td",
+      { staticClass: "col--tax", attrs: { "data-colname": "Tax" } },
+      [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.line.applyTax,
+              expression: "line.applyTax"
+            }
+          ],
+          staticClass: "wperp-form-field",
+          attrs: { type: "checkbox" },
+          domProps: {
+            checked: Array.isArray(_vm.line.applyTax)
+              ? _vm._i(_vm.line.applyTax, null) > -1
+              : _vm.line.applyTax
+          },
+          on: {
+            change: [
+              function($event) {
+                var $$a = _vm.line.applyTax,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = null,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && _vm.$set(_vm.line, "applyTax", $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      _vm.$set(
+                        _vm.line,
+                        "applyTax",
+                        $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                      )
+                  }
                 } else {
-                  $$i > -1 &&
-                    _vm.$set(
-                      _vm.line,
-                      "applyTax",
-                      $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                    )
+                  _vm.$set(_vm.line, "applyTax", $$c)
                 }
-              } else {
-                _vm.$set(_vm.line, "applyTax", $$c)
-              }
-            },
-            _vm.respondAtChange
-          ]
-        }
-      }),
-      _vm._v(" "),
-      _c("span", {
-        staticStyle: { color: "blueviolet" },
-        domProps: { textContent: _vm._s(_vm.line.taxAmount) }
-      }),
-      _vm._v(" "),
-      _c("span", {
-        staticStyle: { color: "#f44336" },
-        domProps: { textContent: _vm._s(_vm.line.discount) }
-      })
-    ]),
+              },
+              _vm.respondAtChange
+            ]
+          }
+        }),
+        _vm._v(" "),
+        "1" == _vm.debugMode
+          ? [
+              _c("span", {
+                staticStyle: { color: "blueviolet" },
+                domProps: { textContent: _vm._s(_vm.line.taxAmount) }
+              }),
+              _vm._v(" "),
+              _c("span", {
+                staticStyle: { color: "#f44336" },
+                domProps: { textContent: _vm._s(_vm.line.discount) }
+              })
+            ]
+          : _vm._e()
+      ],
+      2
+    ),
     _vm._v(" "),
     _c(
       "td",
@@ -53036,74 +53109,153 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h2", { staticClass: "content-header__title" }, [
-      _c("span", [_vm._v("Balance Sheet")]),
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "blnce-sheet-top" }, [
+      _c(
+        "form",
+        {
+          staticClass: "query-options no-print",
+          attrs: { action: "", method: "" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.fetchItems($event)
+            }
+          }
+        },
+        [
+          !_vm.closingBtnVisibility
+            ? _c(
+                "div",
+                { staticClass: "wperp-date-group" },
+                [
+                  _c("datepicker", {
+                    model: {
+                      value: _vm.start_date,
+                      callback: function($$v) {
+                        _vm.start_date = $$v
+                      },
+                      expression: "start_date"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("datepicker", {
+                    model: {
+                      value: _vm.end_date,
+                      callback: function($$v) {
+                        _vm.end_date = $$v
+                      },
+                      expression: "end_date"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "wperp-btn btn--primary add-line-trigger",
+                      attrs: { type: "submit" }
+                    },
+                    [_vm._v("Filter")]
+                  )
+                ],
+                1
+              )
+            : _c("div", { staticClass: "fn-year-info" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "with-multiselect fyear-select",
+                    attrs: { scope: "row" }
+                  },
+                  [
+                    _c("multi-select", {
+                      attrs: { options: _vm.fyears },
+                      model: {
+                        value: _vm.selectedYear,
+                        callback: function($$v) {
+                          _vm.selectedYear = $$v
+                        },
+                        expression: "selectedYear"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _vm.selectedYear
+                  ? _c("div", [
+                      _vm._v("\n                    Balance showing from "),
+                      _c("em", [_vm._v(_vm._s(_vm.selectedYear.start_date))]),
+                      _vm._v(" to "),
+                      _c("em", [_vm._v(_vm._s(_vm.selectedYear.end_date))])
+                    ])
+                  : _vm._e()
+              ])
+        ]
+      ),
       _vm._v(" "),
-      _vm.closingBtnVisibility
-        ? _c(
-            "a",
-            {
-              staticClass: "wperp-btn btn--primary",
-              attrs: { href: "#" },
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.checkClosingPossibility($event)
+      _c("div", { staticClass: "closing-blnc" }, [
+        _c("div", { staticClass: "close-check" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.closingBtnVisibility,
+                expression: "closingBtnVisibility"
+              }
+            ],
+            attrs: { type: "checkbox", id: "prepare-close" },
+            domProps: {
+              checked: Array.isArray(_vm.closingBtnVisibility)
+                ? _vm._i(_vm.closingBtnVisibility, null) > -1
+                : _vm.closingBtnVisibility
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.closingBtnVisibility,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = null,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.closingBtnVisibility = $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      (_vm.closingBtnVisibility = $$a
+                        .slice(0, $$i)
+                        .concat($$a.slice($$i + 1)))
+                  }
+                } else {
+                  _vm.closingBtnVisibility = $$c
                 }
               }
-            },
-            [_vm._v("Close Now")]
-          )
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c(
-      "form",
-      {
-        staticClass: "query-options no-print",
-        attrs: { action: "", method: "" },
-        on: {
-          submit: function($event) {
-            $event.preventDefault()
-            return _vm.fetchItems($event)
-          }
-        }
-      },
-      [
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "prepare-close" } }, [
+            _vm._v("Prepare for closing")
+          ])
+        ]),
+        _vm._v(" "),
         _c(
-          "div",
-          { staticClass: "wperp-date-group" },
-          [
-            _c("datepicker", {
-              model: {
-                value: _vm.start_date,
-                callback: function($$v) {
-                  _vm.start_date = $$v
-                },
-                expression: "start_date"
+          "a",
+          {
+            class: [
+              { visible: _vm.closingBtnVisibility },
+              "wperp-btn btn--primary close-now-btn"
+            ],
+            attrs: { href: "#" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.checkClosingPossibility($event)
               }
-            }),
-            _vm._v(" "),
-            _c("datepicker", {
-              model: {
-                value: _vm.end_date,
-                callback: function($$v) {
-                  _vm.end_date = $$v
-                },
-                expression: "end_date"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "wperp-btn btn--primary add-line-trigger",
-                attrs: { type: "submit" }
-              },
-              [_vm._v("Filter")]
-            )
-          ],
-          1
+            }
+          },
+          [_vm._v("Close Now")]
         ),
         _vm._v(" "),
         _c(
@@ -53120,11 +53272,11 @@ var render = function() {
           },
           [
             _c("i", { staticClass: "flaticon-printer-1" }),
-            _vm._v("\n              Print\n        ")
+            _vm._v("\n                  Print\n            ")
           ]
         )
-      ]
-    ),
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "wperp-panel-body" }, [
       _c("div", { staticClass: "wperp-row" }, [
@@ -53337,7 +53489,7 @@ var render = function() {
           [
             _c("tbody", [
               _c("tr", [
-                _vm._m(0),
+                _vm._m(1),
                 _vm._v(" "),
                 _c("td", [
                   _vm._v(_vm._s(_vm.getCurrencySign() + _vm.totalAsset))
@@ -53349,7 +53501,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("tr", [
-                _vm._m(1),
+                _vm._m(2),
                 _vm._v(" "),
                 _c("td", [
                   _vm._v(_vm._s(_vm.getCurrencySign() + _vm.liability_equity))
@@ -53367,6 +53519,14 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h2", { staticClass: "content-header__title" }, [
+      _c("span", [_vm._v("Balance Sheet")])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
