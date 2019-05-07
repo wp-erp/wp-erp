@@ -80,15 +80,16 @@ class Assets {
         }
 
         wp_localize_script( 'accounting-admin', 'erp_acct_var', array(
-            'user_id'       => $u_id,
-            'site_url'      => $site_url,
-            'rest_nonce'    => $rest_nonce,
-            'logout_url'    => $logout_url,
-            'acct_assets'   => ERP_ACCOUNTING_ASSETS,
-            'erp_assets'    => WPERP_ASSETS,
-            'erp_acct_menus'=> $menus,
-            'erp_acct_url'  => $acct_url,
-            'current_date'  => date( 'Y-m-d' ),
+            'user_id'        => $u_id,
+            'site_url'       => $site_url,
+            'rest_nonce'     => $rest_nonce,
+            'logout_url'     => $logout_url,
+            'acct_assets'    => ERP_ACCOUNTING_ASSETS,
+            'erp_assets'     => WPERP_ASSETS,
+            'erp_acct_menus' => $menus,
+            'erp_acct_url'   => $acct_url,
+            'erp_debug_mode' => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
+            'current_date'   => date( 'Y-m-d' ),
         ) );
     }
 

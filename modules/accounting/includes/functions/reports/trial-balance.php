@@ -563,7 +563,7 @@ function erp_acct_owners_equity_calc_with_opening_balance( $tb_start_date, $data
 function erp_acct_get_closest_fn_year_date( $date ) {
     global $wpdb;
 
-    $sql = "SELECT id, start_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date <= '%s' ORDER BY start_date DESC LIMIT 1";
+    $sql = "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date <= '%s' ORDER BY start_date DESC LIMIT 1";
 
     return $wpdb->get_row( $wpdb->prepare($sql, $date), ARRAY_A );
 }

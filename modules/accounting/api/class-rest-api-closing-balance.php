@@ -39,6 +39,17 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/closest-fn-year', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_closest_fn_year' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_expenses_voucher' );
+                },
+            ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/next-fn-year', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -94,6 +105,22 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $data     = erp_acct_clsbl_get_closest_next_fn_year( $request['date'] );
+        $response = rest_ensure_response( $data );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get current financial year
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_closest_fn_year( $request ) {
+        $data     = erp_acct_get_closest_fn_year_date( date('Y-m-d') );
         $response = rest_ensure_response( $data );
 
         $response->set_status( 200 );
