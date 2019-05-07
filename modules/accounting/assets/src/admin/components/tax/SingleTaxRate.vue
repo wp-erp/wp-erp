@@ -1,5 +1,5 @@
 <template>
-    <div class="app-customers">
+    <div class="app-customers single-tax-rate">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
@@ -168,7 +168,9 @@
         margin-right: 10px !important;
     }
 
-    .col--actions {
-        float: left !important;
+    .single-tax-rate {
+        .col--actions {
+            float: left !important;
+        }
     }
 </style>
