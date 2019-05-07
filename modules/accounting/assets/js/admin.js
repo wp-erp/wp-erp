@@ -14127,6 +14127,8 @@ var STATUS_INITIAL = 0,
 //
 //
 //
+//
+//
 
 
 
@@ -14157,7 +14159,8 @@ var STATUS_INITIAL = 0,
     return {
       taxRate: 0,
       taxAmount: 0,
-      taxCatID: 0
+      taxCatID: 0,
+      debugMode: erp_acct_var.erp_debug_mode
     };
   },
   watch: {
@@ -35399,61 +35402,70 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _c("td", { staticClass: "col--tax", attrs: { "data-colname": "Tax" } }, [
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.line.applyTax,
-            expression: "line.applyTax"
-          }
-        ],
-        staticClass: "wperp-form-field",
-        attrs: { type: "checkbox" },
-        domProps: {
-          checked: Array.isArray(_vm.line.applyTax)
-            ? _vm._i(_vm.line.applyTax, null) > -1
-            : _vm.line.applyTax
-        },
-        on: {
-          change: [
-            function($event) {
-              var $$a = _vm.line.applyTax,
-                $$el = $event.target,
-                $$c = $$el.checked ? true : false
-              if (Array.isArray($$a)) {
-                var $$v = null,
-                  $$i = _vm._i($$a, $$v)
-                if ($$el.checked) {
-                  $$i < 0 && _vm.$set(_vm.line, "applyTax", $$a.concat([$$v]))
+    _c(
+      "td",
+      { staticClass: "col--tax", attrs: { "data-colname": "Tax" } },
+      [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.line.applyTax,
+              expression: "line.applyTax"
+            }
+          ],
+          staticClass: "wperp-form-field",
+          attrs: { type: "checkbox" },
+          domProps: {
+            checked: Array.isArray(_vm.line.applyTax)
+              ? _vm._i(_vm.line.applyTax, null) > -1
+              : _vm.line.applyTax
+          },
+          on: {
+            change: [
+              function($event) {
+                var $$a = _vm.line.applyTax,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = null,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && _vm.$set(_vm.line, "applyTax", $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      _vm.$set(
+                        _vm.line,
+                        "applyTax",
+                        $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                      )
+                  }
                 } else {
-                  $$i > -1 &&
-                    _vm.$set(
-                      _vm.line,
-                      "applyTax",
-                      $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                    )
+                  _vm.$set(_vm.line, "applyTax", $$c)
                 }
-              } else {
-                _vm.$set(_vm.line, "applyTax", $$c)
-              }
-            },
-            _vm.respondAtChange
-          ]
-        }
-      }),
-      _vm._v(" "),
-      _c("span", {
-        staticStyle: { color: "blueviolet" },
-        domProps: { textContent: _vm._s(_vm.line.taxAmount) }
-      }),
-      _vm._v(" "),
-      _c("span", {
-        staticStyle: { color: "#f44336" },
-        domProps: { textContent: _vm._s(_vm.line.discount) }
-      })
-    ]),
+              },
+              _vm.respondAtChange
+            ]
+          }
+        }),
+        _vm._v(" "),
+        "1" == _vm.debugMode
+          ? [
+              _c("span", {
+                staticStyle: { color: "blueviolet" },
+                domProps: { textContent: _vm._s(_vm.line.taxAmount) }
+              }),
+              _vm._v(" "),
+              _c("span", {
+                staticStyle: { color: "#f44336" },
+                domProps: { textContent: _vm._s(_vm.line.discount) }
+              })
+            ]
+          : _vm._e()
+      ],
+      2
+    ),
     _vm._v(" "),
     _c(
       "td",

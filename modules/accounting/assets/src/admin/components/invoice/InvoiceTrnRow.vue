@@ -20,8 +20,10 @@
         <td class="col--tax" data-colname="Tax">
             <input type="checkbox" v-model="line.applyTax" @change="respondAtChange" class="wperp-form-field">
 
-            <span style="color:blueviolet" v-text="line.taxAmount"></span>
-            <span style="color:#f44336" v-text="line.discount"></span>
+            <template v-if="'1' == debugMode">
+                <span style="color:blueviolet" v-text="line.taxAmount"></span>
+                <span style="color:#f44336" v-text="line.discount"></span>
+            </template>
         </td>
         <td class="col--actions delete-row" data-colname="Action">
             <span class="wperp-btn" @click="removeRow"><i class="flaticon-trash"></i></span>
@@ -63,7 +65,8 @@
             return {
                 taxRate  : 0,
                 taxAmount: 0,
-                taxCatID : 0
+                taxCatID : 0,
+                debugMode: erp_acct_var.erp_debug_mode
             }
         },
 
