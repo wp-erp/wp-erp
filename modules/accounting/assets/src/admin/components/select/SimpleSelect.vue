@@ -1,48 +1,12 @@
 <template>
     <div v-if="checkOptions" class="vue-select" :style="'width:' + width + 'px'">
         <select v-model="select_val" @change="onChange">
-            <option v-for="option in options" :value="option.id">{{ option.name }}</option>
+            <option :key="option.id" v-for="option in options" :value="option.id">{{ option.name }}</option>
         </select>
         <i class="select--icon"/>
     </div>
 </template>
 
-<style scoped>
-    .vue-select {
-        border-bottom: 1px solid #ccc;
-        display: inline-block;
-        font-family: inherit;
-        white-space: nowrap;
-        position: relative;
-        overflow: hidden;
-        width: auto;
-    }
-    .vue-select select {
-        -webkit-appearance: none;
-        box-shadow: none;
-        font-size: 15px;
-        width: 130%;
-        border: 0;
-    }
-    .vue-select select:focus {
-        outline: none;
-    }
-    .vue-select .select--icon {
-        border-color: #333 transparent transparent transparent;
-        border-width: 6px 5px 0 5px;
-        transition: opacity 0.5s;
-        border-style: solid;
-        position: absolute;
-        opacity: 0.5;
-        right: 5px;
-        top: 10px;
-        height: 0;
-        width: 0;
-    }
-    .vue-select:hover .select--icon {
-        opacity: 1;
-    }
-</style>
 
 <script>
     export default {
@@ -85,3 +49,40 @@
         }
     };
 </script>
+
+<style scoped>
+    .vue-select {
+        border-bottom: 1px solid #ccc;
+        display: inline-block;
+        font-family: inherit;
+        white-space: nowrap;
+        position: relative;
+        overflow: hidden;
+        width: auto;
+    }
+    .vue-select select {
+        -webkit-appearance: none;
+        box-shadow: none;
+        font-size: 15px;
+        width: 130%;
+        border: 0;
+    }
+    .vue-select select:focus {
+        outline: none;
+    }
+    .vue-select .select--icon {
+        border-color: #333 transparent transparent transparent;
+        border-width: 6px 5px 0 5px;
+        transition: opacity 0.5s;
+        border-style: solid;
+        position: absolute;
+        opacity: 0.5;
+        right: 5px;
+        top: 10px;
+        height: 0;
+        width: 0;
+    }
+    .vue-select:hover .select--icon {
+        opacity: 1;
+    }
+</style>

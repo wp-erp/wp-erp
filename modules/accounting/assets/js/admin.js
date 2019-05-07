@@ -22061,42 +22061,6 @@ if (false) {(function () {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "SimpleSelect",
   props: {
@@ -28008,12 +27972,6 @@ setTimeout(function () {
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 
 
@@ -28054,7 +28012,7 @@ setTimeout(function () {
       banks: [],
       people: [],
       options: [],
-      fin_year: {},
+      fin_year: null,
       years: [],
       description: '',
       all_ledgers: [],
@@ -28068,17 +28026,16 @@ setTimeout(function () {
       totalCredit: 0
     };
   },
+  watch: {
+    isWorking: function isWorking(newval) {
+      this.isWorking = newval;
+    },
+    fin_year: function fin_year() {
+      this.getSelectedOB(this.fin_year);
+    }
+  },
   created: function created() {
-    var _this = this;
-
     this.fetchData();
-    this.$root.$on('SimpleSelectChange', function (data) {
-      _this.fin_year = _this.years.find(function (o) {
-        return o.id === data.selected;
-      });
-
-      _this.getSelectedOB(_this.fin_year);
-    });
   },
   methods: {
     groupBy: function groupBy(arr, fn) {
@@ -28091,7 +28048,7 @@ setTimeout(function () {
       }, {});
     },
     fetchData: function fetchData() {
-      var _this2 = this;
+      var _this = this;
 
       this.chartAccounts = [];
       this.$store.dispatch('spinner/setSpinner', true);
@@ -28101,39 +28058,41 @@ setTimeout(function () {
       this.fetchBanks();
       this.getPeople();
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers/accounts').then(function (response) {
-        _this2.chartAccounts = response.data;
+        _this.chartAccounts = response.data;
 
-        _this2.$store.dispatch('spinner/setSpinner', false);
+        _this.getSelectedOB(_this.fin_year);
+
+        _this.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
-        _this2.$store.dispatch('spinner/setSpinner', false);
+        _this.$store.dispatch('spinner/setSpinner', false);
       });
     },
     fetchLedgers: function fetchLedgers() {
-      var _this3 = this;
+      var _this2 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers').then(function (response) {
         response.data.forEach(function (ledger) {
           ledger.ledger_id = ledger.id;
-          ledger.balance = _this3.transformBalance(ledger.balance);
+          ledger.balance = _this2.transformBalance(ledger.balance);
         });
-        _this3.ledgers = _this3.groupBy(response.data, 'chart_id');
-        _this3.all_ledgers = response.data;
+        _this2.ledgers = _this2.groupBy(response.data, 'chart_id');
+        _this2.all_ledgers = response.data;
       });
     },
     fetchAgencies: function fetchAgencies() {
-      var _this4 = this;
+      var _this3 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/tax-agencies').then(function (response) {
-        _this4.agencies = response.data;
+        _this3.agencies = response.data;
       }).catch(function (error) {
         console.log(error);
       });
     },
     fetchBanks: function fetchBanks() {
-      var _this5 = this;
+      var _this4 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers/7/accounts').then(function (response) {
-        _this5.banks = response.data;
+        _this4.banks = response.data;
       }).catch(function (error) {
         console.log(error);
       });
@@ -28200,7 +28159,7 @@ setTimeout(function () {
       }
     },
     submitOBForm: function submitOBForm() {
-      var _this6 = this;
+      var _this5 = this;
 
       this.validateForm();
 
@@ -28223,58 +28182,59 @@ setTimeout(function () {
         total_cr: this.totalCredit,
         description: this.description
       }).then(function (res) {
-        _this6.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
 
-        _this6.showAlert('success', 'Opening Balance Created!');
+        _this5.showAlert('success', 'Opening Balance Created!');
       }).catch(function (error) {
-        _this6.$store.dispatch('spinner/setSpinner', false);
+        _this5.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
-        _this6.isWorking = false;
+        _this5.isWorking = false;
       });
     },
     getYears: function getYears() {
-      var _this7 = this;
+      var _this6 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/opening-balances/names').then(function (response) {
-        _this7.years = response.data;
+        _this6.years = response.data;
+        _this6.fin_year = _this6.years.length ? _this6.years[0] : null;
       });
     },
     getPeople: function getPeople() {
-      var _this8 = this;
+      var _this7 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/people', {
         params: {
           type: 'all'
         }
       }).then(function (response) {
-        _this8.options = response.data;
+        _this7.options = response.data;
       });
     },
     getSelectedOB: function getSelectedOB(year) {
-      var _this9 = this;
+      var _this8 = this;
 
       this.acct_pay = [];
       this.acct_rec = [];
       this.tax_pay = [];
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(year.id)).then(function (response) {
-        _this9.totalDebit = 0;
-        _this9.totalCredit = 0;
+        _this8.totalDebit = 0;
+        _this8.totalCredit = 0;
         response.data.forEach(function (ledger) {
           ledger.id = ledger.ledger_id;
-          ledger.balance = _this9.transformBalance(ledger.balance);
-          _this9.totalDebit += parseFloat(ledger.debit);
-          _this9.totalCredit += parseFloat(ledger.credit);
+          ledger.balance = _this8.transformBalance(ledger.balance);
+          _this8.totalDebit += parseFloat(ledger.debit);
+          _this8.totalCredit += parseFloat(ledger.credit);
         });
-        _this9.ledgers = _this9.groupBy(response.data, 'chart_id');
+        _this8.ledgers = _this8.groupBy(response.data, 'chart_id');
 
-        _this9.fetchVirtualAccts(year);
+        _this8.fetchVirtualAccts(year);
       }).then(function () {
-        if (Object.keys(_this9.ledgers).length === 0) {
-          _this9.fetchLedgers();
+        if (Object.keys(_this8.ledgers).length === 0) {
+          _this8.fetchLedgers();
         }
 
-        if (!_this9.ledgers.hasOwnProperty('7')) {
-          _this9.ledgers[7] = _this9.banks;
+        if (!_this8.ledgers.hasOwnProperty('7')) {
+          _this8.ledgers[7] = _this8.banks;
         }
       });
 
@@ -28283,26 +28243,26 @@ setTimeout(function () {
       }
     },
     fetchVirtualAccts: function fetchVirtualAccts(year) {
-      var _this10 = this;
+      var _this9 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/virtual-accts/".concat(year.id)).then(function (response) {
-        _this10.acct_pay = response.data.acct_payable;
-        _this10.acct_rec = response.data.acct_receivable;
-        _this10.tax_pay = response.data.tax_payable;
+        _this9.acct_pay = response.data.acct_payable;
+        _this9.acct_rec = response.data.acct_receivable;
+        _this9.tax_pay = response.data.tax_payable;
       }).then(function () {
-        _this10.acct_pay.forEach(function (ledger) {
-          _this10.totalCredit += parseFloat(ledger.credit);
+        _this9.acct_pay.forEach(function (ledger) {
+          _this9.totalCredit += parseFloat(ledger.credit);
         });
 
-        _this10.acct_rec.forEach(function (ledger) {
-          _this10.totalDebit += parseFloat(ledger.debit);
+        _this9.acct_rec.forEach(function (ledger) {
+          _this9.totalDebit += parseFloat(ledger.debit);
         });
 
-        _this10.tax_pay.forEach(function (ledger) {
-          _this10.totalCredit += parseFloat(ledger.credit);
+        _this9.tax_pay.forEach(function (ledger) {
+          _this9.totalCredit += parseFloat(ledger.credit);
         });
 
-        _this10.$store.dispatch('spinner/setSpinner', false);
+        _this9.$store.dispatch('spinner/setSpinner', false);
       });
     },
     printPopup: function printPopup() {
@@ -28323,11 +28283,6 @@ setTimeout(function () {
     removeBankRow: function removeBankRow(index) {
       this.$delete(this.banks, index);
       this.calculateAmount();
-    }
-  },
-  watch: {
-    isWorking: function isWorking(newval) {
-      this.isWorking = newval;
     }
   }
 });
@@ -46472,9 +46427,11 @@ var render = function() {
               }
             },
             _vm._l(_vm.options, function(option) {
-              return _c("option", { domProps: { value: option.id } }, [
-                _vm._v(_vm._s(option.name))
-              ])
+              return _c(
+                "option",
+                { key: option.id, domProps: { value: option.id } },
+                [_vm._v(_vm._s(option.name))]
+              )
             }),
             0
           ),
@@ -53164,10 +53121,7 @@ var render = function() {
             : _c("div", { staticClass: "fn-year-info" }, [
                 _c(
                   "div",
-                  {
-                    staticClass: "with-multiselect fyear-select",
-                    attrs: { scope: "row" }
-                  },
+                  { staticClass: "with-multiselect fyear-select" },
                   [
                     _c("multi-select", {
                       attrs: { options: _vm.fyears },
@@ -53651,13 +53605,15 @@ var render = function() {
           _c("div", { staticClass: "wperp-row" }, [
             _c(
               "div",
-              { staticClass: "wperp-col-sm-6" },
+              {
+                staticClass:
+                  "wperp-col-sm-6 with-multiselect opening-fyear-select"
+              },
               [
                 _c("label", [_vm._v("Financial Year")]),
                 _vm._v(" "),
-                _c("simple-select", {
-                  attrs: { width: 200, options: _vm.years },
-                  on: { input: _vm.getSelectedOB },
+                _c("multi-select", {
+                  attrs: { options: _vm.years },
                   model: {
                     value: _vm.fin_year,
                     callback: function($$v) {

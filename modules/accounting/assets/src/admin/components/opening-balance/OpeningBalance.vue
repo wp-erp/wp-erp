@@ -14,15 +14,9 @@
 
         <form action="" method="post" @submit.prevent="submitOBForm">
             <div class="wperp-row">
-                <div class="wperp-col-sm-6">
+                <div class="wperp-col-sm-6 with-multiselect opening-fyear-select">
                     <label>Financial Year</label>
-                    <simple-select
-                        v-model="fin_year"
-                        @input="getSelectedOB"
-                        :width="200"
-                        :options="years"
-                    >
-                    </simple-select>
+                    <multi-select v-model="fin_year" :options="years" />
                 </div>
 
                 <div class="wperp-col-sm-6">
@@ -328,7 +322,7 @@
                 banks        : [],
                 people       : [],
                 options      : [],
-                fin_year     : {},
+                fin_year     : null,
                 years        : [],
                 description  : '',
                 all_ledgers  : [],
@@ -343,13 +337,18 @@
             }
         },
 
+        watch: {
+            isWorking(newval) {
+                this.isWorking = newval;
+            },
+
+            fin_year() {
+                this.getSelectedOB(this.fin_year);
+            }
+        },
+
         created() {
             this.fetchData();
-
-            this.$root.$on( 'SimpleSelectChange', (data) => {
-                this.fin_year = this.years.find(o => o.id === data.selected);
-                this.getSelectedOB(this.fin_year);
-            });
         },
 
         methods: {
@@ -370,6 +369,8 @@
                 this.getPeople();
                 HTTP.get('/ledgers/accounts').then( response => {
                     this.chartAccounts = response.data;
+
+                    this.getSelectedOB(this.fin_year);
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
@@ -478,13 +479,13 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.post('/opening-balances', {
-                    year: this.fin_year.id,
-                    ledgers: this.ledgers,
-                    acct_pay: this.acct_pay,
-                    acct_rec: this.acct_rec,
-                    tax_pay: this.tax_pay,
-                    total_dr: this.totalDebit,
-                    total_cr: this.totalCredit,
+                    year       : this.fin_year.id,
+                    ledgers    : this.ledgers,
+                    acct_pay   : this.acct_pay,
+                    acct_rec   : this.acct_rec,
+                    tax_pay    : this.tax_pay,
+                    total_dr   : this.totalDebit,
+                    total_cr   : this.totalCredit,
                     description: this.description,
 
                 }).then(res => {
@@ -500,6 +501,7 @@
             getYears() {
                 HTTP.get('/opening-balances/names').then( response => {
                     this.years = response.data;
+                    this.fin_year = this.years.length ? this.years[0] : null;
                 });
             },
 
@@ -584,13 +586,8 @@
                 this.$delete(this.banks, index);
                 this.calculateAmount();
             }
-        },
+        }
 
-        watch: {
-            isWorking(newval) {
-                this.isWorking = newval;
-            },
-        },
     }
 </script>
 
@@ -690,5 +687,11 @@
     .erp-accordion-expand-body {
         padding: 1rem 1.5rem;
         background: #eff0f2;
+    }
+
+    .opening-fyear-select {
+        .multiselect {
+            width: 200px;
+        }
     }
 </style>
