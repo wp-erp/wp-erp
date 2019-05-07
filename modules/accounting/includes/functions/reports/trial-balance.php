@@ -637,9 +637,9 @@ function erp_acct_sales_tax_opening_balance_by_fn_year_id( $id, $type ) {
 
     $sql = "SELECT SUM(opb.balance) AS balance FROM ( SELECT SUM( debit - credit ) AS balance
             FROM {$wpdb->prefix}erp_acct_opening_balances
-            WHERE type = 'tax_agency' GROUP BY ledger_id {$having} ) AS opb";
+            WHERE financial_year_id = %d AND type = 'tax_agency' GROUP BY ledger_id {$having} ) AS opb";
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $wpdb->prepare($sql, $id), ARRAY_A );
 }
 
 /**
