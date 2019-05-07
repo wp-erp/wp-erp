@@ -14,7 +14,7 @@
                 </div>
 
                 <div v-else class="fn-year-info">
-                    <div scope="row" class="with-multiselect fyear-select">
+                    <div class="with-multiselect fyear-select">
                         <multi-select v-model="selectedYear" :options="fyears" />
                     </div>
 
