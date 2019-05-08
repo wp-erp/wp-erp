@@ -334,7 +334,7 @@ function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
     $pay_bill_data['trn_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
     $pay_bill_data['vendor_id'] = isset( $data['vendor_id'] ) ? $data['vendor_id'] : null;
     $pay_bill_data['people_name'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
-    $pay_bill_data['trn_date']     = isset( $data['date'] ) ? $data['date'] : date( "Y-m-d" );
+    $pay_bill_data['trn_date']     = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
     $pay_bill_data['amount']       = isset( $data['amount'] ) ? $data['amount'] : 0;
     $pay_bill_data['ref']          = isset( $data['ref'] ) ? $data['ref'] : 0;
     $pay_bill_data['trn_by']       = isset( $data['trn_by'] ) ? $data['trn_by'] : 0;
