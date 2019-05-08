@@ -11,8 +11,7 @@
             <button class="wperp-btn btn--primary add-line-trigger" type="submit">View</button>
 
             <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
-            <i class="flaticon-printer-1"></i>
-            &nbsp; Print
+                <i class="flaticon-printer-1"></i> &nbsp; Print
             </a>
         </form>
 

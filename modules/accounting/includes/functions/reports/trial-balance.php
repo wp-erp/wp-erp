@@ -142,7 +142,8 @@ function erp_acct_get_account_payable( $args ) {
         AS get_amount";
 
     $purchase_sql = "SELECT SUM(balance) AS amount
-        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE trn_date <= '%s' GROUP BY purchase_no HAVING balance < 0 )
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE trn_date <= '%s'
+        GROUP BY purchase_no HAVING balance < 0 )
         AS get_amount";
 
     $bill_amount = $wpdb->get_var( $wpdb->prepare( $bill_sql, $args['end_date'] ) );
@@ -463,7 +464,9 @@ function erp_acct_sales_tax_calc_with_opening_balance( $tb_start_date, $data, $s
 }
 
 /**
- * Get trial balance people account_payable/account_receivable calculate with opening balance within financial year date range
+ * Get trial balance people account_payable/account_receivable
+ * calculate with opening balance within financial year date range
+ * and with people account details data
  *
  * @param string $tb_start_date
  * @param float $data => ledger details data on trial balance date range
@@ -488,21 +491,23 @@ function erp_acct_people_calc_with_opening_balance( $tb_start_date, $data, $type
     }
 
     // should we go further calculation, check the diff
-    if ( ! erp_acct_has_date_diff($tb_start_date, $closest_fy_date['start_date']) ) {
-        return $balance;
-    } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
-    }
+    // if ( ! erp_acct_has_date_diff($tb_start_date, $closest_fy_date['start_date']) ) {
+    //     return $balance;
+    // } else {
+    //     $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
+    // }
 
-    $start_date = $closest_fy_date['start_date'];
-    $end_date   = $prev_date_of_tb_start;
+    // $start_date = $closest_fy_date['start_date'];
+    // $end_date   = $prev_date_of_tb_start;
 
-    if ( 'payable' === $type ) {
-        $balance += erp_acct_calculate_people_balance($sql1, $start_date, $end_date);
-        $balance += erp_acct_calculate_people_balance($sql2, $start_date, $end_date);
-    } elseif ( 'receivable' === $type ) {
-        $balance += erp_acct_calculate_people_balance($sql1, $start_date, $end_date);
-    }
+    // if ( 'payable' === $type ) {
+    //     $balance += erp_acct_calculate_people_balance($sql1, $start_date, $end_date);
+    //     $balance += erp_acct_calculate_people_balance($sql2, $start_date, $end_date);
+    // } elseif ( 'receivable' === $type ) {
+    //     $balance += erp_acct_calculate_people_balance($sql1, $start_date, $end_date);
+    // }
+
+    // $people_account_details = erp_acct_calc_with_people_account_details();
 
     return $balance;
 }

@@ -12428,7 +12428,6 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 //
 //
 //
-//
 
 
 
@@ -15137,6 +15136,35 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -34008,7 +34036,7 @@ var render = function() {
             },
             [
               _c("i", { staticClass: "flaticon-printer-1" }),
-              _vm._v("\n          Print\n        ")
+              _vm._v("   Print\n        ")
             ]
           )
         ]
@@ -36979,20 +37007,21 @@ var render = function() {
     _c(
       "li",
       [
-        _c("router-link", { attrs: { to: { name: "TrialBalance" } } }, [
-          _vm._v("Trial Balance")
-        ])
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "li",
-      [
+        _c("h3", [_vm._v("Trial Balance")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v(
+            "Trial balance is the bookkeeping or accounting report that lists the balances in each of general ledger accounts."
+          )
+        ]),
+        _vm._v(" "),
         _c(
           "router-link",
-          { attrs: { to: { name: "LedgerSingle", params: { id: 1 } } } },
-          [_vm._v("Ledger Report")]
+          {
+            staticClass: "wperp-btn btn--primary",
+            attrs: { to: { name: "TrialBalance" } }
+          },
+          [_vm._v("View Report")]
         )
       ],
       1
@@ -37001,9 +37030,18 @@ var render = function() {
     _c(
       "li",
       [
-        _c("router-link", { attrs: { to: { name: "IncomeStatement" } } }, [
-          _vm._v("Income Statement")
-        ])
+        _c("h3", [_vm._v("Ledger Report")]),
+        _vm._v(" "),
+        _c("p", [_vm._v("Ledger report")]),
+        _vm._v(" "),
+        _c(
+          "router-link",
+          {
+            staticClass: "wperp-btn btn--primary",
+            attrs: { to: { name: "LedgerSingle", params: { id: 1 } } }
+          },
+          [_vm._v("View Report")]
+        )
       ],
       1
     ),
@@ -37011,9 +37049,22 @@ var render = function() {
     _c(
       "li",
       [
-        _c("router-link", { attrs: { to: { name: "SalesTax" } } }, [
-          _vm._v("Sales Tax")
-        ])
+        _c("h3", [_vm._v("Income Statement")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v(
+            "A summary of a management's performance as reflecte the profitability of an organization during the time interval."
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "router-link",
+          {
+            staticClass: "wperp-btn btn--primary",
+            attrs: { to: { name: "IncomeStatement" } }
+          },
+          [_vm._v("View Report")]
+        )
       ],
       1
     ),
@@ -37021,9 +37072,45 @@ var render = function() {
     _c(
       "li",
       [
-        _c("router-link", { attrs: { to: { name: "BalanceSheet" } } }, [
-          _vm._v("Balance Sheet")
-        ])
+        _c("h3", [_vm._v("Sales Tax")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v(
+            "It generates report based on the sales tax charged or paid for the current financial cycle/year."
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "router-link",
+          {
+            staticClass: "wperp-btn btn--primary",
+            attrs: { to: { name: "SalesTax" } }
+          },
+          [_vm._v("View Report")]
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "li",
+      [
+        _c("h3", [_vm._v("Balance Sheet")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v(
+            'This is a report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year.'
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "router-link",
+          {
+            staticClass: "wperp-btn btn--primary",
+            attrs: { to: { name: "BalanceSheet" } }
+          },
+          [_vm._v("View Report")]
+        )
       ],
       1
     )
