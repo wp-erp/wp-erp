@@ -48,13 +48,13 @@
             <div class="form-row">
                 <label for="">Account Name</label>
 
-                <input type="text" v-model="ledgFields.name" required>
+                <input type="text" class="wperp-form-field" v-model="ledgFields.name" required>
             </div>
 
             <div class="form-row">
                 <label for="">Code (optional)</label>
 
-                <input type="number" v-model="ledgFields.code">
+                <input type="number" class="wperp-form-field" v-model="ledgFields.code">
             </div>
 
             <button class="wperp-btn btn--primary" type="submit">

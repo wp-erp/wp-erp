@@ -90,7 +90,7 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <submit-button text="Add New Tax Rate" @click.native.prevent="addNewTaxRate"></submit-button>
+                            <submit-button text="Save" @click.native.prevent="addNewTaxRate"></submit-button>
                         </div>
                     </div>
                 </form>
