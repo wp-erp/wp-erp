@@ -70,23 +70,33 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
         } // liability loop
     } // ledger loop
 
-    // get accounts receivable
-    $accounts_receivable = erp_acct_clsbl_get_accounts_receivable_balance_with_people( $args );
+    /**
+     * DON'T REMOVE THIS BLOCK BELOW
+     *
+     * ***MAY BE USEFUL FOR LATER USE
+     */
 
-    foreach ( $accounts_receivable as $acc_receivable ) {
-        erp_acct_clsbl_insert_into_opening_balance(
-            $next_f_year_id, null, $acc_receivable['id'], 'people', $acc_receivable['balance'], 0.00
-        );
-    }
+    // // get accounts receivable
+    // $accounts_receivable = erp_acct_clsbl_get_accounts_receivable_balance_with_people( $args );
 
-    // get accounts payable
-    $accounts_payable = erp_acct_clsbl_get_accounts_payable_balance_with_people( $args );
+    // foreach ( $accounts_receivable as $acc_receivable ) {
+    //     erp_acct_clsbl_insert_into_opening_balance(
+    //         $next_f_year_id, null, $acc_receivable['id'], 'people', $acc_receivable['balance'], 0.00
+    //     );
+    // }
 
-    foreach ( $accounts_payable as $acc_payable ) {
-        erp_acct_clsbl_insert_into_opening_balance(
-            $next_f_year_id, null, $acc_payable['id'], 'people', 0.00, abs($acc_payable['balance'])
-        );
-    }
+    // // get accounts payable
+    // $accounts_payable = erp_acct_clsbl_get_accounts_payable_balance_with_people( $args );
+
+    // foreach ( $accounts_payable as $acc_payable ) {
+    //     erp_acct_clsbl_insert_into_opening_balance(
+    //         $next_f_year_id, null, $acc_payable['id'], 'people', 0.00, abs($acc_payable['balance'])
+    //     );
+    // }
+
+    /**
+     * DON'T REMOVE THIS BLOCK ABOVE
+     */
 
     // sales tax receivable
     $tax_receivable = erp_acct_clsbl_sales_tax_agency( $args, 'receivable' );
