@@ -28,7 +28,7 @@
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
                             <submit-button v-if="is_update" text="Update Tax Category" @click.native.prevent="updateTaxCat" :working="isWorking"></submit-button>
-                            <submit-button v-else text="Add New Tax Category" @click.native.prevent="addNewTaxCat" :working="isWorking"></submit-button>
+                            <submit-button v-else text="Save" @click.native.prevent="addNewTaxCat" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>

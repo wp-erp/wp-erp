@@ -23,7 +23,7 @@
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
                             <submit-button v-if="is_update" text="Update Tax Agency" @click.native.prevent="UpdateTaxAgency" :working="isWorking"></submit-button>
-                            <submit-button v-else text="Add New Tax Agency" @click.native.prevent="addNewTaxAgency" :working="isWorking"></submit-button>
+                            <submit-button v-else text="Save" @click.native.prevent="addNewTaxAgency" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>

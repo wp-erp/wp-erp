@@ -35833,6 +35833,7 @@ var render = function() {
                                 expression: "discount"
                               }
                             ],
+                            staticClass: "wperp-form-field",
                             attrs: {
                               type: "text",
                               placeholder: _vm.discountType
@@ -35905,6 +35906,7 @@ var render = function() {
                                 expression: "taxTotalAmount"
                               }
                             ],
+                            staticClass: "wperp-form-field",
                             attrs: { type: "text", readonly: "" },
                             domProps: { value: _vm.taxTotalAmount },
                             on: {
@@ -35934,6 +35936,7 @@ var render = function() {
                                 expression: "finalTotalAmount"
                               }
                             ],
+                            staticClass: "wperp-form-field",
                             attrs: { type: "text", readonly: "" },
                             domProps: { value: _vm.finalTotalAmount },
                             on: {
@@ -36835,6 +36838,7 @@ var render = function() {
                 expression: "ledgFields.name"
               }
             ],
+            staticClass: "wperp-form-field",
             attrs: { type: "text", required: "" },
             domProps: { value: _vm.ledgFields.name },
             on: {
@@ -36860,6 +36864,7 @@ var render = function() {
                 expression: "ledgFields.code"
               }
             ],
+            staticClass: "wperp-form-field",
             attrs: { type: "number" },
             domProps: { value: _vm.ledgFields.code },
             on: {
@@ -48261,10 +48266,7 @@ var render = function() {
                           }
                         })
                       : _c("submit-button", {
-                          attrs: {
-                            text: "Add New Tax Agency",
-                            working: _vm.isWorking
-                          },
+                          attrs: { text: "Save", working: _vm.isWorking },
                           nativeOn: {
                             click: function($event) {
                               $event.preventDefault()
@@ -48417,10 +48419,7 @@ var render = function() {
                           }
                         })
                       : _c("submit-button", {
-                          attrs: {
-                            text: "Add New Tax Category",
-                            working: _vm.isWorking
-                          },
+                          attrs: { text: "Save", working: _vm.isWorking },
                           nativeOn: {
                             click: function($event) {
                               $event.preventDefault()
@@ -49078,7 +49077,7 @@ var render = function() {
                   { staticClass: "buttons-wrapper text-right" },
                   [
                     _c("submit-button", {
-                      attrs: { text: "Add New Tax Rate" },
+                      attrs: { text: "Save" },
                       nativeOn: {
                         click: function($event) {
                           $event.preventDefault()

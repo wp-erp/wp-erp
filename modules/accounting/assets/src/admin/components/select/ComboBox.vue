@@ -88,7 +88,7 @@
 			justify-content: space-between;
 			background: @theme-color;
 			color: #fff;
-			padding: 4px 20px;
+			padding: 6px 20px;
 			border-radius: 3px;
 			white-space: nowrap;
 			cursor: pointer;
@@ -113,7 +113,7 @@
 		border-radius: 3px;
 		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 		background-clip: padding-box;
-		margin: 6px 0 0;	
+		margin: 6px 0 0;
 		padding: 5px 0;
 		font-size: 14px;
 		display: block;
