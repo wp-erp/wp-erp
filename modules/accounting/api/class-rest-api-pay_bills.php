@@ -332,7 +332,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['ref'] = $request['ref'];
         }
         if ( isset( $request['trn_date'] ) ) {
-            $prepared_item['trn_date'] = absint( $request['trn_date'] );
+            $prepared_item['trn_date'] = $request['trn_date'];
         }
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
