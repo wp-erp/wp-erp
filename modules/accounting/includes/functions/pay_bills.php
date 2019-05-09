@@ -178,8 +178,6 @@ function erp_acct_insert_pay_bill( $data ) {
             erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item );
         }
 
-        erp_acct_insert_pay_bill_data_people_details( $pay_bill_data );
-
         if ( isset( $pay_bill_data['trn_by'] ) && $pay_bill_data['trn_by'] === '3' ) {
             erp_acct_insert_check_data ( $pay_bill_data );
         }
@@ -265,8 +263,6 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
 
             erp_acct_update_bill_data_into_ledger( $pay_bill_data, $pay_bill_id, $item );
         }
-
-        erp_acct_update_pay_bill_data_people_details( $pay_bill_data, $pay_bill_id );
 
         $wpdb->query( 'COMMIT' );
 
@@ -434,7 +430,7 @@ function erp_acct_get_pay_bill_count() {
  *
  * @param $bill_no
  * @param $due
- * @return int
+ * @return void
  */
 function erp_acct_change_bill_status( $bill_no ) {
     global $wpdb;
@@ -460,53 +456,4 @@ function erp_acct_change_bill_status( $bill_no ) {
 
 }
 
-/**
- * Insert pay_bill data in people details
- *
- * @param $pay_bill_data
- *
- */
-function erp_acct_insert_pay_bill_data_people_details( $pay_bill_data ) {
-    global $wpdb;
-
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
-        'people_id'   => $pay_bill_data['vendor_id'],
-        'trn_no'      => $pay_bill_data['voucher_no'],
-        'particulars' => $pay_bill_data['particulars'],
-        'debit'       => $pay_bill_data['amount'],
-        'credit'      => 0,
-        'voucher_type'=> erp_acct_get_trn_type_by_voucher_no( $pay_bill_data['voucher_no'] ),
-        'trn_date'    => $pay_bill_data['trn_date'],
-        'created_at'  => $pay_bill_data['created_at'],
-        'created_by'  => $pay_bill_data['created_by'],
-        'updated_at'  => $pay_bill_data['updated_at'],
-        'updated_by'  => $pay_bill_data['updated_by']
-    ) );
-}
-
-/**
- * Update pay_bill data in people details
- *
- * @param $pay_bill_data
- * @param $pay_bill_no
- *
- */
-function erp_acct_update_pay_bill_data_people_details( $pay_bill_data, $pay_bill_no ) {
-    global $wpdb;
-
-    $wpdb->update( $wpdb->prefix . 'erp_acct_people_account_details', array(
-        'people_id'   => $pay_bill_data['vendor_id'],
-        'particulars' => $pay_bill_data['particulars'],
-        'debit'       => $pay_bill_data['amount'],
-        'credit'      => 0,
-        'voucher_type'=> erp_acct_get_trn_type_by_voucher_no( $pay_bill_no ),
-        'trn_date'    => $pay_bill_data['trn_date'],
-        'created_at'  => $pay_bill_data['created_at'],
-        'created_by'  => $pay_bill_data['created_by'],
-        'updated_at'  => $pay_bill_data['updated_at'],
-        'updated_by'  => $pay_bill_data['updated_by']
-    ), array(
-        'trn_no' => $pay_bill_no
-    ));
-}
 
