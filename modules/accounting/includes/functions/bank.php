@@ -50,6 +50,12 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
 
     $accts = $wpdb->get_results( $query, ARRAY_A );
 
+    for ( $i = 0; $i < count( $accts ) ; $i++ ) {
+        if ( 1 == $accts[$i]['ledger_id'] ) {
+            $accts[$i]['balance'] = (float)get_ledger_balance_with_opening_balance(1 );
+        }
+    }
+
     if ( $cash_only && !empty( $accts ) ) {
         return $accts;
     }
@@ -90,25 +96,17 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
  * @return mixed
  */
 function erp_acct_get_dashboard_banks() {
-    global $wpdb;
+    $results = [];
+    $results[] = [
+        'name'       => 'Cash',
+        'balance'    => get_ledger_balance_with_opening_balance( 1 ),
+    ];
 
-    $sql = "SELECT
-        ledger.name,
-        SUM(ledger_detail.debit - ledger_detail.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
-        WHERE ledger.slug = 'cash' GROUP BY ledger_detail.ledger_id";
-
-    // All DB results are inside `rows` key
-    $results = $wpdb->get_results($sql, ARRAY_A);
-
-    $additional = erp_acct_dashboard_balance_bank_balance('balance' );
-    $balance = erp_acct_dashboard_balance_cash_at_bank( $additional );
-
+    $args['start_date'] = $args['end_date'] = date("Y-m-d" );
     $results[] = [
         'name'       => 'Cash at Bank',
-        'balance'    => $balance,
-        'additional' => $additional,
+        'balance'    => erp_acct_cash_at_bank( $args, 'balance' ),
+        'additional' => erp_acct_dashboard_balance_bank_balance('balance' )
     ];
 
     return $results;

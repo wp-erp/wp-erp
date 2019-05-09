@@ -321,3 +321,30 @@ function erp_acct_get_ob_virtual_acct( $year_id ) {
     return $vir_ac;
 
 }
+
+/**
+ * Get balance with opening balance of a ledger
+ *
+ * @param $ledger_id
+ * @param array $args
+ * @return mixed
+ */
+function get_ledger_balance_with_opening_balance( $ledger_id, $args = [] ) {
+    global $wpdb; $fy = [];
+
+    if ( empty( $args['start_date'] ) ) {
+        $args['start_date'] = date("Y-m-d" );
+    }
+    if ( empty( $args['end_date'] ) ) {
+        $args['end_date'] = date("Y-m-d" );
+    }
+
+    $sql = "SELECT id FROM {$wpdb->prefix}erp_acct_financial_years WHERE '{$args['start_date']}' BETWEEN start_date AND end_date";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    $ledger_ob_bal = $wpdb->get_row( "SELECT ledger_id, (debit - credit) as balance FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id={$row['id']} AND type='ledger'" );
+    $ledger_bal    = $wpdb->get_row( "SELECT ledger_id, SUM(debit - credit) as balance FROM {$wpdb->prefix}erp_acct_ledger_details WHERE ledger_id={$ledger_id}" );
+
+    return $ledger_ob_bal->balance + $ledger_bal->balance;
+}
