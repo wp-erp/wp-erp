@@ -155,10 +155,15 @@
                     }
                 }).then( (response) => {
                     let mappedData = response.data.map(item => {
-                        if ( 'purchase' === item.type ) {
+                        if (( 'purchase' === item.type && item.purchase_order == 0 ) && ( 'Partially Paid' == item.status || 'Awaiting Payment' == item.status ) ) {
                             item['actions'] = [
                                 { key: 'edit', label: 'Edit' },
                                 { key: 'payment', label: 'Make Payment' },
+                                // { key: 'trash', label: 'Delete' }
+                            ];
+                        } else if ( ( 'purchase' === item.type && 'Paid' != item.status && item.purchase_order == 0 ) || item.purchase_order == 1 ) {
+                            item['actions'] = [
+                                { key: 'edit', label: 'Edit' },
                             ];
                         } else {
                             item['actions'] = [

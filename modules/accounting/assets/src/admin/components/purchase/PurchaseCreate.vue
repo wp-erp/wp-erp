@@ -405,7 +405,7 @@
                 if ( 'draft' === this.actionType) {
                     trn_status = 1;
                 } else {
-                    trn_status = 3;
+                    trn_status = 2;
                 }
 
                 let requestData = {

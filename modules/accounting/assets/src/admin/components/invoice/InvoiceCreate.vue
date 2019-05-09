@@ -524,7 +524,7 @@
                 if ( 'draft' == this.actionType) {
                     this.status = 1;
                 } else {
-                    this.status = 3;
+                    this.status = 2;
                 }
 
                 let requestData = {

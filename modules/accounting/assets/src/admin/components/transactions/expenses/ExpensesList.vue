@@ -78,7 +78,7 @@
                     currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
                 },
                 actions : [],
-                fetched: false
+                fetched : false
             };
         },
 

@@ -149,8 +149,6 @@ function erp_acct_insert_payment( $data ) {
 	        $payment_data['amount'] = $total;
 
 	        erp_acct_insert_payment_line_items( $payment_data, $item, $voucher_no );
-
-            erp_acct_change_invoice_status( $item['invoice_no'] );
 	    }
 
         erp_acct_insert_payment_data_people_details( $payment_data );
@@ -165,6 +163,10 @@ function erp_acct_insert_payment( $data ) {
 		$wpdb->query( 'ROLLBACK' );
 		return new WP_error( 'payment-exception', $e->getMessage() );
 	}
+
+    foreach ( $items as $key => $item ) {
+        erp_acct_change_invoice_status( $item['invoice_no'] );
+    }
 
 	return erp_acct_get_payment( $voucher_no );
 }
@@ -263,8 +265,6 @@ function erp_acct_update_payment( $data, $voucher_no ) {
 	        $payment_data['amount'] = $total;
 
 	        erp_acct_update_payment_line_items( $payment_data, $voucher_no, $invoice_no[$key] );
-
-            erp_acct_change_invoice_status( $item['invoice_no'] );
 	    }
 
         if ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === '3' ) {
@@ -279,6 +279,10 @@ function erp_acct_update_payment( $data, $voucher_no ) {
 		$wpdb->query( 'ROLLBACK' );
 		return new WP_error( 'payment-exception', $e->getMessage() );
 	}
+
+    foreach ( $items as $key => $item ) {
+        erp_acct_change_invoice_status( $item['invoice_no'] );
+    }
 
     return erp_acct_get_payment( $voucher_no );
 
@@ -419,7 +423,7 @@ function erp_acct_void_payment( $id ) {
  *
  * @param $invoice_no
  *
- * @return int
+ * @return void
  */
 function erp_acct_change_invoice_status( $invoice_no ) {
     global $wpdb;
@@ -434,8 +438,14 @@ function erp_acct_change_invoice_status( $invoice_no ) {
             ),
             array( 'voucher_no' => $invoice_no )
         );
+    } else {
+        $wpdb->update($wpdb->prefix . 'erp_acct_invoices',
+            array(
+                'status' => 5,
+            ),
+            array( 'voucher_no' => $invoice_no )
+        );
     }
-
 }
 
 /**

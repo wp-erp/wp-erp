@@ -98,6 +98,7 @@
 
                 },
                 listLoading   : false,
+                fetchd        : false,
                 rows          : [],
                 paginationData: {
                     totalItems : 0,
@@ -114,10 +115,10 @@
             this.$root.$on('transactions-filter', filters => {
                 this.$router.push({ path: '/transactions/sales', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
                 this.fetchItems(filters);
+                this.fetched = true;
             });
 
             let filters = {};
-
             // Get start & end date from url on page load
             if ( this.$route.query.start && this.$route.query.end ) {
                 filters.start_date = this.$route.query.start;
@@ -127,7 +128,9 @@
                 filters.status   = this.$route.query.status;
             }
 
-            this.fetchItems(filters);
+            if ( !this.fetched  ) {
+                this.fetchItems(filters);
+            }
         },
 
         watch: {
@@ -148,14 +151,20 @@
                     }
                 }).then(response => {
                     let mappedData = response.data.map(item => {
-                        if ( 'invoice' === item.type && 'Pending' == item.status ) {
+                        if ( ( 'invoice' === item.type && item.estimate == 0 ) && ( 'Partially Paid' == item.status || 'Awaiting Payment' == item.status ) ) {
                             item['actions'] = [
                                 { key: 'edit', label: 'Edit' },
                                 { key: 'receive', label: 'Receive Payment' },
                                 // { key: 'trash', label: 'Delete' }
                             ];
+                        } else if ( ( 'invoice' === item.type && 'Paid' != item.status && item.estimate == 0 ) || item.estimate == 1 ) {
+                            item['actions'] = [
+                                { key: 'edit', label: 'Edit' },
+                            ];
                         } else {
-                            item['actions'] = [];
+                            item['actions'] = [
+                                { key: 'void', label: 'Void' },
+                            ];
                         }
 
                         return item;
