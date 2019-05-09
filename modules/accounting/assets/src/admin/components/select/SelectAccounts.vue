@@ -24,7 +24,7 @@
             },
 
             override_accts: {
-                type: Array
+                type: [Object, Array]
             },
 
             reset: {

@@ -343,7 +343,12 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_bank_accounts( $request ) {
-        $items = erp_acct_get_banks( true, false, false );
+        $items[] = [
+            'id'         => 1,
+            'name'       => 'Cash',
+            'balance'    => get_ledger_balance_with_opening_balance( 1 ),
+        ];
+        $items[] = erp_acct_get_banks( true, false, false );
 
         if ( empty( $items ) ) {
             return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
@@ -370,20 +375,15 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_cash_accounts( $request ) {
-        $items = erp_acct_get_banks( true, true, true );
+        $item[] = [
+            'id'         => 1,
+            'name'       => 'Cash',
+            'balance'    => get_ledger_balance_with_opening_balance( 1 ),
+        ];
+        $additional_fields = [];
+        $data = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
 
-        if ( empty( $items ) ) {
-            return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
-        }
-
-        foreach ( $items as $item ) {
-            $additional_fields = [];
-
-            $data = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
-            $formatted_items[] = $this->prepare_response_for_collection( $data );
-        }
-
-        $response = rest_ensure_response( $formatted_items );
+        $response = rest_ensure_response( $data );
         $response = $this->format_collection_response( $response, $request, 0 );
 
         return $response;
@@ -579,7 +579,9 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $additional_fields
      * @return mixed|WP_REST_Response
      */
-    public function prepare_bank_item_for_response(  $item, $request, $additional_fields ){
+    public function prepare_bank_item_for_response( $item, $request, $additional_fields ) {
+        $item = (array) $item;
+
         $data = array_merge( $item, $additional_fields );
 
         // Wrap the data in a response object
