@@ -121,7 +121,7 @@ function erp_acct_get_account_receivable( $args ) {
 
     $data = $wpdb->get_var($wpdb->prepare( $sql, $args['end_date'] ) );
 
-    return erp_acct_people_calc_with_opening_balance( $args['start_date'], $data, 'receivable', $sql );
+    return erp_acct_people_calc_with_opening_balance( $args, $data, 'receivable', $sql );
 }
 
 /**
@@ -151,7 +151,7 @@ function erp_acct_get_account_payable( $args ) {
 
     $data = (float) $bill_amount + (float) $purchase_amount;
 
-    return erp_acct_people_calc_with_opening_balance( $args['start_date'], $data, 'payable', $bill_sql, $purchase_sql );
+    return erp_acct_people_calc_with_opening_balance( $args, $data, 'payable', $bill_sql, $purchase_sql );
 }
 
 /**
@@ -475,11 +475,11 @@ function erp_acct_sales_tax_calc_with_opening_balance( $tb_start_date, $data, $s
  *
  * @return float
  */
-function erp_acct_people_calc_with_opening_balance( $tb_start_date, $data, $type, $sql1, $sql2 = null ) {
+function erp_acct_people_calc_with_opening_balance( $tb_date, $data, $type, $sql1, $sql2 = null ) {
     global $wpdb;
 
     // get closest financial year id and start date
-    $closest_fy_date = erp_acct_get_closest_fn_year_date( $tb_start_date );
+    $closest_fy_date = erp_acct_get_closest_fn_year_date( $tb_date['start_date'] );
 
     // get opening balance data within that(^) financial year
     $opening_balance = erp_acct_people_opening_balance_by_fn_year_id( $closest_fy_date['id'], $type );
@@ -507,9 +507,42 @@ function erp_acct_people_calc_with_opening_balance( $tb_start_date, $data, $type
     //     $balance += erp_acct_calculate_people_balance($sql1, $start_date, $end_date);
     // }
 
-    // $people_account_details = erp_acct_calc_with_people_account_details();
+    // get people account details balance within trial balance end and financial year start date
+    $people_account_details = erp_acct_calc_with_people_account_details( $closest_fy_date['start_date'], $tb_date['end_date'], $type );
+
+    if ( ! empty( $people_account_details ) ) {
+        $balance += (float) $people_account_details;
+    }
 
     return $balance;
+}
+
+/**
+ * Calculate people balance from people account details
+ *
+ * @param string $tb_end_date
+ * @param string $closest_fy_start_date
+ * @param string $type
+ *
+ * @return void
+ */
+function erp_acct_calc_with_people_account_details( $closest_fy_start_date, $tb_end_date, $type ) {
+    global $wpdb;
+
+    if ( 'payable' === $type ) {
+        $having = 'HAVING balance < 0';
+    } elseif ( 'receivable' === $type ) {
+        $having = 'HAVING balance > 0';
+    }
+
+    // mainly ( debit - credit )
+    $sql = "SELECT SUM(balance) AS amount FROM (
+                SELECT SUM( debit - credit ) AS balance
+                FROM {$wpdb->prefix}erp_acct_people_account_details WHERE trn_date BETWEEN '%s' AND '%s'
+                GROUP BY people_id {$having} )
+            AS get_amount";
+
+    return $wpdb->get_var($wpdb->prepare( $sql, $closest_fy_start_date, $tb_end_date ) );
 }
 
 /**
