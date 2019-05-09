@@ -39,36 +39,6 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/transactions', [
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_people_trn' ],
-                'args'                => [],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_all_people_trns' ],
-                'args'                => [],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
-
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/transactions' . '/(?P<id>[\d]+)' , [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_people_trn' ],
-                'args'                => [],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
-
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' , [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -165,86 +135,6 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         return erp_get_people( $id );
-    }
-
-    public function create_people_trn( $request ) {
-        $people_trn_data = $this->prepare_item_for_database( $request );
-
-        $items = $request['line_items'];
-        $item_total = [];
-
-        foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['item_total'];
-        }
-
-        $people_trn_data['attachments'] = maybe_serialize( $request['attachments'] );
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $people_trn_data = erp_acct_insert_people_trn( $people_trn_data );
-
-        $people_trn_data = $this->prepare_item_for_response( $people_trn_data, $request, $additional_fields );
-
-        $response = rest_ensure_response( $people_trn_data );
-        $response->set_status( 201 );
-
-        return $response;
-    }
-
-    public function get_all_people_trns( $request ) {
-        $args = [
-            'number' => !empty( $request['per_page'] ) ? intval( $request['per_page'] ) : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
-        ];
-
-        $formatted_items = [];
-        $additional_fields = [];
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $people_trn_data  = erp_acct_get_all_people_trns( $args );
-        $total_items = erp_acct_get_all_people_trns( [ 'count' => true, 'number' => -1 ] );
-
-        foreach ( $people_trn_data as $item ) {
-            if ( isset( $request['include'] ) ) {
-                $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
-
-                if ( in_array( 'created_by', $include_params ) ) {
-                    $item['created_by'] = $this->get_user( $item['created_by'] );
-                }
-            }
-
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
-            $formatted_items[] = $this->prepare_response_for_collection( $data );
-        }
-
-        $response = rest_ensure_response( $formatted_items );
-        $response = $this->format_collection_response( $response, $request, $total_items );
-
-        $response->set_status( 200 );
-
-        return $response;
-    }
-
-    public function get_people_trn( $request ) {
-        $id = (int) $request['id'];
-
-        if ( empty( $id ) ) {
-            return new WP_Error( 'rest_purchase_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
-        }
-
-        $item = erp_acct_get_people_trn( $id );
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
-        $response = rest_ensure_response( $item );
-
-        $response->set_status( 200 );
-
-        return $response;
     }
 
     /**
