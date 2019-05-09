@@ -247,6 +247,11 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
+        $paid = 4;
+        if ( $paid === $request['status'] ) {
+            return new WP_Error( 'rest_bill_invalid_status', __( 'Invalid status for update.' ), [ 'status' => 403 ] );
+        }
+
         $bill_data = $this->prepare_item_for_database( $request );
 
         $item_total = []; $additional_fields = [];

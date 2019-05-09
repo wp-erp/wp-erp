@@ -1096,6 +1096,7 @@ Company'
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `people_id` varchar(255) DEFAULT NULL,
                 `trn_no` int(11) DEFAULT NULL,
+                `trn_date` date DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `debit` decimal(10,2) DEFAULT 0,
                 `credit` decimal(10,2) DEFAULT 0,
@@ -1516,7 +1517,7 @@ Company'
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_trn_status_types` LIMIT 0, 1" ) ) {
             $statuses = [
                 'Draft',
-                'Awaiting Approval',
+                'Awaiting Payment',
                 'Pending',
                 'Paid',
                 'Partially Paid',

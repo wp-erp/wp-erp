@@ -176,8 +176,6 @@ function erp_acct_insert_pay_bill( $data ) {
             ) );
 
             erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item );
-
-            erp_acct_change_bill_status( $item['voucher_no'] );
         }
 
         erp_acct_insert_pay_bill_data_people_details( $pay_bill_data );
@@ -191,6 +189,10 @@ function erp_acct_insert_pay_bill( $data ) {
     } catch (Exception $e) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'pay-bill-exception', $e->getMessage() );
+    }
+
+    foreach ( $items as $item ) {
+        erp_acct_change_bill_status( $item['voucher_no'] );
     }
 
     return erp_acct_get_pay_bill( $voucher_no );
@@ -262,8 +264,6 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
             ) );
 
             erp_acct_update_bill_data_into_ledger( $pay_bill_data, $pay_bill_id, $item );
-
-            erp_acct_change_bill_status( $item['voucher_no'] );
         }
 
         erp_acct_update_pay_bill_data_people_details( $pay_bill_data, $pay_bill_id );
@@ -273,6 +273,10 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
     } catch (Exception $e) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'bill-exception', $e->getMessage() );
+    }
+
+    foreach ( $items as $item ) {
+        erp_acct_change_bill_status( $item['voucher_no'] );
     }
 
     return erp_acct_get_pay_bill( $pay_bill_id );
@@ -442,6 +446,13 @@ function erp_acct_change_bill_status( $bill_no ) {
         $wpdb->update($wpdb->prefix . 'erp_acct_bills',
             array(
                 'status' => 4,
+            ),
+            array( 'voucher_no' => $bill_no )
+        );
+    } else {
+        $wpdb->update($wpdb->prefix . 'erp_acct_bills',
+            array(
+                'status' => 5,
             ),
             array( 'voucher_no' => $bill_no )
         );

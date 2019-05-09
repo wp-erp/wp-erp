@@ -172,8 +172,6 @@ function erp_acct_insert_pay_purchase( $data ) {
                 'updated_at'  => $pay_purchase_data['updated_at'],
                 'updated_by'  => $pay_purchase_data['updated_by'],
             ) );
-
-            erp_acct_change_purchase_status( $item['voucher_no'] );
         }
 
         erp_acct_insert_pay_purchase_data_people_details( $pay_purchase_data );
@@ -189,6 +187,9 @@ function erp_acct_insert_pay_purchase( $data ) {
         return new WP_error( 'pay-purchase-exception', $e->getMessage() );
     }
 
+    foreach ( $items as $item ) {
+        erp_acct_change_purchase_status( $item['voucher_no'] );
+    }
     return erp_acct_get_pay_purchase( $voucher_no );
 
 }
@@ -262,8 +263,6 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
             ), array(
                 'purchase_no' => $item['voucher_no'],
             ));
-
-            erp_acct_change_purchase_status( $item['voucher_no'] );
         }
 
         erp_acct_update_pay_purchase_data_people_details( $pay_purchase_data, $pay_purchase_id );
@@ -275,6 +274,9 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
         return new WP_error( 'pay-purchase-exception', $e->getMessage() );
     }
 
+    foreach ( $items as $item ) {
+        erp_acct_change_purchase_status( $item['voucher_no'] );
+    }
     return erp_acct_get_pay_purchase( $pay_purchase_id );
 
 }
@@ -446,10 +448,16 @@ function erp_acct_change_purchase_status( $purchase_no ) {
     $due = erp_acct_get_purchase_due( $purchase_no );
 
     if ( $due == 0 ) {
-
         $wpdb->update($wpdb->prefix . 'erp_acct_purchase',
             array(
                 'status' => 4,
+            ),
+            array( 'voucher_no' => $purchase_no )
+        );
+    } else {
+        $wpdb->update($wpdb->prefix . 'erp_acct_purchase',
+            array(
+                'status' => 5,
             ),
             array( 'voucher_no' => $purchase_no )
         );

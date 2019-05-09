@@ -13857,7 +13857,7 @@ if (false) {(function () {
       if ('draft' == this.actionType) {
         this.status = 1;
       } else {
-        this.status = 3;
+        this.status = 2;
       }
 
       var requestData = {
@@ -16515,7 +16515,7 @@ if (false) {(function () {
       if ('draft' === this.actionType) {
         trn_status = 1;
       } else {
-        trn_status = 3;
+        trn_status = 2;
       }
 
       var requestData = {
@@ -18113,7 +18113,7 @@ if (false) {(function () {
       if ('draft' === this.actionType) {
         trn_status = 1;
       } else {
-        trn_status = 3;
+        trn_status = 2;
       }
 
       var requestData = {
@@ -21739,6 +21739,7 @@ if (false) {(function () {
         }
       },
       listLoading: false,
+      fetchd: false,
       rows: [],
       paginationData: {
         totalItems: 0,
@@ -21763,6 +21764,8 @@ if (false) {(function () {
       });
 
       _this.fetchItems(filters);
+
+      _this.fetched = true;
     });
     var filters = {}; // Get start & end date from url on page load
 
@@ -21775,7 +21778,9 @@ if (false) {(function () {
       filters.status = this.$route.query.status;
     }
 
-    this.fetchItems(filters);
+    if (!this.fetched) {
+      this.fetchItems(filters);
+    }
   },
   watch: {
     '$route': 'fetchItems'
@@ -21796,7 +21801,7 @@ if (false) {(function () {
         }
       }).then(function (response) {
         var mappedData = response.data.map(function (item) {
-          if ('invoice' === item.type && 'Pending' == item.status) {
+          if ('invoice' === item.type && item.estimate == 0 && ('Partially Paid' == item.status || 'Awaiting Payment' == item.status)) {
             item['actions'] = [{
               key: 'edit',
               label: 'Edit'
@@ -21804,8 +21809,16 @@ if (false) {(function () {
               key: 'receive',
               label: 'Receive Payment'
             }];
+          } else if ('invoice' === item.type && 'Paid' != item.status && item.estimate == 0 || item.estimate == 1) {
+            item['actions'] = [{
+              key: 'edit',
+              label: 'Edit'
+            }];
           } else {
-            item['actions'] = [];
+            item['actions'] = [{
+              key: 'void',
+              label: 'Void'
+            }];
           }
 
           return item;
@@ -23302,13 +23315,18 @@ setTimeout(function () {
         }
       }).then(function (response) {
         var mappedData = response.data.map(function (item) {
-          if ('purchase' === item.type) {
+          if ('purchase' === item.type && item.purchase_order == 0 && ('Partially Paid' == item.status || 'Awaiting Payment' == item.status)) {
             item['actions'] = [{
               key: 'edit',
               label: 'Edit'
             }, {
               key: 'payment',
               label: 'Make Payment'
+            }];
+          } else if ('purchase' === item.type && 'Paid' != item.status && item.purchase_order == 0 || item.purchase_order == 1) {
+            item['actions'] = [{
+              key: 'edit',
+              label: 'Edit'
             }];
           } else {
             item['actions'] = [{
