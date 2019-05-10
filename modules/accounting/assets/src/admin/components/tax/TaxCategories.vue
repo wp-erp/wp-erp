@@ -13,24 +13,28 @@
 
         <new-tax-category v-if="showModal" :cat_id="cat_id" :is_update="is_update" @close="showModal = false"></new-tax-category>
 
-        <div class="table-container">
-            <list-table
-                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark tax-cats-list"
-                action-column="actions"
-                :columns="columns"
-                :rows="row_data"
-                :total-items="paginationData.totalItems"
-                :total-pages="paginationData.totalPages"
-                :per-page="paginationData.perPage"
-                :current-page="paginationData.currentPage"
-                @pagination="goToPage"
-                :actions="actions"
-                :bulk-actions="bulkActions"
-                @action:click="onActionClick"
-                @bulk:click="onBulkAction">
-            </list-table>
+        <div class="wperp-row">
+            <div class="table-container wperp-col-sm-8">
+                <list-table
+                    tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark tax-cats-list"
+                    action-column="actions"
+                    :columns="columns"
+                    :rows="row_data"
+                    :total-items="paginationData.totalItems"
+                    :total-pages="paginationData.totalPages"
+                    :per-page="paginationData.perPage"
+                    :current-page="paginationData.currentPage"
+                    @pagination="goToPage"
+                    :actions="actions"
+                    :bulk-actions="bulkActions"
+                    @action:click="onActionClick"
+                    @bulk:click="onBulkAction">
+                </list-table>
+            </div>
+            <div class="wperp-col-sm-4">
+                <tax-shortcuts></tax-shortcuts>
+            </div>
         </div>
-
     </div>
 </template>
 
@@ -38,13 +42,15 @@
     import HTTP            from 'admin/http'
     import ListTable       from 'admin/components/list-table/ListTable.vue'
     import NewTaxCategory  from 'admin/components/tax/NewTaxCategory.vue'
+    import TaxShortcuts    from 'admin/components/tax/TaxShortcuts.vue'
 
     export default {
         name: 'TaxCategories',
 
         components: {
             ListTable,
-            NewTaxCategory
+            NewTaxCategory,
+            TaxShortcuts
         },
 
         data() {
@@ -202,9 +208,21 @@
 </script>
 
 <style lang="less">
-.app-tax-categories {
-    .check-column {
-        padding: 20px !important;
+    .app-tax-categories {
+        .table-container {
+            width: 600px;
+        }
+
+        .check-column {
+            padding: 20px !important;
+        }
+
+        .actions {
+            text-align: right;
+        }
+
+        .col--actions {
+            float: right !important;
+        }
     }
-}
 </style>

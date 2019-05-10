@@ -13,28 +13,32 @@
 
         <new-tax-zone v-if="showModal" :rate_name_id="rate_name_id" :is_update="is_update" @close="showModal = false"></new-tax-zone>
 
-        <div class="table-container">
-            <list-table
-                tableClass="wp-ListTable widefat fixed tax-zone-list wperp-table table-striped table-dark"
-                action-column="actions"
-                :columns="columns"
-                :rows="row_data"
-                :total-items="paginationData.totalItems"
-                :total-pages="paginationData.totalPages"
-                :per-page="paginationData.perPage"
-                :current-page="paginationData.currentPage"
-                @pagination="goToPage"
-                :actions="actions"
-                :bulk-actions="bulkActions"
-                @action:click="onActionClick"
-                @bulk:click="onBulkAction">
+        <div class="wperp-row">
+            <div class="table-container wperp-col-sm-8">
+                <list-table
+                    tableClass="wp-ListTable widefat fixed tax-zone-list wperp-table table-striped table-dark"
+                    action-column="actions"
+                    :columns="columns"
+                    :rows="row_data"
+                    :total-items="paginationData.totalItems"
+                    :total-pages="paginationData.totalPages"
+                    :per-page="paginationData.perPage"
+                    :current-page="paginationData.currentPage"
+                    @pagination="goToPage"
+                    :actions="actions"
+                    :bulk-actions="bulkActions"
+                    @action:click="onActionClick"
+                    @bulk:click="onBulkAction">
 
-                <template slot="default" slot-scope="data">
-                    {{ '1' === data.row.default ? '&#x02713;' : '' }}
-                </template>
-            </list-table>
+                    <template slot="default" slot-scope="data">
+                        {{ '1' === data.row.default ? '&#x02713;' : '' }}
+                    </template>
+                </list-table>
+            </div>
+            <div class="wperp-col-sm-4">
+                <tax-shortcuts></tax-shortcuts>
+            </div>
         </div>
-
     </div>
 </template>
 
@@ -42,6 +46,7 @@
     import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import NewTaxZone from 'admin/components/tax/NewTaxZone.vue'
+    import TaxShortcuts from 'admin/components/tax/TaxShortcuts.vue'
 
     export default {
         name: 'TaxZones',
@@ -49,6 +54,7 @@
         components: {
             NewTaxZone,
             ListTable,
+            TaxShortcuts
         },
 
         data() {

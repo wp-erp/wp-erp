@@ -1,5 +1,5 @@
 <template>
-    <div class="wperp-container">
+    <div class="app-money-transfer">
         <!-- Start .header-section -->
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
@@ -79,16 +79,21 @@
 </script>
 
 <style lang="less">
-    .money-transfer-list {
-        .ac_to {
-            float: left !important;
+    .app-money-transfer {
+        .table-container {
+            width: 600px;
         }
-    }
-    .wperp-modal {
-        z-index: 999 !important;
-    }
 
-    #transfer_date {
-        width: 100%;
+        .check-column {
+            padding: 20px !important;
+        }
+
+        .actions {
+            text-align: right;
+        }
+
+        .col--actions {
+            float: right !important;
+        }
     }
 </style>
