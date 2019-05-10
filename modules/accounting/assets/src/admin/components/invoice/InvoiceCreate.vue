@@ -295,10 +295,13 @@
                         return;
                     }
 
-                    if ( parseInt(request3.data.status) !== this.status ) {
-                        this.showAlert('error', 'Can\'t edit');
-                        return;
-                    }
+                    /**
+                     * Needs improvement later ( ** IMPORTANT)
+                     */
+                    // if ( parseInt(request3.data.status) !== this.status ) {
+                    //     this.showAlert('error', 'Can\'t edit');
+                    //     return;
+                    // }
 
                     this.products   = request1.data;
                     this.taxSummary = request2.data;
