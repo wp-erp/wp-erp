@@ -249,7 +249,7 @@ function erp_acct_insert_expense( $data ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_details', array(
                 'trn_no'      => $voucher_no,
                 'ledger_id'   => $item['ledger_id'],
-                'particulars' => $item['particulars'],
+                'particulars' => !empty( $item['particulars'] ) ? $item['particulars'] : '',
                 'amount'      => $item['amount'],
                 'created_at'  => $expense_data['created_at'],
                 'created_by'  => $expense_data['created_by'],

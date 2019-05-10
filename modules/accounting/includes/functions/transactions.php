@@ -462,7 +462,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
     if ( ! empty( $args['status'] ) ) {
         $where .= " AND bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} ";
     } else {
-        $where .= " AND bill.status=2 ";
+        $where .= " AND bill.status=2 OR expense.status=4";
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
