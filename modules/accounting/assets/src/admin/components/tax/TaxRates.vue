@@ -244,11 +244,18 @@
 </script>
 <style lang="less">
     .app-taxes {
+        .table-container {
+            width: 600px;
+        }
+
         .check-column {
             padding: 20px !important;
         }
 
-        .actions,
+        .actions {
+            text-align: right;
+        }
+
         .col--actions {
             float: right !important;
         }
