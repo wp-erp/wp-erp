@@ -797,14 +797,37 @@ function erp_acct_get_trial_balance( $args ) {
         'balance' => erp_acct_get_account_receivable( $args )
     ];
 
-    $results['rows'][] = [
-        'name'    => 'Owner\'s Capital',
-        'balance' => erp_acct_get_owners_equity( $args, 'capital' )
+    /**
+     * Owner's equity
+     */
+    $capital     = erp_acct_get_owners_equity( $args, 'capital' );
+    $drawings    = erp_acct_get_owners_equity( $args, 'drawings' );
+    $new_capital = $capital + $drawings;
+
+    $closest_fy_date       = erp_acct_get_closest_fn_year_date( $args['start_date'] );
+    $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $args['start_date'] ) ) );
+
+    // Owner's Equity calculation with income statement profit/loss
+    $inc_statmnt_range = [
+        'start_date' => $closest_fy_date['start_date'],
+        'end_date'   => $prev_date_of_tb_start
     ];
-    $results['rows'][] = [
-        'name'    => 'Owner\'s Drawings',
-        'balance' => erp_acct_get_owners_equity( $args, 'drawings' )
-    ];
+
+    $income_statement_balance = erp_acct_get_income_statement( $inc_statmnt_range );
+
+    $new_capital = $new_capital - $income_statement_balance['raw_balance'];
+
+    if ( 0 < $new_capital ) {
+        $results['rows'][] = [
+            'name'    => 'Owner\'s Drawings',
+            'balance' => $new_capital
+        ];
+    } else {
+        $results['rows'][] = [
+            'name'    => 'Owner\'s Capital',
+            'balance' => $new_capital
+        ];
+    }
 
     // Totals are inside the root `result` array
     $results['total_debit']  = 0;
