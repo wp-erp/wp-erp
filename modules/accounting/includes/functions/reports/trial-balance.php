@@ -276,20 +276,24 @@ function erp_acct_get_balance_within_ledger_details_and_trial_balance($sql, $tem
 
     $ledger_details = $wpdb->get_results($sql, ARRAY_A);
 
-    foreach ( $temp_data as $temp ) {
-        $balance = $temp['balance'];
+    if ( ! empty( $temp_data ) ) {
+        foreach ( $temp_data as $temp ) {
+            $balance = $temp['balance'];
 
-        foreach ( $ledger_details as $detail ) {
-            if ( $temp['id'] == $detail['id'] ) {
-                $balance += (float) $detail['balance'];
+            foreach ( $ledger_details as $detail ) {
+                if ( $temp['id'] == $detail['id'] ) {
+                    $balance += (float) $detail['balance'];
+                }
             }
-        }
 
-        $result[] = [
-            'id'      => $temp['id'],
-            'name'    => $temp['name'],
-            'balance' => $balance
-        ];
+            $result[] = [
+                'id'      => $temp['id'],
+                'name'    => $temp['name'],
+                'balance' => $balance
+            ];
+        }
+    } else {
+        $result = $ledger_details;
     }
 
     return $result;
@@ -327,7 +331,11 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
         $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
     }
 
-    $sql = $wpdb->prepare($sql, $closest_fy_date['start_date'], $prev_date_of_tb_start);
+    $sql = $wpdb->prepare("SELECT
+        ledger.id, ledger.name, SUM(ledger_detail.debit - ledger_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
+        WHERE ledger.chart_id NOT IN ( 4, 5, 7 ) AND ledger.slug <> 'owner_s_equity' AND ledger_detail.trn_date BETWEEN '%s' AND '%s' GROUP BY ledger_detail.ledger_id", $closest_fy_date['start_date'], $prev_date_of_tb_start);
 
     $result = erp_acct_get_balance_within_ledger_details_and_trial_balance($sql, $temp_data);
 
