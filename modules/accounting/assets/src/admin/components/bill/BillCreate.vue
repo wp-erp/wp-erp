@@ -231,10 +231,13 @@
                         return;
                     }
 
-                    if ( 'pending' !== request2.data.status ) {
-                        this.showAlert('error', 'Can\'t edit');
-                        return;
-                    }
+                    /**
+                     * Needs improvement later ( ** IMPORTANT)
+                     */
+                    // if ( 'pending' !== request2.data.status ) {
+                    //     this.showAlert('error', 'Can\'t edit');
+                    //     return;
+                    // }
 
                     this.ledgers   = request1.data;
                     this.setDataForEdit( request2.data );

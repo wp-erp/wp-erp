@@ -335,14 +335,16 @@ function erp_acct_get_income_statement( $args ) {
         if ( $dr_cr_diff < 0 ) {
             $dr_cr_diff = - $dr_cr_diff;
         }
-        $results['profit'] = $dr_cr_diff;
+        $results['profit']      = $dr_cr_diff;
+        $results['raw_balance'] = $dr_cr_diff;
     } else {
         if ( $dr_cr_diff > 0 ) {
             $balance = - $dr_cr_diff;
         } else {
             $balance = - $dr_cr_diff;
         }
-        $results['loss'] = $balance;
+        $results['loss']        = $balance;
+        $results['raw_balance'] = $balance;
     }
 
     $results['balance'] = $dr_cr_diff;

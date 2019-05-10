@@ -13570,7 +13570,7 @@ if (false) {(function () {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!this.$route.params.id) {
-                  _context.next = 25;
+                  _context.next = 22;
                   break;
                 }
 
@@ -13606,25 +13606,23 @@ if (false) {(function () {
                 return _context.abrupt("return");
 
               case 15:
-                if (!(parseInt(request3.data.status) !== this.status)) {
-                  _context.next = 18;
-                  break;
-                }
-
-                this.showAlert('error', 'Can\'t edit');
-                return _context.abrupt("return");
-
-              case 18:
+                /**
+                 * Needs improvement later ( ** IMPORTANT)
+                 */
+                // if ( parseInt(request3.data.status) !== this.status ) {
+                //     this.showAlert('error', 'Can\'t edit');
+                //     return;
+                // }
                 this.products = request1.data;
                 this.taxSummary = request2.data;
                 this.taxRates = this.getUniqueTaxRates(request2.data);
                 this.setDataForEdit(request3.data); // initialize combo button id with `update`
 
                 this.$store.dispatch('combo/setBtnID', 'update');
-                _context.next = 31;
+                _context.next = 28;
                 break;
 
-              case 25:
+              case 22:
                 /**
                  * ----------------------------------------------
                  * create a new invoice
@@ -13638,7 +13636,7 @@ if (false) {(function () {
 
                 this.$store.dispatch('combo/setBtnID', 'save');
 
-              case 31:
+              case 28:
               case "end":
                 return _context.stop();
             }
@@ -16311,7 +16309,7 @@ if (false) {(function () {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!this.$route.params.id) {
-                  _context.next = 21;
+                  _context.next = 18;
                   break;
                 }
 
@@ -16343,23 +16341,21 @@ if (false) {(function () {
                 return _context.abrupt("return");
 
               case 13:
-                if (!('pending' !== request2.data.status)) {
-                  _context.next = 16;
-                  break;
-                }
-
-                this.showAlert('error', 'Can\'t edit');
-                return _context.abrupt("return");
-
-              case 16:
+                /**
+                 * Needs improvement later ( ** IMPORTANT)
+                 */
+                // if ( 'pending' !== request2.data.status ) {
+                //     this.showAlert('error', 'Can\'t edit');
+                //     return;
+                // }
                 this.ledgers = request1.data;
                 this.setDataForEdit(request2.data); // initialize combo button id with `update`
 
                 this.$store.dispatch('combo/setBtnID', 'update');
-                _context.next = 26;
+                _context.next = 23;
                 break;
 
-              case 21:
+              case 18:
                 /**
                  * ----------------------------------------------
                  * create a new bill
@@ -16372,7 +16368,7 @@ if (false) {(function () {
 
                 this.$store.dispatch('combo/setBtnID', 'save');
 
-              case 26:
+              case 23:
               case "end":
                 return _context.stop();
             }
