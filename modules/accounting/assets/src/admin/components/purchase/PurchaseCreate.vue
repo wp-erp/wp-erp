@@ -342,7 +342,6 @@
                     if ( line.hasOwnProperty('selectedProduct') ) {
                         lineItems.push({
                             product_id: line.selectedProduct.id,
-                            product_type: 'service',
                             qty: line.qty,
                             unit_price: line.unitPrice,
                             item_total: line.amount,
@@ -374,11 +373,9 @@
                 HTTP.post('/purchases', requestData).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert('success', 'Purchase Created!');
-                }).then(() => {
+                }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.isWorking = false;
-                    this.reset = true;
-
+                }).then(() => {
                     if ('save' == this.actionType || 'draft' == this.actionType) {
                         this.$router.push({name: 'Purchases'});
                     } else if ('new_create' == this.actionType) {

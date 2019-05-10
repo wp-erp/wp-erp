@@ -7,38 +7,37 @@
                     <a class="wperp-btn btn--primary" @click.prevent="newTaxRate">
                         <span>Add Tax Rate</span>
                     </a>
-                    <div class="erp-acct-tax-menus">
-                        <combo-box
-                            :options="entity_lists"
-                            :hasUrl="true"
-                            placeholder="Tax Entity Lists" />
-                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="table-container">
-            <list-table
-                tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark table-taxrates"
-                action-column="actions"
-                :columns="columns"
-                :rows="row_data"
-                :total-items="paginationData.totalItems"
-                :total-pages="paginationData.totalPages"
-                :per-page="paginationData.perPage"
-                :current-page="paginationData.currentPage"
-                @pagination="goToPage"
-                :actions="actions"
-                :bulk-actions="bulkActions"
-                @action:click="onActionClick"
-                @bulk:click="onBulkAction">
+        <div class="wperp-row">
+            <div class="table-container wperp-col-sm-8">
+                <list-table
+                    tableClass="wp-ListTable widefat fixed tax-rate-list wperp-table table-striped table-dark table-taxrates"
+                    action-column="actions"
+                    :columns="columns"
+                    :rows="row_data"
+                    :total-items="paginationData.totalItems"
+                    :total-pages="paginationData.totalPages"
+                    :per-page="paginationData.perPage"
+                    :current-page="paginationData.currentPage"
+                    @pagination="goToPage"
+                    :actions="actions"
+                    :bulk-actions="bulkActions"
+                    @action:click="onActionClick"
+                    @bulk:click="onBulkAction">
 
-                <template slot="tax_rate_name" slot-scope="data">
-                    <strong>
-                        <a href="#" @click.prevent="singleTaxRate(data.row.tax_id, data.row.tax_rate_name)"> {{ data.row.tax_rate_name }}</a>
-                    </strong>
-                </template>
-            </list-table>
+                    <template slot="tax_rate_name" slot-scope="data">
+                        <strong>
+                            <a href="#" @click.prevent="singleTaxRate(data.row.tax_id, data.row.tax_rate_name)"> {{ data.row.tax_rate_name }}</a>
+                        </strong>
+                    </template>
+                </list-table>
+            </div>
+            <div class="wperp-col-sm-4">
+                <tax-shortcuts></tax-shortcuts>
+            </div>
         </div>
 
         <new-tax-zone v-if="taxrateModal" @close="taxrateModal = false"/>
@@ -55,6 +54,7 @@
     import NewTaxZone from 'admin/components/tax/NewTaxZone.vue'
     import NewTaxCategory from 'admin/components/tax/NewTaxCategory.vue'
     import NewTaxAgency from 'admin/components/tax/NewTaxAgency.vue'
+    import TaxShortcuts from 'admin/components/tax/TaxShortcuts.vue'
 
     export default {
         name: 'TaxRates',
@@ -66,6 +66,7 @@
             NewTaxZone,
             NewTaxCategory,
             NewTaxAgency,
+            TaxShortcuts
         },
 
         data() {
@@ -97,11 +98,6 @@
                     {namedRoute: 'NewTaxZone', name: 'New Tax Zone'},
                     {namedRoute: 'NewTaxCategory', name: 'New Tax Category'},
                     {namedRoute: 'NewTaxAgency', name: 'New Tax Agency'},
-                ],
-                entity_lists: [
-                    {namedRoute: 'TaxZones', name: 'Tax Zones'},
-                    {namedRoute: 'TaxCategories', name: 'Tax Categories'},
-                    {namedRoute: 'TaxAgencies', name: 'Tax Agencies'},
                 ],
                 taxes                 : [{}],
                 buttonTitle           : '',
@@ -248,10 +244,6 @@
 </script>
 <style lang="less">
     .app-taxes {
-        .table-container {
-            width: 600px;
-        }
-
         .check-column {
             padding: 20px !important;
         }
