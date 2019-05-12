@@ -581,7 +581,7 @@ class Form_Handler {
         $errors    = array();
         $employees = array();
         $cur_year  = (int) date( 'Y' );
-        $page_url  = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave_entitilements' );
+        $page_url  = admin_url( 'admin.php?page=erp-hr&section=leave&sub-section=leave-entitlements' );
 
         $is_single       = ! isset( $_POST['assignment_to'] );
         $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : '-1';
