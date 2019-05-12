@@ -3,10 +3,9 @@
     var ERP_Accounting = {
 
         initialize: function () {
-            window.erp_ob_dates = [];
             $('body').on('click', '.erp-ac-ob-add-more', this.ob.moreField);
             $('body').on('click', '.erp-ac-ob-remove-field', this.ob.removeField);
-            $('body').on('click', '.erp-ac-ob-fields input[type="date"]', this.ob.validateDate);
+            $('body').on('change', '.erp-date-field', this.ob.validateDateRange);
         },
 
         ob: {
@@ -37,16 +36,25 @@
                 }
             },
 
-            validateDate(e) {
+            validateDateRange(e) {
                 e.preventDefault();
-                let val = Date.parse(e.target.value);
+                let val = [];
+                $('.erp-date-field').each(function(){
+                    val.push($(this).val());
+                });
 
-                if ( window.erp_ob_dates.includes(val) ) {
-                    console.log('Hello');
-                } else {
-                    window.erp_ob_dates.push(val);
+                for ( let i = 2; i < val.length; ) {
+                    if ( ( Date.parse(val[i]) >= Date.parse(val[i-2]) ) && ( Date.parse(val[i]) <= Date.parse(val[i-1]) ) ) {
+                        alert('Financial year values must not be overlapped!');
+                        return;
+                    }
+                    if ( Date.parse(val[i+1]) < Date.parse(val[i])  ) {
+                        alert('Second value must be greater than first!');
+                        return;
+                    }
+                    i += 2;
                 }
-            }
+            },
         },
     };
 
