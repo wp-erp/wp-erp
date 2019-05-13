@@ -5,7 +5,7 @@ pluginWebpack([3],{
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_hooks__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_hooks__ = __webpack_require__(32);
 
 window.acct = {};
 acct.hooks = Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_hooks__["createHooks"])();
