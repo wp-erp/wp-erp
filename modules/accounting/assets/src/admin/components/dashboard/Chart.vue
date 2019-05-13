@@ -25,7 +25,7 @@
 
 <script>
     import HTTP from 'admin/http'
-    import 'assets/js/plugins/chart.min'
+    import 'admin/components/chart/chart.min'
 
     export default {
         name: 'Chart',
