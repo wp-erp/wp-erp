@@ -78,6 +78,7 @@
         methods: {
             closeModal: function(){
                 this.$emit('close');
+                this.$root.$emit('modal_closed');
             },
 
             getAgency() {

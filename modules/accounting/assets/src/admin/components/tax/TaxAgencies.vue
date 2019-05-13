@@ -92,15 +92,15 @@
         },
 
         created() {
-            this.$on('tax-modal-close', function() {
-                this.showModal = false;
-            });
-
             this.pageTitle      =   this.$route.name;
             this.url            =   this.$route.name.toLowerCase();
 
             this.$root.$on('refetch_tax_data',() => {
                 this.fetchItems();
+                this.is_update = false;
+            });
+
+            this.$root.$on('modal_closed', () => {
                 this.is_update = false;
             });
 

@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_all_tax_rates( $args = [] ) {
     global $wpdb;
 
@@ -176,7 +175,6 @@ function erp_acct_update_tax_rate( $data, $id ) {
     return $id;
 }
 
-
 /**
  * Update tax data
  *
@@ -278,7 +276,6 @@ function erp_acct_edit_tax_rate_line( $data ) {
  *
  * @return int
  */
-
 function erp_acct_delete_tax_rate_line( $line_no ) {
     global $wpdb;
 
@@ -294,7 +291,6 @@ function erp_acct_delete_tax_rate_line( $line_no ) {
  *
  * @return int
  */
-
 function erp_acct_delete_tax_rate( $tax_no ) {
     global $wpdb;
 
@@ -308,7 +304,6 @@ function erp_acct_delete_tax_rate( $tax_no ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_tax_pay_records( $args = [] ) {
     global $wpdb;
 
@@ -340,6 +335,11 @@ function erp_acct_get_tax_pay_records( $args = [] ) {
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
+/**
+ * Get a single tax payment
+ *
+ * @return mixed
+ */
 function erp_acct_get_tax_pay_record( $voucher_no ) {
     global $wpdb;
 

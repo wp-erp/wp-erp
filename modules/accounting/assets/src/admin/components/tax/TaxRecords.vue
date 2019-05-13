@@ -99,10 +99,6 @@
         },
 
         created() {
-            this.$on('tax-modal-close', function() {
-                this.showModal = false;
-            });
-
             this.pageTitle = this.$route.name;
             this.url       = this.$route.name.toLowerCase();
 

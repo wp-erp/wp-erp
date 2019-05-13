@@ -90,6 +90,7 @@
         methods: {
             closeModal() {
                 this.$emit('close');
+                this.$root.$emit('modal_closed');
             },
 
             getRateName() {

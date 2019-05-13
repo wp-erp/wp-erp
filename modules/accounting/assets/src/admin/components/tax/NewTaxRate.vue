@@ -251,7 +251,7 @@
                 return parseFloat(finalAmount).toFixed(2);
             },
 
-            closeModal: function () {
+            closeModal() {
                 this.$emit('close');
             },
 

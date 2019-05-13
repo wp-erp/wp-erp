@@ -72,7 +72,7 @@ function erp_acct_insert_tax_rate_name( $data ) {
     $data['created_at'] = date('Y-m-d H:i:s');
     $data['created_by'] = $created_by;
 
-    if ( ! empty( $tax_data['default'] ) ) {
+    if ( ! empty( $data['default'] ) ) {
         $sql = "UPDATE {$wpdb->prefix}erp_acct_taxes SET `default` = 0";
         $wpdb->query( $sql );
     }
@@ -134,7 +134,6 @@ function erp_acct_update_tax_rate_name( $data, $id ) {
  *
  * @return int
  */
-
 function erp_acct_delete_tax_rate_name( $id ) {
     global $wpdb;
 
