@@ -34,9 +34,9 @@
 </template>
 
 <script>
+    import HTTP from 'admin/http'
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import PeopleModal from 'admin/components/people/PeopleModal.vue'
-    import HTTP from 'admin/http'
 
     export default {
         name: 'People',

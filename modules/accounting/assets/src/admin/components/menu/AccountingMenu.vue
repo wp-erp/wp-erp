@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import {sprintf, _n, __} from "@wordpress/i18n";
+    import {sprintf, _n, __} from '@wordpress/i18n'
 
     export default {
         name: "AccountingMenu",

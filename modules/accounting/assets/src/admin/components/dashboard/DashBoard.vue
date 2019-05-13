@@ -99,10 +99,10 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
+    import HTTP from 'admin/http'
     import Dropdown from 'admin/components/base/Dropdown.vue'
     import Accounts from 'admin/components/dashboard/Accounts.vue'
-    import Chart from "admin/components/dashboard/Chart.vue";
+    import Chart from "admin/components/dashboard/Chart.vue"
 
     export default {
         name: 'Dashboard',

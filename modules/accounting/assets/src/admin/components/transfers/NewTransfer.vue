@@ -57,7 +57,7 @@
 </template>
 
 <script>
-    import MultiSelect from "admin/components/select/MultiSelect.vue"
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
 

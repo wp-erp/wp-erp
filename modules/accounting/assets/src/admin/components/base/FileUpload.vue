@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
+    import HTTP from 'admin/http'
 
     const STATUS_INITIAL = 0,
         STATUS_SAVING = 1,

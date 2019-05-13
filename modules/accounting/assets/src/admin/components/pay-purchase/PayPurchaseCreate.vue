@@ -130,7 +130,7 @@
     import CheckFields from 'admin/components/check/CheckFields.vue'
     import ShowErrors from 'admin/components/base/ShowErrors.vue'
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
-    import ComboButton from 'admin/components/select/ComboButton.vue';
+    import ComboButton from 'admin/components/select/ComboButton.vue'
 
     export default {
         name: 'PayPurchaseCreate',

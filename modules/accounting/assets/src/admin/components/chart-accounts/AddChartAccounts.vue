@@ -71,7 +71,7 @@
     import HTTP from 'admin/http'
     import Treeselect from '@riophae/vue-treeselect'
     import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-    import CatAddModal from 'admin/components/chart-accounts/CatAddModal.vue';
+    import CatAddModal from 'admin/components/chart-accounts/CatAddModal.vue'
 
     export default {
         name: 'AddChartAccounts',

@@ -43,11 +43,11 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
-    import InvoiceSingleContent from 'admin/components/transactions/sales/InvoiceSingleContent.vue';
-    import PaymentSingleContent from 'admin/components/transactions/sales/PaymentSingleContent.vue';
-    import SendMail from 'admin/components/email/SendMail.vue';
-    import Dropdown from 'admin/components/base/Dropdown.vue';
+    import HTTP from 'admin/http'
+    import InvoiceSingleContent from 'admin/components/transactions/sales/InvoiceSingleContent.vue'
+    import PaymentSingleContent from 'admin/components/transactions/sales/PaymentSingleContent.vue'
+    import SendMail from 'admin/components/email/SendMail.vue'
+    import Dropdown from 'admin/components/base/Dropdown.vue'
 
     export default {
         name: 'SalesSingle',

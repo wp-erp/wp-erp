@@ -23,13 +23,13 @@
 </template>
 
 <script>
-    import 'assets/js/plugins/chart.min';
-    import 'assets/js/status_chart';
+    import 'assets/js/plugins/chart.min'
+    import 'assets/js/status_chart'
 
-    import ComboBox from 'admin/components/select/ComboBox.vue';
-    import ExpensesStats from 'admin/components/transactions/expenses/ExpensesStats.vue';
-    import ExpensesList from 'admin/components/transactions/expenses/ExpensesList.vue';
-    import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
+    import ComboBox from 'admin/components/select/ComboBox.vue'
+    import ExpensesStats from 'admin/components/transactions/expenses/ExpensesStats.vue'
+    import ExpensesList from 'admin/components/transactions/expenses/ExpensesList.vue'
+    import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue'
 
     export default {
         name: 'Expenses',

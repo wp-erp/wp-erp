@@ -105,7 +105,7 @@
 <script>
     // Uses `getCurrencySign()` from common.js - mixin
 
-    import HTTP from 'admin/http';
+    import HTTP from 'admin/http'
 
     export default {
         name: 'InvoiceSingleContent',
