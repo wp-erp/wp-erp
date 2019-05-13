@@ -97,6 +97,10 @@
                 this.is_update = false;
             });
 
+            this.$root.$on('modal_closed', () => {
+                this.is_update = false;
+            });
+
             this.fetchItems();
         },
 

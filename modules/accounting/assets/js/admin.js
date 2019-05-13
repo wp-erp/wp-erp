@@ -23491,6 +23491,7 @@ setTimeout(function () {
   methods: {
     closeModal: function closeModal() {
       this.$emit('close');
+      this.$root.$emit('modal_closed');
     },
     getAgency: function getAgency() {
       var _this = this;
@@ -23664,6 +23665,7 @@ setTimeout(function () {
   methods: {
     closeModal: function closeModal() {
       this.$emit('close');
+      this.$root.$emit('modal_closed');
     },
     getCategory: function getCategory() {
       var _this = this;
@@ -24128,6 +24130,7 @@ setTimeout(function () {
   methods: {
     closeModal: function closeModal() {
       this.$emit('close');
+      this.$root.$emit('modal_closed');
     },
     getRateName: function getRateName() {
       var _this = this;
@@ -24630,14 +24633,14 @@ setTimeout(function () {
   created: function created() {
     var _this = this;
 
-    this.$on('tax-modal-close', function () {
-      this.showModal = false;
-    });
     this.pageTitle = this.$route.name;
     this.url = this.$route.name.toLowerCase();
     this.$root.$on('refetch_tax_data', function () {
       _this.fetchItems();
 
+      _this.is_update = false;
+    });
+    this.$root.$on('modal_closed', function () {
       _this.is_update = false;
     });
     this.fetchItems();
@@ -24883,6 +24886,9 @@ setTimeout(function () {
 
       _this.is_update = false;
     });
+    this.$root.$on('modal_closed', function () {
+      _this.is_update = false;
+    });
     this.fetchItems();
   },
   computed: {
@@ -25121,6 +25127,9 @@ setTimeout(function () {
     this.$root.$on('refetch_tax_data', function () {
       _this.fetchItems();
 
+      _this.is_update = false;
+    });
+    this.$root.$on('modal_closed', function () {
       _this.is_update = false;
     });
     this.fetchItems();
@@ -25634,9 +25643,6 @@ setTimeout(function () {
     };
   },
   created: function created() {
-    this.$on('tax-modal-close', function () {
-      this.showModal = false;
-    });
     this.pageTitle = this.$route.name;
     this.url = this.$route.name.toLowerCase();
     this.fetchItems();
