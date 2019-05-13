@@ -12,10 +12,12 @@
 
         <div class="wperp-panel wperp-panel-default pb-0 new-tax-rate">
             <div class="wperp-panel-body">
+                <show-errors :error_msgs="form_errors" ></show-errors>
+
                 <form action="" method="post" class="wperp-form">
                     <div class="wperp-row wperp-gutter-20">
                         <div class="wperp-form-group wperp-col-sm-6">
-                            <label>Tax Zone Name</label>
+                            <label>Tax Zone Name<span class="wperp-required-sign">*</span></label>
                             <div class="wperp-custom-select with-multiselect">
                                 <multi-select v-model="tax_name" :options="rate_names"/>
                             </div>
@@ -106,6 +108,7 @@
     import NewTaxAgency from 'admin/components/tax/NewTaxAgency.vue'
     import NewTaxCategory from 'admin/components/tax/NewTaxCategory.vue'
     import NewTaxZone from 'admin/components/tax/NewTaxZone.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: "NewTaxRate",
@@ -116,7 +119,8 @@
             SubmitButton,
             NewTaxAgency,
             NewTaxCategory,
-            NewTaxZone
+            NewTaxZone,
+            ShowErrors
         },
 
         data() {
@@ -134,7 +138,8 @@
                 agencies: [{}],
                 showRateNameModal: false,
                 showAgencyModal: false,
-                showCatModal: false
+                showCatModal: false,
+                form_errors: [],
             }
         },
 
@@ -182,12 +187,24 @@
             },
 
             addNewTaxRate(event) {
+                this.validateForm();
+
+                if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
+                    return;
+                }
+
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.post('/taxes', {
                     tax_rate_name: this.tax_name.id,
                     is_compound: this.is_compound,
                     tax_components: this.formatLineItems()
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success',  'Tax Rate Created!' );
@@ -214,6 +231,14 @@
                 }
 
                 return lineItems;
+            },
+
+            validateForm() {
+                this.form_errors = [];
+
+                if ( !this.tax_name.hasOwnProperty('id') ) {
+                    this.form_errors.push('Tax Zone Name is required.');
+                }
             },
 
             updateFinalAmount() {

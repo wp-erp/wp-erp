@@ -23417,6 +23417,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_ShowErrors_vue__ = __webpack_require__(8);
 //
 //
 //
@@ -23452,6 +23453,9 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+
 
 
 
@@ -23460,7 +23464,8 @@ setTimeout(function () {
   components: {
     HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
-    SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */]
+    SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */],
+    ShowErrors: __WEBPACK_IMPORTED_MODULE_3_admin_components_base_ShowErrors_vue__["a" /* default */]
   },
   props: {
     agency_id: {
@@ -23474,7 +23479,8 @@ setTimeout(function () {
     return {
       agencies: [],
       agency: null,
-      isWorking: false
+      isWorking: false,
+      form_errors: []
     };
   },
   created: function created() {
@@ -23496,15 +23502,25 @@ setTimeout(function () {
     addNewTaxAgency: function addNewTaxAgency() {
       var _this2 = this;
 
+      this.validateForm();
+
+      if (this.form_errors.length) {
+        window.scrollTo({
+          top: 10,
+          behavior: 'smooth'
+        });
+        return;
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/tax-agencies', {
         agency_name: this.agency
+      }).catch(function (error) {
+        _this2.$store.dispatch('spinner/setSpinner', false);
       }).then(function (res) {
         _this2.$store.dispatch('spinner/setSpinner', false);
 
         _this2.showAlert('success', 'Tax Agency Created!');
-      }).catch(function (error) {
-        _this2.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
         _this2.resetData();
 
@@ -23518,15 +23534,25 @@ setTimeout(function () {
     UpdateTaxAgency: function UpdateTaxAgency() {
       var _this3 = this;
 
+      this.validateForm();
+
+      if (this.form_errors.length) {
+        window.scrollTo({
+          top: 10,
+          behavior: 'smooth'
+        });
+        return;
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].put("/tax-agencies/".concat(this.agency_id), {
         agency_name: this.agency
+      }).catch(function (error) {
+        _this3.$store.dispatch('spinner/setSpinner', false);
       }).then(function (res) {
         _this3.$store.dispatch('spinner/setSpinner', false);
 
         _this3.showAlert('success', 'Tax Agency Created!');
-      }).catch(function (error) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
         _this3.resetData();
 
@@ -23536,6 +23562,13 @@ setTimeout(function () {
 
         _this3.$root.$emit('refetch_tax_data');
       });
+    },
+    validateForm: function validateForm() {
+      this.form_errors = [];
+
+      if (!this.agency) {
+        this.form_errors.push('Agency Name is required.');
+      }
     },
     resetData: function resetData() {
       Object.assign(this.$data, this.$options.data.call(this));
@@ -23551,6 +23584,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_ShowErrors_vue__ = __webpack_require__(8);
 //
 //
 //
@@ -23591,6 +23625,9 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+
 
 
 
@@ -23599,7 +23636,8 @@ setTimeout(function () {
   components: {
     HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
-    SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */]
+    SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */],
+    ShowErrors: __WEBPACK_IMPORTED_MODULE_3_admin_components_base_ShowErrors_vue__["a" /* default */]
   },
   props: {
     cat_id: {
@@ -23614,7 +23652,8 @@ setTimeout(function () {
       categories: [],
       category: null,
       desc: null,
-      isWorking: false
+      isWorking: false,
+      form_errors: []
     };
   },
   created: function created() {
@@ -23637,10 +23676,22 @@ setTimeout(function () {
     addNewTaxCat: function addNewTaxCat() {
       var _this2 = this;
 
+      this.validateForm();
+
+      if (this.form_errors.length) {
+        window.scrollTo({
+          top: 10,
+          behavior: 'smooth'
+        });
+        return;
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/tax-cats', {
         name: this.category,
         description: this.desc
+      }).catch(function (error) {
+        _this2.$store.dispatch('spinner/setSpinner', false);
       }).then(function (res) {
         _this2.$store.dispatch('spinner/setSpinner', false);
 
@@ -23658,16 +23709,26 @@ setTimeout(function () {
     updateTaxCat: function updateTaxCat() {
       var _this3 = this;
 
+      this.validateForm();
+
+      if (this.form_errors.length) {
+        window.scrollTo({
+          top: 10,
+          behavior: 'smooth'
+        });
+        return;
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].put("/tax-cats/".concat(this.cat_id), {
         name: this.category,
         description: this.desc
+      }).catch(function (error) {
+        _this3.$store.dispatch('spinner/setSpinner', false);
       }).then(function (res) {
         _this3.$store.dispatch('spinner/setSpinner', false);
 
         _this3.showAlert('success', 'Tax Category Updated!');
-      }).catch(function (error) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
         _this3.resetData();
 
@@ -23677,6 +23738,13 @@ setTimeout(function () {
 
         _this3.$root.$emit('refetch_tax_data');
       });
+    },
+    validateForm: function validateForm() {
+      this.form_errors = [];
+
+      if (!this.category) {
+        this.form_errors.push('Tax Category Name is required.');
+      }
     },
     resetData: function resetData() {
       Object.assign(this.$data, this.$options.data.call(this));
@@ -23695,6 +23763,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_tax_NewTaxAgency_vue__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_tax_NewTaxCategory_vue__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_tax_NewTaxZone_vue__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_ShowErrors_vue__ = __webpack_require__(8);
 //
 //
 //
@@ -23796,6 +23865,9 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+
 
 
 
@@ -23810,7 +23882,8 @@ setTimeout(function () {
     SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */],
     NewTaxAgency: __WEBPACK_IMPORTED_MODULE_3_admin_components_tax_NewTaxAgency_vue__["a" /* default */],
     NewTaxCategory: __WEBPACK_IMPORTED_MODULE_4_admin_components_tax_NewTaxCategory_vue__["a" /* default */],
-    NewTaxZone: __WEBPACK_IMPORTED_MODULE_5_admin_components_tax_NewTaxZone_vue__["a" /* default */]
+    NewTaxZone: __WEBPACK_IMPORTED_MODULE_5_admin_components_tax_NewTaxZone_vue__["a" /* default */],
+    ShowErrors: __WEBPACK_IMPORTED_MODULE_6_admin_components_base_ShowErrors_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -23827,7 +23900,8 @@ setTimeout(function () {
       agencies: [{}],
       showRateNameModal: false,
       showAgencyModal: false,
-      showCatModal: false
+      showCatModal: false,
+      form_errors: []
     };
   },
   created: function created() {
@@ -23874,11 +23948,23 @@ setTimeout(function () {
     addNewTaxRate: function addNewTaxRate(event) {
       var _this3 = this;
 
+      this.validateForm();
+
+      if (this.form_errors.length) {
+        window.scrollTo({
+          top: 10,
+          behavior: 'smooth'
+        });
+        return;
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/taxes', {
         tax_rate_name: this.tax_name.id,
         is_compound: this.is_compound,
         tax_components: this.formatLineItems()
+      }).catch(function (error) {
+        _this3.$store.dispatch('spinner/setSpinner', false);
       }).then(function (res) {
         _this3.$store.dispatch('spinner/setSpinner', false);
 
@@ -23906,6 +23992,13 @@ setTimeout(function () {
       }
 
       return lineItems;
+    },
+    validateForm: function validateForm() {
+      this.form_errors = [];
+
+      if (!this.tax_name.hasOwnProperty('id')) {
+        this.form_errors.push('Tax Zone Name is required.');
+      }
     },
     updateFinalAmount: function updateFinalAmount() {
       var finalAmount = 0;
@@ -23949,6 +24042,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_ShowErrors_vue__ = __webpack_require__(8);
 //
 //
 //
@@ -23994,6 +24088,9 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+
 
 
 
@@ -24002,7 +24099,8 @@ setTimeout(function () {
   components: {
     HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
-    SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */]
+    SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */],
+    ShowErrors: __WEBPACK_IMPORTED_MODULE_3_admin_components_base_ShowErrors_vue__["a" /* default */]
   },
   props: {
     rate_name_id: {
@@ -24018,7 +24116,8 @@ setTimeout(function () {
       tax_number: '',
       is_default: false,
       rate_name: '',
-      isWorking: false
+      isWorking: false,
+      form_errors: []
     };
   },
   created: function created() {
@@ -24042,17 +24141,27 @@ setTimeout(function () {
     addNewTaxZone: function addNewTaxZone() {
       var _this2 = this;
 
+      this.validateForm();
+
+      if (this.form_errors.length) {
+        window.scrollTo({
+          top: 10,
+          behavior: 'smooth'
+        });
+        return;
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/tax-rate-names', {
         tax_rate_name: this.rate_name,
         tax_number: this.tax_number,
         default: this.is_default
+      }).catch(function (error) {
+        _this2.$store.dispatch('spinner/setSpinner', false);
       }).then(function (res) {
         _this2.$store.dispatch('spinner/setSpinner', false);
 
         _this2.showAlert('success', 'Tax Zone Created!');
-      }).catch(function (error) {
-        _this2.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
         _this2.resetData();
 
@@ -24066,16 +24175,26 @@ setTimeout(function () {
     updateTaxRateName: function updateTaxRateName() {
       var _this3 = this;
 
+      this.validateForm();
+
+      if (this.form_errors.length) {
+        window.scrollTo({
+          top: 10,
+          behavior: 'smooth'
+        });
+        return;
+      }
+
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].put("/tax-rate-names/".concat(this.rate_name_id), {
         tax_rate_name: this.rate_name,
         tax_number: this.tax_number,
         default: this.is_default
+      }).catch(function (error) {
+        _this3.$store.dispatch('spinner/setSpinner', false);
       }).then(function (res) {
         _this3.$store.dispatch('spinner/setSpinner', false);
 
         _this3.showAlert('success', 'Tax Zone Updated !');
-      }).catch(function (error) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
         _this3.resetData();
 
@@ -24085,6 +24204,17 @@ setTimeout(function () {
 
         _this3.$root.$emit('refetch_tax_data');
       });
+    },
+    validateForm: function validateForm() {
+      this.form_errors = [];
+
+      if (!this.rate_name) {
+        this.form_errors.push('Tax Zone Name is required.');
+      }
+
+      if (!this.tax_number) {
+        this.form_errors.push('Tax Number is required.');
+      }
     },
     resetData: function resetData() {
       Object.assign(this.$data, this.$options.data.call(this));
@@ -31578,7 +31708,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "first_name" } }, [
       _vm._v("First Name "),
-      _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
     ])
   },
   function() {
@@ -31587,7 +31717,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "last_name" } }, [
       _vm._v("Last Name "),
-      _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
     ])
   },
   function() {
@@ -31595,8 +31725,8 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "email" } }, [
-      _vm._v("Email"),
-      _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+      _vm._v("Email "),
+      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
     ])
   }
 ]
@@ -48376,100 +48506,117 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "wperp-modal-dialog" }, [
-        _c("div", { staticClass: "wperp-modal-content" }, [
-          _c("div", { staticClass: "wperp-modal-header" }, [
-            _c("h3", [
-              _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Agency")
-            ]),
-            _vm._v(" "),
-            _c(
-              "span",
-              {
-                staticClass: "modal-close",
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.closeModal($event)
-                  }
-                }
-              },
-              [_c("i", { staticClass: "flaticon-close" })]
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              staticClass: "modal-form edit-customer-modal",
-              attrs: { action: "", method: "post" }
-            },
-            [
-              _c("div", { staticClass: "wperp-modal-body" }, [
-                _c("div", { staticClass: "wperp-form-group" }, [
-                  _c("label", [_vm._v("Tax Agency Name")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.agency,
-                        expression: "agency"
-                      }
-                    ],
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.agency },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.agency = $event.target.value
-                      }
-                    }
-                  })
-                ])
+        _c(
+          "div",
+          { staticClass: "wperp-modal-content" },
+          [
+            _c("div", { staticClass: "wperp-modal-header" }, [
+              _c("h3", [
+                _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Agency")
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
-                _c(
-                  "div",
-                  { staticClass: "buttons-wrapper text-right" },
-                  [
-                    _vm.is_update
-                      ? _c("submit-button", {
-                          attrs: {
-                            text: "Update Tax Agency",
-                            working: _vm.isWorking
-                          },
-                          nativeOn: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.UpdateTaxAgency($event)
-                            }
+              _c(
+                "span",
+                {
+                  staticClass: "modal-close",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeModal($event)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "flaticon-close" })]
+              )
+            ]),
+            _vm._v(" "),
+            _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                staticClass: "modal-form edit-customer-modal",
+                attrs: { action: "", method: "post" }
+              },
+              [
+                _c("div", { staticClass: "wperp-modal-body" }, [
+                  _c("div", { staticClass: "wperp-form-group" }, [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.agency,
+                          expression: "agency"
+                        }
+                      ],
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.agency },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
                           }
-                        })
-                      : _c("submit-button", {
-                          attrs: { text: "Save", working: _vm.isWorking },
-                          nativeOn: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.addNewTaxAgency($event)
+                          _vm.agency = $event.target.value
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
+                  _c(
+                    "div",
+                    { staticClass: "buttons-wrapper text-right" },
+                    [
+                      _vm.is_update
+                        ? _c("submit-button", {
+                            attrs: {
+                              text: "Update Tax Agency",
+                              working: _vm.isWorking
+                            },
+                            nativeOn: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.UpdateTaxAgency($event)
+                              }
                             }
-                          }
-                        })
-                  ],
-                  1
-                )
-              ])
-            ]
-          )
-        ])
+                          })
+                        : _c("submit-button", {
+                            attrs: { text: "Save", working: _vm.isWorking },
+                            nativeOn: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.addNewTaxAgency($event)
+                              }
+                            }
+                          })
+                    ],
+                    1
+                  )
+                ])
+              ]
+            )
+          ],
+          1
+        )
       ])
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [
+      _vm._v("Tax Agency Name"),
+      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
+    ])
+  }
+]
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -48503,126 +48650,143 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "wperp-modal-dialog" }, [
-        _c("div", { staticClass: "wperp-modal-content" }, [
-          _c("div", { staticClass: "wperp-modal-header" }, [
-            _c("h3", [
-              _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Category")
-            ]),
-            _vm._v(" "),
-            _c(
-              "span",
-              {
-                staticClass: "modal-close",
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.closeModal($event)
-                  }
-                }
-              },
-              [_c("i", { staticClass: "flaticon-close" })]
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              staticClass: "modal-form edit-customer-modal",
-              attrs: { action: "", method: "post" }
-            },
-            [
-              _c("div", { staticClass: "wperp-modal-body" }, [
-                _c("div", { staticClass: "wperp-form-group" }, [
-                  _c("label", [_vm._v("Tax Category Name")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.category,
-                        expression: "category"
-                      }
-                    ],
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.category },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.category = $event.target.value
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-form-group mb-0" }, [
-                  _c("label", [_vm._v("Description")]),
-                  _vm._v(" "),
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.desc,
-                        expression: "desc"
-                      }
-                    ],
-                    staticClass: "wperp-form-field",
-                    attrs: { rows: "4" },
-                    domProps: { value: _vm.desc },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.desc = $event.target.value
-                      }
-                    }
-                  })
-                ])
+        _c(
+          "div",
+          { staticClass: "wperp-modal-content" },
+          [
+            _c("div", { staticClass: "wperp-modal-header" }, [
+              _c("h3", [
+                _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Category")
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
-                _c(
-                  "div",
-                  { staticClass: "buttons-wrapper text-right" },
-                  [
-                    _vm.is_update
-                      ? _c("submit-button", {
-                          attrs: {
-                            text: "Update Tax Category",
-                            working: _vm.isWorking
-                          },
-                          nativeOn: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.updateTaxCat($event)
-                            }
+              _c(
+                "span",
+                {
+                  staticClass: "modal-close",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeModal($event)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "flaticon-close" })]
+              )
+            ]),
+            _vm._v(" "),
+            _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                staticClass: "modal-form edit-customer-modal",
+                attrs: { action: "", method: "post" }
+              },
+              [
+                _c("div", { staticClass: "wperp-modal-body" }, [
+                  _c("div", { staticClass: "wperp-form-group" }, [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.category,
+                          expression: "category"
+                        }
+                      ],
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.category },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
                           }
-                        })
-                      : _c("submit-button", {
-                          attrs: { text: "Save", working: _vm.isWorking },
-                          nativeOn: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.addNewTaxCat($event)
-                            }
+                          _vm.category = $event.target.value
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-form-group mb-0" }, [
+                    _c("label", [_vm._v("Description")]),
+                    _vm._v(" "),
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.desc,
+                          expression: "desc"
+                        }
+                      ],
+                      staticClass: "wperp-form-field",
+                      attrs: { rows: "4" },
+                      domProps: { value: _vm.desc },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
                           }
-                        })
-                  ],
-                  1
-                )
-              ])
-            ]
-          )
-        ])
+                          _vm.desc = $event.target.value
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
+                  _c(
+                    "div",
+                    { staticClass: "buttons-wrapper text-right" },
+                    [
+                      _vm.is_update
+                        ? _c("submit-button", {
+                            attrs: {
+                              text: "Update Tax Category",
+                              working: _vm.isWorking
+                            },
+                            nativeOn: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.updateTaxCat($event)
+                              }
+                            }
+                          })
+                        : _c("submit-button", {
+                            attrs: { text: "Save", working: _vm.isWorking },
+                            nativeOn: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.addNewTaxCat($event)
+                              }
+                            }
+                          })
+                    ],
+                    1
+                  )
+                ])
+              ]
+            )
+          ],
+          1
+        )
       ])
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [
+      _vm._v("Tax Category Name"),
+      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
+    ])
+  }
+]
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -48662,172 +48826,198 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "wperp-modal-dialog" }, [
-        _c("div", { staticClass: "wperp-modal-content" }, [
-          _c("div", { staticClass: "wperp-modal-header" }, [
-            _c("h3", [
-              _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Zone")
+        _c(
+          "div",
+          { staticClass: "wperp-modal-content" },
+          [
+            _c("div", { staticClass: "wperp-modal-header" }, [
+              _c("h3", [
+                _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Zone")
+              ]),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass: "modal-close",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeModal($event)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "flaticon-close" })]
+              )
             ]),
             _vm._v(" "),
+            _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
+            _vm._v(" "),
             _c(
-              "span",
+              "form",
               {
-                staticClass: "modal-close",
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.closeModal($event)
-                  }
-                }
+                staticClass: "modal-form edit-customer-modal",
+                attrs: { action: "", method: "post" }
               },
-              [_c("i", { staticClass: "flaticon-close" })]
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              staticClass: "modal-form edit-customer-modal",
-              attrs: { action: "", method: "post" }
-            },
-            [
-              _c("div", { staticClass: "wperp-modal-body" }, [
-                _c("div", { staticClass: "wperp-form-group" }, [
-                  _c("label", [_vm._v("Tax Zone Name")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.rate_name,
-                        expression: "rate_name"
-                      }
-                    ],
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.rate_name },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.rate_name = $event.target.value
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "wperp-form-group" }, [
-                  _c("label", [_vm._v("Tax Number")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.tax_number,
-                        expression: "tax_number"
-                      }
-                    ],
-                    staticClass: "wperp-form-field",
-                    attrs: { type: "text", placeholder: "Enter Tax Number" },
-                    domProps: { value: _vm.tax_number },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.tax_number = $event.target.value
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-check" }, [
-                  _c("label", { staticClass: "form-check-label" }, [
+              [
+                _c("div", { staticClass: "wperp-modal-body" }, [
+                  _c("div", { staticClass: "wperp-form-group" }, [
+                    _vm._m(0),
+                    _vm._v(" "),
                     _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.is_default,
-                          expression: "is_default"
+                          value: _vm.rate_name,
+                          expression: "rate_name"
                         }
                       ],
-                      staticClass: "form-check-input",
-                      attrs: { type: "checkbox" },
-                      domProps: {
-                        checked: Array.isArray(_vm.is_default)
-                          ? _vm._i(_vm.is_default, null) > -1
-                          : _vm.is_default
-                      },
+                      attrs: { type: "text" },
+                      domProps: { value: _vm.rate_name },
                       on: {
-                        change: function($event) {
-                          var $$a = _vm.is_default,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = null,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 && (_vm.is_default = $$a.concat([$$v]))
-                            } else {
-                              $$i > -1 &&
-                                (_vm.is_default = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
-                            }
-                          } else {
-                            _vm.is_default = $$c
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
                           }
+                          _vm.rate_name = $event.target.value
                         }
                       }
-                    }),
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-form-group" }, [
+                    _vm._m(1),
                     _vm._v(" "),
-                    _c("span", { staticClass: "form-check-sign" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "field-label" }, [
-                      _vm._v("Is this tax default?")
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.tax_number,
+                          expression: "tax_number"
+                        }
+                      ],
+                      staticClass: "wperp-form-field",
+                      attrs: { type: "text", placeholder: "Enter Tax Number" },
+                      domProps: { value: _vm.tax_number },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.tax_number = $event.target.value
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-check" }, [
+                    _c("label", { staticClass: "form-check-label" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.is_default,
+                            expression: "is_default"
+                          }
+                        ],
+                        staticClass: "form-check-input",
+                        attrs: { type: "checkbox" },
+                        domProps: {
+                          checked: Array.isArray(_vm.is_default)
+                            ? _vm._i(_vm.is_default, null) > -1
+                            : _vm.is_default
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.is_default,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 && (_vm.is_default = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.is_default = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
+                            } else {
+                              _vm.is_default = $$c
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "form-check-sign" }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "field-label" }, [
+                        _vm._v("Is this tax default?")
+                      ])
                     ])
                   ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
+                  _c(
+                    "div",
+                    { staticClass: "buttons-wrapper text-right" },
+                    [
+                      _vm.is_update
+                        ? _c("submit-button", {
+                            attrs: { text: "Update", working: _vm.isWorking },
+                            nativeOn: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.updateTaxRateName($event)
+                              }
+                            }
+                          })
+                        : _c("submit-button", {
+                            attrs: { text: "Add New", working: _vm.isWorking },
+                            nativeOn: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.addNewTaxZone($event)
+                              }
+                            }
+                          })
+                    ],
+                    1
+                  )
                 ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
-                _c(
-                  "div",
-                  { staticClass: "buttons-wrapper text-right" },
-                  [
-                    _vm.is_update
-                      ? _c("submit-button", {
-                          attrs: { text: "Update", working: _vm.isWorking },
-                          nativeOn: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.updateTaxRateName($event)
-                            }
-                          }
-                        })
-                      : _c("submit-button", {
-                          attrs: { text: "Add New", working: _vm.isWorking },
-                          nativeOn: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.addNewTaxZone($event)
-                            }
-                          }
-                        })
-                  ],
-                  1
-                )
-              ])
-            ]
-          )
-        ])
+              ]
+            )
+          ],
+          1
+        )
       ])
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [
+      _vm._v("Tax Zone Name"),
+      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [
+      _vm._v("Tax Number"),
+      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
+    ])
+  }
+]
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -48854,429 +49044,449 @@ var render = function() {
       "div",
       { staticClass: "wperp-panel wperp-panel-default pb-0 new-tax-rate" },
       [
-        _c("div", { staticClass: "wperp-panel-body" }, [
-          _c(
-            "form",
-            {
-              staticClass: "wperp-form",
-              attrs: { action: "", method: "post" }
-            },
-            [
-              _c("div", { staticClass: "wperp-row wperp-gutter-20" }, [
-                _c("div", { staticClass: "wperp-form-group wperp-col-sm-6" }, [
-                  _c("label", [_vm._v("Tax Zone Name")]),
+        _c(
+          "div",
+          { staticClass: "wperp-panel-body" },
+          [
+            _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                staticClass: "wperp-form",
+                attrs: { action: "", method: "post" }
+              },
+              [
+                _c("div", { staticClass: "wperp-row wperp-gutter-20" }, [
+                  _c(
+                    "div",
+                    { staticClass: "wperp-form-group wperp-col-sm-6" },
+                    [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "wperp-custom-select with-multiselect" },
+                        [
+                          _c("multi-select", {
+                            attrs: { options: _vm.rate_names },
+                            model: {
+                              value: _vm.tax_name,
+                              callback: function($$v) {
+                                _vm.tax_name = $$v
+                              },
+                              expression: "tax_name"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]
+                  ),
                   _vm._v(" "),
                   _c(
                     "div",
-                    { staticClass: "wperp-custom-select with-multiselect" },
+                    {
+                      staticClass:
+                        "wperp-form-group wperp-col-sm-6 compound-checkbox"
+                    },
                     [
-                      _c("multi-select", {
-                        attrs: { options: _vm.rate_names },
-                        model: {
-                          value: _vm.tax_name,
-                          callback: function($$v) {
-                            _vm.tax_name = $$v
-                          },
-                          expression: "tax_name"
+                      _c("div", { staticClass: "form-check" }, [
+                        _c("label", { staticClass: "form-check-label" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.is_compound,
+                                expression: "is_compound"
+                              }
+                            ],
+                            staticClass: "form-check-input",
+                            attrs: { type: "checkbox" },
+                            domProps: {
+                              checked: Array.isArray(_vm.is_compound)
+                                ? _vm._i(_vm.is_compound, null) > -1
+                                : _vm.is_compound
+                            },
+                            on: {
+                              change: [
+                                function($event) {
+                                  var $$a = _vm.is_compound,
+                                    $$el = $event.target,
+                                    $$c = $$el.checked ? true : false
+                                  if (Array.isArray($$a)) {
+                                    var $$v = null,
+                                      $$i = _vm._i($$a, $$v)
+                                    if ($$el.checked) {
+                                      $$i < 0 &&
+                                        (_vm.is_compound = $$a.concat([$$v]))
+                                    } else {
+                                      $$i > -1 &&
+                                        (_vm.is_compound = $$a
+                                          .slice(0, $$i)
+                                          .concat($$a.slice($$i + 1)))
+                                    }
+                                  } else {
+                                    _vm.is_compound = $$c
+                                  }
+                                },
+                                function($event) {
+                                  _vm.isCompoundTax = !_vm.isCompoundTax
+                                }
+                              ]
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "form-check-sign" }),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "field-label" }, [
+                            _vm._v("Is this tax compound?")
+                          ])
+                        ])
+                      ])
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "table-container mt-20" }, [
+                  _c(
+                    "table",
+                    {
+                      staticClass:
+                        "wperp-table wperp-form-table new-journal-form"
+                    },
+                    [
+                      _vm._m(2),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        [
+                          _vm._l(_vm.componentLines, function(line, key) {
+                            return _c(
+                              "tr",
+                              {
+                                key: key,
+                                class: _vm.isRowExpanded
+                                  ? "is-row-expanded"
+                                  : ""
+                              },
+                              [
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass:
+                                      "col--component-name column-primary",
+                                    attrs: { scope: "row" }
+                                  },
+                                  [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: line.component_name,
+                                          expression: "line.component_name"
+                                        }
+                                      ],
+                                      staticClass: "wperp-form-field",
+                                      attrs: { type: "text" },
+                                      domProps: { value: line.component_name },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            line,
+                                            "component_name",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "a",
+                                      {
+                                        staticClass:
+                                          "vis-hide after-select-dropdown",
+                                        attrs: { href: "#" },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("component")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("button", {
+                                      staticClass: "wperp-toggle-row",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          _vm.isRowExpanded = !_vm.isRowExpanded
+                                        }
+                                      }
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass: "col--agency with-multiselect",
+                                    attrs: { "data-colname": "Agency" }
+                                  },
+                                  [
+                                    _c("multi-select", {
+                                      attrs: { options: _vm.agencies },
+                                      model: {
+                                        value: line.agency_id,
+                                        callback: function($$v) {
+                                          _vm.$set(line, "agency_id", $$v)
+                                        },
+                                        expression: "line.agency_id"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "a",
+                                      {
+                                        staticClass: "after-select-dropdown",
+                                        attrs: { href: "#", role: "button" },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            _vm.showAgencyModal = true
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Add Tax Agency")]
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass:
+                                      "col--tax-category with-multiselect",
+                                    attrs: { "data-colname": "Tax Category" }
+                                  },
+                                  [
+                                    _c("multi-select", {
+                                      attrs: { options: _vm.categories },
+                                      model: {
+                                        value: line.tax_category,
+                                        callback: function($$v) {
+                                          _vm.$set(line, "tax_category", $$v)
+                                        },
+                                        expression: "line.tax_category"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "a",
+                                      {
+                                        staticClass: "after-select-dropdown",
+                                        attrs: { href: "#", role: "button" },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            _vm.showCatModal = true
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Add Tax Category")]
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass: "col--tax-rate",
+                                    attrs: { "data-colname": "Tax Rate" }
+                                  },
+                                  [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: line.tax_rate,
+                                          expression: "line.tax_rate"
+                                        }
+                                      ],
+                                      staticClass:
+                                        "wperp-form-field text-right",
+                                      attrs: { type: "text" },
+                                      domProps: { value: line.tax_rate },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            line,
+                                            "tax_rate",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "a",
+                                      {
+                                        staticClass:
+                                          "vis-hide after-select-dropdown",
+                                        attrs: { href: "#" },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("tax rate")]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass: "col--actions delete-row",
+                                    attrs: {
+                                      "data-colname": "Remove Above Selection"
+                                    }
+                                  },
+                                  [
+                                    _c(
+                                      "a",
+                                      {
+                                        attrs: { href: "#" },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.removeRow(key)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "flaticon-trash"
+                                        })
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          }),
+                          _vm._v(" "),
+                          _vm.isCompoundTax
+                            ? _c("tr", { staticClass: "add-new-line" }, [
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass: "text-left",
+                                    attrs: { colspan: "9" }
+                                  },
+                                  [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "wperp-btn btn--primary add-line-trigger",
+                                        attrs: { type: "button" },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.addLine($event)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass:
+                                            "flaticon-add-plus-button"
+                                        }),
+                                        _vm._v(
+                                          "Add Component\n                                "
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ])
+                            : _vm._e()
+                        ],
+                        2
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _vm.showRateNameModal
+                  ? _c("new-tax-zone", {
+                      on: {
+                        close: function($event) {
+                          _vm.showRateNameModal = false
+                        }
+                      }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.showCatModal
+                  ? _c("new-tax-category", {
+                      on: {
+                        close: function($event) {
+                          _vm.showCatModal = false
+                        }
+                      }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.showAgencyModal
+                  ? _c("new-tax-agency", {
+                      on: {
+                        close: function($event) {
+                          _vm.showAgencyModal = false
+                        }
+                      }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
+                  _c(
+                    "div",
+                    { staticClass: "buttons-wrapper text-right" },
+                    [
+                      _c("submit-button", {
+                        attrs: { text: "Save" },
+                        nativeOn: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.addNewTaxRate($event)
+                          }
                         }
                       })
                     ],
                     1
                   )
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "wperp-form-group wperp-col-sm-6 compound-checkbox"
-                  },
-                  [
-                    _c("div", { staticClass: "form-check" }, [
-                      _c("label", { staticClass: "form-check-label" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.is_compound,
-                              expression: "is_compound"
-                            }
-                          ],
-                          staticClass: "form-check-input",
-                          attrs: { type: "checkbox" },
-                          domProps: {
-                            checked: Array.isArray(_vm.is_compound)
-                              ? _vm._i(_vm.is_compound, null) > -1
-                              : _vm.is_compound
-                          },
-                          on: {
-                            change: [
-                              function($event) {
-                                var $$a = _vm.is_compound,
-                                  $$el = $event.target,
-                                  $$c = $$el.checked ? true : false
-                                if (Array.isArray($$a)) {
-                                  var $$v = null,
-                                    $$i = _vm._i($$a, $$v)
-                                  if ($$el.checked) {
-                                    $$i < 0 &&
-                                      (_vm.is_compound = $$a.concat([$$v]))
-                                  } else {
-                                    $$i > -1 &&
-                                      (_vm.is_compound = $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1)))
-                                  }
-                                } else {
-                                  _vm.is_compound = $$c
-                                }
-                              },
-                              function($event) {
-                                _vm.isCompoundTax = !_vm.isCompoundTax
-                              }
-                            ]
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "form-check-sign" }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "field-label" }, [
-                          _vm._v("Is this tax compound?")
-                        ])
-                      ])
-                    ])
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "table-container mt-20" }, [
-                _c(
-                  "table",
-                  {
-                    staticClass: "wperp-table wperp-form-table new-journal-form"
-                  },
-                  [
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _c(
-                      "tbody",
-                      [
-                        _vm._l(_vm.componentLines, function(line, key) {
-                          return _c(
-                            "tr",
-                            {
-                              key: key,
-                              class: _vm.isRowExpanded ? "is-row-expanded" : ""
-                            },
-                            [
-                              _c(
-                                "td",
-                                {
-                                  staticClass:
-                                    "col--component-name column-primary",
-                                  attrs: { scope: "row" }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: line.component_name,
-                                        expression: "line.component_name"
-                                      }
-                                    ],
-                                    staticClass: "wperp-form-field",
-                                    attrs: { type: "text" },
-                                    domProps: { value: line.component_name },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          line,
-                                          "component_name",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      staticClass:
-                                        "vis-hide after-select-dropdown",
-                                      attrs: { href: "#" },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                        }
-                                      }
-                                    },
-                                    [_vm._v("component")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("button", {
-                                    staticClass: "wperp-toggle-row",
-                                    attrs: { type: "button" },
-                                    on: {
-                                      click: function($event) {
-                                        $event.preventDefault()
-                                        _vm.isRowExpanded = !_vm.isRowExpanded
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticClass: "col--agency with-multiselect",
-                                  attrs: { "data-colname": "Agency" }
-                                },
-                                [
-                                  _c("multi-select", {
-                                    attrs: { options: _vm.agencies },
-                                    model: {
-                                      value: line.agency_id,
-                                      callback: function($$v) {
-                                        _vm.$set(line, "agency_id", $$v)
-                                      },
-                                      expression: "line.agency_id"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      staticClass: "after-select-dropdown",
-                                      attrs: { href: "#", role: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          _vm.showAgencyModal = true
-                                        }
-                                      }
-                                    },
-                                    [_vm._v("Add Tax Agency")]
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticClass:
-                                    "col--tax-category with-multiselect",
-                                  attrs: { "data-colname": "Tax Category" }
-                                },
-                                [
-                                  _c("multi-select", {
-                                    attrs: { options: _vm.categories },
-                                    model: {
-                                      value: line.tax_category,
-                                      callback: function($$v) {
-                                        _vm.$set(line, "tax_category", $$v)
-                                      },
-                                      expression: "line.tax_category"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      staticClass: "after-select-dropdown",
-                                      attrs: { href: "#", role: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          _vm.showCatModal = true
-                                        }
-                                      }
-                                    },
-                                    [_vm._v("Add Tax Category")]
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticClass: "col--tax-rate",
-                                  attrs: { "data-colname": "Tax Rate" }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: line.tax_rate,
-                                        expression: "line.tax_rate"
-                                      }
-                                    ],
-                                    staticClass: "wperp-form-field text-right",
-                                    attrs: { type: "text" },
-                                    domProps: { value: line.tax_rate },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          line,
-                                          "tax_rate",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      staticClass:
-                                        "vis-hide after-select-dropdown",
-                                      attrs: { href: "#" },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                        }
-                                      }
-                                    },
-                                    [_vm._v("tax rate")]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticClass: "col--actions delete-row",
-                                  attrs: {
-                                    "data-colname": "Remove Above Selection"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "a",
-                                    {
-                                      attrs: { href: "#" },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          return _vm.removeRow(key)
-                                        }
-                                      }
-                                    },
-                                    [_c("i", { staticClass: "flaticon-trash" })]
-                                  )
-                                ]
-                              )
-                            ]
-                          )
-                        }),
-                        _vm._v(" "),
-                        _vm.isCompoundTax
-                          ? _c("tr", { staticClass: "add-new-line" }, [
-                              _c(
-                                "td",
-                                {
-                                  staticClass: "text-left",
-                                  attrs: { colspan: "9" }
-                                },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "wperp-btn btn--primary add-line-trigger",
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          return _vm.addLine($event)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "flaticon-add-plus-button"
-                                      }),
-                                      _vm._v(
-                                        "Add Component\n                                "
-                                      )
-                                    ]
-                                  )
-                                ]
-                              )
-                            ])
-                          : _vm._e()
-                      ],
-                      2
-                    )
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _vm.showRateNameModal
-                ? _c("new-tax-zone", {
-                    on: {
-                      close: function($event) {
-                        _vm.showRateNameModal = false
-                      }
-                    }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.showCatModal
-                ? _c("new-tax-category", {
-                    on: {
-                      close: function($event) {
-                        _vm.showCatModal = false
-                      }
-                    }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.showAgencyModal
-                ? _c("new-tax-agency", {
-                    on: {
-                      close: function($event) {
-                        _vm.showAgencyModal = false
-                      }
-                    }
-                  })
-                : _vm._e(),
-              _vm._v(" "),
-              _c("div", { staticClass: "wperp-modal-footer pt-0" }, [
-                _c(
-                  "div",
-                  { staticClass: "buttons-wrapper text-right" },
-                  [
-                    _c("submit-button", {
-                      attrs: { text: "Save" },
-                      nativeOn: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.addNewTaxRate($event)
-                        }
-                      }
-                    })
-                  ],
-                  1
-                )
-              ])
-            ],
-            1
-          )
-        ])
+                ])
+              ],
+              1
+            )
+          ],
+          1
+        )
       ]
     )
   ])
@@ -49294,6 +49504,15 @@ var staticRenderFns = [
           ])
         ])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [
+      _vm._v("Tax Zone Name"),
+      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
     ])
   },
   function() {
