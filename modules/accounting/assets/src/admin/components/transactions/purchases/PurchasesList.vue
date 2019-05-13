@@ -75,8 +75,8 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
-    import ListTable from 'admin/components/list-table/ListTable.vue';
+    import HTTP from 'admin/http'
+    import ListTable from 'admin/components/list-table/ListTable.vue'
 
     export default {
         name: 'PurchaseList',

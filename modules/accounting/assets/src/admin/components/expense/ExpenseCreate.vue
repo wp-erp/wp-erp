@@ -154,7 +154,7 @@
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import ComboButton from 'admin/components/select/ComboButton.vue';
+    import ComboButton from 'admin/components/select/ComboButton.vue'
     import SelectPeople from 'admin/components/people/SelectPeople.vue'
     import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
     import CheckFields from 'admin/components/check/CheckFields.vue'

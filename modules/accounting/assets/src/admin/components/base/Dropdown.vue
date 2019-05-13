@@ -20,7 +20,7 @@
 
     // Vue click outside
     // https://jsfiddle.net/Linusborg/Lx49LaL8/
-    import Popper from 'popper.js';
+    import Popper from 'popper.js'
 
     export default {
 
@@ -63,7 +63,7 @@
             // Create non-reactive property
             this._popper = null;
 
-            this.$parent.$on( 'action:click', () => {
+            this.$parent.$on('action:click', () => {
                 this.visible = false;
             });
         },

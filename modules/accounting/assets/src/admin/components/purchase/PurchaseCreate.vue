@@ -127,7 +127,7 @@
     import HTTP from 'admin/http'
     import Datepicker from 'admin/components/base/Datepicker.vue'
     import FileUpload from 'admin/components/base/FileUpload.vue'
-    import ComboButton from 'admin/components/select/ComboButton.vue';
+    import ComboButton from 'admin/components/select/ComboButton.vue'
     import PurchaseRow from 'admin/components/purchase/PurchaseRow.vue'
     import SelectVendors from 'admin/components/people/SelectVendors.vue'
     import ShowErrors from 'admin/components/base/ShowErrors.vue'

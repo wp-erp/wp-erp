@@ -53,9 +53,9 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
-    import Dropdown from 'admin/components/base/Dropdown.vue';
-    import Modal from 'admin/components/modal/Modal.vue';
+    import HTTP from 'admin/http'
+    import Dropdown from 'admin/components/base/Dropdown.vue'
+    import Modal from 'admin/components/modal/Modal.vue'
     import InputTag from 'vue-input-tag'
 
     export default {

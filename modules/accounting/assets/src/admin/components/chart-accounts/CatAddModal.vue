@@ -45,8 +45,8 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
-    import Treeselect from '@riophae/vue-treeselect';
+    import HTTP from 'admin/http'
+    import Treeselect from '@riophae/vue-treeselect'
 
     export default {
         name: 'CatAddModal',

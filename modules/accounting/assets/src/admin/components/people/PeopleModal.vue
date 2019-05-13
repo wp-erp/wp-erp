@@ -126,7 +126,8 @@
 
 <script>
     import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue';
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+
     export default {
         name: "CustomerModal",
         components: {

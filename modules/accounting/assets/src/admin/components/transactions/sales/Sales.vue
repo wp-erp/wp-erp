@@ -23,10 +23,10 @@
 </template>
 
 <script>
-    import ComboBox from 'admin/components/select/ComboBox.vue';
-    import SalesStats from 'admin/components/transactions/sales/SalesStats.vue';
-    import SalesList from 'admin/components/transactions/sales/SalesList.vue';
-    import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
+    import ComboBox from 'admin/components/select/ComboBox.vue'
+    import SalesStats from 'admin/components/transactions/sales/SalesStats.vue'
+    import SalesList from 'admin/components/transactions/sales/SalesList.vue'
+    import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue'
 
     export default {
         name: 'Sales',

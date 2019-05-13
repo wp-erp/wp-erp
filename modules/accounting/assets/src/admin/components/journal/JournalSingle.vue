@@ -101,7 +101,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
+    import HTTP from 'admin/http'
 
     export default {
         name: 'JournalSingle',

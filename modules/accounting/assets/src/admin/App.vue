@@ -15,10 +15,10 @@
 <script>
     import { mapState, mapActions } from 'vuex'
 
-    import AccountingMenu from 'admin/components/menu/AccountingMenu.vue';
-    import Loading from 'vue-loading-overlay';
-    import 'vue-loading-overlay/dist/vue-loading.css';
-    import 'vue-loading-overlay/dist/vue-loading.css';
+    import AccountingMenu from 'admin/components/menu/AccountingMenu.vue'
+    import Loading from 'vue-loading-overlay'
+    import 'vue-loading-overlay/dist/vue-loading.css'
+    import 'vue-loading-overlay/dist/vue-loading.css'
     import '../../font/flaticon.css'
     import '../../css/master.css'
 

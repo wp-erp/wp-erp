@@ -63,7 +63,7 @@
 
 <script>
     import ListTable from 'admin/components/list-table/ListTable.vue'
-    import Datepicker from 'admin/components/base/Datepicker.vue';
+    import Datepicker from 'admin/components/base/Datepicker.vue'
 
     export default {
         name: 'PeopleTransaction',

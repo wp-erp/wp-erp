@@ -39,7 +39,7 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http';
+    import HTTP from 'admin/http'
     import Dropdown from 'admin/components/base/Dropdown.vue'
 
     export default {
