@@ -124,7 +124,7 @@
                 to_receive    : [],
                 to_pay        : [],
                 dashboardTitle: null,
-                sampleLists   : window.acct.hooks.applyFilters( 'weposHomeSampleList', [] ),
+                sampleLists   : window.acct.hooks.applyFilters( 'acctHomeSampleList', [] ),
             }
         },
 
