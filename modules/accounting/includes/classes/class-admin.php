@@ -231,7 +231,16 @@ class Admin {
      * @return void
      */
     public function enqueue_scripts() {
+        // load styles
         wp_enqueue_style( 'accounting-admin' );
+
+        // load hook
+        wp_enqueue_script( 'accounting-hook' );
+
+        // JS do action
+        do_action( 'erp_acct_js_hook_loaded' );
+
+        // load scripts
         wp_enqueue_script( 'accounting-admin' );
     }
 

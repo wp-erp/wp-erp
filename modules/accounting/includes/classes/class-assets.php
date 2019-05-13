@@ -120,6 +120,12 @@ class Assets {
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/vendor.js' ),
                 'in_footer' => true
             ],
+            'accounting-hook' => [
+                'src'       => ERP_ACCOUNTING_ASSETS . '/js/wphook.js',
+                'deps'      => [ 'accounting-vendor' ],
+                'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/wphook.js' ),
+                'in_footer' => true
+            ],
             'accounting-frontend' => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/frontend.js',
                 'deps'      => [ 'jquery', 'accounting-vendor' ],
