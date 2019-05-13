@@ -8,16 +8,18 @@
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
                 <!-- end modal body title -->
+                <show-errors :error_msgs="form_errors" ></show-errors>
+
                 <form action="" method="post" class="modal-form edit-customer-modal">
                     <div class="wperp-modal-body">
 
                         <div class="wperp-form-group">
-                            <label>Tax Zone Name</label>
+                            <label>Tax Zone Name<span class="wperp-required-sign">*</span></label>
                             <input type="text" v-model="rate_name" />
                         </div>
 
                         <div class="wperp-form-group">
-                            <label>Tax Number</label>
+                            <label>Tax Number<span class="wperp-required-sign">*</span></label>
                             <input type="text" v-model="tax_number" class="wperp-form-field" placeholder="Enter Tax Number">
                         </div>
                         <div class="form-check">
@@ -47,6 +49,7 @@
     import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: 'NewTaxZone',
@@ -54,7 +57,8 @@
         components: {
             HTTP,
             MultiSelect,
-            SubmitButton
+            SubmitButton,
+            ShowErrors
         },
 
         props: {
@@ -73,6 +77,7 @@
                 is_default: false,
                 rate_name: '',
                 isWorking: false,
+                form_errors: []
             };
         },
 
@@ -96,18 +101,28 @@
             },
 
             addNewTaxZone() {
+                this.validateForm();
+
+                if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
+                    return;
+                }
+
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.post('/tax-rate-names', {
                     tax_rate_name: this.rate_name,
                     tax_number   : this.tax_number,
                     default      : this.is_default,
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Zone Created!' );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
+                }).then(() => {
                     this.resetData();
                     this.isWorking = false;
                     this.$emit('close');
@@ -116,21 +131,42 @@
             },
 
             updateTaxRateName() {
+                this.validateForm();
+
+                if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
+                    return;
+                }
+
                 HTTP.put(`/tax-rate-names/${this.rate_name_id}`, {
                     tax_rate_name: this.rate_name,
                     tax_number   : this.tax_number,
                     default      : this.is_default,
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Zone Updated !' );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
+                }).then(() => {
                     this.resetData();
                     this.isWorking = false;
                     this.$emit('close');
                     this.$root.$emit('refetch_tax_data');
                 });
+            },
+
+            validateForm() {
+                this.form_errors = [];
+
+                if ( !this.rate_name ) {
+                    this.form_errors.push('Tax Zone Name is required.');
+                }
+                if ( !this.tax_number ) {
+                    this.form_errors.push('Tax Number is required.');
+                }
             },
 
             resetData() {

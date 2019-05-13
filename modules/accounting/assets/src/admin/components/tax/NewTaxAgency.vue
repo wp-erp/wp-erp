@@ -7,12 +7,14 @@
                     <h3>{{ is_update ? 'Edit' : 'Add' }} Tax Agency</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
+
+                <show-errors :error_msgs="form_errors" ></show-errors>
                 <!-- end modal body title -->
                 <form action="" method="post" class="modal-form edit-customer-modal">
                     <div class="wperp-modal-body">
 
                         <div class="wperp-form-group">
-                            <label>Tax Agency Name</label>
+                            <label>Tax Agency Name<span class="wperp-required-sign">*</span></label>
                             <!--<multi-select v-model="agency" :options="agencies" />-->
                             <input type="text" v-model="agency" />
                         </div>
@@ -37,6 +39,7 @@
     import HTTP from 'admin/http'
     import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import SubmitButton from 'admin/components/base/SubmitButton.vue'
+    import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: 'NewTaxAgency',
@@ -44,7 +47,8 @@
         components: {
             HTTP,
             MultiSelect,
-            SubmitButton
+            SubmitButton,
+            ShowErrors
         },
 
         props: {
@@ -61,6 +65,7 @@
                 agencies: [],
                 agency: null,
                 isWorking: false,
+                form_errors: [],
             };
         },
 
@@ -82,15 +87,25 @@
             },
 
             addNewTaxAgency() {
+                this.validateForm();
+
+                if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
+                    return;
+                }
+
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post('/tax-agencies', {
                     agency_name: this.agency,
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Agency Created!' );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
+                }).then(() => {
                     this.resetData();
                     this.isWorking = false;
                     this.$emit('close');
@@ -99,20 +114,38 @@
             },
 
             UpdateTaxAgency() {
+                this.validateForm();
+
+                if ( this.form_errors.length ) {
+                    window.scrollTo({
+                        top: 10,
+                        behavior: 'smooth'
+                    });
+                    return;
+                }
+
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.put(`/tax-agencies/${this.agency_id}`, {
                     agency_name: this.agency,
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Tax Agency Created!' );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
+                }).then(() => {
                     this.resetData();
                     this.isWorking = false;
                     this.$emit('close');
                     this.$root.$emit('refetch_tax_data');
                 });
+            },
+
+            validateForm() {
+                this.form_errors = [];
+
+                if ( !this.agency ) {
+                    this.form_errors.push('Agency Name is required.');
+                }
             },
 
             resetData() {

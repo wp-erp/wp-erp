@@ -20,15 +20,15 @@
                                 <!-- add new product form -->
                                 <div class="wperp-row wperp-gutter-20">
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                        <label for="first_name">First Name <span class="required-sign">*</span></label>
+                                        <label for="first_name">First Name <span class="wperp-required-sign">*</span></label>
                                         <input type="text" v-model="peopleFields.first_name" id="first_name" class="wperp-form-field" placeholder="First Name">
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                        <label for="last_name">Last Name <span class="required-sign">*</span></label>
+                                        <label for="last_name">Last Name <span class="wperp-required-sign">*</span></label>
                                         <input type="text" v-model="peopleFields.last_name" id="last_name" class="wperp-form-field" placeholder="Last Name">
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                        <label for="email">Email<span class="required-sign">*</span></label>
+                                        <label for="email">Email <span class="wperp-required-sign">*</span></label>
                                         <input type="email" v-model="peopleFields.email" id="email" class="wperp-form-field" placeholder="you@domain.com">
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
