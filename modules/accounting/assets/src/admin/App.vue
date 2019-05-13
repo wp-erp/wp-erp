@@ -1,6 +1,6 @@
 <template>
     <div id="erp-accounting">
-        <ERPMenu></ERPMenu>
+        <accounting-menu></accounting-menu>
         <router-view/>
         <loading
             :active.sync="loader"
@@ -15,7 +15,7 @@
 <script>
     import { mapState, mapActions } from 'vuex'
 
-    import ERPMenu from 'admin/components/menu/ERPMenu.vue';
+    import AccountingMenu from 'admin/components/menu/AccountingMenu.vue';
     import Loading from 'vue-loading-overlay';
     import 'vue-loading-overlay/dist/vue-loading.css';
     import 'vue-loading-overlay/dist/vue-loading.css';
@@ -24,7 +24,12 @@
 
     export default {
         name: 'Accounting',
-        components: { ERPMenu, Loading },
+
+        components: {
+            AccountingMenu,
+            Loading
+        },
+
         computed: mapState({
             loader: state => state.spinner.loader
         }),
