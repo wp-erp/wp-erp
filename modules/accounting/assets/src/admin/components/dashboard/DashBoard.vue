@@ -11,6 +11,18 @@
         </div>
         <!-- End .header-section -->
 
+        <ul>
+            <li>One</li>
+            <li>Two</li>
+            <li>Three</li>
+
+            <component
+                v-for="(component, index) in sampleLists"
+                :key="index"
+                :is="component"
+            />
+        </ul>
+
         <div class="wperp-dashboard">
             <div class="wperp-row">
                 <div class="wperp-col-md-9 wperp-col-sm-12 wperp-col-xs-12">
@@ -111,7 +123,8 @@
                 msg           : 'Accounting',
                 to_receive    : [],
                 to_pay        : [],
-                dashboardTitle: null
+                dashboardTitle: null,
+                sampleLists   : window.acct.hooks.applyFilters( 'weposHomeSampleList', [] ),
             }
         },
 
