@@ -5,10 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ dashboardTitle }}</h2>
-
-                    <!-- test add action hook -->
-                    {{ hooks.doAction( 'todayDate', new Date ) }}
+                    <h2 class="content-header__title">Dashboard</h2>
                 </div>
             </div>
         </div>
@@ -136,10 +133,6 @@
                 this.$store.dispatch( 'spinner/setSpinner', false );
                 return this.formatAmount(total);
             },
-
-            hooks() {
-                return window.hooks;
-            }
         },
 
         created() {
@@ -147,11 +140,6 @@
             this.fetchReceivables();
             this.fetchPayables();
        },
-
-        mounted() {
-            // `hooks` object can be use with/without `this` inside <script>
-            this.dashboardTitle = hooks.applyFilters( 'dashboardTitle', 'dashboard' );
-        },
 
         methods: {
             fetchReceivables(){

@@ -82,23 +82,6 @@
             this.fetchAccounts();
         },
 
-
-        mounted() {
-            // Add filter test
-            hooks.addFilter( 'dashboardTitle', 'acct', function(title) {
-                console.log('Accounts.vue : line 89');
-
-                return title.toUpperCase();
-            } );
-
-            // Add action test
-            hooks.addAction( 'todayDate', 'acct', function(today) {
-                console.log('Accounts.vue : line 96');
-
-                console.log( today );
-            } );
-        },
-
         methods: {
             fetchAccounts() {
                 HTTP.get('/accounts/cash-at-bank').then( response => {
