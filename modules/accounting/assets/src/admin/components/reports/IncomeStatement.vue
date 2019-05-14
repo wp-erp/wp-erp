@@ -116,7 +116,15 @@
         },
 
         created() {
-            this.fetchItems();
+            this.$nextTick(function () {
+                // with leading zero, and JS month are zero index based
+                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
+
+                this.start_date = `2019-${month}-01`;
+                this.end_date   = erp_acct_var.current_date;
+
+                this.fetchItems();
+            });
         },
 
         methods: {

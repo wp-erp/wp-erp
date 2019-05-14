@@ -1,7 +1,7 @@
 <template>
     <tr>
         <th scope="row" class="col--products with-multiselect product-select">
-            <multi-select v-model="line.selectedProduct" :options="products" />
+            <multi-select v-model="line.selectedProduct" :options="products" @input="setProductInfo" />
         </th>
         <td class="col--qty column-primary">
             <input type="number" :class="{'has-err': errors.first('qty')}"
@@ -71,10 +71,6 @@
         },
 
         watch: {
-            'line.selectedProduct'() {
-                this.setProductInfo();
-            },
-
             taxRateID() {
                 this.getTaxRate();
                 this.respondAtChange();
