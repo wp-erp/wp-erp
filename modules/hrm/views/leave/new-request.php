@@ -8,6 +8,8 @@
                     erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ) );
                 } elseif ( $_GET['msg'] == 'error' ) {
                     erp_html_show_notice( __( 'Something went wrong.', 'erp' ), 'error' );
+                } elseif ( $_GET['msg'] == 'no_reason' ) {
+                    erp_html_show_notice( __( 'Leave reason field can not be blank.', 'erp' ), 'error' );
                 }
 
             } ?>
@@ -63,6 +65,7 @@
                         'label'       => __( 'Reason', 'erp' ),
                         'name'        => 'leave_reason',
                         'type'        => 'textarea',
+                        'required'    => true,
                         'custom_attr' => array( 'cols' => 30, 'rows' => 3, 'disabled' => 'disabled' )
                     ) ); ?>
                 </div>
