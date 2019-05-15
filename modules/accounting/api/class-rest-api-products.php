@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -23,7 +24,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -78,7 +79,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'bulk_delete' ],
                 'args'                => [
-                    'ids'   => [ 'required' => true ]
+                    'ids' => [ 'required' => true ]
                 ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_hr_manager' );
@@ -108,31 +109,31 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_inventory_products( $request ) {
+    public function get_inventory_products ( $request ) {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-	    $product_data = erp_acct_get_all_products( $args );
-	    $total_items = erp_acct_get_all_products( [ 'count' => true, 'number' => -1 ] );
+        $product_data = erp_acct_get_all_products( $args );
+        $total_items  = erp_acct_get_all_products( [ 'count' => true, 'number' => -1 ] );
 
-	    foreach ( $product_data as $item ) {
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        foreach ( $product_data as $item ) {
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
-	    $response = rest_ensure_response( $formatted_items );
-	    $response = $this->format_collection_response( $response, $request, $total_items );
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
         $response->set_status( 200 );
 
-	    return $response;
+        return $response;
     }
 
     /**
@@ -142,9 +143,9 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_inventory_product( $request ) {
-        $id       = (int) $request['id'];
-        $item     = erp_acct_get_product( $id );
+    public function get_inventory_product ( $request ) {
+        $id   = (int) $request['id'];
+        $item = erp_acct_get_product( $id );
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_inventory_product_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
@@ -152,8 +153,8 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
-        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
-        $response = rest_ensure_response( $item );
+        $item                           = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $response                       = rest_ensure_response( $item );
 
         $response->set_status( 200 );
 
@@ -167,10 +168,10 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_inventory_product( $request ) {
+    public function create_inventory_product ( $request ) {
         $item = $this->prepare_item_for_database( $request );
 
-        $id   = erp_acct_insert_product( $item );
+        $id         = erp_acct_insert_product( $item );
         $item['id'] = $id;
 
         $additional_fields['namespace'] = $this->namespace;
@@ -190,16 +191,16 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function update_inventory_product( $request ) {
+    public function update_inventory_product ( $request ) {
         $id = (int) $request['id'];
 
-	    if ( empty( $id ) ) {
-		    return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
-	    }
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
 
-	    $item = $this->prepare_item_for_database( $request );
+        $item = $this->prepare_item_for_database( $request );
 
-	    $id   = erp_acct_update_product( $item, $id );
+        $id         = erp_acct_update_product( $item, $id );
         $item['id'] = $id;
 
         $additional_fields['namespace'] = $this->namespace;
@@ -209,7 +210,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response = rest_ensure_response( $response );
         $response->set_status( 200 );
 
-	    return $response;
+        return $response;
     }
 
 
@@ -220,10 +221,10 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_inventory_product( $request ) {
+    public function delete_inventory_product ( $request ) {
         $id = (int) $request['id'];
 
-	    erp_acct_delete_product( $id );
+        erp_acct_delete_product( $id );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -235,7 +236,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database ( $request ) {
         $prepared_item = [];
         // required arguments.
         if ( isset( $request['name'] ) ) {
@@ -258,13 +259,13 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['vendor'] = $request['vendor']['id'];
         }
 
-	    if ( isset( $request['cost_price'] ) ) {
-		    $prepared_item['cost_price'] = $request['cost_price'];
-	    }
+        if ( isset( $request['cost_price'] ) ) {
+            $prepared_item['cost_price'] = $request['cost_price'];
+        }
 
-	    if ( isset( $request['sale_price'] ) ) {
-		    $prepared_item['sale_price'] = $request['sale_price'];
-	    }
+        if ( isset( $request['sale_price'] ) ) {
+            $prepared_item['sale_price'] = $request['sale_price'];
+        }
 
         return $prepared_item;
     }
@@ -278,7 +279,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -311,7 +312,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'erp_inv_product',
@@ -323,7 +324,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'name'           => [
+                'name'            => [
                     'description' => __( 'Title for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -332,14 +333,14 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'vendor'           => [
-	                'description' => __( 'Vendor for the resource.' ),
-	                'type'        => 'string',
-	                'context'     => [ 'edit' ],
-	                'arg_options' => [
-		                'sanitize_callback' => 'sanitize_text_field',
-	                ],
-	                'required'    => true,
+                'vendor'          => [
+                    'description' => __( 'Vendor for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
                 ],
                 'product_type_id' => [
                     'description' => __( 'product type id for the resource.' ),
@@ -349,7 +350,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'category_id'   => [
+                'category_id'     => [
                     'description' => __( 'Category id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -357,7 +358,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'tax_cat_id'   => [
+                'tax_cat_id'      => [
                     'description' => __( 'Tax Category id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -365,13 +366,13 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'cost_price'              => [
-	                'description' => __( 'Cost price for the resource.' ),
-	                'type'        => 'integer',
-	                'context'     => [ 'embed', 'view', 'edit' ],
-	                'readonly'    => true,
+                'cost_price'      => [
+                    'description' => __( 'Cost price for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
                 ],
-                'sale_price'              => [
+                'sale_price'      => [
                     'description' => __( 'Sale price for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
@@ -388,8 +389,8 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return object
      */
-    public function get_product_types() {
-        $types = erp_get_product_type();
+    public function get_product_types () {
+        $types    = erp_get_product_type();
         $response = rest_ensure_response( $types );
         return $response;
     }
@@ -397,13 +398,13 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Bulk delete action
      *
-     * @param  object $request
+     * @param object $request
      *
      * @return object
      */
-    public function bulk_delete( $request ) {
-        $ids    =   $request['ids'];
-        $ids    =   explode( ',', $ids );
+    public function bulk_delete ( $request ) {
+        $ids = $request['ids'];
+        $ids = explode( ',', $ids );
 
         if ( ! $ids ) {
             return;

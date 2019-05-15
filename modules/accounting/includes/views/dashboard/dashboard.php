@@ -4,8 +4,8 @@
     <div class="erp-badge-ac-box">
         <h3><?php _e( 'Cash & Bank Accounts', 'erp' ); ?></h3>
         <?php
-            $items = erp_acct_get_dashboard_banks();
-            include_once ERP_ACCOUNTING_VIEWS . '/dashboard/bank.php';
+        $items = erp_acct_get_dashboard_banks();
+        include_once ERP_ACCOUNTING_VIEWS . '/dashboard/bank.php';
         ?>
     </div>
 </div>

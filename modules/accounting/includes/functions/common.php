@@ -9,22 +9,22 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array
  */
-function erp_acct_upload_attachments($files) {
+function erp_acct_upload_attachments ( $files ) {
     if ( ! function_exists( 'wp_handle_upload' ) ) {
         require_once( ABSPATH . 'wp-admin/includes/file.php' );
     }
 
     $attachments = [];
-    $movefiles = [];
+    $movefiles   = [];
 
     // Formatting request for upload
-    for ( $i = 0; $i < count($files['name']); $i++ ) {
+    for ( $i = 0; $i < count( $files['name'] ); $i++ ) {
         $attachments[] = [
-            'name' => $files['name'][$i],
-            'type' => $files['type'][$i],
-            'tmp_name' => $files['tmp_name'][$i],
-            'error' => $files['error'][$i],
-            'size' => $files['size'][$i]
+            'name'     => $files['name'][ $i ],
+            'type'     => $files['type'][ $i ],
+            'tmp_name' => $files['tmp_name'][ $i ],
+            'error'    => $files['error'][ $i ],
+            'size'     => $files['size'][ $i ]
         ];
     }
 
@@ -43,13 +43,13 @@ function erp_acct_upload_attachments($files) {
  *
  * @return array|null|object
  */
-function erp_acct_get_payables( $from, $to ) {
+function erp_acct_get_payables ( $from, $to ) {
     global $wpdb;
 
     $from_date = date( "Y-m-d", strtotime( $from ) );
-    $to_date = date( "Y-m-d", strtotime( $to ) );
+    $to_date   = date( "Y-m-d", strtotime( $to ) );
 
-    $purchases = $wpdb->prefix . 'erp_acct_purchase';
+    $purchases             = $wpdb->prefix . 'erp_acct_purchase';
     $purchase_acct_details = $wpdb->prefix . 'erp_acct_purchase_account_details';
 
     $purchase_query = $wpdb->prepare( "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
@@ -61,9 +61,9 @@ function erp_acct_get_payables( $from, $to ) {
 
     $purchase_results = $wpdb->get_results( $purchase_query, ARRAY_A );
 
-    $bills = $wpdb->prefix . 'erp_acct_bills';
+    $bills             = $wpdb->prefix . 'erp_acct_bills';
     $bill_acct_details = $wpdb->prefix . 'erp_acct_bill_account_details';
-    $bills_query = $wpdb->prepare( "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
+    $bills_query       = $wpdb->prepare( "Select voucher_no, SUM(ad.debit - ad.credit) as due, due_date
                               FROM $bills
                               LEFT JOIN $bill_acct_details as ad
                               ON ad.bill_no = voucher_no  where due_date
@@ -72,7 +72,7 @@ function erp_acct_get_payables( $from, $to ) {
 
     $bill_results = $wpdb->get_results( $bills_query, ARRAY_A );
 
-    if ( !empty( $purchase_results) && !empty( $bill_results ) ) {
+    if ( ! empty( $purchase_results ) && ! empty( $bill_results ) ) {
         return array_merge( $bill_results, $purchase_results );
     }
 
@@ -91,12 +91,12 @@ function erp_acct_get_payables( $from, $to ) {
  *
  * @return array
  */
-function erp_acct_get_payables_overview() {
+function erp_acct_get_payables_overview () {
     // get dates till coming 90 days
     $from_date = date( "Y-m-d" );
-    $to_date = date( "Y-m-d", strtotime( "+90 day", strtotime( $from_date ) ) );
+    $to_date   = date( "Y-m-d", strtotime( "+90 day", strtotime( $from_date ) ) );
 
-    $data = [];
+    $data   = [];
     $amount = [
         'first'  => 0,
         'second' => 0,
@@ -105,13 +105,13 @@ function erp_acct_get_payables_overview() {
 
     $result = erp_acct_get_payables( $from_date, $to_date );
 
-    if ( !empty( $result ) ) {
+    if ( ! empty( $result ) ) {
         $from_date = new DateTime( $from_date );
 
         foreach ( $result as $item_data ) {
-            $item = (object)$item_data;
+            $item  = (object) $item_data;
             $later = new DateTime( $item->due_date );
-            $diff = $later->diff( $from_date )->format( "%a" );
+            $diff  = $later->diff( $from_date )->format( "%a" );
 
             //segment by date difference
             switch ( $diff ) {
@@ -151,21 +151,21 @@ function erp_acct_get_payables_overview() {
  *
  * @return void
  */
-function erp_acct_insert_check_data( $check_data ) {
+function erp_acct_insert_check_data ( $check_data ) {
     global $wpdb;
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_checks', array(
-        'trn_no'      => $check_data['voucher_no'],
-        'check_no'    => $check_data['check_no'],
-        'voucher_type'=> $check_data['voucher_type'],
-        'amount'      => $check_data['amount'],
-        'bank'        => $check_data['bank'],
-        'name'        => $check_data['name'],
-        'pay_to'      => $check_data['pay_to'],
-        'created_at'  => $check_data['created_at'],
-        'created_by'  => $check_data['created_by'],
-        'updated_at'  => $check_data['updated_at'],
-        'updated_by'  => $check_data['updated_by'],
+        'trn_no'       => $check_data['voucher_no'],
+        'check_no'     => $check_data['check_no'],
+        'voucher_type' => $check_data['voucher_type'],
+        'amount'       => $check_data['amount'],
+        'bank'         => $check_data['bank'],
+        'name'         => $check_data['name'],
+        'pay_to'       => $check_data['pay_to'],
+        'created_at'   => $check_data['created_at'],
+        'created_by'   => $check_data['created_by'],
+        'updated_at'   => $check_data['updated_at'],
+        'updated_by'   => $check_data['updated_by'],
     ) );
 }
 
@@ -177,20 +177,20 @@ function erp_acct_insert_check_data( $check_data ) {
  *
  * @return void
  */
-function erp_acct_update_check_data( $check_data, $check_no ) {
+function erp_acct_update_check_data ( $check_data, $check_no ) {
     global $wpdb;
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_checks', array(
-        'trn_no'      => $check_data['voucher_no'],
-        'voucher_type'=> $check_data['voucher_type'],
-        'amount'      => $check_data['amount'],
-        'bank'        => $check_data['bank'],
-        'name'        => $check_data['name'],
-        'pay_to'      => $check_data['pay_to'],
-        'created_at'  => $check_data['created_at'],
-        'created_by'  => $check_data['created_by'],
-        'updated_at'  => $check_data['updated_at'],
-        'updated_by'  => $check_data['updated_by'],
+        'trn_no'       => $check_data['voucher_no'],
+        'voucher_type' => $check_data['voucher_type'],
+        'amount'       => $check_data['amount'],
+        'bank'         => $check_data['bank'],
+        'name'         => $check_data['name'],
+        'pay_to'       => $check_data['pay_to'],
+        'created_at'   => $check_data['created_at'],
+        'created_by'   => $check_data['created_by'],
+        'updated_at'   => $check_data['updated_at'],
+        'updated_by'   => $check_data['updated_by'],
     ), array(
         'check_no' => $check_no,
     ) );
@@ -203,7 +203,7 @@ function erp_acct_update_check_data( $check_data, $check_no ) {
  *
  * @return array
  */
-function erp_acct_get_people_info_by_id( $people_id ) {
+function erp_acct_get_people_info_by_id ( $people_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT first_name, last_name, email FROM {$wpdb->prefix}erp_peoples WHERE id = {$people_id} LIMIT" );
@@ -218,7 +218,7 @@ function erp_acct_get_people_info_by_id( $people_id ) {
  *
  * @return array
  */
-function erp_acct_get_ledger_by_id( $ledger_id ) {
+function erp_acct_get_ledger_by_id ( $ledger_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name, slug, code FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = {$ledger_id} LIMIT 1" );
@@ -233,7 +233,7 @@ function erp_acct_get_ledger_by_id( $ledger_id ) {
  *
  * @return array
  */
-function erp_acct_get_product_type_by_id( $product_type_id ) {
+function erp_acct_get_product_type_by_id ( $product_type_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_product_types WHERE id = {$product_type_id} LIMIT 1" );
@@ -248,7 +248,7 @@ function erp_acct_get_product_type_by_id( $product_type_id ) {
  *
  * @return array
  */
-function erp_acct_get_product_category_by_id( $cat_id ) {
+function erp_acct_get_product_category_by_id ( $cat_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_product_categories WHERE id = {$cat_id} LIMIT 1" );
@@ -278,7 +278,7 @@ function erp_acct_get_product_category_by_id( $cat_id ) {
  *
  * @return array
  */
-function erp_acct_get_tax_agency_by_id( $agency_id ) {
+function erp_acct_get_tax_agency_by_id ( $agency_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_tax_agencies WHERE id = {$agency_id} LIMIT 1" );
@@ -293,7 +293,7 @@ function erp_acct_get_tax_agency_by_id( $agency_id ) {
  *
  * @return array
  */
-function erp_acct_get_tax_category_by_id( $cat_id ) {
+function erp_acct_get_tax_category_by_id ( $cat_id ) {
     global $wpdb;
 
     if ( null !== $cat_id ) {
@@ -310,10 +310,10 @@ function erp_acct_get_tax_category_by_id( $cat_id ) {
  *
  * @return string
  */
-function erp_acct_get_trn_status_by_id( $trn_id ) {
+function erp_acct_get_trn_status_by_id ( $trn_id ) {
     global $wpdb;
 
-    if ( !$trn_id ) {
+    if ( ! $trn_id ) {
         return 'pending';
     }
 
@@ -329,7 +329,7 @@ function erp_acct_get_trn_status_by_id( $trn_id ) {
  *
  * @return array
  */
-function erp_acct_get_payment_method_by_id( $method_id ) {
+function erp_acct_get_payment_method_by_id ( $method_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_payment_methods WHERE id = {$method_id} LIMIT 1" );
@@ -344,7 +344,7 @@ function erp_acct_get_payment_method_by_id( $method_id ) {
  *
  * @return array
  */
-function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
+function erp_acct_get_check_trn_type_by_id ( $trn_type_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_check_trn_tables WHERE id = {$trn_type_id} LIMIT 1" );
@@ -358,72 +358,72 @@ function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
  *
  * @return array
  */
-function erp_acct_quick_access_menu() {
+function erp_acct_quick_access_menu () {
     return [
-        'invoice' => [
+        'invoice'         => [
             'title' => 'Invoice',
             'slug'  => 'invoice',
             'url'   => 'invoices/new'
         ],
-        'estimate' => [
+        'estimate'        => [
             'title' => 'Estimate',
             'slug'  => 'estimate',
             'url'   => 'estimates/new'
         ],
-        "rec_payment" => [
+        "rec_payment"     => [
             'title' => 'Receive Payment',
             'slug'  => 'payment',
             'url'   => 'payments/new'
         ],
-        "bill" => [
+        "bill"            => [
             'title' => 'Bill',
             'slug'  => 'bill',
             'url'   => 'bills/new'
         ],
-        "pay_bill" => [
+        "pay_bill"        => [
             'title' => 'Pay Bill',
             'slug'  => 'pay_bill',
             'url'   => 'pay-bills/new'
         ],
-        "purchase-order" => [
+        "purchase-order"  => [
             'title' => 'Purchase Order',
             'slug'  => 'purchase-orders',
             'url'   => 'purchase-orders/new'
         ],
-        "purchase" => [
+        "purchase"        => [
             'title' => 'Purchase',
             'slug'  => 'purchase',
             'url'   => 'purchases/new'
         ],
-        "pay_purchase" => [
+        "pay_purchase"    => [
             'title' => 'Pay Purchase',
             'slug'  => 'pay_purchase',
             'url'   => 'pay-purchases/new'
         ],
-        "expense" => [
+        "expense"         => [
             'title' => 'Expense',
             'slug'  => 'expense',
             'url'   => 'expenses/new'
         ],
-        "check" => [
+        "check"           => [
             'title' => 'Check',
             'slug'  => 'check',
             'url'   => 'checks/new'
         ],
-        "journal" => [
+        "journal"         => [
             'title' => 'Journal',
             'slug'  => 'journal',
             'url'   => 'journals/new'
         ],
-        "tax_rate" => [
+        "tax_rate"        => [
             'title' => 'Tax Payment',
             'slug'  => 'pay_tax',
             'url'   => 'pay-tax'
         ],
         "opening_balance" => [
-            'title'      =>  __( 'Opening Balance', 'erp' ),
-            'slug'       => 'opening_balance',
-            'url'        => 'opening-balance',
+            'title' => __( 'Opening Balance', 'erp' ),
+            'slug'  => 'opening_balance',
+            'url'   => 'opening-balance',
         ]
     ];
 }
@@ -435,7 +435,7 @@ function erp_acct_quick_access_menu() {
  *
  * @return array
  */
-function erp_acct_get_trn_type_by_voucher_no( $voucher_no ) {
+function erp_acct_get_trn_type_by_voucher_no ( $voucher_no ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT type FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = {$voucher_no} LIMIT 1" );
@@ -446,11 +446,11 @@ function erp_acct_get_trn_type_by_voucher_no( $voucher_no ) {
 /**
  * Change a string to slug
  */
-function slugify($str) {
+function slugify ( $str ) {
     // replace non letter or digits by _
-    $str = preg_replace('~[^\pL\d]+~u', '_', $str);
+    $str = preg_replace( '~[^\pL\d]+~u', '_', $str );
 
-    return strtolower($str);
+    return strtolower( $str );
 }
 
 /**
@@ -459,10 +459,10 @@ function slugify($str) {
  * @param $id
  * @return mixed
  */
-function erp_acct_get_ledger_name_by_id( $id ) {
+function erp_acct_get_ledger_name_by_id ( $id ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = %d", $id);
+    $sql = $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = %d", $id );
 
     $result = $wpdb->get_row( $sql );
 

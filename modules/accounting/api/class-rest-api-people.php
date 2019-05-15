@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -27,8 +28,8 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base , [
+    public function register_routes () {
+        register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_all_people' ],
@@ -39,7 +40,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' , [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_people' ],
@@ -50,7 +51,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/address' , [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/address', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_people_address' ],
@@ -61,7 +62,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/opening-balance' , [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/opening-balance', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_opening_balance' ],
@@ -79,7 +80,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_all_people( $request ) {
+    public function get_all_people ( $request ) {
         $args = [
             'number' => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -91,7 +92,8 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
         $total_items = erp_get_peoples( [ 'type' => $args['type'], 'count' => true ] );
         $total_items = is_array( $total_items ) ? count( $total_items ) : $total_items;
 
-        $formatted_items = []; $additional_fields = [];
+        $formatted_items   = [];
+        $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -103,12 +105,12 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                 if ( in_array( 'owner', $include_params ) ) {
                     $customer_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, 'contact_owner', true ) : erp_people_get_meta( $item->id, 'contact_owner', true );
 
-                    $item->owner = $this->get_user( $customer_owner_id );
-                    $additional_fields = ['owner' => $item->owner];
+                    $item->owner       = $this->get_user( $customer_owner_id );
+                    $additional_fields = [ 'owner' => $item->owner ];
                 }
             }
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -126,7 +128,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $id
      * @return string
      */
-    public function get_people( $request ) {
+    public function get_people ( $request ) {
 
         $id = (int) $request['id'];
 
@@ -143,7 +145,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $id
      * @return string
      */
-    public function get_people_address( $request ) {
+    public function get_people_address ( $request ) {
         global $wpdb;
 
         $id = (int) $request['id'];
@@ -156,7 +158,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             street_1, street_2, city, state, postal_code, country
             FROM {$wpdb->prefix}erp_peoples WHERE id = {$id}";
 
-        $row = $wpdb->get_row($sql, ARRAY_A);
+        $row = $wpdb->get_row( $sql, ARRAY_A );
 
         return erp_acct_format_people_address( $row );
     }
@@ -168,8 +170,8 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_opening_balance( $request ) {
-        $id = (int) $request['id'];
+    public function get_opening_balance ( $request ) {
+        $id                = (int) $request['id'];
         $args['people_id'] = $id;
 
         $transactions = erp_acct_get_people_opening_balance( $args );
@@ -184,7 +186,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database ( $request ) {
         $prepared_item = [];
         // required arguments.
         if ( isset( $request['first_name'] ) ) {
@@ -255,33 +257,33 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
-            'id'          => (int) $item->id,
-            'first_name'  => $item->first_name,
-            'last_name'   => $item->last_name,
-            'name'        => $item->first_name . ' ' . $item->last_name,
-            'email'       => $item->email,
-            'phone'       => $item->phone,
-            'mobile'      => $item->mobile,
-            'fax'         => $item->fax,
-            'website'     => $item->website,
-            'notes'       => $item->notes,
-            'other'       => $item->other,
-            'company'     => $item->company,
-            'billing'     => [
-                'first_name'    => $item->first_name,
-                'last_name'     => $item->last_name,
-                'street_1'      => $item->street_1,
-                'street_2'      => $item->street_2,
-                'city'          => $item->city,
-                'state'         => $item->state,
-                'postal_code'   => $item->postal_code,
-                'country'       => $item->country,
-                'email'         => $item->email,
-                'phone'         => $item->phone
+            'id'         => (int) $item->id,
+            'first_name' => $item->first_name,
+            'last_name'  => $item->last_name,
+            'name'       => $item->first_name . ' ' . $item->last_name,
+            'email'      => $item->email,
+            'phone'      => $item->phone,
+            'mobile'     => $item->mobile,
+            'fax'        => $item->fax,
+            'website'    => $item->website,
+            'notes'      => $item->notes,
+            'other'      => $item->other,
+            'company'    => $item->company,
+            'billing'    => [
+                'first_name'  => $item->first_name,
+                'last_name'   => $item->last_name,
+                'street_1'    => $item->street_1,
+                'street_2'    => $item->street_2,
+                'city'        => $item->city,
+                'state'       => $item->state,
+                'postal_code' => $item->postal_code,
+                'country'     => $item->country,
+                'email'       => $item->email,
+                'phone'       => $item->phone
             ],
         ];
 
@@ -300,19 +302,19 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'customer',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'         => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'first_name'  => [
+                'first_name' => [
                     'description' => __( 'First name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -321,7 +323,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'last_name'   => [
+                'last_name'  => [
                     'description' => __( 'Last name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -330,14 +332,14 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'email'       => [
+                'email'      => [
                     'description' => __( 'The email address for the resource.' ),
                     'type'        => 'string',
                     'format'      => 'email',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
-                'phone'       => [
+                'phone'      => [
                     'description' => __( 'Phone for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -345,7 +347,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'other'       => [
+                'other'      => [
                     'description' => __( 'Other for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -353,13 +355,13 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'website'         => [
+                'website'    => [
                     'description' => __( 'Website of the resource.' ),
                     'type'        => 'string',
                     'format'      => 'uri',
                     'context'     => [ 'embed', 'view', 'edit' ],
                 ],
-                'notes'           => [
+                'notes'      => [
                     'description' => __( 'Notes of the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
@@ -367,47 +369,47 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'billing'            => [
+                'billing'    => [
                     'description' => __( 'List of billing address data.', 'erp' ),
                     'type'        => 'object',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'first_name' => [
+                        'first_name'  => [
                             'description' => __( 'First name.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'last_name'  => [
+                        'last_name'   => [
                             'description' => __( 'Last name.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'street_1'  => [
+                        'street_1'    => [
                             'description' => __( 'Address line 1', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'street_2'  => [
+                        'street_2'    => [
                             'description' => __( 'Address line 2', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'city'       => [
+                        'city'        => [
                             'description' => __( 'City name.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'state'      => [
+                        'state'       => [
                             'description' => __( 'ISO code or name of the state, province or district.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'postal_code'   => [
+                        'postal_code' => [
                             'description' => __( 'Postal code.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'country'    => [
+                        'country'     => [
                             'description' => __( 'ISO code of the country.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],

@@ -10,16 +10,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_opening_balances( $args = [] ) {
+function erp_acct_get_all_opening_balances ( $args = [] ) {
     global $wpdb;
 
     $defaults = [
-        'number'     => 20,
-        'offset'     => 0,
-        'orderby'    => 'id',
-        'order'      => 'DESC',
-        'count'      => false,
-        's'          => '',
+        'number'  => 20,
+        'offset'  => 0,
+        'orderby' => 'id',
+        'order'   => 'DESC',
+        'count'   => false,
+        's'       => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -47,7 +47,7 @@ function erp_acct_get_all_opening_balances( $args = [] ) {
     $sql .= " ON opening_balance.financial_year_id = financial_year.id {$where} GROUP BY financial_year.name ORDER BY financial_year.{$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        $wpdb->get_results($sql);
+        $wpdb->get_results( $sql );
         return $wpdb->num_rows;
     }
 
@@ -62,7 +62,7 @@ function erp_acct_get_all_opening_balances( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_opening_balance( $year_id ) {
+function erp_acct_get_opening_balance ( $year_id ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -93,7 +93,7 @@ function erp_acct_get_opening_balance( $year_id ) {
  * @return mixed
  */
 
-function erp_acct_get_virtual_acct( $year_id ) {
+function erp_acct_get_virtual_acct ( $year_id ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -121,11 +121,11 @@ function erp_acct_get_virtual_acct( $year_id ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_insert_opening_balance( $data ) {
+function erp_acct_insert_opening_balance ( $data ) {
     global $wpdb;
 
-    $created_by = get_current_user_id();
-    $data['created_at'] = date("Y-m-d H:i:s");
+    $created_by         = get_current_user_id();
+    $data['created_at'] = date( "Y-m-d H:i:s" );
     $data['created_by'] = $created_by;
 
     try {
@@ -143,20 +143,20 @@ function erp_acct_insert_opening_balance( $data ) {
 
         $year_id = $opening_balance_data['year'];
 
-        $wpdb->query("DELETE FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = {$year_id}" );
+        $wpdb->query( "DELETE FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = {$year_id}" );
 
         foreach ( $ledgers as $ledger ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
                 'financial_year_id' => $year_id,
-                'ledger_id' => $ledger['ledger_id'],
-                'chart_id' => $ledger['chart_id'],
-                'type' => 'ledger',
-                'debit' => isset( $ledger['debit'] ) ? $ledger['debit'] : 0,
-                'credit' => isset( $ledger['credit'] ) ? $ledger['credit'] : 0,
-                'created_at' => $opening_balance_data['created_at'],
-                'created_by' => $opening_balance_data['created_by'],
-                'updated_at' => $opening_balance_data['updated_at'],
-                'updated_by' => $opening_balance_data['updated_by'],
+                'ledger_id'         => $ledger['ledger_id'],
+                'chart_id'          => $ledger['chart_id'],
+                'type'              => 'ledger',
+                'debit'             => isset( $ledger['debit'] ) ? $ledger['debit'] : 0,
+                'credit'            => isset( $ledger['credit'] ) ? $ledger['credit'] : 0,
+                'created_at'        => $opening_balance_data['created_at'],
+                'created_by'        => $opening_balance_data['created_by'],
+                'updated_at'        => $opening_balance_data['updated_at'],
+                'updated_by'        => $opening_balance_data['updated_by'],
             ] );
         }
 
@@ -164,7 +164,7 @@ function erp_acct_insert_opening_balance( $data ) {
 
         $wpdb->query( 'COMMIT' );
 
-    } catch (Exception $e) {
+    } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'opening_balance-exception', $e->getMessage() );
     }
@@ -179,54 +179,54 @@ function erp_acct_insert_opening_balance( $data ) {
  * @param $data
  * @param $year_id
  */
-function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
+function erp_acct_insert_ob_vir_accounts ( $data, $year_id ) {
     global $wpdb;
 
-    if ( !empty( $data['acct_rec'] ) ) {
+    if ( ! empty( $data['acct_rec'] ) ) {
         foreach ( $data['acct_rec'] as $acct_rec ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
                 'financial_year_id' => $year_id,
-                'ledger_id' => $acct_rec['people']['id'],
-                'type' => 'people',
-                'debit' => $acct_rec['debit'],
-                'credit' => 0,
-                'created_at' => $data['created_at'],
-                'created_by' => $data['created_by'],
-                'updated_at' => $data['updated_at'],
-                'updated_by' => $data['updated_by'],
+                'ledger_id'         => $acct_rec['people']['id'],
+                'type'              => 'people',
+                'debit'             => $acct_rec['debit'],
+                'credit'            => 0,
+                'created_at'        => $data['created_at'],
+                'created_by'        => $data['created_by'],
+                'updated_at'        => $data['updated_at'],
+                'updated_by'        => $data['updated_by'],
             ] );
         }
     }
 
-    if ( !empty( $data['acct_pay'] ) ) {
+    if ( ! empty( $data['acct_pay'] ) ) {
         foreach ( $data['acct_pay'] as $acct_pay ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
                 'financial_year_id' => $year_id,
-                'ledger_id' => $acct_pay['people']['id'],
-                'type' => 'people',
-                'debit' => 0,
-                'credit' => $acct_pay['credit'],
-                'created_at' => $data['created_at'],
-                'created_by' => $data['created_by'],
-                'updated_at' => $data['updated_at'],
-                'updated_by' => $data['updated_by'],
+                'ledger_id'         => $acct_pay['people']['id'],
+                'type'              => 'people',
+                'debit'             => 0,
+                'credit'            => $acct_pay['credit'],
+                'created_at'        => $data['created_at'],
+                'created_by'        => $data['created_by'],
+                'updated_at'        => $data['updated_at'],
+                'updated_by'        => $data['updated_by'],
             ] );
         }
     }
 
 
-    if ( !empty( $data['tax_pay'] ) ) {
+    if ( ! empty( $data['tax_pay'] ) ) {
         foreach ( $data['tax_pay'] as $tax_pay ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
                 'financial_year_id' => $year_id,
-                'ledger_id' => $tax_pay['agency']['id'],
-                'type' => 'tax_agency',
-                'debit' => 0,
-                'credit' => $tax_pay['credit'],
-                'created_at' => $data['created_at'],
-                'created_by' => $data['created_by'],
-                'updated_at' => $data['updated_at'],
-                'updated_by' => $data['updated_by'],
+                'ledger_id'         => $tax_pay['agency']['id'],
+                'type'              => 'tax_agency',
+                'debit'             => 0,
+                'credit'            => $tax_pay['credit'],
+                'created_at'        => $data['created_at'],
+                'created_by'        => $data['created_by'],
+                'updated_at'        => $data['updated_at'],
+                'updated_by'        => $data['updated_by'],
             ] );
         }
     }
@@ -240,20 +240,20 @@ function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
  * @param $voucher_no
  * @return mixed
  */
-function erp_acct_get_formatted_opening_balance_data( $data ) {
+function erp_acct_get_formatted_opening_balance_data ( $data ) {
     $opening_balance_data = [];
 
-    $opening_balance_data['year']         = isset($data['year']) ? $data['year'] : '';
-    $opening_balance_data['ledgers']      = isset($data['ledgers']) ? $data['ledgers'] : [];
-    $opening_balance_data['descriptions'] = isset($data['descriptions']) ? $data['descriptions'] : '';
-    $opening_balance_data['amount']       = isset($data['amount']) ? $data['amount'] : '';
-    $opening_balance_data['acct_pay']     = isset($data['acct_pay']) ? $data['acct_pay'] : [];
-    $opening_balance_data['acct_rec']     = isset($data['acct_rec']) ? $data['acct_rec'] : [];
-    $opening_balance_data['tax_pay']      = isset($data['tax_pay']) ? $data['tax_pay'] : [];
-    $opening_balance_data['created_at']   = isset($data['created_at']) ? $data['created_at'] : '';
-    $opening_balance_data['created_by']   = isset($data['created_by']) ? $data['created_by'] : '';
-    $opening_balance_data['updated_at']   = isset($data['updated_at']) ? $data['updated_at'] : '';
-    $opening_balance_data['updated_by']   = isset($data['updated_by']) ? $data['updated_by'] : '';
+    $opening_balance_data['year']         = isset( $data['year'] ) ? $data['year'] : '';
+    $opening_balance_data['ledgers']      = isset( $data['ledgers'] ) ? $data['ledgers'] : [];
+    $opening_balance_data['descriptions'] = isset( $data['descriptions'] ) ? $data['descriptions'] : '';
+    $opening_balance_data['amount']       = isset( $data['amount'] ) ? $data['amount'] : '';
+    $opening_balance_data['acct_pay']     = isset( $data['acct_pay'] ) ? $data['acct_pay'] : [];
+    $opening_balance_data['acct_rec']     = isset( $data['acct_rec'] ) ? $data['acct_rec'] : [];
+    $opening_balance_data['tax_pay']      = isset( $data['tax_pay'] ) ? $data['tax_pay'] : [];
+    $opening_balance_data['created_at']   = isset( $data['created_at'] ) ? $data['created_at'] : '';
+    $opening_balance_data['created_by']   = isset( $data['created_by'] ) ? $data['created_by'] : '';
+    $opening_balance_data['updated_at']   = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
+    $opening_balance_data['updated_by']   = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
 
     return $opening_balance_data;
 }
@@ -261,7 +261,7 @@ function erp_acct_get_formatted_opening_balance_data( $data ) {
 /**
  * Get opening balance names
  */
-function erp_acct_get_opening_balance_names() {
+function erp_acct_get_opening_balance_names () {
     global $wpdb;
 
     $sql = "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years";
@@ -278,7 +278,7 @@ function erp_acct_get_opening_balance_names() {
  *
  * @return array
  */
-function erp_acct_get_start_end_date( $year_id ) {
+function erp_acct_get_start_end_date ( $year_id ) {
     $dates = [];
     global $wpdb;
 
@@ -287,7 +287,7 @@ function erp_acct_get_start_end_date( $year_id ) {
     $rows = $wpdb->get_row( $sql, ARRAY_A );
 
     $dates['start'] = $rows['start_date'];
-    $dates['end'] = $rows['end_date'];
+    $dates['end']   = $rows['end_date'];
 
     return $dates;
 }
@@ -295,7 +295,7 @@ function erp_acct_get_start_end_date( $year_id ) {
 /**
  * Get virtual accts summary for opening balance
  */
-function erp_acct_get_ob_virtual_acct( $year_id ) {
+function erp_acct_get_ob_virtual_acct ( $year_id ) {
     global $wpdb;
 
 
@@ -303,19 +303,19 @@ function erp_acct_get_ob_virtual_acct( $year_id ) {
     $vir_ac['acct_payable']    = $wpdb->get_results( "select ledger_id as people_id, debit, credit from {$wpdb->prefix}erp_acct_opening_balances where financial_year_id = {$year_id} and debit=0 and type='people'", ARRAY_A );
     $vir_ac['tax_payable']     = $wpdb->get_results( "select ledger_id as agency_id, debit, credit from {$wpdb->prefix}erp_acct_opening_balances where financial_year_id = {$year_id} and debit=0 and type='tax_agency'", ARRAY_A );
 
-    for( $i = 0; $i < count( $vir_ac['acct_payable'] ); $i++ ) {
-        $vir_ac['acct_payable'][$i]['people']['id'] = $vir_ac['acct_payable'][$i]['people_id'] ;
-        $vir_ac['acct_payable'][$i]['people']['name'] = erp_acct_get_people_name_by_people_id( $vir_ac['acct_payable'][$i]['people_id'] );
+    for ( $i = 0; $i < count( $vir_ac['acct_payable'] ); $i++ ) {
+        $vir_ac['acct_payable'][ $i ]['people']['id']   = $vir_ac['acct_payable'][ $i ]['people_id'];
+        $vir_ac['acct_payable'][ $i ]['people']['name'] = erp_acct_get_people_name_by_people_id( $vir_ac['acct_payable'][ $i ]['people_id'] );
     }
 
-    for( $i = 0; $i < count( $vir_ac['acct_receivable'] ); $i++ ) {
-        $vir_ac['acct_receivable'][$i]['people']['id'] = $vir_ac['acct_receivable'][$i]['people_id'] ;
-        $vir_ac['acct_receivable'][$i]['people']['name'] = erp_acct_get_people_name_by_people_id( $vir_ac['acct_receivable'][$i]['people_id'] );
+    for ( $i = 0; $i < count( $vir_ac['acct_receivable'] ); $i++ ) {
+        $vir_ac['acct_receivable'][ $i ]['people']['id']   = $vir_ac['acct_receivable'][ $i ]['people_id'];
+        $vir_ac['acct_receivable'][ $i ]['people']['name'] = erp_acct_get_people_name_by_people_id( $vir_ac['acct_receivable'][ $i ]['people_id'] );
     }
 
-    for( $i = 0; $i < count( $vir_ac['tax_payable'] ); $i++ ) {
-        $vir_ac['tax_payable'][$i]['agency']['id'] = $vir_ac['tax_payable'][$i]['agency_id'] ;
-        $vir_ac['tax_payable'][$i]['agency']['name'] = erp_acct_get_tax_agency_name_by_id( $vir_ac['tax_payable'][$i]['agency_id'] );
+    for ( $i = 0; $i < count( $vir_ac['tax_payable'] ); $i++ ) {
+        $vir_ac['tax_payable'][ $i ]['agency']['id']   = $vir_ac['tax_payable'][ $i ]['agency_id'];
+        $vir_ac['tax_payable'][ $i ]['agency']['name'] = erp_acct_get_tax_agency_name_by_id( $vir_ac['tax_payable'][ $i ]['agency_id'] );
     }
 
     return $vir_ac;
@@ -329,14 +329,15 @@ function erp_acct_get_ob_virtual_acct( $year_id ) {
  * @param array $args
  * @return mixed
  */
-function get_ledger_balance_with_opening_balance( $ledger_id, $args = [] ) {
-    global $wpdb; $fy = [];
+function get_ledger_balance_with_opening_balance ( $ledger_id, $args = [] ) {
+    global $wpdb;
+    $fy = [];
 
     if ( empty( $args['start_date'] ) ) {
-        $args['start_date'] = date("Y-m-d" );
+        $args['start_date'] = date( "Y-m-d" );
     }
     if ( empty( $args['end_date'] ) ) {
-        $args['end_date'] = date("Y-m-d" );
+        $args['end_date'] = date( "Y-m-d" );
     }
 
     $sql = "SELECT id FROM {$wpdb->prefix}erp_acct_financial_years WHERE '{$args['start_date']}' BETWEEN start_date AND end_date";
