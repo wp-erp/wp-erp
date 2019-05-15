@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -26,7 +27,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -96,8 +97,8 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_opening_balances( $request ) {
-        $args['number'] = !empty( $request['per_page'] ) ? $request['per_page'] : 20;
+    public function get_opening_balances ( $request ) {
+        $args['number'] = ! empty( $request['per_page'] ) ? $request['per_page'] : 20;
         $args['offset'] = ( $request['per_page'] * ( $request['page'] - 1 ) );
 
         $additional_fields = [];
@@ -110,7 +111,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $formatted_items = [];
         foreach ( $items as $item ) {
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -129,10 +130,11 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_opening_balance( $request ) {
+    public function get_opening_balance ( $request ) {
         global $wpdb;
 
-        $id   = (int) $request['id']; $additional_fields = [];
+        $id                = (int) $request['id'];
+        $additional_fields = [];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
@@ -140,17 +142,18 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $ledgers = erp_acct_get_opening_balance( $id );
 
-        $formatted_items = []; $additional_fields = [];
+        $formatted_items   = [];
+        $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        foreach ( $ledgers as $ledger) {
+        foreach ( $ledgers as $ledger ) {
             if ( $ledger['chart_id'] == 7 ) {
-                $ledger['bank']['id'] = $ledger['ledger_id'];
+                $ledger['bank']['id']   = $ledger['ledger_id'];
                 $ledger['bank']['name'] = $ledger['name'];
             }
-            $data = $this->prepare_item_for_response( $ledger, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $ledger, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -169,8 +172,9 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_virtual_accts_by_year( $request ) {
-        $id   = (int) $request['id']; $additional_fields = [];
+    public function get_virtual_accts_by_year ( $request ) {
+        $id                = (int) $request['id'];
+        $additional_fields = [];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
@@ -192,13 +196,13 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_opening_balance_names( $request ) {
+    public function get_opening_balance_names ( $request ) {
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $item     = erp_acct_get_opening_balance_names();
+        $item = erp_acct_get_opening_balance_names();
 
         $response = rest_ensure_response( $item );
 
@@ -215,12 +219,14 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_opening_balance( $request ) {
+    public function create_opening_balance ( $request ) {
         $opening_balance_data = $this->prepare_item_for_database( $request );
 
         $items = $opening_balance_data['ledgers'];
 
-        $ledgers = []; $total_dr = 0 ; $total_cr = 0;
+        $ledgers  = [];
+        $total_dr = 0;
+        $total_cr = 0;
 
         $total_dr = ( isset( $request['total_dr'] ) ? $request['total_dr'] : 0 );
         $total_cr = ( isset( $request['total_dr'] ) ? $request['total_dr'] : 0 );
@@ -253,10 +259,10 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log( $data, $action ) {
+    public function add_log ( $data, $action ) {
         $data = (array) $data;
 
-        erp_log()->add([
+        erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Opening Balance', 'erp' ),
             'old_value'     => '',
@@ -264,7 +270,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
             'message'       => sprintf( __( 'A opening balance of %s has been created by %s', 'erp' ), $data['amount'], get_current_user_id() ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
-        ]);
+        ] );
     }
 
     /**
@@ -274,7 +280,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database ( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['year'] ) ) {
@@ -308,7 +314,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
 
         $item = (array) $item;
 
@@ -328,19 +334,19 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'opening_balance',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'      => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'ledgers'  => [
+                'ledgers' => [
                     'description' => __( 'Ledger names for the resource.' ),
                     'type'        => 'object',
                     'context'     => [ 'edit' ],

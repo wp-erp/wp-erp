@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -27,7 +28,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -80,7 +81,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'bulk_delete' ],
                 'args'                => [
-                    'ids'   => [ 'required' => true ]
+                    'ids' => [ 'required' => true ]
                 ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
@@ -110,15 +111,15 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_tax_rate_names( $request ) {
+    public function get_tax_rate_names ( $request ) {
         $args = [
-            'number'     => !empty( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
@@ -136,7 +137,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
                 }
             }
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -156,7 +157,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_tax_rate_name( $request ) {
+    public function get_tax_rate_name ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -168,7 +169,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $item );
 
         $response->set_status( 200 );
@@ -183,7 +184,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_tax_rate_name( $request ) {
+    public function create_tax_rate_name ( $request ) {
 
         $tax_data = $this->prepare_item_for_database( $request );
 
@@ -209,7 +210,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_tax_rate_name( $request ) {
+    public function update_tax_rate_name ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -220,7 +221,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $tax_id = erp_acct_update_tax_rate_name( $tax_data, $id );
 
-        $tax_data['id'] = $tax_id;
+        $tax_data['id']                 = $tax_id;
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -240,7 +241,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function delete_tax_rate_name( $request ) {
+    public function delete_tax_rate_name ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -255,13 +256,13 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Bulk delete action
      *
-     * @param  object $request
+     * @param object $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function bulk_delete( $request ) {
-        $ids    =   $request['ids'];
-        $ids    =   explode( ',', $ids );
+    public function bulk_delete ( $request ) {
+        $ids = $request['ids'];
+        $ids = explode( ',', $ids );
 
         if ( ! $ids ) {
             return;
@@ -281,7 +282,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database ( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['tax_rate_name'] ) ) {
@@ -306,7 +307,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
 
         $data = array_merge( $item, $additional_fields );
 
@@ -323,19 +324,19 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'tax',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'   => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'name'  => [
+                'name' => [
                     'description' => __( 'Tax Category name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],

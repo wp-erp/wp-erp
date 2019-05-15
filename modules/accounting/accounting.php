@@ -3,7 +3,9 @@
 namespace WeDevs\ERP\Accounting;
 
 // don't call the file directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
  * Accounting class
@@ -32,7 +34,7 @@ final class Accounting {
      * Sets up all the appropriate hooks and actions
      * within our plugin.
      */
-    public function __construct( $plugin ) {
+    public function __construct ( $plugin ) {
         // prevent duplicate loading
         if ( did_action( 'erp_accounting_loaded' ) ) {
             return;
@@ -42,7 +44,7 @@ final class Accounting {
 
         $this->deactive_addon();
 
-         // Define constants
+        // Define constants
         $this->define_constants();
 
         // Include required files
@@ -52,7 +54,7 @@ final class Accounting {
         add_action( 'erp_loaded', array( $this, 'plugin_init' ) );
 
         // trigger after accounting module loaded
-        do_action('erp_accounting_loaded');
+        do_action( 'erp_accounting_loaded' );
     }
 
     /**
@@ -61,7 +63,7 @@ final class Accounting {
      * Checks for an existing ERP_Accounting() instance
      * and if it doesn't find one, creates it.
      */
-    public static function init() {
+    public static function init () {
         static $instance = false;
 
         if ( ! $instance ) {
@@ -78,7 +80,7 @@ final class Accounting {
      *
      * @return mixed
      */
-    public function __get( $prop ) {
+    public function __get ( $prop ) {
         if ( array_key_exists( $prop, $this->container ) ) {
             return $this->container[ $prop ];
         }
@@ -93,7 +95,7 @@ final class Accounting {
      *
      * @return mixed
      */
-    public function __isset( $prop ) {
+    public function __isset ( $prop ) {
         return isset( $this->{$prop} ) || isset( $this->container[ $prop ] );
     }
 
@@ -102,7 +104,7 @@ final class Accounting {
      *
      * @return void
      */
-    public function define_constants() {
+    public function define_constants () {
         define( 'ERP_ACCOUNTING_FILE', __FILE__ );
         define( 'ERP_ACCOUNTING_PATH', dirname( ERP_ACCOUNTING_FILE ) );
         define( 'ERP_ACCOUNTING_INCLUDES', ERP_ACCOUNTING_PATH . '/includes' );
@@ -117,7 +119,7 @@ final class Accounting {
      *
      * @return void
      */
-    public function plugin_init() {
+    public function plugin_init () {
         $this->includes();
         $this->init_actions();
         $this->init_filters();
@@ -128,7 +130,7 @@ final class Accounting {
      *
      * @return void
      */
-    public function includes() {
+    public function includes () {
         $this->include_functions();
         $this->include_classes();
     }
@@ -138,7 +140,7 @@ final class Accounting {
      * Includes Rest API helper Functions
      *
      */
-    public function include_functions() {
+    public function include_functions () {
         foreach ( glob( ERP_ACCOUNTING_INCLUDES . '/functions/*.php' ) as $filename ) {
             include_once $filename;
         }
@@ -149,7 +151,7 @@ final class Accounting {
      * Includes Classes
      *
      */
-    public function include_classes() {
+    public function include_classes () {
         require_once ERP_ACCOUNTING_API . '/class-controller-rest-api.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-assets.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-ledger-map.php';
@@ -165,7 +167,7 @@ final class Accounting {
      *
      * @return void
      */
-    public function init_actions() {
+    public function init_actions () {
         add_action( 'init', [ $this, 'init_classes' ] );
     }
 
@@ -174,7 +176,7 @@ final class Accounting {
      *
      * @return void
      */
-    public function init_filters() {
+    public function init_filters () {
         add_filter( 'erp_settings_pages', [ $this, 'add_settings_page' ] );
     }
 
@@ -185,7 +187,7 @@ final class Accounting {
      *
      * @return array
      */
-    public function add_settings_page( $settings = array() ) {
+    public function add_settings_page ( $settings = array() ) {
         $settings[] = include __DIR__ . '/includes/classes/class-settings.php';
         return $settings;
     }
@@ -195,13 +197,13 @@ final class Accounting {
      *
      * @return void
      */
-    public function init_classes() {
+    public function init_classes () {
 
         if ( $this->is_request( 'admin' ) ) {
             $this->container['admin'] = new \WeDevs\ERP\Accounting\Includes\Classes\Admin();
         }
 
-        $this->container['rest'] = new \WeDevs\ERP\Accounting\API\REST_API();
+        $this->container['rest']   = new \WeDevs\ERP\Accounting\API\REST_API();
         $this->container['assets'] = new \WeDevs\ERP\Accounting\Includes\Classes\Assets();
     }
 
@@ -209,11 +211,11 @@ final class Accounting {
     /**
      * What type of request is this?
      *
-     * @param  string $type admin, ajax, cron or frontend.
+     * @param string $type admin, ajax, cron or frontend.
      *
      * @return bool
      */
-    private function is_request( $type ) {
+    private function is_request ( $type ) {
         switch ( $type ) {
             case 'admin' :
                 return is_admin();
@@ -238,7 +240,7 @@ final class Accounting {
      *
      * @return bool
      */
-    public function is_rest_api_request() {
+    public function is_rest_api_request () {
         if ( empty( $_SERVER['REQUEST_URI'] ) ) {
             return false;
         }
@@ -257,7 +259,7 @@ final class Accounting {
      *
      * @return void
      */
-    function deactive_addon() {
+    function deactive_addon () {
         /**
          * Detect plugin. For use on Front End only.
          */

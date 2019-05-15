@@ -10,16 +10,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_purchases( $args = [] ) {
+function erp_acct_get_purchases ( $args = [] ) {
     global $wpdb;
 
     $defaults = [
-        'number'     => 20,
-        'offset'     => 0,
-        'orderby'    => 'id',
-        'order'      => 'DESC',
-        'count'      => false,
-        's'          => '',
+        'number'  => 20,
+        'offset'  => 0,
+        'orderby' => 'id',
+        'order'   => 'DESC',
+        'count'   => false,
+        's'       => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -35,7 +35,7 @@ function erp_acct_get_purchases( $args = [] ) {
     $sql .= "FROM {$wpdb->prefix}erp_acct_purchase ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var($sql);
+        return $wpdb->get_var( $sql );
     }
 
     return $wpdb->get_results( $sql, ARRAY_A );
@@ -47,10 +47,10 @@ function erp_acct_get_purchases( $args = [] ) {
  * @param $purchase_no
  * @return mixed
  */
-function erp_acct_get_purchase( $purchase_no ) {
+function erp_acct_get_purchase ( $purchase_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("SELECT
+    $sql = $wpdb->prepare( "SELECT
 
     purchase.id,
     purchase.voucher_no,
@@ -72,12 +72,12 @@ function erp_acct_get_purchase( $purchase_no ) {
 
     FROM wp_erp_acct_purchase AS purchase
     LEFT JOIN wp_erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
-    WHERE purchase.voucher_no = %d", $purchase_no);
+    WHERE purchase.voucher_no = %d", $purchase_no );
 
-    $row = $wpdb->get_row( $sql, ARRAY_A );
-    $row['line_items'] = erp_acct_format_purchase_line_items( $purchase_no );
+    $row                = $wpdb->get_row( $sql, ARRAY_A );
+    $row['line_items']  = erp_acct_format_purchase_line_items( $purchase_no );
     $row['attachments'] = unserialize( $row['attachments'] );
-    $row['total_due'] = $row['credit'] - $row['debit'];
+    $row['total_due']   = $row['credit'] - $row['debit'];
 
     return $row;
 }
@@ -85,10 +85,10 @@ function erp_acct_get_purchase( $purchase_no ) {
 /**
  * Purchase items detail
  */
-function erp_acct_format_purchase_line_items( $voucher_no ) {
+function erp_acct_format_purchase_line_items ( $voucher_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("SELECT
+    $sql = $wpdb->prepare( "SELECT
         purchase_detail.product_id,
         purchase_detail.qty,
         purchase_detail.price,
@@ -104,13 +104,13 @@ function erp_acct_format_purchase_line_items( $voucher_no ) {
         FROM wp_erp_acct_purchase AS purchase
         LEFT JOIN wp_erp_acct_purchase_details AS purchase_detail ON purchase.voucher_no = purchase_detail.trn_no
         LEFT JOIN wp_erp_acct_products AS product ON purchase_detail.product_id = product.id
-        WHERE purchase.voucher_no = %d", $voucher_no);
+        WHERE purchase.voucher_no = %d", $voucher_no );
 
-    $results = $wpdb->get_results($sql, ARRAY_A);
+    $results = $wpdb->get_results( $sql, ARRAY_A );
 
     // calculate every line total
     foreach ( $results as $key => $value ) {
-        $results[$key]['line_total'] = $value['amount'];
+        $results[ $key ]['line_total'] = $value['amount'];
     }
 
     return $results;
@@ -123,14 +123,14 @@ function erp_acct_format_purchase_line_items( $voucher_no ) {
  * @param $due
  * @return mixed
  */
-function erp_acct_insert_purchase( $data ) {
+function erp_acct_insert_purchase ( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
     $voucher_no         = 0;
-    $data['created_at'] = date("Y-m-d H:i:s");
+    $data['created_at'] = date( "Y-m-d H:i:s" );
     $data['created_by'] = $created_by;
-    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_at'] = date( "Y-m-d H:i:s" );
     $data['updated_by'] = $created_by;
 
     try {
@@ -144,32 +144,32 @@ function erp_acct_insert_purchase( $data ) {
             'updated_by' => isset( $data['updated_by'] ) ? $data['updated_by'] : ''
         ) );
 
-        $voucher_no = $wpdb->insert_id;
+        $voucher_no  = $wpdb->insert_id;
         $purchase_no = $voucher_no;
 
         $purchase_data = erp_acct_get_formatted_purchase_data( $data, $voucher_no );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase', array(
-            'voucher_no'  => $voucher_no,
-            'vendor_id'   => $purchase_data['vendor_id'],
-            'vendor_name' => $purchase_data['vendor_name'],
-            'trn_date'    => $purchase_data['trn_date'],
-            'due_date'    => $purchase_data['due_date'],
-            'amount'      => $purchase_data['amount'],
-            'ref'         => $purchase_data['ref'],
-            'status'      => $purchase_data['status'],
-            'purchase_order'=> $purchase_data['purchase_order'],
-            'attachments' => $purchase_data['attachments'],
-            'particulars' => $purchase_data['particulars'],
-            'created_at'  => $purchase_data['created_at'],
-            'created_by'  => $created_by,
-            'updated_at'  => $purchase_data['updated_at'],
-            'updated_by'  => $purchase_data['updated_by'],
+            'voucher_no'     => $voucher_no,
+            'vendor_id'      => $purchase_data['vendor_id'],
+            'vendor_name'    => $purchase_data['vendor_name'],
+            'trn_date'       => $purchase_data['trn_date'],
+            'due_date'       => $purchase_data['due_date'],
+            'amount'         => $purchase_data['amount'],
+            'ref'            => $purchase_data['ref'],
+            'status'         => $purchase_data['status'],
+            'purchase_order' => $purchase_data['purchase_order'],
+            'attachments'    => $purchase_data['attachments'],
+            'particulars'    => $purchase_data['particulars'],
+            'created_at'     => $purchase_data['created_at'],
+            'created_by'     => $created_by,
+            'updated_at'     => $purchase_data['updated_at'],
+            'updated_by'     => $purchase_data['updated_by'],
         ) );
 
         $items = $data['line_items'];
 
-        foreach( $items as $key => $item ) {
+        foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_details', array(
                 'trn_no'     => $voucher_no,
                 'product_id' => $item['product_id'],
@@ -205,7 +205,7 @@ function erp_acct_insert_purchase( $data ) {
 
         $wpdb->query( 'COMMIT' );
 
-    } catch (Exception $e) {
+    } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'purchase-exception', $e->getMessage() );
     }
@@ -222,11 +222,11 @@ function erp_acct_insert_purchase( $data ) {
  * @param $due
  * @return mixed
  */
-function erp_acct_update_purchase( $data, $purchase_id ) {
+function erp_acct_update_purchase ( $data, $purchase_id ) {
     global $wpdb;
 
-    $updated_by = get_current_user_id();
-    $data['updated_at'] = date('Y-m-d H:i:s');
+    $updated_by         = get_current_user_id();
+    $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
@@ -235,22 +235,22 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
         $purchase_data = erp_acct_get_formatted_purchase_data( $data, $purchase_id );
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_purchase', array(
-            'vendor_id'   => $purchase_data['vendor_id'],
-            'vendor_name' => $purchase_data['vendor_name'],
-            'trn_date'    => $purchase_data['trn_date'],
-            'due_date'    => $purchase_data['due_date'],
-            'amount'      => $purchase_data['amount'],
-            'ref'         => $purchase_data['ref'],
-            'status'      => $purchase_data['status'],
-            'purchase_order'=> $purchase_data['purchase_order'],
-            'attachments' => $purchase_data['attachments'],
-            'particulars' => $purchase_data['particulars'],
-            'created_at'  => $purchase_data['created_at'],
-            'created_by'  => $purchase_data['created_by'],
-            'updated_at'  => $purchase_data['updated_at'],
-            'updated_by'  => $purchase_data['updated_by'],
+            'vendor_id'      => $purchase_data['vendor_id'],
+            'vendor_name'    => $purchase_data['vendor_name'],
+            'trn_date'       => $purchase_data['trn_date'],
+            'due_date'       => $purchase_data['due_date'],
+            'amount'         => $purchase_data['amount'],
+            'ref'            => $purchase_data['ref'],
+            'status'         => $purchase_data['status'],
+            'purchase_order' => $purchase_data['purchase_order'],
+            'attachments'    => $purchase_data['attachments'],
+            'particulars'    => $purchase_data['particulars'],
+            'created_at'     => $purchase_data['created_at'],
+            'created_by'     => $purchase_data['created_by'],
+            'updated_at'     => $purchase_data['updated_at'],
+            'updated_by'     => $purchase_data['updated_by'],
         ), array(
-            'voucher_no'      => $purchase_id
+            'voucher_no' => $purchase_id
         ) );
 
         /**
@@ -260,14 +260,14 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
          *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
          *? so, remove previous rows and insert new rows
          */
-        $prev_detail_ids = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}erp_acct_purchase_details WHERE trn_no = {$purchase_id}", ARRAY_A);
+        $prev_detail_ids = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_acct_purchase_details WHERE trn_no = {$purchase_id}", ARRAY_A );
         $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
 
         $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_details', [ 'trn_no' => $purchase_id ] );
 
         $items = $data['line_items'];
 
-        foreach( $items as $key => $item ) {
+        foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_details', array(
                 'product_id' => $item['product_id'],
                 'qty'        => $item['qty'],
@@ -278,7 +278,7 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
                 'updated_at' => $purchase_data['updated_at'],
                 'updated_by' => $purchase_data['updated_by']
             ), array(
-                'trn_no'     => $purchase_id
+                'trn_no' => $purchase_id
             ) );
         }
 
@@ -298,14 +298,14 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
             'updated_at'  => $purchase_data['updated_at'],
             'updated_by'  => $purchase_data['updated_by']
         ), array(
-            'trn_no'     => $purchase_id
+            'trn_no' => $purchase_id
         ) );
 
         erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_id );
 
         $wpdb->query( 'COMMIT' );
 
-    } catch (Exception $e) {
+    } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'purchase-exception', $e->getMessage() );
     }
@@ -320,10 +320,10 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
  * @param $id
  * @return void
  */
-function erp_acct_delete_purchase( $id ) {
+function erp_acct_delete_purchase ( $id ) {
     global $wpdb;
 
-    if ( !$id ) {
+    if ( ! $id ) {
         return;
     }
 
@@ -336,14 +336,14 @@ function erp_acct_delete_purchase( $id ) {
  * @param $id
  * @return void
  */
-function erp_acct_void_purchase( $id ) {
+function erp_acct_void_purchase ( $id ) {
     global $wpdb;
 
-    if ( !$id ) {
+    if ( ! $id ) {
         return;
     }
 
-    $wpdb->update($wpdb->prefix . 'erp_acct_purchase',
+    $wpdb->update( $wpdb->prefix . 'erp_acct_purchase',
         array(
             'status' => 'void',
         ),
@@ -359,24 +359,24 @@ function erp_acct_void_purchase( $id ) {
  *
  * @return mixed
  */
-function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
+function erp_acct_get_formatted_purchase_data ( $data, $voucher_no ) {
     $user_info = erp_get_people( $data['vendor_id'] );
 
-    $purchase_data['voucher_no']  = isset( $data['voucher_no'] ) ? $data['voucher_no'] : $voucher_no;
-    $purchase_data['vendor_id']   = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 0;
-    $purchase_data['vendor_name'] = $user_info->first_name . ' ' . $user_info->last_name;
-    $purchase_data['trn_date']    = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
-    $purchase_data['due_date']    = isset( $data['due_date'] ) ? $data['due_date'] : date( "Y-m-d" );
-    $purchase_data['amount']      = isset( $data['amount'] ) ? floatval( $data['amount'] ) : 0;
-    $purchase_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $purchase_data['status']      = isset( $data['status'] ) ? intval( $data['status'] ) : '';
-    $purchase_data['purchase_order']  = isset( $data['purchase_order'] ) ? intval( $data['purchase_order'] ) : '';
-    $purchase_data['ref']         = isset( $data['ref'] ) ? $data['ref'] : '';
-    $purchase_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
-    $purchase_data['created_at']  = date( "Y-m-d" );
-    $purchase_data['created_by']  = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $purchase_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
-    $purchase_data['updated_by']  = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $purchase_data['voucher_no']     = isset( $data['voucher_no'] ) ? $data['voucher_no'] : $voucher_no;
+    $purchase_data['vendor_id']      = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 0;
+    $purchase_data['vendor_name']    = $user_info->first_name . ' ' . $user_info->last_name;
+    $purchase_data['trn_date']       = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
+    $purchase_data['due_date']       = isset( $data['due_date'] ) ? $data['due_date'] : date( "Y-m-d" );
+    $purchase_data['amount']         = isset( $data['amount'] ) ? floatval( $data['amount'] ) : 0;
+    $purchase_data['attachments']    = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $purchase_data['status']         = isset( $data['status'] ) ? intval( $data['status'] ) : '';
+    $purchase_data['purchase_order'] = isset( $data['purchase_order'] ) ? intval( $data['purchase_order'] ) : '';
+    $purchase_data['ref']            = isset( $data['ref'] ) ? $data['ref'] : '';
+    $purchase_data['particulars']    = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $purchase_data['created_at']     = date( "Y-m-d" );
+    $purchase_data['created_by']     = isset( $data['created_by'] ) ? $data['created_by'] : '';
+    $purchase_data['updated_at']     = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
+    $purchase_data['updated_by']     = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
 
     return $purchase_data;
 }
@@ -388,13 +388,13 @@ function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
  *
  * @return mixed
  */
-function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
+function erp_acct_insert_purchase_data_into_ledger ( $purchase_data ) {
     global $wpdb;
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-    $ledger_id = $ledger_map->get_ledger_id_by_slug('purchase');
+    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'purchase' );
 
-    if ( !$ledger_id ) {
+    if ( ! $ledger_id ) {
         return new WP_Error( 505, 'Ledger ID not found for purchase', $purchase_data );
     }
     // Insert amount in ledger_details
@@ -421,13 +421,13 @@ function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
  *
  * @return mixed
  */
-function erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_no ) {
+function erp_acct_update_purchase_data_into_ledger ( $purchase_data, $purchase_no ) {
     global $wpdb;
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-    $ledger_id = $ledger_map->get_ledger_id_by_slug('inventory');
+    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'inventory' );
 
-    if ( !$ledger_id ) {
+    if ( ! $ledger_id ) {
         return new WP_Error( 505, 'Ledger ID not found for purchase', $purchase_data );
     }
 
@@ -453,7 +453,7 @@ function erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_no
  *
  * @return int
  */
-function erp_acct_get_purchase_count() {
+function erp_acct_get_purchase_count () {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_purchase" );
@@ -468,16 +468,16 @@ function erp_acct_get_purchase_count() {
  * @return mixed
  */
 
-function erp_acct_get_due_purchases_by_vendor( $args ) {
+function erp_acct_get_due_purchases_by_vendor ( $args ) {
     global $wpdb;
 
     $defaults = [
-        'number'     => 20,
-        'offset'     => 0,
-        'orderby'    => 'id',
-        'order'      => 'DESC',
-        'count'      => false,
-        's'          => '',
+        'number'  => 20,
+        'offset'  => 0,
+        'orderby' => 'id',
+        'order'   => 'DESC',
+        'count'   => false,
+        's'       => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -488,9 +488,9 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
-    $purchases= "{$wpdb->prefix}erp_acct_purchase";
+    $purchases            = "{$wpdb->prefix}erp_acct_purchase";
     $purchase_act_details = "{$wpdb->prefix}erp_acct_purchase_account_details";
-    $items = $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $items                = $args['count'] ? " COUNT( id ) as total_number " : " * ";
 
     $query = $wpdb->prepare( "SELECT $items FROM $purchases as purchase INNER JOIN
                                 (
@@ -501,7 +501,7 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
                                 ) as ps
                                 ON purchase.voucher_no = ps.purchase_no
                                 WHERE purchase.vendor_id = %d AND purchase.status != 1 AND purchase.purchase_order != 1
-                                ORDER BY %s %s $limit", $args['vendor_id'], $args['orderby'], $args['order']  );
+                                ORDER BY %s %s $limit", $args['vendor_id'], $args['orderby'], $args['order'] );
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $query );
@@ -517,7 +517,7 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
  * @param $bill_no
  * @return int
  */
-function erp_acct_get_purchase_due( $purchase_no ) {
+function erp_acct_get_purchase_due ( $purchase_no ) {
     global $wpdb;
 
     $result = $wpdb->get_row( "SELECT purchase_no, SUM( debit - credit) as due FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE purchase_no = {$purchase_no} GROUP BY purchase_no", ARRAY_A );

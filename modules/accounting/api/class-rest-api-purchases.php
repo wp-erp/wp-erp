@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -27,7 +28,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -105,21 +106,21 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_purchases( $request ) {
+    public function get_purchases ( $request ) {
 
         $args = [
-            'number' => !empty( $request['per_page'] ) ? intval( $request['per_page'] ) : 20,
+            'number' => ! empty( $request['per_page'] ) ? intval( $request['per_page'] ) : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $purchase_data  = erp_acct_get_purchases( $args );
-        $total_items = erp_acct_get_purchases( [ 'count' => true, 'number' => -1 ] );
+        $purchase_data = erp_acct_get_purchases( $args );
+        $total_items   = erp_acct_get_purchases( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $purchase_data as $item ) {
             if ( isset( $request['include'] ) ) {
@@ -130,7 +131,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 }
             }
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -150,7 +151,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function due_purchases( $request ) {
+    public function due_purchases ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -159,17 +160,17 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $args = [];
 
-        $args['number'] = !empty( $request['per_page'] ) ? $request['per_page'] : 20;
-        $args['offset'] = ( $args['number'] * ( intval($request['page']) - 1 ) );
+        $args['number']    = ! empty( $request['per_page'] ) ? $request['per_page'] : 20;
+        $args['offset']    = ( $args['number'] * ( intval( $request['page'] ) - 1 ) );
         $args['vendor_id'] = $id;
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
         $puchase_data = erp_acct_get_due_purchases_by_vendor( $args );
-        $total_items = count( $puchase_data );
+        $total_items  = count( $puchase_data );
 
         foreach ( $puchase_data as $item ) {
             if ( isset( $request['include'] ) ) {
@@ -182,7 +183,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
             $item['line_items'] = []; // TEST?
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -201,7 +202,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_purchase( $request ) {
+    public function get_purchase ( $request ) {
 
         $id = (int) $request['id'];
 
@@ -214,7 +215,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $item );
 
         $response->set_status( 200 );
@@ -229,18 +230,18 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_purchase( $request ) {
+    public function create_purchase ( $request ) {
         $purchase_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['line_items'];
+        $items      = $request['line_items'];
         $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['item_total'];
+            $item_total[ $key ] = $item['item_total'];
         }
 
-        $purchase_data['amount'] = array_sum( $item_total );
-        $purchase_data['attachments'] = maybe_serialize( $request['attachments'] );
+        $purchase_data['amount']        = array_sum( $item_total );
+        $purchase_data['attachments']   = maybe_serialize( $request['attachments'] );
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -263,7 +264,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_purchase( $request ) {
+    public function update_purchase ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -280,14 +281,15 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['line_items'];
 
         foreach ( $items as $key => $item ) {
-            $total = 0; $due = 0;
+            $total = 0;
+            $due   = 0;
 
-            $purchase_id[$key] = $item['purchase_id'];
-            $total += $item['line_total'];
+            $purchase_id[ $key ] = $item['purchase_id'];
+            $total               += $item['line_total'];
 
             $purchase_data['amount'] = $total;
 
-            erp_acct_update_purchase( $purchase_data, $purchase_id[$key] );
+            erp_acct_update_purchase( $purchase_data, $purchase_id[ $key ] );
         }
 
         $this->add_log( $purchase_data, 'update' );
@@ -305,7 +307,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_purchase( $request ) {
+    public function delete_purchase ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -324,7 +326,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function void_purchase( $request ) {
+    public function void_purchase ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -342,8 +344,8 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log( $data, $action ) {
-        erp_log()->add([
+    public function add_log ( $data, $action ) {
+        erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Pay Bill', 'erp' ),
             'old_value'     => '',
@@ -352,7 +354,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 
-        ]);
+        ] );
     }
 
     /**
@@ -362,7 +364,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database ( $request ) {
 
         $prepared_item = [];
 
@@ -418,23 +420,23 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
-            'id'          => (int) $item->id,
-            'vendor_id'   => (int) $item->vendor_id,
-            'voucher_no'  => (int) $item->voucher_no,
-            'vendor_name' => $item->vendor_name,
-            'date'        => $item->trn_date,
-            'due_date'    => $item->due_date,
-            'line_items'  => $item->line_items,
-            'type'        => !empty( $item->type ) ? $item->type : 'purchase',
-            'status'      => $item->status,
+            'id'             => (int) $item->id,
+            'vendor_id'      => (int) $item->vendor_id,
+            'voucher_no'     => (int) $item->voucher_no,
+            'vendor_name'    => $item->vendor_name,
+            'date'           => $item->trn_date,
+            'due_date'       => $item->due_date,
+            'line_items'     => $item->line_items,
+            'type'           => ! empty( $item->type ) ? $item->type : 'purchase',
+            'status'         => $item->status,
             'purchase_order' => $item->purchase_order,
-            'amount'      => $item->amount,
-            'due'         => empty($item->due) ? erp_acct_get_purchase_due($item->voucher_no) : $item->due,
-            'attachments' => maybe_unserialize( $item->attachments )
+            'amount'         => $item->amount,
+            'due'            => empty( $item->due ) ? erp_acct_get_purchase_due( $item->voucher_no ) : $item->due,
+            'attachments'    => maybe_unserialize( $item->attachments )
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -452,7 +454,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'purchase',
@@ -481,7 +483,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'vendor_name'   => [
+                'vendor_name' => [
                     'description' => __( 'Customer id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -489,7 +491,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'trn_date'       => [
+                'trn_date'    => [
                     'description' => __( 'Date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -498,7 +500,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'due_date'       => [
+                'due_date'    => [
                     'description' => __( 'Due date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -507,22 +509,22 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'line_items' => [
+                'line_items'  => [
                     'description' => __( 'List of line items data.', 'erp' ),
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'product_id'       => [
+                        'product_id'   => [
                             'description' => __( 'Product id.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'product_type'      => [
+                        'product_type' => [
                             'description' => __( 'Product type.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'qty'   => [
+                        'qty'          => [
                             'description' => __( 'Product quantity.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
@@ -532,29 +534,29 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'discount'    => [
+                        'discount'     => [
                             'description' => __( 'Discount.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'tax'       => [
+                        'tax'          => [
                             'description' => __( 'Tax.' ),
                             'type'        => 'integer',
                             'context'     => [ 'edit' ],
                         ],
-                        'tax_percent'    => [
+                        'tax_percent'  => [
                             'description' => __( 'Tax percent.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'item_total'       => [
+                        'item_total'   => [
                             'description' => __( 'Item total.' ),
                             'type'        => 'integer',
                             'context'     => [ 'edit' ],
                         ],
                     ],
                 ],
-                'type'       => [
+                'type'        => [
                     'description' => __( 'Type for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -562,7 +564,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'status'       => [
+                'status'      => [
                     'description' => __( 'Status for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],

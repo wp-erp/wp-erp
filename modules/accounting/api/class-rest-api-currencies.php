@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -23,7 +24,7 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -44,7 +45,7 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_currencies( $request ) {
+    public function get_currencies ( $request ) {
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
@@ -54,7 +55,7 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $formatted_items = [];
         foreach ( $items as $item ) {
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -75,7 +76,7 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -100,19 +101,19 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'journal',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'   => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'name'  => [
+                'name' => [
                     'description' => __( 'Name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -120,7 +121,7 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'sign'  => [
+                'sign' => [
                     'description' => __( 'Sign for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],

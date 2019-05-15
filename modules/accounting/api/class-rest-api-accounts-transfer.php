@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -23,7 +24,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -128,7 +129,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_accounts( $request ) {
+    public function get_accounts ( $request ) {
 
         $items = erp_acct_get_transfer_accounts( true );
 
@@ -136,7 +137,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         foreach ( $items as $item ) {
             $additional_fields = [];
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -153,7 +154,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_account( $request ) {
+    public function get_account ( $request ) {
         $id   = (int) $request['id'];
         $item = erp_acct_get_bank( $id );
 
@@ -174,7 +175,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function delete_account( $request ) {
+    public function delete_account ( $request ) {
         $id   = (int) $request['id'];
         $item = erp_acct_delete_bank( $id );
 
@@ -195,7 +196,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function transfer_money( $request ) {
+    public function transfer_money ( $request ) {
         $item = $this->prepare_item_for_database( $request );
 
         if ( empty( $item['from_account_id'] ) || empty( $item['to_account_id'] ) ) {
@@ -231,7 +232,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|object|WP_REST_Response
      */
-    public function get_transfer_list( $request ) {
+    public function get_transfer_list ( $request ) {
 
         $args = [
             'order_by' => isset( $request['order_by'] ) ? $request['order_by'] : 'id',
@@ -240,7 +241,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'offset'   => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
-        $items = erp_acct_get_transfer_vouchers( $args );
+        $items    = erp_acct_get_transfer_vouchers( $args );
         $accounts = erp_acct_get_transfer_accounts();
         $accounts = wp_list_pluck( $accounts, 'name', 'id' );
 
@@ -248,7 +249,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         foreach ( $items as $item ) {
             $additional_fields = [];
 
-            $data = $this->prepare_list_item_for_response( $item, $request, $additional_fields, $accounts );
+            $data              = $this->prepare_list_item_for_response( $item, $request, $additional_fields, $accounts );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -261,13 +262,13 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Get single voucher
      */
-    public function get_single_transfer( $request ) {
-        $id         = ! empty( $request['id'] ) ? intval( $request['id'] ) : 0;
-        $item       = erp_acct_get_single_voucher( $id );
-        $accounts   = erp_acct_get_transfer_accounts();
-        $accounts   = wp_list_pluck( $accounts, 'name', 'id' );
-        $data       = $this->prepare_list_item_for_response( $item, $request, [], $accounts );
-        $response   = rest_ensure_response( $data );
+    public function get_single_transfer ( $request ) {
+        $id       = ! empty( $request['id'] ) ? intval( $request['id'] ) : 0;
+        $item     = erp_acct_get_single_voucher( $id );
+        $accounts = erp_acct_get_transfer_accounts();
+        $accounts = wp_list_pluck( $accounts, 'name', 'id' );
+        $data     = $this->prepare_list_item_for_response( $item, $request, [], $accounts );
+        $response = rest_ensure_response( $data );
 
         return $response;
     }
@@ -279,7 +280,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_bank_accounts( $request ) {
+    public function get_bank_accounts ( $request ) {
         $items = erp_acct_get_banks( true, true, false );
 
         if ( empty( $items ) ) {
@@ -289,7 +290,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         foreach ( $items as $item ) {
             $additional_fields = [];
 
-            $data = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -306,9 +307,9 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_cash_at_bank( $request ) {
-        $formatted_items =[];
-        $items = erp_acct_get_dashboard_banks();
+    public function get_cash_at_bank ( $request ) {
+        $formatted_items = [];
+        $items           = erp_acct_get_dashboard_banks();
 
         if ( empty( $items ) ) {
             return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
@@ -317,7 +318,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         foreach ( $items as $item ) {
             $additional_fields = [];
 
-            $data = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -334,12 +335,13 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_dashboard_accounts( $request ) {
+    public function update_dashboard_accounts ( $request ) {
         global $wpdb;
 
-        $wpdb->query('TRUNCATE TABLE ' . $wpdb->prefix . 'erp_acct_cash_at_banks');
+        $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . 'erp_acct_cash_at_banks' );
 
-        $items = $request['accounts']; $formatted_items = [];
+        $items           = $request['accounts'];
+        $formatted_items = [];
 
         if ( empty( $items ) ) {
             return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
@@ -352,9 +354,9 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'ledger_id' => $item['ledger_id'],
                 'name'      => $item['name'],
                 'balance'   => $item['balance'],
-            ));
+            ) );
 
-            $data = $this->prepare_dashboard_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_dashboard_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -373,17 +375,17 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log( $data, $action ) {
-        erp_log()->add([
+    public function add_log ( $data, $action ) {
+        erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Transfer', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => sprintf( __(  '%s has been transfered from %s to %s', 'erp' ), $data['amount'], $data['from_account_id'], $data['to_account_id'] ),
+            'message'       => sprintf( __( '%s has been transfered from %s to %s', 'erp' ), $data['amount'], $data['from_account_id'], $data['to_account_id'] ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 
-        ]);
+        ] );
     }
 
     /**
@@ -393,12 +395,12 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database ( $request ) {
         $prepared_item = [];
 
         $prepared_item['date']            = date( 'Y-m-d', strtotime( $request['date'] ) );
         $prepared_item['from_account_id'] = isset( $request['from_account_id'] ) ? intval( $request['from_account_id'] ) : 0;
-        $prepared_item['to_account_id']   = isset( $request['to_account_id'] ) ?intval( $request['to_account_id'] ) : 0;
+        $prepared_item['to_account_id']   = isset( $request['to_account_id'] ) ? intval( $request['to_account_id'] ) : 0;
         $prepared_item['amount']          = isset( $request['amount'] ) ? floatval( $request['amount'] ) : 0;
         $prepared_item['particulars']     = isset( $request['particulars'] ) ? sanitize_text_field( $request['particulars'] ) : '';
 
@@ -414,17 +416,17 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
-            'id'             => (int) $item->id,
+            'id'      => (int) $item->id,
 //            'code'           => (int) $item->code,
-            'name'           => $item->name,
+            'name'    => $item->name,
 //            'description'    => $item->description,
 //            'account_number' => isset( $item->bank_details['account_number'] ) ? $item->bank_details['account_number']: '',
 //            'balance'        => erp_acct_get_single_account_balance( intval( $item->id ) ),
-            'balance'        => !empty( $item->balance ) ? $item->balance : 0,
+            'balance' => ! empty( $item->balance ) ? $item->balance : 0,
         ];
 
         if ( isset( $request['include'] ) ) {
@@ -452,7 +454,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_dashboard_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_dashboard_item_for_response ( $item, $request, $additional_fields = [] ) {
 
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
@@ -477,18 +479,18 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $accounts
      * @return mixed|WP_REST_Response
      */
-    public function prepare_list_item_for_response(  $item, $request, $additional_fields, $accounts ){
+    public function prepare_list_item_for_response ( $item, $request, $additional_fields, $accounts ) {
         $item = (object) $item;
 
         $data = [
             'id'          => $item->id,
             'voucher'     => (int) $item->voucher_no,
-            'ac_from'     => $accounts[$item->ac_from],
-            'ac_to'       => $accounts[$item->ac_to],
+            'ac_from'     => $accounts[ $item->ac_from ],
+            'ac_to'       => $accounts[ $item->ac_to ],
             'trn_date'    => $item->trn_date,
             'particulars' => $item->particulars,
             'amount'      => $item->amount,
-            'created_by'  => $this->get_user(1)
+            'created_by'  => $this->get_user( 1 )
         ];
 
         if ( isset( $request['include'] ) ) {
@@ -513,7 +515,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $additional_fields
      * @return mixed|WP_REST_Response
      */
-    public function prepare_bank_item_for_response(  $item, $request, $additional_fields ){
+    public function prepare_bank_item_for_response ( $item, $request, $additional_fields ) {
         $data = array_merge( $item, $additional_fields );
 
         // Wrap the data in a response object
@@ -527,7 +529,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'bank account',
@@ -566,7 +568,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
-                'particulars'            => [
+                'particulars'     => [
                     'description' => __( 'Particulars for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],

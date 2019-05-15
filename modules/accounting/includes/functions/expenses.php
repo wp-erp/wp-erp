@@ -10,16 +10,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_expenses( $args = [] ) {
+function erp_acct_get_expenses ( $args = [] ) {
     global $wpdb;
 
     $defaults = [
-        'number'     => 20,
-        'offset'     => 0,
-        'orderby'    => 'id',
-        'order'      => 'DESC',
-        'count'      => false,
-        's'          => '',
+        'number'  => 20,
+        'offset'  => 0,
+        'orderby' => 'id',
+        'order'   => 'DESC',
+        'count'   => false,
+        's'       => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -36,7 +36,7 @@ function erp_acct_get_expenses( $args = [] ) {
     $sql .= "FROM {$wpdb->prefix}erp_acct_expenses WHERE `trn_by_ledger_id` IS NOT NULL ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var($sql);
+        return $wpdb->get_var( $sql );
     }
 
     $rows = $wpdb->get_results( $sql, ARRAY_A );
@@ -50,7 +50,7 @@ function erp_acct_get_expenses( $args = [] ) {
  * @param $expense_no
  * @return mixed
  */
-function erp_acct_get_expense( $expense_no ) {
+function erp_acct_get_expense ( $expense_no ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -88,7 +88,7 @@ function erp_acct_get_expense( $expense_no ) {
  * @param $expense_no
  * @return mixed
  */
-function erp_acct_get_check( $expense_no ) {
+function erp_acct_get_check ( $expense_no ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -136,10 +136,10 @@ function erp_acct_get_check( $expense_no ) {
 /**
  * Format check line items
  */
-function erp_acct_format_check_line_items( $voucher_no ) {
+function erp_acct_format_check_line_items ( $voucher_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("SELECT
+    $sql = $wpdb->prepare( "SELECT
         expense.id,
         expense.voucher_no,
         expense.status,
@@ -162,18 +162,18 @@ function erp_acct_format_check_line_items( $voucher_no ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS expense_detail ON expense_detail.trn_no = cheque.trn_no
         LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledger ON expense_detail.ledger_id = ledger.id
 
-        WHERE expense.voucher_no = %d AND cheque.voucher_type = 'check'", $voucher_no);
+        WHERE expense.voucher_no = %d AND cheque.voucher_type = 'check'", $voucher_no );
 
-    return $wpdb->get_results($sql, ARRAY_A);
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**
  * Format expense line items
  */
-function erp_acct_format_expense_line_items( $voucher_no ) {
+function erp_acct_format_expense_line_items ( $voucher_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("SELECT
+    $sql = $wpdb->prepare( "SELECT
         expense_detail.id,
         expense_detail.ledger_id,
         ledger.name AS ledger_name,
@@ -184,9 +184,9 @@ function erp_acct_format_expense_line_items( $voucher_no ) {
         FROM {$wpdb->prefix}erp_acct_expenses AS expense
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_details AS expense_detail ON expense.voucher_no = expense_detail.trn_no
         LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledger ON expense_detail.ledger_id = ledger.id
-        WHERE expense.voucher_no = %d", $voucher_no);
+        WHERE expense.voucher_no = %d", $voucher_no );
 
-    return $wpdb->get_results($sql, ARRAY_A);
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**
@@ -195,13 +195,13 @@ function erp_acct_format_expense_line_items( $voucher_no ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_insert_expense( $data ) {
+function erp_acct_insert_expense ( $data ) {
     global $wpdb;
 
-    $created_by = get_current_user_id();
-    $data['created_at'] = date("Y-m-d H:i:s");
+    $created_by         = get_current_user_id();
+    $data['created_at'] = date( "Y-m-d H:i:s" );
     $data['created_by'] = $created_by;
-    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_at'] = date( "Y-m-d H:i:s" );
     $data['updated_by'] = $created_by;
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -224,23 +224,23 @@ function erp_acct_insert_expense( $data ) {
         $expense_data = erp_acct_get_formatted_expense_data( $data, $voucher_no );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_expenses', array(
-            'voucher_no'      => $expense_data['voucher_no'],
-            'people_id'       => $expense_data['people_id'],
-            'people_name'     => $expense_data['people_name'],
-            'address'         => $expense_data['billing_address'],
-            'trn_date'        => $expense_data['trn_date'],
-            'amount'          => $expense_data['amount'],
-            'ref'             => $expense_data['ref'],
-            'check_no'        => $expense_data['check_no'],
-            'particulars'     => $expense_data['particulars'],
-            'status'          => $expense_data['status'],
-            'trn_by'          => $expense_data['trn_by'],
-            'trn_by_ledger_id'=> $expense_data['trn_by_ledger_id'],
-            'attachments'     => $expense_data['attachments'],
-            'created_at'      => $expense_data['created_at'],
-            'created_by'      => $expense_data['created_by'],
-            'updated_at'      => $expense_data['updated_at'],
-            'updated_by'      => $expense_data['updated_by'],
+            'voucher_no'       => $expense_data['voucher_no'],
+            'people_id'        => $expense_data['people_id'],
+            'people_name'      => $expense_data['people_name'],
+            'address'          => $expense_data['billing_address'],
+            'trn_date'         => $expense_data['trn_date'],
+            'amount'           => $expense_data['amount'],
+            'ref'              => $expense_data['ref'],
+            'check_no'         => $expense_data['check_no'],
+            'particulars'      => $expense_data['particulars'],
+            'status'           => $expense_data['status'],
+            'trn_by'           => $expense_data['trn_by'],
+            'trn_by_ledger_id' => $expense_data['trn_by_ledger_id'],
+            'attachments'      => $expense_data['attachments'],
+            'created_at'       => $expense_data['created_at'],
+            'created_by'       => $expense_data['created_by'],
+            'updated_at'       => $expense_data['updated_at'],
+            'updated_by'       => $expense_data['updated_by'],
         ) );
 
         $items = $expense_data['bill_details'];
@@ -249,7 +249,7 @@ function erp_acct_insert_expense( $data ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_details', array(
                 'trn_no'      => $voucher_no,
                 'ledger_id'   => $item['ledger_id'],
-                'particulars' => !empty( $item['particulars'] ) ? $item['particulars'] : '',
+                'particulars' => ! empty( $item['particulars'] ) ? $item['particulars'] : '',
                 'amount'      => $item['amount'],
                 'created_at'  => $expense_data['created_at'],
                 'created_by'  => $expense_data['created_by'],
@@ -260,7 +260,7 @@ function erp_acct_insert_expense( $data ) {
             erp_acct_insert_expense_data_into_ledger( $expense_data, $item );
         }
 
-        if ( 1 == $expense_data['status']) {
+        if ( 1 == $expense_data['status'] ) {
             $wpdb->query( 'COMMIT' );
             if ( 'check' === $type ) {
                 return erp_acct_get_check( $voucher_no );
@@ -273,12 +273,12 @@ function erp_acct_insert_expense( $data ) {
         erp_acct_insert_source_expense_data_into_ledger( $expense_data );
 
         if ( isset( $expense_data['trn_by'] ) && $expense_data['trn_by'] === '3' ) {
-            erp_acct_insert_check_data ( $expense_data );
+            erp_acct_insert_check_data( $expense_data );
         }
 
         $wpdb->query( 'COMMIT' );
 
-    } catch (Exception $e) {
+    } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'expense-exception', $e->getMessage() );
     }
@@ -298,11 +298,11 @@ function erp_acct_insert_expense( $data ) {
  *
  * @return mixed
  */
-function erp_acct_update_expense( $data, $expense_id ) {
+function erp_acct_update_expense ( $data, $expense_id ) {
     global $wpdb;
 
-    $updated_by = get_current_user_id();
-    $data['updated_at'] = date('Y-m-d H:i:s');
+    $updated_by         = get_current_user_id();
+    $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
@@ -311,21 +311,21 @@ function erp_acct_update_expense( $data, $expense_id ) {
         $expense_data = erp_acct_get_formatted_expense_data( $data, $expense_id );
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_expenses', array(
-            'people_id'       => $expense_data['people_id'],
-            'people_name'     => $expense_data['people_name'],
-            'address'         => $expense_data['billing_address'],
-            'trn_date'        => $expense_data['trn_date'],
-            'amount'          => $expense_data['amount'],
-            'ref'             => $expense_data['ref'],
-            'check_no'        => $expense_data['check_no'],
-            'particulars'     => $expense_data['particulars'],
-            'trn_by'          => $expense_data['trn_by'],
-            'trn_by_ledger_id'=> $expense_data['trn_by_ledger_id'],
-            'attachments'     => $expense_data['attachments'],
-            'updated_at'      => $expense_data['updated_at'],
-            'updated_by'      => $expense_data['updated_by'],
+            'people_id'        => $expense_data['people_id'],
+            'people_name'      => $expense_data['people_name'],
+            'address'          => $expense_data['billing_address'],
+            'trn_date'         => $expense_data['trn_date'],
+            'amount'           => $expense_data['amount'],
+            'ref'              => $expense_data['ref'],
+            'check_no'         => $expense_data['check_no'],
+            'particulars'      => $expense_data['particulars'],
+            'trn_by'           => $expense_data['trn_by'],
+            'trn_by_ledger_id' => $expense_data['trn_by_ledger_id'],
+            'attachments'      => $expense_data['attachments'],
+            'updated_at'       => $expense_data['updated_at'],
+            'updated_by'       => $expense_data['updated_by'],
         ), array(
-            'voucher_no'      => $expense_id
+            'voucher_no' => $expense_id
         ) );
 
         /**
@@ -335,7 +335,7 @@ function erp_acct_update_expense( $data, $expense_id ) {
          *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
          *? so, remove previous rows and insert new rows
          */
-        $prev_detail_ids = $wpdb->get_results("SELECT id FROM {$wpdb->prefix}erp_acct_expense_details WHERE trn_no = {$expense_id}", ARRAY_A);
+        $prev_detail_ids = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_acct_expense_details WHERE trn_no = {$expense_id}", ARRAY_A );
         $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
 
         $wpdb->delete( $wpdb->prefix . 'erp_acct_expense_details', [ 'trn_no' => $expense_id ] );
@@ -351,12 +351,12 @@ function erp_acct_update_expense( $data, $expense_id ) {
                 'created_by'  => $expense_data['created_by'],
                 'updated_at'  => $expense_data['updated_at'],
                 'updated_by'  => $expense_data['updated_by'],
-            ));
+            ) );
         }
 
         $wpdb->query( 'COMMIT' );
 
-    } catch (Exception $e) {
+    } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'expense-exception', $e->getMessage() );
     }
@@ -371,10 +371,10 @@ function erp_acct_update_expense( $data, $expense_id ) {
  * @param $id
  * @return void
  */
-function erp_acct_delete_expense( $id ) {
+function erp_acct_delete_expense ( $id ) {
     global $wpdb;
 
-    if ( !$id ) {
+    if ( ! $id ) {
         return;
     }
 
@@ -387,14 +387,14 @@ function erp_acct_delete_expense( $id ) {
  * @param $id
  * @return void
  */
-function erp_acct_void_expense( $id ) {
+function erp_acct_void_expense ( $id ) {
     global $wpdb;
 
-    if ( !$id ) {
+    if ( ! $id ) {
         return;
     }
 
-    $wpdb->update($wpdb->prefix . 'erp_acct_expenses',
+    $wpdb->update( $wpdb->prefix . 'erp_acct_expenses',
         array(
             'status' => 'void',
         ),
@@ -410,34 +410,34 @@ function erp_acct_void_expense( $id ) {
  *
  * @return mixed
  */
-function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
+function erp_acct_get_formatted_expense_data ( $data, $voucher_no ) {
     $expense_data = [];
 
-    $people = erp_get_people( $data['people_id'] );
+    $people  = erp_get_people( $data['people_id'] );
     $company = new \WeDevs\ERP\Company();
 
-    $expense_data['voucher_no'] = !empty( $voucher_no ) ? $voucher_no : 0;
-    $expense_data['people_id'] = isset( $data['people_id'] ) ? $data['people_id'] : get_current_user_id();
-    $expense_data['people_name'] = isset( $people ) ?  $people->first_name . ' ' . $people->last_name : '';
-    $expense_data['billing_address'] = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
-    $expense_data['trn_date']   = isset( $data['trn_date'] ) ? $data['trn_date'] : date("Y-m-d" );
-    $expense_data['amount'] = isset( $data['amount'] ) ? $data['amount'] : 0;
-    $expense_data['attachments'] = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $expense_data['ref'] = isset( $data['ref'] ) ? $data['ref'] : '';
-    $expense_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : null;
-    $expense_data['particulars'] = isset( $data['particulars'] ) ? $data['particulars'] : '';
-    $expense_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
-    $expense_data['status'] = isset( $data['status'] ) ? $data['status'] : 1;
+    $expense_data['voucher_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $expense_data['people_id']        = isset( $data['people_id'] ) ? $data['people_id'] : get_current_user_id();
+    $expense_data['people_name']      = isset( $people ) ? $people->first_name . ' ' . $people->last_name : '';
+    $expense_data['billing_address']  = isset( $data['billing_address'] ) ? $data['billing_address'] : '';
+    $expense_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
+    $expense_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $expense_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $expense_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
+    $expense_data['check_no']         = isset( $data['check_no'] ) ? $data['check_no'] : null;
+    $expense_data['particulars']      = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $expense_data['bill_details']     = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
+    $expense_data['status']           = isset( $data['status'] ) ? $data['status'] : 1;
     $expense_data['trn_by_ledger_id'] = isset( $data['trn_by_ledger_id'] ) ? $data['trn_by_ledger_id'] : null;
-    $expense_data['trn_by'] = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
-    $expense_data['created_at'] = date("Y-m-d" );
-    $expense_data['created_by'] = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $expense_data['updated_at'] = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
-    $expense_data['updated_by'] = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
-    $expense_data['pay_to'] = isset( $people ) ?  $people->first_name . ' ' . $people->last_name : '';
-    $expense_data['name'] = isset( $data['name'] ) ?  $data['name'] : $company->name;
-    $expense_data['bank'] = isset( $data['bank'] ) ?  $data['bank'] : '';
-    $expense_data['voucher_type'] = isset( $data['voucher_type'] ) ?  $data['voucher_type'] : '';
+    $expense_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
+    $expense_data['created_at']       = date( "Y-m-d" );
+    $expense_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
+    $expense_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
+    $expense_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $expense_data['pay_to']           = isset( $people ) ? $people->first_name . ' ' . $people->last_name : '';
+    $expense_data['name']             = isset( $data['name'] ) ? $data['name'] : $company->name;
+    $expense_data['bank']             = isset( $data['bank'] ) ? $data['bank'] : '';
+    $expense_data['voucher_type']     = isset( $data['voucher_type'] ) ? $data['voucher_type'] : '';
 
     return $expense_data;
 }
@@ -451,10 +451,10 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
  *
  * @return mixed
  */
-function erp_acct_insert_expense_data_into_ledger( $expense_data, $item_data = [] ) {
+function erp_acct_insert_expense_data_into_ledger ( $expense_data, $item_data = [] ) {
     global $wpdb;
 
-    if ( 1 == $expense_data['status']) {
+    if ( 1 == $expense_data['status'] ) {
         return;
     }
 
@@ -483,10 +483,10 @@ function erp_acct_insert_expense_data_into_ledger( $expense_data, $item_data = [
  *
  * @return mixed
  */
-function erp_acct_update_expense_data_into_ledger( $expense_data, $expense_no, $item_data = [] ) {
+function erp_acct_update_expense_data_into_ledger ( $expense_data, $expense_no, $item_data = [] ) {
     global $wpdb;
 
-    if ( 1 == $expense_data['status']) {
+    if ( 1 == $expense_data['status'] ) {
         return;
     }
 
@@ -514,10 +514,10 @@ function erp_acct_update_expense_data_into_ledger( $expense_data, $expense_no, $
  *
  * @return void
  */
-function erp_acct_insert_source_expense_data_into_ledger( $expense_data ) {
+function erp_acct_insert_source_expense_data_into_ledger ( $expense_data ) {
     global $wpdb;
 
-    if ( 1 == $expense_data['status']) {
+    if ( 1 == $expense_data['status'] ) {
         return;
     }
     // Insert amount in ledger_details

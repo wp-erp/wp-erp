@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -27,7 +28,7 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
 
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
@@ -49,7 +50,7 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_company( $request ) {
+    public function get_company ( $request ) {
 
         $company = new \WeDevs\ERP\Company();
 
@@ -59,14 +60,14 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
             $url = $company->placeholder_logo();
         } else {
             $image = wp_get_attachment_image_src( $logo_id, 'medium' );
-            $url = $image[0];
+            $url   = $image[0];
         }
 
-        $response = rest_ensure_response([
-            'logo' => $url,
-            'name' => $company->name,
+        $response = rest_ensure_response( [
+            'logo'    => $url,
+            'name'    => $company->name,
             'address' => $company->address,
-        ]);
+        ] );
 
         $response->set_status( 200 );
 
