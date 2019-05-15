@@ -679,7 +679,7 @@ class Form_Handler {
             wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if(empty(trim($_POST['leave_reason']))){
+        if( empty( trim( $_POST['leave_reason'] ) ) ){
             $redirect_to = admin_url( 'admin.php?page=erp-hr&section=leave&view=new&msg=no_reason' );
             wp_redirect( $redirect_to );
             exit;

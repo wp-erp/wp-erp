@@ -1598,7 +1598,7 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if(empty(trim($_POST['leave_reason']))){
+        if( empty( trim( $_POST['leave_reason'] ) ) ){
             $this->send_error( __( 'Leave reason field can not be blank', 'erp' ) );
         }
 
