@@ -1598,6 +1598,9 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
+        if(empty(trim($_POST['leave_reason']))){
+            $this->send_error( __( 'Leave reason field can not be blank', 'erp' ) );
+        }
 
         // @todo: date format may need to be changed when partial leave introduced
         $start_date = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] . ' 00:00:00' ) : date_i18n( 'Y-m-d 00:00:00' );

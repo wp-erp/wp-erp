@@ -45,7 +45,7 @@ $types = $employee_types ? $employee_types : [];
             'label'       => __( 'Reason', 'erp' ),
             'name'        => 'leave_reason',
             'type'        => 'textarea',
-            'required' => true,
+            'required'    => true,
             'custom_attr' => array( 'cols' => 25, 'rows' => 3 )
         ) ); ?>
     </div>
