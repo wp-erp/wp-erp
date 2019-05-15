@@ -63,6 +63,7 @@
                         'label'       => __( 'Reason', 'erp' ),
                         'name'        => 'leave_reason',
                         'type'        => 'textarea',
+                        'required' => true,
                         'custom_attr' => array( 'cols' => 30, 'rows' => 3, 'disabled' => 'disabled' )
                     ) ); ?>
                 </div>
