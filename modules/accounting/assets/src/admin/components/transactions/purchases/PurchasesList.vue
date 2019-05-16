@@ -145,6 +145,7 @@
             fetchItems(filters = {}) {
                 this.rows = [];
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get('/transactions/purchases', {
                     params: {
                         per_page  : this.paginationData.perPage,
