@@ -52,6 +52,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     } else {
         $sql .= " voucher.id,
             voucher.type,
+            voucher.editable,
             invoice.customer_id AS inv_cus_id,
             invoice.customer_name AS inv_cus_name,
             invoice_receipt.customer_name AS pay_cus_name,
