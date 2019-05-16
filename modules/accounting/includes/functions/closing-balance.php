@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return void
  */
-function erp_acct_clsbl_get_closest_next_fn_year( $date ) {
+function erp_acct_clsbl_get_closest_next_fn_year ( $date ) {
     global $wpdb;
 
     $sql = "SELECT id, start_date FROM {$wpdb->prefix}erp_acct_financial_years
@@ -27,8 +27,8 @@ function erp_acct_clsbl_get_closest_next_fn_year( $date ) {
  *
  * @return void
  */
-function erp_acct_clsbl_close_balance_sheet_now( $args ) {
-    $balance_sheet  = erp_acct_get_balance_sheet($args);
+function erp_acct_clsbl_close_balance_sheet_now ( $args ) {
+    $balance_sheet  = erp_acct_get_balance_sheet( $args );
     $assets         = $balance_sheet['rows1'];
     $liability      = $balance_sheet['rows2'];
     $next_f_year_id = $args['f_year_id'];
@@ -112,7 +112,7 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
 
     foreach ( $tax_payable as $payable_agency ) {
         erp_acct_clsbl_insert_into_opening_balance(
-            $next_f_year_id, null, $payable_agency['id'], 'tax_agency', 0.00, abs($payable_agency['balance'])
+            $next_f_year_id, null, $payable_agency['id'], 'tax_agency', 0.00, abs( $payable_agency['balance'] )
         );
     }
 
@@ -147,7 +147,7 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
  *
  * @return void
  */
-function erp_acct_clsbl_insert_into_opening_balance($f_year_id, $chart_id, $ledger_id, $type, $debit, $credit) {
+function erp_acct_clsbl_insert_into_opening_balance ( $f_year_id, $chart_id, $ledger_id, $type, $debit, $credit ) {
     global $wpdb;
 
     $wpdb->insert(
@@ -159,7 +159,7 @@ function erp_acct_clsbl_insert_into_opening_balance($f_year_id, $chart_id, $ledg
             'type'              => $type,
             'debit'             => $debit,
             'credit'            => $credit,
-            'created_at'        => date('Y-m-d H:i:s'),
+            'created_at'        => date( 'Y-m-d H:i:s' ),
             'created_by'        => get_current_user_id()
         ]
     );
@@ -173,7 +173,7 @@ function erp_acct_clsbl_insert_into_opening_balance($f_year_id, $chart_id, $ledg
  *
  * @return array
  */
-function erp_acct_clsbl_get_accounts_receivable_balance_with_people( $args ) {
+function erp_acct_clsbl_get_accounts_receivable_balance_with_people ( $args ) {
     global $wpdb;
 
     // mainly ( debit - credit )
@@ -194,7 +194,7 @@ function erp_acct_clsbl_get_accounts_receivable_balance_with_people( $args ) {
  *
  * @return array
  */
-function erp_acct_clsbl_get_accounts_payable_balance_with_people( $args ) {
+function erp_acct_clsbl_get_accounts_payable_balance_with_people ( $args ) {
     global $wpdb;
 
     $bill_sql = "SELECT bill.vendor_id AS id, SUM( debit - credit ) AS balance
@@ -225,7 +225,7 @@ function erp_acct_clsbl_get_accounts_payable_balance_with_people( $args ) {
  *
  * @return array
  */
-function erp_acct_clsbl_people_ar_calc_with_opening_balance( $bs_start_date, $data, $sql ) {
+function erp_acct_clsbl_people_ar_calc_with_opening_balance ( $bs_start_date, $data, $sql ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -234,18 +234,18 @@ function erp_acct_clsbl_people_ar_calc_with_opening_balance( $bs_start_date, $da
     // get opening balance data within that(^) financial year
     $opening_balance = erp_acct_clsbl_customer_ar_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
 
-    $merged = array_merge($data, $opening_balance);
+    $merged = array_merge( $data, $opening_balance );
     $result = erp_acct_clsbl_get_formatted_people_balance( $merged );
 
     // should we go further calculation, check the diff
-    if ( ! erp_acct_has_date_diff($bs_start_date, $closest_fy_date['start_date']) ) {
+    if ( ! erp_acct_has_date_diff( $bs_start_date, $closest_fy_date['start_date'] ) ) {
         return $result;
     } else {
-        $prev_date_of_bs_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($bs_start_date) ) );
+        $prev_date_of_bs_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
     }
 
-    $query  = $wpdb->get_results( $wpdb->prepare($sql, $closest_fy_date['start_date'], $prev_date_of_bs_start), ARRAY_A );
-    $merged = array_merge($result, $query);
+    $query  = $wpdb->get_results( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_bs_start ), ARRAY_A );
+    $merged = array_merge( $result, $query );
 
     return erp_acct_clsbl_get_formatted_people_balance( $merged );
 }
@@ -261,7 +261,7 @@ function erp_acct_clsbl_people_ar_calc_with_opening_balance( $bs_start_date, $da
  * @return array
  */
 
-function erp_acct_clsbl_vendor_ap_calc_with_opening_balance($bs_start_date, $bill_data, $purchase_data, $bill_sql, $purchase_sql) {
+function erp_acct_clsbl_vendor_ap_calc_with_opening_balance ( $bs_start_date, $bill_data, $purchase_data, $bill_sql, $purchase_sql ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -270,21 +270,21 @@ function erp_acct_clsbl_vendor_ap_calc_with_opening_balance($bs_start_date, $bil
     // get opening balance data within that(^) financial year
     $opening_balance = erp_acct_clsbl_vendor_ap_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
 
-    $merged = array_merge($bill_data, $purchase_data, $opening_balance);
-    $result = erp_acct_clsbl_get_formatted_people_balance($merged);
+    $merged = array_merge( $bill_data, $purchase_data, $opening_balance );
+    $result = erp_acct_clsbl_get_formatted_people_balance( $merged );
 
     // should we go further calculation, check the diff
-    if ( ! erp_acct_has_date_diff($bs_start_date, $closest_fy_date['start_date']) ) {
+    if ( ! erp_acct_has_date_diff( $bs_start_date, $closest_fy_date['start_date'] ) ) {
         return $result;
     } else {
-        $prev_date_of_bs_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($bs_start_date) ) );
+        $prev_date_of_bs_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
     }
 
-    $query1 = $wpdb->get_results( $wpdb->prepare($bill_sql, $closest_fy_date['start_date'], $prev_date_of_bs_start), ARRAY_A );
-    $query2 = $wpdb->get_results( $wpdb->prepare($purchase_sql, $closest_fy_date['start_date'], $prev_date_of_bs_start), ARRAY_A );
-    $merged = array_merge($result, $query1, $query2);
+    $query1 = $wpdb->get_results( $wpdb->prepare( $bill_sql, $closest_fy_date['start_date'], $prev_date_of_bs_start ), ARRAY_A );
+    $query2 = $wpdb->get_results( $wpdb->prepare( $purchase_sql, $closest_fy_date['start_date'], $prev_date_of_bs_start ), ARRAY_A );
+    $merged = array_merge( $result, $query1, $query2 );
 
-    return erp_acct_clsbl_get_formatted_people_balance($merged);
+    return erp_acct_clsbl_get_formatted_people_balance( $merged );
 }
 
 /**
@@ -294,14 +294,14 @@ function erp_acct_clsbl_vendor_ap_calc_with_opening_balance($bs_start_date, $bil
  *
  * @return void
  */
-function erp_acct_clsbl_customer_ar_opening_balance_by_fn_year_id( $id ) {
+function erp_acct_clsbl_customer_ar_opening_balance_by_fn_year_id ( $id ) {
     global $wpdb;
 
     $sql = "SELECT ledger_id AS id, SUM( debit - credit ) AS balance
         FROM {$wpdb->prefix}erp_acct_opening_balances
         WHERE financial_year_id = %d AND type = 'people' GROUP BY ledger_id HAVING balance > 0";
 
-    return $wpdb->get_results( $wpdb->prepare($sql, $id), ARRAY_A );
+    return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 }
 
 /**
@@ -311,14 +311,14 @@ function erp_acct_clsbl_customer_ar_opening_balance_by_fn_year_id( $id ) {
  *
  * @return void
  */
-function erp_acct_clsbl_vendor_ap_opening_balance_by_fn_year_id( $id ) {
+function erp_acct_clsbl_vendor_ap_opening_balance_by_fn_year_id ( $id ) {
     global $wpdb;
 
     $sql = "SELECT ledger_id AS id, SUM( debit - credit ) AS balance
         FROM {$wpdb->prefix}erp_acct_opening_balances
         WHERE financial_year_id = %d AND type = 'people' GROUP BY ledger_id HAVING balance < 0";
 
-    return $wpdb->get_results( $wpdb->prepare($sql, $id), ARRAY_A );
+    return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 }
 
 /**
@@ -329,15 +329,15 @@ function erp_acct_clsbl_vendor_ap_opening_balance_by_fn_year_id( $id ) {
  *
  * @return void
  */
-function erp_acct_clsbl_get_formatted_people_balance( $arr ) {
+function erp_acct_clsbl_get_formatted_people_balance ( $arr ) {
     $temp = [];
 
     foreach ( $arr as $entry ) {
         // get index by id from a multidimensional array
-        $index = array_search( $entry['id'], array_column($arr, 'id') );
+        $index = array_search( $entry['id'], array_column( $arr, 'id' ) );
 
-        if ( ! empty( $temp[$index] ) ) {
-            $temp[$index]['balance'] += $entry['balance'];
+        if ( ! empty( $temp[ $index ] ) ) {
+            $temp[ $index ]['balance'] += $entry['balance'];
         } else {
             $temp[] = [
                 'id'      => $entry['id'],
@@ -349,7 +349,7 @@ function erp_acct_clsbl_get_formatted_people_balance( $arr ) {
     return $temp;
 }
 
-function erp_acct_clsbl_sales_tax_agency( $args, $type ) {
+function erp_acct_clsbl_sales_tax_agency ( $args, $type ) {
     global $wpdb;
 
     if ( 'payable' === $type ) {
@@ -377,7 +377,7 @@ function erp_acct_clsbl_sales_tax_agency( $args, $type ) {
  *
  * @return float
  */
-function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $data, $sql, $type ) {
+function erp_acct_clsbl_sales_tax_agency_with_opening_balance ( $bs_start_date, $data, $sql, $type ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -386,23 +386,23 @@ function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $
     // get opening balance data within that(^) financial year
     $opening_balance = erp_acct_clsbl_sales_tax_agency_opening_balance_by_fn_year_id( $closest_fy_date['id'], $type );
 
-    $merged = array_merge($data, $opening_balance);
+    $merged = array_merge( $data, $opening_balance );
     $result = erp_acct_clsbl_get_formatted_people_balance( $merged );
 
     // should we go further calculation, check the diff
-    if ( ! erp_acct_has_date_diff($bs_start_date, $closest_fy_date['start_date']) ) {
+    if ( ! erp_acct_has_date_diff( $bs_start_date, $closest_fy_date['start_date'] ) ) {
         return $result;
     } else {
-        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($bs_start_date) ) );
+        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
     }
 
     // get agency details data between
     //     `financial year start date`
     // and
     //     `previous date from trial balance start date`
-    $agency_details_balance = $wpdb->get_results( $wpdb->prepare($sql, $closest_fy_date['start_date'], $prev_date_of_tb_start), ARRAY_A );
+    $agency_details_balance = $wpdb->get_results( $wpdb->prepare( $sql, $closest_fy_date['start_date'], $prev_date_of_tb_start ), ARRAY_A );
 
-    $merged = array_merge($result, $agency_details_balance);
+    $merged = array_merge( $result, $agency_details_balance );
     return erp_acct_clsbl_get_formatted_people_balance( $merged );
 }
 
@@ -413,7 +413,7 @@ function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $
  *
  * @return void
  */
-function erp_acct_clsbl_sales_tax_agency_opening_balance_by_fn_year_id( $id, $type ) {
+function erp_acct_clsbl_sales_tax_agency_opening_balance_by_fn_year_id ( $id, $type ) {
     global $wpdb;
 
     if ( 'payable' === $type ) {

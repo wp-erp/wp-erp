@@ -10,16 +10,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_pay_bills( $args = [] ) {
+function erp_acct_get_pay_bills ( $args = [] ) {
     global $wpdb;
 
     $defaults = [
-        'number'     => 20,
-        'offset'     => 0,
-        'orderby'    => 'id',
-        'order'      => 'DESC',
-        'count'      => false,
-        's'          => '',
+        'number'  => 20,
+        'offset'  => 0,
+        'orderby' => 'id',
+        'order'   => 'DESC',
+        'count'   => false,
+        's'       => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -35,7 +35,7 @@ function erp_acct_get_pay_bills( $args = [] ) {
     $sql .= "FROM {$wpdb->prefix}erp_acct_pay_bill ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        return $wpdb->get_var($sql);
+        return $wpdb->get_var( $sql );
     }
 
     return $wpdb->get_results( $sql, ARRAY_A );
@@ -47,10 +47,10 @@ function erp_acct_get_pay_bills( $args = [] ) {
  * @param $bill_no
  * @return mixed
  */
-function erp_acct_get_pay_bill( $bill_no ) {
+function erp_acct_get_pay_bill ( $bill_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("SELECT
+    $sql = $wpdb->prepare( "SELECT
 
         pay_bill.id,
         pay_bill.voucher_no,
@@ -64,7 +64,7 @@ function erp_acct_get_pay_bill( $bill_no ) {
         pay_bill.status
 
     FROM {$wpdb->prefix}erp_acct_pay_bill AS pay_bill
-    WHERE pay_bill.voucher_no = %d", $bill_no);
+    WHERE pay_bill.voucher_no = %d", $bill_no );
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -76,10 +76,10 @@ function erp_acct_get_pay_bill( $bill_no ) {
 /**
  * Format pay bill line items
  */
-function erp_acct_format_paybill_line_items($voucher_no) {
+function erp_acct_format_paybill_line_items ( $voucher_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("SELECT
+    $sql = $wpdb->prepare( "SELECT
         pay_bill_detail.id,
         pay_bill_detail.voucher_no,
         pay_bill_detail.bill_no,
@@ -87,9 +87,9 @@ function erp_acct_format_paybill_line_items($voucher_no) {
 
         FROM {$wpdb->prefix}erp_acct_pay_bill AS pay_bill
         LEFT JOIN {$wpdb->prefix}erp_acct_pay_bill_details as pay_bill_detail ON pay_bill.voucher_no = pay_bill_detail.voucher_no
-        WHERE pay_bill.voucher_no = %d", $voucher_no);
+        WHERE pay_bill.voucher_no = %d", $voucher_no );
 
-    return $wpdb->get_results($sql, ARRAY_A);
+    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**
@@ -100,15 +100,15 @@ function erp_acct_format_paybill_line_items($voucher_no) {
  * @param $due
  * @return mixed
  */
-function erp_acct_insert_pay_bill( $data ) {
+function erp_acct_insert_pay_bill ( $data ) {
     global $wpdb;
 
-    $created_by = get_current_user_id();
-    $data['created_at'] = date("Y-m-d H:i:s");
+    $created_by         = get_current_user_id();
+    $data['created_at'] = date( "Y-m-d H:i:s" );
     $data['created_by'] = $created_by;
-    $data['updated_at'] = date("Y-m-d H:i:s");
+    $data['updated_at'] = date( "Y-m-d H:i:s" );
     $data['updated_by'] = $created_by;
-    $bill_no = '';
+    $bill_no            = '';
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -126,35 +126,35 @@ function erp_acct_insert_pay_bill( $data ) {
         $pay_bill_data = erp_acct_get_formatted_pay_bill_data( $data, $voucher_no );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_pay_bill', array(
-            'voucher_no'      => $voucher_no,
-            'trn_date'        => $pay_bill_data['trn_date'],
-            'vendor_id'       => $pay_bill_data['vendor_id'],
-            'vendor_name'     => $pay_bill_data['people_name'],
-            'amount'          => $pay_bill_data['amount'],
-            'trn_by'          => $pay_bill_data['trn_by'],
-            'particulars'     => $pay_bill_data['particulars'],
-            'attachments'     => $pay_bill_data['attachments'],
-            'status'          => $pay_bill_data['status'],
-            'created_at'      => $pay_bill_data['created_at'],
-            'created_by'      => $created_by,
-            'updated_at'      => $pay_bill_data['updated_at'],
-            'updated_by'      => $pay_bill_data['updated_by'],
+            'voucher_no'  => $voucher_no,
+            'trn_date'    => $pay_bill_data['trn_date'],
+            'vendor_id'   => $pay_bill_data['vendor_id'],
+            'vendor_name' => $pay_bill_data['people_name'],
+            'amount'      => $pay_bill_data['amount'],
+            'trn_by'      => $pay_bill_data['trn_by'],
+            'particulars' => $pay_bill_data['particulars'],
+            'attachments' => $pay_bill_data['attachments'],
+            'status'      => $pay_bill_data['status'],
+            'created_at'  => $pay_bill_data['created_at'],
+            'created_by'  => $created_by,
+            'updated_at'  => $pay_bill_data['updated_at'],
+            'updated_by'  => $pay_bill_data['updated_by'],
         ) );
 
         $items = $pay_bill_data['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $wpdb->insert($wpdb->prefix . 'erp_acct_pay_bill_details', array(
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_pay_bill_details', array(
                 'voucher_no' => $voucher_no,
-                'bill_no' => $item['voucher_no'],
-                'amount' => $item['amount'],
+                'bill_no'    => $item['voucher_no'],
+                'amount'     => $item['amount'],
                 'created_at' => $pay_bill_data['created_at'],
                 'created_by' => $pay_bill_data['created_by'],
                 'updated_at' => $pay_bill_data['updated_at'],
                 'updated_by' => $pay_bill_data['updated_by'],
-            ));
+            ) );
 
-            if ( 1 == $pay_bill_data['status']) {
+            if ( 1 == $pay_bill_data['status'] ) {
                 $wpdb->query( 'COMMIT' );
 
                 return erp_acct_get_pay_bill( $voucher_no );
@@ -179,12 +179,12 @@ function erp_acct_insert_pay_bill( $data ) {
         }
 
         if ( isset( $pay_bill_data['trn_by'] ) && $pay_bill_data['trn_by'] === '3' ) {
-            erp_acct_insert_check_data ( $pay_bill_data );
+            erp_acct_insert_check_data( $pay_bill_data );
         }
 
         $wpdb->query( 'COMMIT' );
 
-    } catch (Exception $e) {
+    } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'pay-bill-exception', $e->getMessage() );
     }
@@ -205,12 +205,12 @@ function erp_acct_insert_pay_bill( $data ) {
  * @param $due
  * @return mixed
  */
-function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
+function erp_acct_update_pay_bill ( $data, $pay_bill_id ) {
 
     global $wpdb;
 
-    $updated_by = get_current_user_id();
-    $data['updated_at'] = date("Y-m-d H:i:s");
+    $updated_by         = get_current_user_id();
+    $data['updated_at'] = date( "Y-m-d H:i:s" );
     $data['updated_by'] = $updated_by;
 
     try {
@@ -219,33 +219,33 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
         $pay_bill_data = erp_acct_get_formatted_pay_bill_data( $data, $pay_bill_id );
 
         $wpdb->update( $wpdb->prefix . 'erp_acct_pay_bill', array(
-            'bill_no'         => $pay_bill_data['bill_no'],
-            'trn_date'        => $pay_bill_data['trn_date'],
-            'amount'          => $pay_bill_data['amount'],
-            'type'            => $pay_bill_data['type'],
-            'particulars'     => $pay_bill_data['particulars'],
-            'attachments'     => $pay_bill_data['attachments'],
-            'status'          => $pay_bill_data['status'],
-            'created_at'      => $pay_bill_data['created_at'],
-            'created_by'      => $pay_bill_data['created_by'],
-            'updated_at'      => $pay_bill_data['updated_at'],
-            'updated_by'      => $pay_bill_data['updated_by'],
+            'bill_no'     => $pay_bill_data['bill_no'],
+            'trn_date'    => $pay_bill_data['trn_date'],
+            'amount'      => $pay_bill_data['amount'],
+            'type'        => $pay_bill_data['type'],
+            'particulars' => $pay_bill_data['particulars'],
+            'attachments' => $pay_bill_data['attachments'],
+            'status'      => $pay_bill_data['status'],
+            'created_at'  => $pay_bill_data['created_at'],
+            'created_by'  => $pay_bill_data['created_by'],
+            'updated_at'  => $pay_bill_data['updated_at'],
+            'updated_by'  => $pay_bill_data['updated_by'],
         ), array(
-            'voucher_no'      => $pay_bill_id
+            'voucher_no' => $pay_bill_id
         ) );
 
         $items = $pay_bill_data['bill_details'];
 
         foreach ( $items as $key => $item ) {
             $wpdb->update( $wpdb->prefix . 'erp_acct_pay_bill_details', array(
-                'bill_no'     => $item['voucher_no'],
-                'amount'      => $item['amount'],
-                'created_at'  => $pay_bill_data['created_at'],
-                'created_by'  => $pay_bill_data['created_by'],
-                'updated_at'  => $pay_bill_data['updated_at'],
-                'updated_by'  => $pay_bill_data['updated_by'],
+                'bill_no'    => $item['voucher_no'],
+                'amount'     => $item['amount'],
+                'created_at' => $pay_bill_data['created_at'],
+                'created_by' => $pay_bill_data['created_by'],
+                'updated_at' => $pay_bill_data['updated_at'],
+                'updated_by' => $pay_bill_data['updated_by'],
             ), array(
-                'voucher_no'  => $pay_bill_id
+                'voucher_no' => $pay_bill_id
             ) );
 
             $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
@@ -258,7 +258,7 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
                 'updated_at'  => $pay_bill_data['updated_at'],
                 'updated_by'  => $pay_bill_data['updated_by'],
             ), array(
-                'trn_no'      => $pay_bill_id
+                'trn_no' => $pay_bill_id
             ) );
 
             erp_acct_update_bill_data_into_ledger( $pay_bill_data, $pay_bill_id, $item );
@@ -266,7 +266,7 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
 
         $wpdb->query( 'COMMIT' );
 
-    } catch (Exception $e) {
+    } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
@@ -285,10 +285,10 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
  * @param $id
  * @return void
  */
-function erp_acct_delete_pay_bill( $id ) {
+function erp_acct_delete_pay_bill ( $id ) {
     global $wpdb;
 
-    if ( !$id ) {
+    if ( ! $id ) {
         return;
     }
 
@@ -301,14 +301,14 @@ function erp_acct_delete_pay_bill( $id ) {
  * @param $id
  * @return void
  */
-function erp_acct_void_pay_bill( $id ) {
+function erp_acct_void_pay_bill ( $id ) {
     global $wpdb;
 
-    if ( !$id ) {
+    if ( ! $id ) {
         return;
     }
 
-    $wpdb->update($wpdb->prefix . 'erp_acct_pay_bill',
+    $wpdb->update( $wpdb->prefix . 'erp_acct_pay_bill',
         array(
             'status' => 'void',
         ),
@@ -324,34 +324,34 @@ function erp_acct_void_pay_bill( $id ) {
  *
  * @return mixed
  */
-function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
+function erp_acct_get_formatted_pay_bill_data ( $data, $voucher_no ) {
     $pay_bill_data = [];
 
     $user_info = erp_get_people( $data['vendor_id'] );
-    $company = new \WeDevs\ERP\Company();
+    $company   = new \WeDevs\ERP\Company();
 
-    $pay_bill_data['voucher_no']   = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $pay_bill_data['trn_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
-    $pay_bill_data['vendor_id'] = isset( $data['vendor_id'] ) ? $data['vendor_id'] : null;
-    $pay_bill_data['people_name'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
-    $pay_bill_data['trn_date']     = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
-    $pay_bill_data['amount']       = isset( $data['amount'] ) ? $data['amount'] : 0;
-    $pay_bill_data['ref']          = isset( $data['ref'] ) ? $data['ref'] : 0;
-    $pay_bill_data['trn_by']       = isset( $data['trn_by'] ) ? $data['trn_by'] : 0;
-    $pay_bill_data['particulars']  = isset( $data['particulars'] ) ? $data['particulars'] : '';
-    $pay_bill_data['attachments']  = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $pay_bill_data['bill_details'] = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
-    $pay_bill_data['status']       = isset( $data['status'] ) ? $data['status'] : 4;
+    $pay_bill_data['voucher_no']       = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $pay_bill_data['trn_no']           = ! empty( $voucher_no ) ? $voucher_no : 0;
+    $pay_bill_data['vendor_id']        = isset( $data['vendor_id'] ) ? $data['vendor_id'] : null;
+    $pay_bill_data['people_name']      = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
+    $pay_bill_data['trn_date']         = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
+    $pay_bill_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $pay_bill_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : 0;
+    $pay_bill_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : 0;
+    $pay_bill_data['particulars']      = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $pay_bill_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $pay_bill_data['bill_details']     = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
+    $pay_bill_data['status']           = isset( $data['status'] ) ? $data['status'] : 4;
     $pay_bill_data['trn_by_ledger_id'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
-    $pay_bill_data['check_no'] = isset( $data['check_no'] ) ? $data['check_no'] : 0;
-    $pay_bill_data['pay_to'] = isset( $user_info ) ?  $user_info->first_name . ' ' . $user_info->last_name : '';
-    $pay_bill_data['name'] = isset( $data['name'] ) ?  $data['name'] : $company->name;
-    $pay_bill_data['bank'] = isset( $data['bank'] ) ?  $data['bank'] : '';
-    $pay_bill_data['voucher_type'] = isset( $data['voucher_type'] ) ?  $data['voucher_type'] : '';
-    $pay_bill_data['created_at']   = date( "Y-m-d" );
-    $pay_bill_data['created_by']   = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $pay_bill_data['updated_at']   = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
-    $pay_bill_data['updated_by']   = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $pay_bill_data['check_no']         = isset( $data['check_no'] ) ? $data['check_no'] : 0;
+    $pay_bill_data['pay_to']           = isset( $user_info ) ? $user_info->first_name . ' ' . $user_info->last_name : '';
+    $pay_bill_data['name']             = isset( $data['name'] ) ? $data['name'] : $company->name;
+    $pay_bill_data['bank']             = isset( $data['bank'] ) ? $data['bank'] : '';
+    $pay_bill_data['voucher_type']     = isset( $data['voucher_type'] ) ? $data['voucher_type'] : '';
+    $pay_bill_data['created_at']       = date( "Y-m-d" );
+    $pay_bill_data['created_by']       = isset( $data['created_by'] ) ? $data['created_by'] : '';
+    $pay_bill_data['updated_at']       = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
+    $pay_bill_data['updated_by']       = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
 
     return $pay_bill_data;
 }
@@ -364,7 +364,7 @@ function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
  *
  * @return mixed
  */
-function erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item_data ) {
+function erp_acct_insert_pay_bill_data_into_ledger ( $pay_bill_data, $item_data ) {
     global $wpdb;
 
     // Insert amount in ledger_details
@@ -392,7 +392,7 @@ function erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item_data )
  *
  * @return mixed
  */
-function erp_acct_update_pay_bill_data_into_ledger( $pay_bill_data, $pay_bill_no, $item_data ) {
+function erp_acct_update_pay_bill_data_into_ledger ( $pay_bill_data, $pay_bill_no, $item_data ) {
     global $wpdb;
 
     // Update amount in ledger_details
@@ -417,7 +417,7 @@ function erp_acct_update_pay_bill_data_into_ledger( $pay_bill_data, $pay_bill_no
  *
  * @return int
  */
-function erp_acct_get_pay_bill_count() {
+function erp_acct_get_pay_bill_count () {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_pay_bill" );
@@ -432,21 +432,21 @@ function erp_acct_get_pay_bill_count() {
  * @param $due
  * @return void
  */
-function erp_acct_change_bill_status( $bill_no ) {
+function erp_acct_change_bill_status ( $bill_no ) {
     global $wpdb;
 
     $due = erp_acct_get_bill_due( $bill_no );
 
     if ( $due == 0 ) {
 
-        $wpdb->update($wpdb->prefix . 'erp_acct_bills',
+        $wpdb->update( $wpdb->prefix . 'erp_acct_bills',
             array(
                 'status' => 4,
             ),
             array( 'voucher_no' => $bill_no )
         );
     } else {
-        $wpdb->update($wpdb->prefix . 'erp_acct_bills',
+        $wpdb->update( $wpdb->prefix . 'erp_acct_bills',
             array(
                 'status' => 5,
             ),

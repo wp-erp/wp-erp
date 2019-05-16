@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -27,7 +28,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/type/(?P<voucher_no>[\d]+)', [
             [
@@ -73,6 +74,17 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/purchases', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_purchases' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales/chart-status', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -91,28 +103,6 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
-
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/expenses', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_expenses' ],
-                'args'                => [],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
-
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/purchases', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_purchases' ],
-                'args'                => [],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
         ] );
@@ -236,7 +226,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_transaction_type( $request ) {
+    public function get_transaction_type ( $request ) {
         $voucher_no = ! empty( $request['voucher_no'] ) ? $request['voucher_no'] : 0;
 
         $voucher_type = erp_acct_get_transaction_type( $voucher_no );
@@ -255,10 +245,11 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_trn_statuses( $request ) {
+    public function get_trn_statuses ( $request ) {
         global $wpdb;
 
         $statuses = $wpdb->get_results( "SELECT id, type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A );
+        array_unshift( $statuses, [ 'id' => '0', 'type_name' => 'all', 'name' => 'All', 'slug' => 'all' ] );
 
         $response = rest_ensure_response( $statuses );
 
@@ -274,26 +265,26 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_sales( $request ) {
+    public function get_sales ( $request ) {
         $args = [
-            'number' => empty( $request['per_page'] ) ? 20 : $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'number'     => empty( $request['per_page'] ) ? 20 : $request['per_page'],
+            'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'],
-            'status' => empty( $request['status'] ) ? '' : $request['status']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'status'     => empty( $request['status'] ) ? '' : $request['status']
         ];
 
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
         $transactions = erp_acct_get_sales_transactions( $args );
-        $total_items = erp_acct_get_sales_transactions( [ 'count' => true, 'number' => -1 ] );
+        $total_items  = erp_acct_get_sales_transactions( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $transactions as $transaction ) {
-            $data = $this->prepare_item_for_response( $transaction, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $transaction, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -308,13 +299,13 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart status
      */
-    public function get_sales_chart_status( $request ) {
+    public function get_sales_chart_status ( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
-        $chart_status = erp_acct_get_sales_chart_status($args);
+        $chart_status = erp_acct_get_sales_chart_status( $args );
 
         $response = rest_ensure_response( $chart_status );
 
@@ -326,13 +317,13 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart payment
      */
-    public function get_sales_chart_payment( $request ) {
+    public function get_sales_chart_payment ( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
-        $chart_payment = erp_acct_get_sales_chart_payment($args);
+        $chart_payment = erp_acct_get_sales_chart_payment( $args );
 
         $response = rest_ensure_response( $chart_payment );
 
@@ -348,7 +339,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_income_expense_overview( $request ){
+    public function get_income_expense_overview ( $request ) {
 
         $data = erp_acct_get_income_expense_chart_data();
 
@@ -366,14 +357,14 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_expense_chart_data( $request ) {
+    public function get_expense_chart_data ( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
-        $bill_payment = erp_acct_get_bill_chart_data($args);
-        $expense_payment = erp_acct_get_expense_chart_data($args);
+        $bill_payment    = erp_acct_get_bill_chart_data( $args );
+        $expense_payment = erp_acct_get_expense_chart_data( $args );
 
         $chart_payment['paid'] = $bill_payment['paid'] + $expense_payment['paid'];;
         $chart_payment['payable'] = $bill_payment['payable'] + $expense_payment['payable'];;
@@ -392,14 +383,14 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_expense_chart_status( $request ) {
+    public function get_expense_chart_status ( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
-        $chart_statuses = erp_acct_get_bill_chart_status($args);
-        $expense_status = erp_acct_get_expense_chart_status($args);
+        $chart_statuses = erp_acct_get_bill_chart_status( $args );
+        $expense_status = erp_acct_get_expense_chart_status( $args );
 
         foreach ( $chart_statuses as $bill_status ) {
             if ( $bill_status['type_name'] == $expense_status['type_name'] ) {
@@ -424,16 +415,16 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_expenses( $request ) {
+    public function get_expenses ( $request ) {
         $args = [
-            'number' => empty( $request['per_page'] ) ? 20 : $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'number'     => empty( $request['per_page'] ) ? 20 : $request['per_page'],
+            'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'],
-            'status' => empty( $request['status'] ) ? '' : $request['status']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'status'     => empty( $request['status'] ) ? '' : $request['status']
         ];
 
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
@@ -443,7 +434,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $total_items  = erp_acct_get_expense_transactions( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $transactions as $transaction ) {
-            $data = $this->prepare_item_for_response( $transaction, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $transaction, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -462,13 +453,13 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_purchase_chart_data( $request ) {
+    public function get_purchase_chart_data ( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
-        $chart_payment = erp_acct_get_purchase_chart_data($args);
+        $chart_payment = erp_acct_get_purchase_chart_data( $args );
 
         $response = rest_ensure_response( $chart_payment );
 
@@ -484,13 +475,13 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_purchase_chart_status( $request ) {
+    public function get_purchase_chart_status ( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
-        $chart_status = erp_acct_get_purchase_chart_status($args);
+        $chart_status = erp_acct_get_purchase_chart_status( $args );
 
         $response = rest_ensure_response( $chart_status );
 
@@ -506,26 +497,26 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_purchases( $request ) {
+    public function get_purchases ( $request ) {
         $args = [
-            'number' => empty( $request['per_page'] ) ? 20 : $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'number'     => empty( $request['per_page'] ) ? 20 : $request['per_page'],
+            'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'],
-            'status' => empty( $request['status'] ) ? '' : $request['status']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
+            'status'     => empty( $request['status'] ) ? '' : $request['status']
         ];
 
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
         $transactions = erp_acct_get_purchase_transactions( $args );
-        $total_items = erp_acct_get_purchase_transactions( [ 'count' => true, 'number' => -1 ] );
+        $total_items  = erp_acct_get_purchase_transactions( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $transactions as $transaction ) {
-            $data = $this->prepare_item_for_response( $transaction, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $transaction, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -543,7 +534,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_payment_methods() {
+    public function get_payment_methods () {
         global $wpdb;
 
         $sql = "SELECT id, name
@@ -554,7 +545,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $row;
     }
 
-    public function get_voucher_type( $request ) {
+    public function get_voucher_type ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -578,22 +569,34 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
 
-        if ( !empty( $item['inv_status'] ) ) {
+        if ( ! empty( $item['inv_status'] ) ) {
             $status = $item['inv_status'];
-        } else if ( !empty( $item['pay_status'] ) ) {
-            $status = $item['pay_status'];
-        } else if ( !empty( $item['bill_status'] ) ) {
-            $status = $item['bill_status'];
-        } else if ( !empty( $item['pay_bill_status'] ) ) {
-            $status = $item['pay_bill_status'];
-        } else if ( !empty( $item['expense_status'] ) ) {
-            $status = $item['expense_status'];
-        } else if ( !empty( $item['purchase_status'] ) ) {
-            $status = $item['purchase_status'];
-        } else if ( !empty( $item['pay_purchase_status'] ) ) {
-            $status = $item['pay_purchase_status'];
+        } else {
+            if ( ! empty( $item['pay_status'] ) ) {
+                $status = $item['pay_status'];
+            } else {
+                if ( ! empty( $item['bill_status'] ) ) {
+                    $status = $item['bill_status'];
+                } else {
+                    if ( ! empty( $item['pay_bill_status'] ) ) {
+                        $status = $item['pay_bill_status'];
+                    } else {
+                        if ( ! empty( $item['expense_status'] ) ) {
+                            $status = $item['expense_status'];
+                        } else {
+                            if ( ! empty( $item['purchase_status'] ) ) {
+                                $status = $item['purchase_status'];
+                            } else {
+                                if ( ! empty( $item['pay_purchase_status'] ) ) {
+                                    $status = $item['pay_purchase_status'];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         $item['status'] = erp_acct_get_trn_status_by_id( $status );
@@ -614,7 +617,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $request
      * @return array|mixed|object
      */
-    public function send_as_pdf( $request ) {
+    public function send_as_pdf ( $request ) {
 
         $id = (int) $request['id'];
 
@@ -623,12 +626,12 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $response = array(
-            'status' => 304,
+            'status'  => 304,
             'message' => 'There was an error sending mail!'
         );
 
         if ( erp_acct_send_email_with_pdf_attached( $request, 'F' ) ) {
-            $response['status'] = 200;
+            $response['status']  = 200;
             $response['message'] = 'mail Sent successfully.';
         }
 
@@ -638,20 +641,20 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart transaction data of a people
      */
-    public function get_people_trn_amount_data( $request ) {
+    public function get_people_trn_amount_data ( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
         $args['people_id'] = $request['id'];
 
-        $bill_payment = erp_acct_get_bill_chart_data( $args );
-        $expense_payment = erp_acct_get_expense_chart_data( $args );
-        $sales_payment = erp_acct_get_sales_chart_payment( $args );
+        $bill_payment     = erp_acct_get_bill_chart_data( $args );
+        $expense_payment  = erp_acct_get_expense_chart_data( $args );
+        $sales_payment    = erp_acct_get_sales_chart_payment( $args );
         $purchase_payment = erp_acct_get_purchase_chart_data( $args );
 
-        $chart_payment['paid'] = $bill_payment['paid'] + $expense_payment['paid'] + $sales_payment['received'] + $purchase_payment['paid'];
+        $chart_payment['paid']    = $bill_payment['paid'] + $expense_payment['paid'] + $sales_payment['received'] + $purchase_payment['paid'];
         $chart_payment['payable'] = $bill_payment['payable'] + $expense_payment['payable'] + $sales_payment['outstanding'] + $purchase_payment['payable'];
 
         $response = rest_ensure_response( $chart_payment );
@@ -664,32 +667,32 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart transaction status/s of a people
      */
-    public function get_people_trn_status_data( $request ) {
+    public function get_people_trn_status_data ( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
         $args['people_id'] = $request['id'];
 
-        $chart_statuses = erp_acct_get_bill_chart_status( $args );
-        $expense_status = erp_acct_get_expense_chart_status( $args );
-        $sales_statuses = erp_acct_get_sales_chart_status( $args );
+        $chart_statuses    = erp_acct_get_bill_chart_status( $args );
+        $expense_status    = erp_acct_get_expense_chart_status( $args );
+        $sales_statuses    = erp_acct_get_sales_chart_status( $args );
         $purchase_statuses = erp_acct_get_purchase_chart_status( $args );
 
-        for ( $i = 0; $i < count ( $chart_statuses );  $i++ ) {
-            $chart_statuses[$i]['sub_total'] = (int) $chart_statuses[$i]['sub_total'];
+        for ( $i = 0; $i < count( $chart_statuses ); $i++ ) {
+            $chart_statuses[ $i ]['sub_total'] = (int) $chart_statuses[ $i ]['sub_total'];
         }
 
-        for ( $i = 0; $i < count ( $sales_statuses );  $i++ ) {
-            $sales_statuses[$i]['sub_total'] = (int) $sales_statuses[$i]['sub_total'];
+        for ( $i = 0; $i < count( $sales_statuses ); $i++ ) {
+            $sales_statuses[ $i ]['sub_total'] = (int) $sales_statuses[ $i ]['sub_total'];
         }
 
-        for ( $i = 0; $i < count ( $purchase_statuses );  $i++ ) {
-            $purchase_statuses[$i]['sub_total'] = (int) $purchase_statuses[$i]['sub_total'];
+        for ( $i = 0; $i < count( $purchase_statuses ); $i++ ) {
+            $purchase_statuses[ $i ]['sub_total'] = (int) $purchase_statuses[ $i ]['sub_total'];
         }
 
-        if ( !empty( $expense_status ) ) {
+        if ( ! empty( $expense_status ) ) {
             $expense_status['sub_total'] = (int) $expense_status['sub_total'];
             array_push( $chart_statuses, $expense_status );
         }
@@ -700,23 +703,23 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $len = count( $chart_statuses );
         for ( $i = 0; $i < $len; $i++ ) {
             $k = 0;
-            if ( is_null( $chart_statuses[$i] ) ) {
+            if ( is_null( $chart_statuses[ $i ] ) ) {
                 continue;
             }
             for ( $j = $i + 1; $j < $len; $j++ ) {
-                if ( is_null( $chart_statuses[$j] ) ) {
+                if ( is_null( $chart_statuses[ $j ] ) ) {
                     continue;
                 }
-                if ( $chart_statuses[$i]['type_name'] == $chart_statuses[$j]['type_name'] ) {
-                    $chart_statuses[$i]['sub_total'] += $chart_statuses[$j]['sub_total'];
-                    $statuses[$k]['type_name'] = $chart_statuses[$i]['type_name'];
-                    $statuses[$k]['sub_total'] = $chart_statuses[$i]['sub_total'];
+                if ( $chart_statuses[ $i ]['type_name'] == $chart_statuses[ $j ]['type_name'] ) {
+                    $chart_statuses[ $i ]['sub_total'] += $chart_statuses[ $j ]['sub_total'];
+                    $statuses[ $k ]['type_name']       = $chart_statuses[ $i ]['type_name'];
+                    $statuses[ $k ]['sub_total']       = $chart_statuses[ $i ]['sub_total'];
                     $k++;
-                    $chart_statuses[$j] = null;
+                    $chart_statuses[ $j ] = null;
                 }
             }
-            $statuses[$k]['type_name'] = $chart_statuses[$i]['type_name'];
-            $statuses[$k]['sub_total'] = $chart_statuses[$i]['sub_total'];
+            $statuses[ $k ]['type_name'] = $chart_statuses[ $i ]['type_name'];
+            $statuses[ $k ]['sub_total'] = $chart_statuses[ $i ]['sub_total'];
             $k++;
         }
 

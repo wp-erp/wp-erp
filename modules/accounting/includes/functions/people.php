@@ -12,17 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return int
  */
-function erp_acct_add_employee_as_people( $id = null, $data ) {
+function erp_acct_add_employee_as_people ( $id = null, $data ) {
     global $wpdb;
 
-    $update = false; $people_id = 0;
+    $update    = false;
+    $people_id = 0;
 
-    if ( !empty( $id ) ) {
+    if ( ! empty( $id ) ) {
         $data['user_id'] = $id;
     }
 
     if ( isset( $data['id'] ) ) {
-        $update = true;
+        $update    = true;
         $people_id = $data['id'];
     }
 
@@ -51,7 +52,7 @@ function erp_acct_add_employee_as_people( $id = null, $data ) {
             'contact_owner' => '',
             'hash'          => '',
             'created_by'    => get_current_user_id(),
-            'created'         => '',
+            'created'       => '',
         ), array(
             'id' => $data['id']
         ) );
@@ -79,7 +80,7 @@ function erp_acct_add_employee_as_people( $id = null, $data ) {
             'contact_owner' => '',
             'hash'          => '',
             'created_by'    => get_current_user_id(),
-            'created'         => '',
+            'created'       => '',
         ) );
 
         $people_id = $wpdb->insert_id;
@@ -104,14 +105,14 @@ function erp_acct_add_employee_as_people( $id = null, $data ) {
 /**
  * Get transaction by date
  *
- * @param  integer $people_id
- * @param  array  $args
+ * @param integer $people_id
+ * @param array $args
  * @return array
  */
-function erp_people_filter_transaction( $people_id, $args = [] ) {
+function erp_people_filter_transaction ( $people_id, $args = [] ) {
     global $wpdb;
     $start_date = isset( $args['start_date'] ) ? $args['start_date'] : '';
-    $end_date = isset( $args['end_date'] ) ? $args['start_date'] : '';
+    $end_date   = isset( $args['end_date'] ) ? $args['start_date'] : '';
 
     $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_people_account_details WHERE trn_date >= '{$start_date}' AND trn_date <= '{$end_date}' AND people_id = {$people_id}", ARRAY_A );
     return $rows;
@@ -123,11 +124,11 @@ function erp_people_filter_transaction( $people_id, $args = [] ) {
  * @param $people_id
  * @return mixed
  */
-function erp_acct_get_people_address( $people_id ) {
+function erp_acct_get_people_address ( $people_id ) {
     global $wpdb;
     $row = [];
 
-    $sql = $wpdb->prepare("SELECT
+    $sql = $wpdb->prepare( "SELECT
 
         street_1,
         street_2,
@@ -137,7 +138,7 @@ function erp_acct_get_people_address( $people_id ) {
         country
 
     FROM {$wpdb->prefix}erp_peoples
-    WHERE id = %d", $people_id);
+    WHERE id = %d", $people_id );
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -147,14 +148,14 @@ function erp_acct_get_people_address( $people_id ) {
 /**
  * Format people address
  */
-function erp_acct_format_people_address( $address = [] ) {
+function erp_acct_format_people_address ( $address = [] ) {
     $add = '';
 
-    $keys = array_keys( $address );
+    $keys   = array_keys( $address );
     $values = array_values( $address );
 
     for ( $idx = 0; $idx < count( $address ); $idx++ ) {
-        $add .= $keys[$idx] . ': ' . $values[$idx] . '; ';
+        $add .= $keys[ $idx ] . ': ' . $values[ $idx ] . '; ';
     }
 
     return $add;
@@ -166,15 +167,15 @@ function erp_acct_format_people_address( $address = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_people_transactions( $args = [] ) {
+function erp_acct_get_people_transactions ( $args = [] ) {
     global $wpdb;
 
     $defaults = [
-        'number'      => 20,
-        'offset'      => 0,
-        'order'       => 'ASC',
-        'count'       => false,
-        's'           => '',
+        'number' => 20,
+        'offset' => 0,
+        'order'  => 'ASC',
+        'count'  => false,
+        's'      => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -189,12 +190,12 @@ function erp_acct_get_people_transactions( $args = [] ) {
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     } else {
-        $args['start_date'] = date('Y-m-d', strtotime('first day of this month') );
-        $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
-        $where .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of this month' ) );
+        $args['end_date']   = date( 'Y-m-d', strtotime( 'last day of this month' ) );
+        $where              .= " AND people.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
     if ( empty( $args['end_date'] ) ) {
-        $args['end_date'] = date('Y-m-d', strtotime('last day of this month') );
+        $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
@@ -221,45 +222,45 @@ function erp_acct_get_people_transactions( $args = [] ) {
         {$where} ORDER BY people.trn_date {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
-        $wpdb->get_results($sql);
+        $wpdb->get_results( $sql );
         return $wpdb->num_rows;
     }
 
-    $results =  $wpdb->get_results( $sql, ARRAY_A );
+    $results = $wpdb->get_results( $sql, ARRAY_A );
 
-    $total = $o_balance = erp_acct_get_people_opening_balance( $args );
+    $total    = $o_balance = erp_acct_get_people_opening_balance( $args );
     $dr_total = $cr_total = 0;
     if ( $o_balance > 0 ) {
-        $dr_total = (float)$o_balance;
-        $temp = $o_balance . ' Dr';
+        $dr_total = (float) $o_balance;
+        $temp     = $o_balance . ' Dr';
     } else {
-        $cr_total = (float)$o_balance;
-        $temp = $o_balance . ' Cr';
+        $cr_total = (float) $o_balance;
+        $temp     = $o_balance . ' Cr';
     }
 
     array_unshift( $results, [
-        "voucher_no" => null,
+        "voucher_no"  => null,
         "particulars" => "Opening Balance",
-        "people_id" => null,
-        "trn_no" => null,
-        "trn_date" => null,
-        "created_at" => null,
-        "debit" => null,
-        "credit" => null,
-        "balance" => $o_balance
-    ]);
+        "people_id"   => null,
+        "trn_no"      => null,
+        "trn_date"    => null,
+        "created_at"  => null,
+        "debit"       => null,
+        "credit"      => null,
+        "balance"     => $o_balance
+    ] );
 
-    for ( $idx = 0; $idx < count( $results ) ; $idx++) {
+    for ( $idx = 0; $idx < count( $results ); $idx++ ) {
         if ( $idx == 0 ) {
             continue;
         }
-        $dr_total += (float)$results[$idx]['debit'];
-        $cr_total += (float)$results[$idx]['credit'];
-        $balance = (float)$results[$idx-1]['balance'] + (float)$results[$idx]['debit'] - (float)$results[$idx]['credit'] ;
-        if ( $balance >= 0) {
-            $results[$idx]['balance'] = (float) $balance . ' Dr';
+        $dr_total += (float) $results[ $idx ]['debit'];
+        $cr_total += (float) $results[ $idx ]['credit'];
+        $balance  = (float) $results[ $idx - 1 ]['balance'] + (float) $results[ $idx ]['debit'] - (float) $results[ $idx ]['credit'];
+        if ( $balance >= 0 ) {
+            $results[ $idx ]['balance'] = (float) $balance . ' Dr';
         } else {
-            $results[$idx]['balance'] = (float) $balance . ' Cr';
+            $results[ $idx ]['balance'] = (float) $balance . ' Cr';
         }
         $total = $balance;
     }
@@ -267,16 +268,16 @@ function erp_acct_get_people_transactions( $args = [] ) {
     $results[0]['balance'] = $temp;
 
     array_push( $results, [
-        "voucher_no" => null,
+        "voucher_no"  => null,
         "particulars" => 'Total',
-        "people_id" => null,
-        "trn_no" => null,
-        "trn_date" => null,
-        "created_at" => null,
-        "debit" => $dr_total,
-        "credit" => $cr_total,
-        "balance" => null
-    ]);
+        "people_id"   => null,
+        "trn_no"      => null,
+        "trn_date"    => null,
+        "created_at"  => null,
+        "debit"       => $dr_total,
+        "credit"      => $cr_total,
+        "balance"     => null
+    ] );
 
     return $results;
 }
@@ -288,15 +289,15 @@ function erp_acct_get_people_transactions( $args = [] ) {
  *
  * @return mixed
  */
-function erp_acct_get_people_opening_balance( $args = [] ) {
+function erp_acct_get_people_opening_balance ( $args = [] ) {
     global $wpdb;
 
     $defaults = [
-        'number'      => 20,
-        'offset'      => 0,
-        'order'       => 'ASC',
-        'count'       => false,
-        's'           => '',
+        'number' => 20,
+        'offset' => 0,
+        'order'  => 'ASC',
+        'count'  => false,
+        's'      => '',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -309,13 +310,13 @@ function erp_acct_get_people_opening_balance( $args = [] ) {
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND trn_date < '{$args['start_date']}'";
     } else {
-        $args['start_date'] = date('Y-m-d', strtotime('first day of january this year') );
-        $where .= " AND trn_date < '{$args['start_date']}'";
+        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of january this year' ) );
+        $where              .= " AND trn_date < '{$args['start_date']}'";
     }
 
     $sql = "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_people_account_details {$where}";
 
-    $result =  $wpdb->get_row( $sql, ARRAY_A );
+    $result = $wpdb->get_row( $sql, ARRAY_A );
 
     return isset( $result['opening_balance'] ) ? $result['opening_balance'] : 0;
 }
@@ -326,7 +327,7 @@ function erp_acct_get_people_opening_balance( $args = [] ) {
  * @param $people_id
  * @return mixed
  */
-function erp_acct_get_people_type_by_id( $people_id ) {
+function erp_acct_get_people_type_by_id ( $people_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT people_types_id FROM {$wpdb->prefix}erp_people_type_relations WHERE people_id = {$people_id} LIMIT 1" );
@@ -340,7 +341,7 @@ function erp_acct_get_people_type_by_id( $people_id ) {
  * @param $type_id
  * @return mixed
  */
-function erp_acct_get_people_type_by_type_id( $type_id ) {
+function erp_acct_get_people_type_by_type_id ( $type_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_people_types WHERE id = {$type_id} LIMIT 1" );
@@ -353,7 +354,7 @@ function erp_acct_get_people_type_by_type_id( $type_id ) {
  *
  * @return mixed
  */
-function erp_acct_get_people_id_by_user_id( $user_id ) {
+function erp_acct_get_people_id_by_user_id ( $user_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE user_id = {$user_id} LIMIT 1" );
@@ -366,7 +367,7 @@ function erp_acct_get_people_id_by_user_id( $user_id ) {
  *
  * @return mixed
  */
-function erp_acct_get_people_name_by_people_id( $people_id ) {
+function erp_acct_get_people_name_by_people_id ( $people_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT first_name, last_name FROM {$wpdb->prefix}erp_peoples WHERE id = {$people_id} LIMIT 1" );

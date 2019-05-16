@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -27,7 +28,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -94,13 +95,13 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_payments( $request ) {
+    public function get_payments ( $request ) {
         $args = [
             'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
@@ -118,7 +119,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                 }
             }
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -137,7 +138,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_payment( $request ) {
+    public function get_payment ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -164,14 +165,15 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_payment( $request ) {
+    public function create_payment ( $request ) {
         $additional_fields = [];
-        $payment_data = $this->prepare_item_for_database( $request );
+        $payment_data      = $this->prepare_item_for_database( $request );
 
-        $items = $request['line_items']; $item_total = [];
+        $items      = $request['line_items'];
+        $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['line_total'];
+            $item_total[ $key ] = $item['line_total'];
         }
 
         $payment_data['amount'] = array_sum( $item_total );
@@ -198,7 +200,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_payment( $request ) {
+    public function update_payment ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -207,17 +209,18 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $payment_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['line_items']; $item_total = [];
+        $items      = $request['line_items'];
+        $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['line_total'];
+            $item_total[ $key ] = $item['line_total'];
         }
 
         $payment_data['amount'] = array_sum( $item_total );
 
         $payment_data = erp_acct_update_payment( $payment_data, $id );
 
-        $additional_fields = [];
+        $additional_fields              = [];
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
@@ -238,7 +241,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_payment( $request ) {
+    public function delete_payment ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -257,7 +260,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function void_payment( $request ) {
+    public function void_payment ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -275,8 +278,8 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log( $data, $action ) {
-        erp_log()->add([
+    public function add_log ( $data, $action ) {
+        erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Pay Bill', 'erp' ),
             'old_value'     => '',
@@ -285,7 +288,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 
-        ]);
+        ] );
     }
 
     /**
@@ -295,7 +298,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database ( $request ) {
 
         $prepared_item = [];
 
@@ -306,7 +309,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['customer_id'] = $request['customer_id'];
         }
         if ( isset( $request['trn_date'] ) ) {
-            $prepared_item['trn_date'] = $request['trn_date'] ;
+            $prepared_item['trn_date'] = $request['trn_date'];
         }
         if ( isset( $request['line_items'] ) ) {
             $prepared_item['line_items'] = $request['line_items'];
@@ -366,21 +369,21 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
-            'id'              => (int) $item->id,
-            'voucher_no'      => (int) $item->voucher_no,
-            'customer_id'     => (int) $item->customer_id,
-            'customer_name'   => $item->customer_name,
-            'trn_date'        => $item->trn_date,
-            'amount'          => $item->amount,
-            'account'         => erp_acct_get_ledger_name_by_id( $item->trn_by_ledger_id ),
-            'line_items'      => $item->line_items,
-            'attachments'     => maybe_unserialize( $item->attachments ),
-            'status'          => erp_acct_get_trn_status_by_id( $item->status ),
-            'type'            => !empty( $item->type ) ? $item->type : 'payment',
+            'id'            => (int) $item->id,
+            'voucher_no'    => (int) $item->voucher_no,
+            'customer_id'   => (int) $item->customer_id,
+            'customer_name' => $item->customer_name,
+            'trn_date'      => $item->trn_date,
+            'amount'        => $item->amount,
+            'account'       => erp_acct_get_ledger_name_by_id( $item->trn_by_ledger_id ),
+            'line_items'    => $item->line_items,
+            'attachments'   => maybe_unserialize( $item->attachments ),
+            'status'        => erp_acct_get_trn_status_by_id( $item->status ),
+            'type'          => ! empty( $item->type ) ? $item->type : 'payment',
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -398,19 +401,19 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'payment',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'              => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'voucher_no'  => [
+                'voucher_no'      => [
                     'description' => __( 'Voucher no. for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -418,7 +421,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'customer_id'   => [
+                'customer_id'     => [
                     'description' => __( 'Vendor id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -427,7 +430,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'trn_date'       => [
+                'trn_date'        => [
                     'description' => __( 'Date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -441,22 +444,22 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'type'        => 'object',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'city'       => [
+                        'city'        => [
                             'description' => __( 'City name.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'state'      => [
+                        'state'       => [
                             'description' => __( 'ISO code or name of the state, province or district.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'postal_code'   => [
+                        'postal_code' => [
                             'description' => __( 'Postal code.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'country'    => [
+                        'country'     => [
                             'description' => __( 'ISO code of the country.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
@@ -468,34 +471,34 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                         ],
                     ],
                 ],
-                'line_items' => [
+                'line_items'      => [
                     'description' => __( 'List of line items data.', 'erp' ),
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'invoice_no'       => [
+                        'invoice_no' => [
                             'description' => __( 'Invoice no.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'amount'      => [
+                        'amount'     => [
                             'description' => __( 'Invoice amount.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'due'   => [
+                        'due'        => [
                             'description' => __( 'Invoice due.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'line_total'    => [
+                        'line_total' => [
                             'description' => __( 'Total.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ]
                     ],
                 ],
-                'check_no'   => [
+                'check_no'        => [
                     'description' => __( 'Check no for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -503,7 +506,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'name'   => [
+                'name'            => [
                     'description' => __( 'Check name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -511,7 +514,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'type'       => [
+                'type'            => [
                     'description' => __( 'Type for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -519,7 +522,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'status'       => [
+                'status'          => [
                     'description' => __( 'Status for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
