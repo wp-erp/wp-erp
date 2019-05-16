@@ -16,6 +16,9 @@
             </a>
 
         </form>
+        <div>
+            Balance showing from <em>{{ start_date }}</em> to <em>{{ end_date }}</em>
+        </div>
 
          <list-table
             tableClass="wperp-table table-striped table-dark widefat income-statement income-balance-report"
@@ -24,7 +27,7 @@
             :showItemNumbers="false"
             :showCb="false">
             <template slot="amount" slot-scope="data">
-                {{ getCurrencySign() + Math.abs(data.row.credit) }}
+                {{ getCurrencySign() + Math.abs(data.row.balance) }}
             </template>
             <template slot="tfoot">
                 <tr class="t-foot">
@@ -41,7 +44,7 @@
             :showItemNumbers="false"
             :showCb="false">
             <template slot="amount" slot-scope="data">
-                {{ getCurrencySign() + Math.abs(data.row.debit) }}
+                {{ getCurrencySign() + Math.abs(data.row.balance) }}
             </template>
             <template slot="tfoot">
                 <tr class="t-foot">
@@ -52,11 +55,11 @@
         </list-table>
 
         <table class="wperp-table table-striped table-dark widefat income-statement-balance income-balance-report">
-            <template v-if="balance >= 0">
+            <template v-if="profit">
                 <tbody class="wperp-col-sm-12">
                 <tr>
                     <td><strong>Profit</strong></td>
-                    <td>{{ getCurrencySign() + Math.abs(balance) }}</td>
+                    <td>{{ getCurrencySign() + profit }}</td>
                     <td></td>
                 </tr>
                 </tbody>
@@ -65,7 +68,7 @@
                 <tbody class="wperp-col-sm-12">
                     <tr>
                         <td><strong>Loss</strong></td>
-                        <td>{{ getCurrencySign() + Math.abs(balance) }}</td>
+                        <td>{{ getCurrencySign() + loss }}</td>
                         <td></td>
                     </tr>
                 </tbody>
@@ -111,7 +114,8 @@
                 rows2: [],
                 income: 0,
                 expense: 0,
-                balance: 0
+                profit: null,
+                loss: null
             }
         },
 
@@ -140,9 +144,10 @@
                 }).then(response => {
                     this.rows1   = response.data.rows1;
                     this.rows2   = response.data.rows2;
-                    this.income  = response.data.total_credit;
-                    this.expense = response.data.total_debit;
-                    this.balance = this.income - this.expense;
+                    this.income  = response.data.income;
+                    this.expense = response.data.expense;
+                    this.profit  = response.data.profit;
+                    this.loss    = response.data.loss;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {

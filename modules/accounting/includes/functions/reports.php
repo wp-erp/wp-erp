@@ -300,6 +300,7 @@ function erp_acct_get_income_statement ( $args ) {
     $sql1 = "SELECT
         ledger.name,
         SUM(ledger_detail.credit) as credit,
+        SUM(ledger_detail.debit) as debit,
         SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=4 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
@@ -308,6 +309,7 @@ function erp_acct_get_income_statement ( $args ) {
     $sql2 = "SELECT
         ledger.name,
         SUM(ledger_detail.debit) as debit,
+        SUM(ledger_detail.credit) as credit,
         SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=5 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
@@ -318,36 +320,40 @@ function erp_acct_get_income_statement ( $args ) {
     $results['rows2'] = $wpdb->get_results( $sql2, ARRAY_A );
 
     // Totals are inside the root `result` array
-    $results['total_debit']  = 0;
-    $results['total_credit'] = 0;
+    $results['total_debit1']  = 0;
+    $results['total_credit1'] = 0;
+    $results['total_debit2']  = 0;
+    $results['total_credit2'] = 0;
+    $results['income'] = 0;
+    $results['expense'] = 0;
 
     // Add-up all debit and credit
     foreach ( $results['rows1'] as $result ) {
-        $results['total_credit'] += (float) $result['credit'];
+        $results['total_debit1']  += (float) $result['debit'];
+        $results['total_credit1'] += (float) $result['credit'];
     }
+    $results['income'] =  abs( $results['total_debit1'] - $results['total_credit1'] );
+
     foreach ( $results['rows2'] as $result ) {
-        $results['total_debit'] += (float) $result['debit'];
+        $results['total_debit2'] += (float) $result['debit'];
+        $results['total_credit2'] += (float) $result['credit'];
     }
+    $results['expense'] =  abs( $results['total_debit2'] - $results['total_credit2'] );
+
+    $results['total_debit'] = $results['total_debit1'] + $results['total_debit2'];
+    $results['total_credit'] = $results['total_credit1'] + $results['total_credit2'];
 
     $dr_cr_diff = $results['total_debit'] - $results['total_credit'];
 
-    if ( abs( $results['total_debit'] ) <= abs( $results['total_credit'] ) ) {
-        if ( $dr_cr_diff < 0 ) {
-            $dr_cr_diff = -$dr_cr_diff;
-        }
-        $results['profit']      = $dr_cr_diff;
-        $results['raw_balance'] = $dr_cr_diff;
+    if ( $results['income'] >= abs( $results['expense'] ) ) {
+        $results['profit']      = $results['income'] - $results['expense'];
+        $results['raw_balance'] = $results['profit'];
     } else {
-        if ( $dr_cr_diff > 0 ) {
-            $balance = -$dr_cr_diff;
-        } else {
-            $balance = -$dr_cr_diff;
-        }
-        $results['loss']        = $balance;
-        $results['raw_balance'] = $balance;
+        $results['loss']        = $results['income'] - $results['expense'];
+        $results['raw_balance'] = $results['loss'];
     }
 
-    $results['balance'] = $dr_cr_diff;
+    $results['balance'] = isset( $results['profit'] ) ?  $results['profit'] : $results['loss'];
 
     return $results;
 }

@@ -27484,6 +27484,9 @@ setTimeout(function () {
 //
 //
 //
+//
+//
+//
 
 
 
@@ -27522,7 +27525,8 @@ setTimeout(function () {
       rows2: [],
       income: 0,
       expense: 0,
-      balance: 0
+      profit: null,
+      loss: null
     };
   },
   created: function created() {
@@ -27549,9 +27553,10 @@ setTimeout(function () {
       }).then(function (response) {
         _this.rows1 = response.data.rows1;
         _this.rows2 = response.data.rows2;
-        _this.income = response.data.total_credit;
-        _this.expense = response.data.total_debit;
-        _this.balance = _this.income - _this.expense;
+        _this.income = response.data.income;
+        _this.expense = response.data.expense;
+        _this.profit = response.data.profit;
+        _this.loss = response.data.loss;
 
         _this.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
@@ -60831,6 +60836,13 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
+      _c("div", [
+        _vm._v("\n        Balance showing from "),
+        _c("em", [_vm._v(_vm._s(_vm.start_date))]),
+        _vm._v(" to "),
+        _c("em", [_vm._v(_vm._s(_vm.end_date))])
+      ]),
+      _vm._v(" "),
       _c(
         "list-table",
         {
@@ -60850,7 +60862,7 @@ var render = function() {
                   _vm._v(
                     "\n            " +
                       _vm._s(
-                        _vm.getCurrencySign() + Math.abs(data.row.credit)
+                        _vm.getCurrencySign() + Math.abs(data.row.balance)
                       ) +
                       "\n        "
                   )
@@ -60890,7 +60902,9 @@ var render = function() {
                 return [
                   _vm._v(
                     "\n            " +
-                      _vm._s(_vm.getCurrencySign() + Math.abs(data.row.debit)) +
+                      _vm._s(
+                        _vm.getCurrencySign() + Math.abs(data.row.balance)
+                      ) +
                       "\n        "
                   )
                 ]
@@ -60918,16 +60932,14 @@ var render = function() {
             "wperp-table table-striped table-dark widefat income-statement-balance income-balance-report"
         },
         [
-          _vm.balance >= 0
+          _vm.profit
             ? [
                 _c("tbody", { staticClass: "wperp-col-sm-12" }, [
                   _c("tr", [
                     _vm._m(0),
                     _vm._v(" "),
                     _c("td", [
-                      _vm._v(
-                        _vm._s(_vm.getCurrencySign() + Math.abs(_vm.balance))
-                      )
+                      _vm._v(_vm._s(_vm.getCurrencySign() + _vm.profit))
                     ]),
                     _vm._v(" "),
                     _c("td")
@@ -60940,9 +60952,7 @@ var render = function() {
                     _vm._m(1),
                     _vm._v(" "),
                     _c("td", [
-                      _vm._v(
-                        _vm._s(_vm.getCurrencySign() + Math.abs(_vm.balance))
-                      )
+                      _vm._v(_vm._s(_vm.getCurrencySign() + _vm.loss))
                     ]),
                     _vm._v(" "),
                     _c("td")
