@@ -24,7 +24,7 @@
             :showItemNumbers="false"
             :showCb="false">
             <template slot="amount" slot-scope="data">
-                {{ getCurrencySign() + Math.abs(data.row.credit) }}
+                {{ getCurrencySign() + Math.abs(data.row.balance) }}
             </template>
             <template slot="tfoot">
                 <tr class="t-foot">
@@ -41,7 +41,7 @@
             :showItemNumbers="false"
             :showCb="false">
             <template slot="amount" slot-scope="data">
-                {{ getCurrencySign() + Math.abs(data.row.debit) }}
+                {{ getCurrencySign() + Math.abs(data.row.balance) }}
             </template>
             <template slot="tfoot">
                 <tr class="t-foot">
