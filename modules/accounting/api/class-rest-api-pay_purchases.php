@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -27,7 +28,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -94,20 +95,20 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_pay_purchases( $request ) {
+    public function get_pay_purchases ( $request ) {
         $args = [
             'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $pay_purchase_data  = erp_acct_get_pay_purchases( $args );
-        $total_items = erp_acct_get_pay_purchases( [ 'count' => true, 'number' => -1 ] );
+        $pay_purchase_data = erp_acct_get_pay_purchases( $args );
+        $total_items       = erp_acct_get_pay_purchases( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $pay_purchase_data as $item ) {
             if ( isset( $request['include'] ) ) {
@@ -118,7 +119,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 }
             }
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -137,7 +138,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_pay_purchase( $request ) {
+    public function get_pay_purchase ( $request ) {
 
         $id = (int) $request['id'];
 
@@ -150,7 +151,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $item = $this->prepare_item_for_response( $item, $request, $additional_fields );
 
         $response = rest_ensure_response( $item );
 
@@ -166,14 +167,15 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_pay_purchase( $request ) {
+    public function create_pay_purchase ( $request ) {
         $additional_fields = [];
         $pay_purchase_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['purchase_details']; $item_total = [];
+        $items      = $request['purchase_details'];
+        $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['line_total'];
+            $item_total[ $key ] = $item['line_total'];
         }
 
         $pay_purchase_data['amount'] = array_sum( $item_total );
@@ -201,7 +203,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_pay_purchase( $request ) {
+    public function update_pay_purchase ( $request ) {
 
         $id = (int) $request['id'];
 
@@ -211,10 +213,11 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $pay_purchase_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['purchase_details']; $item_total = [];
+        $items      = $request['purchase_details'];
+        $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['line_total'];
+            $item_total[ $key ] = $item['line_total'];
         }
 
         $pay_purchase_data['amount'] = array_sum( $item_total );
@@ -234,7 +237,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_pay_purchase( $request ) {
+    public function delete_pay_purchase ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -253,7 +256,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function void_pay_purchase( $request ) {
+    public function void_pay_purchase ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -271,8 +274,8 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log( $data, $action ) {
-        erp_log()->add([
+    public function add_log ( $data, $action ) {
+        erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Pay Purchase', 'erp' ),
             'old_value'     => '',
@@ -281,7 +284,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 
-        ]);
+        ] );
     }
 
     /**
@@ -291,7 +294,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database ( $request ) {
 
         $prepared_item = [];
 
@@ -359,20 +362,20 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
-            'id'              => (int) $item->id,
-            'voucher_no'      => (int) $item->voucher_no,
-            'vendor_id'       => (int) $item->vendor_id,
-            'trn_date'        => $item->trn_date,
-            'trn_by'          => $item->trn_by,
-            'purchase_details'=> $item->purchase_details,
-            'amount'          => (int) $item->amount,
-            'particulars'     => $item->particulars,
-            'attachments'     => maybe_unserialize( $item->attachments ),
-            'status'          => $item->status,
+            'id'               => (int) $item->id,
+            'voucher_no'       => (int) $item->voucher_no,
+            'vendor_id'        => (int) $item->vendor_id,
+            'trn_date'         => $item->trn_date,
+            'trn_by'           => $item->trn_by,
+            'purchase_details' => $item->purchase_details,
+            'amount'           => (int) $item->amount,
+            'particulars'      => $item->particulars,
+            'attachments'      => maybe_unserialize( $item->attachments ),
+            'status'           => $item->status,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -390,19 +393,19 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'pay_purchase',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'               => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'voucher_no'  => [
+                'voucher_no'       => [
                     'description' => __( 'Voucher no. for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -410,7 +413,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'vendor_id'   => [
+                'vendor_id'        => [
                     'description' => __( 'Vendor id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -419,7 +422,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'trn_date'       => [
+                'trn_date'         => [
                     'description' => __( 'Date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -433,34 +436,34 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'id'       => [
+                        'id'         => [
                             'description' => __( 'Product id.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'voucher_no'      => [
+                        'voucher_no' => [
                             'description' => __( 'Product type.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'due'   => [
+                        'due'        => [
                             'description' => __( 'Unit price.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'total'    => [
+                        'total'      => [
                             'description' => __( 'Discount.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'item_total'       => [
+                        'item_total' => [
                             'description' => __( 'Item total.' ),
                             'type'        => 'integer',
                             'context'     => [ 'edit' ],
                         ],
                     ],
                 ],
-                'check_no'   => [
+                'check_no'         => [
                     'description' => __( 'Check no for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -468,7 +471,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'name'   => [
+                'name'             => [
                     'description' => __( 'Check name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -476,7 +479,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'type'       => [
+                'type'             => [
                     'description' => __( 'Type for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -484,7 +487,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'status'       => [
+                'status'           => [
                     'description' => __( 'Status for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],

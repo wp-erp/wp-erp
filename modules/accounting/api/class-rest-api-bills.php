@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -27,7 +28,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -128,19 +129,19 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_bills( $request ) {
+    public function get_bills ( $request ) {
         $args = [
             'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $bill_data  = erp_acct_get_bills( $args );
+        $bill_data   = erp_acct_get_bills( $args );
         $total_items = erp_acct_get_bills( [ 'count' => true, 'number' => -1 ] );
 
         foreach ( $bill_data as $item ) {
@@ -152,7 +153,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 }
             }
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -171,14 +172,14 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_bill( $request ) {
+    public function get_bill ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $bill_data =  erp_acct_get_bill( $id );
+        $bill_data = erp_acct_get_bill( $id );
         // $bill_data['id'] = $id;
 
         // $bill_data['created_by'] = $this->get_user( $bill_data['created_by'] );
@@ -186,9 +187,9 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $data = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
+        $data            = $this->prepare_item_for_response( $bill_data, $request, $additional_fields );
         $formatted_items = $this->prepare_response_for_collection( $data );
-        $response = rest_ensure_response( $formatted_items );
+        $response        = rest_ensure_response( $formatted_items );
 
         $response->set_status( 200 );
 
@@ -202,15 +203,16 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_bill( $request ) {
+    public function create_bill ( $request ) {
         $bill_data = $this->prepare_item_for_database( $request );
 
-        $item_total = []; $additional_fields = [];
+        $item_total        = [];
+        $additional_fields = [];
 
         $items = $request['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['amount'];
+            $item_total[ $key ] = $item['amount'];
         }
 
         $bill_data['attachments']     = maybe_serialize( $bill_data['attachments'] );
@@ -240,7 +242,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_bill( $request ) {
+    public function update_bill ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -254,12 +256,13 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $bill_data = $this->prepare_item_for_database( $request );
 
-        $item_total = []; $additional_fields = [];
+        $item_total        = [];
+        $additional_fields = [];
 
         $items = $request['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['amount'];
+            $item_total[ $key ] = $item['amount'];
         }
 
         $bill_data['attachments']     = maybe_serialize( $bill_data['attachments'] );
@@ -271,8 +274,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $this->add_log( $bill, 'update' );
 
         // $bill_data['voucher_no'] = $bill_id;
-        $additional_fields['namespace']  = $this->namespace;
-        $additional_fields['rest_base']  = $this->rest_base;
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
 
         $bill_data = $this->prepare_item_for_response( $bill, $request, $additional_fields );
 
@@ -289,7 +292,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_bill( $request ) {
+    public function delete_bill ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -298,7 +301,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         erp_acct_delete_bill( $id );
 
-        return new WP_REST_Response(true, 204 );
+        return new WP_REST_Response( true, 204 );
     }
 
     /**
@@ -308,7 +311,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function void_bill( $request ) {
+    public function void_bill ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -327,7 +330,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function due_bills( $request ) {
+    public function due_bills ( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -335,11 +338,11 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         $args = [
-            'number' => !empty( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number' => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
-        $formatted_items = [];
+        $formatted_items   = [];
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
@@ -357,7 +360,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 }
             }
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -376,8 +379,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function upload_attachments( $request ) {
-        $movefiles = erp_acct_upload_attachments($_FILES['attachments']);
+    public function upload_attachments ( $request ) {
+        $movefiles = erp_acct_upload_attachments( $_FILES['attachments'] );
 
         $response = rest_ensure_response( $movefiles );
         $response->set_status( 200 );
@@ -392,8 +395,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    function get_overview_payables( $request ){
-        $items = erp_acct_get_payables_overview();
+    function get_overview_payables ( $request ) {
+        $items    = erp_acct_get_payables_overview();
         $response = rest_ensure_response( $items );
 
         $response->set_status( 200 );
@@ -407,8 +410,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log( $data, $action ) {
-        erp_log()->add([
+    public function add_log ( $data, $action ) {
+        erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Bill', 'erp' ),
             'old_value'     => '',
@@ -417,7 +420,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 
-        ]);
+        ] );
     }
 
     /**
@@ -427,23 +430,23 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database ( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['vendor_id'] ) ) {
             $prepared_item['vendor_id'] = $request['vendor_id'];
         }
         if ( isset( $request['trn_date'] ) ) {
-            $prepared_item['trn_date'] =  $request['trn_date'];
+            $prepared_item['trn_date'] = $request['trn_date'];
         }
         if ( isset( $request['due_date'] ) ) {
             $prepared_item['due_date'] = $request['due_date'];
         }
         if ( isset( $request['amount'] ) ) {
-            $prepared_item['total'] = (int)$request['amount'];
+            $prepared_item['total'] = (int) $request['amount'];
         }
         if ( isset( $request['due'] ) ) {
-            $prepared_item['due'] = (int)$request['due'];
+            $prepared_item['due'] = (int) $request['due'];
         }
         if ( isset( $request['trn_no'] ) ) {
             $prepared_item['trn_no'] = $request['trn_no'];
@@ -479,7 +482,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -489,10 +492,10 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'vendor_name'     => $item->vendor_name,
             'trn_date'        => $item->trn_date,
             'due_date'        => $item->due_date,
-            'billing_address' => !empty( $item->billing_address ) ? $item->billing_address : erp_acct_get_people_address( $item->vendor_id ),
-            'bill_details'    => !empty( $item->bill_details ) ? $item->bill_details : [],
+            'billing_address' => ! empty( $item->billing_address ) ? $item->billing_address : erp_acct_get_people_address( $item->vendor_id ),
+            'bill_details'    => ! empty( $item->bill_details ) ? $item->bill_details : [],
             'amount'          => (int) $item->amount,
-            'due'             => !empty( $item->due ) ? $item->due : $item->amount,
+            'due'             => ! empty( $item->due ) ? $item->due : $item->amount,
             'ref'             => $item->ref,
             'particulars'     => $item->particulars,
             'status'          => $item->status,
@@ -514,19 +517,19 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'bill',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'           => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'voucher_no'  => [
+                'voucher_no'   => [
                     'description' => __( 'Voucher no. for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -534,7 +537,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'vendor_id'   => [
+                'vendor_id'    => [
                     'description' => __( 'People id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
@@ -543,7 +546,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'trn_date'       => [
+                'trn_date'     => [
                     'description' => __( 'Date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -552,7 +555,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'due_date'       => [
+                'due_date'     => [
                     'description' => __( 'Due date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -561,27 +564,27 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'address' => [
+                'address'      => [
                     'description' => __( 'List of billing address data.', 'erp' ),
                     'type'        => 'object',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'city'       => [
+                        'city'        => [
                             'description' => __( 'City name.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'state'      => [
+                        'state'       => [
                             'description' => __( 'ISO code or name of the state, province or district.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'postal_code'   => [
+                        'postal_code' => [
                             'description' => __( 'Postal code.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'country'    => [
+                        'country'     => [
                             'description' => __( 'ISO code of the country.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
@@ -598,22 +601,22 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'ledger_id'       => [
+                        'ledger_id'   => [
                             'description' => __( 'Ledger id.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'particulars'      => [
+                        'particulars' => [
                             'description' => __( 'Bill Particulars.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'amount'   => [
+                        'amount'      => [
                             'description' => __( 'Bill Amount', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'item_total'       => [
+                        'item_total'  => [
                             'description' => __( 'Line total.' ),
                             'type'        => 'integer',
                             'context'     => [ 'edit' ],

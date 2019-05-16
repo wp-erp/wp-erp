@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -23,7 +24,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -86,8 +87,8 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_journals( $request ) {
-        $args['number'] = !empty( $request['per_page'] ) ? $request['per_page'] : 20;
+    public function get_journals ( $request ) {
+        $args['number'] = ! empty( $request['per_page'] ) ? $request['per_page'] : 20;
         $args['offset'] = ( $request['per_page'] * ( $request['page'] - 1 ) );
 
         $additional_fields = [];
@@ -100,7 +101,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $formatted_items = [];
         foreach ( $items as $item ) {
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -119,8 +120,9 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_journal( $request ) {
-        $id   = (int) $request['id']; $additional_fields = [];
+    public function get_journal ( $request ) {
+        $id                = (int) $request['id'];
+        $additional_fields = [];
 
         if ( empty( $id ) ) {
             return new WP_Error( 'rest_journal_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
@@ -131,7 +133,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $item = $this->prepare_item_for_response( $item, $request, $additional_fields );
 
         $response = rest_ensure_response( $item );
 
@@ -145,10 +147,10 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_next_journal_id( $request ) {
+    public function get_next_journal_id ( $request ) {
         global $wpdb;
 
-        $count = $wpdb->get_row( "SELECT count(*) FROM " . $wpdb->prefix . "erp_acct_journals", ARRAY_N );
+        $count      = $wpdb->get_row( "SELECT count(*) FROM " . $wpdb->prefix . "erp_acct_journals", ARRAY_N );
         $item['id'] = $count['0'] + 1;
 
         $response = rest_ensure_response( $item );
@@ -163,14 +165,14 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_journal( $request ) {
+    public function create_journal ( $request ) {
         $trans_data = $this->prepare_item_for_database( $request );
 
         $items = $request['line_items'];
 
         foreach ( $items as $key => $item ) {
-            $vocher_amount_dr[$key] = $item['debit'];
-            $vocher_amount_cr[$key] = $item['credit'];
+            $vocher_amount_dr[ $key ] = $item['debit'];
+            $vocher_amount_cr[ $key ] = $item['credit'];
         }
 
         $total_dr = array_sum( $vocher_amount_dr );
@@ -203,8 +205,8 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log( $data, $action ) {
-        erp_log()->add([
+    public function add_log ( $data, $action ) {
+        erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Journal', 'erp' ),
             'old_value'     => '',
@@ -213,7 +215,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 
-        ]);
+        ] );
     }
 
     /**
@@ -223,7 +225,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database( $request ) {
+    protected function prepare_item_for_database ( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['type'] ) ) {
@@ -257,7 +259,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -266,7 +268,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
             'particulars' => $item->particulars,
             'ref'         => $item->ref,
             'trn_date'    => $item->trn_date,
-            'line_items'  => !empty( $item->line_items ) ? $item->line_items : [],
+            'line_items'  => ! empty( $item->line_items ) ? $item->line_items : [],
             'attachments' => maybe_unserialize( $item->attachments ),
             'total'       => (float) $item->voucher_amount,
         ];
@@ -295,7 +297,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema() {
+    public function get_item_schema () {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'journal',
@@ -307,7 +309,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'particulars'  => [
+                'particulars' => [
                     'description' => __( 'Particulars for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -315,7 +317,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'ref'  => [
+                'ref'         => [
                     'description' => __( 'Reference for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -323,7 +325,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'trn_date'  => [
+                'trn_date'    => [
                     'description' => __( 'Issue date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -338,7 +340,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
-                'attachments'  => [
+                'attachments' => [
                     'description' => __( 'Attachments for the resource.' ),
                     'type'        => 'object',
                     'context'     => [ 'edit' ],

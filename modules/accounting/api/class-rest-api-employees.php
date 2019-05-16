@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -30,7 +31,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -85,7 +86,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'bulk_delete_employees' ],
                 'args'                => [
-                    'ids'   => [ 'required' => true ]
+                    'ids' => [ 'required' => true ]
                 ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_delete_employee' );
@@ -114,7 +115,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|object|\WP_REST_Response
      */
-    public function get_employees( $request ) {
+    public function get_employees ( $request ) {
         $args = [
             'number'      => $request['per_page'],
             'offset'      => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -132,7 +133,8 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         $total_items   = erp_hr_get_employees( $args );
         $total_items   = is_array( $total_items ) ? count( $total_items ) : $total_items;
 
-        $formatted_items = []; $additional_fields = [];
+        $formatted_items   = [];
+        $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -157,21 +159,21 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_employee( $request ) {
+    public function get_employee ( $request ) {
         $user_id = (int) $request['id'];
 
-        $employee    = new Employee( $user_id );
+        $employee  = new Employee( $user_id );
         $people_id = erp_acct_get_people_id_by_user_id( $user_id );
-        $item = (array)erp_get_people( $people_id );
+        $item      = (array) erp_get_people( $people_id );
 
         if ( empty( $item['id'] ) ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item['designation'] = $employee->get_designation();
-        $item['department'] = $employee->get_department();
+        $item['designation']  = $employee->get_designation();
+        $item['department']   = $employee->get_department();
         $item['reporting_to'] = $employee->get_reporting_to();
-        $item['avatar'] = $employee->get_avatar();
+        $item['avatar']       = $employee->get_avatar();
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
@@ -191,7 +193,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|\WP_REST_Request
      */
-    public function create_employee( $request ) {
+    public function create_employee ( $request ) {
         $item_data = $this->prepare_item_for_database( $request );
 
         $employee = new Employee( null );
@@ -200,8 +202,8 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
             return $created;
         }
 
-        $employee  = new Employee( $created->user_id );
-        $item      = erp_acct_add_employee_as_people( null, $item_data );
+        $employee                = new Employee( $created->user_id );
+        $item                    = erp_acct_add_employee_as_people( null, $item_data );
         $additional_fields['id'] = $item;
 
         // User Notification
@@ -217,8 +219,8 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
-        $response = $this->prepare_item_for_response( $employee, $request, $additional_fields );
-        $response = rest_ensure_response( $response );
+        $response                       = $this->prepare_item_for_response( $employee, $request, $additional_fields );
+        $response                       = rest_ensure_response( $response );
         $response->set_status( 201 );
 
         return $response;
@@ -231,7 +233,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return $this|mixed|object|\WP_Error|\WP_REST_Response
      */
-    public function update_employee( $request ) {
+    public function update_employee ( $request ) {
         $id = (int) $request['user_id'];
 
         $employee = new Employee( $id );
@@ -249,10 +251,10 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $updated_user = new Employee( $updated->user_id );
-        $item         = erp_acct_add_employee_as_people( null, $data );
+        $updated_user            = new Employee( $updated->user_id );
+        $item                    = erp_acct_add_employee_as_people( null, $data );
         $additional_fields['id'] = $item;
-        $response     = $this->prepare_item_for_response( $updated_user, $request, $additional_fields );
+        $response                = $this->prepare_item_for_response( $updated_user, $request, $additional_fields );
 
         $response = rest_ensure_response( $response );
         $response->set_status( 200 );
@@ -267,7 +269,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return \WP_REST_Response
      */
-    public function delete_employee( $request ) {
+    public function delete_employee ( $request ) {
         $id = (int) $request['user_id'];
 
         erp_employee_delete( $id );
@@ -283,10 +285,10 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response
      */
-    public function bulk_delete_employees( $request ) {
+    public function bulk_delete_employees ( $request ) {
         $ids = (string) $request['ids'];
 
-        erp_employee_delete( explode(',' ,$ids) );
+        erp_employee_delete( explode( ',', $ids ) );
 
         $response = rest_ensure_response( true );
         return new WP_REST_Response( $response, 204 );
@@ -299,8 +301,8 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_transactions( $request ) {
-        $id = (int) $request['id'];
+    public function get_transactions ( $request ) {
+        $id                = (int) $request['id'];
         $args['people_id'] = $id;
 
         $transactions = erp_acct_get_people_transactions( $args );
@@ -317,12 +319,12 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|object|\WP_REST_Response
      */
-    public function prepare_item_for_response( $item, $request = null, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request = null, $additional_fields = [] ) {
         $item = $item->data;
 
-        $data = array_merge( $item['work'], $item['personal'], $additional_fields );
+        $data            = array_merge( $item['work'], $item['personal'], $additional_fields );
         $data['user_id'] = $item['user_id'];
-        $data['email'] = $item['user_email'];
+        $data['email']   = $item['user_email'];
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
@@ -339,9 +341,9 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    public function prepare_item_for_database( $request ) {
+    public function prepare_item_for_database ( $request ) {
         $prepared_item = [];
-        $company = new \WeDevs\ERP\Company();
+        $company       = new \WeDevs\ERP\Company();
 
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = $request['id'];
@@ -505,7 +507,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_collection_params() {
+    public function get_collection_params () {
         return [
             'context'  => $this->get_context_param(),
             'page'     => [

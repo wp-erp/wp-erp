@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\API;
 
 use WP_REST_Server;
@@ -27,7 +28,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes() {
+    public function register_routes () {
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/trial-balance', [
             [
@@ -93,10 +94,10 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_trial_balance( $request ) {
+    public function get_trial_balance ( $request ) {
         $args = [
             'start_date' => ! empty( $request['start_date'] ) ? $request['start_date'] : null,
-            'end_date'   => ! empty( $request['end_date'] )   ? $request['end_date']   : null
+            'end_date'   => ! empty( $request['end_date'] ) ? $request['end_date'] : null
         ];
 
         $data = erp_acct_get_trial_balance( $args );
@@ -111,13 +112,13 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart status
      */
-    public function get_sales_chart_status( $request ) {
+    public function get_sales_chart_status ( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
-        $chart_status = erp_acct_get_sales_chart_status($args);
+        $chart_status = erp_acct_get_sales_chart_status( $args );
 
         $response = rest_ensure_response( $chart_status );
 
@@ -129,13 +130,13 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart payment
      */
-    public function get_sales_chart_payment( $request ) {
+    public function get_sales_chart_payment ( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date' => empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
         ];
 
-        $chart_payment = erp_acct_get_sales_chart_payment($args);
+        $chart_payment = erp_acct_get_sales_chart_payment( $args );
 
         $response = rest_ensure_response( $chart_payment );
 
@@ -151,10 +152,10 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_ledger_report( $request ) {
+    public function get_ledger_report ( $request ) {
         $ledger_id  = (int) $request['ledger_id'];
-        $start_date = empty( $request['start_date'] ) ? date('Y-m-d') : $request['start_date'];
-        $end_date   = empty( $request['end_date'] ) ? date('Y-m-d') : $request['end_date'];
+        $start_date = empty( $request['start_date'] ) ? date( 'Y-m-d' ) : $request['start_date'];
+        $end_date   = empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'];
 
         $data = erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date );
 
@@ -172,10 +173,10 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_sales_tax_report( $request ) {
+    public function get_sales_tax_report ( $request ) {
         $agency_id  = (int) $request['agency_id'];
         $start_date = empty( $request['start_date'] ) ? null : $request['start_date'];
-        $end_date   = empty( $request['end_date'] )   ? null : $request['end_date'];
+        $end_date   = empty( $request['end_date'] ) ? null : $request['end_date'];
 
         $data = erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date );
 
@@ -193,7 +194,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_income_statement( $request ) {
+    public function get_income_statement ( $request ) {
         $start_date = $request['start_date'];
         $end_date   = $request['end_date'];
         $args       = [
@@ -217,7 +218,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_balance_sheet( $request ) {
+    public function get_balance_sheet ( $request ) {
         $start_date = $request['start_date'];
         $end_date   = $request['end_date'];
         $args       = [
@@ -243,7 +244,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
 
         $data = array_merge( $item, $additional_fields );
 

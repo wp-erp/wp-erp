@@ -141,6 +141,7 @@
             fetchItems(filters = {}) {
                 this.rows = [];
 
+                this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get('/transactions/sales', {
                     params: {
                         per_page  : this.paginationData.perPage,
@@ -150,7 +151,7 @@
                         status    : filters.status
                     }
                 }).then(response => {
-                    let mappedData = response.data.map(item => {
+                    this.rows = response.data.map(item => {
                         if ( ( 'invoice' === item.type && item.estimate == 0 ) && ( 'Partially Paid' == item.status || 'Awaiting Payment' == item.status ) ) {
                             item['actions'] = [
                                 { key: 'edit', label: 'Edit' },
@@ -169,8 +170,6 @@
 
                         return item;
                     });
-
-                    this.rows = mappedData;
 
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);

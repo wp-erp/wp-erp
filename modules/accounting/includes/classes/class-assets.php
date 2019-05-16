@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting\Includes\Classes;
 
 /**
@@ -6,7 +7,7 @@ namespace WeDevs\ERP\Accounting\Includes\Classes;
  */
 class Assets {
 
-    function __construct() {
+    function __construct () {
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'register' ], 5 );
@@ -20,10 +21,10 @@ class Assets {
      *
      * @return void
      */
-    public function register() {
+    public function register () {
         if ( is_admin() ) {
             $screen = get_current_screen();
-            if ( $screen->base == 'wp-erp_page_erp-settings') {
+            if ( $screen->base == 'wp-erp_page_erp-settings' ) {
                 wp_enqueue_script( 'accounting-helper', ERP_ACCOUNTING_ASSETS . '/js/accounting.js', array( 'jquery' ), false, true );
                 return;
             } elseif ( $screen->base != 'wp-erp_page_erp-accounting' ) {
@@ -38,17 +39,17 @@ class Assets {
     /**
      * Register scripts
      *
-     * @param  array $scripts
+     * @param array $scripts
      *
      * @return void
      */
-    private function register_scripts( $scripts ) {
+    private function register_scripts ( $scripts ) {
         global $current_user;
-        $u_id =  $current_user->ID;
-        $site_url = site_url();
+        $u_id       = $current_user->ID;
+        $site_url   = site_url();
         $rest_nonce = wp_create_nonce( "wp_rest" );
         $logout_url = esc_url( wp_logout_url() );
-        $acct_url = admin_url( 'admin.php' ) . '?page=erp-accounting#/';
+        $acct_url   = admin_url( 'admin.php' ) . '?page=erp-accounting#/';
 
         foreach ( $scripts as $handle => $script ) {
             $deps      = isset( $script['deps'] ) ? $script['deps'] : false;
@@ -62,12 +63,12 @@ class Assets {
 
         if ( is_admin() ) {
             $component = 'accounting';
-            $menu  = erp_menu();
-            $menus = $menu[$component];
+            $menu      = erp_menu();
+            $menus     = $menu[ $component ];
 
             //check items for capabilities
-            $items = array_filter( $menus, function( $item ) {
-                if ( !isset( $item['capability'] ) ) {
+            $items = array_filter( $menus, function ( $item ) {
+                if ( ! isset( $item['capability'] ) ) {
                     return false;
                 }
                 return current_user_can( $item['capability'] );
@@ -96,11 +97,11 @@ class Assets {
     /**
      * Register styles
      *
-     * @param  array $styles
+     * @param array $styles
      *
      * @return void
      */
-    public function register_styles( $styles ) {
+    public function register_styles ( $styles ) {
         foreach ( $styles as $handle => $style ) {
             $deps = isset( $style['deps'] ) ? $style['deps'] : false;
 
@@ -113,14 +114,14 @@ class Assets {
      *
      * @return array
      */
-    public function get_scripts() {
+    public function get_scripts () {
         $scripts = [
-            'accounting-vendor' => [
+            'accounting-vendor'   => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/vendor.js',
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/vendor.js' ),
                 'in_footer' => true
             ],
-            'accounting-hook' => [
+            'accounting-hook'     => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/wphook.js',
                 'deps'      => [ 'accounting-vendor' ],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/wphook.js' ),
@@ -132,7 +133,7 @@ class Assets {
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/frontend.js' ),
                 'in_footer' => true
             ],
-            'accounting-admin' => [
+            'accounting-admin'    => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/admin.js',
                 'deps'      => [ 'jquery', 'accounting-vendor' ],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/admin.js' ),
@@ -148,16 +149,16 @@ class Assets {
      *
      * @return array
      */
-    public function get_styles() {
+    public function get_styles () {
         $styles = [
-            'accounting-style' => [
-                'src' =>  ERP_ACCOUNTING_ASSETS . '/css/style.css'
+            'accounting-style'    => [
+                'src' => ERP_ACCOUNTING_ASSETS . '/css/style.css'
             ],
             'accounting-frontend' => [
-                'src' =>  ERP_ACCOUNTING_ASSETS . '/css/frontend.css'
+                'src' => ERP_ACCOUNTING_ASSETS . '/css/frontend.css'
             ],
-            'accounting-admin' => [
-                'src' =>  ERP_ACCOUNTING_ASSETS . '/css/admin.css'
+            'accounting-admin'    => [
+                'src' => ERP_ACCOUNTING_ASSETS . '/css/admin.css'
             ],
         ];
 

@@ -21769,6 +21769,7 @@ if (false) {(function () {
 
       var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       this.rows = [];
+      this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/transactions/sales', {
         params: {
           per_page: this.paginationData.perPage,
@@ -21778,7 +21779,7 @@ if (false) {(function () {
           status: filters.status
         }
       }).then(function (response) {
-        var mappedData = response.data.map(function (item) {
+        _this2.rows = response.data.map(function (item) {
           if ('invoice' === item.type && item.estimate == 0 && ('Partially Paid' == item.status || 'Awaiting Payment' == item.status)) {
             item['actions'] = [{
               key: 'edit',
@@ -21801,7 +21802,6 @@ if (false) {(function () {
 
           return item;
         });
-        _this2.rows = mappedData;
         _this2.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
         _this2.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
         _this2.listLoading = false;
@@ -22522,6 +22522,7 @@ setTimeout(function () {
 
       var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       this.rows = [];
+      this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/transactions/expenses', {
         params: {
           per_page: this.paginationData.perPage,
@@ -23284,6 +23285,7 @@ setTimeout(function () {
 
       var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       this.rows = [];
+      this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/transactions/purchases', {
         params: {
           per_page: this.paginationData.perPage,
