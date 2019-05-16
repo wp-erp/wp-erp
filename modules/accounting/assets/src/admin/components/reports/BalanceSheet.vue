@@ -56,12 +56,12 @@
                         </template>
                         <template slot="balance" slot-scope="data">
                             <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
-                            <span v-else>{{ getCurrencySign() + Math.abs(data.row.balance) }} </span>
+                            <span v-else>{{ transformBalance(data.row.balance) }} </span>
                         </template>
                         <template slot="tfoot">
                             <tr class="t-foot">
                                 <td>Total Asset</td>
-                                <td>{{ getCurrencySign() + totalAsset }}</td>
+                                <td>{{ transformBalance(totalAsset) }}</td>
                             </tr>
                         </template>
                     </list-table>
@@ -79,12 +79,12 @@
                         </template>
                         <template slot="balance" slot-scope="data">
                             <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
-                            <span v-else>{{ getCurrencySign() + Math.abs(data.row.balance) }} </span>
+                            <span v-else>{{ transformBalance(data.row.balance) }} </span>
                         </template>
                         <template slot="tfoot">
                             <tr class="t-foot">
                                 <td>Total Liability</td>
-                                <td>{{ getCurrencySign() + Math.abs(totalLiability) }}</td>
+                                <td>{{ transformBalance(totalLiability) }}</td>
                             </tr>
                         </template>
                     </list-table>
@@ -102,12 +102,12 @@
                         </template>
                         <template slot="balance" slot-scope="data">
                             <span v-if="isNaN(data.row.balance)">{{data.row.balance}}</span>
-                            <span v-else>{{ getCurrencySign() + Math.abs(data.row.balance) }} </span>
+                            <span v-else>{{ transformBalance(data.row.balance) }} </span>
                         </template>
                         <template slot="tfoot">
                             <tr class="t-foot">
                                 <td>Total Equity</td>
-                                <td>{{ getCurrencySign() + Math.abs(totalEquity) }}</td>
+                                <td>{{ transformBalance(totalEquity) }}</td>
                             </tr>
                         </template>
                     </list-table>
@@ -117,13 +117,13 @@
                     <tbody>
                         <tr>
                             <td><strong>Assets = </strong></td>
-                            <td>{{ getCurrencySign() + totalAsset }}</td>
+                            <td>{{ transformBalance(totalAsset) }}</td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td><strong>Liability + Equity = </strong></td>
-                            <td>{{ getCurrencySign() + liability_equity }}</td>
+                            <td>{{ transformBalance(liability_equity) }}</td>
                             <td></td>
                             <td></td>
                         </tr>
@@ -250,6 +250,18 @@
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
+            },
+
+            transformBalance( val ) {
+                if ( null === val && typeof val === 'object' ) {
+                    val = 0;
+                }
+                let currency = '$';
+                if ( val < 0 ){
+                    return `Cr. ${currency}${Math.abs(val)}`;
+                }
+
+                return `Dr. ${currency}${val}`;
             },
 
             fetchFnYears() {
