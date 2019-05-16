@@ -137,6 +137,13 @@
             display: none;
         }
 
+        .tablenav {
+            &.top,
+            &.bottom {
+                display: none
+            }
+        }
+
         tbody tr td:last-child {
             text-align: initial !important;
         }
@@ -179,6 +186,28 @@
             }
             .no-print, .no-print * {
                 display: none !important;
+            }
+
+            .trial-balance details {
+                margin: 0;
+                padding: 0;
+
+                summary {
+                    margin-bottom: 2px;
+                }
+            }
+
+            .trial-balance p {
+                margin-bottom: 0;
+            }
+
+            .wperp-table td,
+            .wperp-table th {
+                padding: 1px;
+            }
+
+            .wperp-table thead tr th {
+                font-weight: bold;
             }
         }
     }
