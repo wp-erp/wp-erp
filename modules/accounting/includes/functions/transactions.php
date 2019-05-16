@@ -36,7 +36,9 @@ function erp_acct_get_sales_transactions ( $args = [] ) {
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
-    if ( ! empty( $args['status'] ) ) {
+    if ( $args['status'] == 0 ) {
+        $where .= "";
+    } else if ( ! empty( $args['status'] ) ) {
         $where .= " AND invoice.status={$args['status']} OR invoice_receipt.status={$args['status']} ";
     } else {
         $where .= " AND invoice.status=2 ";
@@ -459,7 +461,9 @@ function erp_acct_get_expense_transactions ( $args = [] ) {
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
-    if ( ! empty( $args['status'] ) ) {
+    if ( $args['status'] == 0 ) {
+        $where .= "";
+    } else if ( ! empty( $args['status'] ) ) {
         $where .= " AND bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} ";
     } else {
         $where .= " AND bill.status=2 OR expense.status=4";
@@ -543,7 +547,9 @@ function erp_acct_get_purchase_transactions ( $args = [] ) {
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
-    if ( ! empty( $args['status'] ) ) {
+    if ( $args['status'] == 0 ) {
+        $where .= "";
+    } else if ( ! empty( $args['status'] ) ) {
         $where .= " AND purchase.status={$args['status']} OR pay_purchase.status={$args['status']} ";
     } else {
         $where .= " AND purchase.status=2 ";

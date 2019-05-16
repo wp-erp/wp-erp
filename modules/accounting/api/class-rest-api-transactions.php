@@ -74,6 +74,17 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/purchases', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_purchases' ],
+                'args'                => [],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales/chart-status', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -92,28 +103,6 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
-
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/expenses', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_expenses' ],
-                'args'                => [],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
-
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/purchases', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_purchases' ],
-                'args'                => [],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
         ] );
@@ -260,6 +249,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         global $wpdb;
 
         $statuses = $wpdb->get_results( "SELECT id, type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A );
+        array_unshift( $statuses, [ 'id' => '0', 'type_name' => 'all', 'name' => 'All', 'slug' => 'all' ] );
 
         $response = rest_ensure_response( $statuses );
 
