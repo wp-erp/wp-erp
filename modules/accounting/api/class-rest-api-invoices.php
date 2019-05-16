@@ -258,9 +258,10 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $paid = 4;
-        if ( $paid === $request['status'] ) {
-            return new WP_Error( 'rest_invoice_invalid_status', __( 'Invalid status for update.' ), [ 'status' => 403 ] );
+        $can_edit = erp_acct_check_voucher_edit_state( $id );
+
+        if ( ! $can_edit ) {
+            return new WP_Error( 'rest_invoice_invalid_edit', __( 'Invalid edit permission for update.' ), [ 'status' => 403 ] );
         }
 
         $invoice_data = $this->prepare_item_for_database( $request );

@@ -469,3 +469,16 @@ function erp_acct_get_ledger_name_by_id( $id ) {
     return $result->name;
 }
 
+/**
+ * Check voucher edit state
+ *
+ * @param int $id
+ * @return bool
+ */
+function erp_acct_check_voucher_edit_state( $id ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare("SELECT editable FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = %d", $id);
+
+    return ( $wpdb->get_var( $sql ) ) ? true : false;
+}

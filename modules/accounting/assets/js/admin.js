@@ -13553,14 +13553,14 @@ if (false) {(function () {
       var _prepareDataLoad = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee() {
-        var _ref, _ref2, request1, request2, request3;
+        var _ref, _ref2, request1, request2, request3, canEdit;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!this.$route.params.id) {
-                  _context.next = 22;
+                  _context.next = 26;
                   break;
                 }
 
@@ -13596,23 +13596,27 @@ if (false) {(function () {
                 return _context.abrupt("return");
 
               case 15:
-                /**
-                 * Needs improvement later ( ** IMPORTANT)
-                 */
-                // if ( parseInt(request3.data.status) !== this.status ) {
-                //     this.showAlert('error', 'Can\'t edit');
-                //     return;
-                // }
+                canEdit = Boolean(Number(request3.data.editable));
+
+                if (canEdit) {
+                  _context.next = 19;
+                  break;
+                }
+
+                this.showAlert('error', 'Can\'t edit');
+                return _context.abrupt("return");
+
+              case 19:
                 this.products = request1.data;
                 this.taxSummary = request2.data;
                 this.taxRates = this.getUniqueTaxRates(request2.data);
                 this.setDataForEdit(request3.data); // initialize combo button id with `update`
 
                 this.$store.dispatch('combo/setBtnID', 'update');
-                _context.next = 28;
+                _context.next = 32;
                 break;
 
-              case 22:
+              case 26:
                 /**
                  * ----------------------------------------------
                  * create a new invoice
@@ -13626,7 +13630,7 @@ if (false) {(function () {
 
                 this.$store.dispatch('combo/setBtnID', 'save');
 
-              case 28:
+              case 32:
               case "end":
                 return _context.stop();
             }
@@ -21401,12 +21405,7 @@ if (false) {(function () {
         name: 'Receive Payment'
       }]
     };
-  },
-  created: function created() {// this.$root.$on('comboSelected', (selected) => {
-    //     console.log(selected);
-    // });
-  },
-  methods: {}
+  }
 });
 
 /***/ }),
@@ -21839,7 +21838,8 @@ if (false) {(function () {
             this.$router.push({
               name: 'InvoiceEdit',
               params: {
-                id: row.id
+                id: row.id,
+                editable: Number(row.editable)
               }
             });
           }

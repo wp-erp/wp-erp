@@ -46,15 +46,8 @@
                     {namedRoute: 'RecPaymentCreate', name: 'Receive Payment'},
                 ],
             };
-        },
+        }
 
-        created() {
-            // this.$root.$on('comboSelected', (selected) => {
-            //     console.log(selected);
-            // });
-        },
-
-        methods: {},
     };
 </script>
 

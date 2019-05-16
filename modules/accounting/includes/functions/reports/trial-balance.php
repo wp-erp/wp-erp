@@ -119,7 +119,7 @@ function erp_acct_get_account_receivable( $args ) {
             GROUP BY invoice_no HAVING balance > 0 )
         AS get_amount";
 
-    $data = $wpdb->get_var($wpdb->prepare( $sql, $args['end_date'] ) );
+    $data = $wpdb->get_var( $wpdb->prepare( $sql, $args['end_date'] ) );
 
     return erp_acct_people_calc_with_opening_balance( $args, $data, 'receivable', $sql );
 }
