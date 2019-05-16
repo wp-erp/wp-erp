@@ -191,7 +191,7 @@ function erp_acct_get_ledger ( $id ) {
     return $wpdb->get_row( $sql );
 }
 
-function erp_acct_insert_ledger ( $item ) {
+function erp_acct_insert_ledger( $item ) {
     global $wpdb;
 
     $wpdb->insert( "{$wpdb->prefix}erp_acct_ledgers", [
@@ -232,7 +232,7 @@ function erp_acct_update_ledger ( $item, $id ) {
  * @return array
  */
 
-function erp_acct_get_ledgers_with_balances () {
+function erp_acct_get_ledgers_with_balances() {
     global $wpdb;
 
     $today = date( 'Y-m-d' );
@@ -267,7 +267,7 @@ function erp_acct_get_ledgers_with_balances () {
  *
  * @return void
  */
-function erp_acct_ledgers_opening_balance_by_fn_year_id ( $id ) {
+function erp_acct_ledgers_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
 
     $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
@@ -287,7 +287,7 @@ function erp_acct_ledgers_opening_balance_by_fn_year_id ( $id ) {
  *
  * @return array
  */
-function erp_acct_ledger_balance_with_opening_balance ( $ledgers, $data, $opening_balance ) {
+function erp_acct_ledger_balance_with_opening_balance( $ledgers, $data, $opening_balance ) {
     $temp_data = [];
 
     /**
