@@ -27,12 +27,12 @@
             :showItemNumbers="false"
             :showCb="false">
             <template slot="amount" slot-scope="data">
-                {{ getCurrencySign() + Math.abs(data.row.balance) }}
+                {{ transformBalance(Math.abs(data.row.balance)) }}
             </template>
             <template slot="tfoot">
                 <tr class="t-foot">
                     <td>Total Income</td>
-                    <td>{{ getCurrencySign() + income }}</td>
+                    <td>{{ transformBalance(Math.abs(income)) }}</td>
                 </tr>
             </template>
         </list-table>
@@ -44,12 +44,12 @@
             :showItemNumbers="false"
             :showCb="false">
             <template slot="amount" slot-scope="data">
-                {{ getCurrencySign() + Math.abs(data.row.balance) }}
+                {{ transformBalance(Math.abs(data.row.balance)) }}
             </template>
             <template slot="tfoot">
                 <tr class="t-foot">
                     <td>Total Expense</td>
-                    <td>{{ getCurrencySign() + expense }}</td>
+                    <td>{{ transformBalance(Math.abs(expense)) }}</td>
                 </tr>
             </template>
         </list-table>
@@ -59,7 +59,7 @@
                 <tbody class="wperp-col-sm-12">
                 <tr>
                     <td><strong>Profit</strong></td>
-                    <td>{{ getCurrencySign() + profit }}</td>
+                    <td>{{ getCurrencySign() + Math.abs(profit) }}</td>
                     <td></td>
                 </tr>
                 </tbody>
@@ -68,7 +68,7 @@
                 <tbody class="wperp-col-sm-12">
                     <tr>
                         <td><strong>Loss</strong></td>
-                        <td>{{ getCurrencySign() + loss }}</td>
+                        <td>{{ getCurrencySign() + Math.abs(loss) }}</td>
                         <td></td>
                     </tr>
                 </tbody>
@@ -114,8 +114,8 @@
                 rows2: [],
                 income: 0,
                 expense: 0,
-                profit: null,
-                loss: null
+                profit: 0,
+                loss: 0
             }
         },
 
@@ -153,6 +153,18 @@
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
+            },
+
+            transformBalance( val ) {
+                if ( null === val && typeof val === 'object' ) {
+                    val = 0;
+                }
+                let currency = '$';
+                if ( val < 0 ){
+                    return `Cr. ${currency}${Math.abs(val)}`;
+                }
+
+                return `Dr. ${currency}${val}`;
             },
 
             printPopup() {

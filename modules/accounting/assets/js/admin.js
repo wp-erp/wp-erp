@@ -300,7 +300,8 @@ if (false) {(function () {
 /* 9 */,
 /* 10 */,
 /* 11 */,
-/* 12 */
+/* 12 */,
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -356,7 +357,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -412,7 +413,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -468,7 +469,6 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 15 */,
 /* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1150,7 +1150,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(module, global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(15);
+/* WEBPACK VAR INJECTION */(function(module, global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 var require;var require;
 
@@ -12033,7 +12033,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
@@ -13048,7 +13048,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_userinfo_UserBasic_vue__ = __webpack_require__(69);
@@ -13257,14 +13257,14 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_objectSpread__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_objectSpread__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_objectSpread___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_objectSpread__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuex__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_invoice_InvoiceTrnRow_vue__ = __webpack_require__(296);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectCustomers_vue__ = __webpack_require__(92);
@@ -14469,7 +14469,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
@@ -14655,7 +14655,7 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__riophae_vue_treeselect__ = __webpack_require__(38);
@@ -15385,14 +15385,14 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_FileUpload_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_FileUpload_vue__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_people_SelectCustomers_vue__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_SelectAccounts_vue__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
@@ -16061,15 +16061,15 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_people_SelectPeople_vue__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_base_ShowErrors_vue__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
@@ -16681,7 +16681,7 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 //
 //
@@ -17001,12 +17001,12 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_objectSpread__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_objectSpread__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_objectSpread___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_objectSpread__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_FileUpload_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_FileUpload_vue__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_people_SelectPeople_vue__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_SelectAccounts_vue__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
@@ -17458,7 +17458,7 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 //
 //
@@ -17650,14 +17650,14 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_FileUpload_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_FileUpload_vue__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_purchase_PurchaseRow_vue__ = __webpack_require__(370);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_people_SelectVendors_vue__ = __webpack_require__(116);
@@ -18383,7 +18383,7 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 //
 //
@@ -18581,12 +18581,12 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_objectSpread__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_objectSpread__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_objectSpread___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_objectSpread__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_FileUpload_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_FileUpload_vue__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_people_SelectVendors_vue__ = __webpack_require__(116);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_check_CheckFields_vue__ = __webpack_require__(26);
@@ -19057,7 +19057,7 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 //
 //
@@ -19381,8 +19381,8 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_FileUpload_vue__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_FileUpload_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_ShowErrors_vue__ = __webpack_require__(7);
 //
@@ -20148,7 +20148,7 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 //
 //
@@ -20311,15 +20311,15 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_slicedToArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_objectSpread__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_objectSpread__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_objectSpread___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_helpers_objectSpread__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuex__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_base_FileUpload_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_base_FileUpload_vue__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectPeople_vue__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_SelectAccounts_vue__ = __webpack_require__(21);
@@ -20935,7 +20935,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_transactions_sales_InvoiceSingleContent_vue__ = __webpack_require__(410);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_transactions_sales_PaymentSingleContent_vue__ = __webpack_require__(412);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_email_SendMail_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_email_SendMail_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 //
 //
@@ -22261,7 +22261,7 @@ setTimeout(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_chart_PieChart_vue__ = __webpack_require__(24);
@@ -22742,7 +22742,7 @@ setTimeout(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 //
 //
@@ -23408,7 +23408,7 @@ setTimeout(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_ShowErrors_vue__ = __webpack_require__(7);
 //
 //
@@ -23576,7 +23576,7 @@ setTimeout(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_ShowErrors_vue__ = __webpack_require__(7);
 //
 //
@@ -23753,7 +23753,7 @@ setTimeout(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_tax_NewTaxAgency_vue__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_tax_NewTaxCategory_vue__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_tax_NewTaxZone_vue__ = __webpack_require__(30);
@@ -24035,7 +24035,7 @@ setTimeout(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_ShowErrors_vue__ = __webpack_require__(7);
 //
 //
@@ -24225,7 +24225,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_select_SelectAccounts_vue__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_ShowErrors_vue__ = __webpack_require__(7);
 //
@@ -25753,7 +25753,7 @@ setTimeout(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 //
 //
@@ -26087,15 +26087,15 @@ setTimeout(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_objectSpread__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_people_SelectPeople_vue__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(21);
@@ -26684,7 +26684,7 @@ setTimeout(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 //
 //
@@ -27052,7 +27052,7 @@ setTimeout(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_SubmitButton_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 //
 //
@@ -27277,7 +27277,7 @@ setTimeout(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__ = __webpack_require__(15);
 //
 //
 //
@@ -27405,9 +27405,12 @@ setTimeout(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
+
 //
 //
 //
@@ -27493,8 +27496,8 @@ setTimeout(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'IncomeStatement',
   components: {
-    ListTable: __WEBPACK_IMPORTED_MODULE_2_admin_components_list_table_ListTable_vue__["a" /* default */],
-    Datepicker: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__["a" /* default */]
+    ListTable: __WEBPACK_IMPORTED_MODULE_3_admin_components_list_table_ListTable_vue__["a" /* default */],
+    Datepicker: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -27525,8 +27528,8 @@ setTimeout(function () {
       rows2: [],
       income: 0,
       expense: 0,
-      profit: null,
-      loss: null
+      profit: 0,
+      loss: 0
     };
   },
   created: function created() {
@@ -27545,7 +27548,7 @@ setTimeout(function () {
       this.rows1 = [];
       this.rows2 = [];
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/reports/income-statement', {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/reports/income-statement', {
         params: {
           start_date: this.start_date,
           end_date: this.end_date
@@ -27563,6 +27566,19 @@ setTimeout(function () {
         _this.$store.dispatch('spinner/setSpinner', false);
       });
     },
+    transformBalance: function transformBalance(val) {
+      if (null === val && __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default()(val) === 'object') {
+        val = 0;
+      }
+
+      var currency = '$';
+
+      if (val < 0) {
+        return "Cr. ".concat(currency).concat(Math.abs(val));
+      }
+
+      return "Dr. ".concat(currency).concat(val);
+    },
     printPopup: function printPopup() {
       window.print();
     }
@@ -27574,10 +27590,13 @@ setTimeout(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Datepicker_vue__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
+
 //
 //
 //
@@ -27723,9 +27742,9 @@ setTimeout(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'BalanceSheet',
   components: {
-    MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
-    ListTable: __WEBPACK_IMPORTED_MODULE_3_admin_components_list_table_ListTable_vue__["a" /* default */],
-    Datepicker: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__["a" /* default */]
+    MultiSelect: __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__["a" /* default */],
+    ListTable: __WEBPACK_IMPORTED_MODULE_4_admin_components_list_table_ListTable_vue__["a" /* default */],
+    Datepicker: __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Datepicker_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -27810,7 +27829,7 @@ setTimeout(function () {
 
       this.rows = [];
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/reports/balance-sheet', {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/reports/balance-sheet', {
         params: {
           start_date: this.start_date,
           end_date: this.end_date
@@ -27828,10 +27847,23 @@ setTimeout(function () {
         _this.$store.dispatch('spinner/setSpinner', false);
       });
     },
+    transformBalance: function transformBalance(val) {
+      if (null === val && __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default()(val) === 'object') {
+        val = 0;
+      }
+
+      var currency = '$';
+
+      if (val < 0) {
+        return "Cr. ".concat(currency).concat(Math.abs(val));
+      }
+
+      return "Dr. ".concat(currency).concat(val);
+    },
     fetchFnYears: function fetchFnYears() {
       var _this2 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/opening-balances/names').then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/opening-balances/names').then(function (response) {
         // get only last 5
         _this2.fyears = response.data.reverse().slice(0).slice(-5);
 
@@ -27841,7 +27873,7 @@ setTimeout(function () {
     getCurrentFnYear: function getCurrentFnYear() {
       var _this3 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/closing-balance/closest-fn-year').then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/closing-balance/closest-fn-year').then(function (response) {
         _this3.selectedYear = response.data;
       });
     },
@@ -27852,7 +27884,7 @@ setTimeout(function () {
       var _this4 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/closing-balance/next-fn-year', {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/closing-balance/next-fn-year', {
         params: {
           date: this.end_date
         }
@@ -27871,7 +27903,7 @@ setTimeout(function () {
     closeBalancesheet: function closeBalancesheet(f_year_id) {
       var _this5 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/closing-balance', {
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].post('/closing-balance', {
         f_year_id: f_year_id,
         start_date: this.start_date,
         end_date: this.end_date
@@ -27893,12 +27925,12 @@ setTimeout(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_SimpleSelect_vue__ = __webpack_require__(137);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_SubmitButton_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_SubmitButton_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_ShowErrors_vue__ = __webpack_require__(7);
 
 //
@@ -33805,7 +33837,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(module, global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(15);
+/* WEBPACK VAR INJECTION */(function(module, global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 var require;var require;
 
@@ -60861,9 +60893,7 @@ var render = function() {
                 return [
                   _vm._v(
                     "\n            " +
-                      _vm._s(
-                        _vm.getCurrencySign() + Math.abs(data.row.balance)
-                      ) +
+                      _vm._s(_vm.transformBalance(Math.abs(data.row.balance))) +
                       "\n        "
                   )
                 ]
@@ -60877,7 +60907,9 @@ var render = function() {
             _c("tr", { staticClass: "t-foot" }, [
               _c("td", [_vm._v("Total Income")]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.getCurrencySign() + _vm.income))])
+              _c("td", [
+                _vm._v(_vm._s(_vm.transformBalance(Math.abs(_vm.income))))
+              ])
             ])
           ])
         ],
@@ -60902,9 +60934,7 @@ var render = function() {
                 return [
                   _vm._v(
                     "\n            " +
-                      _vm._s(
-                        _vm.getCurrencySign() + Math.abs(data.row.balance)
-                      ) +
+                      _vm._s(_vm.transformBalance(Math.abs(data.row.balance))) +
                       "\n        "
                   )
                 ]
@@ -60918,7 +60948,9 @@ var render = function() {
             _c("tr", { staticClass: "t-foot" }, [
               _c("td", [_vm._v("Total Expense")]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.getCurrencySign() + _vm.expense))])
+              _c("td", [
+                _vm._v(_vm._s(_vm.transformBalance(Math.abs(_vm.expense))))
+              ])
             ])
           ])
         ],
@@ -60939,7 +60971,9 @@ var render = function() {
                     _vm._m(0),
                     _vm._v(" "),
                     _c("td", [
-                      _vm._v(_vm._s(_vm.getCurrencySign() + _vm.profit))
+                      _vm._v(
+                        _vm._s(_vm.getCurrencySign() + Math.abs(_vm.profit))
+                      )
                     ]),
                     _vm._v(" "),
                     _c("td")
@@ -60952,7 +60986,7 @@ var render = function() {
                     _vm._m(1),
                     _vm._v(" "),
                     _c("td", [
-                      _vm._v(_vm._s(_vm.getCurrencySign() + _vm.loss))
+                      _vm._v(_vm._s(_vm.getCurrencySign() + Math.abs(_vm.loss)))
                     ]),
                     _vm._v(" "),
                     _c("td")
@@ -61264,10 +61298,8 @@ var render = function() {
                           ? _c("span", [_vm._v(_vm._s(data.row.balance))])
                           : _c("span", [
                               _vm._v(
-                                _vm._s(
-                                  _vm.getCurrencySign() +
-                                    Math.abs(data.row.balance)
-                                ) + " "
+                                _vm._s(_vm.transformBalance(data.row.balance)) +
+                                  " "
                               )
                             ])
                       ]
@@ -61283,7 +61315,7 @@ var render = function() {
                     _c("td", [_vm._v("Total Asset")]),
                     _vm._v(" "),
                     _c("td", [
-                      _vm._v(_vm._s(_vm.getCurrencySign() + _vm.totalAsset))
+                      _vm._v(_vm._s(_vm.transformBalance(_vm.totalAsset)))
                     ])
                   ])
                 ])
@@ -61328,10 +61360,8 @@ var render = function() {
                           ? _c("span", [_vm._v(_vm._s(data.row.balance))])
                           : _c("span", [
                               _vm._v(
-                                _vm._s(
-                                  _vm.getCurrencySign() +
-                                    Math.abs(data.row.balance)
-                                ) + " "
+                                _vm._s(_vm.transformBalance(data.row.balance)) +
+                                  " "
                               )
                             ])
                       ]
@@ -61347,11 +61377,7 @@ var render = function() {
                     _c("td", [_vm._v("Total Liability")]),
                     _vm._v(" "),
                     _c("td", [
-                      _vm._v(
-                        _vm._s(
-                          _vm.getCurrencySign() + Math.abs(_vm.totalLiability)
-                        )
-                      )
+                      _vm._v(_vm._s(_vm.transformBalance(_vm.totalLiability)))
                     ])
                   ])
                 ])
@@ -61396,10 +61422,8 @@ var render = function() {
                           ? _c("span", [_vm._v(_vm._s(data.row.balance))])
                           : _c("span", [
                               _vm._v(
-                                _vm._s(
-                                  _vm.getCurrencySign() +
-                                    Math.abs(data.row.balance)
-                                ) + " "
+                                _vm._s(_vm.transformBalance(data.row.balance)) +
+                                  " "
                               )
                             ])
                       ]
@@ -61415,11 +61439,7 @@ var render = function() {
                     _c("td", [_vm._v("Total Equity")]),
                     _vm._v(" "),
                     _c("td", [
-                      _vm._v(
-                        _vm._s(
-                          _vm.getCurrencySign() + Math.abs(_vm.totalEquity)
-                        )
-                      )
+                      _vm._v(_vm._s(_vm.transformBalance(_vm.totalEquity)))
                     ])
                   ])
                 ])
@@ -61442,7 +61462,7 @@ var render = function() {
                 _vm._m(1),
                 _vm._v(" "),
                 _c("td", [
-                  _vm._v(_vm._s(_vm.getCurrencySign() + _vm.totalAsset))
+                  _vm._v(_vm._s(_vm.transformBalance(_vm.totalAsset)))
                 ]),
                 _vm._v(" "),
                 _c("td"),
@@ -61454,7 +61474,7 @@ var render = function() {
                 _vm._m(2),
                 _vm._v(" "),
                 _c("td", [
-                  _vm._v(_vm._s(_vm.getCurrencySign() + _vm.liability_equity))
+                  _vm._v(_vm._s(_vm.transformBalance(_vm.liability_equity)))
                 ]),
                 _vm._v(" "),
                 _c("td"),
@@ -62997,7 +63017,7 @@ var debug = process.env.NODE_ENV !== 'production';
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 
@@ -63127,7 +63147,7 @@ var mutations = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 
@@ -63224,7 +63244,7 @@ var mutations = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 
