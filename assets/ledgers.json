@@ -16,78 +16,73 @@
       "system": 1
     },
     {
-      "name"  : "Purchase",
+      "name"  : "Supplies",
       "code"  : 103,
       "system": 1
     },
     {
-      "name"  : "Supplies",
+      "name"  : "Prepaid Insurance",
       "code"  : 104,
       "system": 1
     },
     {
-      "name"  : "Prepaid Insurance",
+      "name"  : "Prepaid Rent",
       "code"  : 105,
       "system": 1
     },
     {
-      "name"  : "Prepaid Rent",
+      "name"  : "Prepaid Salary",
       "code"  : 106,
       "system": 1
     },
     {
-      "name"  : "Prepaid Salary",
+      "name"  : "Land",
       "code"  : 107,
       "system": 1
     },
     {
-      "name"  : "Land",
+      "name"  : "Equipment",
       "code"  : 108,
       "system": 1
     },
     {
-      "name"  : "Equipment",
+      "name"  : "Furniture & Fixture",
       "code"  : 109,
       "system": 1
     },
     {
-      "name"  : "Furniture & Fixture",
+      "name"  : "Buildings",
       "code"  : 110,
       "system": 1
     },
     {
-      "name"  : "Buildings",
+      "name"  : "Copyrights",
       "code"  : 111,
       "system": 1
     },
     {
-      "name"  : "Copyrights",
+      "name"  : "Goodwill",
       "code"  : 112,
       "system": 1
     },
     {
-      "name"  : "Goodwill",
+      "name"  : "Patents",
       "code"  : 113,
       "system": 1
     },
     {
-      "name"  : "Patents",
+      "name"  : "Accoumulated Depreciation- Equipment",
       "code"  : 114,
       "system": 1
     },
     {
-      "name"  : "Accoumulated Depreciation- Equipment",
+      "name"  : "Accoumulated Depreciation- Buildings",
       "code"  : 115,
       "system": 1
     },
     {
-      "name"  : "Accoumulated Depreciation- Buildings",
-      "code"  : 116,
-      "system": 1
-    },
-    {
       "name"  : "Accoumulated Depreciation- Furniture & Fixtur",
-      "code"  : 117,
+      "code"  : 116,
       "system": 1
     }
   ],
@@ -301,6 +296,11 @@
     {
       "name"  : "Utilites Expense",
       "code"  : 514,
+      "system": 1
+    },
+    {
+      "name"  : "Purchase",
+      "code"  : 515,
       "system": 1
     }
   ]
