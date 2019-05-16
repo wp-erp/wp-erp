@@ -345,17 +345,13 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_bank_accounts ( $request ) {
-        $items[] = [
-            'id'      => 1,
-            'name'    => 'Cash',
-            'balance' => get_ledger_balance_with_opening_balance( 1 ),
-        ];
-        $items[] = erp_acct_get_banks( true, false, false );
+        $items = erp_acct_get_banks( true, false, false );
 
         if ( empty( $items ) ) {
             return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
         }
 
+        $formatted_items = [];
         foreach ( $items as $item ) {
             $additional_fields = [];
 
