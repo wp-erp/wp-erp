@@ -287,6 +287,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
         }
 
+        $formatted_items = [];
         foreach ( $items as $item ) {
             $additional_fields = [];
 
