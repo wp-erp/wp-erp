@@ -28,14 +28,14 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
 
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_company' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -50,7 +50,7 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_company ( $request ) {
+    public function get_company( $request ) {
 
         $company = new \WeDevs\ERP\Company();
 

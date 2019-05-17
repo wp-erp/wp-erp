@@ -7,11 +7,11 @@ use WeDevs\ERP\Email;
 
 class Send_Email extends Email {
 
-    function __construct () {
+    function __construct() {
         parent::__construct();
     }
 
-    public function trigger ( $receiver_emails = [], $subject = 'sub', $body = 'body', $attachement = '' ) {
+    public function trigger( $receiver_emails = [], $subject = 'sub', $body = 'body', $attachement = '' ) {
 
         $results = [];
         foreach ( $receiver_emails as $email ) {

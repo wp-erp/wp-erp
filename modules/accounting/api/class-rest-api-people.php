@@ -28,13 +28,13 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_all_people' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
@@ -45,7 +45,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_people' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
@@ -56,7 +56,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_people_address' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
@@ -67,7 +67,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_opening_balance' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
@@ -80,7 +80,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_all_people ( $request ) {
+    public function get_all_people( $request ) {
         $args = [
             'number' => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -128,7 +128,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $id
      * @return string
      */
-    public function get_people ( $request ) {
+    public function get_people( $request ) {
 
         $id = (int) $request['id'];
 
@@ -145,7 +145,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $id
      * @return string
      */
-    public function get_people_address ( $request ) {
+    public function get_people_address( $request ) {
         global $wpdb;
 
         $id = (int) $request['id'];
@@ -170,7 +170,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_opening_balance ( $request ) {
+    public function get_opening_balance( $request ) {
         $id                = (int) $request['id'];
         $args['people_id'] = $id;
 
@@ -186,7 +186,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
         // required arguments.
         if ( isset( $request['first_name'] ) ) {
@@ -257,7 +257,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -302,7 +302,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'customer',

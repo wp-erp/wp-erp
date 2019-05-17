@@ -7,11 +7,11 @@ namespace WeDevs\ERP\Accounting\API;
  */
 class REST_API {
 
-    public function __construct () {
+    public function __construct() {
         add_filter( 'erp_rest_api_controllers', array( $this, 'register_accounting_new_controllers' ) );
     }
 
-    public function register_accounting_new_controllers ( $controllers ) {
+    public function register_accounting_new_controllers( $controllers ) {
         $this->include_controllers();
 
         $controllers = array_merge( $controllers, [
@@ -46,7 +46,7 @@ class REST_API {
         return $controllers;
     }
 
-    public function include_controllers () {
+    public function include_controllers() {
         foreach ( glob( ERP_ACCOUNTING_API . '/*.php' ) as $filename ) {
             include_once $filename;
         }

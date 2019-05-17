@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return mixed
  */
-function erp_acct_get_all_tax_rates ( $args = [] ) {
+function erp_acct_get_all_tax_rates( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -48,7 +48,7 @@ function erp_acct_get_all_tax_rates ( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_tax_rate ( $tax_no ) {
+function erp_acct_get_tax_rate( $tax_no ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -93,7 +93,7 @@ function erp_acct_get_tax_rate ( $tax_no ) {
  * @param $data
  * @return int
  */
-function erp_acct_insert_tax_rate ( $data ) {
+function erp_acct_insert_tax_rate( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -129,7 +129,7 @@ function erp_acct_insert_tax_rate ( $data ) {
  * @param $data
  * @return int
  */
-function erp_acct_update_tax_rate ( $data, $id ) {
+function erp_acct_update_tax_rate( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -181,7 +181,7 @@ function erp_acct_update_tax_rate ( $data, $id ) {
  * @param $data
  * @return int
  */
-function erp_acct_quick_edit_tax_rate ( $data, $id ) {
+function erp_acct_quick_edit_tax_rate( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -214,7 +214,7 @@ function erp_acct_quick_edit_tax_rate ( $data, $id ) {
  * @param $data
  * @return int
  */
-function erp_acct_add_tax_rate_line ( $data ) {
+function erp_acct_add_tax_rate_line( $data ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -244,7 +244,7 @@ function erp_acct_add_tax_rate_line ( $data ) {
  * @param $data
  * @return int
  */
-function erp_acct_edit_tax_rate_line ( $data ) {
+function erp_acct_edit_tax_rate_line( $data ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -276,7 +276,7 @@ function erp_acct_edit_tax_rate_line ( $data ) {
  *
  * @return int
  */
-function erp_acct_delete_tax_rate_line ( $line_no ) {
+function erp_acct_delete_tax_rate_line( $line_no ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_cat_agency', array( 'id' => $line_no ) );
@@ -291,7 +291,7 @@ function erp_acct_delete_tax_rate_line ( $line_no ) {
  *
  * @return int
  */
-function erp_acct_delete_tax_rate ( $tax_no ) {
+function erp_acct_delete_tax_rate( $tax_no ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', array( 'id' => $tax_no ) );
@@ -304,7 +304,7 @@ function erp_acct_delete_tax_rate ( $tax_no ) {
  *
  * @return mixed
  */
-function erp_acct_get_tax_pay_records ( $args = [] ) {
+function erp_acct_get_tax_pay_records( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -340,7 +340,7 @@ function erp_acct_get_tax_pay_records ( $args = [] ) {
  *
  * @return mixed
  */
-function erp_acct_get_tax_pay_record ( $voucher_no ) {
+function erp_acct_get_tax_pay_record( $voucher_no ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -369,7 +369,7 @@ function erp_acct_get_tax_pay_record ( $voucher_no ) {
  * @param $data
  * @return int
  */
-function erp_acct_pay_tax ( $data ) {
+function erp_acct_pay_tax( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -438,7 +438,7 @@ function erp_acct_pay_tax ( $data ) {
  *
  * @return mixed
  */
-function erp_acct_insert_tax_pay_data_into_ledger ( $tax_data ) {
+function erp_acct_insert_tax_pay_data_into_ledger( $tax_data ) {
     global $wpdb;
 
     if ( 'debit' == $tax_data['voucher_type'] ) {
@@ -471,7 +471,7 @@ function erp_acct_insert_tax_pay_data_into_ledger ( $tax_data ) {
  *
  * @return array
  */
-function erp_acct_format_tax_line_items ( $tax = 'all' ) {
+function erp_acct_format_tax_line_items( $tax = 'all' ) {
     global $wpdb;
 
     $sql = "SELECT id as db_id, tax_id, component_name, agency_id, tax_cat_id, tax_rate";
@@ -495,7 +495,7 @@ function erp_acct_format_tax_line_items ( $tax = 'all' ) {
  * @param $voucher_no
  * @return mixed
  */
-function erp_acct_get_formatted_tax_data ( $data ) {
+function erp_acct_get_formatted_tax_data( $data ) {
     $tax_data = [];
 
     $tax_data['tax_rate_id']     = isset( $data['tax_rate_name'] ) ? $data['tax_rate_name'] : '';
@@ -531,7 +531,7 @@ function erp_acct_get_formatted_tax_data ( $data ) {
  * @param $voucher_no
  * @return mixed
  */
-function erp_acct_get_formatted_tax_line_data ( $data ) {
+function erp_acct_get_formatted_tax_line_data( $data ) {
     $tax_data = [];
 
     $tax_data['tax_id']         = isset( $data['tax_id'] ) ? $data['tax_id'] : '';
@@ -552,7 +552,7 @@ function erp_acct_get_formatted_tax_line_data ( $data ) {
 /**
  * Tax summary
  */
-function erp_acct_tax_summary () {
+function erp_acct_tax_summary() {
     global $wpdb;
 
     $sql = "SELECT

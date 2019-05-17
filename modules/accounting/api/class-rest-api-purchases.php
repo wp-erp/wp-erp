@@ -28,13 +28,13 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_purchases' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ],
@@ -42,7 +42,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_purchase' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -54,7 +54,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_purchase' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ],
@@ -62,14 +62,14 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_purchase' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_purchase' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -81,7 +81,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'void_purchase' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_publish_expenses_voucher' );
                 },
             ],
@@ -92,7 +92,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'due_purchases' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -106,7 +106,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_purchases ( $request ) {
+    public function get_purchases( $request ) {
 
         $args = [
             'number' => ! empty( $request['per_page'] ) ? intval( $request['per_page'] ) : 20,
@@ -151,7 +151,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function due_purchases ( $request ) {
+    public function due_purchases( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -202,7 +202,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_purchase ( $request ) {
+    public function get_purchase( $request ) {
 
         $id = (int) $request['id'];
 
@@ -230,7 +230,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_purchase ( $request ) {
+    public function create_purchase( $request ) {
         $purchase_data = $this->prepare_item_for_database( $request );
 
         $items      = $request['line_items'];
@@ -264,7 +264,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_purchase ( $request ) {
+    public function update_purchase( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -307,7 +307,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_purchase ( $request ) {
+    public function delete_purchase( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -326,7 +326,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function void_purchase ( $request ) {
+    public function void_purchase( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -344,7 +344,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log ( $data, $action ) {
+    public function add_log( $data, $action ) {
         erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Pay Bill', 'erp' ),
@@ -364,7 +364,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
 
         $prepared_item = [];
 
@@ -420,7 +420,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -454,7 +454,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'purchase',

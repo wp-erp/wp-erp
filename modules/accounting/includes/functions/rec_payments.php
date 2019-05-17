@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_payments ( $args = [] ) {
+function erp_acct_get_payments( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -51,7 +51,7 @@ function erp_acct_get_payments ( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_payment ( $invoice_no ) {
+function erp_acct_get_payment( $invoice_no ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -98,7 +98,7 @@ function erp_acct_get_payment ( $invoice_no ) {
  * @return mixed
  */
 
-function erp_acct_insert_payment ( $data ) {
+function erp_acct_insert_payment( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -178,7 +178,7 @@ function erp_acct_insert_payment ( $data ) {
  * @param $due
  * @return int
  */
-function erp_acct_insert_payment_line_items ( $data, $item, $voucher_no ) {
+function erp_acct_insert_payment_line_items( $data, $item, $voucher_no ) {
     global $wpdb;
 
     $payment_data               = erp_acct_get_formatted_payment_data( $data, $voucher_no, $item['invoice_no'] );
@@ -226,7 +226,7 @@ function erp_acct_insert_payment_line_items ( $data, $item, $voucher_no ) {
  * @param $invoice_no
  * @return mixed
  */
-function erp_acct_update_payment ( $data, $voucher_no ) {
+function erp_acct_update_payment( $data, $voucher_no ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -293,7 +293,7 @@ function erp_acct_update_payment ( $data, $voucher_no ) {
  * @param $due
  * @return int
  */
-function erp_acct_update_payment_line_items ( $data, $invoice_no, $voucher_no ) {
+function erp_acct_update_payment_line_items( $data, $invoice_no, $voucher_no ) {
     global $wpdb;
 
     $payment_data = erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no );
@@ -341,7 +341,7 @@ function erp_acct_update_payment_line_items ( $data, $invoice_no, $voucher_no ) 
  * @param $invoice_no
  * @return mixed
  */
-function erp_acct_get_formatted_payment_data ( $data, $voucher_no, $invoice_no = 0 ) {
+function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 0 ) {
     $payment_data = [];
 
     // We can pass the name from view... to reduce query load
@@ -383,7 +383,7 @@ function erp_acct_get_formatted_payment_data ( $data, $voucher_no, $invoice_no =
  * @return void
  */
 
-function erp_acct_delete_payment ( $id ) {
+function erp_acct_delete_payment( $id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_receipts', array( 'voucher_no' => $id ) );
@@ -399,7 +399,7 @@ function erp_acct_delete_payment ( $id ) {
  * @return void
  */
 
-function erp_acct_void_payment ( $id ) {
+function erp_acct_void_payment( $id ) {
     global $wpdb;
 
     if ( ! $id ) {
@@ -421,7 +421,7 @@ function erp_acct_void_payment ( $id ) {
  *
  * @return void
  */
-function erp_acct_change_invoice_status ( $invoice_no ) {
+function erp_acct_change_invoice_status( $invoice_no ) {
     global $wpdb;
 
     $due = erp_acct_get_invoice_due( $invoice_no );
@@ -451,7 +451,7 @@ function erp_acct_change_invoice_status ( $invoice_no ) {
  *
  * @return mixed
  */
-function erp_acct_insert_payment_data_into_ledger ( $payment_data ) {
+function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
     global $wpdb;
 
     // Insert amount in ledger_details
@@ -477,7 +477,7 @@ function erp_acct_insert_payment_data_into_ledger ( $payment_data ) {
  *
  * @return mixed
  */
-function erp_acct_update_payment_data_in_ledger ( $payment_data, $invoice_no ) {
+function erp_acct_update_payment_data_in_ledger( $payment_data, $invoice_no ) {
     global $wpdb;
 
     // Update amount in ledger_details
@@ -501,7 +501,7 @@ function erp_acct_update_payment_data_in_ledger ( $payment_data, $invoice_no ) {
  *
  * @return int
  */
-function erp_acct_get_payment_count () {
+function erp_acct_get_payment_count() {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_invoice_receipts" );
@@ -516,7 +516,7 @@ function erp_acct_get_payment_count () {
  *
  * @return array
  */
-function erp_acct_format_payment_line_items ( $invoice = 'all' ) {
+function erp_acct_format_payment_line_items( $invoice = 'all' ) {
     global $wpdb;
 
     $sql = "SELECT id, voucher_no, invoice_no, amount ";

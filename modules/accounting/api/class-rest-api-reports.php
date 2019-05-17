@@ -28,14 +28,14 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/trial-balance', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_trial_balance' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -46,7 +46,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_ledger_report' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -57,7 +57,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_sales_tax_report' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -68,7 +68,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_income_statement' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -79,7 +79,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_balance_sheet' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -94,7 +94,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_trial_balance ( $request ) {
+    public function get_trial_balance( $request ) {
         $args = [
             'start_date' => ! empty( $request['start_date'] ) ? $request['start_date'] : null,
             'end_date'   => ! empty( $request['end_date'] ) ? $request['end_date'] : null
@@ -112,7 +112,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart status
      */
-    public function get_sales_chart_status ( $request ) {
+    public function get_sales_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
@@ -130,7 +130,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart payment
      */
-    public function get_sales_chart_payment ( $request ) {
+    public function get_sales_chart_payment( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
@@ -152,7 +152,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_ledger_report ( $request ) {
+    public function get_ledger_report( $request ) {
         $ledger_id  = (int) $request['ledger_id'];
         $start_date = empty( $request['start_date'] ) ? date( 'Y-m-d' ) : $request['start_date'];
         $end_date   = empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'];
@@ -173,7 +173,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_sales_tax_report ( $request ) {
+    public function get_sales_tax_report( $request ) {
         $agency_id  = (int) $request['agency_id'];
         $start_date = empty( $request['start_date'] ) ? null : $request['start_date'];
         $end_date   = empty( $request['end_date'] ) ? null : $request['end_date'];
@@ -194,7 +194,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_income_statement ( $request ) {
+    public function get_income_statement( $request ) {
         $start_date = $request['start_date'];
         $end_date   = $request['end_date'];
         $args       = [
@@ -218,7 +218,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_balance_sheet ( $request ) {
+    public function get_balance_sheet( $request ) {
         $start_date = $request['start_date'];
         $end_date   = $request['end_date'];
         $args       = [
@@ -244,7 +244,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
 
         $data = array_merge( $item, $additional_fields );
 

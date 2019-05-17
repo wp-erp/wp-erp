@@ -28,13 +28,13 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_tax_cats' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
                 },
             ],
@@ -42,7 +42,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_tax_cat' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -54,7 +54,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_tax_cat' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
                 },
             ],
@@ -62,14 +62,14 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_tax_cat' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_tax_cat' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -83,7 +83,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'ids' => [ 'required' => true ]
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -95,7 +95,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'pay_tax' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_payment' );
                 },
             ],
@@ -111,7 +111,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_tax_cats ( $request ) {
+    public function get_tax_cats( $request ) {
         $args = [
             'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -157,7 +157,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_tax_cat ( $request ) {
+    public function get_tax_cat( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -184,7 +184,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_tax_cat ( $request ) {
+    public function create_tax_cat( $request ) {
 
         $tax_data = $this->prepare_item_for_database( $request );
 
@@ -210,7 +210,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_tax_cat ( $request ) {
+    public function update_tax_cat( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -249,7 +249,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function delete_tax_cat ( $request ) {
+    public function delete_tax_cat( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -268,7 +268,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function bulk_delete ( $request ) {
+    public function bulk_delete( $request ) {
         $ids = $request['ids'];
         $ids = explode( ',', $ids );
 
@@ -289,7 +289,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['name'] ) ) {
@@ -311,7 +311,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -335,7 +335,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'tax',

@@ -28,13 +28,13 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_tax_rates' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
                 },
             ],
@@ -42,7 +42,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_tax_rate' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -54,7 +54,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_tax_rate' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
                 },
             ],
@@ -62,14 +62,14 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_tax_rate' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_tax_rate' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -83,7 +83,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'ids' => [ 'required' => true ]
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -96,7 +96,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'quick_edit_tax_rate' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -109,7 +109,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'line_add_tax_rate' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -122,7 +122,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'line_edit_tax_rate' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -135,7 +135,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'line_delete_tax_rate' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -147,7 +147,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_tax_records' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
                 },
             ],
@@ -159,7 +159,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_tax_pay_record' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
                 },
             ],
@@ -170,7 +170,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'pay_tax' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_payment' );
                 },
             ],
@@ -182,7 +182,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_tax_summary' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
                 },
             ]
@@ -197,7 +197,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_tax_rates ( $request ) {
+    public function get_tax_rates( $request ) {
         $args = [
             'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -243,7 +243,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_tax_rate ( $request ) {
+    public function get_tax_rate( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -270,7 +270,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_tax_rate ( $request ) {
+    public function create_tax_rate( $request ) {
         $item_rates = [];
 
         $tax_data = $this->prepare_item_for_database( $request );
@@ -305,7 +305,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_tax_rate ( $request ) {
+    public function update_tax_rate( $request ) {
         $id         = (int) $request['id'];
         $item_rates = [];
 
@@ -345,7 +345,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function quick_edit_tax_rate ( $request ) {
+    public function quick_edit_tax_rate( $request ) {
         $id         = (int) $request['id'];
         $item_rates = [];
 
@@ -379,7 +379,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function line_add_tax_rate ( $request ) {
+    public function line_add_tax_rate( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -408,7 +408,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function line_edit_tax_rate ( $request ) {
+    public function line_edit_tax_rate( $request ) {
         $id         = (int) $request['id'];
         $item_rates = [];
 
@@ -438,7 +438,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function line_delete_tax_rate ( $request ) {
+    public function line_delete_tax_rate( $request ) {
         $id = (int) $request['db_id'];
 
         if ( empty( $id ) ) {
@@ -458,7 +458,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_tax_rate ( $request ) {
+    public function delete_tax_rate( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -477,7 +477,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function get_tax_records ( $request ) {
+    public function get_tax_records( $request ) {
         $args = [
             'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -522,7 +522,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_tax_pay_record ( $request ) {
+    public function get_tax_pay_record( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -549,7 +549,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function pay_tax ( $request ) {
+    public function pay_tax( $request ) {
         $tax_data = $this->prepare_item_for_database( $request );
 
         $tax_id = erp_acct_pay_tax( $tax_data );
@@ -572,7 +572,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Tax summary
      */
-    public function get_tax_summary ( $request ) {
+    public function get_tax_summary( $request ) {
         $formatted_items   = [];
         $additional_fields = [];
 
@@ -600,7 +600,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return object
      */
-    public function bulk_delete ( $request ) {
+    public function bulk_delete( $request ) {
         $ids = $request['ids'];
         $ids = explode( ',', $ids );
 
@@ -620,7 +620,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log ( $data, $action ) {
+    public function add_log( $data, $action ) {
         erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Pay Bill', 'erp' ),
@@ -640,7 +640,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['tax_rate_name'] ) ) {
@@ -690,7 +690,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_line_item_for_database ( $request ) {
+    protected function prepare_line_item_for_database( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['tax_id'] ) ) {
@@ -727,7 +727,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -756,7 +756,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_tax_line_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_tax_line_for_response( $item, $request, $additional_fields = [] ) {
 
         $data = array_merge( $item, $additional_fields );
 
@@ -778,7 +778,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_tax_pay_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_tax_pay_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -812,7 +812,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_tax_summary_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_tax_summary_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -839,7 +839,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'tax',

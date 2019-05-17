@@ -31,13 +31,13 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_employees' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_view_list' );
                 },
             ],
@@ -45,7 +45,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_employee' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_create_employee' );
                 },
             ],
@@ -59,7 +59,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_list_employee' );
                 },
             ],
@@ -67,14 +67,14 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_employee' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_edit_employee', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_employee' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_delete_employee' );
                 },
             ],
@@ -88,7 +88,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'ids' => [ 'required' => true ]
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_delete_employee' );
                 },
             ],
@@ -100,7 +100,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_transactions' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_view_list' );
                 },
             ],
@@ -115,7 +115,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|object|\WP_REST_Response
      */
-    public function get_employees ( $request ) {
+    public function get_employees( $request ) {
         $args = [
             'number'      => $request['per_page'],
             'offset'      => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -159,7 +159,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_employee ( $request ) {
+    public function get_employee( $request ) {
         $user_id = (int) $request['id'];
 
         $employee  = new Employee( $user_id );
@@ -193,7 +193,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|\WP_REST_Request
      */
-    public function create_employee ( $request ) {
+    public function create_employee( $request ) {
         $item_data = $this->prepare_item_for_database( $request );
 
         $employee = new Employee( null );
@@ -233,7 +233,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return $this|mixed|object|\WP_Error|\WP_REST_Response
      */
-    public function update_employee ( $request ) {
+    public function update_employee( $request ) {
         $id = (int) $request['user_id'];
 
         $employee = new Employee( $id );
@@ -269,7 +269,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return \WP_REST_Response
      */
-    public function delete_employee ( $request ) {
+    public function delete_employee( $request ) {
         $id = (int) $request['user_id'];
 
         erp_employee_delete( $id );
@@ -285,7 +285,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response
      */
-    public function bulk_delete_employees ( $request ) {
+    public function bulk_delete_employees( $request ) {
         $ids = (string) $request['ids'];
 
         erp_employee_delete( explode( ',', $ids ) );
@@ -301,7 +301,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_transactions ( $request ) {
+    public function get_transactions( $request ) {
         $id                = (int) $request['id'];
         $args['people_id'] = $id;
 
@@ -319,7 +319,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|object|\WP_REST_Response
      */
-    public function prepare_item_for_response ( $item, $request = null, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request = null, $additional_fields = [] ) {
         $item = $item->data;
 
         $data            = array_merge( $item['work'], $item['personal'], $additional_fields );
@@ -341,7 +341,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    public function prepare_item_for_database ( $request ) {
+    public function prepare_item_for_database( $request ) {
         $prepared_item = [];
         $company       = new \WeDevs\ERP\Company();
 
@@ -507,7 +507,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_collection_params () {
+    public function get_collection_params() {
         return [
             'context'  => $this->get_context_param(),
             'page'     => [

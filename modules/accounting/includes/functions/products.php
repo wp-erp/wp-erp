@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_products ( $args = [] ) {
+function erp_acct_get_all_products( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -70,7 +70,7 @@ function erp_acct_get_all_products ( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_product ( $product_id ) {
+function erp_acct_get_product( $product_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT
@@ -104,7 +104,7 @@ function erp_acct_get_product ( $product_id ) {
  * @param $data
  * @return int
  */
-function erp_acct_insert_product ( $data ) {
+function erp_acct_insert_product( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -148,7 +148,7 @@ function erp_acct_insert_product ( $data ) {
  * @param $data
  * @return int
  */
-function erp_acct_update_product ( $data, $id ) {
+function erp_acct_update_product( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -193,7 +193,7 @@ function erp_acct_update_product ( $data, $id ) {
  * @param $voucher_no
  * @return mixed
  */
-function erp_acct_get_formatted_product_data ( $data ) {
+function erp_acct_get_formatted_product_data( $data ) {
 
     $product_data['name']            = isset( $data['name'] ) ? $data['name'] : 1;
     $product_data['product_type_id'] = isset( $data['product_type_id'] ) ? $data['product_type_id'] : 1;
@@ -218,7 +218,7 @@ function erp_acct_get_formatted_product_data ( $data ) {
  * @return int
  */
 
-function erp_acct_delete_product ( $product_id ) {
+function erp_acct_delete_product( $product_id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_products', array( 'id' => $product_id ) );
@@ -226,7 +226,7 @@ function erp_acct_delete_product ( $product_id ) {
     return $product_id;
 }
 
-function erp_get_product_type () {
+function erp_get_product_type() {
     global $wpdb;
     $types = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_product_types" );
     return $types;
