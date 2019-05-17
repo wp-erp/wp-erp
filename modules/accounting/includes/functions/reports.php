@@ -430,7 +430,7 @@ function erp_acct_get_balance_sheet ( $args ) {
 
     $results['rows2'][] = [
         'name'    => 'Accounts Payable',
-        'balance' => abs( erp_acct_get_account_payable( $args ) )
+        'balance' => erp_acct_get_account_payable( $args )
     ];
     $results['rows2'][] = [
         'name'       => 'Bank Loan',
@@ -441,16 +441,16 @@ function erp_acct_get_balance_sheet ( $args ) {
     $results['rows2'][] = [
         'name'    => 'Sales Tax Payable',
         'slug'    => 'sales_tax',
-        'balance' => abs( erp_acct_sales_tax_query( $args, 'payable' ) )
+        'balance' => erp_acct_sales_tax_query( $args, 'payable' )
     ];
 
     $capital  = erp_acct_get_owners_equity( $args, 'capital' );
     $drawings = erp_acct_get_owners_equity( $args, 'drawings' );
 
     $results['rows3'][] = [
-        'id'      => 30,
+        'id'      => 29,
         'name'    => 'Owner\'s Equity',
-        'balance' => abs( $capital ) - $drawings
+        'balance' => $capital - $drawings
     ];
 
     $profit_loss = erp_acct_get_profit_loss( $args );
@@ -521,7 +521,7 @@ function erp_acct_get_balance_sheet ( $args ) {
         }
     }
 
-    $results['owners_equity'] = abs( $capital ) - $drawings + $profit - $loss;
+    $results['owners_equity'] = $capital - $drawings + $profit - $loss;
 
     return $results;
 }
@@ -653,7 +653,7 @@ function erp_acct_bs_opening_balance_by_fn_year_id ( $id, $chart_id ) {
         $where = $wpdb->prepare( 'AND ledger.chart_id = %d', $chart_id );
     }
 
-    $sql = "SELECT ledger.id, ledger.name, ABS( SUM(opb.debit - opb.credit) ) AS balance
+    $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
         WHERE opb.financial_year_id = %d {$where} AND opb.type = 'ledger' AND ledger.slug <> 'owner_s_equity'
