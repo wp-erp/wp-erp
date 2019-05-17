@@ -7,7 +7,7 @@ class Ledger_Map {
 
     public $ledgers;
 
-    private function __construct () {
+    private function __construct() {
         global $wpdb;
 
         $sql = "SELECT slug, id, chart_id, category_id, name, code 
@@ -16,7 +16,7 @@ class Ledger_Map {
         $this->ledgers = $wpdb->get_results( $sql, OBJECT_K );
     }
 
-    public static function getInstance () {
+    public static function getInstance() {
         if ( static::$instance == null ) {
             static::$instance = new Ledger_Map;
         }
@@ -24,14 +24,14 @@ class Ledger_Map {
         return static::$instance;
     }
 
-    public function get_ledger_id_by_slug ( $slug ) {
+    public function get_ledger_id_by_slug( $slug ) {
         if ( ! empty( $this->ledgers[ $slug ] ) ) {
             return $this->ledgers[ $slug ]->id;
         }
         return false;
     }
 
-    public function get_ledger_details_by_slug ( $slug ) {
+    public function get_ledger_details_by_slug( $slug ) {
         if ( ! empty( $this->ledgers[ $slug ] ) ) {
             return $this->ledgers[ $slug ];
         }

@@ -12,7 +12,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
      *
      * @return string
      */
-    function erp_ac_get_manager_role () {
+    function erp_ac_get_manager_role() {
         return apply_filters( 'erp_ac_get_manager_role', 'erp_ac_manager' );
     }
 
@@ -23,7 +23,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
      *
      * @return void
      */
-    function erp_ac_new_admin_as_manager ( $user_id ) {
+    function erp_ac_new_admin_as_manager( $user_id ) {
         $user = get_user_by( 'id', $user_id );
 
         if ( $user && in_array( 'administrator', $user->roles ) ) {
@@ -38,7 +38,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
      *
      * @return string
      */
-    function erp_ac_get_user_role ( $user_id = 0 ) {
+    function erp_ac_get_user_role( $user_id = 0 ) {
 
         // Validate user id
         $user = get_userdata( $user_id );
@@ -69,7 +69,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
      *
      * @return array
      */
-    function erp_ac_get_roles () {
+    function erp_ac_get_roles() {
         $roles = [
             erp_ac_get_manager_role() => [
                 'name'         => __( 'Accounting Manager', 'erp' ),
@@ -81,7 +81,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
         return apply_filters( 'erp_ac_get_roles', $roles );
     }
 
-    function erp_ac_get_caps_for_role ( $role = '' ) {
+    function erp_ac_get_caps_for_role( $role = '' ) {
         $caps = [];
 
         // Which role are we looking for?
@@ -142,7 +142,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
         return apply_filters( 'erp_ac_get_caps_for_role', $caps, $role );
     }
 
-    function erp_ac_is_hr_current_user_manager () {
+    function erp_ac_is_hr_current_user_manager() {
         $current_user_hr_role = erp_hr_get_user_role( get_current_user_id() );
 
         if ( erp_hr_get_manager_role() != $current_user_hr_role ) {
@@ -154,11 +154,11 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
 
     //Customer
-    function erp_ac_create_customer () {
+    function erp_ac_create_customer() {
         return current_user_can( 'erp_ac_create_customer' );
     }
 
-    function erp_ac_current_user_can_edit_customer ( $created_by = false ) {
+    function erp_ac_current_user_can_edit_customer( $created_by = false ) {
         if ( ! current_user_can( 'erp_ac_edit_customer' ) ) {
             return false;
         };
@@ -180,15 +180,15 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
         return false;
     }
 
-    function erp_ac_current_user_can_view_single_customer () {
+    function erp_ac_current_user_can_view_single_customer() {
         return current_user_can( 'erp_ac_view_single_customer' );
     }
 
-    function erp_ac_view_other_customers () {
+    function erp_ac_view_other_customers() {
         return current_user_can( 'erp_ac_view_other_customers' );
     }
 
-    function erp_ac_current_user_can_delete_customer ( $created_by = false ) {
+    function erp_ac_current_user_can_delete_customer( $created_by = false ) {
         if ( ! current_user_can( 'erp_ac_delete_customer' ) ) {
             return false;
         };
@@ -211,11 +211,11 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     }
 
     //vendor
-    function erp_ac_create_vendor () {
+    function erp_ac_create_vendor() {
         return current_user_can( 'erp_ac_create_vendor' );
     }
 
-    function erp_ac_current_user_can_edit_vendor ( $created_by = false ) {
+    function erp_ac_current_user_can_edit_vendor( $created_by = false ) {
         if ( ! current_user_can( 'erp_ac_edit_vendor' ) ) {
             return false;
         };
@@ -237,15 +237,15 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
         return false;
     }
 
-    function erp_ac_current_user_can_view_single_vendor () {
+    function erp_ac_current_user_can_view_single_vendor() {
         return current_user_can( 'erp_ac_view_single_vendor' );
     }
 
-    function erp_ac_view_other_vendors () {
+    function erp_ac_view_other_vendors() {
         return current_user_can( 'erp_ac_view_other_vendors' );
     }
 
-    function erp_ac_current_user_can_delete_vendor ( $created_by = false ) {
+    function erp_ac_current_user_can_delete_vendor( $created_by = false ) {
         if ( ! current_user_can( 'erp_ac_delete_vendor' ) ) {
             return false;
         };
@@ -268,27 +268,27 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     }
 
     //sale
-    function erp_ac_view_other_sales () {
+    function erp_ac_view_other_sales() {
         return current_user_can( 'erp_ac_view_other_sales' );
     }
 
-    function erp_ac_view_sales_summary () {
+    function erp_ac_view_sales_summary() {
         return current_user_can( 'erp_ac_view_sales_summary' );
     }
 
-    function erp_ac_create_sales_payment () {
+    function erp_ac_create_sales_payment() {
         return current_user_can( 'erp_ac_create_sales_payment' );
     }
 
-    function erp_ac_publish_sales_payment () {
+    function erp_ac_publish_sales_payment() {
         return current_user_can( 'erp_ac_publish_sales_payment' );
     }
 
-    function erp_ac_create_sales_invoice () {
+    function erp_ac_create_sales_invoice() {
         return current_user_can( 'erp_ac_create_sales_invoice' );
     }
 
-    function erp_ac_publish_sales_invoice () {
+    function erp_ac_publish_sales_invoice() {
         return current_user_can( 'erp_ac_publish_sales_invoice' );
     }
 
@@ -301,58 +301,58 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
      *
      * @since 1.0.0
      */
-    function erp_ac_view_other_expenses () {
+    function erp_ac_view_other_expenses() {
         return current_user_can( 'erp_ac_view_other_expenses' );
     }
 
-    function erp_ac_view_expenses_summary () {
+    function erp_ac_view_expenses_summary() {
         return current_user_can( 'erp_ac_view_expenses_summary' );
     }
 
-    function erp_ac_create_expenses_voucher () {
+    function erp_ac_create_expenses_voucher() {
         return current_user_can( 'erp_ac_create_expenses_voucher' );
     }
 
-    function erp_ac_publish_expenses_voucher () {
+    function erp_ac_publish_expenses_voucher() {
         return current_user_can( 'erp_ac_publish_expenses_voucher' );
     }
 
-    function erp_ac_create_expenses_credit () {
+    function erp_ac_create_expenses_credit() {
         return current_user_can( 'erp_ac_create_expenses_credit' );
     }
 
-    function erp_ac_publish_expenses_credit () {
+    function erp_ac_publish_expenses_credit() {
         return current_user_can( 'erp_ac_publish_expenses_credit' );
     }
 
     //accounts
-    function erp_ac_view_single_account () {
+    function erp_ac_view_single_account() {
         return current_user_can( 'erp_ac_view_single_account' );
     }
 
-    function erp_ac_create_account () {
+    function erp_ac_create_account() {
         return current_user_can( 'erp_ac_create_account' );
     }
 
-    function erp_ac_edit_account () {
+    function erp_ac_edit_account() {
         return current_user_can( 'erp_ac_edit_account' );
     }
 
-    function erp_ac_delete_account () {
+    function erp_ac_delete_account() {
         return current_user_can( 'erp_ac_delete_account' );
     }
 
     //bank accounts
-    function erp_ac_create_bank_transfer () {
+    function erp_ac_create_bank_transfer() {
         return current_user_can( 'erp_ac_create_bank_transfer' );
     }
 
     //journal
-    function erp_ac_create_journal () {
+    function erp_ac_create_journal() {
         return current_user_can( 'erp_ac_create_journal' );
     }
 
-    function erp_ac_view_other_journals () {
+    function erp_ac_view_other_journals() {
         return current_user_can( 'erp_ac_view_other_journals' );
     }
 
@@ -367,7 +367,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
  *
  * @return array
  */
-function erp_ac_filter_editable_roles ( $all_roles = [] ) {
+function erp_ac_filter_editable_roles( $all_roles = [] ) {
     $roles = erp_ac_get_roles();
 
     foreach ( $roles as $ac_role_key => $ac_role ) {

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_tax_rate_names ( $args = [] ) {
+function erp_acct_get_all_tax_rate_names( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -49,7 +49,7 @@ function erp_acct_get_all_tax_rate_names ( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_tax_rate_name ( $tax_no ) {
+function erp_acct_get_tax_rate_name( $tax_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_taxes WHERE id = %d LIMIT 1", $tax_no );
@@ -65,7 +65,7 @@ function erp_acct_get_tax_rate_name ( $tax_no ) {
  * @param $data
  * @return int
  */
-function erp_acct_insert_tax_rate_name ( $data ) {
+function erp_acct_insert_tax_rate_name( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -100,7 +100,7 @@ function erp_acct_insert_tax_rate_name ( $data ) {
  * @param $data
  * @return int
  */
-function erp_acct_update_tax_rate_name ( $data, $id ) {
+function erp_acct_update_tax_rate_name( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -134,7 +134,7 @@ function erp_acct_update_tax_rate_name ( $data, $id ) {
  *
  * @return int
  */
-function erp_acct_delete_tax_rate_name ( $id ) {
+function erp_acct_delete_tax_rate_name( $id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_taxes', array( 'id' => $id ) );
@@ -150,7 +150,7 @@ function erp_acct_delete_tax_rate_name ( $id ) {
  *
  * @return mixed
  */
-function erp_acct_get_formatted_tax_rate_name_data ( $data ) {
+function erp_acct_get_formatted_tax_rate_name_data( $data ) {
     $tax_data = [];
 
     $tax_data['tax_rate_name'] = isset( $data['tax_rate_name'] ) ? $data['tax_rate_name'] : '';

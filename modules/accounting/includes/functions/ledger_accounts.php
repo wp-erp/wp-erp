@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array
  */
-function erp_acct_get_all_charts () {
+function erp_acct_get_all_charts() {
     global $wpdb;
 
     $charts = $wpdb->get_results( "SELECT id, name AS label FROM {$wpdb->prefix}erp_acct_chart_of_accounts", ARRAY_A );
@@ -23,7 +23,7 @@ function erp_acct_get_all_charts () {
  * @param $ledger_id
  * @return mixed
  */
-function erp_get_ledger_name_by_id ( $ledger_id ) {
+function erp_get_ledger_name_by_id( $ledger_id ) {
     global $wpdb;
 
     $sql = "SELECT id, name  FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = {$ledger_id}";
@@ -49,7 +49,7 @@ function erp_get_ledger_name_by_id ( $ledger_id ) {
  * Get ledger categories
  */
 
-function erp_acct_get_ledger_categories ( $chart_id ) {
+function erp_acct_get_ledger_categories( $chart_id ) {
     global $wpdb;
 
     $sql = "SELECT id, name AS label, chart_id, parent_id, system FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE chart_id = {$chart_id}";
@@ -60,7 +60,7 @@ function erp_acct_get_ledger_categories ( $chart_id ) {
 /**
  * Create ledger category
  */
-function erp_acct_create_ledger_category ( $args ) {
+function erp_acct_create_ledger_category( $args ) {
     global $wpdb;
 
     $exist = $wpdb->get_var( "SELECT name FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE name = '{$args['name']}'" );
@@ -81,7 +81,7 @@ function erp_acct_create_ledger_category ( $args ) {
 /**
  * Update ledger category
  */
-function erp_acct_update_ledger_category ( $args ) {
+function erp_acct_update_ledger_category( $args ) {
     global $wpdb;
 
     $exist = $wpdb->get_var( "SELECT name FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE name = '{$args['name']}' AND id <> {$args['id']}" );
@@ -105,7 +105,7 @@ function erp_acct_update_ledger_category ( $args ) {
 /**
  * Remove ledger category
  */
-function erp_acct_delete_ledger_category ( $id ) {
+function erp_acct_delete_ledger_category( $id ) {
     global $wpdb;
 
     $table = "{$wpdb->prefix}erp_acct_ledger_categories";
@@ -128,7 +128,7 @@ function erp_acct_delete_ledger_category ( $id ) {
  * @param $chart_id
  * @return array|object|null
  */
-function erp_acct_get_ledgers_by_chart_id ( $chart_id ) {
+function erp_acct_get_ledgers_by_chart_id( $chart_id ) {
     global $wpdb;
 
     $charts = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE chart_id = {$chart_id} ", ARRAY_A );
@@ -142,7 +142,7 @@ function erp_acct_get_ledgers_by_chart_id ( $chart_id ) {
  * @param $ledger_id
  * @return mixed
  */
-function erp_acct_get_ledger_trn_count ( $ledger_id ) {
+function erp_acct_get_ledger_trn_count( $ledger_id ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -161,7 +161,7 @@ function erp_acct_get_ledger_trn_count ( $ledger_id ) {
  * @param $ledger_id
  * @return mixed
  */
-function erp_acct_get_ledger_balance ( $ledger_id ) {
+function erp_acct_get_ledger_balance( $ledger_id ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -183,7 +183,7 @@ function erp_acct_get_ledger_balance ( $ledger_id ) {
  * Ledger CRUD
  * ===============*/
 
-function erp_acct_get_ledger ( $id ) {
+function erp_acct_get_ledger( $id ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = %d", $id );
@@ -205,7 +205,7 @@ function erp_acct_insert_ledger( $item ) {
     return erp_acct_get_ledger( $wpdb->insert_id );
 }
 
-function erp_acct_update_ledger ( $item, $id ) {
+function erp_acct_update_ledger( $item, $id ) {
     global $wpdb;
 
     $wpdb->update( "{$wpdb->prefix}erp_acct_ledgers", [

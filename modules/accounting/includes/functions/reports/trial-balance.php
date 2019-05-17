@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return int
  */
-function erp_acct_cash_at_bank ( $args, $type ) {
+function erp_acct_cash_at_bank( $args, $type ) {
     global $wpdb;
 
     $balance = null;
@@ -53,7 +53,7 @@ function erp_acct_cash_at_bank ( $args, $type ) {
  *
  * @return mixed
  */
-function erp_acct_bank_balance ( $args, $type ) {
+function erp_acct_bank_balance( $args, $type ) {
     global $wpdb;
 
     $balance = null;
@@ -86,7 +86,7 @@ function erp_acct_bank_balance ( $args, $type ) {
  *
  * @return int
  */
-function erp_acct_sales_tax_query ( $args, $type ) {
+function erp_acct_sales_tax_query( $args, $type ) {
     global $wpdb;
 
     if ( 'payable' === $type ) {
@@ -109,7 +109,7 @@ function erp_acct_sales_tax_query ( $args, $type ) {
  *
  * Get account receivable
  */
-function erp_acct_get_account_receivable ( $args ) {
+function erp_acct_get_account_receivable( $args ) {
     global $wpdb;
 
     // mainly ( debit - credit )
@@ -129,7 +129,7 @@ function erp_acct_get_account_receivable ( $args ) {
  *
  * Get account payble
  */
-function erp_acct_get_account_payable ( $args ) {
+function erp_acct_get_account_payable( $args ) {
     global $wpdb;
 
     /**
@@ -159,7 +159,7 @@ function erp_acct_get_account_payable ( $args ) {
  *
  * Get owners equity
  */
-function erp_acct_get_owners_equity ( $args, $type ) {
+function erp_acct_get_owners_equity( $args, $type ) {
     global $wpdb;
 
     if ( 'capital' === $type ) {
@@ -186,7 +186,7 @@ function erp_acct_get_owners_equity ( $args, $type ) {
  *
  * @return boolean
  */
-function erp_acct_has_date_diff ( $date1, $date2 ) {
+function erp_acct_has_date_diff( $date1, $date2 ) {
     $interval = date_diff( date_create( $date1 ), date_create( $date2 ) );
 
     // if difference is `0` OR `1` day
@@ -206,7 +206,7 @@ function erp_acct_has_date_diff ( $date1, $date2 ) {
  *
  * @return float
  */
-function erp_acct_calculate_people_balance ( $sql, $start_date, $end_date ) {
+function erp_acct_calculate_people_balance( $sql, $start_date, $end_date ) {
     global $wpdb;
 
     $balance = 0;
@@ -228,7 +228,7 @@ function erp_acct_calculate_people_balance ( $sql, $start_date, $end_date ) {
  *
  * @return array
  */
-function erp_acct_get_balance_with_opening_balance ( $ledgers, $data, $opening_balance ) {
+function erp_acct_get_balance_with_opening_balance( $ledgers, $data, $opening_balance ) {
     $temp_data = [];
 
     /**
@@ -269,7 +269,7 @@ function erp_acct_get_balance_with_opening_balance ( $ledgers, $data, $opening_b
  *
  * @return array
  */
-function erp_acct_get_balance_within_ledger_details_and_trial_balance ( $sql, $temp_data ) {
+function erp_acct_get_balance_within_ledger_details_and_trial_balance( $sql, $temp_data ) {
     global $wpdb;
 
     $result = [];
@@ -308,7 +308,7 @@ function erp_acct_get_balance_within_ledger_details_and_trial_balance ( $sql, $t
  *
  * @return array
  */
-function erp_acct_calc_with_opening_balance ( $tb_start_date, $data, $sql ) {
+function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
     global $wpdb;
 
     $result = [];
@@ -352,7 +352,7 @@ function erp_acct_calc_with_opening_balance ( $tb_start_date, $data, $sql ) {
  *
  * @return float
  */
-function erp_acct_bank_cash_calc_with_opening_balance ( $tb_start_date, $data, $sql, $type ) {
+function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -397,7 +397,7 @@ function erp_acct_bank_cash_calc_with_opening_balance ( $tb_start_date, $data, $
  *
  * @return array
  */
-function erp_acct_bank_balance_calc_with_opening_balance ( $tb_start_date, $data, $sql, $type ) {
+function erp_acct_bank_balance_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
 
     $chart_bank = 7;
@@ -436,7 +436,7 @@ function erp_acct_bank_balance_calc_with_opening_balance ( $tb_start_date, $data
  *
  * @return float
  */
-function erp_acct_sales_tax_calc_with_opening_balance ( $tb_start_date, $data, $sql, $type ) {
+function erp_acct_sales_tax_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -483,7 +483,7 @@ function erp_acct_sales_tax_calc_with_opening_balance ( $tb_start_date, $data, $
  *
  * @return float
  */
-function erp_acct_people_calc_with_opening_balance ( $tb_date, $data, $type, $sql1, $sql2 = null ) {
+function erp_acct_people_calc_with_opening_balance( $tb_date, $data, $type, $sql1, $sql2 = null ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -534,7 +534,7 @@ function erp_acct_people_calc_with_opening_balance ( $tb_date, $data, $type, $sq
  *
  * @return void
  */
-function erp_acct_calc_with_people_account_details ( $closest_fy_start_date, $tb_end_date, $type ) {
+function erp_acct_calc_with_people_account_details( $closest_fy_start_date, $tb_end_date, $type ) {
     global $wpdb;
 
     if ( 'payable' === $type ) {
@@ -563,7 +563,7 @@ function erp_acct_calc_with_people_account_details ( $closest_fy_start_date, $tb
  *
  * @return float
  */
-function erp_acct_owners_equity_calc_with_opening_balance ( $tb_start_date, $data, $sql, $type ) {
+function erp_acct_owners_equity_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -605,7 +605,7 @@ function erp_acct_owners_equity_calc_with_opening_balance ( $tb_start_date, $dat
  *
  * @return string
  */
-function erp_acct_get_closest_fn_year_date ( $date ) {
+function erp_acct_get_closest_fn_year_date( $date ) {
     global $wpdb;
 
     $sql = "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date <= '%s' ORDER BY start_date DESC LIMIT 1";
@@ -621,7 +621,7 @@ function erp_acct_get_closest_fn_year_date ( $date ) {
  *
  * @return string
  */
-function erp_acct_opening_balance_by_fn_year_id ( $id, $chart_id = null ) {
+function erp_acct_opening_balance_by_fn_year_id( $id, $chart_id = null ) {
     global $wpdb;
 
     $where = '';
@@ -647,7 +647,7 @@ function erp_acct_opening_balance_by_fn_year_id ( $id, $chart_id = null ) {
  *
  * @return array
  */
-function erp_acct_bank_cash_opening_balance_by_fn_year_id ( $id, $type ) {
+function erp_acct_bank_cash_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
 
     if ( 'loan' === $type ) {
@@ -671,7 +671,7 @@ function erp_acct_bank_cash_opening_balance_by_fn_year_id ( $id, $type ) {
  *
  * @return array
  */
-function erp_acct_sales_tax_opening_balance_by_fn_year_id ( $id, $type ) {
+function erp_acct_sales_tax_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
 
     if ( 'payable' === $type ) {
@@ -695,7 +695,7 @@ function erp_acct_sales_tax_opening_balance_by_fn_year_id ( $id, $type ) {
  *
  * @return array
  */
-function erp_acct_bank_balance_opening_balance_by_fn_year_id ( $id, $type ) {
+function erp_acct_bank_balance_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
 
     if ( 'loan' === $type ) {
@@ -720,7 +720,7 @@ function erp_acct_bank_balance_opening_balance_by_fn_year_id ( $id, $type ) {
  *
  * @return mixed
  */
-function erp_acct_owners_equity_opening_balance_by_fn_year_id ( $id, $type ) {
+function erp_acct_owners_equity_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
 
     if ( 'capital' === $type ) {
@@ -737,7 +737,7 @@ function erp_acct_owners_equity_opening_balance_by_fn_year_id ( $id, $type ) {
     return $wpdb->get_var( $wpdb->prepare( $sql, $id ) );
 }
 
-function erp_acct_people_opening_balance_by_fn_year_id ( $id, $type ) {
+function erp_acct_people_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
 
     if ( 'payable' === $type ) {
@@ -758,7 +758,7 @@ function erp_acct_people_opening_balance_by_fn_year_id ( $id, $type ) {
  *
  * @return mixed
  */
-function erp_acct_get_trial_balance ( $args ) {
+function erp_acct_get_trial_balance( $args ) {
     global $wpdb;
 
     $sql = "SELECT

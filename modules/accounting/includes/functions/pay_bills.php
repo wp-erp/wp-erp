@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_pay_bills ( $args = [] ) {
+function erp_acct_get_pay_bills( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -47,7 +47,7 @@ function erp_acct_get_pay_bills ( $args = [] ) {
  * @param $bill_no
  * @return mixed
  */
-function erp_acct_get_pay_bill ( $bill_no ) {
+function erp_acct_get_pay_bill( $bill_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT
@@ -76,7 +76,7 @@ function erp_acct_get_pay_bill ( $bill_no ) {
 /**
  * Format pay bill line items
  */
-function erp_acct_format_paybill_line_items ( $voucher_no ) {
+function erp_acct_format_paybill_line_items( $voucher_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT
@@ -100,7 +100,7 @@ function erp_acct_format_paybill_line_items ( $voucher_no ) {
  * @param $due
  * @return mixed
  */
-function erp_acct_insert_pay_bill ( $data ) {
+function erp_acct_insert_pay_bill( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -205,7 +205,7 @@ function erp_acct_insert_pay_bill ( $data ) {
  * @param $due
  * @return mixed
  */
-function erp_acct_update_pay_bill ( $data, $pay_bill_id ) {
+function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
 
     global $wpdb;
 
@@ -285,7 +285,7 @@ function erp_acct_update_pay_bill ( $data, $pay_bill_id ) {
  * @param $id
  * @return void
  */
-function erp_acct_delete_pay_bill ( $id ) {
+function erp_acct_delete_pay_bill( $id ) {
     global $wpdb;
 
     if ( ! $id ) {
@@ -301,7 +301,7 @@ function erp_acct_delete_pay_bill ( $id ) {
  * @param $id
  * @return void
  */
-function erp_acct_void_pay_bill ( $id ) {
+function erp_acct_void_pay_bill( $id ) {
     global $wpdb;
 
     if ( ! $id ) {
@@ -324,7 +324,7 @@ function erp_acct_void_pay_bill ( $id ) {
  *
  * @return mixed
  */
-function erp_acct_get_formatted_pay_bill_data ( $data, $voucher_no ) {
+function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
     $pay_bill_data = [];
 
     $user_info = erp_get_people( $data['vendor_id'] );
@@ -364,7 +364,7 @@ function erp_acct_get_formatted_pay_bill_data ( $data, $voucher_no ) {
  *
  * @return mixed
  */
-function erp_acct_insert_pay_bill_data_into_ledger ( $pay_bill_data, $item_data ) {
+function erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item_data ) {
     global $wpdb;
 
     // Insert amount in ledger_details
@@ -392,7 +392,7 @@ function erp_acct_insert_pay_bill_data_into_ledger ( $pay_bill_data, $item_data 
  *
  * @return mixed
  */
-function erp_acct_update_pay_bill_data_into_ledger ( $pay_bill_data, $pay_bill_no, $item_data ) {
+function erp_acct_update_pay_bill_data_into_ledger( $pay_bill_data, $pay_bill_no, $item_data ) {
     global $wpdb;
 
     // Update amount in ledger_details
@@ -417,7 +417,7 @@ function erp_acct_update_pay_bill_data_into_ledger ( $pay_bill_data, $pay_bill_n
  *
  * @return int
  */
-function erp_acct_get_pay_bill_count () {
+function erp_acct_get_pay_bill_count() {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_pay_bill" );
@@ -432,7 +432,7 @@ function erp_acct_get_pay_bill_count () {
  * @param $due
  * @return void
  */
-function erp_acct_change_bill_status ( $bill_no ) {
+function erp_acct_change_bill_status( $bill_no ) {
     global $wpdb;
 
     $due = erp_acct_get_bill_due( $bill_no );

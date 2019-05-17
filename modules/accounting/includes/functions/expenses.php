@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_expenses ( $args = [] ) {
+function erp_acct_get_expenses( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -50,7 +50,7 @@ function erp_acct_get_expenses ( $args = [] ) {
  * @param $expense_no
  * @return mixed
  */
-function erp_acct_get_expense ( $expense_no ) {
+function erp_acct_get_expense( $expense_no ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -88,7 +88,7 @@ function erp_acct_get_expense ( $expense_no ) {
  * @param $expense_no
  * @return mixed
  */
-function erp_acct_get_check ( $expense_no ) {
+function erp_acct_get_check( $expense_no ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -136,7 +136,7 @@ function erp_acct_get_check ( $expense_no ) {
 /**
  * Format check line items
  */
-function erp_acct_format_check_line_items ( $voucher_no ) {
+function erp_acct_format_check_line_items( $voucher_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT
@@ -170,7 +170,7 @@ function erp_acct_format_check_line_items ( $voucher_no ) {
 /**
  * Format expense line items
  */
-function erp_acct_format_expense_line_items ( $voucher_no ) {
+function erp_acct_format_expense_line_items( $voucher_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT
@@ -195,7 +195,7 @@ function erp_acct_format_expense_line_items ( $voucher_no ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_insert_expense ( $data ) {
+function erp_acct_insert_expense( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -298,7 +298,7 @@ function erp_acct_insert_expense ( $data ) {
  *
  * @return mixed
  */
-function erp_acct_update_expense ( $data, $expense_id ) {
+function erp_acct_update_expense( $data, $expense_id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -371,7 +371,7 @@ function erp_acct_update_expense ( $data, $expense_id ) {
  * @param $id
  * @return void
  */
-function erp_acct_delete_expense ( $id ) {
+function erp_acct_delete_expense( $id ) {
     global $wpdb;
 
     if ( ! $id ) {
@@ -387,7 +387,7 @@ function erp_acct_delete_expense ( $id ) {
  * @param $id
  * @return void
  */
-function erp_acct_void_expense ( $id ) {
+function erp_acct_void_expense( $id ) {
     global $wpdb;
 
     if ( ! $id ) {
@@ -410,7 +410,7 @@ function erp_acct_void_expense ( $id ) {
  *
  * @return mixed
  */
-function erp_acct_get_formatted_expense_data ( $data, $voucher_no ) {
+function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data = [];
 
     $people  = erp_get_people( $data['people_id'] );
@@ -451,7 +451,7 @@ function erp_acct_get_formatted_expense_data ( $data, $voucher_no ) {
  *
  * @return mixed
  */
-function erp_acct_insert_expense_data_into_ledger ( $expense_data, $item_data = [] ) {
+function erp_acct_insert_expense_data_into_ledger( $expense_data, $item_data = [] ) {
     global $wpdb;
 
     if ( 1 == $expense_data['status'] ) {
@@ -483,7 +483,7 @@ function erp_acct_insert_expense_data_into_ledger ( $expense_data, $item_data = 
  *
  * @return mixed
  */
-function erp_acct_update_expense_data_into_ledger ( $expense_data, $expense_no, $item_data = [] ) {
+function erp_acct_update_expense_data_into_ledger( $expense_data, $expense_no, $item_data = [] ) {
     global $wpdb;
 
     if ( 1 == $expense_data['status'] ) {
@@ -514,7 +514,7 @@ function erp_acct_update_expense_data_into_ledger ( $expense_data, $expense_no, 
  *
  * @return void
  */
-function erp_acct_insert_source_expense_data_into_ledger ( $expense_data ) {
+function erp_acct_insert_source_expense_data_into_ledger( $expense_data ) {
     global $wpdb;
 
     if ( 1 == $expense_data['status'] ) {

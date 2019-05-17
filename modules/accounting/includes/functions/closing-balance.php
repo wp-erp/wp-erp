@@ -53,10 +53,10 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
             if ( ! empty( $asset['id'] ) ) {
                 if ( $asset['id'] === $ledger['id'] ) {
                     if ( 0 <= $asset['balance'] ) {
-                        $debit = abs( $asset['balance'] );
+                        $debit  = abs( $asset['balance'] );
                         $credit = 0.00;
                     } else {
-                        $debit = 0.00;
+                        $debit  = 0.00;
                         $credit = abs( $asset['balance'] );
                     }
 
@@ -72,10 +72,10 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
             if ( ! empty( $liab['id'] ) ) {
                 if ( $liab['id'] === $ledger['id'] ) {
                     if ( 0 <= $liab['balance'] ) {
-                        $debit = abs( $liab['balance'] );
+                        $debit  = abs( $liab['balance'] );
                         $credit = 0.00;
                     } else {
-                        $debit = 0.00;
+                        $debit  = 0.00;
                         $credit = abs( $liab['balance'] );
                     }
 
@@ -93,10 +93,10 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
             if ( ! empty( $eqt['id'] ) && $owners_equity_id != $eqt['id'] ) {
                 if ( $eqt['id'] === $ledger['id'] ) {
                     if ( 0 <= $eqt['balance'] ) {
-                        $debit = abs( $eqt['balance'] );
+                        $debit  = abs( $eqt['balance'] );
                         $credit = 0.00;
                     } else {
-                        $debit = 0.00;
+                        $debit  = 0.00;
                         $credit = abs( $eqt['balance'] );
                     }
 
@@ -175,7 +175,7 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
  *
  * @return void
  */
-function erp_acct_clsbl_insert_into_opening_balance ( $f_year_id, $chart_id, $ledger_id, $type, $debit, $credit ) {
+function erp_acct_clsbl_insert_into_opening_balance( $f_year_id, $chart_id, $ledger_id, $type, $debit, $credit ) {
     global $wpdb;
 
     $wpdb->insert(
@@ -201,7 +201,7 @@ function erp_acct_clsbl_insert_into_opening_balance ( $f_year_id, $chart_id, $le
  *
  * @return array
  */
-function erp_acct_clsbl_get_accounts_receivable_balance_with_people ( $args ) {
+function erp_acct_clsbl_get_accounts_receivable_balance_with_people( $args ) {
     global $wpdb;
 
     // mainly ( debit - credit )
@@ -222,7 +222,7 @@ function erp_acct_clsbl_get_accounts_receivable_balance_with_people ( $args ) {
  *
  * @return array
  */
-function erp_acct_clsbl_get_accounts_payable_balance_with_people ( $args ) {
+function erp_acct_clsbl_get_accounts_payable_balance_with_people( $args ) {
     global $wpdb;
 
     $bill_sql = "SELECT bill.vendor_id AS id, SUM( debit - credit ) AS balance
@@ -253,7 +253,7 @@ function erp_acct_clsbl_get_accounts_payable_balance_with_people ( $args ) {
  *
  * @return array
  */
-function erp_acct_clsbl_people_ar_calc_with_opening_balance ( $bs_start_date, $data, $sql ) {
+function erp_acct_clsbl_people_ar_calc_with_opening_balance( $bs_start_date, $data, $sql ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -289,7 +289,7 @@ function erp_acct_clsbl_people_ar_calc_with_opening_balance ( $bs_start_date, $d
  * @return array
  */
 
-function erp_acct_clsbl_vendor_ap_calc_with_opening_balance ( $bs_start_date, $bill_data, $purchase_data, $bill_sql, $purchase_sql ) {
+function erp_acct_clsbl_vendor_ap_calc_with_opening_balance( $bs_start_date, $bill_data, $purchase_data, $bill_sql, $purchase_sql ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -322,7 +322,7 @@ function erp_acct_clsbl_vendor_ap_calc_with_opening_balance ( $bs_start_date, $b
  *
  * @return void
  */
-function erp_acct_clsbl_customer_ar_opening_balance_by_fn_year_id ( $id ) {
+function erp_acct_clsbl_customer_ar_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
 
     $sql = "SELECT ledger_id AS id, SUM( debit - credit ) AS balance
@@ -339,7 +339,7 @@ function erp_acct_clsbl_customer_ar_opening_balance_by_fn_year_id ( $id ) {
  *
  * @return void
  */
-function erp_acct_clsbl_vendor_ap_opening_balance_by_fn_year_id ( $id ) {
+function erp_acct_clsbl_vendor_ap_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
 
     $sql = "SELECT ledger_id AS id, SUM( debit - credit ) AS balance
@@ -357,7 +357,7 @@ function erp_acct_clsbl_vendor_ap_opening_balance_by_fn_year_id ( $id ) {
  *
  * @return void
  */
-function erp_acct_clsbl_get_formatted_people_balance ( $arr ) {
+function erp_acct_clsbl_get_formatted_people_balance( $arr ) {
     $temp = [];
 
     foreach ( $arr as $entry ) {
@@ -377,7 +377,7 @@ function erp_acct_clsbl_get_formatted_people_balance ( $arr ) {
     return $temp;
 }
 
-function erp_acct_clsbl_sales_tax_agency ( $args, $type ) {
+function erp_acct_clsbl_sales_tax_agency( $args, $type ) {
     global $wpdb;
 
     if ( 'payable' === $type ) {
@@ -405,7 +405,7 @@ function erp_acct_clsbl_sales_tax_agency ( $args, $type ) {
  *
  * @return float
  */
-function erp_acct_clsbl_sales_tax_agency_with_opening_balance ( $bs_start_date, $data, $sql, $type ) {
+function erp_acct_clsbl_sales_tax_agency_with_opening_balance( $bs_start_date, $data, $sql, $type ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -441,7 +441,7 @@ function erp_acct_clsbl_sales_tax_agency_with_opening_balance ( $bs_start_date, 
  *
  * @return void
  */
-function erp_acct_clsbl_sales_tax_agency_opening_balance_by_fn_year_id ( $id, $type ) {
+function erp_acct_clsbl_sales_tax_agency_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
 
     if ( 'payable' === $type ) {

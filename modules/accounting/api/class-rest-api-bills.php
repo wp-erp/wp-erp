@@ -28,13 +28,13 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_bills' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ],
@@ -42,7 +42,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_bill' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -54,7 +54,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_bill' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ],
@@ -62,14 +62,14 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_bill' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_bill' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -81,7 +81,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'due_bills' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -92,7 +92,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'void_bill' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_publish_expenses_voucher' );
                 },
             ],
@@ -103,7 +103,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'upload_attachments' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -114,7 +114,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_overview_payables' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -129,7 +129,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_bills ( $request ) {
+    public function get_bills( $request ) {
         $args = [
             'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
@@ -172,7 +172,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_bill ( $request ) {
+    public function get_bill( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -203,7 +203,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_bill ( $request ) {
+    public function create_bill( $request ) {
         $bill_data = $this->prepare_item_for_database( $request );
 
         $item_total        = [];
@@ -242,7 +242,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_bill ( $request ) {
+    public function update_bill( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -292,7 +292,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_bill ( $request ) {
+    public function delete_bill( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -311,7 +311,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function void_bill ( $request ) {
+    public function void_bill( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -330,7 +330,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function due_bills ( $request ) {
+    public function due_bills( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -379,7 +379,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function upload_attachments ( $request ) {
+    public function upload_attachments( $request ) {
         $movefiles = erp_acct_upload_attachments( $_FILES['attachments'] );
 
         $response = rest_ensure_response( $movefiles );
@@ -395,7 +395,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    function get_overview_payables ( $request ) {
+    function get_overview_payables( $request ) {
         $items    = erp_acct_get_payables_overview();
         $response = rest_ensure_response( $items );
 
@@ -410,7 +410,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log ( $data, $action ) {
+    public function add_log( $data, $action ) {
         erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Bill', 'erp' ),
@@ -430,7 +430,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['vendor_id'] ) ) {
@@ -482,7 +482,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -517,7 +517,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'bill',

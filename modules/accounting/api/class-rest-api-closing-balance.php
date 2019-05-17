@@ -28,13 +28,13 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'close_balancesheet' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ]
@@ -45,7 +45,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_closest_fn_year' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -56,7 +56,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_next_fn_year' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -70,7 +70,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function close_balancesheet ( $request ) {
+    public function close_balancesheet( $request ) {
         if ( empty( $request['start_date'] ) ) {
             return new WP_Error( 'rest_invalid_date', __( 'Start date missing.' ), [ 'status' => 404 ] );
         }
@@ -100,7 +100,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_next_fn_year ( $request ) {
+    public function get_next_fn_year( $request ) {
         if ( empty( $request['date'] ) ) {
             return new WP_Error( 'rest_invalid_date', __( 'Invalid resource date.' ), [ 'status' => 404 ] );
         }
@@ -120,7 +120,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_closest_fn_year ( $request ) {
+    public function get_closest_fn_year( $request ) {
         $data     = erp_acct_get_closest_fn_year_date( date( 'Y-m-d' ) );
         $response = rest_ensure_response( $data );
 
