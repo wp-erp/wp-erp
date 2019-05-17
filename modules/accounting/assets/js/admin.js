@@ -28357,7 +28357,7 @@ setTimeout(function () {
       for (var key in this.ledgers) {
         for (var idx = 0; idx < this.ledgers[key].length; idx++) {
           if (this.ledgers[key][idx].hasOwnProperty('debit')) {
-            if (this.ledgers[key][idx].debit.value === '') {
+            if (this.ledgers[key][idx].debit === '') {
               this.ledgers[key][idx].debit = 0;
             }
 

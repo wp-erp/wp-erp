@@ -423,7 +423,7 @@
                 for (let key in this.ledgers) {
                     for ( let idx = 0; idx < this.ledgers[key].length; idx++ ) {
                         if ( this.ledgers[key][idx].hasOwnProperty('debit') ) {
-                            if ( this.ledgers[key][idx].debit.value === '' ) {
+                            if ( this.ledgers[key][idx].debit === '' ) {
                                 this.ledgers[key][idx].debit = 0;
                             }
                             this.debit_total += parseFloat(this.ledgers[key][idx].debit);
