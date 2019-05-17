@@ -27803,7 +27803,7 @@ setTimeout(function () {
   },
   computed: {
     liability_equity: function liability_equity() {
-      return parseFloat(Math.abs(this.totalLiability)) + parseFloat(Math.abs(this.totalEquity));
+      return parseFloat(this.totalLiability) + parseFloat(this.totalEquity);
     }
   },
   watch: {
@@ -28357,10 +28357,18 @@ setTimeout(function () {
       for (var key in this.ledgers) {
         for (var idx = 0; idx < this.ledgers[key].length; idx++) {
           if (this.ledgers[key][idx].hasOwnProperty('debit')) {
+            if (this.ledgers[key][idx].debit.value === '') {
+              this.ledgers[key][idx].debit = 0;
+            }
+
             this.debit_total += parseFloat(this.ledgers[key][idx].debit);
           }
 
           if (this.ledgers[key][idx].hasOwnProperty('credit')) {
+            if (this.ledgers[key][idx].credit === '') {
+              this.ledgers[key][idx].credit = 0;
+            }
+
             this.credit_total += parseFloat(this.ledgers[key][idx].credit);
           }
         }
@@ -60964,7 +60972,7 @@ var render = function() {
             "wperp-table table-striped table-dark widefat income-statement-balance income-balance-report"
         },
         [
-          _vm.profit
+          _vm.profit >= 0
             ? [
                 _c("tbody", { staticClass: "wperp-col-sm-12" }, [
                   _c("tr", [

@@ -203,7 +203,7 @@
 
         computed: {
             liability_equity() {
-                return parseFloat( Math.abs(this.totalLiability) ) + parseFloat(Math.abs(this.totalEquity));
+                return parseFloat( this.totalLiability ) + parseFloat( this.totalEquity );
             }
         },
 
