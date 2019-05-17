@@ -423,9 +423,15 @@
                 for (let key in this.ledgers) {
                     for ( let idx = 0; idx < this.ledgers[key].length; idx++ ) {
                         if ( this.ledgers[key][idx].hasOwnProperty('debit') ) {
+                            if ( this.ledgers[key][idx].debit.value === '' ) {
+                                this.ledgers[key][idx].debit = 0;
+                            }
                             this.debit_total += parseFloat(this.ledgers[key][idx].debit);
                         }
                         if ( this.ledgers[key][idx].hasOwnProperty('credit') ) {
+                            if ( this.ledgers[key][idx].credit === '' ) {
+                                this.ledgers[key][idx].credit = 0;
+                            }
                             this.credit_total += parseFloat(this.ledgers[key][idx].credit);
                         }
                     }

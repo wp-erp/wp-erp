@@ -55,7 +55,7 @@
         </list-table>
 
         <table class="wperp-table table-striped table-dark widefat income-statement-balance income-balance-report">
-            <template v-if="profit">
+            <template v-if="profit>=0">
                 <tbody class="wperp-col-sm-12">
                 <tr>
                     <td><strong>Profit</strong></td>
