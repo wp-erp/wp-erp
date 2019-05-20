@@ -17,36 +17,42 @@
 
         <p><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></p>
 
-        <list-table
-            tableClass="wperp-table table-striped table-dark widefat"
-            :columns="columns"
-            :rows="rows">
-            <template slot="name" slot-scope="data">
+        <table class="wperp-table table-striped table-dark widefat">
+            <thead>
+                <tr>
+                    <th>Account Name</th>
+                    <th>Debit Total</th>
+                    <th>Credit Total</th>
+                </tr>
+            </thead>
+            <tbody :key="key" v-for="(chart, key) in chrtAcct">
+                <tr v-if="rows[chart.id]"><h1>{{ chart.label }}</h1></tr>
 
-                <details v-if="data.row.additional" open>
-                    <summary>{{ data.row.name }}</summary>
-                    <p :key="additional.id" v-for="additional in data.row.additional">
-                        <strong>{{ additional.name }}</strong>
-                        <em>{{ getCurrencySign() + Math.abs(additional.balance) }}</em>
-                    </p>
-                </details>
-                <span v-else>{{ data.row.name }}</span>
+                <tr :key="index" v-for="(row, index) in rows[chart.id]">
+                    <td>
+                        <details v-if="row.additional" open>
+                            <summary>{{ row.name }}</summary>
+                            <p :key="additional.id" v-for="additional in row.additional">
+                                <strong>{{ additional.name }}</strong>
+                                <em>{{ getCurrencySign() + Math.abs(additional.balance) }}</em>
+                            </p>
+                        </details>
 
-            </template>
-            <template slot="debit" slot-scope="data">
-                {{ Math.sign(data.row.balance) === 1 ? getCurrencySign() + data.row.balance : '' }}
-            </template>
-            <template slot="credit" slot-scope="data">
-                {{ Math.sign(data.row.balance) === -1 ? getCurrencySign() + Math.abs(data.row.balance) : '' }}
-            </template>
-            <template slot="tfoot">
+                        <span v-else>{{ row.name }}</span>
+                    </td>
+
+                    <td>{{ Math.sign(row.balance) === 1 ? getCurrencySign() + row.balance : '' }}</td>
+                    <td>{{ Math.sign(row.balance) === -1 ? getCurrencySign() + Math.abs(row.balance) : '' }}</td>
+                </tr>
+            </tbody>
+            <tfoot>
                 <tr class="t-foot">
                     <td>Total</td>
                     <td>{{ getCurrencySign() + totalDebit }}</td>
                     <td>{{ getCurrencySign() + Math.abs(totalCredit) }}</td>
                 </tr>
-            </template>
-        </list-table>
+            </tfoot>
+        </table>
 
     </div>
 </template>
@@ -81,25 +87,40 @@
                 rows       : [],
                 totalDebit : 0,
                 totalCredit: 0,
+                chrtAcct   : null,
                 start_date : null,
                 end_date   : null
             }
         },
 
         created() {
-            //? why is nextTick here ...? i don't know.
-            this.$nextTick(function () {
-                // with leading zero, and JS month are zero index based
-                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
-
-                this.start_date = `2019-${month}-01`;
-                this.end_date   = erp_acct_var.current_date;
-
-                this.getTrialBalance();
-            });
+            this.getChartOfAccts();
         },
 
         methods: {
+            getChartOfAccts() {
+                HTTP.get( '/ledgers/accounts').then(response => {
+                    this.chrtAcct = response.data;
+
+                    this.setDateAndGetTb();
+                });
+            },
+
+            setDateAndGetTb() {
+                //? why is nextTick here ...? i don't know.
+                // this.$nextTick(function () {
+                    // with leading zero, and JS month are zero index based
+                    let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
+
+                    this.start_date = '2018-01-01';
+                    this.end_date   = '2018-12-31';
+                    // this.start_date = `2019-${month}-01`;
+                    // this.end_date   = erp_acct_var.current_date;
+
+                    this.getTrialBalance();
+                // });
+            },
+
             getTrialBalance() {
                 this.rows = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
@@ -120,6 +141,13 @@
                 });
             },
 
+            groupBy(arr, fn) { /* https://30secondsofcode.org/ */
+                return arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val, i) => {
+                    acc[val] = (acc[val] || []).concat(arr[i]);
+                    return acc;
+                }, {})
+            },
+
             printPopup() {
                 window.print();
             }
@@ -131,6 +159,14 @@
     .trial-balance {
         h2 {
             padding-top: 15px;
+        }
+
+        tr {
+            h1 {
+                padding-left: 10px;
+                font-size: 15px;
+                font-weight: bold;
+            }
         }
 
         .col--check {

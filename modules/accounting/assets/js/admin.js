@@ -12418,6 +12418,12 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -12448,23 +12454,37 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
       rows: [],
       totalDebit: 0,
       totalCredit: 0,
+      chrtAcct: null,
       start_date: null,
       end_date: null
     };
   },
   created: function created() {
-    //? why is nextTick here ...? i don't know.
-    this.$nextTick(function () {
-      // with leading zero, and JS month are zero index based
-      var month = ('0' + (new Date().getMonth() + 1)).slice(-2);
-      this.start_date = "2019-".concat(month, "-01");
-      this.end_date = erp_acct_var.current_date;
-      this.getTrialBalance();
-    });
+    this.getChartOfAccts();
   },
   methods: {
-    getTrialBalance: function getTrialBalance() {
+    getChartOfAccts: function getChartOfAccts() {
       var _this = this;
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/ledgers/accounts').then(function (response) {
+        _this.chrtAcct = response.data;
+
+        _this.setDateAndGetTb();
+      });
+    },
+    setDateAndGetTb: function setDateAndGetTb() {
+      //? why is nextTick here ...? i don't know.
+      // this.$nextTick(function () {
+      // with leading zero, and JS month are zero index based
+      var month = ('0' + (new Date().getMonth() + 1)).slice(-2);
+      this.start_date = '2018-01-01';
+      this.end_date = '2018-12-31'; // this.start_date = `2019-${month}-01`;
+      // this.end_date   = erp_acct_var.current_date;
+
+      this.getTrialBalance(); // });
+    },
+    getTrialBalance: function getTrialBalance() {
+      var _this2 = this;
 
       this.rows = [];
       this.$store.dispatch('spinner/setSpinner', true);
@@ -12474,14 +12494,23 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
           end_date: this.end_date
         }
       }).then(function (response) {
-        _this.rows = response.data.rows;
-        _this.totalDebit = response.data.total_debit;
-        _this.totalCredit = response.data.total_credit;
+        _this2.rows = response.data.rows;
+        _this2.totalDebit = response.data.total_debit;
+        _this2.totalCredit = response.data.total_credit;
 
-        _this.$store.dispatch('spinner/setSpinner', false);
+        _this2.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (e) {
-        _this.$store.dispatch('spinner/setSpinner', false);
+        _this2.$store.dispatch('spinner/setSpinner', false);
       });
+    },
+    groupBy: function groupBy(arr, fn) {
+      /* https://30secondsofcode.org/ */
+      return arr.map(typeof fn === 'function' ? fn : function (val) {
+        return val[fn];
+      }).reduce(function (acc, val, i) {
+        acc[val] = (acc[val] || []).concat(arr[i]);
+        return acc;
+      }, {});
     },
     printPopup: function printPopup() {
       window.print();
@@ -41744,191 +41773,189 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "trial-balance" },
-    [
-      _c("h2", [_vm._v("Trial Balance")]),
-      _vm._v(" "),
-      _c(
-        "form",
-        {
-          staticClass: "query-options no-print",
-          attrs: { action: "", method: "" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.getTrialBalance($event)
-            }
+  return _c("div", { staticClass: "trial-balance" }, [
+    _c("h2", [_vm._v("Trial Balance")]),
+    _vm._v(" "),
+    _c(
+      "form",
+      {
+        staticClass: "query-options no-print",
+        attrs: { action: "", method: "" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            return _vm.getTrialBalance($event)
           }
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "wperp-date-btn-group" },
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "wperp-date-btn-group" },
+          [
+            _c("datepicker", {
+              model: {
+                value: _vm.start_date,
+                callback: function($$v) {
+                  _vm.start_date = $$v
+                },
+                expression: "start_date"
+              }
+            }),
+            _vm._v(" "),
+            _c("datepicker", {
+              model: {
+                value: _vm.end_date,
+                callback: function($$v) {
+                  _vm.end_date = $$v
+                },
+                expression: "end_date"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "wperp-btn btn--primary add-line-trigger",
+            attrs: { type: "submit" }
+          },
+          [_vm._v("View")]
+        ),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "wperp-btn btn--default print-btn",
+            attrs: { href: "#" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.printPopup($event)
+              }
+            }
+          },
+          [
+            _c("i", { staticClass: "flaticon-printer-1" }),
+            _vm._v("   Print\n        ")
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c("p", [
+      _c("strong", [_vm._v("For the period of ( Transaction date ):")]),
+      _vm._v(" "),
+      _c("em", [_vm._v(_vm._s(_vm.start_date))]),
+      _vm._v(" to "),
+      _c("em", [_vm._v(_vm._s(_vm.end_date))])
+    ]),
+    _vm._v(" "),
+    _c(
+      "table",
+      { staticClass: "wperp-table table-striped table-dark widefat" },
+      [
+        _vm._m(0),
+        _vm._v(" "),
+        _vm._l(_vm.chrtAcct, function(chart, key) {
+          return _c(
+            "tbody",
+            { key: key },
             [
-              _c("datepicker", {
-                model: {
-                  value: _vm.start_date,
-                  callback: function($$v) {
-                    _vm.start_date = $$v
-                  },
-                  expression: "start_date"
-                }
-              }),
+              _vm.rows[chart.id]
+                ? _c("tr", [_c("h1", [_vm._v(_vm._s(chart.label))])])
+                : _vm._e(),
               _vm._v(" "),
-              _c("datepicker", {
-                model: {
-                  value: _vm.end_date,
-                  callback: function($$v) {
-                    _vm.end_date = $$v
-                  },
-                  expression: "end_date"
-                }
+              _vm._l(_vm.rows[chart.id], function(row, index) {
+                return _c("tr", { key: index }, [
+                  _c("td", [
+                    row.additional
+                      ? _c(
+                          "details",
+                          { attrs: { open: "" } },
+                          [
+                            _c("summary", [_vm._v(_vm._s(row.name))]),
+                            _vm._v(" "),
+                            _vm._l(row.additional, function(additional) {
+                              return _c("p", { key: additional.id }, [
+                                _c("strong", [_vm._v(_vm._s(additional.name))]),
+                                _vm._v(" "),
+                                _c("em", [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.getCurrencySign() +
+                                        Math.abs(additional.balance)
+                                    )
+                                  )
+                                ])
+                              ])
+                            })
+                          ],
+                          2
+                        )
+                      : _c("span", [_vm._v(_vm._s(row.name))])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      _vm._s(
+                        Math.sign(row.balance) === 1
+                          ? _vm.getCurrencySign() + row.balance
+                          : ""
+                      )
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      _vm._s(
+                        Math.sign(row.balance) === -1
+                          ? _vm.getCurrencySign() + Math.abs(row.balance)
+                          : ""
+                      )
+                    )
+                  ])
+                ])
               })
             ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "wperp-btn btn--primary add-line-trigger",
-              attrs: { type: "submit" }
-            },
-            [_vm._v("View")]
-          ),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "wperp-btn btn--default print-btn",
-              attrs: { href: "#" },
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.printPopup($event)
-                }
-              }
-            },
-            [
-              _c("i", { staticClass: "flaticon-printer-1" }),
-              _vm._v("   Print\n        ")
-            ]
+            2
           )
-        ]
-      ),
-      _vm._v(" "),
-      _c("p", [
-        _c("strong", [_vm._v("For the period of ( Transaction date ):")]),
+        }),
         _vm._v(" "),
-        _c("em", [_vm._v(_vm._s(_vm.start_date))]),
-        _vm._v(" to "),
-        _c("em", [_vm._v(_vm._s(_vm.end_date))])
-      ]),
-      _vm._v(" "),
-      _c(
-        "list-table",
-        {
-          attrs: {
-            tableClass: "wperp-table table-striped table-dark widefat",
-            columns: _vm.columns,
-            rows: _vm.rows
-          },
-          scopedSlots: _vm._u([
-            {
-              key: "name",
-              fn: function(data) {
-                return [
-                  data.row.additional
-                    ? _c(
-                        "details",
-                        { attrs: { open: "" } },
-                        [
-                          _c("summary", [_vm._v(_vm._s(data.row.name))]),
-                          _vm._v(" "),
-                          _vm._l(data.row.additional, function(additional) {
-                            return _c("p", { key: additional.id }, [
-                              _c("strong", [_vm._v(_vm._s(additional.name))]),
-                              _vm._v(" "),
-                              _c("em", [
-                                _vm._v(
-                                  _vm._s(
-                                    _vm.getCurrencySign() +
-                                      Math.abs(additional.balance)
-                                  )
-                                )
-                              ])
-                            ])
-                          })
-                        ],
-                        2
-                      )
-                    : _c("span", [_vm._v(_vm._s(data.row.name))])
-                ]
-              }
-            },
-            {
-              key: "debit",
-              fn: function(data) {
-                return [
-                  _vm._v(
-                    "\n            " +
-                      _vm._s(
-                        Math.sign(data.row.balance) === 1
-                          ? _vm.getCurrencySign() + data.row.balance
-                          : ""
-                      ) +
-                      "\n        "
-                  )
-                ]
-              }
-            },
-            {
-              key: "credit",
-              fn: function(data) {
-                return [
-                  _vm._v(
-                    "\n            " +
-                      _vm._s(
-                        Math.sign(data.row.balance) === -1
-                          ? _vm.getCurrencySign() + Math.abs(data.row.balance)
-                          : ""
-                      ) +
-                      "\n        "
-                  )
-                ]
-              }
-            }
-          ])
-        },
-        [
-          _vm._v(" "),
-          _vm._v(" "),
-          _vm._v(" "),
-          _c("template", { slot: "tfoot" }, [
-            _c("tr", { staticClass: "t-foot" }, [
-              _c("td", [_vm._v("Total")]),
-              _vm._v(" "),
-              _c("td", [
-                _vm._v(_vm._s(_vm.getCurrencySign() + _vm.totalDebit))
-              ]),
-              _vm._v(" "),
-              _c("td", [
-                _vm._v(
-                  _vm._s(_vm.getCurrencySign() + Math.abs(_vm.totalCredit))
-                )
-              ])
+        _c("tfoot", [
+          _c("tr", { staticClass: "t-foot" }, [
+            _c("td", [_vm._v("Total")]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(_vm.getCurrencySign() + _vm.totalDebit))]),
+            _vm._v(" "),
+            _c("td", [
+              _vm._v(_vm._s(_vm.getCurrencySign() + Math.abs(_vm.totalCredit)))
             ])
           ])
-        ],
-        2
-      )
-    ],
-    1
-  )
+        ])
+      ],
+      2
+    )
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Account Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Debit Total")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Credit Total")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
