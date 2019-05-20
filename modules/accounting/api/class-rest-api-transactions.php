@@ -542,7 +542,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $row = $wpdb->get_results( $sql, ARRAY_A );
 
-        return $row;
+        return apply_filters( 'erp_acct_pay_methods', $row ) ;
     }
 
     public function get_voucher_type( $request ) {
