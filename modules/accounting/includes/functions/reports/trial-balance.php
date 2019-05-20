@@ -288,9 +288,10 @@ function erp_acct_get_balance_within_ledger_details_and_trial_balance( $sql, $te
             }
 
             $result[] = [
-                'id'      => $temp['id'],
-                'name'    => $temp['name'],
-                'balance' => $balance
+                'id'       => $temp['id'],
+                'chart_id' => $temp['chart_id'],
+                'name'     => $temp['name'],
+                'balance'  => $balance
             ];
         }
     } else {

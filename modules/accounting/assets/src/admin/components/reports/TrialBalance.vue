@@ -26,7 +26,7 @@
                 </tr>
             </thead>
             <tbody :key="key" v-for="(chart, key) in chrtAcct">
-                <tr v-if="rows[chart.id]"><h1>{{ chart.label }}</h1></tr>
+                <tr v-if="rows[chart.id] && debugMode"><h1>{{ chart.label }}</h1></tr>
 
                 <tr :key="index" v-for="(row, index) in rows[chart.id]">
                     <td>
@@ -90,6 +90,12 @@
                 chrtAcct   : null,
                 start_date : null,
                 end_date   : null
+            }
+        },
+
+        computed: {
+            debugMode() {
+                return '1' == erp_acct_var.erp_debug_mode;
             }
         },
 

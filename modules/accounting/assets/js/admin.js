@@ -12459,6 +12459,11 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
       end_date: null
     };
   },
+  computed: {
+    debugMode: function debugMode() {
+      return '1' == erp_acct_var.erp_debug_mode;
+    }
+  },
   created: function created() {
     this.getChartOfAccts();
   },
@@ -41864,7 +41869,7 @@ var render = function() {
             "tbody",
             { key: key },
             [
-              _vm.rows[chart.id]
+              _vm.rows[chart.id] && _vm.debugMode
                 ? _c("tr", [_c("h1", [_vm._v(_vm._s(chart.label))])])
                 : _vm._e(),
               _vm._v(" "),
