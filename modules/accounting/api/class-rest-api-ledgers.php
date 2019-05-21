@@ -28,14 +28,14 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
 
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_all_ledger_accounts' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_account_lists' );
                 },
             ],
@@ -43,7 +43,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_ledger_account' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_account' );
                 },
             ],
@@ -57,7 +57,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_single_account' );
                 },
             ],
@@ -65,14 +65,14 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_ledger_account' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_edit_account' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_ledger_account' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_delete_account' );
                 },
             ],
@@ -84,7 +84,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_ledger_accounts_by_chart' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_account_lists' );
                 },
             ],
@@ -95,7 +95,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_chart_accounts' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_account_lists' );
                 },
             ],
@@ -106,7 +106,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_bank_accounts' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_account_lists' );
                 },
             ],
@@ -117,7 +117,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_cash_accounts' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_account_lists' );
                 },
             ],
@@ -128,7 +128,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_ledger_categories' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_account_lists' );
                 },
             ],
@@ -136,7 +136,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_ledger_category' ],
                 // 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_account' );
                 },
             ]
@@ -147,14 +147,14 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_ledger_category' ],
                 // 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_edit_account' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_ledger_category' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_delete_account' );
                 },
             ],
@@ -169,7 +169,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_all_ledger_accounts ( $request ) {
+    public function get_all_ledger_accounts( $request ) {
         $formatted_items   = [];
         $additional_fields = [];
 
@@ -198,7 +198,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_ledger_accounts_by_chart ( $request ) {
+    public function get_ledger_accounts_by_chart( $request ) {
         $id = $request['chart_id'];
 
 
@@ -221,7 +221,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_ledger_account ( $request ) {
+    public function get_ledger_account( $request ) {
         global $wpdb;
         $items = array();
 
@@ -246,7 +246,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_ledger_account ( $request ) {
+    public function create_ledger_account( $request ) {
         global $wpdb;
 
         $exist = $wpdb->get_var( "SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE name = '{$request['name']}'" );
@@ -277,7 +277,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function update_ledger_account ( $request ) {
+    public function update_ledger_account( $request ) {
         global $wpdb;
 
         $id = (int) $request['id'];
@@ -306,7 +306,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_ledger_account ( $request ) {
+    public function delete_ledger_account( $request ) {
         global $wpdb;
 
         $id = (int) $request['id'];
@@ -327,7 +327,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_ERROR|WP_REST_REQUEST
      */
-    public function get_chart_accounts ( $request ) {
+    public function get_chart_accounts( $request ) {
         $accounts = erp_acct_get_all_charts();
 
         $response = rest_ensure_response( $accounts );
@@ -344,7 +344,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_bank_accounts ( $request ) {
+    public function get_bank_accounts( $request ) {
         $items = erp_acct_get_banks( true, false, false );
 
         if ( empty( $items ) ) {
@@ -372,7 +372,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_cash_accounts ( $request ) {
+    public function get_cash_accounts( $request ) {
         $item[]            = [
             'id'      => 1,
             'name'    => 'Cash',
@@ -394,7 +394,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_ERROR|WP_REST_REQUEST
      */
-    public function get_ledger_categories ( $request ) {
+    public function get_ledger_categories( $request ) {
         $chart_id = absint( $request['chart_id'] );
 
         $categories = erp_acct_get_ledger_categories( $chart_id );
@@ -413,7 +413,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_ERROR|WP_REST_REQUEST
      */
-    public function create_ledger_category ( $request ) {
+    public function create_ledger_category( $request ) {
         $category = erp_acct_create_ledger_category( $request );
 
         if ( ! $category ) {
@@ -434,7 +434,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_ERROR|WP_REST_REQUEST
      */
-    public function update_ledger_category ( $request ) {
+    public function update_ledger_category( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -457,7 +457,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Remove category
      */
-    public function delete_ledger_category ( $request ) {
+    public function delete_ledger_category( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -475,7 +475,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log ( $data, $action ) {
+    public function add_log( $data, $action ) {
         $data = (array) $data;
         erp_log()->add( [
             'component'     => 'Accounting',
@@ -496,7 +496,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
         $prepared_item['chart_id']    = ! empty( $request['chart_id'] ) ? (int) $request['chart_id'] : '';
@@ -516,7 +516,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -548,7 +548,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_ledger_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_ledger_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -577,7 +577,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $additional_fields
      * @return mixed|WP_REST_Response
      */
-    public function prepare_bank_item_for_response ( $item, $request, $additional_fields ) {
+    public function prepare_bank_item_for_response( $item, $request, $additional_fields ) {
         $item = (array) $item;
 
         $data = array_merge( $item, $additional_fields );
@@ -593,7 +593,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'chart of account',

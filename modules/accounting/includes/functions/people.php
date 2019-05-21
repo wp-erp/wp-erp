@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return int
  */
-function erp_acct_add_employee_as_people ( $id = null, $data ) {
+function erp_acct_add_employee_as_people( $id = null, $data ) {
     global $wpdb;
 
     $update    = false;
@@ -109,7 +109,7 @@ function erp_acct_add_employee_as_people ( $id = null, $data ) {
  * @param array $args
  * @return array
  */
-function erp_people_filter_transaction ( $people_id, $args = [] ) {
+function erp_people_filter_transaction( $people_id, $args = [] ) {
     global $wpdb;
     $start_date = isset( $args['start_date'] ) ? $args['start_date'] : '';
     $end_date   = isset( $args['end_date'] ) ? $args['start_date'] : '';
@@ -124,7 +124,7 @@ function erp_people_filter_transaction ( $people_id, $args = [] ) {
  * @param $people_id
  * @return mixed
  */
-function erp_acct_get_people_address ( $people_id ) {
+function erp_acct_get_people_address( $people_id ) {
     global $wpdb;
     $row = [];
 
@@ -148,7 +148,7 @@ function erp_acct_get_people_address ( $people_id ) {
 /**
  * Format people address
  */
-function erp_acct_format_people_address ( $address = [] ) {
+function erp_acct_format_people_address( $address = [] ) {
     $add = '';
 
     $keys   = array_keys( $address );
@@ -167,7 +167,7 @@ function erp_acct_format_people_address ( $address = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_people_transactions ( $args = [] ) {
+function erp_acct_get_people_transactions( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -289,7 +289,7 @@ function erp_acct_get_people_transactions ( $args = [] ) {
  *
  * @return mixed
  */
-function erp_acct_get_people_opening_balance ( $args = [] ) {
+function erp_acct_get_people_opening_balance( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -327,7 +327,7 @@ function erp_acct_get_people_opening_balance ( $args = [] ) {
  * @param $people_id
  * @return mixed
  */
-function erp_acct_get_people_type_by_id ( $people_id ) {
+function erp_acct_get_people_type_by_id( $people_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT people_types_id FROM {$wpdb->prefix}erp_people_type_relations WHERE people_id = {$people_id} LIMIT 1" );
@@ -341,7 +341,7 @@ function erp_acct_get_people_type_by_id ( $people_id ) {
  * @param $type_id
  * @return mixed
  */
-function erp_acct_get_people_type_by_type_id ( $type_id ) {
+function erp_acct_get_people_type_by_type_id( $type_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_people_types WHERE id = {$type_id} LIMIT 1" );
@@ -354,7 +354,7 @@ function erp_acct_get_people_type_by_type_id ( $type_id ) {
  *
  * @return mixed
  */
-function erp_acct_get_people_id_by_user_id ( $user_id ) {
+function erp_acct_get_people_id_by_user_id( $user_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT id FROM {$wpdb->prefix}erp_peoples WHERE user_id = {$user_id} LIMIT 1" );
@@ -367,7 +367,7 @@ function erp_acct_get_people_id_by_user_id ( $user_id ) {
  *
  * @return mixed
  */
-function erp_acct_get_people_name_by_people_id ( $people_id ) {
+function erp_acct_get_people_name_by_people_id( $people_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT first_name, last_name FROM {$wpdb->prefix}erp_peoples WHERE id = {$people_id} LIMIT 1" );

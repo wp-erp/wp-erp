@@ -7,7 +7,7 @@ namespace WeDevs\ERP\Accounting\Includes\Classes;
  */
 class Admin {
 
-    public function __construct () {
+    public function __construct() {
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
         add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_menu' ] );
         add_action( 'admin_init', [ $this, 'init_hooks' ], 5 );
@@ -20,7 +20,7 @@ class Admin {
      *
      * @return void
      */
-    public function admin_menu () {
+    public function admin_menu() {
         $dashboard      = 'erp_ac_view_dashboard';
         $customer       = 'erp_ac_view_customer';
         $vendor         = 'erp_ac_view_vendor';
@@ -162,7 +162,7 @@ class Admin {
     /**
      * Render Admin bar menu
      */
-    public function add_admin_bar_menu () {
+    public function add_admin_bar_menu() {
         global $wp_admin_bar;
 
         /* Check that the admin bar is showing and user has permission... */
@@ -222,7 +222,7 @@ class Admin {
      *
      * @return void
      */
-    public function init_hooks () {
+    public function init_hooks() {
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
     }
 
@@ -231,7 +231,7 @@ class Admin {
      *
      * @return void
      */
-    public function enqueue_scripts () {
+    public function enqueue_scripts() {
         // load styles
         wp_enqueue_style( 'accounting-admin' );
 
@@ -250,7 +250,7 @@ class Admin {
      *
      * @return void
      */
-    public function plugin_page () {
+    public function plugin_page() {
         echo '<div class="wrap"><div id="erp-accounting"></div></div>';
 
         $component = 'accounting';
@@ -267,7 +267,7 @@ class Admin {
      * @param array $data
      * @return bool
      */
-    public function make_people_from_employee ( $id, $data ) {
+    public function make_people_from_employee( $id, $data ) {
 
         if ( ! current_user_can( 'erp_create_employee' ) ) {
             return;
@@ -297,7 +297,7 @@ class Admin {
         return $people_id;
     }
 
-    public function save_accounting_settings () {
+    public function save_accounting_settings() {
         global $wpdb;
         $fin_years = [];
 

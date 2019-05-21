@@ -20,7 +20,7 @@ require_once ERP_ACCOUNTING_INCLUDES . '/functions/reports/trial-balance.php';
  * @param string $end_date
  * @return mixed
  */
-function erp_acct_get_ledger_report ( $ledger_id, $start_date, $end_date ) {
+function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -139,7 +139,7 @@ function erp_acct_get_ledger_report ( $ledger_id, $start_date, $end_date ) {
     ];
 }
 
-function erp_acct_ledger_report_opening_balance_by_fn_year_id ( $id, $ledger_id ) {
+function erp_acct_ledger_report_opening_balance_by_fn_year_id( $id, $ledger_id ) {
     global $wpdb;
 
     $sql = "SELECT SUM(debit - credit) AS balance FROM {$wpdb->prefix}erp_acct_opening_balances
@@ -163,7 +163,7 @@ function erp_acct_ledger_report_opening_balance_by_fn_year_id ( $id, $ledger_id 
  * @param string $end_date
  * @return mixed
  */
-function erp_acct_get_sales_tax_report ( $agency_id, $start_date, $end_date ) {
+function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
     global $wpdb;
 
     // opening balance
@@ -282,7 +282,7 @@ function erp_acct_get_sales_tax_report ( $agency_id, $start_date, $end_date ) {
 /**
  * Get income statement
  */
-function erp_acct_get_income_statement ( $args ) {
+function erp_acct_get_income_statement( $args ) {
     global $wpdb;
 
     if ( empty( $args['start_date'] ) ) {
@@ -324,23 +324,23 @@ function erp_acct_get_income_statement ( $args ) {
     $results['total_credit1'] = 0;
     $results['total_debit2']  = 0;
     $results['total_credit2'] = 0;
-    $results['income'] = 0;
-    $results['expense'] = 0;
+    $results['income']        = 0;
+    $results['expense']       = 0;
 
     // Add-up all debit and credit
     foreach ( $results['rows1'] as $result ) {
         $results['total_debit1']  += (float) $result['debit'];
         $results['total_credit1'] += (float) $result['credit'];
     }
-    $results['income'] =  abs( $results['total_debit1'] - $results['total_credit1'] );
+    $results['income'] = abs( $results['total_debit1'] - $results['total_credit1'] );
 
     foreach ( $results['rows2'] as $result ) {
-        $results['total_debit2'] += (float) $result['debit'];
+        $results['total_debit2']  += (float) $result['debit'];
         $results['total_credit2'] += (float) $result['credit'];
     }
-    $results['expense'] =  abs( $results['total_debit2'] - $results['total_credit2'] );
+    $results['expense'] = abs( $results['total_debit2'] - $results['total_credit2'] );
 
-    $results['total_debit'] = $results['total_debit1'] + $results['total_debit2'];
+    $results['total_debit']  = $results['total_debit1'] + $results['total_debit2'];
     $results['total_credit'] = $results['total_credit1'] + $results['total_credit2'];
 
     $dr_cr_diff = $results['total_debit'] - $results['total_credit'];
@@ -353,7 +353,7 @@ function erp_acct_get_income_statement ( $args ) {
         $results['raw_balance'] = $results['loss'];
     }
 
-    $results['balance'] = isset( $results['profit'] ) ?  $results['profit'] : $results['loss'];
+    $results['balance'] = isset( $results['profit'] ) ? $results['profit'] : $results['loss'];
 
     return $results;
 }
@@ -370,7 +370,7 @@ function erp_acct_get_income_statement ( $args ) {
  * @param $args
  * @return mixed
  */
-function erp_acct_get_balance_sheet ( $args ) {
+function erp_acct_get_balance_sheet( $args ) {
     global $wpdb;
 
     if ( empty( $args['start_date'] ) ) {
@@ -430,7 +430,7 @@ function erp_acct_get_balance_sheet ( $args ) {
 
     $results['rows2'][] = [
         'name'    => 'Accounts Payable',
-        'balance' => abs( erp_acct_get_account_payable( $args ) )
+        'balance' => erp_acct_get_account_payable( $args )
     ];
     $results['rows2'][] = [
         'name'       => 'Bank Loan',
@@ -441,47 +441,34 @@ function erp_acct_get_balance_sheet ( $args ) {
     $results['rows2'][] = [
         'name'    => 'Sales Tax Payable',
         'slug'    => 'sales_tax',
-        'balance' => abs( erp_acct_sales_tax_query( $args, 'payable' ) )
+        'balance' => erp_acct_sales_tax_query( $args, 'payable' )
     ];
 
     $capital  = erp_acct_get_owners_equity( $args, 'capital' );
     $drawings = erp_acct_get_owners_equity( $args, 'drawings' );
 
     $results['rows3'][] = [
-        'id'      => 30,
+        'id'      => 29,
         'name'    => 'Owner\'s Equity',
-        'balance' => abs( $capital ) - $drawings
+        'balance' => $capital - $drawings
     ];
 
-    $profit_loss = erp_acct_get_profit_loss( $args );
-    $profit      = 0;
-    $loss        = 0;
+    $profit_loss = erp_acct_get_income_statement( $args );
 
-    $dr_cr_diff = abs( $profit_loss['total_debit'] ) - abs( $profit_loss['total_credit'] );
-
-    if ( abs( $profit_loss['total_debit'] ) <= abs( $profit_loss['total_credit'] ) ) {
-        if ( $dr_cr_diff < 0 ) {
-            $dr_cr_diff = -$dr_cr_diff;
-        }
+    if ( !empty( $profit_loss['profit'] ) ) {
         $results['rows3'][] = [
             'name'    => 'Profit',
             'slug'    => 'profit',
-            'balance' => $dr_cr_diff
+            'balance' => - $profit_loss['profit']
         ];
-        $profit             = $dr_cr_diff;
-    } else {
-        if ( $dr_cr_diff > 0 ) {
-            $balance = -$dr_cr_diff;
-        } else {
-            $dr_cr_diff = -$dr_cr_diff;
-            $balance    = $dr_cr_diff;
-        }
+    }
+
+    if ( !empty( $profit_loss['loss'] ) ) {
         $results['rows3'][] = [
             'name'    => 'Loss',
             'slug'    => 'loss',
-            'balance' => $balance
+            'balance' => - $profit_loss['loss']
         ];
-        $loss               = $balance;
     }
 
     $results['total_asset']     = 0;
@@ -521,7 +508,16 @@ function erp_acct_get_balance_sheet ( $args ) {
         }
     }
 
-    $results['owners_equity'] = abs( $capital ) - $drawings + $profit - $loss;
+    $profit = 0;
+    $loss   = 0;
+
+    if ( ! empty( $profit_loss['profit'] ) ) {
+        $profit = $profit_loss['profit'];
+    } elseif ( ! empty( $profit_loss['loss'] ) ) {
+        $loss = $profit_loss['loss'];
+    }
+
+    $results['owners_equity'] = $capital - $drawings + $profit - $loss;
 
     return $results;
 }
@@ -536,7 +532,7 @@ function erp_acct_get_balance_sheet ( $args ) {
  * @return array
  */
 
-function erp_acct_balance_sheet_calculate_with_opening_balance ( $bs_start_date, $data, $sql, $chart_id ) {
+function erp_acct_balance_sheet_calculate_with_opening_balance( $bs_start_date, $data, $sql, $chart_id ) {
     global $wpdb;
 
     // get closest financial year id and start date
@@ -607,7 +603,7 @@ function erp_acct_balance_sheet_calculate_with_opening_balance ( $bs_start_date,
  *
  * @return array
  */
-function erp_acct_get_bs_balance_with_opening_balance ( $ledgers, $data, $opening_balance ) {
+function erp_acct_get_bs_balance_with_opening_balance( $ledgers, $data, $opening_balance ) {
     $temp_data = [];
 
     foreach ( $ledgers as $ledger ) {
@@ -644,7 +640,7 @@ function erp_acct_get_bs_balance_with_opening_balance ( $ledgers, $data, $openin
  *
  * @return array
  */
-function erp_acct_bs_opening_balance_by_fn_year_id ( $id, $chart_id ) {
+function erp_acct_bs_opening_balance_by_fn_year_id( $id, $chart_id ) {
     global $wpdb;
 
     $where = '';
@@ -653,7 +649,7 @@ function erp_acct_bs_opening_balance_by_fn_year_id ( $id, $chart_id ) {
         $where = $wpdb->prepare( 'AND ledger.chart_id = %d', $chart_id );
     }
 
-    $sql = "SELECT ledger.id, ledger.name, ABS( SUM(opb.debit - opb.credit) ) AS balance
+    $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
         WHERE opb.financial_year_id = %d {$where} AND opb.type = 'ledger' AND ledger.slug <> 'owner_s_equity'
@@ -669,7 +665,7 @@ function erp_acct_bs_opening_balance_by_fn_year_id ( $id, $chart_id ) {
  *
  * @return array
  */
-function erp_acct_get_profit_loss ( $args ) {
+function erp_acct_get_profit_loss( $args ) {
     global $wpdb;
 
     if ( empty( $args['start_date'] ) ) {

@@ -28,13 +28,13 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_customers' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_customer' );
                 },
             ],
@@ -42,7 +42,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_customer' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_customer' );
                 },
             ],
@@ -56,7 +56,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_customer' );
                 },
             ],
@@ -64,14 +64,14 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_customer' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_edit_customer' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_customer' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_delete_customer' );
                 },
             ],
@@ -85,7 +85,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'ids' => [ 'required' => true ]
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_delete_customer' );
                 },
             ],
@@ -97,7 +97,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_transactions' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_customer' );
                 },
             ],
@@ -107,7 +107,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'filter_transactions' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_customer' );
                 },
             ],
@@ -118,7 +118,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_countries' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_customer' );
                 },
             ]
@@ -132,7 +132,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_customers ( $request ) {
+    public function get_customers( $request ) {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -181,7 +181,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_customer ( $request ) {
+    public function get_customer( $request ) {
         $id   = (int) $request['id'];
         $item = erp_get_people( $id );
         $item = (array) $item;
@@ -219,7 +219,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_customer ( $request ) {
+    public function create_customer( $request ) {
 
         if ( false != email_exists( $request['email'] ) ) {
             return new WP_Error( 'rest_customer_invalid_id', __( 'Email already exists!' ), [ 'status' => 400 ] );
@@ -251,7 +251,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function update_customer ( $request ) {
+    public function update_customer( $request ) {
         $id = (int) $request['id'];
 
         $item = erp_get_people( $id );
@@ -285,7 +285,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_customer ( $request ) {
+    public function delete_customer( $request ) {
         $id = (int) $request['id'];
 
         $data = [
@@ -306,7 +306,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function bulk_delete_customers ( $request ) {
+    public function bulk_delete_customers( $request ) {
         $ids = (string) $request['ids'];
 
         $data = [
@@ -327,7 +327,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_transactions ( $request ) {
+    public function get_transactions( $request ) {
         $id = (int) $request['id'];
 
         $args['people_id'] = $id;
@@ -342,7 +342,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return object
      */
-    public function get_countries ( $request ) {
+    public function get_countries( $request ) {
         $country  = \WeDevs\ERP\Countries::instance();
         $c        = $country->get_countries();
         $state    = $country->get_states();
@@ -357,7 +357,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param object $request
      * @return array
      */
-    public function filter_transactions ( $request ) {
+    public function filter_transactions( $request ) {
         $id           = $request['id'];
         $start_date   = $request['start_date'];
         $end_date     = $request['end_date'];
@@ -378,7 +378,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log ( $data, $action ) {
+    public function add_log( $data, $action ) {
         erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Customer', 'erp' ),
@@ -398,7 +398,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
         // required arguments.
         if ( isset( $request['first_name'] ) ) {
@@ -469,7 +469,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -513,7 +513,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'customer',

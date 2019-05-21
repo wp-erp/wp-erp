@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_banks ( $show_balance = false, $with_cash = false, $no_bank = false ) {
+function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank = false ) {
     global $wpdb;
 
     $ledgers   = $wpdb->prefix . 'erp_acct_ledgers';
@@ -100,7 +100,7 @@ function erp_acct_get_banks ( $show_balance = false, $with_cash = false, $no_ban
  * @param $data
  * @return mixed
  */
-function erp_acct_get_dashboard_banks () {
+function erp_acct_get_dashboard_banks() {
     $results   = [];
     $results[] = [
         'name'    => 'Cash',
@@ -124,7 +124,7 @@ function erp_acct_get_dashboard_banks () {
  *
  * @return float
  */
-function erp_acct_dashboard_balance_cash_at_bank ( $additionals ) {
+function erp_acct_dashboard_balance_cash_at_bank( $additionals ) {
     $balance = 0;
 
     foreach ( $additionals as $additional ) {
@@ -141,7 +141,7 @@ function erp_acct_dashboard_balance_cash_at_bank ( $additionals ) {
  *
  * @return mixed
  */
-function erp_acct_dashboard_balance_bank_balance ( $type ) {
+function erp_acct_dashboard_balance_bank_balance( $type ) {
     global $wpdb;
 
     if ( 'loan' === $type ) {
@@ -164,7 +164,7 @@ function erp_acct_dashboard_balance_bank_balance ( $type ) {
  * @param $bank_no
  * @return mixed
  */
-function erp_acct_get_bank ( $bank_no ) {
+function erp_acct_get_bank( $bank_no ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "wp_erp_acct_cash_at_banks WHERE ledger_id = {$bank_no}", ARRAY_A );
@@ -179,7 +179,7 @@ function erp_acct_get_bank ( $bank_no ) {
  * @param $bank_id
  * @return int
  */
-function erp_acct_insert_bank ( $data ) {
+function erp_acct_insert_bank( $data ) {
     global $wpdb;
 
     $bank_data = erp_acct_get_formatted_bank_data( $data );
@@ -208,7 +208,7 @@ function erp_acct_insert_bank ( $data ) {
  * @param $id
  * @return int
  */
-function erp_acct_delete_bank ( $id ) {
+function erp_acct_delete_bank( $id ) {
     global $wpdb;
 
     try {
@@ -233,7 +233,7 @@ function erp_acct_delete_bank ( $id ) {
  *
  * @return mixed
  */
-function erp_acct_get_formatted_bank_data ( $data ) {
+function erp_acct_get_formatted_bank_data( $data ) {
 
     $bank_data['ledger_id'] = ! empty( $bank_data['ledger_id'] ) ? $bank_data['ledger_id'] : 0;
 
@@ -247,7 +247,7 @@ function erp_acct_get_formatted_bank_data ( $data ) {
  *
  */
 
-function erp_acct_get_single_account_balance ( $ledger_id ) {
+function erp_acct_get_single_account_balance( $ledger_id ) {
     global $wpdb;
 
     $result = $wpdb->get_row( "SELECT ledger_id, SUM(credit) - SUM(debit) AS 'balance' FROM " . $wpdb->prefix . "erp_acct_ledger_details WHERE ledger_id = {$ledger_id}", ARRAY_A );
@@ -260,7 +260,7 @@ function erp_acct_get_single_account_balance ( $ledger_id ) {
  *
  * @return array
  */
-function erp_acct_get_account_debit_credit ( $ledger_id ) {
+function erp_acct_get_account_debit_credit( $ledger_id ) {
     global $wpdb;
     $dr_cr = [];
 
@@ -276,7 +276,7 @@ function erp_acct_get_account_debit_credit ( $ledger_id ) {
  *
  * @param $item
  */
-function erp_acct_perform_transfer ( $item ) {
+function erp_acct_perform_transfer( $item ) {
     global $wpdb;
     $created_by = get_current_user_id();
     $created_at = date( "Y-m-d" );
@@ -350,7 +350,7 @@ function erp_acct_perform_transfer ( $item ) {
 /**
  * Sync dashboard account on transfer
  */
-function erp_acct_sync_dashboard_accounts () {
+function erp_acct_sync_dashboard_accounts() {
     global $wpdb;
 
     $accounts = erp_acct_get_banks( true, true, false );
@@ -368,7 +368,7 @@ function erp_acct_sync_dashboard_accounts () {
 /**
  * Get transferrable accounts
  */
-function erp_acct_get_transfer_accounts ( $show_balance = false ) {
+function erp_acct_get_transfer_accounts( $show_balance = false ) {
     /*
     global $wpdb;
 
@@ -405,7 +405,7 @@ function erp_acct_get_transfer_accounts ( $show_balance = false ) {
  *
  * @return array
  */
-function erp_acct_get_transfer_vouchers ( $args = [] ) {
+function erp_acct_get_transfer_vouchers( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -439,7 +439,7 @@ function erp_acct_get_transfer_vouchers ( $args = [] ) {
  * @param integer $id Voucher id
  * @return object     Single voucher
  */
-function erp_acct_get_single_voucher ( $id ) {
+function erp_acct_get_single_voucher( $id ) {
     global $wpdb;
 
     if ( ! $id ) {
@@ -461,7 +461,7 @@ function erp_acct_get_single_voucher ( $id ) {
  *
  * @return array
  */
-function erp_acct_get_balance_by_ledger ( $id ) {
+function erp_acct_get_balance_by_ledger( $id ) {
     if ( is_array( $id ) ) {
         $id = "'" . implode( "','", $id ) . "'";
     }

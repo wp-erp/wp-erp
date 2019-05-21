@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_opening_balances ( $args = [] ) {
+function erp_acct_get_all_opening_balances( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -62,7 +62,7 @@ function erp_acct_get_all_opening_balances ( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_opening_balance ( $year_id ) {
+function erp_acct_get_opening_balance( $year_id ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -76,7 +76,7 @@ function erp_acct_get_opening_balance ( $year_id ) {
     credit
 
     FROM {$wpdb->prefix}erp_acct_opening_balances as ob
-    LEFT JOIN {$wpdb->prefix}erp_acct_ledgers as ledger 
+    LEFT JOIN {$wpdb->prefix}erp_acct_ledgers as ledger
     ON ledger.id = ob.ledger_id
     WHERE financial_year_id = {$year_id} AND ob.type = 'ledger'";
 
@@ -93,7 +93,7 @@ function erp_acct_get_opening_balance ( $year_id ) {
  * @return mixed
  */
 
-function erp_acct_get_virtual_acct ( $year_id ) {
+function erp_acct_get_virtual_acct( $year_id ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -121,7 +121,7 @@ function erp_acct_get_virtual_acct ( $year_id ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_insert_opening_balance ( $data ) {
+function erp_acct_insert_opening_balance( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -179,7 +179,7 @@ function erp_acct_insert_opening_balance ( $data ) {
  * @param $data
  * @param $year_id
  */
-function erp_acct_insert_ob_vir_accounts ( $data, $year_id ) {
+function erp_acct_insert_ob_vir_accounts( $data, $year_id ) {
     global $wpdb;
 
     if ( ! empty( $data['acct_rec'] ) ) {
@@ -240,7 +240,7 @@ function erp_acct_insert_ob_vir_accounts ( $data, $year_id ) {
  * @param $voucher_no
  * @return mixed
  */
-function erp_acct_get_formatted_opening_balance_data ( $data ) {
+function erp_acct_get_formatted_opening_balance_data( $data ) {
     $opening_balance_data = [];
 
     $opening_balance_data['year']         = isset( $data['year'] ) ? $data['year'] : '';
@@ -261,7 +261,7 @@ function erp_acct_get_formatted_opening_balance_data ( $data ) {
 /**
  * Get opening balance names
  */
-function erp_acct_get_opening_balance_names () {
+function erp_acct_get_opening_balance_names() {
     global $wpdb;
 
     $sql = "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years";
@@ -278,7 +278,7 @@ function erp_acct_get_opening_balance_names () {
  *
  * @return array
  */
-function erp_acct_get_start_end_date ( $year_id ) {
+function erp_acct_get_start_end_date( $year_id ) {
     $dates = [];
     global $wpdb;
 
@@ -295,7 +295,7 @@ function erp_acct_get_start_end_date ( $year_id ) {
 /**
  * Get virtual accts summary for opening balance
  */
-function erp_acct_get_ob_virtual_acct ( $year_id ) {
+function erp_acct_get_ob_virtual_acct( $year_id ) {
     global $wpdb;
 
 
@@ -329,7 +329,7 @@ function erp_acct_get_ob_virtual_acct ( $year_id ) {
  * @param array $args
  * @return mixed
  */
-function get_ledger_balance_with_opening_balance ( $ledger_id, $args = [] ) {
+function get_ledger_balance_with_opening_balance( $ledger_id, $args = [] ) {
     global $wpdb;
     $fy = [];
 
@@ -351,4 +351,52 @@ function get_ledger_balance_with_opening_balance ( $ledger_id, $args = [] ) {
     $bal2 = isset( $ledger_bal->balance ) ? $ledger_bal->balance : 0;
 
     return $bal1 + $bal2;
+}
+
+/**
+ * Get opening balance invoice account details
+ *
+ * @param string $fy_start_date
+ * @return int
+ */
+function erp_acct_get_opb_invoice_account_details( $fy_start_date ) {
+    global $wpdb;
+
+    // mainly ( debit - credit )
+    $sql = "SELECT SUM(balance) AS amount
+        FROM ( SELECT SUM( debit - credit ) AS balance
+            FROM {$wpdb->prefix}erp_acct_invoice_account_details WHERE trn_date < '%s'
+            GROUP BY invoice_no HAVING balance > 0 )
+        AS get_amount";
+
+    return (float) $wpdb->get_var( $wpdb->prepare( $sql, $fy_start_date ) );
+}
+
+/**
+ * Get opening balance bill & purchase
+ *
+ * @param string $fy_start_date
+ * @return int
+ */
+function erp_acct_get_opb_bill_purchase_account_details( $fy_start_date ) {
+    global $wpdb;
+
+    /**
+     *? Why only bills, not expense?
+     *? Expense is `direct expense`, and we don't include direct expense here
+     */
+    $bill_sql = "SELECT SUM(balance) AS amount
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_bill_account_details WHERE trn_date < '%s'
+        GROUP BY bill_no HAVING balance < 0 )
+        AS get_amount";
+
+    $purchase_sql = "SELECT SUM(balance) AS amount
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE trn_date < '%s'
+        GROUP BY purchase_no HAVING balance < 0 )
+        AS get_amount";
+
+    $bill_amount     = $wpdb->get_var( $wpdb->prepare( $bill_sql, $fy_start_date ) );
+    $purchase_amount = $wpdb->get_var( $wpdb->prepare( $purchase_sql, $fy_start_date ) );
+
+    return (float) $bill_amount + (float) $purchase_amount;
 }

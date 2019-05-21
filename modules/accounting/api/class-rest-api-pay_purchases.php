@@ -28,13 +28,13 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_pay_purchases' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ],
@@ -42,7 +42,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_pay_purchase' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -54,7 +54,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_pay_purchase' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ],
@@ -62,14 +62,14 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_pay_purchase' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_pay_purchase' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
@@ -81,7 +81,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'void_pay_purchase' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_publish_expenses_voucher' );
                 },
             ],
@@ -95,7 +95,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_pay_purchases ( $request ) {
+    public function get_pay_purchases( $request ) {
         $args = [
             'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
@@ -138,7 +138,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_pay_purchase ( $request ) {
+    public function get_pay_purchase( $request ) {
 
         $id = (int) $request['id'];
 
@@ -167,7 +167,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_pay_purchase ( $request ) {
+    public function create_pay_purchase( $request ) {
         $additional_fields = [];
         $pay_purchase_data = $this->prepare_item_for_database( $request );
 
@@ -203,7 +203,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_pay_purchase ( $request ) {
+    public function update_pay_purchase( $request ) {
 
         $id = (int) $request['id'];
 
@@ -237,7 +237,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_pay_purchase ( $request ) {
+    public function delete_pay_purchase( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -256,7 +256,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function void_pay_purchase ( $request ) {
+    public function void_pay_purchase( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -274,7 +274,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log ( $data, $action ) {
+    public function add_log( $data, $action ) {
         erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Pay Purchase', 'erp' ),
@@ -294,7 +294,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
 
         $prepared_item = [];
 
@@ -362,7 +362,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -393,7 +393,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'pay_purchase',

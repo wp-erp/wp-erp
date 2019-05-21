@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_sales_transactions ( $args = [] ) {
+function erp_acct_get_sales_transactions( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -38,10 +38,12 @@ function erp_acct_get_sales_transactions ( $args = [] ) {
     }
     if ( $args['status'] == 0 ) {
         $where .= "";
-    } else if ( ! empty( $args['status'] ) ) {
-        $where .= " AND invoice.status={$args['status']} OR invoice_receipt.status={$args['status']} ";
     } else {
-        $where .= " AND invoice.status=2 ";
+        if ( ! empty( $args['status'] ) ) {
+            $where .= " AND invoice.status={$args['status']} OR invoice_receipt.status={$args['status']} ";
+        } else {
+            $where .= " AND invoice.status=2 ";
+        }
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
@@ -88,7 +90,7 @@ function erp_acct_get_sales_transactions ( $args = [] ) {
 /**
  * Get sales chart status
  */
-function erp_acct_get_sales_chart_status ( $args = [] ) {
+function erp_acct_get_sales_chart_status( $args = [] ) {
     global $wpdb;
 
     $where = '';
@@ -114,7 +116,7 @@ function erp_acct_get_sales_chart_status ( $args = [] ) {
 /**
  * Get sales chart payment
  */
-function erp_acct_get_sales_chart_payment ( $args = [] ) {
+function erp_acct_get_sales_chart_payment( $args = [] ) {
     global $wpdb;
 
     $where = ' WHERE invoice.estimate = 0 AND invoice.status != 1';
@@ -145,7 +147,7 @@ function erp_acct_get_sales_chart_payment ( $args = [] ) {
  *
  * @return array|null|object
  */
-function erp_acct_get_bill_chart_data ( $args = [] ) {
+function erp_acct_get_bill_chart_data( $args = [] ) {
     global $wpdb;
 
     $where = ' WHERE bill.status != 1';
@@ -175,7 +177,7 @@ function erp_acct_get_bill_chart_data ( $args = [] ) {
  *
  * @return array|null|object
  */
-function erp_acct_get_bill_chart_status ( $args = [] ) {
+function erp_acct_get_bill_chart_status( $args = [] ) {
     global $wpdb;
 
     $where = '';
@@ -206,7 +208,7 @@ function erp_acct_get_bill_chart_status ( $args = [] ) {
  *
  * @return array|null|object
  */
-function erp_acct_get_purchase_chart_data ( $args = [] ) {
+function erp_acct_get_purchase_chart_data( $args = [] ) {
     global $wpdb;
 
     $where = ' WHERE purchase.purchase_order = 0 AND purchase.status != 1';
@@ -238,7 +240,7 @@ function erp_acct_get_purchase_chart_data ( $args = [] ) {
  *
  * @return array|null|object
  */
-function erp_acct_get_purchase_chart_status ( $args = [] ) {
+function erp_acct_get_purchase_chart_status( $args = [] ) {
     global $wpdb;
 
     $where = '';
@@ -271,7 +273,7 @@ function erp_acct_get_purchase_chart_status ( $args = [] ) {
  *
  * @return array|null|object
  */
-function erp_acct_get_expense_chart_data ( $args = [] ) {
+function erp_acct_get_expense_chart_data( $args = [] ) {
     global $wpdb;
 
     $where = '';
@@ -299,7 +301,7 @@ function erp_acct_get_expense_chart_data ( $args = [] ) {
  *
  * @return array|null|object
  */
-function erp_acct_get_expense_chart_status ( $args = [] ) {
+function erp_acct_get_expense_chart_status( $args = [] ) {
     global $wpdb;
 
     $where = '';
@@ -328,7 +330,7 @@ function erp_acct_get_expense_chart_status ( $args = [] ) {
  *
  * @return array|null|object
  */
-function erp_acct_get_income_expense_chart_data () {
+function erp_acct_get_income_expense_chart_data() {
 
     $income_chart_id  = 4; //Default db value
     $expense_chart_id = 5; //Default db value
@@ -373,7 +375,7 @@ function erp_acct_get_income_expense_chart_data () {
  *
  * @return array|null|object
  */
-function erp_acct_get_monthly_balance_by_chart_id ( $start_date, $end_date, $chart_id ) {
+function erp_acct_get_monthly_balance_by_chart_id( $start_date, $end_date, $chart_id ) {
     global $wpdb;
 
     $ledger_details = $wpdb->prefix . 'erp_acct_ledger_details';
@@ -399,7 +401,7 @@ function erp_acct_get_monthly_balance_by_chart_id ( $start_date, $end_date, $cha
  *
  * @return array
  */
-function erp_acct_format_monthly_data_to_yearly_data ( $result ) {
+function erp_acct_format_monthly_data_to_yearly_data( $result ) {
     $default_year_data = [
         'Jan' => 0,
         'Feb' => 0,
@@ -415,7 +417,7 @@ function erp_acct_format_monthly_data_to_yearly_data ( $result ) {
         'Dec' => 0,
     ];
 
-    $result = array_map( function ( $item ) {
+    $result = array_map( function( $item ) {
         $item['month']   = date( "M", mktime( 0, 0, 0, $item['month'] ) );
         $item['balance'] = abs( $item['balance'] );
         return $item;
@@ -437,7 +439,7 @@ function erp_acct_format_monthly_data_to_yearly_data ( $result ) {
  * @return mixed
  */
 
-function erp_acct_get_expense_transactions ( $args = [] ) {
+function erp_acct_get_expense_transactions( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -464,10 +466,12 @@ function erp_acct_get_expense_transactions ( $args = [] ) {
     }
     if ( $args['status'] == 0 ) {
         $where .= "";
-    } else if ( ! empty( $args['status'] ) ) {
-        $where .= " AND bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} ";
     } else {
-        $where .= " AND bill.status=2 OR expense.status=4";
+        if ( ! empty( $args['status'] ) ) {
+            $where .= " AND bill.status={$args['status']} OR pay_bill.status={$args['status']} OR expense.status={$args['status']} ";
+        } else {
+            $where .= " AND bill.status=2 OR expense.status=4";
+        }
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
@@ -523,7 +527,7 @@ function erp_acct_get_expense_transactions ( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_purchase_transactions ( $args = [] ) {
+function erp_acct_get_purchase_transactions( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -550,10 +554,12 @@ function erp_acct_get_purchase_transactions ( $args = [] ) {
     }
     if ( $args['status'] == 0 ) {
         $where .= "";
-    } else if ( ! empty( $args['status'] ) ) {
-        $where .= " AND purchase.status={$args['status']} OR pay_purchase.status={$args['status']} ";
     } else {
-        $where .= " AND purchase.status=2 ";
+        if ( ! empty( $args['status'] ) ) {
+            $where .= " AND purchase.status={$args['status']} OR pay_purchase.status={$args['status']} ";
+        } else {
+            $where .= " AND purchase.status=2 ";
+        }
     }
     if ( $args['number'] != '-1' ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
@@ -604,7 +610,7 @@ function erp_acct_get_purchase_transactions ( $args = [] ) {
  *
  * @return boolean
  */
-function erp_acct_send_email_with_pdf_attached ( $request, $output_method = 'D' ) {
+function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' ) {
 
     $type       = isset( $request['type'] ) ? $request['type'] : '';
     $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : [];
@@ -818,7 +824,7 @@ function erp_acct_send_email_with_pdf_attached ( $request, $output_method = 'D' 
 /**
  * Get voucher type by id
  */
-function erp_acct_get_transaction_type ( $voucher_no ) {
+function erp_acct_get_transaction_type( $voucher_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT type FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = %d", $voucher_no );

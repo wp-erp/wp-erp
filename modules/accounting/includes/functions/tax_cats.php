@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_tax_cats ( $args = [] ) {
+function erp_acct_get_all_tax_cats( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -49,7 +49,7 @@ function erp_acct_get_all_tax_cats ( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_tax_cat ( $tax_no ) {
+function erp_acct_get_tax_cat( $tax_no ) {
     global $wpdb;
 
     $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_tax_categories
@@ -66,7 +66,7 @@ function erp_acct_get_tax_cat ( $tax_no ) {
  * @param $data
  * @return int
  */
-function erp_acct_insert_tax_cat ( $data ) {
+function erp_acct_insert_tax_cat( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -96,7 +96,7 @@ function erp_acct_insert_tax_cat ( $data ) {
  * @param $data
  * @return int
  */
-function erp_acct_update_tax_cat ( $data, $id ) {
+function erp_acct_update_tax_cat( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -128,7 +128,7 @@ function erp_acct_update_tax_cat ( $data, $id ) {
  * @return int
  */
 
-function erp_acct_delete_tax_cat ( $id ) {
+function erp_acct_delete_tax_cat( $id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_categories', array( 'id' => $id ) );

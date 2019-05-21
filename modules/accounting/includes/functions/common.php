@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array
  */
-function erp_acct_upload_attachments ( $files ) {
+function erp_acct_upload_attachments( $files ) {
     if ( ! function_exists( 'wp_handle_upload' ) ) {
         require_once( ABSPATH . 'wp-admin/includes/file.php' );
     }
@@ -43,7 +43,7 @@ function erp_acct_upload_attachments ( $files ) {
  *
  * @return array|null|object
  */
-function erp_acct_get_payables ( $from, $to ) {
+function erp_acct_get_payables( $from, $to ) {
     global $wpdb;
 
     $from_date = date( "Y-m-d", strtotime( $from ) );
@@ -91,7 +91,7 @@ function erp_acct_get_payables ( $from, $to ) {
  *
  * @return array
  */
-function erp_acct_get_payables_overview () {
+function erp_acct_get_payables_overview() {
     // get dates till coming 90 days
     $from_date = date( "Y-m-d" );
     $to_date   = date( "Y-m-d", strtotime( "+90 day", strtotime( $from_date ) ) );
@@ -151,7 +151,7 @@ function erp_acct_get_payables_overview () {
  *
  * @return void
  */
-function erp_acct_insert_check_data ( $check_data ) {
+function erp_acct_insert_check_data( $check_data ) {
     global $wpdb;
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_checks', array(
@@ -177,7 +177,7 @@ function erp_acct_insert_check_data ( $check_data ) {
  *
  * @return void
  */
-function erp_acct_update_check_data ( $check_data, $check_no ) {
+function erp_acct_update_check_data( $check_data, $check_no ) {
     global $wpdb;
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_expense_checks', array(
@@ -203,7 +203,7 @@ function erp_acct_update_check_data ( $check_data, $check_no ) {
  *
  * @return array
  */
-function erp_acct_get_people_info_by_id ( $people_id ) {
+function erp_acct_get_people_info_by_id( $people_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT first_name, last_name, email FROM {$wpdb->prefix}erp_peoples WHERE id = {$people_id} LIMIT" );
@@ -218,7 +218,7 @@ function erp_acct_get_people_info_by_id ( $people_id ) {
  *
  * @return array
  */
-function erp_acct_get_ledger_by_id ( $ledger_id ) {
+function erp_acct_get_ledger_by_id( $ledger_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name, slug, code FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = {$ledger_id} LIMIT 1" );
@@ -233,7 +233,7 @@ function erp_acct_get_ledger_by_id ( $ledger_id ) {
  *
  * @return array
  */
-function erp_acct_get_product_type_by_id ( $product_type_id ) {
+function erp_acct_get_product_type_by_id( $product_type_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_product_types WHERE id = {$product_type_id} LIMIT 1" );
@@ -248,7 +248,7 @@ function erp_acct_get_product_type_by_id ( $product_type_id ) {
  *
  * @return array
  */
-function erp_acct_get_product_category_by_id ( $cat_id ) {
+function erp_acct_get_product_category_by_id( $cat_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_product_categories WHERE id = {$cat_id} LIMIT 1" );
@@ -278,7 +278,7 @@ function erp_acct_get_product_category_by_id ( $cat_id ) {
  *
  * @return array
  */
-function erp_acct_get_tax_agency_by_id ( $agency_id ) {
+function erp_acct_get_tax_agency_by_id( $agency_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_tax_agencies WHERE id = {$agency_id} LIMIT 1" );
@@ -293,7 +293,7 @@ function erp_acct_get_tax_agency_by_id ( $agency_id ) {
  *
  * @return array
  */
-function erp_acct_get_tax_category_by_id ( $cat_id ) {
+function erp_acct_get_tax_category_by_id( $cat_id ) {
     global $wpdb;
 
     if ( null !== $cat_id ) {
@@ -310,7 +310,7 @@ function erp_acct_get_tax_category_by_id ( $cat_id ) {
  *
  * @return string
  */
-function erp_acct_get_trn_status_by_id ( $trn_id ) {
+function erp_acct_get_trn_status_by_id( $trn_id ) {
     global $wpdb;
 
     if ( ! $trn_id ) {
@@ -329,7 +329,7 @@ function erp_acct_get_trn_status_by_id ( $trn_id ) {
  *
  * @return array
  */
-function erp_acct_get_payment_method_by_id ( $method_id ) {
+function erp_acct_get_payment_method_by_id( $method_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_payment_methods WHERE id = {$method_id} LIMIT 1" );
@@ -344,7 +344,7 @@ function erp_acct_get_payment_method_by_id ( $method_id ) {
  *
  * @return array
  */
-function erp_acct_get_check_trn_type_by_id ( $trn_type_id ) {
+function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_check_trn_tables WHERE id = {$trn_type_id} LIMIT 1" );
@@ -358,7 +358,7 @@ function erp_acct_get_check_trn_type_by_id ( $trn_type_id ) {
  *
  * @return array
  */
-function erp_acct_quick_access_menu () {
+function erp_acct_quick_access_menu() {
     return [
         'invoice'         => [
             'title' => 'Invoice',
@@ -435,7 +435,7 @@ function erp_acct_quick_access_menu () {
  *
  * @return array
  */
-function erp_acct_get_trn_type_by_voucher_no ( $voucher_no ) {
+function erp_acct_get_trn_type_by_voucher_no( $voucher_no ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT type FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = {$voucher_no} LIMIT 1" );
@@ -446,7 +446,7 @@ function erp_acct_get_trn_type_by_voucher_no ( $voucher_no ) {
 /**
  * Change a string to slug
  */
-function slugify ( $str ) {
+function slugify( $str ) {
     // replace non letter or digits by _
     $str = preg_replace( '~[^\pL\d]+~u', '_', $str );
 
@@ -459,7 +459,7 @@ function slugify ( $str ) {
  * @param $id
  * @return mixed
  */
-function erp_acct_get_ledger_name_by_id ( $id ) {
+function erp_acct_get_ledger_name_by_id( $id ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = %d", $id );
