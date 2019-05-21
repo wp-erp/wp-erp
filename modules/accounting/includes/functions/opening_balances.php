@@ -76,7 +76,7 @@ function erp_acct_get_opening_balance( $year_id ) {
     credit
 
     FROM {$wpdb->prefix}erp_acct_opening_balances as ob
-    LEFT JOIN {$wpdb->prefix}erp_acct_ledgers as ledger 
+    LEFT JOIN {$wpdb->prefix}erp_acct_ledgers as ledger
     ON ledger.id = ob.ledger_id
     WHERE financial_year_id = {$year_id} AND ob.type = 'ledger'";
 
@@ -351,4 +351,52 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $args = [] ) {
     $bal2 = isset( $ledger_bal->balance ) ? $ledger_bal->balance : 0;
 
     return $bal1 + $bal2;
+}
+
+/**
+ * Get opening balance invoice account details
+ *
+ * @param string $fy_start_date
+ * @return int
+ */
+function erp_acct_get_opb_invoice_account_details( $fy_start_date ) {
+    global $wpdb;
+
+    // mainly ( debit - credit )
+    $sql = "SELECT SUM(balance) AS amount
+        FROM ( SELECT SUM( debit - credit ) AS balance
+            FROM {$wpdb->prefix}erp_acct_invoice_account_details WHERE trn_date < '%s'
+            GROUP BY invoice_no HAVING balance > 0 )
+        AS get_amount";
+
+    return (float) $wpdb->get_var( $wpdb->prepare( $sql, $fy_start_date ) );
+}
+
+/**
+ * Get opening balance bill & purchase
+ *
+ * @param string $fy_start_date
+ * @return int
+ */
+function erp_acct_get_opb_bill_purchase_account_details( $fy_start_date ) {
+    global $wpdb;
+
+    /**
+     *? Why only bills, not expense?
+     *? Expense is `direct expense`, and we don't include direct expense here
+     */
+    $bill_sql = "SELECT SUM(balance) AS amount
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_bill_account_details WHERE trn_date < '%s'
+        GROUP BY bill_no HAVING balance < 0 )
+        AS get_amount";
+
+    $purchase_sql = "SELECT SUM(balance) AS amount
+        FROM ( SELECT SUM( debit - credit ) AS balance FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE trn_date < '%s'
+        GROUP BY purchase_no HAVING balance < 0 )
+        AS get_amount";
+
+    $bill_amount     = $wpdb->get_var( $wpdb->prepare( $bill_sql, $fy_start_date ) );
+    $purchase_amount = $wpdb->get_var( $wpdb->prepare( $purchase_sql, $fy_start_date ) );
+
+    return (float) $bill_amount + (float) $purchase_amount;
 }

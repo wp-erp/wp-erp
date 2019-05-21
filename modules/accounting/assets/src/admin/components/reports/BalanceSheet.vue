@@ -257,7 +257,7 @@
                     val = 0;
                 }
                 let currency = '$';
-                if ( val < 0 ){
+                if ( val < 0 ) {
                     return `Cr. ${currency}${Math.abs(val)}`;
                 }
 

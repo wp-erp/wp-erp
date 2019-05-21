@@ -508,6 +508,15 @@ function erp_acct_get_balance_sheet( $args ) {
         }
     }
 
+    $profit = 0;
+    $loss   = 0;
+
+    if ( ! empty( $profit_loss['profit'] ) ) {
+        $profit = $profit_loss['profit'];
+    } elseif ( ! empty( $profit_loss['loss'] ) ) {
+        $loss = $profit_loss['loss'];
+    }
+
     $results['owners_equity'] = $capital - $drawings + $profit - $loss;
 
     return $results;
