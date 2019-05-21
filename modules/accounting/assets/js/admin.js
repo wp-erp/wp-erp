@@ -12506,15 +12506,6 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
         _this2.$store.dispatch('spinner/setSpinner', false);
       });
     },
-    groupBy: function groupBy(arr, fn) {
-      /* https://30secondsofcode.org/ */
-      return arr.map(typeof fn === 'function' ? fn : function (val) {
-        return val[fn];
-      }).reduce(function (acc, val, i) {
-        acc[val] = (acc[val] || []).concat(arr[i]);
-        return acc;
-      }, {});
-    },
     printPopup: function printPopup() {
       window.print();
     }
@@ -28250,7 +28241,7 @@ setTimeout(function () {
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-  name: "OpeningBalance",
+  name: 'OpeningBalance',
   components: {
     HTTP: __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */],
     SimpleSelect: __WEBPACK_IMPORTED_MODULE_2_admin_components_select_SimpleSelect_vue__["a" /* default */],
@@ -28295,15 +28286,37 @@ setTimeout(function () {
       acct_pay: [],
       tax_pay: [],
       totalDebit: 0,
-      totalCredit: 0
+      totalCredit: 0,
+      accPayRec: null
     };
   },
   watch: {
     isWorking: function isWorking(newval) {
       this.isWorking = newval;
     },
-    fin_year: function fin_year() {
-      this.getSelectedOB(this.fin_year);
+    fin_year: function fin_year(newVal) {
+      this.getSelectedOB(newVal);
+      this.getOpbAccountDetailsPayableReceivable(newVal.start_date);
+    }
+  },
+  computed: {
+    finalTotalDebit: function finalTotalDebit() {
+      var invoice_acc_details = 0;
+
+      if (null !== this.accPayRec && '0' !== this.accPayRec.invoice_acc) {
+        invoice_acc_details = this.accPayRec.invoice_acc;
+      }
+
+      return this.totalDebit + invoice_acc_details;
+    },
+    finalTotalCredit: function finalTotalCredit() {
+      var bill_purchase_acc_details = 0;
+
+      if (null !== this.accPayRec && '0' !== this.accPayRec.bill_purchase_acc) {
+        bill_purchase_acc_details = this.accPayRec.bill_purchase_acc;
+      }
+
+      return this.totalCredit + bill_purchase_acc_details;
     }
   },
   created: function created() {
@@ -28319,8 +28332,19 @@ setTimeout(function () {
         return acc;
       }, {});
     },
-    fetchData: function fetchData() {
+    getOpbAccountDetailsPayableReceivable: function getOpbAccountDetailsPayableReceivable(startDate) {
       var _this = this;
+
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/opening-balances/acc-payable-receivable', {
+        params: {
+          start_date: startDate
+        }
+      }).then(function (response) {
+        _this.accPayRec = response.data;
+      });
+    },
+    fetchData: function fetchData() {
+      var _this2 = this;
 
       this.chartAccounts = [];
       this.$store.dispatch('spinner/setSpinner', true);
@@ -28330,41 +28354,41 @@ setTimeout(function () {
       this.fetchBanks();
       this.getPeople();
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers/accounts').then(function (response) {
-        _this.chartAccounts = response.data;
+        _this2.chartAccounts = response.data;
 
-        _this.getSelectedOB(_this.fin_year);
+        _this2.getSelectedOB(_this2.fin_year);
 
-        _this.$store.dispatch('spinner/setSpinner', false);
+        _this2.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
-        _this.$store.dispatch('spinner/setSpinner', false);
+        _this2.$store.dispatch('spinner/setSpinner', false);
       });
     },
     fetchLedgers: function fetchLedgers() {
-      var _this2 = this;
+      var _this3 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers').then(function (response) {
         response.data.forEach(function (ledger) {
           ledger.ledger_id = ledger.id;
-          ledger.balance = _this2.transformBalance(ledger.balance);
+          ledger.balance = _this3.transformBalance(ledger.balance);
         });
-        _this2.ledgers = _this2.groupBy(response.data, 'chart_id');
-        _this2.all_ledgers = response.data;
+        _this3.ledgers = _this3.groupBy(response.data, 'chart_id');
+        _this3.all_ledgers = response.data;
       });
     },
     fetchAgencies: function fetchAgencies() {
-      var _this3 = this;
+      var _this4 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/tax-agencies').then(function (response) {
-        _this3.agencies = response.data;
+        _this4.agencies = response.data;
       }).catch(function (error) {
         console.log(error);
       });
     },
     fetchBanks: function fetchBanks() {
-      var _this4 = this;
+      var _this5 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers/7/accounts').then(function (response) {
-        _this4.banks = response.data;
+        _this5.banks = response.data;
       }).catch(function (error) {
         console.log(error);
       });
@@ -28439,7 +28463,7 @@ setTimeout(function () {
       }
     },
     submitOBForm: function submitOBForm() {
-      var _this5 = this;
+      var _this6 = this;
 
       this.validateForm();
 
@@ -28462,59 +28486,59 @@ setTimeout(function () {
         total_cr: this.totalCredit,
         description: this.description
       }).then(function (res) {
-        _this5.$store.dispatch('spinner/setSpinner', false);
+        _this6.$store.dispatch('spinner/setSpinner', false);
 
-        _this5.showAlert('success', 'Opening Balance Created!');
+        _this6.showAlert('success', 'Opening Balance Created!');
       }).catch(function (error) {
-        _this5.$store.dispatch('spinner/setSpinner', false);
+        _this6.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
-        _this5.isWorking = false;
+        _this6.isWorking = false;
       });
     },
     getYears: function getYears() {
-      var _this6 = this;
+      var _this7 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/opening-balances/names').then(function (response) {
-        _this6.years = response.data;
-        _this6.fin_year = _this6.years.length ? _this6.years[0] : null;
+        _this7.years = response.data;
+        _this7.fin_year = _this7.years.length ? _this7.years[0] : null;
       });
     },
     getPeople: function getPeople() {
-      var _this7 = this;
+      var _this8 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/people', {
         params: {
           type: 'all'
         }
       }).then(function (response) {
-        _this7.options = response.data;
+        _this8.options = response.data;
       });
     },
     getSelectedOB: function getSelectedOB(year) {
-      var _this8 = this;
+      var _this9 = this;
 
       this.acct_pay = [];
       this.acct_rec = [];
       this.tax_pay = [];
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(year.id)).then(function (response) {
-        _this8.totalDebit = 0;
-        _this8.totalCredit = 0;
+        _this9.totalDebit = 0;
+        _this9.totalCredit = 0;
         response.data.forEach(function (ledger) {
           ledger.id = ledger.ledger_id;
-          ledger.balance = _this8.transformBalance(ledger.balance);
-          _this8.totalDebit += parseFloat(ledger.debit);
-          _this8.totalCredit += parseFloat(ledger.credit);
+          ledger.balance = _this9.transformBalance(ledger.balance);
+          _this9.totalDebit += parseFloat(ledger.debit);
+          _this9.totalCredit += parseFloat(ledger.credit);
         });
-        _this8.ledgers = _this8.groupBy(response.data, 'chart_id');
+        _this9.ledgers = _this9.groupBy(response.data, 'chart_id');
 
-        _this8.fetchVirtualAccts(year);
+        _this9.fetchVirtualAccts(year);
       }).then(function () {
-        if (Object.keys(_this8.ledgers).length === 0) {
-          _this8.fetchLedgers();
+        if (Object.keys(_this9.ledgers).length === 0) {
+          _this9.fetchLedgers();
         }
 
-        if (!_this8.ledgers.hasOwnProperty('7')) {
-          _this8.ledgers[7] = _this8.banks;
+        if (!_this9.ledgers.hasOwnProperty('7')) {
+          _this9.ledgers[7] = _this9.banks;
         }
       });
 
@@ -28523,26 +28547,26 @@ setTimeout(function () {
       }
     },
     fetchVirtualAccts: function fetchVirtualAccts(year) {
-      var _this9 = this;
+      var _this10 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/virtual-accts/".concat(year.id)).then(function (response) {
-        _this9.acct_pay = response.data.acct_payable;
-        _this9.acct_rec = response.data.acct_receivable;
-        _this9.tax_pay = response.data.tax_payable;
+        _this10.acct_pay = response.data.acct_payable;
+        _this10.acct_rec = response.data.acct_receivable;
+        _this10.tax_pay = response.data.tax_payable;
       }).then(function () {
-        _this9.acct_pay.forEach(function (ledger) {
-          _this9.totalCredit += parseFloat(ledger.credit);
+        _this10.acct_pay.forEach(function (ledger) {
+          _this10.totalCredit += parseFloat(ledger.credit);
         });
 
-        _this9.acct_rec.forEach(function (ledger) {
-          _this9.totalDebit += parseFloat(ledger.debit);
+        _this10.acct_rec.forEach(function (ledger) {
+          _this10.totalDebit += parseFloat(ledger.debit);
         });
 
-        _this9.tax_pay.forEach(function (ledger) {
-          _this9.totalCredit += parseFloat(ledger.credit);
+        _this10.tax_pay.forEach(function (ledger) {
+          _this10.totalCredit += parseFloat(ledger.credit);
         });
 
-        _this9.$store.dispatch('spinner/setSpinner', false);
+        _this10.$store.dispatch('spinner/setSpinner', false);
       });
     },
     printPopup: function printPopup() {
@@ -41483,22 +41507,6 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "wperp-containers" }, [
     _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "ul",
-      [
-        _c("li", [_vm._v("One")]),
-        _vm._v(" "),
-        _c("li", [_vm._v("Two")]),
-        _vm._v(" "),
-        _c("li", [_vm._v("Three")]),
-        _vm._v(" "),
-        _vm._l(_vm.sampleLists, function(component, index) {
-          return _c(component, { key: index, tag: "component" })
-        })
-      ],
-      2
-    ),
     _vm._v(" "),
     _c("div", { staticClass: "wperp-dashboard" }, [
       _c("div", { staticClass: "wperp-row" }, [
@@ -61752,7 +61760,26 @@ var render = function() {
                   "wperp-table wperp-form-table erp-accordion-expand-body"
               },
               [
-                _vm._m(1),
+                _c("thead", [
+                  _c("tr", [
+                    _c("th", [_vm._v("People")]),
+                    _vm._v(" "),
+                    _c("th", [
+                      _vm._v("Debit "),
+                      _vm.accPayRec && "0" != _vm.accPayRec.invoice_acc
+                        ? _c("span", [
+                            _vm._v(
+                              "(" + _vm._s(_vm.accPayRec.invoice_acc) + ")"
+                            )
+                          ])
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v("Credit")]),
+                    _vm._v(" "),
+                    _c("th")
+                  ])
+                ]),
                 _vm._v(" "),
                 _c(
                   "tbody",
@@ -61927,7 +61954,29 @@ var render = function() {
                       "wperp-table wperp-form-table erp-accordion-expand-body"
                   },
                   [
-                    _vm._m(2),
+                    _c("thead", [
+                      _c("tr", [
+                        _c("th", [_vm._v("People")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Debit")]),
+                        _vm._v(" "),
+                        _c("th", [
+                          _vm._v("Credit "),
+                          _vm.accPayRec &&
+                          "0" != _vm.accPayRec.bill_purchase_acc
+                            ? _c("span", [
+                                _vm._v(
+                                  "(" +
+                                    _vm._s(_vm.accPayRec.bill_purchase_acc) +
+                                    ")"
+                                )
+                              ])
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _c("th")
+                      ])
+                    ]),
                     _vm._v(" "),
                     _c(
                       "tbody",
@@ -62107,7 +62156,7 @@ var render = function() {
                       "wperp-table wperp-form-table erp-accordion-expand-body"
                   },
                   [
-                    _vm._m(3),
+                    _vm._m(1),
                     _vm._v(" "),
                     _c(
                       "tbody",
@@ -62285,7 +62334,7 @@ var render = function() {
                           "wperp-table wperp-form-table erp-accordion-expand-body"
                       },
                       [
-                        _vm._m(4),
+                        _vm._m(2),
                         _vm._v(" "),
                         _c(
                           "tbody",
@@ -62394,7 +62443,7 @@ var render = function() {
                           "wperp-table wperp-form-table erp-accordion-expand-body"
                       },
                       [
-                        _vm._m(5),
+                        _vm._m(3),
                         _vm._v(" "),
                         _c(
                           "tbody",
@@ -62503,7 +62552,7 @@ var render = function() {
                           "wperp-table wperp-form-table erp-accordion-expand-body"
                       },
                       [
-                        _vm._m(6),
+                        _vm._m(4),
                         _vm._v(" "),
                         _c(
                           "tbody",
@@ -62611,7 +62660,7 @@ var render = function() {
                       "wperp-table wperp-form-table erp-accordion-expand-body"
                   },
                   [
-                    _vm._m(7),
+                    _vm._m(5),
                     _vm._v(" "),
                     _c(
                       "tbody",
@@ -62759,13 +62808,13 @@ var render = function() {
           _c("table", { staticClass: "wperp-table wperp-form-table" }, [
             _c("tbody", [
               _c("tr", { staticClass: "total-amount-row" }, [
-                _vm._m(8),
+                _vm._m(6),
                 _vm._v(" "),
                 _c("td", { attrs: { "data-colname": "Total Debit" } }, [
                   _c("input", {
                     staticClass: "text-right",
                     attrs: { type: "text", readonly: "" },
-                    domProps: { value: _vm.totalDebit }
+                    domProps: { value: _vm.finalTotalDebit }
                   })
                 ]),
                 _vm._v(" "),
@@ -62773,7 +62822,7 @@ var render = function() {
                   _c("input", {
                     staticClass: "text-right",
                     attrs: { type: "text", readonly: "" },
-                    domProps: { value: _vm.totalCredit }
+                    domProps: { value: _vm.finalTotalCredit }
                   })
                 ])
               ]),
@@ -62835,38 +62884,6 @@ var staticRenderFns = [
             _vm._v("Opening Balances")
           ])
         ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("People")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Debit")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Credit")]),
-        _vm._v(" "),
-        _c("th")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("People")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Debit")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Credit")]),
-        _vm._v(" "),
-        _c("th")
       ])
     ])
   },

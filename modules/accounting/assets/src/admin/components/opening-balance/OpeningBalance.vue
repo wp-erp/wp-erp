@@ -45,7 +45,7 @@
                     <thead>
                     <tr>
                         <th>People</th>
-                        <th>Debit</th>
+                        <th>Debit <span v-if="accPayRec && '0' != accPayRec.invoice_acc">({{ accPayRec.invoice_acc }})</span></th>
                         <th>Credit</th>
                         <th></th>
                     </tr>
@@ -82,7 +82,7 @@
                     <tr>
                         <th>People</th>
                         <th>Debit</th>
-                        <th>Credit</th>
+                        <th>Credit <span v-if="accPayRec && '0' != accPayRec.bill_purchase_acc">({{ accPayRec.bill_purchase_acc }})</span></th>
                         <th></th>
                     </tr>
                     </thead>
@@ -260,8 +260,8 @@
                     <td class="pl-10 text-right col--total-amount" style="width: 60%;">
                         <span>Total Amount</span>
                     </td>
-                    <td data-colname="Total Debit"><input type="text" class="text-right" :value="totalDebit" readonly ></td>
-                    <td data-colname="Total Credit"><input type="text" class="text-right" :value="totalCredit" readonly ></td>
+                    <td data-colname="Total Debit"><input type="text" class="text-right" :value="finalTotalDebit" readonly ></td>
+                    <td data-colname="Total Credit"><input type="text" class="text-right" :value="finalTotalCredit" readonly ></td>
                 </tr>
                 <tr class="wperp-form-group">
                     <td colspan="9" style="text-align: left;">
@@ -285,7 +285,7 @@
     import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
-        name: "OpeningBalance",
+        name: 'OpeningBalance',
 
         components: {
             HTTP,
@@ -333,7 +333,8 @@
                 acct_pay     : [],
                 tax_pay      : [],
                 totalDebit   : 0,
-                totalCredit  : 0
+                totalCredit  : 0,
+                accPayRec    : null
             }
         },
 
@@ -342,8 +343,31 @@
                 this.isWorking = newval;
             },
 
-            fin_year() {
-                this.getSelectedOB(this.fin_year);
+            fin_year(newVal) {
+                this.getSelectedOB(newVal);
+                this.getOpbAccountDetailsPayableReceivable(newVal.start_date);
+            }
+        },
+
+        computed: {
+            finalTotalDebit() {
+                let invoice_acc_details = 0;
+
+                if ( null !== this.accPayRec && '0' !== this.accPayRec.invoice_acc ) {
+                    invoice_acc_details = this.accPayRec.invoice_acc;
+                }
+
+                return this.totalDebit + invoice_acc_details;
+            },
+
+            finalTotalCredit() {
+                let bill_purchase_acc_details = 0;
+
+                if ( null !== this.accPayRec && '0' !== this.accPayRec.bill_purchase_acc ) {
+                    bill_purchase_acc_details = this.accPayRec.bill_purchase_acc;
+                }
+
+                return this.totalCredit + bill_purchase_acc_details;
             }
         },
 
@@ -357,6 +381,16 @@
                     acc[val] = (acc[val] || []).concat(arr[i]);
                     return acc;
                 }, {})
+            },
+
+            getOpbAccountDetailsPayableReceivable( startDate ) {
+                HTTP.get('/opening-balances/acc-payable-receivable', {
+                    params: {
+                        start_date: startDate
+                    }
+                }).then( response => {
+                    this.accPayRec = response.data;
+                });
             },
 
             fetchData() {

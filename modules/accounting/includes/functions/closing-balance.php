@@ -108,6 +108,26 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
         } // liability loop
     } // ledger loop
 
+    $chart_id_bank = 7;
+
+    // get bank balance
+    $bank_balance = erp_acct_bank_balance( $args, 'balance' );
+
+    foreach ( $bank_balance as $b_balance ) {
+        erp_acct_clsbl_insert_into_opening_balance(
+            $next_f_year_id, $chart_id_bank, $b_balance['id'], 'ledger', $b_balance['balance'], 0.00
+        );
+    }
+
+    // get bank loan
+    $bank_loan = erp_acct_bank_balance( $args, 'loan' );
+
+    foreach ( $bank_loan as $b_loan ) {
+        erp_acct_clsbl_insert_into_opening_balance(
+            $next_f_year_id, $chart_id_bank, $b_loan['id'], 'ledger', 0.00, abs( $b_loan['balance'] )
+        );
+    }
+
     // get accounts receivable
     $accounts_receivable = erp_acct_clsbl_people_ar_calc_with_opening_balance( $args['start_date'] ); //erp_acct_clsbl_get_accounts_receivable_balance_with_people( $args );
 
