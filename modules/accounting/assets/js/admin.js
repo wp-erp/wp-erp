@@ -29187,7 +29187,7 @@ if (false) {
 
 __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["default"]);
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["default"]({
-  routes: [{
+  routes: acct.hooks.applyFilters('erp_acct_admin_routes', [{
     path: '/',
     component: __WEBPACK_IMPORTED_MODULE_6_admin_components_dashboard_DashBoard_vue__["a" /* default */],
     children: [{
@@ -29746,7 +29746,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
       name: 'OpeningBalance',
       component: __WEBPACK_IMPORTED_MODULE_55_admin_components_opening_balance_OpeningBalance_vue__["a" /* default */]
     }]
-  }]
+  }])
 }));
 
 /***/ }),
