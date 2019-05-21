@@ -58,606 +58,715 @@ import OpeningBalance    from 'admin/components/opening-balance/OpeningBalance.v
 Vue.use(Router);
 
 export default new Router({
-    routes: [
-        {
-            path: '/',
-            component: DashBoard,
-            children: [
-                {
-                    path : '/dashboard',
-                    name : 'DashBoard',
-                    component: DashBoard,
-                }
-            ]
-        },
-        {
-            path: '/inventory',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'Products',
-                    component: Products,
-                    alias: '/products'
+    routes: acct.hooks.applyFilters('erp_acct_admin_routes', [
+            {
+                path: '/',
+                component: DashBoard,
+                children: [
+                    {
+                        path: '/dashboard',
+                        name: 'DashBoard',
+                        component: DashBoard,
+                    }
+                ]
+            },
+            {
+                path: '/inventory',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateProducts',
-                    component: Products,
+                children: [
+                    {
+                        path: '',
+                        name: 'Products',
+                        component: Products,
+                        alias: '/products'
+                    },
+                    {
+                        path: 'page/:page',
+                        name: 'PaginateProducts',
+                        component: Products,
+                    },
+                ]
+            },
+            {
+                path: '/customers',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-            ]
-        },
-        {
-            path: '/customers',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path : '',
-                    name : 'Customers',
-                    component: People,
-                    alias: '/users'
+                children: [
+                    {
+                        path: '',
+                        name: 'Customers',
+                        component: People,
+                        alias: '/users'
+                    },
+                    {
+                        path: 'page/:page',
+                        name: 'PaginateCustomers',
+                        component: People,
+                    },
+                    {
+                        path: 'view/:id',
+                        name: 'CustomerDetails',
+                        component: PeopleDetails,
+                    }
+                ]
+            },
+            {
+                path: '/vendors',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-                {
-                    path : 'page/:page',
-                    name : 'PaginateCustomers',
-                    component: People,
+                children: [
+                    {
+                        path: '',
+                        name: 'Vendors',
+                        component: People,
+                    },
+                    {
+                        path: 'view/:id',
+                        name: 'VendorDetails',
+                        component: PeopleDetails,
+                    },
+                    {
+                        path: 'page/:page',
+                        name: 'PaginateVendors',
+                        component: People,
+                    },
+                ]
+            },
+            {
+                path: '/employees',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-                {
-                    path : 'view/:id',
-                    name : 'CustomerDetails',
-                    component: PeopleDetails,
-                }
-            ]
-        },
-        {
-            path: '/vendors',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'Vendors',
-                    component: People,
+                children: [
+                    {
+                        path: '',
+                        name: 'Employees',
+                        component: Employees,
+                    },
+                    {
+                        path: 'view/:id',
+                        name: 'EmployeeDetails',
+                        component: EmployeeDetails
+                    },
+                    {
+                        path: 'page/:page',
+                        name: 'PaginateEmployees',
+                        component: Employees,
+                    }
+                ]
+            },
+            {
+                path: '/transactions',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-                {
-                    path : 'view/:id',
-                    name : 'VendorDetails',
-                    component: PeopleDetails,
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateVendors',
-                    component: People,
-                },
-            ]
-        },
-        {
-            path: '/employees',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'Employees',
-                    component: Employees,
-                },
-                {
-                    path: 'view/:id',
-                    name: 'EmployeeDetails',
-                    component: EmployeeDetails
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateEmployees',
-                    component: Employees,
-                }
-            ]
-        },
-        {
-            path: '/transactions',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'Transactions',
-                    component: Sales,
-                },
-                {
-                    path: 'sales',
-                    component: { render (c) { return c('router-view') } },
-                    children: [
-                        {
-                            path: '',
-                            name: 'Sales',
-                            component: Sales,
+                children: [
+                    {
+                        path: '',
+                        name: 'Transactions',
+                        component: Sales,
+                    },
+                    {
+                        path: 'sales',
+                        component: {
+                            render(c) {
+                                return c('router-view')
+                            }
                         },
-                        {
-                            path: ':id',
-                            name: 'SalesSingle',
-                            component: SalesSingle,
+                        children: [
+                            {
+                                path: '',
+                                name: 'Sales',
+                                component: Sales,
+                            },
+                            {
+                                path: ':id',
+                                name: 'SalesSingle',
+                                component: SalesSingle,
+                            },
+                            {
+                                path: 'page/:page',
+                                name: 'PaginateSales',
+                                component: Sales,
+                            }
+                        ]
+                    },
+                    {
+                        path: 'expenses',
+                        component: {
+                            render(c) {
+                                return c('router-view')
+                            }
                         },
-                        {
-                            path: 'page/:page',
-                            name: 'PaginateSales',
-                            component: Sales,
-                        }
-                    ]
-                },
-                {
-                    path: 'expenses',
-                    component: { render (c) { return c('router-view') } },
-                    children: [
-                        {
-                            path: '',
-                            name: 'Expenses',
-                            component: Expenses,
+                        children: [
+                            {
+                                path: '',
+                                name: 'Expenses',
+                                component: Expenses,
+                            },
+                            {
+                                path: 'page/:page',
+                                name: 'PaginateExpenses',
+                                component: Expenses,
+                            }
+                        ]
+                    },
+                    {
+                        path: 'purchases',
+                        component: {
+                            render(c) {
+                                return c('router-view')
+                            }
                         },
-                        {
-                            path: 'page/:page',
-                            name: 'PaginateExpenses',
-                            component: Expenses,
-                        }
-                    ]
+                        children: [
+                            {
+                                path: '',
+                                name: 'Purchases',
+                                component: Purchases,
+                            },
+                            {
+                                path: 'page/:page',
+                                name: 'PaginatePurchases',
+                                component: Purchases,
+                            }
+                        ]
+                    },
+                ]
+            },
+            {
+                path: '/charts',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-                {
-                    path: 'purchases',
-                    component: { render (c) { return c('router-view') } },
-                    children: [
-                        {
-                            path: '',
-                            name: 'Purchases',
-                            component: Purchases,
+                children: [
+                    {
+                        path: '',
+                        name: 'ChartOfAccounts',
+                        component: ChartOfAccounts,
+                    },
+                    {
+                        path: 'new',
+                        name: 'AddChartAccounts',
+                        component: AddChartAccounts,
+                    },
+                    {
+                        path: ':id/edit',
+                        name: 'ChartAccountsEdit',
+                        component: AddChartAccounts,
+                    },
+                ]
+            },
+            {
+                path: '/banks',
+                name: 'BankAccounts',
+                component: BankAccounts
+            },
+            {
+                path: '/invoices',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
+                        path: 'new',
+                        name: 'InvoiceCreate',
+                        component: InvoiceCreate,
+                    },
+                    {
+                        path: ':id/edit',
+                        name: 'InvoiceEdit',
+                        component: InvoiceCreate,
+                    },
+                ]
+            },
+            {
+                path: '/estimates',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
+                        path: 'new',
+                        name: 'EstimateCreate',
+                        component: InvoiceCreate,
+                    },
+                    {
+                        path: ':id/edit',
+                        name: 'EstimateEdit',
+                        component: InvoiceCreate,
+                    },
+                ]
+            },
+            {
+                path: '/product_categories',
+                name: 'ProductCategory',
+                component: ProductCategory
+            },
+            {
+                path: '/payments',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
+                        path: 'new',
+                        name: 'RecPaymentCreate',
+                        component: RecPaymentCreate,
+                    },
+                    {
+                        path: ':id/edit',
+                        name: 'RecPaymentEdit',
+                        component: RecPaymentCreate,
+                    },
+                ]
+            },
+            {
+                path: '/bills',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
+
+                        path: 'new',
+                        name: 'BillCreate',
+                        component: BillCreate
+                    },
+                    {
+                        path: ':id',
+                        name: 'BillSingle',
+                        component: BillSingle,
+                    },
+                    {
+                        path: ':id/edit',
+                        name: 'BillEdit',
+                        component: BillCreate,
+                    },
+                ]
+            },
+            {
+                path: '/pay-bills',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
+
+                        path: 'new',
+                        name: 'PayBillCreate',
+                        component: PayBillCreate
+                    },
+                    {
+                        path: ':id',
+                        name: 'PayBillSingle',
+                        component: PayBillSingle,
+                    },
+                ]
+            },
+            {
+                path: '/purchases',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
+
+                        path: 'new',
+                        name: 'PurchaseCreate',
+                        component: PurchaseCreate
+                    },
+                    {
+                        path: ':id',
+                        name: 'PurchaseSingle',
+                        component: PurchaseSingle,
+                    },
+                    {
+                        path: ':id/edit',
+                        name: 'PurchaseEdit',
+                        component: PurchaseCreate,
+                    },
+                ]
+            },
+            {
+                path: '/purchase-orders',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
+
+                        path: 'new',
+                        name: 'PurchaseOrderCreate',
+                        component: PurchaseCreate
+                    },
+                    {
+                        path: ':id',
+                        name: 'PurchaseOrderSingle',
+                        component: PurchaseSingle,
+                    },
+                    {
+                        path: ':id/edit',
+                        name: 'PurchaseOrderEdit',
+                        component: PurchaseCreate,
+                    },
+                ]
+            },
+            {
+                path: '/pay-purchases',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
+
+                        path: 'new',
+                        name: 'PayPurchaseCreate',
+                        component: PayPurchaseCreate
+                    },
+                    {
+                        path: ':id',
+                        name: 'PayPurchaseSingle',
+                        component: PayPurchaseSingle,
+                    },
+                ]
+            },
+            {
+                path: '/reports',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
+                        path: '',
+                        name: 'ReportsOverview',
+                        component: ReportsOverview,
+                    },
+                    {
+                        path: 'trial-balance',
+                        name: 'TrialBalance',
+                        component: TrialBalance,
+                    },
+                    {
+                        path: 'ledgers',
+                        component: {
+                            render(c) {
+                                return c('router-view')
+                            }
                         },
-                        {
-                            path: 'page/:page',
-                            name: 'PaginatePurchases',
-                            component: Purchases,
-                        }
-                    ]
+                        children: [
+                            {
+                                path: '',
+                                name: 'LedgerReport',
+                                component: LedgerReport,
+                            },
+                            {
+                                path: ':id',
+                                name: 'LedgerSingle',
+                                component: LedgerReport
+                            },
+                        ]
+                    },
+                    {
+                        path: 'sales-tax',
+                        name: 'SalesTax',
+                        component: SalesTax,
+                    },
+                    {
+                        path: 'income-statement',
+                        name: 'IncomeStatement',
+                        component: IncomeStatement,
+                    },
+                    {
+                        path: 'balance-sheet',
+                        name: 'BalanceSheet',
+                        component: BalanceSheet,
+                    },
+                ]
+            },
+            {
+                path: '/journals',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-            ]
-        },
-        {
-            path: '/charts',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'ChartOfAccounts',
-                    component: ChartOfAccounts,
-                },
-                {
-                    path: 'new',
-                    name: 'AddChartAccounts',
-                    component: AddChartAccounts,
-                },
-                {
-                    path: ':id/edit',
-                    name: 'ChartAccountsEdit',
-                    component: AddChartAccounts,
-                },
-            ]
-        },
-        {
-            path: '/banks',
-            name: 'BankAccounts',
-            component: BankAccounts
-        },
-        {
-            path: '/invoices',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: 'new',
-                    name: 'InvoiceCreate',
-                    component: InvoiceCreate,
-                },
-                {
-                    path: ':id/edit',
-                    name: 'InvoiceEdit',
-                    component: InvoiceCreate,
-                },
-            ]
-        },
-        {
-            path: '/estimates',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: 'new',
-                    name: 'EstimateCreate',
-                    component: InvoiceCreate,
-                },
-                {
-                    path: ':id/edit',
-                    name: 'EstimateEdit',
-                    component: InvoiceCreate,
-                },
-            ]
-        },
-        {
-            path: '/product_categories',
-            name: 'ProductCategory',
-            component: ProductCategory
-        },
-        {
-            path: '/payments',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: 'new',
-                    name: 'RecPaymentCreate',
-                    component: RecPaymentCreate,
-                },
-                {
-                    path: ':id/edit',
-                    name: 'RecPaymentEdit',
-                    component: RecPaymentCreate,
-                },
-            ]
-        },
-        {
-            path: '/bills',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
+                children: [
+                    {
+                        path: '',
+                        name: 'Journals',
+                        component: JournalList,
+                    },
+                    {
 
-                    path: 'new',
-                    name: 'BillCreate',
-                    component: BillCreate
-                },
-                {
-                    path: ':id',
-                    name: 'BillSingle',
-                    component: BillSingle,
-                },
-                {
-                    path: ':id/edit',
-                    name: 'BillEdit',
-                    component: BillCreate,
-                },
-            ]
-        },
-        {
-            path: '/pay-bills',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
+                        path: '/journals/new',
+                        name: 'JournalCreate',
+                        component: JournalCreate
+                    },
+                    {
 
-                    path: 'new',
-                    name: 'PayBillCreate',
-                    component: PayBillCreate
+                        path: '/journals/:id',
+                        name: 'JournalSingle',
+                        component: JournalSingle
+                    },
+                    {
+                        path: 'page/:page',
+                        name: 'PaginateJournals',
+                        component: JournalList,
+                    },
+                ]
+            },
+            {
+                path: '/taxes',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-                {
-                    path: ':id',
-                    name: 'PayBillSingle',
-                    component: PayBillSingle,
+                children: [
+                    {
+                        path: '',
+                        name: 'TaxRates',
+                        component: TaxRates,
+                    },
+                    {
+                        path: 'new',
+                        name: 'NewTaxRate',
+                        component: NewTaxRate,
+                    },
+                    {
+                        path: 'rate-names',
+                        name: 'TaxZones',
+                        component: TaxZones,
+                    },
+                    {
+                        path: 'agencies',
+                        name: 'TaxAgencies',
+                        component: TaxAgencies,
+                    },
+                    {
+                        path: 'categories',
+                        name: 'TaxCategories',
+                        component: TaxCategories,
+                    },
+                    {
+                        path: 'new-rate-name',
+                        name: 'NewTaxZone',
+                        component: NewTaxZone,
+                    },
+                    {
+                        path: 'new-agency',
+                        name: 'NewTaxAgency',
+                        component: NewTaxAgency,
+                    },
+                    {
+                        path: 'new-tax-cat',
+                        name: 'NewTaxCategory',
+                        component: NewTaxCategory,
+                    },
+                    {
+                        path: ':id',
+                        name: 'SingleTaxRate',
+                        component: SingleTaxRate,
+                    },
+                    {
+                        path: ':id/edit',
+                        name: 'EditSingleTaxRate',
+                        component: SingleTaxRate,
+                    },
+                    {
+                        path: 'page/:page',
+                        name: 'PaginateTaxRates',
+                        component: TaxRates,
+                    },
+                    {
+                        path: 'rate-names/page/:page',
+                        name: 'PaginateTaxZones',
+                        component: TaxZones,
+                    },
+                    {
+                        path: 'categories/page/:page',
+                        name: 'PaginateTaxCategories',
+                        component: TaxCategories,
+                    },
+                    {
+                        path: 'agencies/page/:page',
+                        name: 'PaginateTaxAgencies',
+                        component: TaxAgencies,
+                    },
+                ]
+            },
+            {
+                path: '/tax-records',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-            ]
-        },
-        {
-            path: '/purchases',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
+                children: [
+                    {
+                        path: '',
+                        name: 'TaxRecords',
+                        component: TaxRecords,
+                    },
+                    {
+                        path: 'page/:page',
+                        name: 'PaginateTaxRecords',
+                        component: TaxRecords,
+                    },
+                    {
+                        path: ':id',
+                        name: 'PayTaxSingle',
+                        component: PayTaxSingle,
+                    },
+                ]
+            },
+            {
+                path: '/transfers',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
+                        path: '',
+                        name: 'Transfers',
+                        component: Transfers
+                    },
+                    {
+                        path: 'new',
+                        name: 'NewTransfer',
+                        component: NewTransfer
+                    },
+                    {
+                        path: ':id',
+                        name: 'SingleTransfer',
+                        component: SingleTransfer,
+                    },
+                ]
+            },
+            {
+                path: '/expenses',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
+                },
+                children: [
+                    {
 
-                    path: 'new',
-                    name: 'PurchaseCreate',
-                    component: PurchaseCreate
+                        path: 'new',
+                        name: 'ExpenseCreate',
+                        component: ExpenseCreate
+                    },
+                    {
+                        path: ':id',
+                        name: 'ExpenseSingle',
+                        component: ExpenseSingle,
+                    },
+                    {
+                        path: ':id/edit',
+                        name: 'ExpenseEdit',
+                        component: ExpenseCreate,
+                    },
+                ]
+            },
+            {
+                path: '/checks',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-                {
-                    path: ':id',
-                    name: 'PurchaseSingle',
-                    component: PurchaseSingle,
-                },
-                {
-                    path: ':id/edit',
-                    name: 'PurchaseEdit',
-                    component: PurchaseCreate,
-                },
-            ]
-        },
-        {
-            path: '/purchase-orders',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
+                children: [
+                    {
 
-                    path: 'new',
-                    name: 'PurchaseOrderCreate',
-                    component: PurchaseCreate
+                        path: 'new',
+                        name: 'CheckCreate',
+                        component: CheckCreate
+                    },
+                    {
+                        path: ':id',
+                        name: 'CheckSingle',
+                        component: CheckSingle,
+                    },
+                    {
+                        path: ':id/edit',
+                        name: 'CheckEdit',
+                        component: CheckCreate,
+                    },
+                ]
+            },
+            {
+                path: '/pay-tax',
+                name: 'RecordPayTax',
+                component: RecordPayTax
+            },
+            {
+                path: '/trn-loader',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-                {
-                    path: ':id',
-                    name: 'PurchaseOrderSingle',
-                    component: PurchaseSingle,
+                children: [
+                    {
+                        path: '',
+                        name: 'DynamicTrnLoader',
+                        component: DynamicTrnLoader,
+                        alias: '/trn-loader/:id'
+                    }
+                ]
+            },
+            {
+                path: '/opening-balance',
+                component: {
+                    render(c) {
+                        return c('router-view')
+                    }
                 },
-                {
-                    path: ':id/edit',
-                    name: 'PurchaseOrderEdit',
-                    component: PurchaseCreate,
-                },
-            ]
-        },
-        {
-            path: '/pay-purchases',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-
-                    path: 'new',
-                    name: 'PayPurchaseCreate',
-                    component: PayPurchaseCreate
-                },
-                {
-                    path: ':id',
-                    name: 'PayPurchaseSingle',
-                    component: PayPurchaseSingle,
-                },
-            ]
-        },
-        {
-            path: '/reports',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'ReportsOverview',
-                    component: ReportsOverview,
-                },
-                {
-                    path: 'trial-balance',
-                    name: 'TrialBalance',
-                    component: TrialBalance,
-                },
-                {
-                    path: 'ledgers',
-                    component: { render (c) { return c('router-view') } },
-                    children: [
-                        {
-                            path: '',
-                            name: 'LedgerReport',
-                            component: LedgerReport,
-                        },
-                        {
-                            path: ':id',
-                            name: 'LedgerSingle',
-                            component: LedgerReport
-                        },
-                    ]
-                },
-                {
-                    path: 'sales-tax',
-                    name: 'SalesTax',
-                    component: SalesTax,
-                },
-                {
-                    path: 'income-statement',
-                    name: 'IncomeStatement',
-                    component: IncomeStatement,
-                },
-                {
-                    path: 'balance-sheet',
-                    name: 'BalanceSheet',
-                    component: BalanceSheet,
-                },
-            ]
-        },
-        {
-            path: '/journals',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'Journals',
-                    component: JournalList,
-                },
-                {
-
-                    path: '/journals/new',
-                    name: 'JournalCreate',
-                    component: JournalCreate
-                },
-                {
-
-                    path: '/journals/:id',
-                    name: 'JournalSingle',
-                    component: JournalSingle
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateJournals',
-                    component: JournalList,
-                },
-            ]
-        },
-        {
-            path: '/taxes',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'TaxRates',
-                    component: TaxRates,
-                },
-                {
-                    path: 'new',
-                    name: 'NewTaxRate',
-                    component: NewTaxRate,
-                },
-                {
-                    path: 'rate-names',
-                    name: 'TaxZones',
-                    component: TaxZones,
-                },
-                {
-                    path: 'agencies',
-                    name: 'TaxAgencies',
-                    component: TaxAgencies,
-                },
-                {
-                    path: 'categories',
-                    name: 'TaxCategories',
-                    component: TaxCategories,
-                },
-                {
-                    path: 'new-rate-name',
-                    name: 'NewTaxZone',
-                    component: NewTaxZone,
-                },
-                {
-                    path: 'new-agency',
-                    name: 'NewTaxAgency',
-                    component: NewTaxAgency,
-                },
-                {
-                    path: 'new-tax-cat',
-                    name: 'NewTaxCategory',
-                    component: NewTaxCategory,
-                },
-                {
-                    path: ':id',
-                    name: 'SingleTaxRate',
-                    component: SingleTaxRate,
-                },
-                {
-                    path: ':id/edit',
-                    name: 'EditSingleTaxRate',
-                    component: SingleTaxRate,
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateTaxRates',
-                    component: TaxRates,
-                },
-                {
-                    path: 'rate-names/page/:page',
-                    name: 'PaginateTaxZones',
-                    component: TaxZones,
-                },
-                {
-                    path: 'categories/page/:page',
-                    name: 'PaginateTaxCategories',
-                    component: TaxCategories,
-                },
-                {
-                    path: 'agencies/page/:page',
-                    name: 'PaginateTaxAgencies',
-                    component: TaxAgencies,
-                },
-            ]
-        },
-        {
-            path: '/tax-records',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'TaxRecords',
-                    component: TaxRecords,
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateTaxRecords',
-                    component: TaxRecords,
-                },
-                {
-                    path: ':id',
-                    name: 'PayTaxSingle',
-                    component: PayTaxSingle,
-                },
-            ]
-        },
-        {
-            path: '/transfers',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                  path: '',
-                  name: 'Transfers',
-                  component: Transfers
-                },
-                {
-                    path: 'new',
-                    name: 'NewTransfer',
-                    component: NewTransfer
-                },
-                {
-                    path: ':id',
-                    name: 'SingleTransfer',
-                    component: SingleTransfer,
-                },
-            ]
-        },
-        {
-            path: '/expenses',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-
-                    path: 'new',
-                    name: 'ExpenseCreate',
-                    component: ExpenseCreate
-                },
-                {
-                    path: ':id',
-                    name: 'ExpenseSingle',
-                    component: ExpenseSingle,
-                },
-                {
-                    path: ':id/edit',
-                    name: 'ExpenseEdit',
-                    component: ExpenseCreate,
-                },
-            ]
-        },
-        {
-            path: '/checks',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-
-                    path: 'new',
-                    name: 'CheckCreate',
-                    component: CheckCreate
-                },
-                {
-                    path: ':id',
-                    name: 'CheckSingle',
-                    component: CheckSingle,
-                },
-                {
-                    path: ':id/edit',
-                    name: 'CheckEdit',
-                    component: CheckCreate,
-                },
-            ]
-        },
-        {
-            path: '/pay-tax',
-            name: 'RecordPayTax',
-            component: RecordPayTax
-        },
-        {
-            path: '/trn-loader',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'DynamicTrnLoader',
-                    component: DynamicTrnLoader,
-                    alias: '/trn-loader/:id'
-                }
-            ]
-        },
-        {
-            path: '/opening-balance',
-            component: { render (c) { return c('router-view') } },
-            children: [
-                {
-                    path: '',
-                    name: 'OpeningBalance',
-                    component: OpeningBalance
-                }
-            ]
-        },
-    ]
+                children: [
+                    {
+                        path: '',
+                        name: 'OpeningBalance',
+                        component: OpeningBalance
+                    }
+                ]
+            },
+        ]
+    )
 })
