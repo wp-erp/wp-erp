@@ -10,7 +10,7 @@ use WeDevs\ERP\Framework\ERP_Settings_Page;
 class Settings extends ERP_Settings_Page {
 
 
-    function __construct () {
+    function __construct() {
         $this->id            = 'erp-ac';
         $this->label         = __( 'Accounting', 'erp' );
         $this->single_option = true;
@@ -24,7 +24,7 @@ class Settings extends ERP_Settings_Page {
      *
      * @return array
      */
-    public function get_sections () {
+    public function get_sections() {
         $sections = array(
             'currency_option' => __( 'Currency Settings', 'erp' ),
             'opening_balance' => __( 'Opening Balance', 'erp' )
@@ -38,7 +38,7 @@ class Settings extends ERP_Settings_Page {
      *
      * @return array
      */
-    public function get_section_fields ( $section = '' ) {
+    public function get_section_fields( $section = '' ) {
 
         $symbol = erp_acct_get_currency_symbol();
 
@@ -110,7 +110,7 @@ class Settings extends ERP_Settings_Page {
      *
      * @return array
      */
-    public function get_settings () {
+    public function get_settings() {
 
         $fields = array(
 
@@ -132,7 +132,7 @@ class Settings extends ERP_Settings_Page {
         return apply_filters( 'erp_ac_settings_general', $fields );
     }
 
-    function acct_opening_balance () {
+    function acct_opening_balance() {
         global $wpdb;
 
         $sql = "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years";

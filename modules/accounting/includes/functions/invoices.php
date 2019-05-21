@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_invoices ( $args = [] ) {
+function erp_acct_get_all_invoices( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -61,7 +61,7 @@ function erp_acct_get_all_invoices ( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_invoice ( $invoice_no ) {
+function erp_acct_get_invoice( $invoice_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "Select
@@ -112,7 +112,7 @@ function erp_acct_get_invoice ( $invoice_no ) {
 /**
  * Get formatted line items
  */
-function erp_acct_format_invoice_line_items ( $voucher_no ) {
+function erp_acct_format_invoice_line_items( $voucher_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT
@@ -146,7 +146,7 @@ function erp_acct_format_invoice_line_items ( $voucher_no ) {
  * @param $data
  * @return int
  */
-function erp_acct_insert_invoice ( $data ) {
+function erp_acct_insert_invoice( $data ) {
     global $wpdb;
 
     $user_id = get_current_user_id();
@@ -352,7 +352,7 @@ function erp_acct_insert_invoice_account_details($invoice_data, $voucher_no, $co
  * @param $data
  * @return int
  */
-function erp_acct_update_invoice ( $data, $invoice_no ) {
+function erp_acct_update_invoice( $data, $invoice_no ) {
     global $wpdb;
 
     $user_id = get_current_user_id();
@@ -428,7 +428,7 @@ function erp_acct_update_invoice ( $data, $invoice_no ) {
  * @param $voucher_no
  * @return mixed
  */
-function erp_acct_get_formatted_invoice_data ( $data, $voucher_no ) {
+function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data = [];
 
     // We can pass the name from view... to reduce DB query load
@@ -467,7 +467,7 @@ function erp_acct_get_formatted_invoice_data ( $data, $voucher_no ) {
  * @return void
  */
 
-function erp_acct_delete_invoice ( $invoice_no ) {
+function erp_acct_delete_invoice( $invoice_no ) {
     global $wpdb;
 
     if ( ! $invoice_no ) {
@@ -485,7 +485,7 @@ function erp_acct_delete_invoice ( $invoice_no ) {
  * @return void
  */
 
-function erp_acct_void_invoice ( $invoice_no ) {
+function erp_acct_void_invoice( $invoice_no ) {
     global $wpdb;
 
     if ( ! $invoice_no ) {
@@ -503,7 +503,7 @@ function erp_acct_void_invoice ( $invoice_no ) {
 /**
  * Tax category with agency
  */
-function get_tax_rate_with_agency ( $tax_id, $tax_cat_id ) {
+function get_tax_rate_with_agency( $tax_id, $tax_cat_id ) {
     global $wpdb;
 
     $sql = $wpdb->prepare(
@@ -586,7 +586,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
  *
  * @return mixed
  */
-function erp_acct_update_invoice_data_in_ledger ( $invoice_data, $invoice_no ) {
+function erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no ) {
     global $wpdb;
 
     // Update amount in ledger_details
@@ -617,7 +617,7 @@ function erp_acct_update_invoice_data_in_ledger ( $invoice_data, $invoice_no ) {
  *
  * @return int
  */
-function erp_acct_get_invoice_count () {
+function erp_acct_get_invoice_count() {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_invoices" );
@@ -679,7 +679,7 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
  * @param $bill_no
  * @return int
  */
-function erp_acct_get_due_payment ( $invoice_no ) {
+function erp_acct_get_due_payment( $invoice_no ) {
     global $wpdb;
 
     $result = $wpdb->get_row( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = {$invoice_no} GROUP BY ia.invoice_no", ARRAY_A );
@@ -696,7 +696,7 @@ function erp_acct_get_due_payment ( $invoice_no ) {
  *
  * @return array|null|object
  */
-function erp_acct_get_recievables ( $from, $to ) {
+function erp_acct_get_recievables( $from, $to ) {
     global $wpdb;
 
     $from_date = date( "Y-m-d", strtotime( $from ) );
@@ -720,7 +720,7 @@ function erp_acct_get_recievables ( $from, $to ) {
 /**
  * Get Dashboard Overview details
  */
-function erp_acct_get_recievables_overview () {
+function erp_acct_get_recievables_overview() {
     // get dates till coming 90 days
     $from_date = date( "Y-m-d" );
     $to_date   = date( "Y-m-d", strtotime( "+90 day", strtotime( $from_date ) ) );
@@ -777,7 +777,7 @@ function erp_acct_get_recievables_overview () {
  * @param $invoice_no
  * @return int
  */
-function erp_acct_get_invoice_due ( $invoice_no ) {
+function erp_acct_get_invoice_due( $invoice_no ) {
     global $wpdb;
 
     $result = $wpdb->get_row( "SELECT invoice_no, SUM( ia.debit - ia.credit) as due FROM {$wpdb->prefix}erp_acct_invoice_account_details as ia WHERE ia.invoice_no = {$invoice_no} GROUP BY ia.invoice_no", ARRAY_A );

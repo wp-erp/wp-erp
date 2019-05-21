@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_journals ( $args = [] ) {
+function erp_acct_get_all_journals( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -62,7 +62,7 @@ function erp_acct_get_all_journals ( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_journal ( $journal_no ) {
+function erp_acct_get_journal( $journal_no ) {
     global $wpdb;
 
     $sql = "SELECT
@@ -97,7 +97,7 @@ function erp_acct_get_journal ( $journal_no ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_insert_journal ( $data ) {
+function erp_acct_insert_journal( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -179,7 +179,7 @@ function erp_acct_insert_journal ( $data ) {
  * @param $data
  * @return int
  */
-function erp_acct_update_journal ( $data, $journal_no ) {
+function erp_acct_update_journal( $data, $journal_no ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -240,7 +240,7 @@ function erp_acct_update_journal ( $data, $journal_no ) {
  * @param $voucher_no
  * @return mixed
  */
-function erp_acct_get_formatted_journal_data ( $data, $voucher_no ) {
+function erp_acct_get_formatted_journal_data( $data, $voucher_no ) {
     $journal_data = [];
 
     $journal_data['voucher_no']     = ! empty( $voucher_no ) ? $voucher_no : 0;
@@ -258,7 +258,7 @@ function erp_acct_get_formatted_journal_data ( $data, $voucher_no ) {
     return $journal_data;
 }
 
-function erp_acct_format_journal_data ( $item, $journal_no ) {
+function erp_acct_format_journal_data( $item, $journal_no ) {
 
     global $wpdb;
 

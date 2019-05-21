@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param $data
  * @return mixed
  */
-function erp_acct_get_purchases ( $args = [] ) {
+function erp_acct_get_purchases( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -47,7 +47,7 @@ function erp_acct_get_purchases ( $args = [] ) {
  * @param $purchase_no
  * @return mixed
  */
-function erp_acct_get_purchase ( $purchase_no ) {
+function erp_acct_get_purchase( $purchase_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT
@@ -85,7 +85,7 @@ function erp_acct_get_purchase ( $purchase_no ) {
 /**
  * Purchase items detail
  */
-function erp_acct_format_purchase_line_items ( $voucher_no ) {
+function erp_acct_format_purchase_line_items( $voucher_no ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT
@@ -123,7 +123,7 @@ function erp_acct_format_purchase_line_items ( $voucher_no ) {
  * @param $due
  * @return mixed
  */
-function erp_acct_insert_purchase ( $data ) {
+function erp_acct_insert_purchase( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -222,7 +222,7 @@ function erp_acct_insert_purchase ( $data ) {
  * @param $due
  * @return mixed
  */
-function erp_acct_update_purchase ( $data, $purchase_id ) {
+function erp_acct_update_purchase( $data, $purchase_id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -320,7 +320,7 @@ function erp_acct_update_purchase ( $data, $purchase_id ) {
  * @param $id
  * @return void
  */
-function erp_acct_delete_purchase ( $id ) {
+function erp_acct_delete_purchase( $id ) {
     global $wpdb;
 
     if ( ! $id ) {
@@ -336,7 +336,7 @@ function erp_acct_delete_purchase ( $id ) {
  * @param $id
  * @return void
  */
-function erp_acct_void_purchase ( $id ) {
+function erp_acct_void_purchase( $id ) {
     global $wpdb;
 
     if ( ! $id ) {
@@ -359,7 +359,7 @@ function erp_acct_void_purchase ( $id ) {
  *
  * @return mixed
  */
-function erp_acct_get_formatted_purchase_data ( $data, $voucher_no ) {
+function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
     $user_info = erp_get_people( $data['vendor_id'] );
 
     $purchase_data['voucher_no']     = isset( $data['voucher_no'] ) ? $data['voucher_no'] : $voucher_no;
@@ -388,7 +388,7 @@ function erp_acct_get_formatted_purchase_data ( $data, $voucher_no ) {
  *
  * @return mixed
  */
-function erp_acct_insert_purchase_data_into_ledger ( $purchase_data ) {
+function erp_acct_insert_purchase_data_into_ledger( $purchase_data ) {
     global $wpdb;
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
@@ -421,7 +421,7 @@ function erp_acct_insert_purchase_data_into_ledger ( $purchase_data ) {
  *
  * @return mixed
  */
-function erp_acct_update_purchase_data_into_ledger ( $purchase_data, $purchase_no ) {
+function erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_no ) {
     global $wpdb;
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
@@ -453,7 +453,7 @@ function erp_acct_update_purchase_data_into_ledger ( $purchase_data, $purchase_n
  *
  * @return int
  */
-function erp_acct_get_purchase_count () {
+function erp_acct_get_purchase_count() {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT COUNT(*) as count FROM " . $wpdb->prefix . "erp_acct_purchase" );
@@ -468,7 +468,7 @@ function erp_acct_get_purchase_count () {
  * @return mixed
  */
 
-function erp_acct_get_due_purchases_by_vendor ( $args ) {
+function erp_acct_get_due_purchases_by_vendor( $args ) {
     global $wpdb;
 
     $defaults = [
@@ -517,7 +517,7 @@ function erp_acct_get_due_purchases_by_vendor ( $args ) {
  * @param $bill_no
  * @return int
  */
-function erp_acct_get_purchase_due ( $purchase_no ) {
+function erp_acct_get_purchase_due( $purchase_no ) {
     global $wpdb;
 
     $result = $wpdb->get_row( "SELECT purchase_no, SUM( debit - credit) as due FROM {$wpdb->prefix}erp_acct_purchase_account_details WHERE purchase_no = {$purchase_no} GROUP BY purchase_no", ARRAY_A );

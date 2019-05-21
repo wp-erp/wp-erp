@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_tax_agencies ( $args = [] ) {
+function erp_acct_get_all_tax_agencies( $args = [] ) {
     global $wpdb;
 
     $defaults = [
@@ -49,7 +49,7 @@ function erp_acct_get_all_tax_agencies ( $args = [] ) {
  * @return mixed
  */
 
-function erp_acct_get_tax_agency ( $tax_no ) {
+function erp_acct_get_tax_agency( $tax_no ) {
     global $wpdb;
 
     $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_tax_agencies
@@ -66,7 +66,7 @@ function erp_acct_get_tax_agency ( $tax_no ) {
  * @param $data
  * @return int
  */
-function erp_acct_insert_tax_agency ( $data ) {
+function erp_acct_insert_tax_agency( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -95,7 +95,7 @@ function erp_acct_insert_tax_agency ( $data ) {
  * @param $data
  * @return int
  */
-function erp_acct_update_tax_agency ( $data, $id ) {
+function erp_acct_update_tax_agency( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -125,7 +125,7 @@ function erp_acct_update_tax_agency ( $data, $id ) {
  *
  * @return int
  */
-function erp_acct_delete_tax_agency ( $id ) {
+function erp_acct_delete_tax_agency( $id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agencies', array( 'id' => $id ) );
@@ -140,7 +140,7 @@ function erp_acct_delete_tax_agency ( $id ) {
  *
  * @return mixed
  */
-function erp_acct_get_tax_agency_name_by_id ( $agency_id ) {
+function erp_acct_get_tax_agency_name_by_id( $agency_id ) {
     global $wpdb;
 
     $sql = "SELECT name FROM {$wpdb->prefix}erp_acct_tax_agencies
@@ -157,7 +157,7 @@ function erp_acct_get_tax_agency_name_by_id ( $agency_id ) {
  * @param int $agency_id
  * @return mixed
  */
-function erp_acct_get_agency_due ( $agency_id ) {
+function erp_acct_get_agency_due( $agency_id ) {
     global $wpdb;
 
     $sql = $wpdb->prepare( "SELECT SUM( credit - debit ) as tax_due From {$wpdb->prefix}erp_acct_tax_agency_details WHERE agency_id = %d", $agency_id );

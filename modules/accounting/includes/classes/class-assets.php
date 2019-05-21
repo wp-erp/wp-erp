@@ -7,7 +7,7 @@ namespace WeDevs\ERP\Accounting\Includes\Classes;
  */
 class Assets {
 
-    function __construct () {
+    function __construct() {
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'register' ], 5 );
@@ -21,7 +21,7 @@ class Assets {
      *
      * @return void
      */
-    public function register () {
+    public function register() {
         if ( is_admin() ) {
             $screen = get_current_screen();
             if ( $screen->base == 'wp-erp_page_erp-settings' ) {
@@ -43,7 +43,7 @@ class Assets {
      *
      * @return void
      */
-    private function register_scripts ( $scripts ) {
+    private function register_scripts( $scripts ) {
         global $current_user;
         $u_id       = $current_user->ID;
         $site_url   = site_url();
@@ -67,7 +67,7 @@ class Assets {
             $menus     = $menu[ $component ];
 
             //check items for capabilities
-            $items = array_filter( $menus, function ( $item ) {
+            $items = array_filter( $menus, function( $item ) {
                 if ( ! isset( $item['capability'] ) ) {
                     return false;
                 }
@@ -75,7 +75,7 @@ class Assets {
             } );
 
             //sort items for position
-            uasort( $menus, function ( $a, $b ) {
+            uasort( $menus, function( $a, $b ) {
                 return $a['position'] > $b['position'];
             } );
         }
@@ -101,7 +101,7 @@ class Assets {
      *
      * @return void
      */
-    public function register_styles ( $styles ) {
+    public function register_styles( $styles ) {
         foreach ( $styles as $handle => $style ) {
             $deps = isset( $style['deps'] ) ? $style['deps'] : false;
 
@@ -114,7 +114,7 @@ class Assets {
      *
      * @return array
      */
-    public function get_scripts () {
+    public function get_scripts() {
         $scripts = [
             'accounting-vendor'   => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/vendor.js',
@@ -149,7 +149,7 @@ class Assets {
      *
      * @return array
      */
-    public function get_styles () {
+    public function get_styles() {
         $styles = [
             'accounting-style'    => [
                 'src' => ERP_ACCOUNTING_ASSETS . '/css/style.css'

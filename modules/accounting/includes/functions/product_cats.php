@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed
  */
 
-function erp_acct_get_all_product_cats () {
+function erp_acct_get_all_product_cats() {
     global $wpdb;
 
     $row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_product_categories", ARRAY_A );
@@ -26,7 +26,7 @@ function erp_acct_get_all_product_cats () {
  * @return mixed
  */
 
-function erp_acct_get_product_cat ( $product_cat_id ) {
+function erp_acct_get_product_cat( $product_cat_id ) {
     global $wpdb;
 
     $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_product_categories WHERE id = {$product_cat_id} GROUP BY parent", ARRAY_A );
@@ -40,7 +40,7 @@ function erp_acct_get_product_cat ( $product_cat_id ) {
  * @param $data
  * @return int
  */
-function erp_acct_insert_product_cat ( $data ) {
+function erp_acct_insert_product_cat( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
@@ -79,7 +79,7 @@ function erp_acct_insert_product_cat ( $data ) {
  * @param $data
  * @return int
  */
-function erp_acct_update_product_cat ( $data, $id ) {
+function erp_acct_update_product_cat( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
@@ -119,7 +119,7 @@ function erp_acct_update_product_cat ( $data, $id ) {
  * @param $voucher_no
  * @return mixed
  */
-function erp_acct_get_formatted_product_cat_data ( $data ) {
+function erp_acct_get_formatted_product_cat_data( $data ) {
 
     $product_cat_data['name']       = isset( $data['name'] ) ? $data['name'] : '';
     $product_cat_data['parent']     = isset( $data['parent'] ) ? $data['parent'] : 0;
@@ -139,7 +139,7 @@ function erp_acct_get_formatted_product_cat_data ( $data ) {
  * @return void
  */
 
-function erp_acct_delete_product_cat ( $product_cat_id ) {
+function erp_acct_delete_product_cat( $product_cat_id ) {
     global $wpdb;
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_product_categories', array( 'id' => $product_cat_id ) );

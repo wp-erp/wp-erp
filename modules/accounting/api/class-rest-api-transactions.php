@@ -28,14 +28,14 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/type/(?P<voucher_no>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_transaction_type' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -46,7 +46,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_trn_statuses' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -57,7 +57,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_sales' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -68,7 +68,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_expenses' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -79,7 +79,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_purchases' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
@@ -90,7 +90,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_sales_chart_status' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -101,7 +101,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_sales_chart_payment' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -112,7 +112,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_income_expense_overview' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
@@ -123,7 +123,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_expense_chart_data' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -134,7 +134,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_expense_chart_status' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -145,7 +145,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_purchase_chart_data' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -156,7 +156,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_purchase_chart_status' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -167,7 +167,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_payment_methods' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
@@ -178,7 +178,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'send_as_pdf' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
@@ -189,7 +189,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_people_trn_amount_data' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
@@ -200,7 +200,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_people_trn_status_data' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_expense' );
                 },
             ]
@@ -211,7 +211,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_voucher_type' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ]
@@ -226,7 +226,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_transaction_type ( $request ) {
+    public function get_transaction_type( $request ) {
         $voucher_no = ! empty( $request['voucher_no'] ) ? $request['voucher_no'] : 0;
 
         $voucher_type = erp_acct_get_transaction_type( $voucher_no );
@@ -245,7 +245,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_trn_statuses ( $request ) {
+    public function get_trn_statuses( $request ) {
         global $wpdb;
 
         $statuses = $wpdb->get_results( "SELECT id, type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types", ARRAY_A );
@@ -265,7 +265,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_sales ( $request ) {
+    public function get_sales( $request ) {
         $args = [
             'number'     => empty( $request['per_page'] ) ? 20 : $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -299,7 +299,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart status
      */
-    public function get_sales_chart_status ( $request ) {
+    public function get_sales_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
@@ -317,7 +317,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart payment
      */
-    public function get_sales_chart_payment ( $request ) {
+    public function get_sales_chart_payment( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
@@ -339,7 +339,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_income_expense_overview ( $request ) {
+    public function get_income_expense_overview( $request ) {
 
         $data = erp_acct_get_income_expense_chart_data();
 
@@ -357,7 +357,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_expense_chart_data ( $request ) {
+    public function get_expense_chart_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
@@ -383,7 +383,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_expense_chart_status ( $request ) {
+    public function get_expense_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
@@ -415,7 +415,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_expenses ( $request ) {
+    public function get_expenses( $request ) {
         $args = [
             'number'     => empty( $request['per_page'] ) ? 20 : $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -453,7 +453,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_purchase_chart_data ( $request ) {
+    public function get_purchase_chart_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
@@ -475,7 +475,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    public function get_purchase_chart_status ( $request ) {
+    public function get_purchase_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
@@ -497,7 +497,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_purchases ( $request ) {
+    public function get_purchases( $request ) {
         $args = [
             'number'     => empty( $request['per_page'] ) ? 20 : $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -534,7 +534,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_payment_methods () {
+    public function get_payment_methods() {
         global $wpdb;
 
         $sql = "SELECT id, name
@@ -542,10 +542,10 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $row = $wpdb->get_results( $sql, ARRAY_A );
 
-        return $row;
+        return apply_filters( 'erp_acct_pay_methods', $row ) ;
     }
 
-    public function get_voucher_type ( $request ) {
+    public function get_voucher_type( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -569,7 +569,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
 
         if ( ! empty( $item['inv_status'] ) ) {
             $status = $item['inv_status'];
@@ -617,7 +617,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $request
      * @return array|mixed|object
      */
-    public function send_as_pdf ( $request ) {
+    public function send_as_pdf( $request ) {
 
         $id = (int) $request['id'];
 
@@ -641,7 +641,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart transaction data of a people
      */
-    public function get_people_trn_amount_data ( $request ) {
+    public function get_people_trn_amount_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
@@ -667,7 +667,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Chart transaction status/s of a people
      */
-    public function get_people_trn_status_data ( $request ) {
+    public function get_people_trn_status_data( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']

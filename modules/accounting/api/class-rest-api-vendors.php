@@ -28,13 +28,13 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_vendors' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_vendor' );
                 },
             ],
@@ -42,7 +42,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_vendor' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_vendor' );
                 },
             ],
@@ -56,7 +56,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_vendor' );
                 },
             ],
@@ -64,14 +64,14 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_vendor' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_edit_vendor' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_vendor' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_delete_vendor' );
                 },
             ],
@@ -85,7 +85,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'ids' => [ 'required' => true ]
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_delete_vendor' );
                 },
             ],
@@ -97,7 +97,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_transactions' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_vendor' );
                 },
             ],
@@ -108,7 +108,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'filter_transactions' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_customer' );
                 },
             ],
@@ -122,7 +122,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_vendors ( $request ) {
+    public function get_vendors( $request ) {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -170,7 +170,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_vendor ( $request ) {
+    public function get_vendor( $request ) {
         $id   = (int) $request['id'];
         $item = erp_get_people( $id );
         $item = (array) $item;
@@ -208,7 +208,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_vendor ( $request ) {
+    public function create_vendor( $request ) {
 
         if ( false != email_exists( $request['email'] ) ) {
             return new WP_Error( 'rest_customer_invalid_id', __( 'Email already exists!' ), [ 'status' => 400 ] );
@@ -240,7 +240,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function update_vendor ( $request ) {
+    public function update_vendor( $request ) {
         $id = (int) $request['id'];
 
         $item = erp_get_people( $id );
@@ -275,7 +275,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_vendor ( $request ) {
+    public function delete_vendor( $request ) {
         $id = (int) $request['id'];
 
         $data = [
@@ -296,7 +296,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function bulk_delete_vendors ( $request ) {
+    public function bulk_delete_vendors( $request ) {
         $ids = (string) $request['ids'];
 
         $data = [
@@ -317,7 +317,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_transactions ( $request ) {
+    public function get_transactions( $request ) {
         $id                = (int) $request['id'];
         $args['people_id'] = $id;
 
@@ -332,7 +332,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param object $request
      * @return array
      */
-    public function filter_transactions ( $request ) {
+    public function filter_transactions( $request ) {
         $id           = $request['id'];
         $start_date   = $request['start_date'];
         $end_date     = $request['end_date'];
@@ -353,7 +353,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log ( $data, $action ) {
+    public function add_log( $data, $action ) {
         erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Vendor', 'erp' ),
@@ -373,7 +373,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['first_name'] ) ) {
@@ -446,7 +446,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $item = (object) $item;
 
         $data = [
@@ -488,7 +488,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'vendor',

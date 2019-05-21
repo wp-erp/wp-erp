@@ -28,13 +28,13 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_invoices' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sale' );
                 },
             ],
@@ -42,7 +42,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_invoice' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -54,7 +54,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_invoice' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_sales_summary' );
                 },
             ],
@@ -62,14 +62,14 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_invoice' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_invoice' ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -81,7 +81,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'void_invoice' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -92,7 +92,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'due_invoices' ],
                 'args'                => $this->get_collection_params(),
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -103,7 +103,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'upload_attachments' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -115,7 +115,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_overview_receivables' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
@@ -131,7 +131,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_invoices ( $request ) {
+    public function get_invoices( $request ) {
         $args = [
             'number'     => $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
@@ -177,7 +177,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_invoice ( $request ) {
+    public function get_invoice( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -203,7 +203,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function create_invoice ( $request ) {
+    public function create_invoice( $request ) {
         $invoice_data = $this->prepare_item_for_database( $request );
 
         $item_total          = 0;
@@ -252,7 +252,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_invoice ( $request ) {
+    public function update_invoice( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -314,7 +314,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_invoice ( $request ) {
+    public function delete_invoice( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -333,7 +333,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function void_invoice ( $request ) {
+    public function void_invoice( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -352,7 +352,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function due_invoices ( $request ) {
+    public function due_invoices( $request ) {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -401,7 +401,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return mixed|WP_REST_Response
      */
-    function get_overview_receivables ( $request ) {
+    function get_overview_receivables( $request ) {
         $items    = erp_acct_get_recievables_overview();
         $response = rest_ensure_response( $items );
 
@@ -417,7 +417,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function upload_attachments ( $request ) {
+    public function upload_attachments( $request ) {
         $movefiles = erp_acct_upload_attachments( $_FILES['attachments'] );
 
         $response = rest_ensure_response( $movefiles );
@@ -432,7 +432,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log ( $data, $action ) {
+    public function add_log( $data, $action ) {
         erp_log()->add( [
             'component'     => 'Accounting',
             'sub_component' => __( 'Invoice', 'erp' ),
@@ -452,7 +452,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
 
         $prepared_item = [];
 
@@ -505,7 +505,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
 
         $data = array_merge( $item, $additional_fields );
 
@@ -522,7 +522,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'invoice',

@@ -11,7 +11,7 @@
         </div>
         <!-- End .header-section -->
 
-        <ul>
+        <!-- <ul>
             <li>One</li>
             <li>Two</li>
             <li>Three</li>
@@ -21,7 +21,7 @@
                 :key="index"
                 :is="component"
             />
-        </ul>
+        </ul> -->
 
         <div class="wperp-dashboard">
             <div class="wperp-row">

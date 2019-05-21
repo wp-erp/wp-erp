@@ -27,13 +27,13 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes () {
+    public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_opening_balances' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_journal' );
                 },
             ],
@@ -41,7 +41,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_opening_balance' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_create_journal' );
                 },
             ],
@@ -54,7 +54,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_opening_balance_names' ],
                 'args'                => [],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_journal' );
                 },
             ],
@@ -68,7 +68,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_journal' );
                 },
             ],
@@ -82,11 +82,25 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
-                'permission_callback' => function ( $request ) {
+                'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_ac_view_journal' );
                 },
             ],
             'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/acc-payable-receivable', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_acc_payable_receivable' ],
+                'args'                => [
+                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                ],
+                'permission_callback' => function( $request ) {
+                    return current_user_can( 'erp_ac_view_journal' );
+                },
+            ]
         ] );
     }
 
@@ -97,7 +111,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_opening_balances ( $request ) {
+    public function get_opening_balances( $request ) {
         $args['number'] = ! empty( $request['per_page'] ) ? $request['per_page'] : 20;
         $args['offset'] = ( $request['per_page'] * ( $request['page'] - 1 ) );
 
@@ -130,7 +144,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_opening_balance ( $request ) {
+    public function get_opening_balance( $request ) {
         global $wpdb;
 
         $id                = (int) $request['id'];
@@ -172,7 +186,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_virtual_accts_by_year ( $request ) {
+    public function get_virtual_accts_by_year( $request ) {
         $id                = (int) $request['id'];
         $additional_fields = [];
 
@@ -196,7 +210,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_opening_balance_names ( $request ) {
+    public function get_opening_balance_names( $request ) {
         $additional_fields = [];
 
         $additional_fields['namespace'] = $this->namespace;
@@ -211,7 +225,6 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
-
     /**
      * Create a opening_balance
      *
@@ -219,7 +232,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_opening_balance ( $request ) {
+    public function create_opening_balance( $request ) {
         $opening_balance_data = $this->prepare_item_for_database( $request );
 
         $items = $opening_balance_data['ledgers'];
@@ -252,6 +265,30 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
         return $response;
     }
 
+    /**
+     * Get account payable & receivable
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_acc_payable_receivable( $request ) {
+        $additional_fields = [];
+
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $acc_pay_rec = [];
+
+        $acc_pay_rec['invoice_acc'] = erp_acct_get_opb_invoice_account_details( $request['start_date'] );
+        $acc_pay_rec['bill_purchase_acc'] = erp_acct_get_opb_bill_purchase_account_details(  $request['start_date'] );
+
+        $response = rest_ensure_response( $acc_pay_rec );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
 
     /**
      * Log when opening balance is created
@@ -259,7 +296,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $data
      * @param $action
      */
-    public function add_log ( $data, $action ) {
+    public function add_log( $data, $action ) {
         $data = (array) $data;
 
         erp_log()->add( [
@@ -280,7 +317,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array $prepared_item
      */
-    protected function prepare_item_for_database ( $request ) {
+    protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
         if ( isset( $request['year'] ) ) {
@@ -314,7 +351,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response ( $item, $request, $additional_fields = [] ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
 
         $item = (array) $item;
 
@@ -334,7 +371,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
      *
      * @return array
      */
-    public function get_item_schema () {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'opening_balance',
