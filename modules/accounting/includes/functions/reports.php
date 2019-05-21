@@ -453,35 +453,22 @@ function erp_acct_get_balance_sheet( $args ) {
         'balance' => $capital - $drawings
     ];
 
-    $profit_loss = erp_acct_get_profit_loss( $args );
-    $profit      = 0;
-    $loss        = 0;
+    $profit_loss = erp_acct_get_income_statement( $args );
 
-    $dr_cr_diff = abs( $profit_loss['total_debit'] ) - abs( $profit_loss['total_credit'] );
-
-    if ( abs( $profit_loss['total_debit'] ) <= abs( $profit_loss['total_credit'] ) ) {
-        if ( $dr_cr_diff < 0 ) {
-            $dr_cr_diff = -$dr_cr_diff;
-        }
+    if ( !empty( $profit_loss['profit'] ) ) {
         $results['rows3'][] = [
             'name'    => 'Profit',
             'slug'    => 'profit',
-            'balance' => $dr_cr_diff
+            'balance' => - $profit_loss['profit']
         ];
-        $profit             = $dr_cr_diff;
-    } else {
-        if ( $dr_cr_diff > 0 ) {
-            $balance = -$dr_cr_diff;
-        } else {
-            $dr_cr_diff = -$dr_cr_diff;
-            $balance    = $dr_cr_diff;
-        }
+    }
+
+    if ( !empty( $profit_loss['loss'] ) ) {
         $results['rows3'][] = [
             'name'    => 'Loss',
             'slug'    => 'loss',
-            'balance' => $balance
+            'balance' => - $profit_loss['loss']
         ];
-        $loss               = $balance;
     }
 
     $results['total_asset']     = 0;
