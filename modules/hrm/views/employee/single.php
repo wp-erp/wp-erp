@@ -14,7 +14,7 @@
     ?>
     </h2>
 
-    <?php  if( isset( $_GET['msg'] ) && $_GET['msg'] == 'success'):  ?>
+    <?php if( isset( $_GET['msg'] ) && $_GET['msg'] == 'success'):  ?>
     <div class="error">
         <p> Data Successfully saved</p>
     </div>
