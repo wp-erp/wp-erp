@@ -14,7 +14,7 @@ var entryPoint = {
     frontend: './assets/src/frontend/main.js',
     admin: './assets/src/admin/main.js',
     vendor: Object.keys(pkg.dependencies),
-    wphook: './assets/src/admin/wphook.js',
+    bootstrap: './assets/src/admin/bootstrap.js',
     style: './assets/less/style.less',
     // master: './assets/less/master.less'
 };
