@@ -80,7 +80,7 @@ class Assets {
             } );
         }
 
-        wp_localize_script( 'accounting-admin', 'erp_acct_var', array(
+        wp_localize_script( 'accounting-hook', 'erp_acct_var', array(
             'user_id'        => $u_id,
             'site_url'       => $site_url,
             'rest_nonce'     => $rest_nonce,
