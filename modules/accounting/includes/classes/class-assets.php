@@ -122,9 +122,9 @@ class Assets {
                 'in_footer' => true
             ],
             'accounting-hook'     => [
-                'src'       => ERP_ACCOUNTING_ASSETS . '/js/wphook.js',
+                'src'       => ERP_ACCOUNTING_ASSETS . '/js/bootstrap.js',
                 'deps'      => [ 'accounting-vendor' ],
-                'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/wphook.js' ),
+                'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/bootstrap.js' ),
                 'in_footer' => true
             ],
             'accounting-frontend' => [
