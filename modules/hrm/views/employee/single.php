@@ -13,6 +13,12 @@
     }
     ?>
     </h2>
+
+    <?php  if( isset( $_GET['msg'] ) && $_GET['msg'] == 'success'):  ?>
+    <div class="error">
+        <p> Data Successfully saved</p>
+    </div>
+    <?php endif;  ?>
     <div class="erp-single-container erp-hr-employees-wrap" id="erp-single-container-wrap">
         <div class="erp-area-left full-width erp-hr-employees-wrap-inner">
             <div id="erp-area-left-inner">
