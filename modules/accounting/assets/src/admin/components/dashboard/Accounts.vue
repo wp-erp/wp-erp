@@ -63,12 +63,15 @@
                     return;
                 }
                 let amount = 0;
-                this.accounts.forEach( element => {
-                    if ( null === element.balance ) {
-                        element.balance = 0;
-                    }
-                    amount += parseFloat(element.balance);
-                });
+
+                if ( this.accounts ) {
+                    this.accounts.forEach( element => {
+                        if ( null === element.balance ) {
+                            element.balance = 0;
+                        }
+                        amount += parseFloat(element.balance);
+                    });
+                }
 
                 if ( isNaN( parseFloat(amount) )) {
                     amount = 0;
