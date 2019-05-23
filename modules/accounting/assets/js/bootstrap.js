@@ -151,6 +151,10 @@ pluginWebpack([3],{
     reset: {
       type: Boolean,
       default: false
+    },
+    label: {
+      type: String,
+      default: 'Pay to'
     }
   },
   data: function data() {
@@ -3243,7 +3247,10 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _vm._m(0),
+      _c("label", [
+        _vm._v(_vm._s(_vm.label)),
+        _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
+      ]),
       _vm._v(" "),
       _c("multi-select", {
         attrs: { options: _vm.options },
@@ -3259,17 +3266,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Pay to"),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
