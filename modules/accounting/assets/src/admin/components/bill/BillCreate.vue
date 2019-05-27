@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">New Bill</h2>
+                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} Bill</h2>
                 </div>
             </div>
         </div> <!-- End .header-section -->
@@ -66,10 +66,10 @@
                             <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
                             <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
                             <td class="col--amount" data-colname="Amount">
-                                <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
+                                <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="wperp-form-field text-right"/>
                             </td>
                             <td class="col--total" style="text-align: center" data-colname="Total">
-                                <input type="text" class="text-right" :value="line.amount" readonly disabled/>
+                                <input type="text" class="wperp-form-field text-right" :value="line.amount" readonly disabled/>
                             </td>
                             <td class="delete-row" data-colname="Remove Above Selection">
                                 <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -84,7 +84,7 @@
                         <tr class="total-amount-row">
                             <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
                             <td class="text-right" data-colname="Total Amount">
-                                <input type="text" class="text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
+                                <input type="text" class="wperp-form-field text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
                             <td class="text-right"></td>
                         </tr>
                         <tr class="wperp-form-group">
@@ -231,13 +231,12 @@
                         return;
                     }
 
-                    /**
-                     * Needs improvement later ( ** IMPORTANT)
-                     */
-                    // if ( 'pending' !== request2.data.status ) {
-                    //     this.showAlert('error', 'Can\'t edit');
-                    //     return;
-                    // }
+                    let canEdit = Boolean( Number( request2.data.editable ) );
+
+                    if ( ! canEdit ) {
+                        this.showAlert('error', 'Can\'t edit');
+                        return;
+                    }
 
                     this.ledgers   = request1.data;
                     this.setDataForEdit( request2.data );

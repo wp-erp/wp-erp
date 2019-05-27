@@ -54,6 +54,7 @@ function erp_acct_get_bill( $bill_no ) {
 
     $sql = $wpdb->prepare( "SELECT
 
+    voucher.editable,
     bill.id,
     bill.voucher_no,
     bill.vendor_id,
@@ -67,10 +68,10 @@ function erp_acct_get_bill( $bill_no ) {
     bill.attachments
 
     FROM {$wpdb->prefix}erp_acct_bills AS bill
+    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON bill.voucher_no = voucher.id
     LEFT JOIN {$wpdb->prefix}erp_acct_bill_account_details AS b_ac_detail ON bill.voucher_no = b_ac_detail.trn_no
     WHERE bill.voucher_no = %d", $bill_no );
 
-    // error_log(print_r($sql, true));
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
     $row['bill_details'] = erp_acct_format_bill_line_items( $bill_no );
@@ -122,6 +123,7 @@ function erp_acct_insert_bill( $data ) {
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'bill',
+            'editable'   => 1,
             'created_at' => $data['created_at'],
             'created_by' => $data['created_by'],
             'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
@@ -153,7 +155,7 @@ function erp_acct_insert_bill( $data ) {
         foreach ( $items as $key => $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', [
                 'trn_no'      => $voucher_no,
-                'ledger_id'   => $item['ledger_id']['id'],
+                'ledger_id'   => $item['ledger_id'],
                 'particulars' => isset( $item['description'] ) ? $item['description'] : '',
                 'amount'      => $item['amount'],
                 'created_at'  => $bill_data['created_at'],
@@ -163,7 +165,9 @@ function erp_acct_insert_bill( $data ) {
             erp_acct_insert_bill_data_into_ledger( $bill_data, $item );
         }
 
-        if ( 1 == $bill_data['status'] ) {
+        $draft = 1;
+
+        if ( $draft == $bill_data['status'] ) {
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_invoice( $voucher_no );
         }
@@ -187,7 +191,6 @@ function erp_acct_insert_bill( $data ) {
     }
 
     return erp_acct_get_bill( $voucher_no );
-
 }
 
 /**
@@ -201,79 +204,124 @@ function erp_acct_insert_bill( $data ) {
 function erp_acct_update_bill( $data, $bill_id ) {
     global $wpdb;
 
-    $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( "Y-m-d H:i:s" );
-    $data['updated_by'] = $updated_by;
+    $user_id = get_current_user_id();
+    $draft   = 1;
+
+    $data['created_at'] = date('Y-m-d H:i:s');
+    $data['created_by'] = $user_id;
+    $data['updated_at'] = date('Y-m-d H:i:s');
+    $data['updated_by'] = $user_id;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
-        $bill_data = erp_acct_get_formatted_bill_data( $data, $bill_id );
+        // disable editing on old bill
+        $wpdb->update( $wpdb->prefix . 'erp_acct_voucher_no', [ 'editable' => 0 ], [ 'id' => $bill_id ] );
 
-        $wpdb->update( $wpdb->prefix . 'erp_acct_bills', array(
-            'vendor_id'   => $bill_data['vendor_id'],
-            'vendor_name' => $bill_data['vendor_name'],
-            'address'     => $bill_data['billing_address'],
-            'trn_date'    => $bill_data['trn_date'],
-            'due_date'    => $bill_data['due_date'],
-            'amount'      => $bill_data['amount'],
-            'particulars' => $bill_data['particulars'],
-            'attachments' => $bill_data['attachments'],
-            'updated_at'  => $bill_data['updated_at'],
-            'updated_by'  => $bill_data['updated_by'],
-        ), array(
-            'voucher_no' => $bill_id
+        // insert contra voucher
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
+            'type'       => 'bill',
+            'currency'   => '',
+            'editable'   => 0,
+            'created_at' => $data['created_at'],
+            'created_by' => $data['created_by'],
+            'updated_at' => $data['updated_at'],
+            'updated_by' => $data['updated_by']
         ) );
 
-        /**
-         *? We can't update `expense_details` directly
-         *? suppose there were 5 detail rows previously
-         *? but on update there may be 2 detail rows
-         *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
-         *? so, remove previous rows and insert new rows
-         */
-        $prev_detail_ids = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_acct_bill_details WHERE trn_no = {$bill_id}", ARRAY_A );
-        $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
+        $voucher_no = $wpdb->insert_id;
 
-        $wpdb->delete( $wpdb->prefix . 'erp_acct_bill_details', [ 'trn_no' => $bill_id ] );
+        $old_bill = erp_acct_get_bill( $bill_id );
 
-        $items = $bill_data['bill_details'];
+        // insert contra `erp_acct_bills` (basically a duplication of row)
+        $wpdb->query( $wpdb->prepare("CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_bills WHERE voucher_no = %d", $bill_id) );
+        $wpdb->query( $wpdb->prepare(
+            "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
+            0, $voucher_no, $bill_id, $data['created_at'])
+        );
+        $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_bills SELECT * FROM acct_tmptable" );
+        $wpdb->query( "DROP TABLE acct_tmptable" );
+
+        // change bill status and other things
+        $status_closed = 7;
+        $wpdb->query( $wpdb->prepare(
+            "UPDATE {$wpdb->prefix}erp_acct_bills SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
+            $status_closed, $data['updated_at'], $user_id, $bill_id, $voucher_no)
+        );
+
+        $items = $old_bill['bill_details'];
 
         foreach ( $items as $key => $item ) {
+            // insert contra `erp_acct_bill_details`
             $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', [
-                'trn_no'      => $bill_id,
-                'ledger_id'   => $item['ledger_id']['id'],
+                'trn_no'      => $voucher_no,
+                'ledger_id'   => $item['ledger_id'],
                 'particulars' => isset( $item['description'] ) ? $item['description'] : '',
                 'amount'      => $item['amount'],
-                'created_at'  => $bill_data['created_at'],
-                'created_by'  => $bill_data['created_by']
+                'created_at'  => $data['created_at'],
+                'created_by'  => $data['created_by']
             ] );
 
-            erp_acct_update_bill_data_into_ledger( $bill_data, $bill_id, $item );
+            // insert contra `erp_acct_ledger_details`
+            erp_acct_update_bill_data_into_ledger( $old_bill, $voucher_no, $item );
         }
 
-        if ( 1 == $bill_data['status'] ) {
-            $wpdb->query( 'COMMIT' );
-            return erp_acct_get_invoice( $bill_id );
-        }
-
-        $wpdb->update( $wpdb->prefix . 'erp_acct_bill_account_details', array(
-            'particulars' => $bill_data['particulars'],
-            'credit'      => $bill_data['amount'],
-            'updated_at'  => $bill_data['updated_at'],
-            'updated_by'  => $bill_data['updated_by'],
-        ), array(
-            'trn_no' => $bill_id
+        // insert contra `erp_acct_bill_account_details`
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
+            'bill_no'     => $bill_id,
+            'trn_no'      => $voucher_no,
+            'trn_date'    => $old_bill['trn_date'],
+            'particulars' => $old_bill['particulars'],
+            'debit'       => $old_bill['amount'],
+            'updated_at'  => $data['updated_at'],
+            'updated_by'  => $data['updated_by'],
         ) );
 
-        $wpdb->query( 'COMMIT' );
+        // insert new bill with edited data
+        erp_acct_insert_bill( $data );
 
+        $wpdb->query( 'COMMIT' );
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
 
     return erp_acct_get_bill( $bill_id );
+}
+
+/**
+ * Make bill draft on update
+ *
+ * @param array $bi
+ * @return void
+ */
+function erp_acct_make_bill_draft_on_update($bill_data, $bill_id) {
+    global $wpdb;
+
+    /**
+    *? We can't update `expense_details` directly
+    *? suppose there were 5 detail rows previously
+    *? but on update there may be 2 detail rows
+    *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
+    *? so, remove previous rows and insert new rows
+    */
+    $prev_detail_ids = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_acct_bill_details WHERE trn_no = {$bill_id}", ARRAY_A );
+    $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
+
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_bill_details', [ 'trn_no' => $bill_id ] );
+
+    $items = $bill_data['bill_details'];
+
+    foreach ( $items as $key => $item ) {
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_details', [
+            'trn_no'      => $bill_id,
+            'ledger_id'   => $item['ledger_id'],
+            'particulars' => isset( $item['description'] ) ? $item['description'] : '',
+            'amount'      => $item['amount'],
+            'created_at'  => $bill_data['created_at'],
+            'created_by'  => $bill_data['created_by']
+        ] );
+    }
 }
 
 /**
@@ -359,13 +407,15 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
 function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
     global $wpdb;
 
-    if ( 1 == $bill_data['status'] ) {
+    $draft = 1;
+
+    if ( $draft == $bill_data['status'] ) {
         return;
     }
 
     // Insert items amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
-        'ledger_id'   => $item_data['ledger_id']['id'],
+        'ledger_id'   => $item_data['ledger_id'],
         'trn_no'      => $bill_data['voucher_no'],
         'particulars' => $bill_data['particulars'],
         'debit'       => $item_data['amount'],
@@ -392,24 +442,25 @@ function erp_acct_insert_bill_data_into_ledger( $bill_data, $item_data ) {
 function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data ) {
     global $wpdb;
 
-    if ( 1 == $bill_data['status'] ) {
-        return;
-    }
+    $user_id = get_current_user_id();
 
-    // Update amount in ledger_details
-    $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
+    $bill_data['created_at'] = date('Y-m-d H:i:s');
+    $bill_data['created_by'] = $user_id;
+    $bill_data['updated_at'] = date('Y-m-d H:i:s');
+    $bill_data['updated_by'] = $user_id;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
+        'ledger_id'   => $item_data['ledger_id'],
+        'trn_no'      => $bill_no,
         'particulars' => $bill_data['particulars'],
-        'debit'       => $item_data['amount'],
-        'credit'      => 0,
+        'debit'       => 0,
+        'credit'      => $item_data['amount'],
         'trn_date'    => $bill_data['trn_date'],
         'created_at'  => $bill_data['created_at'],
         'created_by'  => $bill_data['created_by'],
         'updated_at'  => $bill_data['updated_at'],
         'updated_by'  => $bill_data['updated_by'],
-    ), array(
-        'trn_no' => $bill_no,
     ) );
-
 }
 
 /**
