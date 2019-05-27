@@ -80,7 +80,7 @@ class Assets {
             } );
         }
 
-        wp_localize_script( 'accounting-admin', 'erp_acct_var', array(
+        wp_localize_script( 'accounting-hook', 'erp_acct_var', array(
             'user_id'        => $u_id,
             'site_url'       => $site_url,
             'rest_nonce'     => $rest_nonce,
@@ -122,9 +122,9 @@ class Assets {
                 'in_footer' => true
             ],
             'accounting-hook'     => [
-                'src'       => ERP_ACCOUNTING_ASSETS . '/js/wphook.js',
+                'src'       => ERP_ACCOUNTING_ASSETS . '/js/bootstrap.js',
                 'deps'      => [ 'accounting-vendor' ],
-                'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/wphook.js' ),
+                'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/bootstrap.js' ),
                 'in_footer' => true
             ],
             'accounting-frontend' => [

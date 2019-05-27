@@ -500,23 +500,6 @@ function erp_acct_people_calc_with_opening_balance( $tb_date, $data, $type, $sql
         $balance += (float) $opening_balance;
     }
 
-    // should we go further calculation, check the diff
-    // if ( ! erp_acct_has_date_diff($tb_start_date, $closest_fy_date['start_date']) ) {
-    //     return $balance;
-    // } else {
-    //     $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime($tb_start_date) ) );
-    // }
-
-    // $start_date = $closest_fy_date['start_date'];
-    // $end_date   = $prev_date_of_tb_start;
-
-    // if ( 'payable' === $type ) {
-    //     $balance += erp_acct_calculate_people_balance($sql1, $start_date, $end_date);
-    //     $balance += erp_acct_calculate_people_balance($sql2, $start_date, $end_date);
-    // } elseif ( 'receivable' === $type ) {
-    //     $balance += erp_acct_calculate_people_balance($sql1, $start_date, $end_date);
-    // }
-
     // get people account details balance within trial balance end and financial year start date
     $people_account_details = erp_acct_calc_with_people_account_details( $closest_fy_date['start_date'], $tb_date['end_date'], $type );
 

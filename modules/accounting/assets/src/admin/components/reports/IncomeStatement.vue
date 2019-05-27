@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="income-statement">
         <h2 class="content-header__title">Income Statement</h2>
 
         <form action="" @submit.prevent="fetchItems" class="query-options no-print">
@@ -16,11 +16,10 @@
             </a>
 
         </form>
-        <div>
-            Balance showing from <em>{{ start_date }}</em> to <em>{{ end_date }}</em>
-        </div>
 
-         <list-table
+        <p><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></p>
+
+        <list-table
             tableClass="wperp-table table-striped table-dark widefat income-statement income-balance-report"
             :columns="columns1"
             :rows="rows1"
@@ -124,15 +123,31 @@
                 // with leading zero, and JS month are zero index based
                 let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
 
-                this.start_date = `2019-${month}-01`;
-                this.end_date   = erp_acct_var.current_date;
+                if ( this.$route.query.start ) {
+                    this.start_date = this.$route.query.start;
+                    this.end_date   = this.$route.query.end;
+                } else {
+                    this.start_date = `2019-${month}-01`;
+                    this.end_date   = erp_acct_var.current_date;
+                };
+
+                this.updateDate();
 
                 this.fetchItems();
             });
         },
 
         methods: {
+             updateDate() {
+                this.$router.push({ path: this.$route.path, query: {
+                    start: this.start_date,
+                    end  : this.end_date
+                } });
+            },
+
             fetchItems() {
+                this.updateDate();
+
                 this.rows1 = [];
                 this.rows2 = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
@@ -160,7 +175,7 @@
                     val = 0;
                 }
                 let currency = '$';
-                if ( val < 0 ){
+                if ( val < 0 ) {
                     return `Cr. ${currency}${Math.abs(val)}`;
                 }
 
@@ -174,18 +189,28 @@
     }
 </script>
 
-<style>
+<style lang="less">
     .content-header__title {
         padding-top: 5px !important;
     }
     .income-statement tbody tr td:last-child {
         text-align: left !important;
     }
-    .income-balance-report tbody tr td:first-child {
-        width: 70% !important;
+
+    .income-balance-report {
+        tbody tr td:first-child {
+            width: 70% !important;
+        }
+
+        thead tr th:first-child {
+            width: 70% !important;
+        }
     }
-    .income-balance-report thead tr th:first-child {
-        width: 70% !important;
+
+    .income-statement {
+        .tablenav.top {
+            display: none;
+        }
     }
     .income-statement .t-foot td {
         color: #2196f3;
@@ -209,6 +234,32 @@
         }
         .no-print, .no-print * {
             display: none !important;
+        }
+        .income-balance-report {
+            tbody tr td:first-child {
+                width: 70% !important;
+            }
+
+            thead tr th:first-child {
+                width: 70% !important;
+            }
+
+            thead th,
+            tfoot th {
+                font-weight: bold;
+            }
+
+            thead tr th,
+            tfoot tr td,
+            tbody tr td {
+                padding: 0;
+            }
+
+            tfoot {
+                td:first-child {
+                    padding-left: 20px !important;
+                }
+            }
         }
     }
 </style>
