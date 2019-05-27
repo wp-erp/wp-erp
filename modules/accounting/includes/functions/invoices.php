@@ -193,7 +193,7 @@ function erp_acct_insert_invoice( $data ) {
 
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no );
 
-        if ( 1 == $invoice_data['estimate'] || 1 == $invoice_data['status'] ) {
+        if ( $estimate_type == $invoice_data['estimate'] || $draft == $invoice_data['status'] ) {
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_invoice( $voucher_no );
         }
@@ -229,6 +229,7 @@ function erp_acct_insert_invoice_details_and_tax($invoice_data, $voucher_no, $co
     $invoice_data['updated_at'] = date('Y-m-d H:i:s');
     $invoice_data['updated_by'] = $user_id;
 
+    $estimate_type = $draft  = 1;
     $tax_agency_details = [];
 
     $items = $invoice_data['line_items'];
@@ -250,8 +251,8 @@ function erp_acct_insert_invoice_details_and_tax($invoice_data, $voucher_no, $co
             'created_by'  => $invoice_data['created_by']
         ) );
 
-        if ( 1 == $invoice_data['estimate'] ) {
-            return;
+        if ( $estimate_type == $invoice_data['estimate'] || $draft == $invoice_data['status']  ) {
+            continue;
         }
 
         // calculate tax for every related agency
@@ -383,7 +384,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 
         $old_invoice = erp_acct_get_invoice( $invoice_no );
 
-        // insert contra `erp_acct_invoicesvoice` (basically a duplication of row)
+        // insert contra `erp_acct_invoices` (basically a duplication of row)
         $wpdb->query( $wpdb->prepare("CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_invoices WHERE voucher_no = %d", $invoice_no) );
         $wpdb->query( $wpdb->prepare(
             "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
@@ -401,6 +402,13 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 
         // insert contra `erp_acct_invoice_details` AND `erp_acct_invoice_details_tax`
         erp_acct_insert_invoice_details_and_tax( $old_invoice, $voucher_no, true );
+
+        $estimate_type = $draft  = 1;
+
+        if ( $estimate_type == $data['estimate'] || $draft == $data['status'] ) {
+            $wpdb->query( 'COMMIT' );
+            return erp_acct_get_invoice( $voucher_no );
+        }
 
         // insert contra `erp_acct_invoice_account_details`
         erp_acct_insert_invoice_account_details( $old_invoice, $voucher_no, true );
