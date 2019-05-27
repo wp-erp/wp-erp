@@ -12468,9 +12468,31 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
     }
   },
   created: function created() {
+    //? why is nextTick here ...? i don't know.
+    this.$nextTick(function () {
+      // with leading zero, and JS month are zero index based
+      var month = ('0' + (new Date().getMonth() + 1)).slice(-2);
+
+      if (this.$route.query.start) {
+        this.start_date = this.$route.query.start;
+        this.end_date = this.$route.query.end;
+      } else {
+        this.start_date = "2019-".concat(month, "-01");
+        this.end_date = erp_acct_var.current_date;
+      }
+    });
     this.getChartOfAccts();
   },
   methods: {
+    updateDate: function updateDate() {
+      this.$router.push({
+        path: this.$route.path,
+        query: {
+          start: this.start_date,
+          end: this.end_date
+        }
+      });
+    },
     getChartOfAccts: function getChartOfAccts() {
       var _this = this;
 
@@ -12481,17 +12503,13 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
       });
     },
     setDateAndGetTb: function setDateAndGetTb() {
-      //? why is nextTick here ...? i don't know.
-      // this.$nextTick(function () {
-      // with leading zero, and JS month are zero index based
-      var month = ('0' + (new Date().getMonth() + 1)).slice(-2);
-      this.start_date = "2019-".concat(month, "-01");
-      this.end_date = erp_acct_var.current_date;
-      this.getTrialBalance(); // });
+      this.updateDate();
+      this.getTrialBalance();
     },
     getTrialBalance: function getTrialBalance() {
       var _this2 = this;
 
+      this.updateDate();
       this.rows = [];
       this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/reports/trial-balance', {
@@ -27536,7 +27554,6 @@ setTimeout(function () {
 //
 //
 //
-//
 
 
 
@@ -27583,15 +27600,34 @@ setTimeout(function () {
     this.$nextTick(function () {
       // with leading zero, and JS month are zero index based
       var month = ('0' + (new Date().getMonth() + 1)).slice(-2);
-      this.start_date = "2019-".concat(month, "-01");
-      this.end_date = erp_acct_var.current_date;
+
+      if (this.$route.query.start) {
+        this.start_date = this.$route.query.start;
+        this.end_date = this.$route.query.end;
+      } else {
+        this.start_date = "2019-".concat(month, "-01");
+        this.end_date = erp_acct_var.current_date;
+      }
+
+      ;
+      this.updateDate();
       this.fetchItems();
     });
   },
   methods: {
+    updateDate: function updateDate() {
+      this.$router.push({
+        path: this.$route.path,
+        query: {
+          start: this.start_date,
+          end: this.end_date
+        }
+      });
+    },
     fetchItems: function fetchItems() {
       var _this = this;
 
+      this.updateDate();
       this.rows1 = [];
       this.rows2 = [];
       this.$store.dispatch('spinner/setSpinner', true);
@@ -60591,7 +60627,7 @@ if (false) {
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(504)
+  __webpack_require__(643)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -60637,12 +60673,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 504 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 504 */,
 /* 505 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -60653,6 +60684,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "income-statement" },
     [
       _c("h2", { staticClass: "content-header__title" }, [
         _vm._v("Income Statement")
@@ -60727,8 +60759,9 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("div", [
-        _vm._v("\n        Balance showing from "),
+      _c("p", [
+        _c("strong", [_vm._v("For the period of ( Transaction date ):")]),
+        _vm._v(" "),
         _c("em", [_vm._v(_vm._s(_vm.start_date))]),
         _vm._v(" to "),
         _c("em", [_vm._v(_vm._s(_vm.end_date))])
@@ -63552,6 +63585,13 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-12b927aa", esExports)
   }
 }
+
+/***/ }),
+/* 642 */,
+/* 643 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 ],[180]);

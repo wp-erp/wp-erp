@@ -338,6 +338,21 @@ function erp_acct_get_payment_method_by_id( $method_id ) {
 }
 
 /**
+ * Get payment method by id
+ *
+ * @param $trn_id
+ *
+ * @return string
+ */
+function erp_acct_get_payment_method_name_by_id( $method_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT name FROM {$wpdb->prefix}erp_acct_payment_methods WHERE id = {$method_id} LIMIT 1" );
+
+    return $row->name;
+}
+
+/**
  * Get check transaction type by id
  *
  * @param $trn_id
