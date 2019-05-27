@@ -285,65 +285,7 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
 function erp_acct_get_income_statement( $args ) {
     global $wpdb;
 
-    if ( empty( $args['start_date'] ) ) {
-        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of this month' ) );
-    }
-    if ( empty( $args['end_date'] ) ) {
-        $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
-    }
-
-    if ( empty( $args['start_date'] ) && empty( $args['end_date'] ) ) {
-        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of this month' ) );
-        $args['end_date']   = date( 'Y-m-d', strtotime( 'last day of this month' ) );
-    }
-
-    $sql1 = "SELECT
-        ledger.name,
-        SUM(ledger_detail.credit) as credit,
-        SUM(ledger_detail.debit) as debit,
-        SUM(ledger_detail.debit - ledger_detail.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=4 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
-        GROUP BY ledger_detail.ledger_id";
-
-    $sql2 = "SELECT
-        ledger.name,
-        SUM(ledger_detail.debit) as debit,
-        SUM(ledger_detail.credit) as credit,
-        SUM(ledger_detail.debit - ledger_detail.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=5 AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
-        GROUP BY ledger_detail.ledger_id";
-
-    // All DB results are inside `rows` key
-    $results['rows1'] = $wpdb->get_results( $sql1, ARRAY_A );
-    $results['rows2'] = $wpdb->get_results( $sql2, ARRAY_A );
-
-    // Totals are inside the root `result` array
-    $results['total_debit1']  = 0;
-    $results['total_credit1'] = 0;
-    $results['total_debit2']  = 0;
-    $results['total_credit2'] = 0;
-    $results['income']        = 0;
-    $results['expense']       = 0;
-
-    // Add-up all debit and credit
-    foreach ( $results['rows1'] as $result ) {
-        $results['total_debit1']  += (float) $result['debit'];
-        $results['total_credit1'] += (float) $result['credit'];
-    }
-    $results['income'] = abs( $results['total_debit1'] - $results['total_credit1'] );
-
-    foreach ( $results['rows2'] as $result ) {
-        $results['total_debit2']  += (float) $result['debit'];
-        $results['total_credit2'] += (float) $result['credit'];
-    }
-    $results['expense'] = abs( $results['total_debit2'] - $results['total_credit2'] );
-
-    $results['total_debit']  = $results['total_debit1'] + $results['total_debit2'];
-    $results['total_credit'] = $results['total_credit1'] + $results['total_credit2'];
-
-    $dr_cr_diff = $results['total_debit'] - $results['total_credit'];
+    $results = erp_acct_get_profit_loss( $args );
 
     if ( $results['income'] >= abs( $results['expense'] ) ) {
         $results['profit']      = $results['income'] - $results['expense'];
@@ -356,6 +298,142 @@ function erp_acct_get_income_statement( $args ) {
     $results['balance'] = isset( $results['profit'] ) ? $results['profit'] : $results['loss'];
 
     return $results;
+}
+
+/**
+ * Income statement with opening balance helper
+ *
+ * @param $bs_start_date
+ * @param $data
+ * @param $sql
+ * @param $chart_id
+ * @return array
+ */
+
+function erp_acct_income_statement_calculate_with_opening_balance( $is_start_date, $data, $sql, $chart_id ) {
+    global $wpdb;
+
+    // get closest financial year id and start date
+    $closest_fy_date = erp_acct_get_closest_fn_year_date( $is_start_date );
+
+    // get opening balance data within that(^) financial year
+    $opening_balance = erp_acct_is_opening_balance_by_fn_year_id( $closest_fy_date['id'], $chart_id );
+
+    $ledger_sql = "SELECT
+        ledger.id, ledger.name
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        WHERE ledger.chart_id={$chart_id}";
+
+    $ledgers   = $wpdb->get_results( $ledger_sql, ARRAY_A );
+    $temp_data = erp_acct_get_is_balance_with_opening_balance( $ledgers, $data, $opening_balance );
+    $result    = [];
+
+    if ( ! erp_acct_has_date_diff( $is_start_date, $closest_fy_date['start_date'] ) ) {
+        return $temp_data;
+    } else {
+        $prev_date_of_tb_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $is_start_date ) ) );
+    }
+
+    // should we go further calculation, check the diff
+    $date1    = date_create( $is_start_date );
+    $date2    = date_create( $closest_fy_date['start_date'] );
+    $interval = date_diff( $date1, $date2 );
+
+    // if difference is `0` OR `1` day
+    if ( '2' > $interval->format( '%a' ) ) {
+        return $temp_data;
+    } else {
+        // get previous date from balance sheet start date
+        $date_before_balance_sheet_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $is_start_date ) ) );
+        $is_date                         = $date_before_balance_sheet_start;
+    }
+
+    // get ledger details data between `financial year start date` and `previous date from balance sheet start date`
+    $ledger_details = $wpdb->get_results(
+        $wpdb->prepare( $sql, $closest_fy_date['start_date'], $is_date ), ARRAY_A
+    );
+
+    foreach ( $temp_data as $temp ) {
+        $balance = $temp['balance'];
+
+        foreach ( $ledger_details as $detail ) {
+            if ( $temp['id'] == $detail['id'] ) {
+                $balance += (float) $detail['balance'];
+            }
+        }
+
+        $result[] = [
+            'id'      => $temp['id'],
+            'name'    => $temp['name'],
+            'balance' => $balance
+        ];
+    }
+
+    return $result;
+}
+
+/**
+ * Get income statement ledger balance with opening balance
+ *
+ * @param array $ledgers
+ * @param array $data
+ * @param array $opening_balance
+ *
+ * @return array
+ */
+function erp_acct_get_is_balance_with_opening_balance( $ledgers, $data, $opening_balance ) {
+    $temp_data = [];
+
+    foreach ( $ledgers as $ledger ) {
+        $balance = 0;
+        foreach ( $data as $row ) {
+            if ( $row['balance'] && $row['id'] == $ledger['id'] ) {
+                $balance += (float) abs( $row['balance'] );
+            }
+        }
+
+        foreach ( $opening_balance as $op_balance ) {
+            if ( $op_balance['id'] == $ledger['id'] ) {
+                $balance += (float) abs( $op_balance['balance'] );
+            }
+        }
+
+        if ( $balance ) {
+            $temp_data[] = [
+                'id'      => $ledger['id'],
+                'name'    => $ledger['name'],
+                'balance' => $balance
+            ];
+        }
+    }
+
+    return $temp_data;
+}
+
+/**
+ * Get income statement opening balance data by financial year id
+ *
+ * @param int $id
+ * @param int $chart_id ( optional )
+ *
+ * @return array
+ */
+function erp_acct_is_opening_balance_by_fn_year_id( $id, $chart_id ) {
+    global $wpdb;
+
+    $where = '';
+
+    if ( $chart_id ) {
+        $where = $wpdb->prepare( 'AND ledger.chart_id = %d', $chart_id );
+    }
+
+    $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
+        WHERE opb.financial_year_id = %d {$where} AND opb.type = 'ledger' AND ledger.slug <> 'owner_s_equity'
+        GROUP BY opb.ledger_id";
+
+    return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 }
 
 /**
@@ -668,35 +746,55 @@ function erp_acct_bs_opening_balance_by_fn_year_id( $id, $chart_id ) {
 function erp_acct_get_profit_loss( $args ) {
     global $wpdb;
 
+
+
     if ( empty( $args['start_date'] ) ) {
-        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of this month' ) );
+        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of january' ) );
+    } else {
+        $closest_fy_date = erp_acct_get_closest_fn_year_date(  $args['start_date'] );
+        $args['start_date'] = $closest_fy_date['start_date'];
     }
+
     if ( empty( $args['end_date'] ) ) {
         $args['end_date'] = date( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
 
     if ( empty( $args['start_date'] ) && empty( $args['end_date'] ) ) {
-        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of this month' ) );
+        $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of january' ) );
         $args['end_date']   = date( 'Y-m-d', strtotime( 'last day of this month' ) );
     }
 
-    $sql = "SELECT
+    $sql1 = "SELECT
+        ledger.id,
         ledger.name,
-        SUM(ledger_detail.debit) as debit,
-        SUM(ledger_detail.credit) as credit,
         SUM(ledger_detail.debit - ledger_detail.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE (ledger.chart_id=4 OR ledger.chart_id=5) AND ledger_detail.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=4 AND ledger_detail.trn_date BETWEEN '%s' AND '%s'
         GROUP BY ledger_detail.ledger_id";
 
-    $results['rows'] = $wpdb->get_results( $sql, ARRAY_A );
+    $sql2 = "SELECT
+        ledger.id,
+        ledger.name,
+        SUM(ledger_detail.debit - ledger_detail.credit) AS balance
+        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id WHERE ledger.chart_id=5 AND ledger_detail.trn_date BETWEEN '%s' AND '%s'
+        GROUP BY ledger_detail.ledger_id";
 
-    $results['total_debit']  = 0;
-    $results['total_credit'] = 0;
+    $data1 = $wpdb->get_results( $wpdb->prepare( $sql1, $args['start_date'], $args['end_date'] ), ARRAY_A );
+    $data2 = $wpdb->get_results( $wpdb->prepare( $sql2, $args['start_date'], $args['end_date'] ), ARRAY_A );
 
-    foreach ( $results['rows'] as $result ) {
-        $results['total_debit']  += (float) $result['debit'];
-        $results['total_credit'] += (float) $result['credit'];
+    $results['rows1'] = erp_acct_income_statement_calculate_with_opening_balance( $args['start_date'], $data1, $sql1, 4 );
+    $results['rows2'] = erp_acct_income_statement_calculate_with_opening_balance( $args['start_date'], $data2, $sql2, 5 );
+
+    $results['income']  = 0;
+    $results['expense'] = 0;
+
+    foreach ( $results['rows1'] as $result ) {
+        $results['income'] += (float) $result['balance'];
+    }
+
+    foreach ( $results['rows2'] as $result ) {
+        $results['expense'] += (float) $result['balance'];
     }
 
     return $results;

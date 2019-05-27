@@ -1,23 +1,26 @@
-import Vue from 'vue'
-import VeeValidate from 'vee-validate'
 import App from './App.vue'
 import router from './router'
-import VueSweetalert2 from 'vue-sweetalert2'
-import commonMixins from './mixins/common'
 import store from './store/store'
-import Loading from 'vue-loading-overlay';
-// import accounting from 'accounting';
 
+// get lib reference
+let Vue = acct_get_lib('Vue');
+let VeeValidate = acct_get_lib('VeeValidate');
+let VueSweetalert2 = acct_get_lib('VueSweetalert2');
+let Loading = acct_get_lib('Loading');
+let commonMixins = acct_get_lib('commonMixins');
+
+// config
 Vue.config.productionTip = false
 
-// Vue uses
+// vue uses
 Vue.use(VeeValidate);
 Vue.use(VueSweetalert2);
 Vue.use(Loading);
 
+// mixin
 Vue.mixin(commonMixins);
 
-// Vue click outside directive
+// vue click outside directive
 Vue.directive('click-outside', {
     bind(el, binding, vnode) {
         const bubble = binding.modifiers.bubble
@@ -44,4 +47,3 @@ new Vue({
     store,
     render: h => h(App)
 });
-

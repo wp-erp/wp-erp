@@ -344,7 +344,9 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $args = [] ) {
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
-    $ledger_ob_bal = $wpdb->get_row( "SELECT ledger_id, (debit - credit) as balance FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id={$row['id']} AND type='ledger'" );
+    if ( !empty( $row['id'] ) ) {
+        $ledger_ob_bal = $wpdb->get_row( "SELECT ledger_id, (debit - credit) as balance FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id={$row['id']} AND type='ledger'" );
+    }
     $ledger_bal    = $wpdb->get_row( "SELECT ledger_id, SUM(debit - credit) as balance FROM {$wpdb->prefix}erp_acct_ledger_details WHERE ledger_id={$ledger_id}" );
 
     $bal1 = isset( $ledger_ob_bal->balance ) ? $ledger_ob_bal->balance : 0;

@@ -100,10 +100,31 @@
         },
 
         created() {
+            //? why is nextTick here ...? i don't know.
+            this.$nextTick(function () {
+                // with leading zero, and JS month are zero index based
+                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
+
+                if ( this.$route.query.start ) {
+                    this.start_date = this.$route.query.start;
+                    this.end_date   = this.$route.query.end;
+                } else {
+                    this.start_date = `2019-${month}-01`;
+                    this.end_date   = erp_acct_var.current_date;
+                }
+            });
+
             this.getChartOfAccts();
         },
 
         methods: {
+            updateDate() {
+                this.$router.push({ path: this.$route.path, query: {
+                    start: this.start_date,
+                    end  : this.end_date
+                } });
+            },
+
             getChartOfAccts() {
                 HTTP.get( '/ledgers/accounts').then(response => {
                     this.chrtAcct = response.data;
@@ -113,19 +134,13 @@
             },
 
             setDateAndGetTb() {
-                //? why is nextTick here ...? i don't know.
-                // this.$nextTick(function () {
-                    // with leading zero, and JS month are zero index based
-                    let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
-
-                    this.start_date = `2019-${month}-01`;
-                    this.end_date   = erp_acct_var.current_date;
-
-                    this.getTrialBalance();
-                // });
+                this.updateDate();
+                this.getTrialBalance();
             },
 
             getTrialBalance() {
+                this.updateDate();
+
                 this.rows = [];
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
@@ -212,25 +227,20 @@
                 padding: 3px;
             }
         }
+    }
 
-        @media print {
-            .erp-nav-container {
-                display: none;
-            }
-            .no-print, .no-print * {
-                display: none !important;
-            }
 
-            .trial-balance details {
-                margin: 0;
-                padding: 0;
+    @media print {
+        .erp-nav-container {
+            display: none;
+        }
 
-                summary {
-                    margin-bottom: 2px;
-                }
-            }
+        .no-print, .no-print * {
+            display: none !important;
+        }
 
-            .trial-balance p {
+        .trial-balance {
+            p {
                 margin-bottom: 0;
             }
 
@@ -241,6 +251,38 @@
 
             .wperp-table thead tr th {
                 font-weight: bold;
+            }
+
+            details {
+                margin: 0;
+                padding: 0;
+
+                summary {
+                    margin-bottom: 2px;
+                }
+            }
+
+            .wperp-table thead tr th {
+                font-weight: bold;
+                &:not(:first-child) {
+                    text-align: right;
+                }
+            }
+
+            .wperp-table tbody tr td {
+                &:not(:first-child) {
+                    text-align: right !important;
+                }
+            }
+
+            .wperp-table tfoot {
+                td:first-child {
+                    padding-left: 20px;
+                }
+
+                td:not(:first-child) {
+                    text-align: right !important;
+                }
             }
         }
     }
