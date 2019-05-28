@@ -401,6 +401,10 @@
             td {
                 color: #2196f3;
                 font-weight: bold;
+
+                &:last-child {
+                    font-size: 16px;
+                }
             }
         }
     }
@@ -456,8 +460,13 @@
                 color: #2196f3;
                 font-weight: bold;
             }
+
+            &:last-child td:nth-child(2) {
+                font-size: 16px;
+            }
         }
     }
+
     @media print {
         .erp-nav-container {
             display: none;

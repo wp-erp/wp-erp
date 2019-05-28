@@ -53,8 +53,8 @@
                 <tr class="tfoot">
                     <td colspan="3"></td>
                     <td>Total =</td>
-                    <td>{{ totalDebit }}</td>
-                    <td>{{ totalCredit }}</td>
+                    <td>{{ totalDebit.toFixed(2) }}</td>
+                    <td>{{ totalCredit.toFixed(2) }}</td>
                     <td></td>
                 </tr>
             </template>
@@ -255,35 +255,59 @@
 
             .wperp-table.ledger-table {
                 th.trn_date,
-                th.created_at {
-                    min-width: 120px;
+                th.created_at,
+                .balance {
+                    min-width: 118px;
                 }
 
                 th.trn_no {
-                    min-width: 100px;
+                    min-width: 95px;
+                }
+
+                td.column.particulars {
+                    text-align: left !important;
+                }
+
+                tr th:first-child,
+                tr td:last-child {
+                    padding-left: 5px;
+                }
+
+                tr th:last-child,
+                tr td:last-child {
+                    padding-right: 5px;
                 }
 
                 td,
                 th {
-                    padding: 3px 20px;
+                    padding: 3px 0;
                 }
 
                 thead tr th {
                     font-weight: bold;
 
-                    &:not(:first-child) {
+                    &:nth-child(5),
+                    &:nth-child(6),
+                    &:nth-child(7) {
+                        min-width: 100px;
                         text-align: right;
                     }
                 }
 
                 tbody tr td {
-                    &:not(:first-child) {
+                    &:nth-child(5),
+                    &:nth-child(6),
+                    &:nth-child(7) {
+                        min-width: 100px;
                         text-align: right !important;
                     }
                 }
 
-                tfoot td:not(:first-child) {
-                    text-align: right !important;
+                tfoot td {
+                    &:nth-child(3),
+                    &:nth-child(4) {
+                        text-align: right !important;
+                    }
                 }
             }
         }
