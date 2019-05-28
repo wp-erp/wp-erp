@@ -42865,9 +42865,9 @@ var render = function() {
               _vm._v(" "),
               _c("td", [_vm._v("Total =")]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.totalDebit))]),
+              _c("td", [_vm._v(_vm._s(_vm.totalDebit.toFixed(2)))]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.totalCredit))]),
+              _c("td", [_vm._v(_vm._s(_vm.totalCredit.toFixed(2)))]),
               _vm._v(" "),
               _c("td")
             ])
@@ -63619,7 +63619,7 @@ var render = function() {
           _vm._v(" "),
           _c("template", { slot: "tfoot" }, [
             _c("tr", { staticClass: "tfoot" }, [
-              _c("td", { attrs: { colspan: "4" } }),
+              _c("td", { attrs: { colspan: "3" } }),
               _vm._v(" "),
               _c("td", [_vm._v("Total =")]),
               _vm._v(" "),
@@ -63627,7 +63627,7 @@ var render = function() {
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(_vm.totalCredit))]),
               _vm._v(" "),
-              _c("td", { staticClass: "no-print" })
+              _c("td")
             ])
           ])
         ],

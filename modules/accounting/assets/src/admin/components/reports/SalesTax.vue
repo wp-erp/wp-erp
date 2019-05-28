@@ -50,11 +50,11 @@
             </template>
             <template slot="tfoot">
                 <tr class="tfoot">
-                    <td colspan="4"></td>
+                    <td colspan="3"></td>
                     <td>Total =</td>
                     <td>{{ totalDebit }}</td>
                     <td>{{ totalCredit }}</td>
-                    <td class="no-print"></td>
+                    <td></td>
                 </tr>
             </template>
         </list-table>
@@ -216,25 +216,42 @@
 
                 td,
                 th {
-                    padding: 3px 20px !important;
+                    padding: 3px !important;
+                }
+
+                tr th:first-child,
+                tr td:last-child {
+                    padding-left: 5px;
+                }
+
+                tr th:last-child,
+                tr td:last-child {
+                    padding-right: 5px;
                 }
 
                 thead tr th {
                     font-weight: bold;
 
-                    &:not(:first-child) {
+                    &:nth-child(5),
+                    &:nth-child(6),
+                    &:nth-child(7) {
                         text-align: right;
                     }
                 }
 
                 tbody tr td {
-                    &:not(:first-child) {
+                    &:nth-child(5),
+                    &:nth-child(6),
+                    &:nth-child(7) {
                         text-align: right !important;
                     }
                 }
 
-                tfoot td:not(:first-child) {
-                    text-align: right !important;
+                tfoot td {
+                    &:nth-child(3),
+                    &:nth-child(4) {
+                        text-align: right !important;
+                    }
                 }
             }
         }
