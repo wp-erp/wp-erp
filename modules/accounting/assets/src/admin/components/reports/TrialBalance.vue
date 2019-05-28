@@ -229,7 +229,6 @@
         }
     }
 
-
     @media print {
         .erp-nav-container {
             display: none;
@@ -242,15 +241,37 @@
         .trial-balance {
             p {
                 margin-bottom: 0;
+
+                em {
+                    font-weight: bold;
+                }
             }
 
-            .wperp-table td,
-            .wperp-table th {
-                padding: 1px;
-            }
+            .wperp-table {
+                margin-top: 20px;
 
-            .wperp-table thead tr th {
-                font-weight: bold;
+                td,
+                th {
+                    padding: 3px 20px;
+                }
+
+                thead tr th {
+                    font-weight: bold;
+
+                    &:not(:first-child) {
+                        text-align: right;
+                    }
+                }
+
+                tbody tr td {
+                    &:not(:first-child) {
+                        text-align: right !important;
+                    }
+                }
+
+                tfoot td:not(:first-child) {
+                    text-align: right !important;
+                }
             }
 
             details {
@@ -259,29 +280,6 @@
 
                 summary {
                     margin-bottom: 2px;
-                }
-            }
-
-            .wperp-table thead tr th {
-                font-weight: bold;
-                &:not(:first-child) {
-                    text-align: right;
-                }
-            }
-
-            .wperp-table tbody tr td {
-                &:not(:first-child) {
-                    text-align: right !important;
-                }
-            }
-
-            .wperp-table tfoot {
-                td:first-child {
-                    padding-left: 20px;
-                }
-
-                td:not(:first-child) {
-                    text-align: right !important;
                 }
             }
         }

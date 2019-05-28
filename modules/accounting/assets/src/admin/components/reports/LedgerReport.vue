@@ -31,7 +31,8 @@
         <list-table
             tableClass="wperp-table table-striped table-dark widefat ledger-table"
             :columns="columns"
-            :rows="rows">
+            :rows="rows"
+            :showCb="false">
             <template slot="trn_no" slot-scope="data">
                 <strong>
                     <router-link :to="{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}">
@@ -226,7 +227,6 @@
         .report-header {
             width: 420px;
             padding: 10px 0 0 0;
-            margin: 50px 0 0 0;
 
             li {
                 display: flex;
@@ -237,14 +237,54 @@
         .ledger-table tbody tr td:last-child {
             text-align: left !important;
         }
+    }
 
-        @media print {
-            .erp-nav-container {
-                display: none;
+    @media print {
+        .erp-nav-container {
+            display: none;
+        }
+
+        .no-print, .no-print * {
+            display: none !important;
+        }
+
+        .ledger-report {
+            .report-header {
+                margin: 0 0 20px 0;
             }
 
-            .no-print, .no-print * {
-                display: none !important;
+            .wperp-table.ledger-table {
+                th.trn_date,
+                th.created_at {
+                    min-width: 120px;
+                }
+
+                th.trn_no {
+                    min-width: 100px;
+                }
+
+                td,
+                th {
+                    padding: 3px 20px;
+                }
+
+                thead tr th {
+                    font-weight: bold;
+
+                    &:not(:first-child) {
+                        text-align: right;
+                    }
+                }
+
+                tbody tr td {
+                    &:not(:first-child) {
+                        text-align: right !important;
+                    }
+                }
+
+                tfoot td:not(:first-child) {
+                    text-align: right !important;
+                }
             }
         }
     }
