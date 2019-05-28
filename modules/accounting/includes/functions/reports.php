@@ -43,6 +43,8 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
         $opening_balance     += (float) $prev_ledger_details;
     }
 
+    $raw_opening_balance = $opening_balance;
+
     // ledger details
     $sql2 = $wpdb->prepare( "SELECT
         trn_no, particulars, debit, credit, trn_date, created_at
@@ -87,7 +89,6 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
 
         if ( '0.00' === $detail['credit'] ) {
             // so we're working with debit
-
             if ( $opening_balance < 0 ) {
                 // opening balance is negative
                 $opening_balance            = $opening_balance + (float) $detail['debit'];
@@ -112,10 +113,10 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     }
 
     // Assign opening balance as first row
-    if ( (float) $prev_ledger_details > 0 ) {
-        $balance = $prev_ledger_details . ' Dr';
-    } elseif ( (float) $prev_ledger_details < 0 ) {
-        $balance = abs( $prev_ledger_details ) . ' Cr';
+    if ( (float) $raw_opening_balance > 0 ) {
+        $balance = $raw_opening_balance . ' Dr';
+    } elseif ( (float) $raw_opening_balance < 0 ) {
+        $balance = abs( $raw_opening_balance ) . ' Cr';
     } else {
         $balance = '0 Dr';
     }
