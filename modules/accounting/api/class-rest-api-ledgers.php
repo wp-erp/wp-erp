@@ -373,10 +373,22 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_cash_accounts( $request ) {
-        $item[]            = [
-            'id'      => 1,
-            'name'    => 'Cash',
-            'balance' => get_ledger_balance_with_opening_balance( 1 ),
+        $args               = [];
+        $args['start_date'] = date( "Y-m-d" );
+
+        $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
+        $args['start_date'] = $closest_fy_date['start_date'];
+        $args['end_date']   = $closest_fy_date['end_date'];
+
+        $c_balance = get_ledger_balance_with_opening_balance(1, $args['start_date'], $args['end_date'] );
+
+        $item[] = [
+            'id'           => 1,
+            'name'         => 'Cash',
+            'obalance'     => $c_balance['obalance'],
+            'balance'      => $c_balance['balance'],
+            'total_debit'  => $c_balance['total_debit'],
+            'total_credit' => $c_balance['total_credit']
         ];
         $additional_fields = [];
         $data              = $this->prepare_bank_item_for_response( $item, $request, $additional_fields );

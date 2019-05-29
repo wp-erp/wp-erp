@@ -352,90 +352,27 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_
         $opening_balance     += (float) $prev_ledger_details;
     }
 
-    $raw_opening_balance = $opening_balance;
-
     // ledger details
     $sql2 = $wpdb->prepare( "SELECT
-        trn_no, particulars, debit, credit, trn_date, created_at
+        SUM(debit-credit) as balance
         FROM {$wpdb->prefix}erp_acct_ledger_details
         WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s'",
         $ledger_id, $start_date, $end_date
     );
 
-    $details = $wpdb->get_results( $sql2, ARRAY_A );
+    $res = $wpdb->get_row( $sql2, ARRAY_A );
 
-    $total_debit  = 0;
-    $total_credit = 0;
+    $total_debit   = 0;
+    $total_credit  = 0;
+    $final_balance = 0;
 
-    // Please refactor me
-    foreach ( $details as $key => $detail ) {
-        $total_debit  += (float) $detail['debit'];
-        $total_credit += (float) $detail['credit'];
-
-        if ( '0.00' === $detail['debit'] ) {
-            // so we're working with credit
-            if ( $opening_balance < 0 ) {
-                // opening balance is negative
-                $opening_balance            = $opening_balance + ( -(float) $detail['credit'] );
-                $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
-
-            } elseif ( $opening_balance >= 0 ) {
-                // opening balance is positive
-                $opening_balance = $opening_balance + ( -(float) $detail['credit'] );
-
-                // after calculation with credit
-                if ( $opening_balance >= 0 ) {
-                    $details[ $key ]['balance'] = $opening_balance . ' Dr';
-                } elseif ( $opening_balance < 0 ) {
-                    $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
-                }
-
-            } else {
-                // opening balance is 0
-                $details[ $key ]['balance'] = '0 Dr';
-            }
-        }
-
-        if ( '0.00' === $detail['credit'] ) {
-            // so we're working with debit
-            if ( $opening_balance < 0 ) {
-                // opening balance is negative
-                $opening_balance            = $opening_balance + (float) $detail['debit'];
-                $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
-
-            } elseif ( $opening_balance >= 0 ) {
-                // opening balance is positive
-                $opening_balance = $opening_balance + (float) $detail['debit'];
-
-                // after calculation with debit
-                if ( $opening_balance >= 0 ) {
-                    $details[ $key ]['balance'] = $opening_balance . ' Dr';
-                } elseif ( $opening_balance < 0 ) {
-                    $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
-                }
-
-            } else {
-                // opening balance is 0
-                $details[ $key ]['balance'] = '0 Dr';
-            }
-        }
-    }
-
-    // Assign opening balance as first row
-    if ( (float) $raw_opening_balance > 0 ) {
-        $balance = $raw_opening_balance . ' Dr';
-    } elseif ( (float) $raw_opening_balance < 0 ) {
-        $balance = abs( $raw_opening_balance ) . ' Cr';
-    } else {
-        $balance = '0 Dr';
-    }
-
+    $final_balance = $opening_balance + $res['balance'];
 
     return [
         'id'           => $ledger_id,
         'name'         => erp_acct_get_ledger_name_by_id( $ledger_id ),
-        'obalance'     => $balance,
-        'balance'      => $raw_opening_balance,
+        'obalance'     => $opening_balance,
+        'balance'      => $final_balance,
         'total_debit'  => $total_debit,
         'total_credit' => $total_credit
     ];
