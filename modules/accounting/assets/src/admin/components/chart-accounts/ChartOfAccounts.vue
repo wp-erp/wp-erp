@@ -190,4 +190,8 @@
             }
         }
     }
+
+    .tablenav-pages {
+        display: none !important;
+    }
 </style>
