@@ -13,6 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank = false ) {
     global $wpdb;
 
+    $args               = [];
+    $args['start_date'] = date( "Y-m-d" );
+
+    $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
+    $args['start_date'] = $closest_fy_date['start_date'];
+    $args['end_date']   = $closest_fy_date['end_date'];
+
     $ledgers   = $wpdb->prefix . 'erp_acct_ledgers';
     $show_all  = false;
     $cash_only = false;
@@ -53,12 +60,14 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
               Where ld.ledger_id IN ($sub_query)
               Group BY ld.ledger_id";
 
-    $accts = $wpdb->get_results( $query, ARRAY_A );
+    $temp_accts = $wpdb->get_results( $query, ARRAY_A );
+    $accts = []; $bank_accts = []; $uniq_accts = [];
 
-    for ( $i = 0; $i < count( $accts ); $i++ ) {
-        if ( 1 == $accts[ $i ]['ledger_id'] ) {
-            $accts[ $i ]['balance'] = (float) get_ledger_balance_with_opening_balance( 1 );
-        }
+    $c_balance = get_ledger_balance_with_opening_balance( 1, $args['start_date'], $args['end_date'] );
+    $balance = empty( $c_balance->obalance ) ? 0 : $c_balance->obalance;
+
+    foreach ( $temp_accts as $temp_acct ) {
+        $bank_accts[] = get_ledger_balance_with_opening_balance( $temp_acct['id'], $args['start_date'], $args['end_date'] );
     }
 
     if ( $cash_only && ! empty( $accts ) ) {
@@ -79,9 +88,11 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
         return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
     }
 
-    $results = array_merge( $accts, $banks );
+    foreach ( $banks as $bank ) {
+        $bank_accts[] = get_ledger_balance_with_opening_balance( $bank['id'], $args['start_date'], $args['end_date'] );
+    }
 
-    $uniq_accts = array();
+    $results = array_merge( $accts, $bank_accts );
 
     foreach ( $results as $index => $result ) {
         if ( ! empty( $uniq_accts ) && in_array( $result['id'], $uniq_accts ) ) {
@@ -101,13 +112,22 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
  * @return mixed
  */
 function erp_acct_get_dashboard_banks() {
+    $args               = [];
+    $args['start_date'] = date( "Y-m-d" );
+
+    $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
+    $args['start_date'] = $closest_fy_date['start_date'];
+    $args['end_date']   = $closest_fy_date['end_date'];
+
     $results   = [];
+    $c_balance = get_ledger_balance_with_opening_balance( 1, $args['start_date'], $args['end_date'] );
+    $balance = empty( $c_balance->obalance ) ? 0 : $c_balance->obalance;
+
     $results[] = [
         'name'    => 'Cash',
-        'balance' => get_ledger_balance_with_opening_balance( 1 ),
+        'balance' => $balance,
     ];
 
-    $args['start_date'] = $args['end_date'] = date( "Y-m-d" );
     $results[]          = [
         'name'       => 'Cash at Bank',
         'balance'    => erp_acct_cash_at_bank( $args, 'balance' ),

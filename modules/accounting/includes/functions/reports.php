@@ -140,6 +140,13 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     ];
 }
 
+
+/**
+ * Ledger report opening balance helper
+ * @param $id
+ * @param $ledger_id
+ * @return string|null
+ */
 function erp_acct_ledger_report_opening_balance_by_fn_year_id( $id, $ledger_id ) {
     global $wpdb;
 
@@ -746,8 +753,6 @@ function erp_acct_bs_opening_balance_by_fn_year_id( $id, $chart_id ) {
  */
 function erp_acct_get_profit_loss( $args ) {
     global $wpdb;
-
-
 
     if ( empty( $args['start_date'] ) ) {
         $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of january' ) );
