@@ -31257,39 +31257,42 @@ setTimeout(function () {
       this.acct_pay = [];
       this.acct_rec = [];
       this.tax_pay = [];
-      this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(year.id)).then(function (response) {
-        _this9.totalDebit = 0;
-        _this9.totalCredit = 0;
-        response.data.forEach(function (ledger) {
-          ledger.id = ledger.ledger_id;
-          ledger.balance = _this9.transformBalance(ledger.balance);
-          _this9.totalDebit += parseFloat(ledger.debit);
-          _this9.totalCredit += parseFloat(ledger.credit);
-        });
-        _this9.ledgers = _this9.groupBy(response.data, 'chart_id');
-
-        _this9.fetchVirtualAccts(year);
+      var count = 0;
+      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(year.id, "/count")).then(function (response) {
+        count = parseInt(response.data);
       }).then(function () {
-        if (Object.keys(_this9.ledgers).length === 0) {
+        if (count == 0) {
           _this9.fetchLedgers();
-        }
 
-        if (!_this9.ledgers.hasOwnProperty('7')) {
-          _this9.ledgers[7] = _this9.banks;
+          return;
+        } else {
+          __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(year.id)).then(function (response) {
+            _this9.totalDebit = 0;
+            _this9.totalCredit = 0;
+            response.data.forEach(function (ledger) {
+              ledger.id = ledger.ledger_id;
+              ledger.balance = _this9.transformBalance(ledger.balance);
+              _this9.totalDebit += parseFloat(ledger.debit);
+              _this9.totalCredit += parseFloat(ledger.credit);
+            });
+            _this9.ledgers = _this9.groupBy(response.data, 'chart_id');
+
+            _this9.fetchVirtualAccts(year);
+          }).then(function () {
+            if (!_this9.ledgers.hasOwnProperty('7')) {
+              _this9.ledgers[7] = _this9.banks;
+            }
+          });
+
+          if (Object.keys(_this9.ledgers).length === 0) {
+            _this9.fetchData();
+          }
         }
-      }).catch(function (error) {
-        _this9.$store.dispatch('spinner/setSpinner', false);
       });
-
-      if (Object.keys(this.ledgers).length === 0) {
-        this.fetchData();
-      }
     },
     fetchVirtualAccts: function fetchVirtualAccts(year) {
       var _this10 = this;
 
-      this.$store.dispatch('spinner/setSpinner', true);
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/virtual-accts/".concat(year.id)).then(function (response) {
         _this10.acct_pay = response.data.acct_payable;
         _this10.acct_rec = response.data.acct_receivable;
@@ -42908,11 +42911,11 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SalesTax_vue__ = __webpack_require__(120);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7e95079f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesTax_vue__ = __webpack_require__(641);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7e95079f_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SalesTax_vue__ = __webpack_require__(295);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(640)
+  __webpack_require__(294)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -42958,8 +42961,255 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 294 */,
-/* 295 */,
+/* 294 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 295 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "sales-tax-report" },
+    [
+      _c("h2", [_vm._v("Sales Tax Report")]),
+      _vm._v(" "),
+      _c(
+        "form",
+        {
+          staticClass: "query-options no-print",
+          attrs: { action: "", method: "" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.getSalesTaxReport($event)
+            }
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "with-multiselect" },
+            [
+              _c("multi-select", {
+                attrs: { options: _vm.taxAgencies },
+                model: {
+                  value: _vm.selectedAgency,
+                  callback: function($$v) {
+                    _vm.selectedAgency = $$v
+                  },
+                  expression: "selectedAgency"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wperp-date-group" },
+            [
+              _c("datepicker", {
+                model: {
+                  value: _vm.start_date,
+                  callback: function($$v) {
+                    _vm.start_date = $$v
+                  },
+                  expression: "start_date"
+                }
+              }),
+              _vm._v(" "),
+              _c("datepicker", {
+                model: {
+                  value: _vm.end_date,
+                  callback: function($$v) {
+                    _vm.end_date = $$v
+                  },
+                  expression: "end_date"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "wperp-btn btn--primary add-line-trigger",
+              attrs: { type: "submit" }
+            },
+            [_vm._v("View")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "wperp-btn btn--default print-btn",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.printPopup($event)
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: "flaticon-printer-1" }),
+              _vm._v("\n              Print\n        ")
+            ]
+          )
+        ]
+      ),
+      _vm._v(" "),
+      null !== _vm.selectedAgency
+        ? _c("ul", { staticClass: "report-header" }, [
+            _c("li", [
+              _c("strong", [_vm._v("Account Name:")]),
+              _vm._v(" "),
+              _c("em", [_vm._v(_vm._s(_vm.selectedAgency.name))])
+            ]),
+            _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _c("li", [
+              _c("strong", [_vm._v("For the period of ( Transaction date ):")]),
+              _vm._v(" "),
+              _c("em", [_vm._v(_vm._s(_vm.start_date))]),
+              _vm._v(" to "),
+              _c("em", [_vm._v(_vm._s(_vm.end_date))])
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "list-table",
+        {
+          attrs: {
+            tableClass:
+              "wperp-table table-striped table-dark widefat sales-tax-table",
+            columns: _vm.columns,
+            rows: _vm.rows,
+            showCb: false
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "trn_no",
+              fn: function(data) {
+                return [
+                  _c(
+                    "strong",
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          attrs: {
+                            to: {
+                              name: "DynamicTrnLoader",
+                              params: { id: data.row.trn_no }
+                            }
+                          }
+                        },
+                        [
+                          data.row.trn_no
+                            ? _c("span", [
+                                _vm._v("#" + _vm._s(data.row.trn_no))
+                              ])
+                            : _vm._e()
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ]
+              }
+            },
+            {
+              key: "debit",
+              fn: function(data) {
+                return [
+                  _vm._v(
+                    "\n            " + _vm._s(data.row.debit) + "\n        "
+                  )
+                ]
+              }
+            },
+            {
+              key: "credit",
+              fn: function(data) {
+                return [
+                  _vm._v(
+                    "\n            " + _vm._s(data.row.credit) + "\n        "
+                  )
+                ]
+              }
+            },
+            {
+              key: "balance",
+              fn: function(data) {
+                return [
+                  _vm._v(
+                    "\n            " + _vm._s(data.row.balance) + "\n        "
+                  )
+                ]
+              }
+            }
+          ])
+        },
+        [
+          _vm._v(" "),
+          _vm._v(" "),
+          _vm._v(" "),
+          _vm._v(" "),
+          _c("template", { slot: "tfoot" }, [
+            _c("tr", { staticClass: "tfoot" }, [
+              _c("td", { attrs: { colspan: "3" } }),
+              _vm._v(" "),
+              _c("td", [_vm._v("Total =")]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.totalDebit))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.totalCredit))]),
+              _vm._v(" "),
+              _c("td")
+            ])
+          ])
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", [
+      _c("strong", [_vm._v("Currency:")]),
+      _vm._v(" "),
+      _c("em", [_vm._v("Dollar")])
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7e95079f", esExports)
+  }
+}
+
+/***/ }),
 /* 296 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -63288,376 +63538,6 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
-
-/***/ }),
-/* 519 */,
-/* 520 */,
-/* 521 */,
-/* 522 */,
-/* 523 */,
-/* 524 */,
-/* 525 */,
-/* 526 */,
-/* 527 */,
-/* 528 */,
-/* 529 */,
-/* 530 */,
-/* 531 */,
-/* 532 */,
-/* 533 */,
-/* 534 */,
-/* 535 */,
-/* 536 */,
-/* 537 */,
-/* 538 */,
-/* 539 */,
-/* 540 */,
-/* 541 */,
-/* 542 */,
-/* 543 */,
-/* 544 */,
-/* 545 */,
-/* 546 */,
-/* 547 */,
-/* 548 */,
-/* 549 */,
-/* 550 */,
-/* 551 */,
-/* 552 */,
-/* 553 */,
-/* 554 */,
-/* 555 */,
-/* 556 */,
-/* 557 */,
-/* 558 */,
-/* 559 */,
-/* 560 */,
-/* 561 */,
-/* 562 */,
-/* 563 */,
-/* 564 */,
-/* 565 */,
-/* 566 */,
-/* 567 */,
-/* 568 */,
-/* 569 */,
-/* 570 */,
-/* 571 */,
-/* 572 */,
-/* 573 */,
-/* 574 */,
-/* 575 */,
-/* 576 */,
-/* 577 */,
-/* 578 */,
-/* 579 */,
-/* 580 */,
-/* 581 */,
-/* 582 */,
-/* 583 */,
-/* 584 */,
-/* 585 */,
-/* 586 */,
-/* 587 */,
-/* 588 */,
-/* 589 */,
-/* 590 */,
-/* 591 */,
-/* 592 */,
-/* 593 */,
-/* 594 */,
-/* 595 */,
-/* 596 */,
-/* 597 */,
-/* 598 */,
-/* 599 */,
-/* 600 */,
-/* 601 */,
-/* 602 */,
-/* 603 */,
-/* 604 */,
-/* 605 */,
-/* 606 */,
-/* 607 */,
-/* 608 */,
-/* 609 */,
-/* 610 */,
-/* 611 */,
-/* 612 */,
-/* 613 */,
-/* 614 */,
-/* 615 */,
-/* 616 */,
-/* 617 */,
-/* 618 */,
-/* 619 */,
-/* 620 */,
-/* 621 */,
-/* 622 */,
-/* 623 */,
-/* 624 */,
-/* 625 */,
-/* 626 */,
-/* 627 */,
-/* 628 */,
-/* 629 */,
-/* 630 */,
-/* 631 */,
-/* 632 */,
-/* 633 */,
-/* 634 */,
-/* 635 */,
-/* 636 */,
-/* 637 */,
-/* 638 */,
-/* 639 */,
-/* 640 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 641 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "sales-tax-report" },
-    [
-      _c("h2", [_vm._v("Sales Tax Report")]),
-      _vm._v(" "),
-      _c(
-        "form",
-        {
-          staticClass: "query-options no-print",
-          attrs: { action: "", method: "" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.getSalesTaxReport($event)
-            }
-          }
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "with-multiselect" },
-            [
-              _c("multi-select", {
-                attrs: { options: _vm.taxAgencies },
-                model: {
-                  value: _vm.selectedAgency,
-                  callback: function($$v) {
-                    _vm.selectedAgency = $$v
-                  },
-                  expression: "selectedAgency"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "wperp-date-group" },
-            [
-              _c("datepicker", {
-                model: {
-                  value: _vm.start_date,
-                  callback: function($$v) {
-                    _vm.start_date = $$v
-                  },
-                  expression: "start_date"
-                }
-              }),
-              _vm._v(" "),
-              _c("datepicker", {
-                model: {
-                  value: _vm.end_date,
-                  callback: function($$v) {
-                    _vm.end_date = $$v
-                  },
-                  expression: "end_date"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "wperp-btn btn--primary add-line-trigger",
-              attrs: { type: "submit" }
-            },
-            [_vm._v("View")]
-          ),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "wperp-btn btn--default print-btn",
-              attrs: { href: "#" },
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.printPopup($event)
-                }
-              }
-            },
-            [
-              _c("i", { staticClass: "flaticon-printer-1" }),
-              _vm._v("\n              Print\n        ")
-            ]
-          )
-        ]
-      ),
-      _vm._v(" "),
-      null !== _vm.selectedAgency
-        ? _c("ul", { staticClass: "report-header" }, [
-            _c("li", [
-              _c("strong", [_vm._v("Account Name:")]),
-              _vm._v(" "),
-              _c("em", [_vm._v(_vm._s(_vm.selectedAgency.name))])
-            ]),
-            _vm._v(" "),
-            _vm._m(0),
-            _vm._v(" "),
-            _c("li", [
-              _c("strong", [_vm._v("For the period of ( Transaction date ):")]),
-              _vm._v(" "),
-              _c("em", [_vm._v(_vm._s(_vm.start_date))]),
-              _vm._v(" to "),
-              _c("em", [_vm._v(_vm._s(_vm.end_date))])
-            ])
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "list-table",
-        {
-          attrs: {
-            tableClass:
-              "wperp-table table-striped table-dark widefat sales-tax-table",
-            columns: _vm.columns,
-            rows: _vm.rows,
-            showCb: false
-          },
-          scopedSlots: _vm._u([
-            {
-              key: "trn_no",
-              fn: function(data) {
-                return [
-                  _c(
-                    "strong",
-                    [
-                      _c(
-                        "router-link",
-                        {
-                          attrs: {
-                            to: {
-                              name: "DynamicTrnLoader",
-                              params: { id: data.row.trn_no }
-                            }
-                          }
-                        },
-                        [
-                          data.row.trn_no
-                            ? _c("span", [
-                                _vm._v("#" + _vm._s(data.row.trn_no))
-                              ])
-                            : _vm._e()
-                        ]
-                      )
-                    ],
-                    1
-                  )
-                ]
-              }
-            },
-            {
-              key: "debit",
-              fn: function(data) {
-                return [
-                  _vm._v(
-                    "\n            " + _vm._s(data.row.debit) + "\n        "
-                  )
-                ]
-              }
-            },
-            {
-              key: "credit",
-              fn: function(data) {
-                return [
-                  _vm._v(
-                    "\n            " + _vm._s(data.row.credit) + "\n        "
-                  )
-                ]
-              }
-            },
-            {
-              key: "balance",
-              fn: function(data) {
-                return [
-                  _vm._v(
-                    "\n            " + _vm._s(data.row.balance) + "\n        "
-                  )
-                ]
-              }
-            }
-          ])
-        },
-        [
-          _vm._v(" "),
-          _vm._v(" "),
-          _vm._v(" "),
-          _vm._v(" "),
-          _c("template", { slot: "tfoot" }, [
-            _c("tr", { staticClass: "tfoot" }, [
-              _c("td", { attrs: { colspan: "3" } }),
-              _vm._v(" "),
-              _c("td", [_vm._v("Total =")]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.totalDebit))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.totalCredit))]),
-              _vm._v(" "),
-              _c("td")
-            ])
-          ])
-        ],
-        2
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", [
-      _c("strong", [_vm._v("Currency:")]),
-      _vm._v(" "),
-      _c("em", [_vm._v("Dollar")])
-    ])
-  }
-]
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7e95079f", esExports)
-  }
-}
 
 /***/ })
 ],[209]);
