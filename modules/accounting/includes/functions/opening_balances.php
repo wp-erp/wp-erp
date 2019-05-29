@@ -72,8 +72,8 @@ function erp_acct_get_opening_balance( $year_id ) {
     ob.ledger_id,
     ledger.name,
     ob.chart_id,
-    debit,
-    credit
+    ob.debit,
+    ob.credit
 
     FROM {$wpdb->prefix}erp_acct_opening_balances as ob
     LEFT JOIN {$wpdb->prefix}erp_acct_ledgers as ledger
@@ -102,8 +102,8 @@ function erp_acct_get_virtual_acct( $year_id ) {
     ob.financial_year_id,
     ob.ledger_id,
     ob.type,
-    debit,
-    credit
+    ob.debit,
+    ob.credit
 
     FROM {$wpdb->prefix}erp_acct_opening_balances as ob
     WHERE financial_year_id = {$year_id} AND ob.type <> 'ledger'";
@@ -329,30 +329,116 @@ function erp_acct_get_ob_virtual_acct( $year_id ) {
  * @param array $args
  * @return mixed
  */
-function get_ledger_balance_with_opening_balance( $ledger_id, $args = [] ) {
+function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_date ) {
     global $wpdb;
-    $fy = [];
 
-    if ( empty( $args['start_date'] ) ) {
-        $args['start_date'] = date( "Y-m-d" );
+    // get closest financial year id and start date
+    $closest_fy_date = erp_acct_get_closest_fn_year_date( $start_date );
+
+    // get opening balance data within that(^) financial year
+    $opening_balance = (float) erp_acct_ledger_report_opening_balance_by_fn_year_id( $closest_fy_date['id'], $ledger_id );
+
+    // should we go further calculation, check the diff
+    if ( erp_acct_has_date_diff( $start_date, $closest_fy_date['start_date'] ) ) {
+        $prev_date_of_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $start_date ) ) );
+
+        $sql1 = $wpdb->prepare( "SELECT SUM(debit - credit) AS balance
+            FROM {$wpdb->prefix}erp_acct_ledger_details
+            WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s'",
+            $ledger_id, $closest_fy_date['start_date'], $prev_date_of_start
+        );
+
+        $prev_ledger_details = $wpdb->get_var( $sql1 );
+        $opening_balance     += (float) $prev_ledger_details;
     }
-    if ( empty( $args['end_date'] ) ) {
-        $args['end_date'] = date( "Y-m-d" );
+
+    $raw_opening_balance = $opening_balance;
+
+    // ledger details
+    $sql2 = $wpdb->prepare( "SELECT
+        trn_no, particulars, debit, credit, trn_date, created_at
+        FROM {$wpdb->prefix}erp_acct_ledger_details
+        WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s'",
+        $ledger_id, $start_date, $end_date
+    );
+
+    $details = $wpdb->get_results( $sql2, ARRAY_A );
+
+    $total_debit  = 0;
+    $total_credit = 0;
+
+    // Please refactor me
+    foreach ( $details as $key => $detail ) {
+        $total_debit  += (float) $detail['debit'];
+        $total_credit += (float) $detail['credit'];
+
+        if ( '0.00' === $detail['debit'] ) {
+            // so we're working with credit
+            if ( $opening_balance < 0 ) {
+                // opening balance is negative
+                $opening_balance            = $opening_balance + ( -(float) $detail['credit'] );
+                $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+
+            } elseif ( $opening_balance >= 0 ) {
+                // opening balance is positive
+                $opening_balance = $opening_balance + ( -(float) $detail['credit'] );
+
+                // after calculation with credit
+                if ( $opening_balance >= 0 ) {
+                    $details[ $key ]['balance'] = $opening_balance . ' Dr';
+                } elseif ( $opening_balance < 0 ) {
+                    $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+                }
+
+            } else {
+                // opening balance is 0
+                $details[ $key ]['balance'] = '0 Dr';
+            }
+        }
+
+        if ( '0.00' === $detail['credit'] ) {
+            // so we're working with debit
+            if ( $opening_balance < 0 ) {
+                // opening balance is negative
+                $opening_balance            = $opening_balance + (float) $detail['debit'];
+                $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+
+            } elseif ( $opening_balance >= 0 ) {
+                // opening balance is positive
+                $opening_balance = $opening_balance + (float) $detail['debit'];
+
+                // after calculation with debit
+                if ( $opening_balance >= 0 ) {
+                    $details[ $key ]['balance'] = $opening_balance . ' Dr';
+                } elseif ( $opening_balance < 0 ) {
+                    $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+                }
+
+            } else {
+                // opening balance is 0
+                $details[ $key ]['balance'] = '0 Dr';
+            }
+        }
     }
 
-    $sql = "SELECT id FROM {$wpdb->prefix}erp_acct_financial_years WHERE '{$args['start_date']}' BETWEEN start_date AND end_date";
-
-    $row = $wpdb->get_row( $sql, ARRAY_A );
-
-    if ( !empty( $row['id'] ) ) {
-        $ledger_ob_bal = $wpdb->get_row( "SELECT ledger_id, (debit - credit) as balance FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id={$row['id']} AND type='ledger'" );
+    // Assign opening balance as first row
+    if ( (float) $raw_opening_balance > 0 ) {
+        $balance = $raw_opening_balance . ' Dr';
+    } elseif ( (float) $raw_opening_balance < 0 ) {
+        $balance = abs( $raw_opening_balance ) . ' Cr';
+    } else {
+        $balance = '0 Dr';
     }
-    $ledger_bal    = $wpdb->get_row( "SELECT ledger_id, SUM(debit - credit) as balance FROM {$wpdb->prefix}erp_acct_ledger_details WHERE ledger_id={$ledger_id}" );
 
-    $bal1 = isset( $ledger_ob_bal->balance ) ? $ledger_ob_bal->balance : 0;
-    $bal2 = isset( $ledger_bal->balance ) ? $ledger_bal->balance : 0;
 
-    return $bal1 + $bal2;
+    return [
+        'id'           => $ledger_id,
+        'name'         => erp_acct_get_ledger_name_by_id( $ledger_id ),
+        'obalance'     => $balance,
+        'balance'      => $raw_opening_balance,
+        'total_debit'  => $total_debit,
+        'total_credit' => $total_credit
+    ];
 }
 
 /**
