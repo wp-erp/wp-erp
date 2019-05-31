@@ -64,7 +64,7 @@ class Assets {
         if ( is_admin() ) {
             $component = 'accounting';
             $menu      = erp_menu();
-            $menus     = $menu[ $component ];
+            $menus     = $menu[$component];
 
             //check items for capabilities
             $items = array_filter( $menus, function( $item ) {

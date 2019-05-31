@@ -38,9 +38,13 @@ function erp_acct_cash_at_bank( $args, $type ) {
     }
 
     if ( 'loan' === $type ) {
-        if ( $balance < 0 ) return $balance;
+        if ( $balance < 0 ) {
+            return $balance;
+        }
     } elseif ( 'balance' === $type ) {
-        if ( $balance > 0 ) return $balance;
+        if ( $balance > 0 ) {
+            return $balance;
+        }
     }
 }
 
@@ -68,9 +72,13 @@ function erp_acct_bank_balance( $args, $type ) {
     $balance = erp_acct_bank_balance_calc_with_opening_balance( $args['start_date'], $data, $sql );
 
     if ( 'loan' === $type ) {
-        if ( $balance < 0 ) return $balance;
+        if ( $balance < 0 ) {
+            return $balance;
+        }
     } elseif ( 'balance' === $type ) {
-        if ( $balance > 0 ) return $balance;
+        if ( $balance > 0 ) {
+            return $balance;
+        }
     }
 }
 
@@ -834,7 +842,7 @@ function erp_acct_get_trial_balance( $args ) {
         }
     }
 
-    ksort($grouped, SORT_NUMERIC);
+    ksort( $grouped, SORT_NUMERIC );
 
     $results['rows'] = $grouped;
 

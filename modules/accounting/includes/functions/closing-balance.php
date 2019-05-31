@@ -384,8 +384,8 @@ function erp_acct_clsbl_get_formatted_people_balance( $arr ) {
         // get index by id from a multidimensional array
         $index = array_search( $entry['id'], array_column( $arr, 'id' ) );
 
-        if ( ! empty( $temp[ $index ] ) ) {
-            $temp[ $index ]['balance'] += $entry['balance'];
+        if ( ! empty( $temp[$index] ) ) {
+            $temp[$index]['balance'] += $entry['balance'];
         } else {
             $temp[] = [
                 'id'      => $entry['id'],

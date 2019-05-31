@@ -380,9 +380,9 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $args['start_date'] = $closest_fy_date['start_date'];
         $args['end_date']   = $closest_fy_date['end_date'];
 
-        $c_balance = get_ledger_balance_with_opening_balance(1, $args['start_date'], $args['end_date'] );
+        $c_balance = get_ledger_balance_with_opening_balance( 1, $args['start_date'], $args['end_date'] );
 
-        $item[] = [
+        $item[]            = [
             'id'           => 1,
             'name'         => 'Cash',
             'obalance'     => $c_balance['obalance'],

@@ -155,7 +155,7 @@ function erp_acct_format_people_address( $address = [] ) {
     $values = array_values( $address );
 
     for ( $idx = 0; $idx < count( $address ); $idx++ ) {
-        $add .= $keys[ $idx ] . ': ' . $values[ $idx ] . '; ';
+        $add .= $keys[$idx] . ': ' . $values[$idx] . '; ';
     }
 
     return $add;
@@ -254,13 +254,13 @@ function erp_acct_get_people_transactions( $args = [] ) {
         if ( $idx == 0 ) {
             continue;
         }
-        $dr_total += (float) $results[ $idx ]['debit'];
-        $cr_total += (float) $results[ $idx ]['credit'];
-        $balance  = (float) $results[ $idx - 1 ]['balance'] + (float) $results[ $idx ]['debit'] - (float) $results[ $idx ]['credit'];
+        $dr_total += (float) $results[$idx]['debit'];
+        $cr_total += (float) $results[$idx]['credit'];
+        $balance  = (float) $results[$idx - 1]['balance'] + (float) $results[$idx]['debit'] - (float) $results[$idx]['credit'];
         if ( $balance >= 0 ) {
-            $results[ $idx ]['balance'] = (float) $balance . ' Dr';
+            $results[$idx]['balance'] = (float) $balance . ' Dr';
         } else {
-            $results[ $idx ]['balance'] = (float) $balance . ' Cr';
+            $results[$idx]['balance'] = (float) $balance . ' Cr';
         }
         $total = $balance;
     }

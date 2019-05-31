@@ -222,7 +222,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['tax_components'];
 
         foreach ( $items as $key => $item ) {
-            $item_rates[ $key ] = $item['tax_rate'];
+            $item_rates[$key] = $item['tax_rate'];
         }
 
         $tax_data['total_rate'] = array_sum( $item_rates );

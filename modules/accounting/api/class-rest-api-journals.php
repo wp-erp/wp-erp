@@ -171,8 +171,8 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['line_items'];
 
         foreach ( $items as $key => $item ) {
-            $vocher_amount_dr[ $key ] = $item['debit'];
-            $vocher_amount_cr[ $key ] = $item['credit'];
+            $vocher_amount_dr[$key] = $item['debit'];
+            $vocher_amount_cr[$key] = $item['credit'];
         }
 
         $total_dr = array_sum( $vocher_amount_dr );

@@ -322,8 +322,8 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $acc_pay_rec = [];
 
-        $acc_pay_rec['invoice_acc'] = erp_acct_get_opb_invoice_account_details( $request['start_date'] );
-        $acc_pay_rec['bill_purchase_acc'] = erp_acct_get_opb_bill_purchase_account_details(  $request['start_date'] );
+        $acc_pay_rec['invoice_acc']       = erp_acct_get_opb_invoice_account_details( $request['start_date'] );
+        $acc_pay_rec['bill_purchase_acc'] = erp_acct_get_opb_bill_purchase_account_details( $request['start_date'] );
 
         $response = rest_ensure_response( $acc_pay_rec );
 
