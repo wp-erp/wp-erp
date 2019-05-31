@@ -143,8 +143,8 @@ function erp_acct_insert_payment( $data ) {
         foreach ( $items as $key => $item ) {
             $total = 0;
 
-            $invoice_no[ $key ] = $payment_data['invoice_no'];
-            $total              += $item['line_total'];
+            $invoice_no[$key] = $payment_data['invoice_no'];
+            $total            += $item['line_total'];
 
             $payment_data['amount'] = $total;
 
@@ -257,12 +257,12 @@ function erp_acct_update_payment( $data, $voucher_no ) {
         foreach ( $items as $key => $item ) {
             $total = 0;
 
-            $invoice_no[ $key ] = $item['invoice_id'];
-            $total              += $item['line_total'];
+            $invoice_no[$key] = $item['invoice_id'];
+            $total            += $item['line_total'];
 
             $payment_data['amount'] = $total;
 
-            erp_acct_update_payment_line_items( $payment_data, $voucher_no, $invoice_no[ $key ] );
+            erp_acct_update_payment_line_items( $payment_data, $voucher_no, $invoice_no[$key] );
         }
 
         if ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === '3' ) {

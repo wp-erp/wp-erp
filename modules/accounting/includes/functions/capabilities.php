@@ -379,7 +379,7 @@ function erp_ac_filter_editable_roles( $all_roles = [] ) {
 
                 // If keys match, unset
                 if ( $wp_role === $ac_role_key ) {
-                    unset( $all_roles[ $wp_role ] );
+                    unset( $all_roles[$wp_role] );
                 }
             }
         }

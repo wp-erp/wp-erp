@@ -26,7 +26,7 @@ function erp_acct_get_currencies_for_dropdown() {
     $currencies_dropdown = [];
 
     foreach ( $currencies as $currency ) {
-        $currencies_dropdown[ $currency['id'] ] = $currency['name'] . ' (' . $currency['sign'] . ')';
+        $currencies_dropdown[$currency['id']] = $currency['name'] . ' (' . $currency['sign'] . ')';
     }
 
     return $currencies_dropdown;

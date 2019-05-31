@@ -255,9 +255,9 @@ class Admin {
 
         $component = 'accounting';
         $menu      = erp_menu();
-        $menu      = $menu[ $component ];
-        $section   = ( isset( $_GET['section'] ) && isset( $menu[ $_GET['section'] ] ) ) ? $_GET['section'] : 'dashboard';
-        $sub       = ( isset( $_GET['sub-section'] ) && ! empty( $menu[ $section ]['submenu'][ $_GET['sub-section'] ] ) ) ? $_GET['sub-section'] : false;
+        $menu      = $menu[$component];
+        $section   = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
+        $sub       = ( isset( $_GET['sub-section'] ) && ! empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? $_GET['sub-section'] : false;
     }
 
     /**
@@ -313,19 +313,19 @@ class Admin {
 
         if ( ! empty( $ob_names ) ) {
             for ( $i = 0; $i < count( $ob_names ); $i++ ) {
-                $fin_years['ob_names'][] = $ob_names[ $i ];
+                $fin_years['ob_names'][] = $ob_names[$i];
             }
         }
 
         if ( ! empty( $ob_starts ) ) {
             for ( $i = 0; $i < count( $ob_starts ); $i++ ) {
-                $fin_years['ob_starts'][] = $ob_starts[ $i ];
+                $fin_years['ob_starts'][] = $ob_starts[$i];
             }
         }
 
         if ( ! empty( $ob_ends ) ) {
             for ( $i = 0; $i < count( $ob_ends ); $i++ ) {
-                $fin_years['ob_ends'][] = $ob_ends[ $i ];
+                $fin_years['ob_ends'][] = $ob_ends[$i];
             }
         }
 
@@ -333,9 +333,9 @@ class Admin {
 
         for ( $i = 0; $i < count( $ob_names ); $i++ ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
-                'name'       => $fin_years['ob_names'][ $i ],
-                'start_date' => $fin_years['ob_starts'][ $i ],
-                'end_date'   => $fin_years['ob_ends'][ $i ],
+                'name'       => $fin_years['ob_names'][$i],
+                'start_date' => $fin_years['ob_starts'][$i],
+                'end_date'   => $fin_years['ob_ends'][$i],
                 'created_at' => $opening_balance_data['created_at'],
                 'created_by' => $opening_balance_data['created_by']
             ) );

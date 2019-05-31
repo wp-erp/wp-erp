@@ -183,7 +183,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[ $key ] = $item['amount'];
+            $item_total[$key] = $item['amount'];
         }
 
         $pay_bill_data['amount'] = array_sum( $item_total );
@@ -224,7 +224,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[ $key ] = $item['total'];
+            $item_total[$key] = $item['total'];
         }
 
         $pay_bill_data['amount'] = array_sum( $item_total );

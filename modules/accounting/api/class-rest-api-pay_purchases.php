@@ -175,7 +175,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[ $key ] = $item['line_total'];
+            $item_total[$key] = $item['line_total'];
         }
 
         $pay_purchase_data['amount'] = array_sum( $item_total );
@@ -217,7 +217,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[ $key ] = $item['line_total'];
+            $item_total[$key] = $item['line_total'];
         }
 
         $pay_purchase_data['amount'] = array_sum( $item_total );

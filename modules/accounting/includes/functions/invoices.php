@@ -96,8 +96,8 @@ function erp_acct_get_invoice( $invoice_no ) {
 
     // calculate every line total
     foreach ( $row['line_items'] as $key => $value ) {
-        $total                                   = ( $value['item_total'] + $value['tax'] ) - $value['discount'];
-        $row['line_items'][ $key ]['line_total'] = $total;
+        $total                                 = ( $value['item_total'] + $value['tax'] ) - $value['discount'];
+        $row['line_items'][$key]['line_total'] = $total;
     }
 
     $row['attachments'] = unserialize( $row['attachments'] );
@@ -248,9 +248,9 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no ) {
             $tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
 
             if ( array_key_exists( $rate_agency['agency_id'], $tax_agency_details ) ) {
-                $tax_agency_details[ $rate_agency['agency_id'] ] += $tax_amount;
+                $tax_agency_details[$rate_agency['agency_id']] += $tax_amount;
             } else {
-                $tax_agency_details[ $rate_agency['agency_id'] ] = $tax_amount;
+                $tax_agency_details[$rate_agency['agency_id']] = $tax_amount;
             }
 
             /*==== insert into invoice details tax ====*/

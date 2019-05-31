@@ -221,8 +221,8 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $item_amount[ $key ] = $item['amount'];
-            $item_total[ $key ]  = $item['amount'];
+            $item_amount[$key] = $item['amount'];
+            $item_total[$key]  = $item['amount'];
         }
         $expense_data['attachments'] = maybe_serialize( $request['attachments'] );
         $expense_data['amount']      = array_sum( $item_total );
@@ -266,8 +266,8 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $item_amount[ $key ] = $item['amount'];
-            $item_total[ $key ]  = $item['amount'];
+            $item_amount[$key] = $item['amount'];
+            $item_total[$key]  = $item['amount'];
         }
         $expense_data['attachments'] = maybe_serialize( $request['attachments'] );
         $expense_data['amount']      = array_sum( $item_total );

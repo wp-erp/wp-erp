@@ -486,8 +486,8 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'          => $item->id,
             'voucher'     => (int) $item->voucher_no,
-            'ac_from'     => $accounts[ $item->ac_from ],
-            'ac_to'       => $accounts[ $item->ac_to ],
+            'ac_from'     => $accounts[$item->ac_from],
+            'ac_to'       => $accounts[$item->ac_to],
             'trn_date'    => $item->trn_date,
             'particulars' => $item->particulars,
             'amount'      => $item->amount,

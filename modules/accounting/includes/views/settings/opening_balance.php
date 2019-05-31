@@ -28,7 +28,7 @@
                             'label' => __( 'Name', 'erp' ),
                             'name'  => 'ob_names[]',
                             'type'  => 'text',
-                            'value' => $rows[ $i ]['name']
+                            'value' => $rows[$i]['name']
                         ) ); ?>
 
                         <?php erp_html_form_input( array(
@@ -36,7 +36,7 @@
                             'name'  => 'ob_starts[]',
                             'type'  => 'text',
                             'class' => 'erp-date-field',
-                            'value' => $rows[ $i ]['start_date']
+                            'value' => $rows[$i]['start_date']
                         ) ); ?>
 
                         <?php erp_html_form_input( array(
@@ -44,7 +44,7 @@
                             'name'  => 'ob_ends[]',
                             'type'  => 'text',
                             'class' => 'erp-date-field',
-                            'value' => $rows[ $i ]['end_date']
+                            'value' => $rows[$i]['end_date']
                         ) ); ?>
                         <span><i class="fa fa-times-circle erp-ac-ob-remove-field"></i></span>
                     </div>
