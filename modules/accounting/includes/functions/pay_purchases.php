@@ -178,6 +178,8 @@ function erp_acct_insert_pay_purchase( $data ) {
             erp_acct_insert_check_data( $pay_purchase_data );
         }
 
+        do_action( 'erp_acct_pay_purchase_people_transaction', $pay_purchase_data, $voucher_no );
+
         $wpdb->query( 'COMMIT' );
 
     } catch ( Exception $e ) {

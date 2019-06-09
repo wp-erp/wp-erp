@@ -269,11 +269,15 @@ function erp_acct_insert_expense( $data ) {
             return erp_acct_get_expense( $voucher_no );
         }
 
-        //Insert into Ledger for source account
-        erp_acct_insert_source_expense_data_into_ledger( $expense_data );
+
 
         if ( isset( $expense_data['trn_by'] ) && $expense_data['trn_by'] === '3' ) {
             erp_acct_insert_check_data( $expense_data );
+        } elseif ( isset( $expense_data['trn_by'] ) && $expense_data['trn_by'] === '4' ) {
+            do_action( 'erp_acct_expense_people_transaction', $expense_data, $voucher_no );
+        } else {
+            //Insert into Ledger for source account
+            erp_acct_insert_source_expense_data_into_ledger( $expense_data );
         }
 
         $wpdb->query( 'COMMIT' );
