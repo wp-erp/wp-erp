@@ -198,16 +198,12 @@
 
     };
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .app-customers {
         .add-new-people {
             padding-top: 10px;
             align-items: center;
             display: flex;
-            span {
-                font-size: 18px;
-                font-weight: bold;
-            }
             a {
                 background: #1a9ed4;
                 border-radius: 3px;
@@ -226,11 +222,6 @@
             tbody {
                 background: #FAFAFA;
             }
-            tfoot th,
-            thead th {
-                color: #1A9ED4;
-                font-weight: bold;
-            }
             th ul,
             th li {
                 margin: 0;
@@ -241,18 +232,6 @@
                 img {
                     width: 14px;
                     padding-right: 5px;
-                }
-            }
-            .column.title {
-                &.selected {
-                    color: #1A9ED4;
-                }
-                a {
-                    color: #222;
-                    font-weight: normal;
-                    &:hover {
-                        color: #1A9ED4;
-                    }
                 }
             }
             .check-column input {
@@ -288,9 +267,6 @@
         }
         .check-column {
             padding: 20px !important;
-        }
-        th.column {
-            color: #1A9ED4;
         }
     }
 </style>
