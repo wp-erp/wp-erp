@@ -18879,7 +18879,7 @@ if (false) {(function () {
           });
         });
       } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
-        __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions').then(function (response) {
+        __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this5.accts_by_chart = response.data;
 
           _this5.accts_by_chart.forEach(function (element) {
@@ -20092,7 +20092,7 @@ if (false) {(function () {
           });
         });
       } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
-        __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions').then(function (response) {
+        __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this6.accts_by_chart = response.data;
 
           _this6.accts_by_chart.forEach(function (element) {
@@ -21692,7 +21692,7 @@ if (false) {(function () {
           });
         });
       } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
-        __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions').then(function (response) {
+        __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this5.accts_by_chart = response.data;
 
           _this5.accts_by_chart.forEach(function (element) {
@@ -23570,7 +23570,7 @@ if (false) {(function () {
           });
         });
       } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
-        __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/people-transactions').then(function (response) {
+        __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this8.accts_by_chart = response.data;
 
           _this8.accts_by_chart.forEach(function (element) {
@@ -27124,7 +27124,7 @@ setTimeout(function () {
           });
         });
       } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
-        __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/people-transactions').then(function (response) {
+        __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this2.accts_by_chart = response.data;
 
           _this2.accts_by_chart.forEach(function (element) {
@@ -29327,7 +29327,7 @@ setTimeout(function () {
           });
         });
       } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
-        __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions').then(function (response) {
+        __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this7.accts_by_chart = response.data;
 
           _this7.accts_by_chart.forEach(function (element) {

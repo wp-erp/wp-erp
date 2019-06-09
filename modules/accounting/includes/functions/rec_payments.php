@@ -155,6 +155,8 @@ function erp_acct_insert_payment( $data ) {
             erp_acct_insert_check_data( $payment_data );
         }
 
+        do_action( 'erp_acct_payment_people_transaction', $payment_data, $voucher_no );
+
         $wpdb->query( 'COMMIT' );
 
     } catch ( Exception $e ) {

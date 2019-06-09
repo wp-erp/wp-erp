@@ -304,16 +304,28 @@ function erp_acct_get_ob_virtual_acct( $year_id ) {
     $vir_ac['tax_payable']     = $wpdb->get_results( "select ledger_id as agency_id, debit, credit from {$wpdb->prefix}erp_acct_opening_balances where financial_year_id = {$year_id} and debit=0 and type='tax_agency'", ARRAY_A );
 
     for ( $i = 0; $i < count( $vir_ac['acct_payable'] ); $i++ ) {
+        if ( empty( $vir_ac['acct_payable'][$i]['people_id'] ) ) {
+            return;
+        }
+
         $vir_ac['acct_payable'][$i]['people']['id']   = $vir_ac['acct_payable'][$i]['people_id'];
         $vir_ac['acct_payable'][$i]['people']['name'] = erp_acct_get_people_name_by_people_id( $vir_ac['acct_payable'][$i]['people_id'] );
     }
 
     for ( $i = 0; $i < count( $vir_ac['acct_receivable'] ); $i++ ) {
+        if ( empty( $vir_ac['acct_receivable'][$i]['people_id'] ) ) {
+            return;
+        }
+
         $vir_ac['acct_receivable'][$i]['people']['id']   = $vir_ac['acct_receivable'][$i]['people_id'];
         $vir_ac['acct_receivable'][$i]['people']['name'] = erp_acct_get_people_name_by_people_id( $vir_ac['acct_receivable'][$i]['people_id'] );
     }
 
     for ( $i = 0; $i < count( $vir_ac['tax_payable'] ); $i++ ) {
+        if ( empty( $vir_ac['tax_payable'][$i]['agency_id'] ) ) {
+            return;
+        }
+
         $vir_ac['tax_payable'][$i]['agency']['id']   = $vir_ac['tax_payable'][$i]['agency_id'];
         $vir_ac['tax_payable'][$i]['agency']['name'] = erp_acct_get_tax_agency_name_by_id( $vir_ac['tax_payable'][$i]['agency_id'] );
     }

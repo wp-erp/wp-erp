@@ -429,7 +429,7 @@
                         });
                     });
                 } else if ( "undefined" !== erp_people_trn_var.people_trn_module &&  '1' === erp_people_trn_var.people_trn_module ) {
-                    HTTP.get('/people-transactions').then((response) => {
+                    HTTP.get('/people-transactions/balances').then((response) => {
                         this.accts_by_chart = response.data;
                         this.accts_by_chart.forEach( element =>{
                             if ( !element.hasOwnProperty('balance') ) {
