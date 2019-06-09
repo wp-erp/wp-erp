@@ -189,6 +189,10 @@
                 }
             }
         }
+
+        th.column.actions {
+            float: right;
+        }
     }
 
     .tablenav-pages {
