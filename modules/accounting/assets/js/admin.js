@@ -31210,14 +31210,26 @@ setTimeout(function () {
       }
 
       for (var _key in this.acct_rec) {
+        if (this.acct_rec[_key].debit === '') {
+          this.acct_rec[_key].debit = 0;
+        }
+
         this.debit_total += parseFloat(this.acct_rec[_key].debit);
       }
 
       for (var _key2 in this.acct_pay) {
+        if (this.acct_pay[_key2].credit === '') {
+          this.acct_pay[_key2].credit = 0;
+        }
+
         this.credit_total += parseFloat(this.acct_pay[_key2].credit);
       }
 
       for (var _key3 in this.tax_pay) {
+        if (this.tax_pay[_key3].credit === '') {
+          this.tax_pay[_key3].credit = 0;
+        }
+
         this.credit_total += parseFloat(this.tax_pay[_key3].credit);
       }
 
@@ -31231,7 +31243,24 @@ setTimeout(function () {
       }
     },
     validateForm: function validateForm() {
+      var _this6 = this;
+
       this.form_errors = [];
+      this.acct_rec.forEach(function (element) {
+        if (typeof element !== 'undefined' && element.hasOwnProperty('people')) {
+          _this6.form_errors.push('People is not selected in Accounts Receivable.');
+        }
+      });
+      this.acct_pay.forEach(function (element) {
+        if (typeof element !== 'undefined' && element.hasOwnProperty('people')) {
+          _this6.form_errors.push('People is not selected in Accounts Payable.');
+        }
+      });
+      this.tax_pay.forEach(function (element) {
+        if (typeof element !== 'undefined' && element.hasOwnProperty('agency')) {
+          _this6.form_errors.push('Agency is not selected in Tax Payable.');
+        }
+      });
 
       if (!this.fin_year.hasOwnProperty('id')) {
         this.form_errors.push('Financial year is required.');
@@ -31242,7 +31271,7 @@ setTimeout(function () {
       }
     },
     submitOBForm: function submitOBForm() {
-      var _this6 = this;
+      var _this7 = this;
 
       this.validateForm();
 
@@ -31265,36 +31294,36 @@ setTimeout(function () {
         total_cr: this.totalCredit,
         description: this.description
       }).then(function (res) {
-        _this6.$store.dispatch('spinner/setSpinner', false);
+        _this7.$store.dispatch('spinner/setSpinner', false);
 
-        _this6.showAlert('success', 'Opening Balance Created!');
+        _this7.showAlert('success', 'Opening Balance Created!');
       }).catch(function (error) {
-        _this6.$store.dispatch('spinner/setSpinner', false);
+        _this7.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
-        _this6.isWorking = false;
+        _this7.isWorking = false;
       });
     },
     getYears: function getYears() {
-      var _this7 = this;
+      var _this8 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/opening-balances/names').then(function (response) {
-        _this7.years = response.data;
-        _this7.fin_year = _this7.years.length ? _this7.years[0] : null;
+        _this8.years = response.data;
+        _this8.fin_year = _this8.years.length ? _this8.years[0] : null;
       });
     },
     getPeople: function getPeople() {
-      var _this8 = this;
+      var _this9 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/people', {
         params: {
           type: 'all'
         }
       }).then(function (response) {
-        _this8.options = response.data;
+        _this9.options = response.data;
       });
     },
     getSelectedOB: function getSelectedOB(year) {
-      var _this9 = this;
+      var _this10 = this;
 
       this.acct_pay = [];
       this.acct_rec = [];
@@ -31304,55 +31333,55 @@ setTimeout(function () {
         count = parseInt(response.data);
       }).then(function () {
         if (count == 0) {
-          _this9.fetchLedgers();
+          _this10.fetchLedgers();
 
           return;
         } else {
           __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/".concat(year.id)).then(function (response) {
-            _this9.totalDebit = 0;
-            _this9.totalCredit = 0;
+            _this10.totalDebit = 0;
+            _this10.totalCredit = 0;
             response.data.forEach(function (ledger) {
               ledger.id = ledger.ledger_id;
-              ledger.balance = _this9.transformBalance(ledger.balance);
-              _this9.totalDebit += parseFloat(ledger.debit);
-              _this9.totalCredit += parseFloat(ledger.credit);
+              ledger.balance = _this10.transformBalance(ledger.balance);
+              _this10.totalDebit += parseFloat(ledger.debit);
+              _this10.totalCredit += parseFloat(ledger.credit);
             });
-            _this9.ledgers = _this9.groupBy(response.data, 'chart_id');
+            _this10.ledgers = _this10.groupBy(response.data, 'chart_id');
 
-            _this9.fetchVirtualAccts(year);
+            _this10.fetchVirtualAccts(year);
           }).then(function () {
-            if (!_this9.ledgers.hasOwnProperty('7')) {
-              _this9.ledgers[7] = _this9.banks;
+            if (!_this10.ledgers.hasOwnProperty('7')) {
+              _this10.ledgers[7] = _this10.banks;
             }
           });
 
-          if (Object.keys(_this9.ledgers).length === 0) {
-            _this9.fetchData();
+          if (Object.keys(_this10.ledgers).length === 0) {
+            _this10.fetchData();
           }
         }
       });
     },
     fetchVirtualAccts: function fetchVirtualAccts(year) {
-      var _this10 = this;
+      var _this11 = this;
 
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get("/opening-balances/virtual-accts/".concat(year.id)).then(function (response) {
-        _this10.acct_pay = response.data.acct_payable;
-        _this10.acct_rec = response.data.acct_receivable;
-        _this10.tax_pay = response.data.tax_payable;
+        _this11.acct_pay = response.data.acct_payable;
+        _this11.acct_rec = response.data.acct_receivable;
+        _this11.tax_pay = response.data.tax_payable;
       }).then(function () {
-        _this10.acct_pay.forEach(function (ledger) {
-          _this10.totalCredit += parseFloat(ledger.credit);
+        _this11.acct_pay.forEach(function (ledger) {
+          _this11.totalCredit += parseFloat(ledger.credit);
         });
 
-        _this10.acct_rec.forEach(function (ledger) {
-          _this10.totalDebit += parseFloat(ledger.debit);
+        _this11.acct_rec.forEach(function (ledger) {
+          _this11.totalDebit += parseFloat(ledger.debit);
         });
 
-        _this10.tax_pay.forEach(function (ledger) {
-          _this10.totalCredit += parseFloat(ledger.credit);
+        _this11.tax_pay.forEach(function (ledger) {
+          _this11.totalCredit += parseFloat(ledger.credit);
         });
 
-        _this10.$store.dispatch('spinner/setSpinner', false);
+        _this11.$store.dispatch('spinner/setSpinner', false);
       });
     },
     printPopup: function printPopup() {
