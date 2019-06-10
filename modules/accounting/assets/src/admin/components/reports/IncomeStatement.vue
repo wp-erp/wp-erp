@@ -59,7 +59,7 @@
                 <tr>
                     <td><strong>Profit</strong></td>
                     <td>{{ getCurrencySign() + Math.abs(profit) }}</td>
-                    <td></td>
+                    <td class="no-print"></td>
                 </tr>
                 </tbody>
             </template>
@@ -68,7 +68,7 @@
                     <tr>
                         <td><strong>Loss</strong></td>
                         <td>{{ getCurrencySign() + Math.abs(loss) }}</td>
-                        <td></td>
+                        <td class="no-print"></td>
                     </tr>
                 </tbody>
             </template>
@@ -208,7 +208,8 @@
     }
 
     .income-statement {
-        .tablenav.top {
+        .tablenav.top,
+        .tablenav.bottom {
             display: none;
         }
     }
@@ -228,37 +229,48 @@
         color: #2196f3;
         font-weight: bold;
     }
+
     @media print {
+        .income-statement {
+            p {
+                margin-bottom: 20px;
+
+                em {
+                    font-weight: bold;
+                }
+            }
+        }
+
         .erp-nav-container {
             display: none;
         }
+
         .no-print, .no-print * {
             display: none !important;
         }
-        .income-balance-report {
-            tbody tr td:first-child {
-                width: 70% !important;
+
+        .wperp-table.income-balance-report {
+            td,
+            th {
+                padding: 3px 20px;
             }
 
-            thead tr th:first-child {
-                width: 70% !important;
-            }
-
-            thead th,
-            tfoot th {
+            thead tr th {
                 font-weight: bold;
-            }
 
-            thead tr th,
-            tfoot tr td,
-            tbody tr td {
-                padding: 0;
-            }
-
-            tfoot {
-                td:first-child {
-                    padding-left: 20px !important;
+                &:not(:first-child) {
+                    text-align: right;
                 }
+            }
+
+            tbody tr td {
+                &:not(:first-child) {
+                    text-align: right !important;
+                }
+            }
+
+            tfoot td:not(:first-child) {
+                text-align: right !important;
             }
         }
     }

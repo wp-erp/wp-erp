@@ -75,6 +75,20 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/count', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_opening_balance_count_by_fy' ],
+                'args'                => [
+                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+                ],
+                'permission_callback' => function( $request ) {
+                    return current_user_can( 'erp_ac_view_journal' );
+                },
+            ],
+            'schema' => [ $this, 'get_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/virtual-accts' . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -173,6 +187,34 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, count( $ledgers ) );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get number of entries of a financial year
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_opening_balance_count_by_fy( $request ) {
+        global $wpdb;
+
+        $id                = (int) $request['id'];
+        $additional_fields = [];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_opening_balance_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $sql = "select count(*) as num from {$wpdb->prefix}erp_acct_opening_balances where financial_year_id = {$id}";
+
+        $result = $wpdb->get_row( $sql );
+
+        $response = rest_ensure_response( $result->num );
 
         $response->set_status( 200 );
 
@@ -280,8 +322,8 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $acc_pay_rec = [];
 
-        $acc_pay_rec['invoice_acc'] = erp_acct_get_opb_invoice_account_details( $request['start_date'] );
-        $acc_pay_rec['bill_purchase_acc'] = erp_acct_get_opb_bill_purchase_account_details(  $request['start_date'] );
+        $acc_pay_rec['invoice_acc']       = erp_acct_get_opb_invoice_account_details( $request['start_date'] );
+        $acc_pay_rec['bill_purchase_acc'] = erp_acct_get_opb_bill_purchase_account_details( $request['start_date'] );
 
         $response = rest_ensure_response( $acc_pay_rec );
 

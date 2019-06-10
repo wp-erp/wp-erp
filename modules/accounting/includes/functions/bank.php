@@ -13,6 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank = false ) {
     global $wpdb;
 
+    $args               = [];
+    $args['start_date'] = date( "Y-m-d" );
+
+    $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
+    $args['start_date'] = $closest_fy_date['start_date'];
+    $args['end_date']   = $closest_fy_date['end_date'];
+
     $ledgers   = $wpdb->prefix . 'erp_acct_ledgers';
     $show_all  = false;
     $cash_only = false;
@@ -53,24 +60,20 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
               Where ld.ledger_id IN ($sub_query)
               Group BY ld.ledger_id";
 
-    $accts = $wpdb->get_results( $query, ARRAY_A );
+    $temp_accts = $wpdb->get_results( $query, ARRAY_A );
+    $accts      = [];
+    $bank_accts = [];
+    $uniq_accts = [];
 
-    for ( $i = 0; $i < count( $accts ); $i++ ) {
-        if ( 1 == $accts[ $i ]['ledger_id'] ) {
-            $accts[ $i ]['balance'] = (float) get_ledger_balance_with_opening_balance( 1 );
-        }
+    $c_balance = get_ledger_balance_with_opening_balance( 1, $args['start_date'], $args['end_date'] );
+    $balance   = empty( $c_balance->balance ) ? 0 : $c_balance->balance;
+
+    foreach ( $temp_accts as $temp_acct ) {
+        $bank_accts[] = get_ledger_balance_with_opening_balance( $temp_acct['id'], $args['start_date'], $args['end_date'] );
     }
 
     if ( $cash_only && ! empty( $accts ) ) {
         return $accts;
-    }
-
-    if ( empty( $accts ) && ( $cash_only || $show_all ) ) {
-        $acct['id']      = 1;
-        $acct['name']    = 'Cash';
-        $acct['balance'] = 0;
-
-        $accts[] = $acct;
     }
 
     $banks = erp_acct_get_ledgers_by_chart_id( 7 );
@@ -79,13 +82,15 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
         return new WP_Error( 'rest_empty_accounts', __( 'Bank accounts are empty.' ), [ 'status' => 204 ] );
     }
 
-    $results = array_merge( $accts, $banks );
+    foreach ( $banks as $bank ) {
+        $bank_accts[] = get_ledger_balance_with_opening_balance( $bank['id'], $args['start_date'], $args['end_date'] );
+    }
 
-    $uniq_accts = array();
+    $results = array_merge( $accts, $bank_accts );
 
     foreach ( $results as $index => $result ) {
         if ( ! empty( $uniq_accts ) && in_array( $result['id'], $uniq_accts ) ) {
-            unset( $results[ $index ] );
+            unset( $results[$index] );
             continue;
         }
         $uniq_accts[] = $result['id'];
@@ -101,61 +106,35 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
  * @return mixed
  */
 function erp_acct_get_dashboard_banks() {
+    $args               = [];
+    $args['start_date'] = date( "Y-m-d" );
+
+    $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
+    $args['start_date'] = $closest_fy_date['start_date'];
+    $args['end_date']   = $closest_fy_date['end_date'];
+
     $results   = [];
+    $c_balance = get_ledger_balance_with_opening_balance( 1, $args['start_date'], $args['end_date'] );
+    $balance   = empty( $c_balance['balance'] ) ? 0 : $c_balance['balance'];
+
     $results[] = [
         'name'    => 'Cash',
-        'balance' => get_ledger_balance_with_opening_balance( 1 ),
+        'balance' => $balance,
     ];
 
-    $args['start_date'] = $args['end_date'] = date( "Y-m-d" );
-    $results[]          = [
+    $results[] = [
         'name'       => 'Cash at Bank',
         'balance'    => erp_acct_cash_at_bank( $args, 'balance' ),
-        'additional' => erp_acct_dashboard_balance_bank_balance( 'balance' )
+        'additional' => erp_acct_bank_balance( $args, 'balance' )
+    ];
+
+    $results[] = [
+        'name'       => 'Bank Loan',
+        'balance'    => erp_acct_cash_at_bank( $args, 'loan' ),
+        'additional' => erp_acct_bank_balance( $args, 'loan' )
     ];
 
     return $results;
-}
-
-/**
- * Dashboard account helper
- *
- * @param object $additionals
- *
- * @return float
- */
-function erp_acct_dashboard_balance_cash_at_bank( $additionals ) {
-    $balance = 0;
-
-    foreach ( $additionals as $additional ) {
-        $balance += (float) $additional['balance'];
-    }
-
-    return $balance;
-}
-
-/**
- * Dashboard account helper
- *
- * @param string $type
- *
- * @return mixed
- */
-function erp_acct_dashboard_balance_bank_balance( $type ) {
-    global $wpdb;
-
-    if ( 'loan' === $type ) {
-        $having = "HAVING balance < 0";
-    } elseif ( 'balance' === $type ) {
-        $having = "HAVING balance >= 0";
-    }
-
-    $sql = "SELECT ledger.id, ledger.name, SUM( debit - credit ) AS balance
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledger_detail ON ledger.id = ledger_detail.ledger_id
-        WHERE ledger.chart_id = 7 GROUP BY ledger.id {$having}";
-
-    return $wpdb->get_results( $sql, ARRAY_A );
 }
 
 /**

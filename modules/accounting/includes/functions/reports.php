@@ -43,6 +43,8 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
         $opening_balance     += (float) $prev_ledger_details;
     }
 
+    $raw_opening_balance = $opening_balance;
+
     // ledger details
     $sql2 = $wpdb->prepare( "SELECT
         trn_no, particulars, debit, credit, trn_date, created_at
@@ -65,8 +67,8 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
             // so we're working with credit
             if ( $opening_balance < 0 ) {
                 // opening balance is negative
-                $opening_balance            = $opening_balance + ( -(float) $detail['credit'] );
-                $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+                $opening_balance          = $opening_balance + ( -(float) $detail['credit'] );
+                $details[$key]['balance'] = abs( $opening_balance ) . ' Cr';
 
             } elseif ( $opening_balance >= 0 ) {
                 // opening balance is positive
@@ -74,24 +76,23 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
 
                 // after calculation with credit
                 if ( $opening_balance >= 0 ) {
-                    $details[ $key ]['balance'] = $opening_balance . ' Dr';
+                    $details[$key]['balance'] = $opening_balance . ' Dr';
                 } elseif ( $opening_balance < 0 ) {
-                    $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+                    $details[$key]['balance'] = abs( $opening_balance ) . ' Cr';
                 }
 
             } else {
                 // opening balance is 0
-                $details[ $key ]['balance'] = '0 Dr';
+                $details[$key]['balance'] = '0 Dr';
             }
         }
 
         if ( '0.00' === $detail['credit'] ) {
             // so we're working with debit
-
             if ( $opening_balance < 0 ) {
                 // opening balance is negative
-                $opening_balance            = $opening_balance + (float) $detail['debit'];
-                $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+                $opening_balance          = $opening_balance + (float) $detail['debit'];
+                $details[$key]['balance'] = abs( $opening_balance ) . ' Cr';
 
             } elseif ( $opening_balance >= 0 ) {
                 // opening balance is positive
@@ -99,23 +100,23 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
 
                 // after calculation with debit
                 if ( $opening_balance >= 0 ) {
-                    $details[ $key ]['balance'] = $opening_balance . ' Dr';
+                    $details[$key]['balance'] = $opening_balance . ' Dr';
                 } elseif ( $opening_balance < 0 ) {
-                    $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+                    $details[$key]['balance'] = abs( $opening_balance ) . ' Cr';
                 }
 
             } else {
                 // opening balance is 0
-                $details[ $key ]['balance'] = '0 Dr';
+                $details[$key]['balance'] = '0 Dr';
             }
         }
     }
 
     // Assign opening balance as first row
-    if ( (float) $prev_ledger_details > 0 ) {
-        $balance = $prev_ledger_details . ' Dr';
-    } elseif ( (float) $prev_ledger_details < 0 ) {
-        $balance = abs( $prev_ledger_details ) . ' Cr';
+    if ( (float) $raw_opening_balance > 0 ) {
+        $balance = $raw_opening_balance . ' Dr';
+    } elseif ( (float) $raw_opening_balance < 0 ) {
+        $balance = abs( $raw_opening_balance ) . ' Cr';
     } else {
         $balance = '0 Dr';
     }
@@ -139,6 +140,13 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     ];
 }
 
+
+/**
+ * Ledger report opening balance helper
+ * @param $id
+ * @param $ledger_id
+ * @return string|null
+ */
 function erp_acct_ledger_report_opening_balance_by_fn_year_id( $id, $ledger_id ) {
     global $wpdb;
 
@@ -198,8 +206,8 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
             // so we're working with credit
             if ( $opening_balance < 0 ) {
                 // opening balance is negative
-                $opening_balance            = $opening_balance + ( -(float) $detail['credit'] );
-                $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+                $opening_balance          = $opening_balance + ( -(float) $detail['credit'] );
+                $details[$key]['balance'] = abs( $opening_balance ) . ' Cr';
 
             } elseif ( $opening_balance >= 0 ) {
                 // opening balance is positive
@@ -207,14 +215,14 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
 
                 // after calculation with credit
                 if ( $opening_balance >= 0 ) {
-                    $details[ $key ]['balance'] = $opening_balance . ' Dr';
+                    $details[$key]['balance'] = $opening_balance . ' Dr';
                 } elseif ( $opening_balance < 0 ) {
-                    $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+                    $details[$key]['balance'] = abs( $opening_balance ) . ' Cr';
                 }
 
             } else {
                 // opening balance is 0
-                $details[ $key ]['balance'] = '0 Dr';
+                $details[$key]['balance'] = '0 Dr';
             }
         }
 
@@ -223,8 +231,8 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
 
             if ( $opening_balance < 0 ) {
                 // opening balance is negative
-                $opening_balance            = $opening_balance + (float) $detail['debit'];
-                $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+                $opening_balance          = $opening_balance + (float) $detail['debit'];
+                $details[$key]['balance'] = abs( $opening_balance ) . ' Cr';
 
             } elseif ( $opening_balance >= 0 ) {
                 // opening balance is positive
@@ -232,14 +240,14 @@ function erp_acct_get_sales_tax_report( $agency_id, $start_date, $end_date ) {
 
                 // after calculation with debit
                 if ( $opening_balance >= 0 ) {
-                    $details[ $key ]['balance'] = $opening_balance . ' Dr';
+                    $details[$key]['balance'] = $opening_balance . ' Dr';
                 } elseif ( $opening_balance < 0 ) {
-                    $details[ $key ]['balance'] = abs( $opening_balance ) . ' Cr';
+                    $details[$key]['balance'] = abs( $opening_balance ) . ' Cr';
                 }
 
             } else {
                 // opening balance is 0
-                $details[ $key ]['balance'] = '0 Dr';
+                $details[$key]['balance'] = '0 Dr';
             }
         }
     }
@@ -533,19 +541,19 @@ function erp_acct_get_balance_sheet( $args ) {
 
     $profit_loss = erp_acct_get_income_statement( $args );
 
-    if ( !empty( $profit_loss['profit'] ) ) {
+    if ( ! empty( $profit_loss['profit'] ) ) {
         $results['rows3'][] = [
             'name'    => 'Profit',
             'slug'    => 'profit',
-            'balance' => - $profit_loss['profit']
+            'balance' => -$profit_loss['profit']
         ];
     }
 
-    if ( !empty( $profit_loss['loss'] ) ) {
+    if ( ! empty( $profit_loss['loss'] ) ) {
         $results['rows3'][] = [
             'name'    => 'Loss',
             'slug'    => 'loss',
-            'balance' => - $profit_loss['loss']
+            'balance' => -$profit_loss['loss']
         ];
     }
 
@@ -746,12 +754,10 @@ function erp_acct_bs_opening_balance_by_fn_year_id( $id, $chart_id ) {
 function erp_acct_get_profit_loss( $args ) {
     global $wpdb;
 
-
-
     if ( empty( $args['start_date'] ) ) {
         $args['start_date'] = date( 'Y-m-d', strtotime( 'first day of january' ) );
     } else {
-        $closest_fy_date = erp_acct_get_closest_fn_year_date(  $args['start_date'] );
+        $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
         $args['start_date'] = $closest_fy_date['start_date'];
     }
 

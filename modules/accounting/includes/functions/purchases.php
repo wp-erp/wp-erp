@@ -112,7 +112,7 @@ function erp_acct_format_purchase_line_items( $voucher_no ) {
 
     // calculate every line total
     foreach ( $results as $key => $value ) {
-        $results[ $key ]['line_total'] = $value['amount'];
+        $results[$key]['line_total'] = $value['amount'];
     }
 
     return $results;

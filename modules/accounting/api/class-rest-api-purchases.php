@@ -237,7 +237,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[ $key ] = $item['item_total'];
+            $item_total[$key] = $item['item_total'];
         }
 
         $purchase_data['amount']        = array_sum( $item_total );

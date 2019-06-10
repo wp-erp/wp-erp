@@ -481,8 +481,17 @@
                             }
                         });
                     });
-                } else {
+                } else if ( '1' === this.basic_fields.trn_by.id ) {
                     HTTP.get('/ledgers/cash-accounts').then((response) => {
+                        this.accts_by_chart = response.data;
+                        this.accts_by_chart.forEach( element =>{
+                            if ( !element.hasOwnProperty('balance') ) {
+                                element.balance = 0;
+                            }
+                        });
+                    });
+                } else if ( "undefined" !== erp_people_trn_var.people_trn_module &&  '1' === erp_people_trn_var.people_trn_module ) {
+                    HTTP.get('/people-transactions/balances').then((response) => {
                         this.accts_by_chart = response.data;
                         this.accts_by_chart.forEach( element =>{
                             if ( !element.hasOwnProperty('balance') ) {

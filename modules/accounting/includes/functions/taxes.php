@@ -77,11 +77,11 @@ function erp_acct_get_tax_rate( $tax_no ) {
     $row['tax_components'] = erp_acct_format_tax_line_items( $tax_no );
 
     for ( $i = 0; $i < count( $row['tax_components'] ); $i++ ) {
-        $row['tax_components'][ $i ]['agency']   = null; // we'll fill that later from VUE
-        $row['tax_components'][ $i ]['category'] = null; // we'll fill that later from VUE
+        $row['tax_components'][$i]['agency']   = null; // we'll fill that later from VUE
+        $row['tax_components'][$i]['category'] = null; // we'll fill that later from VUE
 
-        $row['tax_components'][ $i ]['agency_name']  = erp_acct_get_tax_agency_by_id( $row['tax_components'][ $i ]['agency_id'] );
-        $row['tax_components'][ $i ]['tax_cat_name'] = erp_acct_get_tax_category_by_id( $row['tax_components'][ $i ]['tax_cat_id'] );
+        $row['tax_components'][$i]['agency_name']  = erp_acct_get_tax_agency_by_id( $row['tax_components'][$i]['agency_id'] );
+        $row['tax_components'][$i]['tax_cat_name'] = erp_acct_get_tax_category_by_id( $row['tax_components'][$i]['tax_cat_id'] );
     }
 
     return $row;

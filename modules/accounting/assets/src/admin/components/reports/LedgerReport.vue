@@ -31,7 +31,8 @@
         <list-table
             tableClass="wperp-table table-striped table-dark widefat ledger-table"
             :columns="columns"
-            :rows="rows">
+            :rows="rows"
+            :showCb="false">
             <template slot="trn_no" slot-scope="data">
                 <strong>
                     <router-link :to="{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}">
@@ -52,8 +53,8 @@
                 <tr class="tfoot">
                     <td colspan="3"></td>
                     <td>Total =</td>
-                    <td>{{ totalDebit }}</td>
-                    <td>{{ totalCredit }}</td>
+                    <td>{{ totalDebit.toFixed(2) }}</td>
+                    <td>{{ totalCredit.toFixed(2) }}</td>
                     <td></td>
                 </tr>
             </template>
@@ -226,7 +227,6 @@
         .report-header {
             width: 420px;
             padding: 10px 0 0 0;
-            margin: 50px 0 0 0;
 
             li {
                 display: flex;
@@ -237,14 +237,78 @@
         .ledger-table tbody tr td:last-child {
             text-align: left !important;
         }
+    }
 
-        @media print {
-            .erp-nav-container {
-                display: none;
+    @media print {
+        .erp-nav-container {
+            display: none;
+        }
+
+        .no-print, .no-print * {
+            display: none !important;
+        }
+
+        .ledger-report {
+            .report-header {
+                margin: 0 0 20px 0;
             }
 
-            .no-print, .no-print * {
-                display: none !important;
+            .wperp-table.ledger-table {
+                th.trn_date,
+                th.created_at,
+                .balance {
+                    min-width: 118px;
+                }
+
+                th.trn_no {
+                    min-width: 95px;
+                }
+
+                td.column.particulars {
+                    text-align: left !important;
+                }
+
+                tr th:first-child,
+                tr td:last-child {
+                    padding-left: 5px;
+                }
+
+                tr th:last-child,
+                tr td:last-child {
+                    padding-right: 5px;
+                }
+
+                td,
+                th {
+                    padding: 3px 0;
+                }
+
+                thead tr th {
+                    font-weight: bold;
+
+                    &:nth-child(5),
+                    &:nth-child(6),
+                    &:nth-child(7) {
+                        min-width: 100px;
+                        text-align: right;
+                    }
+                }
+
+                tbody tr td {
+                    &:nth-child(5),
+                    &:nth-child(6),
+                    &:nth-child(7) {
+                        min-width: 100px;
+                        text-align: right !important;
+                    }
+                }
+
+                tfoot td {
+                    &:nth-child(3),
+                    &:nth-child(4) {
+                        text-align: right !important;
+                    }
+                }
             }
         }
     }
