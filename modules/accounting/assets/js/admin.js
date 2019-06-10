@@ -15464,8 +15464,9 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 //
 //
 //
@@ -15525,14 +15526,20 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+
 
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'TrialBalance',
   components: {
-    ListTable: __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__["a" /* default */],
-    Datepicker: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__["a" /* default */]
+    ListTable: __WEBPACK_IMPORTED_MODULE_2_admin_components_list_table_ListTable_vue__["a" /* default */],
+    Datepicker: __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Datepicker_vue__["a" /* default */],
+    MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -15553,16 +15560,31 @@ if (false) {(function () {
         }
       },
       rows: [],
+      fyears: [],
       totalDebit: 0,
       totalCredit: 0,
       chrtAcct: null,
       start_date: null,
-      end_date: null
+      end_date: null,
+      selectedYear: null
     };
   },
   computed: {
     debugMode: function debugMode() {
       return '1' == erp_acct_var.erp_debug_mode;
+    }
+  },
+  watch: {
+    selectedYear: function selectedYear(newVal) {
+      this.start_date = newVal.start_date;
+      this.end_date = newVal.end_date;
+      this.getChartOfAccts();
+    },
+    start_date: function start_date() {
+      this.selectedYear = null;
+    },
+    end_date: function end_date() {
+      this.selectedYear = null;
     }
   },
   created: function created() {
@@ -15579,6 +15601,7 @@ if (false) {(function () {
         this.end_date = erp_acct_var.current_date;
       }
     });
+    this.fetchFnYears();
     this.getChartOfAccts();
   },
   methods: {
@@ -15604,8 +15627,16 @@ if (false) {(function () {
       this.updateDate();
       this.getTrialBalance();
     },
-    getTrialBalance: function getTrialBalance() {
+    fetchFnYears: function fetchFnYears() {
       var _this2 = this;
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/opening-balances/names').then(function (response) {
+        // get only last 5
+        _this2.fyears = response.data.reverse().slice(0).slice(-5);
+      });
+    },
+    getTrialBalance: function getTrialBalance() {
+      var _this3 = this;
 
       this.updateDate();
       this.rows = [];
@@ -15616,13 +15647,13 @@ if (false) {(function () {
           end_date: this.end_date
         }
       }).then(function (response) {
-        _this2.rows = response.data.rows;
-        _this2.totalDebit = response.data.total_debit;
-        _this2.totalCredit = response.data.total_credit;
+        _this3.rows = response.data.rows;
+        _this3.totalDebit = response.data.total_debit;
+        _this3.totalCredit = response.data.total_credit;
 
-        _this2.$store.dispatch('spinner/setSpinner', false);
+        _this3.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (e) {
-        _this2.$store.dispatch('spinner/setSpinner', false);
+        _this3.$store.dispatch('spinner/setSpinner', false);
       });
     },
     printPopup: function printPopup() {
@@ -30543,11 +30574,11 @@ setTimeout(function () {
       rows1: [],
       rows2: [],
       rows3: [],
+      fyears: [],
       totalAsset: 0,
       totalLiability: 0,
       totalEquity: 0,
-      selectedYear: null,
-      fyears: []
+      selectedYear: null
     };
   },
   created: function created() {
@@ -42374,6 +42405,24 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "trial-balance" }, [
     _c("h2", [_vm._v("Trial Balance")]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "with-multiselect fyear-select" },
+      [
+        _c("multi-select", {
+          attrs: { options: _vm.fyears },
+          model: {
+            value: _vm.selectedYear,
+            callback: function($$v) {
+              _vm.selectedYear = $$v
+            },
+            expression: "selectedYear"
+          }
+        })
+      ],
+      1
+    ),
     _vm._v(" "),
     _c(
       "form",
