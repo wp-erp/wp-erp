@@ -18201,8 +18201,19 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["a"] = ({
-  name: 'ReportsOverview'
+  name: 'ReportsOverview',
+  data: function data() {
+    return {
+      reportLists: window.acct.hooks.applyFilters('acctExtensionReportsList', [])
+    };
+  }
 });
 
 /***/ }),
@@ -45340,118 +45351,126 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("ul", [
-    _c(
-      "li",
-      [
-        _c("h3", [_vm._v("Trial Balance")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v(
-            "Trial balance is the bookkeeping or accounting report that lists the balances in each of general ledger accounts."
+  return _c(
+    "ul",
+    [
+      _c(
+        "li",
+        [
+          _c("h3", [_vm._v("Trial Balance")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "Trial balance is the bookkeeping or accounting report that lists the balances in each of general ledger accounts."
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { to: { name: "TrialBalance" } }
+            },
+            [_vm._v("View Report")]
           )
-        ]),
-        _vm._v(" "),
-        _c(
-          "router-link",
-          {
-            staticClass: "wperp-btn btn--primary",
-            attrs: { to: { name: "TrialBalance" } }
-          },
-          [_vm._v("View Report")]
-        )
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "li",
-      [
-        _c("h3", [_vm._v("Ledger Report")]),
-        _vm._v(" "),
-        _c("p", [_vm._v("Ledger report")]),
-        _vm._v(" "),
-        _c(
-          "router-link",
-          {
-            staticClass: "wperp-btn btn--primary",
-            attrs: { to: { name: "LedgerSingle", params: { id: 1 } } }
-          },
-          [_vm._v("View Report")]
-        )
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "li",
-      [
-        _c("h3", [_vm._v("Income Statement")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v(
-            "A summary of a management's performance as reflecte the profitability of an organization during the time interval."
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        [
+          _c("h3", [_vm._v("Ledger Report")]),
+          _vm._v(" "),
+          _c("p", [_vm._v("Ledger report")]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { to: { name: "LedgerSingle", params: { id: 1 } } }
+            },
+            [_vm._v("View Report")]
           )
-        ]),
-        _vm._v(" "),
-        _c(
-          "router-link",
-          {
-            staticClass: "wperp-btn btn--primary",
-            attrs: { to: { name: "IncomeStatement" } }
-          },
-          [_vm._v("View Report")]
-        )
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "li",
-      [
-        _c("h3", [_vm._v("Sales Tax")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v(
-            "It generates report based on the sales tax charged or paid for the current financial cycle/year."
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        [
+          _c("h3", [_vm._v("Income Statement")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "A summary of a management's performance as reflecte the profitability of an organization during the time interval."
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { to: { name: "IncomeStatement" } }
+            },
+            [_vm._v("View Report")]
           )
-        ]),
-        _vm._v(" "),
-        _c(
-          "router-link",
-          {
-            staticClass: "wperp-btn btn--primary",
-            attrs: { to: { name: "SalesTax" } }
-          },
-          [_vm._v("View Report")]
-        )
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "li",
-      [
-        _c("h3", [_vm._v("Balance Sheet")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v(
-            'This is a report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year.'
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        [
+          _c("h3", [_vm._v("Sales Tax")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "It generates report based on the sales tax charged or paid for the current financial cycle/year."
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { to: { name: "SalesTax" } }
+            },
+            [_vm._v("View Report")]
           )
-        ]),
-        _vm._v(" "),
-        _c(
-          "router-link",
-          {
-            staticClass: "wperp-btn btn--primary",
-            attrs: { to: { name: "BalanceSheet" } }
-          },
-          [_vm._v("View Report")]
-        )
-      ],
-      1
-    )
-  ])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        [
+          _c("h3", [_vm._v("Balance Sheet")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              'This is a report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year.'
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { to: { name: "BalanceSheet" } }
+            },
+            [_vm._v("View Report")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _vm._l(_vm.reportLists, function(component, index) {
+        return _c(component, { key: index, tag: "component" })
+      })
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

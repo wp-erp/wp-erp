@@ -34,12 +34,24 @@
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'BalanceSheet' }">View Report</router-link>
         </li>
+
+        <component
+            v-for="(component, index) in reportLists"
+            :key="index"
+            :is="component"
+        />
     </ul>
 </template>
 
 <script>
     export default {
         name: 'ReportsOverview',
+
+        data() {
+            return {
+                reportLists: window.acct.hooks.applyFilters( 'acctExtensionReportsList',[] ),
+            }
+        },
     }
 </script>
 
