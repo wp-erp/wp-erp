@@ -271,9 +271,10 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_purchase_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $paid = 4;
-        if ( $paid === $request['status'] ) {
-            return new WP_Error( 'rest_purchase_invalid_status', __( 'Invalid status for update.' ), [ 'status' => 403 ] );
+        $can_edit = erp_acct_check_voucher_edit_state( $id );
+
+        if ( ! $can_edit ) {
+            return new WP_Error( 'rest_purchase_invalid_edit', __( 'Invalid edit permission for update.' ), [ 'status' => 403 ] );
         }
 
         $purchase_data = $this->prepare_item_for_database( $request );
@@ -284,12 +285,12 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             $total = 0;
             $due   = 0;
 
-            $purchase_id[ $key ] = $item['purchase_id'];
-            $total               += $item['line_total'];
+            $purchase_id[$key] = $item['purchase_id'];
+            $total            += $item['line_total'];
 
             $purchase_data['amount'] = $total;
 
-            erp_acct_update_purchase( $purchase_data, $purchase_id[ $key ] );
+            erp_acct_update_purchase( $purchase_data, $purchase_id[$key] );
         }
 
         $this->add_log( $purchase_data, 'update' );
@@ -350,10 +351,9 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'sub_component' => __( 'Pay Bill', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => sprintf( __( 'A bill payment of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'message'       => sprintf( __( 'A bill payment of %s has been created for %s', 'erp' ), $data['amount'], $data['vendor_id'] ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
-
         ] );
     }
 
@@ -368,9 +368,6 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $prepared_item = [];
 
-        // if ( isset( $request['voucher_no'] ) ) {
-        //     $prepared_item['voucher_no'] = $request['voucher_no'];
-        // }
         if ( isset( $request['vendor_id'] ) ) {
             $prepared_item['vendor_id'] = $request['vendor_id'];
         }
@@ -425,6 +422,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'             => (int) $item->id,
+            'editable'       => (int) $item->editable,
             'vendor_id'      => (int) $item->vendor_id,
             'voucher_no'     => (int) $item->voucher_no,
             'vendor_name'    => $item->vendor_name,

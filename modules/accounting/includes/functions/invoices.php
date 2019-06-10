@@ -156,6 +156,8 @@ function erp_acct_insert_invoice( $data ) {
     $data['updated_at'] = date('Y-m-d H:i:s');
     $data['updated_by'] = $user_id;
 
+    $estimate_type = $draft  = 1;
+
     try {
         $wpdb->query( 'START TRANSACTION' );
 
@@ -363,70 +365,110 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
     $data['updated_at'] = date('Y-m-d H:i:s');
     $data['updated_by'] = $user_id;
 
+    $estimate_type = $draft  = 1;
+
     try {
         $wpdb->query( 'START TRANSACTION' );
 
-        // disable editing on old invoice
-        $wpdb->update( $wpdb->prefix . 'erp_acct_voucher_no', [ 'editable' => 0 ], [ 'id' => $invoice_no ] );
-
-        // insert contra voucher
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-            'type'       => 'invoice',
-            'currency'   => '',
-            'editable'   => 0,
-            'created_at' => $data['created_at'],
-            'created_by' => $data['created_by'],
-            'updated_at' => $data['updated_at'],
-            'updated_by' => $data['updated_by']
-        ) );
-
-        $voucher_no = $wpdb->insert_id;
-
-        $old_invoice = erp_acct_get_invoice( $invoice_no );
-
-        // insert contra `erp_acct_invoices` (basically a duplication of row)
-        $wpdb->query( $wpdb->prepare("CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_invoices WHERE voucher_no = %d", $invoice_no) );
-        $wpdb->query( $wpdb->prepare(
-            "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
-            0, $voucher_no, $invoice_no, $data['created_at'])
-        );
-        $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_invoices SELECT * FROM acct_tmptable" );
-        $wpdb->query( "DROP TABLE acct_tmptable" );
-
-        // change invoice status and other things
-        $status_closed = 7;
-        $wpdb->query( $wpdb->prepare(
-            "UPDATE {$wpdb->prefix}erp_acct_invoices SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
-            $status_closed, $data['updated_at'], $user_id, $invoice_no, $voucher_no)
-        );
-
-        // insert contra `erp_acct_invoice_details` AND `erp_acct_invoice_details_tax`
-        erp_acct_insert_invoice_details_and_tax( $old_invoice, $voucher_no, true );
-
-        $estimate_type = $draft  = 1;
-
         if ( $estimate_type == $data['estimate'] || $draft == $data['status'] ) {
-            $wpdb->query( 'COMMIT' );
-            return erp_acct_get_invoice( $voucher_no );
+            erp_acct_update_draft_and_estimate( $data, $invoice_no );
+        } else {
+            // disable editing on old invoice
+            $wpdb->update( $wpdb->prefix . 'erp_acct_voucher_no', [ 'editable' => 0 ], [ 'id' => $invoice_no ] );
+
+            // insert contra voucher
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
+                'type'       => 'invoice',
+                'currency'   => '',
+                'editable'   => 0,
+                'created_at' => $data['created_at'],
+                'created_by' => $data['created_by'],
+                'updated_at' => $data['updated_at'],
+                'updated_by' => $data['updated_by']
+            ) );
+
+            $voucher_no = $wpdb->insert_id;
+
+            $old_invoice = erp_acct_get_invoice( $invoice_no );
+
+            // insert contra `erp_acct_invoices` (basically a duplication of row)
+            $wpdb->query( $wpdb->prepare("CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_invoices WHERE voucher_no = %d", $invoice_no) );
+            $wpdb->query( $wpdb->prepare(
+                "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
+                0, $voucher_no, $invoice_no, $data['created_at'])
+            );
+            $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_invoices SELECT * FROM acct_tmptable" );
+            $wpdb->query( "DROP TABLE acct_tmptable" );
+
+            // change invoice status and other things
+            $status_closed = 7;
+            $wpdb->query( $wpdb->prepare(
+                "UPDATE {$wpdb->prefix}erp_acct_invoices SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
+                $status_closed, $data['updated_at'], $user_id, $invoice_no, $voucher_no)
+            );
+
+            // insert contra `erp_acct_invoice_details` AND `erp_acct_invoice_details_tax`
+            erp_acct_insert_invoice_details_and_tax( $old_invoice, $voucher_no, true );
+
+            // insert contra `erp_acct_invoice_account_details`
+            erp_acct_insert_invoice_account_details( $old_invoice, $voucher_no, true );
+
+            // insert contra `erp_acct_ledger_details`
+            erp_acct_insert_invoice_data_into_ledger( $old_invoice, $voucher_no, true );
+
+            // insert new invoice with edited data
+            erp_acct_insert_invoice( $data );
         }
 
-        // insert contra `erp_acct_invoice_account_details`
-        erp_acct_insert_invoice_account_details( $old_invoice, $voucher_no, true );
-
-        // insert contra `erp_acct_ledger_details`
-        erp_acct_insert_invoice_data_into_ledger( $old_invoice, $voucher_no, true );
-
-        // insert new invoice with edited data
-        erp_acct_insert_invoice( $data );
-
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'invoice-exception', $e->getMessage() );
     }
 
     return erp_acct_get_invoice( $invoice_no );
+}
+
+/**
+ * Update draft & estimate
+ *
+ * @param array $data
+ * @param int $invoice_no
+ * @return void
+ */
+function erp_acct_update_draft_and_estimate( $data, $invoice_no ) {
+
+    $invoice_data = erp_acct_get_formatted_invoice_data( $data, $invoice_no );
+
+    $wpdb->update( $wpdb->prefix . 'erp_acct_invoices', [
+        'customer_id'     => $invoice_data['customer_id'],
+        'customer_name'   => $invoice_data['customer_name'],
+        'trn_date'        => $invoice_data['trn_date'],
+        'due_date'        => $invoice_data['due_date'],
+        'billing_address' => $invoice_data['billing_address'],
+        'amount'          => $invoice_data['amount'],
+        'discount'        => $invoice_data['discount'],
+        'discount_type'   => $invoice_data['discount_type'],
+        'tax_rate_id'     => $invoice_data['tax_rate_id'],
+        'tax'             => $invoice_data['tax'],
+        'estimate'        => $invoice_data['estimate'],
+        'attachments'     => $invoice_data['attachments'],
+        'status'          => $invoice_data['status'],
+        'particulars'     => $invoice_data['particulars'],
+        'updated_at'      => $invoice_data['updated_at'],
+        'updated_by'      => $invoice_data['updated_by']
+    ], [ 'voucher_no' => $invoice_no ] );
+
+    /**
+     *? We can't update `invoice_details` directly
+     *? suppose there were 5 detail rows previously
+     *? but on update there may be 2 detail rows
+     *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
+     *? so, remove previous rows to insert new rows
+     */
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_details', [ 'trn_no' => $invoice_no ] );
+
+    erp_acct_insert_invoice_details_and_tax( $invoice_data, $invoice_no );
 }
 
 /**
