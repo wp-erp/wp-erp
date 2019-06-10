@@ -189,5 +189,13 @@
                 }
             }
         }
+
+        th.column.actions {
+            float: right;
+        }
+    }
+
+    .tablenav-pages {
+        display: none !important;
     }
 </style>

@@ -116,7 +116,7 @@
 
     };
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .app-employees {
         .add-new-people {
             margin-top: 10px;
@@ -131,11 +131,6 @@
             border-radius: 3px;
             tbody {
                 background: #FAFAFA;
-            }
-            tfoot th,
-            thead th {
-                color: #1A9ED4;
-                font-weight: bold;
             }
             th ul,
             th li {

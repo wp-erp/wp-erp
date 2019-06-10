@@ -542,7 +542,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $row = $wpdb->get_results( $sql, ARRAY_A );
 
-        return apply_filters( 'erp_acct_pay_methods', $row ) ;
+        return apply_filters( 'erp_acct_pay_methods', $row );
     }
 
     public function get_voucher_type( $request ) {
@@ -681,15 +681,15 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $purchase_statuses = erp_acct_get_purchase_chart_status( $args );
 
         for ( $i = 0; $i < count( $chart_statuses ); $i++ ) {
-            $chart_statuses[ $i ]['sub_total'] = (int) $chart_statuses[ $i ]['sub_total'];
+            $chart_statuses[$i]['sub_total'] = (int) $chart_statuses[$i]['sub_total'];
         }
 
         for ( $i = 0; $i < count( $sales_statuses ); $i++ ) {
-            $sales_statuses[ $i ]['sub_total'] = (int) $sales_statuses[ $i ]['sub_total'];
+            $sales_statuses[$i]['sub_total'] = (int) $sales_statuses[$i]['sub_total'];
         }
 
         for ( $i = 0; $i < count( $purchase_statuses ); $i++ ) {
-            $purchase_statuses[ $i ]['sub_total'] = (int) $purchase_statuses[ $i ]['sub_total'];
+            $purchase_statuses[$i]['sub_total'] = (int) $purchase_statuses[$i]['sub_total'];
         }
 
         if ( ! empty( $expense_status ) ) {
@@ -703,23 +703,23 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $len = count( $chart_statuses );
         for ( $i = 0; $i < $len; $i++ ) {
             $k = 0;
-            if ( is_null( $chart_statuses[ $i ] ) ) {
+            if ( is_null( $chart_statuses[$i] ) ) {
                 continue;
             }
             for ( $j = $i + 1; $j < $len; $j++ ) {
-                if ( is_null( $chart_statuses[ $j ] ) ) {
+                if ( is_null( $chart_statuses[$j] ) ) {
                     continue;
                 }
-                if ( $chart_statuses[ $i ]['type_name'] == $chart_statuses[ $j ]['type_name'] ) {
-                    $chart_statuses[ $i ]['sub_total'] += $chart_statuses[ $j ]['sub_total'];
-                    $statuses[ $k ]['type_name']       = $chart_statuses[ $i ]['type_name'];
-                    $statuses[ $k ]['sub_total']       = $chart_statuses[ $i ]['sub_total'];
+                if ( $chart_statuses[$i]['type_name'] == $chart_statuses[$j]['type_name'] ) {
+                    $chart_statuses[$i]['sub_total'] += $chart_statuses[$j]['sub_total'];
+                    $statuses[$k]['type_name']       = $chart_statuses[$i]['type_name'];
+                    $statuses[$k]['sub_total']       = $chart_statuses[$i]['sub_total'];
                     $k++;
-                    $chart_statuses[ $j ] = null;
+                    $chart_statuses[$j] = null;
                 }
             }
-            $statuses[ $k ]['type_name'] = $chart_statuses[ $i ]['type_name'];
-            $statuses[ $k ]['sub_total'] = $chart_statuses[ $i ]['sub_total'];
+            $statuses[$k]['type_name'] = $chart_statuses[$i]['type_name'];
+            $statuses[$k]['sub_total'] = $chart_statuses[$i]['sub_total'];
             $k++;
         }
 

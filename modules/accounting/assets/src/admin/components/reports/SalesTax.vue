@@ -30,11 +30,12 @@
         <list-table
             tableClass="wperp-table table-striped table-dark widefat sales-tax-table"
             :columns="columns"
-            :rows="rows">
+            :rows="rows"
+            :showCb="false">
             <template slot="trn_no" slot-scope="data">
                 <strong>
                     <router-link :to="{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}">
-                        #{{ data.row.trn_no }}
+                        <span v-if="data.row.trn_no">#{{ data.row.trn_no }}</span>
                     </router-link>
                 </strong>
             </template>
@@ -49,7 +50,7 @@
             </template>
             <template slot="tfoot">
                 <tr class="tfoot">
-                    <td colspan="4"></td>
+                    <td colspan="3"></td>
                     <td>Total =</td>
                     <td>{{ totalDebit }}</td>
                     <td>{{ totalCredit }}</td>
@@ -154,7 +155,7 @@
     }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
     .sales-tax-report {
         h2 {
             padding-top: 15px;
@@ -181,7 +182,6 @@
         .report-header {
             width: 420px;
             padding: 10px 0 0 0;
-            margin: 50px 0 0 0;
 
             li {
                 display: flex;
@@ -192,14 +192,67 @@
         .sales-tax-table tbody tr td:last-child {
             text-align: left !important;
         }
+    }
 
-        @media print {
-            .erp-nav-container {
-                display: none;
-            }
+    @media print {
+        .erp-nav-container {
+            display: none;
+        }
 
-            .no-print, .no-print * {
-                display: none !important;
+        .no-print, .no-print * {
+            display: none !important;
+        }
+
+        .sales-tax-report {
+            .wperp-table.sales-tax-table {
+                th.trn_date,
+                th.created_at {
+                    min-width: 120px;
+                }
+
+                th.trn_no {
+                    min-width: 100px;
+                }
+
+                td,
+                th {
+                    padding: 3px !important;
+                }
+
+                tr th:first-child,
+                tr td:last-child {
+                    padding-left: 5px;
+                }
+
+                tr th:last-child,
+                tr td:last-child {
+                    padding-right: 5px;
+                }
+
+                thead tr th {
+                    font-weight: bold;
+
+                    &:nth-child(5),
+                    &:nth-child(6),
+                    &:nth-child(7) {
+                        text-align: right;
+                    }
+                }
+
+                tbody tr td {
+                    &:nth-child(5),
+                    &:nth-child(6),
+                    &:nth-child(7) {
+                        text-align: right !important;
+                    }
+                }
+
+                tfoot td {
+                    &:nth-child(3),
+                    &:nth-child(4) {
+                        text-align: right !important;
+                    }
+                }
             }
         }
     }

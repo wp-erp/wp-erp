@@ -145,11 +145,6 @@
             tbody {
                 background: #FAFAFA;
             }
-            tfoot th,
-            thead th {
-                color: #1A9ED4;
-                font-weight: bold;
-            }
             th ul,
             th li {
                 margin: 0;

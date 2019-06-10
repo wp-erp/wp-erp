@@ -1098,6 +1098,8 @@ Company'
                 `people_id` varchar(255) DEFAULT NULL,
                 `trn_no` int(11) DEFAULT NULL,
                 `trn_date` date DEFAULT NULL,
+                `trn_by` varchar(255) DEFAULT NULL,
+                `voucher_type` varchar(255) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `debit` decimal(10,2) DEFAULT 0,
                 `credit` decimal(10,2) DEFAULT 0,

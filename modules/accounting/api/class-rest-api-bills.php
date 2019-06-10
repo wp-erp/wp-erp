@@ -212,7 +212,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $item_total[ $key ] = $item['amount'];
+            $item_total[$key] = $item['amount'];
         }
 
         $bill_data['attachments']     = maybe_serialize( $bill_data['attachments'] );
@@ -263,7 +263,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['bill_details'];
 
         foreach ( $items as $key => $item ) {
-            $item_total[ $key ] = $item['amount'];
+            $item_total[$key] = $item['amount'];
         }
 
         $bill_data['attachments']     = maybe_serialize( $bill_data['attachments'] );

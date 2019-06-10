@@ -139,7 +139,7 @@ function erp_acct_insert_journal( $data ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_journal_details', array(
                 'trn_no'      => $voucher_no,
                 'ledger_id'   => $item['ledger_id'],
-                'particulars' => $item['particulars'],
+                'particulars' => empty( $item['particulars'] ) ? '' : $item['particulars'],
                 'debit'       => $item['debit'],
                 'credit'      => $item['credit'],
                 'created_at'  => $journal_data['created_at'],
@@ -151,7 +151,7 @@ function erp_acct_insert_journal( $data ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', [
                 'ledger_id'   => $item['ledger_id'],
                 'trn_no'      => $voucher_no,
-                'particulars' => $item['particulars'],
+                'particulars' => empty( $item['particulars'] ) ? '' : $item['particulars'],
                 'debit'       => $item['debit'],
                 'credit'      => $item['credit'],
                 'trn_date'    => $journal_data['trn_date'],
@@ -279,11 +279,11 @@ function erp_acct_format_journal_data( $item, $journal_no ) {
     $line_items = [];
 
     foreach ( $rows as $key => $item ) {
-        $line_items[ $key ]['ledger_id']   = $item['ledger_id'];
-        $line_items[ $key ]['account']     = erp_acct_get_ledger_name_by_id( $item['ledger_id'] );
-        $line_items[ $key ]['particulars'] = $item['particulars'];
-        $line_items[ $key ]['debit']       = $item['debit'];
-        $line_items[ $key ]['credit']      = $item['credit'];
+        $line_items[$key]['ledger_id']   = $item['ledger_id'];
+        $line_items[$key]['account']     = erp_acct_get_ledger_name_by_id( $item['ledger_id'] );
+        $line_items[$key]['particulars'] = $item['particulars'];
+        $line_items[$key]['debit']       = $item['debit'];
+        $line_items[$key]['credit']      = $item['credit'];
     }
 
     return $line_items;

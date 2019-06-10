@@ -278,7 +278,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['tax_components'];
 
         foreach ( $items as $key => $item ) {
-            $item_rates[ $key ] = $item['tax_rate'];
+            $item_rates[$key] = $item['tax_rate'];
         }
 
         $tax_data['tax_rate'] = array_sum( $item_rates );
@@ -318,7 +318,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $tax_data['tax_components'];
 
         foreach ( $items as $key => $item ) {
-            $item_rates[ $key ] = $item['tax_rate'];
+            $item_rates[$key] = $item['tax_rate'];
         }
 
         $tax_data['tax_rate'] = array_sum( $item_rates );

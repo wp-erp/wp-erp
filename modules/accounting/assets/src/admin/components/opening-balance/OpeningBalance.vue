@@ -558,38 +558,41 @@
             getSelectedOB(year) {
                 this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
 
-                this.$store.dispatch( 'spinner/setSpinner', true );
+                let count = 0;
 
-                HTTP.get(`/opening-balances/${year.id}`).then( response => {
-                    this.totalDebit = 0;
-                    this.totalCredit = 0;
-                    response.data.forEach( (ledger) => {
-                        ledger.id = ledger.ledger_id;
-                        ledger.balance = this.transformBalance( ledger.balance );
-                        this.totalDebit += parseFloat( ledger.debit );
-                        this.totalCredit += parseFloat( ledger.credit);
-                    });
-                    this.ledgers = this.groupBy(response.data, 'chart_id');
-                    this.fetchVirtualAccts(year);
+                HTTP.get(`/opening-balances/${year.id}/count`).then( response => {
+                    count = parseInt( response.data );
                 }).then(() => {
-                    if ( Object.keys(this.ledgers).length === 0 ) {
+                    if ( count == 0 ) {
                         this.fetchLedgers();
-                    }
+                        return;
+                    } else {
+                        HTTP.get(`/opening-balances/${year.id}`).then( response => {
+                            this.totalDebit = 0;
+                            this.totalCredit = 0;
+                            response.data.forEach( (ledger) => {
+                                ledger.id = ledger.ledger_id;
+                                ledger.balance = this.transformBalance( ledger.balance );
+                                this.totalDebit += parseFloat( ledger.debit );
+                                this.totalCredit += parseFloat( ledger.credit );
+                            });
+                            this.ledgers = this.groupBy(response.data, 'chart_id');
+                            this.fetchVirtualAccts(year);
+                        }).then(() => {
+                            if ( !this.ledgers.hasOwnProperty('7') ) {
+                                this.ledgers[7] = this.banks;
+                            }
+                        });
 
-                    if( !this.ledgers.hasOwnProperty('7') ) {
-                        this.ledgers[7] = this.banks;
+                        if ( Object.keys(this.ledgers).length === 0 ) {
+                            this.fetchData();
+                        }
                     }
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
                 });
 
-                if ( Object.keys(this.ledgers).length === 0 ) {
-                    this.fetchData();
-                }
             },
 
             fetchVirtualAccts(year) {
-                this.$store.dispatch( 'spinner/setSpinner', true );
 
                 HTTP.get(`/opening-balances/virtual-accts/${year.id}`).then( response => {
                     this.acct_pay = response.data.acct_payable;

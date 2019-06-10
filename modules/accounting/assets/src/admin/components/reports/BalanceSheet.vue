@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="balance-sheet">
         <h2 class="content-header__title">
             <span>Balance Sheet</span>
         </h2>
@@ -25,7 +25,7 @@
 
             </form>
 
-            <div class="closing-blnc">
+            <div class="closing-blnc no-print">
                 <div class="close-check">
                     <input type="checkbox" id="prepare-close" v-model="closingBtnVisibility">
                     <label for="prepare-close">Prepare for closing</label>
@@ -41,6 +41,8 @@
                 </a>
             </div>
         </div>
+
+        <p><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></p>
 
         <div class="wperp-panel-body">
             <div class="wperp-row">
@@ -118,14 +120,14 @@
                         <tr>
                             <td><strong>Assets = </strong></td>
                             <td>{{ transformBalance(totalAsset) }}</td>
-                            <td></td>
-                            <td></td>
+                            <td class="no-print"></td>
+                            <td class="no-print"></td>
                         </tr>
                         <tr>
                             <td><strong>Liability + Equity = </strong></td>
                             <td>{{ transformBalance(liability_equity) }}</td>
-                            <td></td>
-                            <td></td>
+                            <td class="no-print"></td>
+                            <td class="no-print"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -175,14 +177,14 @@
                     'name': { label: 'Equity' },
                     'balance': { label: 'Amount' }
                 },
-                rows1         : [] ,
-                rows2         : [] ,
-                rows3         : [] ,
-                totalAsset    : 0 ,
-                totalLiability: 0 ,
-                totalEquity   : 0 ,
-                selectedYear  : null,
-                fyears        : []
+                rows1         : [],
+                rows2         : [],
+                rows3         : [],
+                fyears        : [],
+                totalAsset    : 0,
+                totalLiability: 0,
+                totalEquity   : 0,
+                selectedYear  : null
             }
         },
 
@@ -330,6 +332,13 @@
         }
     }
 
+    .balance-sheet {
+        .tablenav.top,
+        .tablenav.bottom {
+            display: none;
+        }
+    }
+
     .blnce-sheet-top,
     .query-options,
     .close-check {
@@ -392,6 +401,10 @@
             td {
                 color: #2196f3;
                 font-weight: bold;
+
+                &:last-child {
+                    font-size: 16px;
+                }
             }
         }
     }
@@ -447,16 +460,63 @@
                 color: #2196f3;
                 font-weight: bold;
             }
+
+            &:last-child td:nth-child(2) {
+                font-size: 16px;
+            }
         }
     }
+
     @media print {
         .erp-nav-container {
             display: none;
         }
+
         .no-print {
             display: none !important;
             * {
                 display: none !important;
+            }
+        }
+
+        .balance-sheet {
+            .wperp-row {
+                .wperp-col-sm-12 {
+                    width: 100%;
+                }
+            }
+
+            p {
+                margin-bottom: 20px;
+
+                em {
+                    font-weight: bold;
+                }
+            }
+
+            .wperp-table {
+                td,
+                th {
+                    padding: 3px 20px;
+                }
+
+                thead tr th {
+                    font-weight: bold;
+
+                    &:not(:first-child) {
+                        text-align: right;
+                    }
+                }
+
+                tbody tr td {
+                    &:not(:first-child) {
+                        text-align: right !important;
+                    }
+                }
+
+                tfoot td:not(:first-child) {
+                    text-align: right !important;
+                }
             }
         }
     }

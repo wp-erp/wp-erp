@@ -82,7 +82,7 @@ final class Accounting {
      */
     public function __get( $prop ) {
         if ( array_key_exists( $prop, $this->container ) ) {
-            return $this->container[ $prop ];
+            return $this->container[$prop];
         }
 
         return $this->{$prop};
@@ -96,7 +96,7 @@ final class Accounting {
      * @return mixed
      */
     public function __isset( $prop ) {
-        return isset( $this->{$prop} ) || isset( $this->container[ $prop ] );
+        return isset( $this->{$prop} ) || isset( $this->container[$prop] );
     }
 
     /**
