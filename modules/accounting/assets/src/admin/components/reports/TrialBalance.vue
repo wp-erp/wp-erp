@@ -2,6 +2,10 @@
     <div class="trial-balance">
         <h2>Trial Balance</h2>
 
+        <div class="with-multiselect fyear-select">
+            <multi-select v-model="selectedYear" :options="fyears" />
+        </div>
+
         <form action="" method="" @submit.prevent="getTrialBalance" class="query-options no-print">
             <div class="wperp-date-btn-group">
                 <datepicker v-model="start_date"></datepicker>
@@ -59,6 +63,7 @@
 
 <script>
     import HTTP from 'admin/http'
+    import MultiSelect from 'admin/components/select/MultiSelect.vue'
     import ListTable from 'admin/components/list-table/ListTable.vue'
     import Datepicker  from 'admin/components/base/Datepicker.vue'
 
@@ -68,6 +73,7 @@
         components: {
             ListTable,
             Datepicker,
+            MultiSelect,
         },
 
         data() {
@@ -84,18 +90,37 @@
                     'debit' : { label: 'Debit Total' },
                     'credit': { label: 'Credit Total' }
                 },
-                rows       : [],
-                totalDebit : 0,
-                totalCredit: 0,
-                chrtAcct   : null,
-                start_date : null,
-                end_date   : null
+                rows        : [],
+                fyears      : [],
+                totalDebit  : 0,
+                totalCredit : 0,
+                chrtAcct    : null,
+                start_date  : null,
+                end_date    : null,
+                selectedYear: null
             }
         },
 
         computed: {
             debugMode() {
                 return '1' == erp_acct_var.erp_debug_mode;
+            }
+        },
+
+        watch: {
+            selectedYear(newVal) {
+                this.start_date = newVal.start_date;
+                this.end_date   = newVal.end_date;
+
+                this.getChartOfAccts();
+            },
+
+            start_date() {
+                this.selectedYear = null;
+            },
+
+            end_date() {
+                this.selectedYear = null;
             }
         },
 
@@ -113,6 +138,8 @@
                     this.end_date   = erp_acct_var.current_date;
                 }
             });
+
+            this.fetchFnYears();
 
             this.getChartOfAccts();
         },
@@ -136,6 +163,13 @@
             setDateAndGetTb() {
                 this.updateDate();
                 this.getTrialBalance();
+            },
+
+            fetchFnYears() {
+                HTTP.get( '/opening-balances/names').then(response => {
+                    // get only last 5
+                    this.fyears = response.data.reverse().slice(0).slice(-5);
+                });
             },
 
             getTrialBalance() {
@@ -209,6 +243,12 @@
             justify-content: space-between;
             width: 500px;
             padding: 20px 0;
+        }
+
+        .fyear-select {
+            width: 320px;
+            margin-bottom: 0;
+            margin-top: 10px;
         }
 
         details {

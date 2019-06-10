@@ -177,14 +177,14 @@
                     'name': { label: 'Equity' },
                     'balance': { label: 'Amount' }
                 },
-                rows1         : [] ,
-                rows2         : [] ,
-                rows3         : [] ,
-                totalAsset    : 0 ,
-                totalLiability: 0 ,
-                totalEquity   : 0 ,
-                selectedYear  : null,
-                fyears        : []
+                rows1         : [],
+                rows2         : [],
+                rows3         : [],
+                fyears        : [],
+                totalAsset    : 0,
+                totalLiability: 0,
+                totalEquity   : 0,
+                selectedYear  : null
             }
         },
 
