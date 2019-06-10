@@ -374,7 +374,7 @@ function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
  * @return array
  */
 function erp_acct_quick_access_menu() {
-    return [
+    $menus =  [
         'invoice'         => [
             'title' => 'Invoice',
             'slug'  => 'invoice',
@@ -439,8 +439,10 @@ function erp_acct_quick_access_menu() {
             'title' => __( 'Opening Balance', 'erp' ),
             'slug'  => 'opening_balance',
             'url'   => 'opening-balance',
-        ]
+        ],
     ];
+
+    return apply_filters( 'erp_acct_quick_menu', $menus );
 }
 
 /**
