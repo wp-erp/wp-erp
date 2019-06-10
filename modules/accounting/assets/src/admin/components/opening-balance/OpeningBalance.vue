@@ -472,14 +472,23 @@
                 }
 
                 for (let key in this.acct_rec) {
+                    if ( this.acct_rec[key].debit === '' ) {
+                        this.acct_rec[key].debit = 0;
+                    }
                     this.debit_total += parseFloat(this.acct_rec[key].debit);
                 }
 
                 for (let key in this.acct_pay) {
+                    if ( this.acct_pay[key].credit === '' ) {
+                        this.acct_pay[key].credit = 0;
+                    }
                     this.credit_total += parseFloat(this.acct_pay[key].credit);
                 }
 
                 for (let key in this.tax_pay) {
+                    if ( this.tax_pay[key].credit === '' ) {
+                        this.tax_pay[key].credit = 0;
+                    }
                     this.credit_total += parseFloat(this.tax_pay[key].credit);
                 }
 
@@ -495,6 +504,24 @@
 
             validateForm() {
                 this.form_errors = [];
+
+                this.acct_rec.forEach( (element) => {
+                    if ( typeof element !== 'undefined' && element.hasOwnProperty('people') ) {
+                        this.form_errors.push('People is not selected in Accounts Receivable.');
+                    }
+                });
+
+                this.acct_pay.forEach( (element) => {
+                    if ( typeof element !== 'undefined' && element.hasOwnProperty('people') ) {
+                        this.form_errors.push('People is not selected in Accounts Payable.');
+                    }
+                });
+
+                this.tax_pay.forEach( (element) => {
+                    if ( typeof element !== 'undefined' && element.hasOwnProperty('agency') ) {
+                        this.form_errors.push('Agency is not selected in Tax Payable.');
+                    }
+                });
 
                 if ( !this.fin_year.hasOwnProperty('id') ) {
                     this.form_errors.push('Financial year is required.');
