@@ -2035,6 +2035,15 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
           }
         });
       }
+
+      if ('people_trn' === _this.voucher_type) {
+        _this.$router.push({
+          name: 'PeopleTrnSingle',
+          params: {
+            id: _this.voucher_no
+          }
+        });
+      }
     });
   }
 });
