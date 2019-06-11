@@ -27636,19 +27636,19 @@ function validateNamespace(namespace) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ErrorBag", function() { return ErrorBag; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Rules", function() { return Rules; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ValidationObserver", function() { return ValidationObserver; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ValidationProvider", function() { return ValidationProvider; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Validator", function() { return Validator; });
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "install", function() { return install; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "directive", function() { return directive; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "install", function() { return install; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapFields", function() { return mapFields; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mixin", function() { return mixin; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapFields", function() { return mapFields; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Validator", function() { return Validator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ErrorBag", function() { return ErrorBag; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Rules", function() { return Rules; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "version", function() { return version; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ValidationProvider", function() { return ValidationProvider; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ValidationObserver", function() { return ValidationObserver; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withValidation", function() { return withValidation; });
 /**
-  * vee-validate v2.2.8
+  * vee-validate v2.2.7
   * (c) 2019 Abdelrahman Awad
   * @license MIT
   */
@@ -30007,16 +30007,14 @@ Field.prototype.addValueListeners = function addValueListeners () {
   var inputEvent = this._determineInputEvent();
   var events = this._determineEventList(inputEvent);
 
-  // if on input validation is requested.
-  if (includes(events, inputEvent)) {
+  // if there is a model and an on input validation is requested.
+  if (this.model && includes(events, inputEvent)) {
     var ctx = null;
-    var expression = null;
-    var watchCtxVm = false;
+    var expression = this.model.expression;
     // if its watchable from the context vm.
-    if (this.model && this.model.expression) {
+    if (this.model.expression) {
       ctx = this.vm;
       expression = this.model.expression;
-      watchCtxVm = true;
     }
 
     // watch it from the custom component vm instead.
@@ -30037,10 +30035,8 @@ Field.prototype.addValueListeners = function addValueListeners () {
         }
       });
 
-      // filter out input event when we are watching from the context vm.
-      if (watchCtxVm) {
-        events = events.filter(function (e) { return e !== inputEvent; });
-      }
+      // filter out input event as it is already handled by the watcher API.
+      events = events.filter(function (e) { return e !== inputEvent; });
     }
   }
 
@@ -36633,7 +36629,7 @@ var confirmed = {
 };
 
 function unwrapExports (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x.default : x;
 }
 
 function createCommonjsModule(fn, module) {
@@ -37929,272 +37925,6 @@ var $validator = null;
 
 var PROVIDER_COUNTER = 0;
 
-var ValidationProvider = {
-  $__veeInject: false,
-  inject: {
-    $_veeObserver: {
-      from: '$_veeObserver',
-      default: function default$1 () {
-        if (!this.$vnode.context.$_veeObserver) {
-          this.$vnode.context.$_veeObserver = createObserver();
-        }
-
-        return this.$vnode.context.$_veeObserver;
-      }
-    }
-  },
-  props: {
-    vid: {
-      type: [String, Number],
-      default: function () {
-        PROVIDER_COUNTER++;
-
-        return ("_vee_" + PROVIDER_COUNTER);
-      }
-    },
-    name: {
-      type: String,
-      default: null
-    },
-    mode: {
-      type: [String, Function],
-      default: function () {
-        return getConfig().mode;
-      }
-    },
-    events: {
-      type: Array,
-      validate: function () {
-        /* istanbul ignore next */
-        if (process.env.NODE_ENV !== 'production') {
-          warn('events prop and config will be deprecated in future version please use the interaction modes instead');
-        }
-
-        return true;
-      },
-      default: function () {
-        var events = getConfig().events;
-        if (typeof events === 'string') {
-          return events.split('|');
-        }
-
-        return events;
-      }
-    },
-    rules: {
-      type: [Object, String],
-      default: null
-    },
-    immediate: {
-      type: Boolean,
-      default: false
-    },
-    persist: {
-      type: Boolean,
-      default: false
-    },
-    bails: {
-      type: Boolean,
-      default: function () { return getConfig().fastExit; }
-    },
-    debounce: {
-      type: Number,
-      default: function () { return getConfig().delay || 0; }
-    },
-    tag: {
-      type: String,
-      default: 'span'
-    }
-  },
-  watch: {
-    rules: {
-      deep: true,
-      handler: function handler (val, oldVal) {
-        this._needsValidation = !isEqual(val, oldVal);
-      }
-    }
-  },
-  data: function () { return ({
-    messages: [],
-    value: undefined,
-    initialized: false,
-    initialValue: undefined,
-    flags: createFlags(),
-    failedRules: {},
-    forceRequired: false,
-    isDeactivated: false,
-    id: null
-  }); },
-  computed: {
-    isValid: function isValid () {
-      return this.flags.valid;
-    },
-    fieldDeps: function fieldDeps () {
-      var this$1 = this;
-
-      var rules = normalizeRules(this.rules);
-
-      return Object.keys(rules).filter(RuleContainer.isTargetRule).map(function (rule) {
-        var depName = rules[rule][0];
-        watchCrossFieldDep(this$1, depName);
-
-        return depName;
-      });
-    },
-    normalizedEvents: function normalizedEvents () {
-      var this$1 = this;
-
-      var ref = computeModeSetting(this);
-      var on = ref.on;
-
-      return normalizeEvents(on || this.events || []).map(function (e) {
-        if (e === 'input') {
-          return this$1._inputEventName;
-        }
-
-        return e;
-      });
-    },
-    isRequired: function isRequired () {
-      var rules = normalizeRules(this.rules);
-      var forceRequired = this.forceRequired;
-
-      var isRequired = rules.required || forceRequired;
-      this.flags.required = isRequired;
-
-      return isRequired;
-    },
-    classes: function classes () {
-      var this$1 = this;
-
-      var names = getConfig().classNames;
-      return Object.keys(this.flags).reduce(function (classes, flag) {
-        var className = (names && names[flag]) || flag;
-        if (isNullOrUndefined(this$1.flags[flag])) {
-          return classes;
-        }
-
-        if (className) {
-          classes[className] = this$1.flags[flag];
-        }
-
-        return classes;
-      }, {});
-    }
-  },
-  render: function render (h) {
-    var this$1 = this;
-
-    this.registerField();
-    var ctx = createValidationCtx(this);
-
-    // Gracefully handle non-existent scoped slots.
-    var slot = this.$scopedSlots.default;
-    /* istanbul ignore next */
-    if (!isCallable(slot)) {
-      if (process.env.NODE_ENV !== 'production') {
-        warn('ValidationProvider expects a scoped slot. Did you forget to add "slot-scope" to your slot?');
-      }
-
-      return h(this.tag, this.$slots.default);
-    }
-
-    var nodes = slot(ctx);
-    // Handle single-root slot.
-    extractVNodes(nodes).forEach(function (input) {
-      addListeners.call(this$1, input);
-    });
-
-    return h(this.tag, nodes);
-  },
-  beforeDestroy: function beforeDestroy () {
-    // cleanup reference.
-    this.$_veeObserver.unsubscribe(this);
-  },
-  activated: function activated () {
-    this.$_veeObserver.subscribe(this);
-    this.isDeactivated = false;
-  },
-  deactivated: function deactivated () {
-    this.$_veeObserver.unsubscribe(this);
-    this.isDeactivated = true;
-  },
-  methods: {
-    setFlags: function setFlags (flags) {
-      var this$1 = this;
-
-      Object.keys(flags).forEach(function (flag) {
-        this$1.flags[flag] = flags[flag];
-      });
-    },
-    syncValue: function syncValue (e) {
-      var value = normalizeValue$1(e);
-      this.value = value;
-      this.flags.changed = this.initialValue !== value;
-    },
-    reset: function reset () {
-      this.messages = [];
-      this._pendingValidation = null;
-      this.initialValue = this.value;
-      var flags = createFlags();
-      this.setFlags(flags);
-    },
-    validate: function validate () {
-      var this$1 = this;
-      var args = [], len = arguments.length;
-      while ( len-- ) args[ len ] = arguments[ len ];
-
-      if (args.length > 0) {
-        this.syncValue(args[0]);
-      }
-
-      return this.validateSilent().then(function (result) {
-        this$1.applyResult(result);
-
-        return result;
-      });
-    },
-    validateSilent: function validateSilent () {
-      var this$1 = this;
-
-      this.setFlags({ pending: true });
-
-      return $validator.verify(this.value, this.rules, {
-        name: this.name,
-        values: createValuesLookup(this),
-        bails: this.bails
-      }).then(function (result) {
-        this$1.setFlags({ pending: false });
-        if (!this$1.isRequired) {
-          this$1.setFlags({ valid: result.valid, invalid: !result.valid });
-        }
-
-        return result;
-      });
-    },
-    applyResult: function applyResult (ref) {
-      var errors = ref.errors;
-      var failedRules = ref.failedRules;
-
-      this.messages = errors;
-      this.failedRules = assign({}, failedRules);
-      this.setFlags({
-        valid: !errors.length,
-        changed: this.value !== this.initialValue,
-        invalid: !!errors.length,
-        validated: true
-      });
-    },
-    registerField: function registerField () {
-      if (!$validator) {
-        $validator = getValidator() || new Validator(null, { fastExit: getConfig().fastExit });
-      }
-
-      updateRenderingContextRefs(this);
-    }
-  }
-};
-
 function createValidationCtx (ctx) {
   return {
     errors: ctx.messages,
@@ -38393,29 +38123,280 @@ function createObserver () {
   };
 }
 
-function watchCrossFieldDep (ctx, depName, withHooks) {
-  if ( withHooks === void 0 ) withHooks = true;
+var ValidationProvider = {
+  $__veeInject: false,
+  inject: {
+    $_veeObserver: {
+      from: '$_veeObserver',
+      default: function default$1 () {
+        if (!this.$vnode.context.$_veeObserver) {
+          this.$vnode.context.$_veeObserver = createObserver();
+        }
 
-  var providers = ctx.$_veeObserver.refs;
-  if (!ctx._veeWatchers) {
-    ctx._veeWatchers = {};
-  }
-
-  if (!providers[depName] && withHooks) {
-    return ctx.$once('hook:mounted', function () {
-      watchCrossFieldDep(ctx, depName, false);
-    });
-  }
-
-  if (!isCallable(ctx._veeWatchers[depName]) && providers[depName]) {
-    ctx._veeWatchers[depName] = providers[depName].$watch('value', function () {
-      if (ctx.flags.validated) {
-        ctx._needsValidation = true;
-        ctx.validate();
+        return this.$vnode.context.$_veeObserver;
       }
+    }
+  },
+  props: {
+    vid: {
+      type: [String, Number],
+      default: function () {
+        PROVIDER_COUNTER++;
+
+        return ("_vee_" + PROVIDER_COUNTER);
+      }
+    },
+    name: {
+      type: String,
+      default: null
+    },
+    mode: {
+      type: [String, Function],
+      default: function () {
+        return getConfig().mode;
+      }
+    },
+    events: {
+      type: Array,
+      validate: function () {
+        /* istanbul ignore next */
+        if (process.env.NODE_ENV !== 'production') {
+          warn('events prop and config will be deprecated in future version please use the interaction modes instead');
+        }
+
+        return true;
+      },
+      default: function () {
+        var events = getConfig().events;
+        if (typeof events === 'string') {
+          return events.split('|');
+        }
+
+        return events;
+      }
+    },
+    rules: {
+      type: [Object, String],
+      default: null
+    },
+    immediate: {
+      type: Boolean,
+      default: false
+    },
+    persist: {
+      type: Boolean,
+      default: false
+    },
+    bails: {
+      type: Boolean,
+      default: function () { return getConfig().fastExit; }
+    },
+    debounce: {
+      type: Number,
+      default: function () { return getConfig().delay || 0; }
+    },
+    tag: {
+      type: String,
+      default: 'span'
+    }
+  },
+  watch: {
+    rules: {
+      deep: true,
+      handler: function handler (val, oldVal) {
+        this._needsValidation = !isEqual(val, oldVal);
+      }
+    }
+  },
+  data: function () { return ({
+    messages: [],
+    value: undefined,
+    initialized: false,
+    initialValue: undefined,
+    flags: createFlags(),
+    failedRules: {},
+    forceRequired: false,
+    isDeactivated: false,
+    id: null
+  }); },
+  computed: {
+    isValid: function isValid () {
+      return this.flags.valid;
+    },
+    fieldDeps: function fieldDeps () {
+      var this$1 = this;
+
+      var rules = normalizeRules(this.rules);
+      var providers = this.$_veeObserver.refs;
+
+      return Object.keys(rules).filter(RuleContainer.isTargetRule).map(function (rule) {
+        var depName = rules[rule][0];
+        var watcherName = "$__" + depName;
+        if (!isCallable(this$1[watcherName]) && providers[depName]) {
+          this$1[watcherName] = providers[depName].$watch('value', function () {
+            if (this$1.flags.validated) {
+              this$1._needsValidation = true;
+              this$1.validate();
+            }
+          });
+        }
+
+        return depName;
+      });
+    },
+    normalizedEvents: function normalizedEvents () {
+      var this$1 = this;
+
+      var ref = computeModeSetting(this);
+      var on = ref.on;
+
+      return normalizeEvents(on || this.events || []).map(function (e) {
+        if (e === 'input') {
+          return this$1._inputEventName;
+        }
+
+        return e;
+      });
+    },
+    isRequired: function isRequired () {
+      var rules = normalizeRules(this.rules);
+      var forceRequired = this.forceRequired;
+
+      var isRequired = rules.required || forceRequired;
+      this.flags.required = isRequired;
+
+      return isRequired;
+    },
+    classes: function classes () {
+      var this$1 = this;
+
+      var names = getConfig().classNames;
+      return Object.keys(this.flags).reduce(function (classes, flag) {
+        var className = (names && names[flag]) || flag;
+        if (isNullOrUndefined(this$1.flags[flag])) {
+          return classes;
+        }
+
+        if (className) {
+          classes[className] = this$1.flags[flag];
+        }
+
+        return classes;
+      }, {});
+    }
+  },
+  render: function render (h) {
+    var this$1 = this;
+
+    this.registerField();
+    var ctx = createValidationCtx(this);
+
+    // Gracefully handle non-existent scoped slots.
+    var slot = this.$scopedSlots.default;
+    /* istanbul ignore next */
+    if (!isCallable(slot)) {
+      if (process.env.NODE_ENV !== 'production') {
+        warn('ValidationProvider expects a scoped slot. Did you forget to add "slot-scope" to your slot?');
+      }
+
+      return h(this.tag, this.$slots.default);
+    }
+
+    var nodes = slot(ctx);
+    // Handle single-root slot.
+    extractVNodes(nodes).forEach(function (input) {
+      addListeners.call(this$1, input);
     });
+
+    return h(this.tag, nodes);
+  },
+  beforeDestroy: function beforeDestroy () {
+    // cleanup reference.
+    this.$_veeObserver.unsubscribe(this);
+  },
+  activated: function activated () {
+    this.$_veeObserver.subscribe(this);
+    this.isDeactivated = false;
+  },
+  deactivated: function deactivated () {
+    this.$_veeObserver.unsubscribe(this);
+    this.isDeactivated = true;
+  },
+  methods: {
+    setFlags: function setFlags (flags) {
+      var this$1 = this;
+
+      Object.keys(flags).forEach(function (flag) {
+        this$1.flags[flag] = flags[flag];
+      });
+    },
+    syncValue: function syncValue (e) {
+      var value = normalizeValue$1(e);
+      this.value = value;
+      this.flags.changed = this.initialValue !== value;
+    },
+    reset: function reset () {
+      this.messages = [];
+      this._pendingValidation = null;
+      this.initialValue = this.value;
+      var flags = createFlags();
+      this.setFlags(flags);
+    },
+    validate: function validate () {
+      var this$1 = this;
+      var args = [], len = arguments.length;
+      while ( len-- ) args[ len ] = arguments[ len ];
+
+      if (args.length > 0) {
+        this.syncValue(args[0]);
+      }
+
+      return this.validateSilent().then(function (result) {
+        this$1.applyResult(result);
+
+        return result;
+      });
+    },
+    validateSilent: function validateSilent () {
+      var this$1 = this;
+
+      this.setFlags({ pending: true });
+
+      return $validator.verify(this.value, this.rules, {
+        name: this.name,
+        values: createValuesLookup(this),
+        bails: this.bails
+      }).then(function (result) {
+        this$1.setFlags({ pending: false });
+        if (!this$1.isRequired) {
+          this$1.setFlags({ valid: result.valid, invalid: !result.valid });
+        }
+
+        return result;
+      });
+    },
+    applyResult: function applyResult (ref) {
+      var errors = ref.errors;
+      var failedRules = ref.failedRules;
+
+      this.messages = errors;
+      this.failedRules = assign({}, failedRules);
+      this.setFlags({
+        valid: !errors.length,
+        changed: this.value !== this.initialValue,
+        invalid: !!errors.length,
+        validated: true
+      });
+    },
+    registerField: function registerField () {
+      if (!$validator) {
+        $validator = getValidator() || new Validator(null, { fastExit: getConfig().fastExit });
+      }
+
+      updateRenderingContextRefs(this);
+    }
   }
-}
+};
 
 var flagMergingStrategy = {
   pristine: 'every',
@@ -38669,7 +38650,7 @@ function withValidation (component, ctxToProps) {
   return hoc;
 }
 
-var version = '2.2.8';
+var version = '2.2.7';
 
 Object.keys(Rules).forEach(function (rule) {
   Validator.extend(rule, Rules[rule].validate, assign({}, Rules[rule].options, { paramNames: Rules[rule].paramNames }));

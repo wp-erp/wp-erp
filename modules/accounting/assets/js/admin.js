@@ -15789,18 +15789,16 @@ if (false) {(function () {
       return '1' == erp_acct_var.erp_debug_mode;
     }
   },
-  watch: {
-    selectedYear: function selectedYear(newVal) {
-      this.start_date = newVal.start_date;
-      this.end_date = newVal.end_date;
-      this.getChartOfAccts();
-    },
-    start_date: function start_date() {
-      this.selectedYear = null;
-    },
-    end_date: function end_date() {
-      this.selectedYear = null;
-    }
+  watch: {// start_date() {
+    //     if ( this.selectedYear ) {
+    //         this.selectedYear = null;
+    //     }
+    // },
+    // end_date() {
+    //     if (  null !== this.selectedYear ) {
+    //         this.selectedYear = null;
+    //     }
+    // }
   },
   created: function created() {
     //? why is nextTick here ...? i don't know.
@@ -15820,6 +15818,15 @@ if (false) {(function () {
     this.getChartOfAccts();
   },
   methods: {
+    onYearSelected: function onYearSelected() {
+      this.start_date = this.selectedYear.start_date;
+      this.end_date = this.selectedYear.end_date;
+      this.selectedYear = {
+        id: parseInt(this.selectedYear.id),
+        name: this.selectedYear.name
+      };
+      this.getTrialBalance();
+    },
     updateDate: function updateDate() {
       this.$router.push({
         path: this.$route.path,
@@ -42489,6 +42496,7 @@ var render = function() {
       [
         _c("multi-select", {
           attrs: { options: _vm.fyears },
+          on: { input: _vm.onYearSelected },
           model: {
             value: _vm.selectedYear,
             callback: function($$v) {
@@ -42505,7 +42513,6 @@ var render = function() {
       "form",
       {
         staticClass: "query-options no-print",
-        attrs: { action: "", method: "" },
         on: {
           submit: function($event) {
             $event.preventDefault()
