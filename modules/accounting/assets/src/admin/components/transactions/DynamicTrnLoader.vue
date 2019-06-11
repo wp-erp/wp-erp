@@ -55,6 +55,9 @@
                 if ( 'tax_payment' === this.voucher_type ) {
                     this.$router.push({name: 'PayTaxSingle', params: {id: this.voucher_no}});
                 }
+                if ( 'people_trn' === this.voucher_type ) {
+                    this.$router.push({name: 'PeopleTrnSingle', params: {id: this.voucher_no}});
+                }
             });
         },
     }
