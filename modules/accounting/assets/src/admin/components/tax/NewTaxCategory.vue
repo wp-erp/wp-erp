@@ -16,7 +16,7 @@
                         <div class="wperp-form-group">
                             <label>Tax Category Name<span class="wperp-required-sign">*</span></label>
                                 <!--<multi-select v-model="category" :options="categories" />-->
-                                <input type="text" v-model="category" />
+                                <input type="text" v-model="category" class="wperp-required-sign">
                         </div>
 
                         <div class="wperp-form-group mb-0">
@@ -50,7 +50,6 @@
         name: 'NewTaxCategory',
 
         components: {
-            HTTP,
             MultiSelect,
             SubmitButton,
             ShowErrors

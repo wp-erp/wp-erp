@@ -16,7 +16,7 @@
                         <div class="wperp-form-group">
                             <label>Tax Agency Name<span class="wperp-required-sign">*</span></label>
                             <!--<multi-select v-model="agency" :options="agencies" />-->
-                            <input type="text" v-model="agency" />
+                            <input type="text" v-model="agency" class="wperp-form-field">
                         </div>
 
                     </div>
@@ -45,7 +45,6 @@
         name: 'NewTaxAgency',
 
         components: {
-            HTTP,
             MultiSelect,
             SubmitButton,
             ShowErrors

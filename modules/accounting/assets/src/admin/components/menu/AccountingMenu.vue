@@ -11,7 +11,7 @@
                     <path id="Path_281" data-name="Path 281" class="cls-1" :d="svgData"></path>
                 </svg>
             </div>
-            <h2>{{ module_name }}</h2>
+            <p class="page-title">{{ module_name }}</p>
         </div>
         <ul :class="primaryNav">
             <template v-for="(menu, index) in menuItems">
@@ -174,7 +174,8 @@
                     height: 15px;
                 }
             }
-            h2 {
+
+            .page-title {
                 font-size: 20px;
                 line-height: 1.4em;
                 font-weight: 700;
