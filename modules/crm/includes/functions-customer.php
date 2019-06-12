@@ -3065,10 +3065,10 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
         return new WP_Error( 'no-contact', __( 'No contact found', 'erp' ) );
     }
 
-    $contacts   = new \WeDevs\ERP\CRM\Contact( $contact_id );
-    $templates  = (object) erp_crm_get_save_replies_by_id( $template_id );
-    $shortcodes = erp_crm_get_save_replies_shortcodes();
-    $contacts_info   = $contacts->data ;
+    $contacts       = new \WeDevs\ERP\CRM\Contact( $contact_id );
+    $templates      = (object) erp_crm_get_save_replies_by_id( $template_id );
+    $shortcodes     = erp_crm_get_save_replies_shortcodes();
+    $contacts_info  = $contacts->data ;
     $data = [];
 
     foreach ( $shortcodes as $shortcode => $shortcode_val ) {
