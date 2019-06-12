@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.4.4\n"
+"Project-Id-Version: WP ERP 1.4.5\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2019-05-02 08:36:30+00:00\n"
+"POT-Creation-Date: 2019-06-12 06:35:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5565,7 +5565,7 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:210
 #: modules/accounting/includes/views/accounts/chart-table.php:12
-#: modules/hrm/views/employee/single.php:67
+#: modules/hrm/views/employee/single.php:73
 msgid "Actions"
 msgstr ""
 
@@ -5598,7 +5598,7 @@ msgstr ""
 #: modules/hrm/includes/class-designation-list-table.php:83
 #: modules/hrm/includes/class-employee-list-table.php:170
 #: modules/hrm/includes/class-walker-department.php:44
-#: modules/hrm/views/employee/single.php:72
+#: modules/hrm/views/employee/single.php:78
 #: modules/hrm/views/js-templates/row-dept.php:10
 #: modules/hrm/views/js-templates/row-desig.php:10
 #: modules/hrm/views/js-templates/row-employee.php:11
@@ -5935,7 +5935,7 @@ msgstr ""
 #: modules/hrm/views/js-templates/new-leave-request.php:32
 #: modules/hrm/views/js-templates/work-experience.php:36
 #: modules/hrm/views/leave/holiday.php:37
-#: modules/hrm/views/leave/new-request.php:48
+#: modules/hrm/views/leave/new-request.php:50
 msgid "To"
 msgstr ""
 
@@ -5947,7 +5947,7 @@ msgstr ""
 #: modules/hrm/views/js-templates/new-leave-request.php:21
 #: modules/hrm/views/js-templates/work-experience.php:25
 #: modules/hrm/views/leave/holiday.php:34
-#: modules/hrm/views/leave/new-request.php:36
+#: modules/hrm/views/leave/new-request.php:38
 msgid "From"
 msgstr ""
 
@@ -7767,12 +7767,12 @@ msgid "Something went wrong, please try again"
 msgstr ""
 
 #: includes/functions-people.php:828
-#: modules/crm/includes/functions-customer.php:3698
-#: modules/crm/includes/functions-customer.php:3719
-#: modules/crm/includes/functions-customer.php:3738
-#: modules/crm/includes/functions-customer.php:3758
-#: modules/crm/includes/functions-customer.php:3798
-#: modules/crm/includes/functions-customer.php:3818
+#: modules/crm/includes/functions-customer.php:3700
+#: modules/crm/includes/functions-customer.php:3721
+#: modules/crm/includes/functions-customer.php:3740
+#: modules/crm/includes/functions-customer.php:3760
+#: modules/crm/includes/functions-customer.php:3800
+#: modules/crm/includes/functions-customer.php:3820
 msgid "People not exists"
 msgstr ""
 
@@ -9154,7 +9154,7 @@ msgstr ""
 #: modules/accounting/includes/class-form-handler.php:333
 #: modules/accounting/includes/class-form-handler.php:374
 #: modules/accounting/includes/class-form-handler.php:474
-#: modules/hrm/includes/class-form-handler.php:837
+#: modules/hrm/includes/class-form-handler.php:844
 msgid "Permission Denied!"
 msgstr ""
 
@@ -10220,7 +10220,7 @@ msgstr ""
 #: modules/accounting/includes/views/sales/invoice-single.php:53
 #: modules/accounting/includes/views/sales/invoice-single.php:59
 #: modules/accounting/includes/views/sales/payment-single.php:30
-#: modules/hrm/views/employee/single.php:82
+#: modules/hrm/views/employee/single.php:88
 msgid "Print"
 msgstr ""
 
@@ -11222,7 +11222,7 @@ msgstr ""
 #: modules/crm/includes/functions-customer.php:1696
 #: modules/crm/views/js-templates/new-customer.php:306
 #: modules/hrm/views/employee/empty-employee.php:126
-#: modules/hrm/views/employee/single.php:108
+#: modules/hrm/views/employee/single.php:114
 #: modules/hrm/views/employee/tab-notes.php:2
 #: modules/hrm/views/js-templates/education-form.php:51
 msgid "Notes"
@@ -11703,7 +11703,7 @@ msgstr ""
 #: modules/crm/includes/functions-customer.php:382
 #: modules/crm/includes/functions-customer.php:1358
 #: modules/crm/includes/functions-customer.php:3065
-#: modules/crm/includes/functions-customer.php:3518
+#: modules/crm/includes/functions-customer.php:3520
 msgid "No contact found"
 msgstr ""
 
@@ -11786,8 +11786,8 @@ msgstr ""
 #: modules/hrm/includes/class-form-handler.php:541
 #: modules/hrm/includes/class-form-handler.php:577
 #: modules/hrm/includes/class-form-handler.php:679
-#: modules/hrm/includes/class-form-handler.php:730
-#: modules/hrm/includes/class-form-handler.php:802
+#: modules/hrm/includes/class-form-handler.php:737
+#: modules/hrm/includes/class-form-handler.php:809
 msgid "You do not have sufficient permissions to do this action"
 msgstr ""
 
@@ -12508,7 +12508,7 @@ msgid "Country/State"
 msgstr ""
 
 #: modules/crm/includes/functions-customer.php:1710
-#: modules/crm/includes/functions-customer.php:3865
+#: modules/crm/includes/functions-customer.php:3867
 msgid "Tags"
 msgstr ""
 
@@ -12614,105 +12614,105 @@ msgstr ""
 msgid "No template found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3109
-#: modules/crm/includes/functions-customer.php:3110
+#: modules/crm/includes/functions-customer.php:3111
+#: modules/crm/includes/functions-customer.php:3112
 msgid "Import into CRM"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3232
+#: modules/crm/includes/functions-customer.php:3234
 msgid "%s contacts created."
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3385
+#: modules/crm/includes/functions-customer.php:3387
 #: modules/hrm/includes/functions-employee.php:495
 msgid "Advertisement"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3386
+#: modules/crm/includes/functions-customer.php:3388
 msgid "Chat"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3387
+#: modules/crm/includes/functions-customer.php:3389
 msgid "Contact Form"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3388
+#: modules/crm/includes/functions-customer.php:3390
 msgid "Employee Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3389
+#: modules/crm/includes/functions-customer.php:3391
 msgid "External Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3390
+#: modules/crm/includes/functions-customer.php:3392
 msgid "Marketing campaign"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3391
+#: modules/crm/includes/functions-customer.php:3393
 msgid "Newsletter"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3392
+#: modules/crm/includes/functions-customer.php:3394
 msgid "OnlineStore"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3393
+#: modules/crm/includes/functions-customer.php:3395
 msgid "Optin Forms"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3394
+#: modules/crm/includes/functions-customer.php:3396
 msgid "Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3395
+#: modules/crm/includes/functions-customer.php:3397
 msgid "Phone Call"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3396
+#: modules/crm/includes/functions-customer.php:3398
 msgid "Public Relations"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3397
+#: modules/crm/includes/functions-customer.php:3399
 msgid "Sales Mail Alias"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3398
+#: modules/crm/includes/functions-customer.php:3400
 msgid "Search Engine"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3399
+#: modules/crm/includes/functions-customer.php:3401
 msgid "Seminar-Internal"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3400
+#: modules/crm/includes/functions-customer.php:3402
 msgid "Seminar Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3401
+#: modules/crm/includes/functions-customer.php:3403
 msgid "Social Media"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3402
+#: modules/crm/includes/functions-customer.php:3404
 msgid "Trade Show"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3403
+#: modules/crm/includes/functions-customer.php:3405
 msgid "Web Download"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3404
+#: modules/crm/includes/functions-customer.php:3406
 msgid "Web Research"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3514
+#: modules/crm/includes/functions-customer.php:3516
 msgid "You do not have permission to make WP User"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3528
+#: modules/crm/includes/functions-customer.php:3530
 msgid "No email found for creating wp user"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3864
+#: modules/crm/includes/functions-customer.php:3866
 #: modules/crm/views/company/single.php:150
 #: modules/crm/views/contact/single.php:154
 msgid "Tag"
@@ -13726,7 +13726,7 @@ msgstr ""
 msgid "Send Leave Request"
 msgstr ""
 
-#: modules/hrm/hrm.php:188 modules/hrm/views/employee/single.php:78
+#: modules/hrm/hrm.php:188 modules/hrm/views/employee/single.php:84
 msgid "Terminate"
 msgstr ""
 
@@ -14145,15 +14145,19 @@ msgstr ""
 msgid "days are available"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1625
+#: modules/hrm/includes/class-ajax.php:1602
+msgid "Leave reason field can not be blank"
+msgstr ""
+
+#: modules/hrm/includes/class-ajax.php:1628
 msgid "Leave request has been submitted successfully!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1627
+#: modules/hrm/includes/class-ajax.php:1630
 msgid "Something went wrong, please try again."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1659
+#: modules/hrm/includes/class-ajax.php:1662
 msgid "Invalid request permission."
 msgstr ""
 
@@ -14731,7 +14735,7 @@ msgstr ""
 
 #: modules/hrm/includes/class-settings.php:29
 #: modules/hrm/includes/class-settings.php:83
-#: modules/hrm/views/employee/single.php:104
+#: modules/hrm/views/employee/single.php:110
 #: modules/hrm/views/employee/tab-leave.php:11
 msgid "Leave"
 msgstr ""
@@ -14861,7 +14865,7 @@ msgstr ""
 #: modules/hrm/includes/functions-capabilities.php:46
 #: modules/hrm/views/employee/single.php:6 modules/hrm/views/employee.php:5
 #: modules/hrm/views/leave/leave-entitlements.php:80
-#: modules/hrm/views/leave/new-request.php:20
+#: modules/hrm/views/leave/new-request.php:22
 #: modules/hrm/views/reporting/salary-history.php:13
 msgid "Employee"
 msgstr ""
@@ -15123,7 +15127,7 @@ msgstr ""
 
 #: modules/hrm/includes/functions-employee.php:668
 #: modules/hrm/views/employee/empty-employee.php:135
-#: modules/hrm/views/employee/single.php:112
+#: modules/hrm/views/employee/single.php:118
 msgid "Performance"
 msgstr ""
 
@@ -15307,20 +15311,24 @@ msgid ""
 "employees, departments etc."
 msgstr ""
 
-#: modules/hrm/views/employee/single.php:78
+#: modules/hrm/views/employee/single.php:19
+msgid "Data Successfully saved"
+msgstr ""
+
+#: modules/hrm/views/employee/single.php:84
 #: modules/hrm/views/employee/tab-job.php:25
 msgid "Terminate Employee"
 msgstr ""
 
-#: modules/hrm/views/employee/single.php:96
+#: modules/hrm/views/employee/single.php:102
 msgid "General Info"
 msgstr ""
 
-#: modules/hrm/views/employee/single.php:100
+#: modules/hrm/views/employee/single.php:106
 msgid "Job"
 msgstr ""
 
-#: modules/hrm/views/employee/single.php:116
+#: modules/hrm/views/employee/single.php:122
 msgid "Permission"
 msgstr ""
 
@@ -15963,7 +15971,7 @@ msgstr ""
 
 #: modules/hrm/views/js-templates/leave-reject.php:5
 #: modules/hrm/views/js-templates/new-leave-request.php:45
-#: modules/hrm/views/leave/new-request.php:63
+#: modules/hrm/views/leave/new-request.php:65
 msgid "Reason"
 msgstr ""
 
@@ -16164,7 +16172,11 @@ msgstr ""
 msgid "Something went wrong."
 msgstr ""
 
-#: modules/hrm/views/leave/new-request.php:71
+#: modules/hrm/views/leave/new-request.php:12
+msgid "Leave reason field can not be blank."
+msgstr ""
+
+#: modules/hrm/views/leave/new-request.php:74
 msgid "Submit Request"
 msgstr ""
 
