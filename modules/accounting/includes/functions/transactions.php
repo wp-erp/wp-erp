@@ -611,7 +611,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
  */
 function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' ) {
 
-    $type       = isset( $request['type'] ) ? $request['type'] : '';
+    $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
     $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : [];
     $subject    = isset( $request['subject'] ) ? $request['subject'] : '';
     $body       = isset( $request['message'] ) ? $request['message'] : '';
@@ -805,6 +805,17 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->total );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->total );
+    }
+
+    if ( 'people_trn' == $type ) {
+        $type = __( 'People Transaction', 'erp' );
+        // Set Column Headers
+        $trn_pdf->set_table_headers( [ __( 'VOUCHER NO', 'erp' ), __( 'PARTICULARS', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
+
+        $trn_pdf->add_item( [ $transaction->voucher_no, $transaction->particulars, $transaction->balance ] );
+
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->balance );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->balance );
     }
 
 
