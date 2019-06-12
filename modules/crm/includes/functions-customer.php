@@ -3068,19 +3068,21 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
     $contacts   = new \WeDevs\ERP\CRM\Contact( $contact_id );
     $templates  = (object) erp_crm_get_save_replies_by_id( $template_id );
     $shortcodes = erp_crm_get_save_replies_shortcodes();
-
+    $contacts_info   = $contacts->data ;
     $data = [];
 
     foreach ( $shortcodes as $shortcode => $shortcode_val ) {
         if ( $shortcode_val['is_meta'] ) {
             $data[] = erp_people_get_meta( $contact_id, $shortcode_val['key'], true );
         } else {
-            if ( $shortcode == '%country%' ) {
-                $data[] = erp_get_country_name( $contacts->$shortcode_val['key'] );
-            } elseif ( $shortcode == '%state%' ) {
-                $data[] = erp_get_state_name( $contacts->country, $contacts->$shortcode_val['key'] );
-            } else {
-                $data[] = $contacts->$shortcode_val['key'];
+            if ( property_exists( $contacts_info, $shortcode_val['key'] ) ) {
+                if ($shortcode == '%country%') {
+                    $data[] = erp_get_country_name($contacts_info->{$shortcode_val['key']});
+                } elseif ($shortcode == '%state%') {
+                    $data[] = erp_get_state_name($contacts_info->country, $contacts_info->{$shortcode_val['key']});
+                } else {
+                    $data[] = $contacts_info->{$shortcode_val['key']};
+                }
             }
         }
     }
