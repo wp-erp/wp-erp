@@ -52,4 +52,9 @@
     .attachment-container .attachment-placeholder {
         padding: 20px 3px !important;
     }
+
+    .content-header-section .wperp-col {
+        width: 100%;
+        display: block !important;
+    }
 </style>
