@@ -1,11 +1,11 @@
 === WP ERP - Complete WordPress Business Manager with HR, CRM & Accounting Systems for Small Businesses ===
-Contributors: tareq1988, nizamuddinbabu, wedevs, ediamin, sabbir1991, asaquzzaman, rafsuntaskin
+Contributors: tareq1988, nizamuddinbabu, wedevs, ediamin, sabbir1991, asaquzzaman
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.1.1
+Tested up to: 5.2.1
 Requires PHP: 5.6
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -245,6 +245,12 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.4.5 -> June 12, 2019 =
+[tweak] Leave reason field is made required. Closes #824
+[fix] Saving Leave entitlement was redirecting to the leave requests rather than the Entitlements. It has been fixed now. Closes #820
+[fix] Employee ERP Permission was not saving from the Employee profile, which has been fixed. Closes #827
+[fix] CRM email template tag parsing issue. Closes #829
 
 = v1.4.4 -> May 02, 2019 =
 [new] Added a new feature to send a notification email when a new contact is assigned to an agent.
