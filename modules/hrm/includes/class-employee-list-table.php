@@ -1,6 +1,8 @@
 <?php
 namespace WeDevs\ERP\HRM;
 
+use user_switching ;
+
 /**
  * List table class
  */
@@ -165,6 +167,7 @@ class Employee_List_Table extends \WP_List_Table {
         $delete_url  = '';
         $data_hard   = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
         $delete_text = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'erp' ) : __( 'Delete', 'erp' );
+        $get_wp_user = get_user_by( 'id', $employee->get_user_id() );
 
         if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) {
             $actions['edit']   =  sprintf( '<a href="%s" data-id="%d"  title="%s">%s</a>', $delete_url, $employee->get_user_id(), __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
@@ -172,6 +175,12 @@ class Employee_List_Table extends \WP_List_Table {
 
         if ( current_user_can( 'erp_delete_employee' ) ) {
             $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-hard=%d title="%s">%s</a>', $delete_url, $employee->get_user_id(), $data_hard, __( 'Delete this item', 'erp' ), $delete_text );
+        }
+
+        if ( class_exists( 'user_switching' ) ) {
+            if ( current_user_can( 'erp_edit_employee' ) ) {
+                $actions['switch_to_emp'] = sprintf( '<a href="%s" class="" data-id="%d" data-hard=%d title="%s">%s</a>', user_switching::switch_to_url( $get_wp_user ), $employee->get_user_id(), $data_hard, __( 'Switch to', 'erp' ),  __( 'Switch to', 'erp' ) );
+            }
         }
 
         if ( $data_hard ) {
