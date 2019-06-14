@@ -42,6 +42,7 @@ class New_Contact_Owned extends Email {
 
         $contact = erp_get_people( $contact_id );
 
+
         if ( ! $contact ) {
             return;
         }
@@ -59,7 +60,7 @@ class New_Contact_Owned extends Email {
         ];
 
         if ( $employee ) {
-            $this->send( $employee->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+            $this->send( $contact->email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         }
     }
 
