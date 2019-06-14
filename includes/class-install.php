@@ -212,7 +212,7 @@ Company'
             'heading' => 'New Contact Owned',
             'body'    => 'Hello {contact_name},
 
-You own a new contact now .<strong>{employee_name}</strong> has been assigned to you by {created_by}.
+You own a new contact now .<strong>{employee_name}</strong> has been owned to you by {created_by}.
 
 Regards
 Manager Name
