@@ -206,20 +206,6 @@ Company'
 
         update_option( 'erp_email_settings_new-contact-assigned', $new_contact_assigned );
 
-        // New Contact Owned
-        $new_contact_owned = [
-            'subject' => 'New contact has been owned to you',
-            'heading' => 'New Contact Owned',
-            'body'    => 'Hello {contact_name},
-
-You own a new contact now .<strong>{employee_name}</strong> has been owned to you by {created_by}.
-
-Regards
-Manager Name
-Company'
-        ];
-
-        update_option( 'erp_email_settings_new-contact-owned', $new_contact_owned );
     }
 
     /**
