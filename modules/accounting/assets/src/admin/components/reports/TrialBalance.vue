@@ -3,10 +3,10 @@
         <h2>Trial Balance</h2>
 
         <div class="with-multiselect fyear-select">
-            <multi-select v-model="selectedYear" :options="fyears" />
+            <multi-select v-model="selectedYear" @input="onYearSelected" :options="fyears" />
         </div>
 
-        <form action="" method="" @submit.prevent="getTrialBalance" class="query-options no-print">
+        <form @submit.prevent="getTrialBalance" class="query-options no-print">
             <div class="wperp-date-btn-group">
                 <datepicker v-model="start_date"></datepicker>
                 <datepicker v-model="end_date"></datepicker>
@@ -108,20 +108,17 @@
         },
 
         watch: {
-            selectedYear(newVal) {
-                this.start_date = newVal.start_date;
-                this.end_date   = newVal.end_date;
+            // start_date() {
+            //     if ( this.selectedYear ) {
+            //         this.selectedYear = null;
+            //     }
+            // },
 
-                this.getChartOfAccts();
-            },
-
-            start_date() {
-                this.selectedYear = null;
-            },
-
-            end_date() {
-                this.selectedYear = null;
-            }
+            // end_date() {
+            //     if (  null !== this.selectedYear ) {
+            //         this.selectedYear = null;
+            //     }
+            // }
         },
 
         created() {
@@ -145,6 +142,16 @@
         },
 
         methods: {
+            onYearSelected() {
+                this.start_date = this.selectedYear.start_date;
+                this.end_date   = this.selectedYear.end_date;
+
+                this.selectedYear = { id: parseInt(this.selectedYear.id), name: this.selectedYear.name };
+
+
+                this.getTrialBalance();
+            },
+
             updateDate() {
                 this.$router.push({ path: this.$route.path, query: {
                     start: this.start_date,

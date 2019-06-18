@@ -3138,3 +3138,23 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
 
     return $html;
 }
+
+
+/**
+ * Old functions
+ * should be updated ASAP
+ *
+================================*/
+
+/**
+ * Return the thousand separator for prices.
+ *
+ * @since  2.3
+ *
+ * @return string
+ */
+function erp_ac_get_price_thousand_separator() {
+    $separator = stripslashes( erp_get_option( 'erp_ac_th_separator', false, ',' ) );
+
+    return $separator;
+}
