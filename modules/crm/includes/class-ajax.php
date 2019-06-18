@@ -305,9 +305,6 @@ class Ajax_Handler {
         if ( $current_user_id != $data['contact_owner'] ) {
             $email = new \WeDevs\ERP\CRM\Emails\New_Contact_Assigned();
             $email->trigger( $customer_id );
-
-            $email_owner = new \WeDevs\ERP\CRM\Emails\New_Contact_Owned();
-            $email_owner->trigger( $customer_id );
         }
 
         $customer = new Contact( intval( $customer_id ) );

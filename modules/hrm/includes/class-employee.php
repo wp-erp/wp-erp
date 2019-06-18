@@ -313,7 +313,7 @@ class Employee {
         //if user_id and erp_user is found then load user and update data
         if ( $wp_user && $erp_user ) {
             $this->load_employee( absint( $user_id ) );
-
+            do_action( 'erp_hr_employee_new', $user_id, $data );
             return $this->update_employee( $data );
         }
 
