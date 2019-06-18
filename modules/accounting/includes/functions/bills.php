@@ -93,7 +93,7 @@ function erp_acct_format_bill_line_items( $voucher_no ) {
 
         ledger.name AS ledger_name
 
-        FROM wp_erp_acct_bills AS bill
+        FROM {$wpdb->prefix}erp_acct_bills AS bill
         LEFT JOIN {$wpdb->prefix}erp_acct_bill_details AS b_detail ON bill.voucher_no = b_detail.trn_no
         LEFT JOIN {$wpdb->prefix}erp_acct_ledgers AS ledger ON ledger.id = b_detail.ledger_id
         WHERE bill.voucher_no = %d", $voucher_no );

@@ -129,7 +129,7 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
         product.sale_price,
         product.tax_cat_id
 
-        FROM wp_erp_acct_invoices as invoice
+        FROM {$wpdb->prefix}erp_acct_invoices as invoice
         LEFT JOIN {$wpdb->prefix}erp_acct_invoice_details as inv_detail ON invoice.voucher_no = inv_detail.trn_no
         LEFT JOIN {$wpdb->prefix}erp_acct_products as product ON inv_detail.product_id = product.id
         WHERE invoice.voucher_no = %d", $voucher_no );
@@ -265,7 +265,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no ) {
         }
     }
 
-    // insert data into wp_erp_acct_tax_agency_details
+    // insert data into {$wpdb->prefix}erp_acct_tax_agency_details
     foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_agency_details', [
             'agency_id'   => $agency_id,

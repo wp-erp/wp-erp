@@ -146,7 +146,7 @@ function erp_acct_get_dashboard_banks() {
 function erp_acct_get_bank( $bank_no ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "wp_erp_acct_cash_at_banks WHERE ledger_id = {$bank_no}", ARRAY_A );
+    $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}erp_acct_cash_at_banks WHERE ledger_id = {$bank_no}", ARRAY_A );
 
     return $row;
 }

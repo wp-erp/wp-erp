@@ -73,7 +73,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         LEFT JOIN {$wpdb->prefix}erp_acct_invoices AS invoice ON invoice.voucher_no = voucher.id
         LEFT JOIN {$wpdb->prefix}erp_acct_invoice_receipts AS invoice_receipt ON invoice_receipt.voucher_no = voucher.id
-        LEFT JOIN wp_erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_account_detail ON invoice_account_detail.invoice_no = invoice.voucher_no
         {$where} GROUP BY voucher.id ORDER BY voucher.id {$args['order']} {$limit}";
 
     if ( $args['count'] ) {

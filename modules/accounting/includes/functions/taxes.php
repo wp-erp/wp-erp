@@ -411,7 +411,7 @@ function erp_acct_pay_tax( $data ) {
         $credit = $tax_data['amount'];
     }
 
-    // insert data into wp_erp_acct_tax_agency_details
+    // insert data into {$wpdb->prefix}erp_acct_tax_agency_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_agency_details', [
         'agency_id'   => $tax_data['agency_id'],
         'trn_no'      => $voucher_no,
