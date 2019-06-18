@@ -70,8 +70,8 @@ function erp_acct_get_purchase( $purchase_no ) {
     purchase_acc_detail.debit,
     purchase_acc_detail.credit
 
-    FROM wp_erp_acct_purchase AS purchase
-    LEFT JOIN wp_erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
+    FROM {$wpdb->prefix}erp_acct_purchase AS purchase
+    LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
     WHERE purchase.voucher_no = %d", $purchase_no );
 
     $row                = $wpdb->get_row( $sql, ARRAY_A );
@@ -101,9 +101,9 @@ function erp_acct_format_purchase_line_items( $voucher_no ) {
         product.cost_price,
         product.sale_price
 
-        FROM wp_erp_acct_purchase AS purchase
-        LEFT JOIN wp_erp_acct_purchase_details AS purchase_detail ON purchase.voucher_no = purchase_detail.trn_no
-        LEFT JOIN wp_erp_acct_products AS product ON purchase_detail.product_id = product.id
+        FROM {$wpdb->prefix}erp_acct_purchase AS purchase
+        LEFT JOIN {$wpdb->prefix}erp_acct_purchase_details AS purchase_detail ON purchase.voucher_no = purchase_detail.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_products AS product ON purchase_detail.product_id = product.id
         WHERE purchase.voucher_no = %d", $voucher_no );
 
     $results = $wpdb->get_results( $sql, ARRAY_A );
