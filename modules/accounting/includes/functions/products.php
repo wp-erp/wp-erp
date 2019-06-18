@@ -116,17 +116,19 @@ function erp_acct_insert_product( $data ) {
         $product_data = erp_acct_get_formatted_product_data( $data );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_products', array(
-            'name'            => $product_data['name'],
-            'product_type_id' => $product_data['product_type_id'],
-            'category_id'     => $product_data['category_id'],
-            'tax_cat_id'      => $product_data['tax_cat_id'],
-            'vendor'          => $product_data['vendor'],
-            'cost_price'      => $product_data['cost_price'],
-            'sale_price'      => $product_data['sale_price'],
-            'created_at'      => $product_data['created_at'],
-            'created_by'      => $product_data['created_by'],
-            'updated_at'      => $product_data['updated_at'],
-            'updated_by'      => $product_data['updated_by'],
+            'name'              => $product_data['name'],
+            'product_type_id'   => $product_data['product_type_id'],
+            'category_id'       => $product_data['category_id'],
+            'tax_cat_id'        => $product_data['tax_cat_id'],
+            'vendor'            => $product_data['vendor'],
+            'cost_price'        => $product_data['cost_price'],
+            'sale_price'        => $product_data['sale_price'],
+            'ecommerce_type'    => $product_data['ecommerce_type'],
+            'ecommerce_data_id' => $product_data['ecommerce_data_id'],
+            'created_at'        => $product_data['created_at'],
+            'created_by'        => $product_data['created_by'],
+            'updated_at'        => $product_data['updated_at'],
+            'updated_by'        => $product_data['updated_by'],
         ) );
 
         $product_id = $wpdb->insert_id;
@@ -194,18 +196,19 @@ function erp_acct_update_product( $data, $id ) {
  * @return mixed
  */
 function erp_acct_get_formatted_product_data( $data ) {
-
-    $product_data['name']            = isset( $data['name'] ) ? $data['name'] : 1;
-    $product_data['product_type_id'] = isset( $data['product_type_id'] ) ? $data['product_type_id'] : 1;
-    $product_data['category_id']     = isset( $data['category_id'] ) ? $data['category_id'] : 0;
-    $product_data['tax_cat_id']      = isset( $data['tax_cat_id'] ) ? $data['tax_cat_id'] : 0;
-    $product_data['vendor']          = isset( $data['vendor'] ) ? $data['vendor'] : '';
-    $product_data['cost_price']      = isset( $data['cost_price'] ) ? $data['cost_price'] : '';
-    $product_data['sale_price']      = isset( $data['sale_price'] ) ? $data['sale_price'] : '';
-    $product_data['created_at']      = isset( $data['created_at'] ) ? $data['created_at'] : '';
-    $product_data['created_by']      = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $product_data['updated_at']      = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
-    $product_data['updated_by']      = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $product_data['name']              = !empty( $data['name'] ) ? $data['name'] : 1;
+    $product_data['product_type_id']   = !empty( $data['product_type_id'] ) ? $data['product_type_id'] : 1;
+    $product_data['category_id']       = !empty( $data['category_id'] ) ? $data['category_id'] : 0;
+    $product_data['tax_cat_id']        = !empty( $data['tax_cat_id'] ) ? $data['tax_cat_id'] : 0;
+    $product_data['vendor']            = !empty( $data['vendor'] ) ? $data['vendor'] : '';
+    $product_data['cost_price']        = !empty( $data['cost_price'] ) ? $data['cost_price'] : '';
+    $product_data['sale_price']        = !empty( $data['sale_price'] ) ? $data['sale_price'] : '';
+    $product_data['ecommerce_type']    = !empty( $data['ecommerce_type'] ) ? $data['ecommerce_type'] : null;
+    $product_data['ecommerce_data_id'] = !empty( $data['ecommerce_data_id'] ) ? $data['ecommerce_data_id'] : null;
+    $product_data['created_at']        = !empty( $data['created_at'] ) ? $data['created_at'] : '';
+    $product_data['created_by']        = !empty( $data['created_by'] ) ? $data['created_by'] : '';
+    $product_data['updated_at']        = !empty( $data['updated_at'] ) ? $data['updated_at'] : '';
+    $product_data['updated_by']        = !empty( $data['updated_by'] ) ? $data['updated_by'] : '';
 
     return $product_data;
 }
