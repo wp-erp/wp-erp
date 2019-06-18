@@ -205,6 +205,7 @@ Company'
         ];
 
         update_option( 'erp_email_settings_new-contact-assigned', $new_contact_assigned );
+
     }
 
     /**
