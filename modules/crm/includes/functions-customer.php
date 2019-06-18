@@ -3897,3 +3897,22 @@ function erp_crm_send_birthday_greetings() {
     $email =  new WeDevs\ERP\CRM\Emails\Birthday_Greetings();
     $email->trigger();
 }
+
+/**
+ * Check if contact and company has relation
+ *
+ * @return void
+ */
+function erp_crm_check_company_contact_relations($id, $id_type) {
+    global $wpdb;
+
+    if ( isset( $id ) && isset( $id_type ) ) {
+        if ( !empty( $id_type ) ) {
+            if ( $id_type == 'contact') {
+                $id_type = 'customer' ;
+            }
+            $rel_count = $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_crm_customer_companies WHERE {$id_type}_id = {$id}" );
+            return $rel_count ;
+        }
+    }
+}
