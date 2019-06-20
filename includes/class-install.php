@@ -1257,6 +1257,7 @@ Company'
                 `tax_number` varchar(100) DEFAULT NULL,
                 `default` boolean DEFAULT NULL,
                 `ecommerce_type` varchar(255) DEFAULT NULL,
+                `ecommerce_data_id` int(11) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
