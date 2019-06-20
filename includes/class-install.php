@@ -805,7 +805,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `trn_no` int(11) DEFAULT NULL,
-                `product_id` varchar(255) DEFAULT NULL,
+                `product_id` int(11) DEFAULT NULL,
                 `qty` int(11) DEFAULT NULL,
                 `unit_price` decimal(10,2) DEFAULT 0,
                 `discount` decimal(10,2) DEFAULT 0,
