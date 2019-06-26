@@ -67,6 +67,7 @@ export default new Router({
                         path: '/dashboard',
                         name: 'DashBoard',
                         component: DashBoard,
+                        alias: '/trn-loader'
                     }
                 ]
             },
@@ -745,10 +746,9 @@ export default new Router({
                 },
                 children: [
                     {
-                        path: '',
+                        path: ':id',
                         name: 'DynamicTrnLoader',
                         component: DynamicTrnLoader,
-                        alias: '/trn-loader/:id'
                     }
                 ]
             },
