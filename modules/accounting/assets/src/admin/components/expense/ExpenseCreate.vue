@@ -446,13 +446,19 @@
                     trn_status = 4;
                 }
 
+                let deposit_id = this.basic_fields.deposit_to.id;
+
+                if ( this.basic_fields.deposit_to.hasOwnProperty('people_id') ) {
+                    deposit_id = this.basic_fields.deposit_to.people_id;
+                }
+
                 let requestData = {
                     people_id      : this.basic_fields.people.id,
                     ref            : this.basic_fields.trn_ref,
                     trn_date       : this.basic_fields.trn_date,
                     trn_by         : this.basic_fields.trn_by.id,
                     bill_details   : this.formatTrnLines(this.transactionLines),
-                    deposit_to     : this.basic_fields.deposit_to.id,
+                    deposit_to     : deposit_id,
                     billing_address: this.basic_fields.billing_address,
                     attachments    : this.attachments,
                     type           : 'expense',

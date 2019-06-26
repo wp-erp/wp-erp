@@ -18907,6 +18907,12 @@ if (false) {(function () {
         trn_status = 4;
       }
 
+      var deposit_id = this.basic_fields.deposit_to.id;
+
+      if (this.basic_fields.trn_by.id === 4) {
+        deposit_id = this.basic_fields.deposit_to.people_id;
+      }
+
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].post('/payments', {
         customer_id: this.basic_fields.customer.id,
         ref: this.basic_fields.trn_ref,
@@ -18916,7 +18922,7 @@ if (false) {(function () {
         type: 'payment',
         status: trn_status,
         particulars: this.particulars,
-        deposit_to: this.basic_fields.deposit_to.id,
+        deposit_to: deposit_id,
         trn_by: this.basic_fields.trn_by.id,
         check_no: parseInt(this.check_data.check_no),
         name: this.check_data.payer_name,
@@ -20115,6 +20121,12 @@ if (false) {(function () {
         trn_status = 4;
       }
 
+      var deposit_id = this.basic_fields.deposit_to.id;
+
+      if (this.basic_fields.trn_by.id === 4) {
+        deposit_id = this.basic_fields.deposit_to.people_id;
+      }
+
       __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].post('/pay-bills', {
         vendor_id: this.basic_fields.people.id,
         ref: this.basic_fields.trn_ref,
@@ -20125,7 +20137,7 @@ if (false) {(function () {
         type: 'pay_bill',
         status: trn_status,
         particulars: this.particulars,
-        deposit_to: this.basic_fields.deposit_to.id,
+        deposit_to: deposit_id,
         trn_by: this.basic_fields.trn_by.id,
         check_no: parseInt(this.check_data.check_no),
         name: this.check_data.payer_name,
@@ -21721,6 +21733,12 @@ if (false) {(function () {
         trn_status = 4;
       }
 
+      var deposit_id = this.basic_fields.deposit_to.id;
+
+      if (this.basic_fields.trn_by.id === 4) {
+        deposit_id = this.basic_fields.deposit_to.people_id;
+      }
+
       __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].post('/pay-purchases', {
         vendor_id: this.basic_fields.vendor.id,
         ref: this.basic_fields.trn_ref,
@@ -21730,7 +21748,7 @@ if (false) {(function () {
         type: 'pay_purchase',
         status: trn_status,
         particulars: this.particulars,
-        deposit_to: this.basic_fields.deposit_to.id,
+        deposit_to: deposit_id,
         trn_by: this.basic_fields.trn_by.id,
         check_no: parseInt(this.check_data.check_no),
         name: this.check_data.payer_name
@@ -23607,13 +23625,19 @@ if (false) {(function () {
         trn_status = 4;
       }
 
+      var deposit_id = this.basic_fields.deposit_to.id;
+
+      if (this.basic_fields.deposit_to.hasOwnProperty('people_id')) {
+        deposit_id = this.basic_fields.deposit_to.people_id;
+      }
+
       var requestData = {
         people_id: this.basic_fields.people.id,
         ref: this.basic_fields.trn_ref,
         trn_date: this.basic_fields.trn_date,
         trn_by: this.basic_fields.trn_by.id,
         bill_details: this.formatTrnLines(this.transactionLines),
-        deposit_to: this.basic_fields.deposit_to.id,
+        deposit_to: deposit_id,
         billing_address: this.basic_fields.billing_address,
         attachments: this.attachments,
         type: 'expense',

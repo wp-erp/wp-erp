@@ -174,7 +174,7 @@ function erp_acct_insert_pay_purchase( $data ) {
             ) );
         }
 
-        if ( isset( $pay_purchase_data['trn_by'] ) && $pay_purchase_data['trn_by'] === '3' ) {
+        if ( isset( $pay_purchase_data['trn_by'] ) && $pay_purchase_data['trn_by'] === 3 ) {
             erp_acct_insert_check_data( $pay_purchase_data );
         }
 
@@ -367,7 +367,7 @@ function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
 function erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $item_data ) {
     global $wpdb;
 
-    if ( 1 == $pay_purchase_data['status'] ) {
+    if ( 1 === $pay_purchase_data['status'] || ( isset( $pay_purchase_data['trn_by'] ) && $pay_purchase_data['trn_by'] === 4 ) ) {
         return;
     }
 
@@ -399,7 +399,7 @@ function erp_acct_insert_pay_purchase_data_into_ledger( $pay_purchase_data, $ite
 function erp_acct_update_pay_purchase_data_into_ledger( $pay_purchase_data, $pay_purchase_no, $item_data ) {
     global $wpdb;
 
-    if ( 1 == $pay_purchase_data['status'] ) {
+    if ( 1 === $pay_purchase_data['status'] || ( isset( $pay_purchase_data['trn_by'] ) && $pay_purchase_data['trn_by'] === 4 ) ) {
         return;
     }
 

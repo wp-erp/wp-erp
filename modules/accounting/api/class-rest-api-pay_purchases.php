@@ -334,9 +334,6 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['type'] ) ) {
             $prepared_item['voucher_type'] = $request['type'];
         }
-        if ( isset( $request['trn_by_ledger_id'] ) ) {
-            $prepared_item['trn_by_ledger_id'] = $request['trn_by_ledger_id'];
-        }
         if ( isset( $request['check_no'] ) ) {
             $prepared_item['check_no'] = $request['check_no'];
         }
