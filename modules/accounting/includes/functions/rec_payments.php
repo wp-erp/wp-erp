@@ -151,7 +151,7 @@ function erp_acct_insert_payment( $data ) {
             erp_acct_insert_payment_line_items( $payment_data, $item, $voucher_no );
         }
 
-        if ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === '3' ) {
+        if ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === 3 ) {
             erp_acct_insert_check_data( $payment_data );
         }
 
@@ -267,7 +267,7 @@ function erp_acct_update_payment( $data, $voucher_no ) {
             erp_acct_update_payment_line_items( $payment_data, $voucher_no, $invoice_no[$key] );
         }
 
-        if ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === '3' ) {
+        if ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === 3 ) {
             erp_acct_insert_check_data( $payment_data );
         }
 
@@ -456,6 +456,10 @@ function erp_acct_change_invoice_status( $invoice_no ) {
 function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
     global $wpdb;
 
+    if ( 1 === $payment_data['status'] || ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === 4 ) ) {
+        return;
+    }
+
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $payment_data['deposit_to'],
@@ -481,6 +485,10 @@ function erp_acct_insert_payment_data_into_ledger( $payment_data ) {
  */
 function erp_acct_update_payment_data_in_ledger( $payment_data, $invoice_no ) {
     global $wpdb;
+
+    if ( 1 === $payment_data['status'] || ( isset( $payment_data['trn_by'] ) && $payment_data['trn_by'] === 4 ) ) {
+        return;
+    }
 
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(

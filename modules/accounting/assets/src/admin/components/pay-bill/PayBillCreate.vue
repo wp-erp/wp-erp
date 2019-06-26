@@ -306,6 +306,12 @@
                     trn_status = 4;
                 }
 
+                let deposit_id = this.basic_fields.deposit_to.id;
+
+                if ( this.basic_fields.trn_by.id === 4 ) {
+                    deposit_id = this.basic_fields.deposit_to.people_id;
+                }
+
                 HTTP.post('/pay-bills', {
                     vendor_id   : this.basic_fields.people.id,
                     ref         : this.basic_fields.trn_ref,
@@ -316,7 +322,7 @@
                     type        : 'pay_bill',
                     status      : trn_status,
                     particulars : this.particulars,
-                    deposit_to  : this.basic_fields.deposit_to.id,
+                    deposit_to  : deposit_id,
                     trn_by      : this.basic_fields.trn_by.id,
                     check_no    : parseInt(this.check_data.check_no),
                     name        : this.check_data.payer_name,

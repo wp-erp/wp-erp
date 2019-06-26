@@ -178,7 +178,7 @@ function erp_acct_insert_pay_bill( $data ) {
             erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item );
         }
 
-        if ( isset( $pay_bill_data['trn_by'] ) && $pay_bill_data['trn_by'] === '3' ) {
+        if ( isset( $pay_bill_data['trn_by'] ) && $pay_bill_data['trn_by'] === 3 ) {
             erp_acct_insert_check_data( $pay_bill_data );
         }
 
@@ -369,6 +369,10 @@ function erp_acct_get_formatted_pay_bill_data( $data, $voucher_no ) {
 function erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item_data ) {
     global $wpdb;
 
+    if ( 1 === $pay_bill_data['status'] || ( isset( $pay_bill_data['trn_by'] ) && $pay_bill_data['trn_by'] === 4 ) ) {
+        return;
+    }
+
     // Insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $pay_bill_data['trn_by_ledger_id'],
@@ -396,6 +400,10 @@ function erp_acct_insert_pay_bill_data_into_ledger( $pay_bill_data, $item_data )
  */
 function erp_acct_update_pay_bill_data_into_ledger( $pay_bill_data, $pay_bill_no, $item_data ) {
     global $wpdb;
+
+    if ( 1 === $pay_bill_data['status'] || ( isset( $pay_bill_data['trn_by'] ) && $pay_bill_data['trn_by'] === 4 ) ) {
+        return;
+    }
 
     // Update amount in ledger_details
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
