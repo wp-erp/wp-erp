@@ -14,7 +14,7 @@ import MultiSelect from 'admin/components/select/MultiSelect.vue'
 import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
 import TimePicker from 'admin/components/timepicker/TimePicker.vue'
 import SelectPeople from 'admin/components/people/SelectPeople.vue'
-import VeeValidate from 'vee-validate'
+import Vuelidate from 'vuelidate'
 import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue'
 import { createHooks } from '@wordpress/hooks'
 
@@ -44,7 +44,7 @@ window.acct.libs['ListTable'] = ListTable;
 window.acct.libs['TimePicker'] = TimePicker;
 window.acct.libs['SelectPeople'] = SelectPeople;
 window.acct.libs['DynamicTrnLoader'] = DynamicTrnLoader;
-window.acct.libs['VeeValidate'] = VeeValidate;
+window.acct.libs['Vuelidate'] = Vuelidate;
 
 
 // get lib reference from window

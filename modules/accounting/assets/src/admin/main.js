@@ -4,18 +4,18 @@ import store from './store/store'
 
 // get lib reference
 let Vue = acct_get_lib('Vue');
-let VeeValidate = acct_get_lib('VeeValidate');
 let VueSweetalert2 = acct_get_lib('VueSweetalert2');
 let Loading = acct_get_lib('Loading');
+let Vuelidate = acct_get_lib('Vuelidate');
 let commonMixins = acct_get_lib('commonMixins');
 
 // config
 Vue.config.productionTip = false
 
 // vue uses
-Vue.use(VeeValidate);
 Vue.use(VueSweetalert2);
 Vue.use(Loading);
+Vue.use(Vuelidate)
 
 // mixin
 Vue.mixin(commonMixins);
