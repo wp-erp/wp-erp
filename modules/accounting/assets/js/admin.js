@@ -18330,6 +18330,7 @@ if (false) {(function () {
 //
 //
 //
+//
 
 
 
@@ -45735,7 +45736,8 @@ var render = function() {
                     columns: _vm.columns,
                     rows: _vm.categories,
                     actions: _vm.actions,
-                    "bulk-actions": _vm.bulkActions
+                    "bulk-actions": _vm.bulkActions,
+                    showCb: false
                   },
                   on: {
                     "action:click": _vm.onActionClick,

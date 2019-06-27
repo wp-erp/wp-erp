@@ -31,13 +31,14 @@
             <div id="col-right" style="margin-top: 12px">
                 <div class="col-wrap">
                     <list-table class="wperp-table table-striped table-dark widefat table2 category-list"
-                        action-column="actions"
-                        :columns="columns"
-                        :rows="categories"
-                        :actions="actions"
-                        :bulk-actions="bulkActions"
-                        @action:click="onActionClick"
-                        @bulk:click="onBulkAction">
+                                action-column="actions"
+                                :columns="columns"
+                                :rows="categories"
+                                :actions="actions"
+                                :bulk-actions="bulkActions"
+                                :showCb="false"
+                                @action:click="onActionClick"
+                                @bulk:click="onBulkAction">
                         >
                         <template slot="name" slot-scope="data" v-if="data.row.isEdit">
                             <input type="text" :value="data.row.name" :id="'cat-'+data.row.id">
@@ -69,29 +70,29 @@
 
         data() {
             return {
-                categories: [],
-                categoryName: '',
+                categories    : [],
+                categoryName  : '',
                 parentCategory: 0,
-                category: null,
-                error: false,
-                showModal: false,
-                columns: {
-                    'name': {
+                category      : null,
+                error         : false,
+                showModal     : false,
+                columns       : {
+                    'name'   : {
                         label: 'Category Name'
                     },
                     'actions': {
                         label: 'Actions'
                     }
                 },
-                actions: [
+                actions       : [
                     {key: 'edit', label: 'Edit'},
                     {key: 'trash', label: 'Delete'}
                 ],
-                bulkActions: [
+                bulkActions   : [
                     {
-                        key: 'trash',
+                        key  : 'trash',
                         label: 'Move to Trash',
-                        img: erp_acct_var.erp_assets + '/images/trash.png',
+                        img  : erp_acct_var.erp_assets + '/images/trash.png',
                     }
                 ],
             }
@@ -110,7 +111,7 @@
                     let categories = response.data
                     for (let x in categories) {
                         let category = categories[x];
-                        let object = {id: category.id, name: category.name, isEdit: false};
+                        let object   = {id: category.id, name: category.name, isEdit: false};
                         this.categories.push(object);
                     }
                     this.$store.dispatch('spinner/setSpinner', false);
@@ -121,7 +122,7 @@
 
             onActionClick(action, row, index) {
                 if ('edit' == action) {
-                    row.isEdit = true;
+                    row.isEdit    = true;
                     this.category = row;
                 } else if ('trash' == action) {
                     if (confirm("Are you sure want to delete ?")) {
@@ -161,31 +162,31 @@
             },
 
             createCategory() {
-                if ( '' === this.categoryName ) {
+                if ('' === this.categoryName) {
                     this.error = true;
                     return;
                 }
 
                 this.$store.dispatch('spinner/setSpinner', true);
                 var data = {
-                    name: this.categoryName,
+                    name  : this.categoryName,
                     parent: this.parentCategory
                 };
                 HTTP.post('/product-cats', data).then((response) => {
                     this.categories.push(response.data);
-                    this.categoryName = '';
+                    this.categoryName   = '';
                     this.parentCategory = 0;
 
                     this.$store.dispatch('spinner/setSpinner', false);
                 })
-                .catch((error) => {
-                    this.$store.dispatch('spinner/setSpinner', false);
-                })
+                    .catch((error) => {
+                        this.$store.dispatch('spinner/setSpinner', false);
+                    })
             },
 
             updateCategory(row) {
                 var categoryName = document.getElementById('cat-' + row.id).value;
-                var categoryId = row.id;
+                var categoryId   = row.id;
 
                 this.$store.dispatch('spinner/setSpinner', true);
                 HTTP.put('/product-cats/' + categoryId, {name: categoryName}).then((response) => {
