@@ -14134,6 +14134,12 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -32076,7 +32082,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
       alias: '/trn-loader'
     }]
   }, {
-    path: '/inventory',
+    path: '/products',
     component: {
       render: function render(c) {
         return c('router-view');
@@ -32085,8 +32091,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
     children: [{
       path: '',
       name: 'Products',
-      component: __WEBPACK_IMPORTED_MODULE_3_admin_components_products_Products_vue__["a" /* default */],
-      alias: '/products'
+      component: __WEBPACK_IMPORTED_MODULE_3_admin_components_products_Products_vue__["a" /* default */]
     }, {
       path: 'page/:page',
       name: 'PaginateProducts',
@@ -32274,7 +32279,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
       component: __WEBPACK_IMPORTED_MODULE_11_admin_components_invoice_InvoiceCreate_vue__["a" /* default */]
     }]
   }, {
-    path: '/product_categories',
+    path: '/product-categories',
     name: 'ProductCategory',
     component: __WEBPACK_IMPORTED_MODULE_15_admin_components_product_category_ProductCategory_vue__["a" /* default */]
   }, {
@@ -32966,393 +32971,403 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wperp-container" }, [
-    _c(
-      "div",
-      {
-        staticClass: "wperp-modal wperp-modal-open wperp-custom-scroll",
-        attrs: { id: "wperp-invoice-modal", role: "dialog" }
-      },
-      [
-        _c("div", { staticClass: "wperp-modal-dialog" }, [
-          _c("div", { staticClass: "wperp-modal-content" }, [
-            _c("div", { staticClass: "wperp-modal-header" }, [
-              !_vm.product
-                ? _c("h3", [_vm._v("Add " + _vm._s(_vm.title))])
-                : _c("h3", [_vm._v("Update " + _vm._s(_vm.title))]),
-              _vm._v(" "),
-              _c("span", { staticClass: "modal-close" }, [
-                _c("i", {
-                  staticClass: "flaticon-close",
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.$parent.$emit("close")
+  return _c("div", { attrs: { id: "wperp-product-modal" } }, [
+    _c("div", { staticClass: "wperp-container" }, [
+      _c(
+        "div",
+        {
+          staticClass: "wperp-modal wperp-modal-open has-form",
+          attrs: { role: "dialog" }
+        },
+        [
+          _c("div", { staticClass: "wperp-modal-dialog" }, [
+            _c("div", { staticClass: "wperp-modal-content" }, [
+              _c("div", { staticClass: "wperp-modal-header" }, [
+                !_vm.product
+                  ? _c("h3", [_vm._v("Add " + _vm._s(_vm.title))])
+                  : _c("h3", [_vm._v("Update " + _vm._s(_vm.title))]),
+                _vm._v(" "),
+                _c("span", { staticClass: "modal-close" }, [
+                  _c("i", {
+                    staticClass: "flaticon-close",
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.$parent.$emit("close")
+                      }
                     }
-                  }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "wperp-modal-body" }, [
-              _vm.error_msg.length
-                ? _c(
-                    "ul",
-                    { staticClass: "errors" },
-                    _vm._l(_vm.error_msg, function(error, index) {
-                      return _c("li", { key: index }, [
-                        _vm._v("* " + _vm._s(error))
-                      ])
-                    }),
-                    0
-                  )
-                : _vm._e(),
+                  })
+                ])
+              ]),
               _vm._v(" "),
-              _c(
-                "form",
-                {
-                  staticClass: "add-product-form wperp-form-horizontal",
-                  attrs: { action: "", method: "post" },
-                  on: {
-                    submit: function($event) {
-                      $event.preventDefault()
-                      return _vm.saveProduct($event)
+              _c("div", { staticClass: "wperp-modal-body" }, [
+                _vm.error_msg.length
+                  ? _c(
+                      "ul",
+                      { staticClass: "errors" },
+                      _vm._l(_vm.error_msg, function(error, index) {
+                        return _c("li", { key: index }, [
+                          _vm._v("* " + _vm._s(error))
+                        ])
+                      }),
+                      0
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _c(
+                  "form",
+                  {
+                    staticClass: "add-product-form wperp-form-horizontal",
+                    attrs: { action: "", method: "post" },
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.saveProduct($event)
+                      }
                     }
-                  }
-                },
-                [
-                  _c("div", { staticClass: "wperp-row" }, [
-                    _vm._m(0),
+                  },
+                  [
+                    _c("div", { staticClass: "wperp-row" }, [
+                      _vm._m(0),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.ProductFields.name,
+                                expression: "ProductFields.name"
+                              }
+                            ],
+                            staticClass: "wperp-form-field",
+                            attrs: {
+                              type: "text",
+                              placeholder: "Enter Product Name Here"
+                            },
+                            domProps: { value: _vm.ProductFields.name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.ProductFields,
+                                  "name",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ]
+                      )
+                    ]),
                     _vm._v(" "),
                     _c(
                       "div",
-                      { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
-                      [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.ProductFields.name,
-                              expression: "ProductFields.name"
-                            }
-                          ],
-                          staticClass: "wperp-form-field",
-                          attrs: {
-                            type: "text",
-                            placeholder: "Enter Product Name Here"
-                          },
-                          domProps: { value: _vm.ProductFields.name },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.ProductFields,
-                                "name",
-                                $event.target.value
-                              )
-                            }
-                          }
-                        })
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "wperp-panel wperp-panel-default panel-product-details"
-                    },
-                    [
-                      _vm._m(1),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "wperp-panel-body" }, [
-                        _c("div", { staticClass: "wperp-row" }, [
-                          _vm._m(2),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
-                            [
-                              _c(
-                                "div",
-                                { staticClass: "with-multiselect" },
-                                [
-                                  _c("multi-select", {
-                                    attrs: {
-                                      options: _vm.productType,
-                                      multiple: false
-                                    },
-                                    model: {
-                                      value: _vm.ProductFields.type,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.ProductFields, "type", $$v)
-                                      },
-                                      expression: "ProductFields.type"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "wperp-row" }, [
-                          _vm._m(3),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
-                            [
-                              _c(
-                                "div",
-                                { staticClass: "with-multiselect" },
-                                [
-                                  _c("multi-select", {
-                                    attrs: {
-                                      options: _vm.categories,
-                                      multiple: false
-                                    },
-                                    model: {
-                                      value: _vm.ProductFields.categories,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.ProductFields,
-                                          "categories",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "ProductFields.categories"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            ]
-                          )
-                        ])
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "wperp-panel wperp-panel-default panel-product-info"
-                    },
-                    [
-                      _vm._m(4),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "wperp-panel-body" }, [
-                        _c("div", { staticClass: "wperp-row" }, [
-                          _vm._m(5),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.ProductFields.costPrice,
-                                    expression: "ProductFields.costPrice"
-                                  }
-                                ],
-                                staticClass: "dk-form-field",
-                                attrs: {
-                                  type: "text",
-                                  name: "cost-price",
-                                  id: "cost-price",
-                                  value: "0"
-                                },
-                                domProps: {
-                                  value: _vm.ProductFields.costPrice
-                                },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.ProductFields,
-                                      "costPrice",
-                                      $event.target.value
-                                    )
-                                  }
-                                }
-                              })
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "wperp-row" }, [
-                          _vm._m(6),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.ProductFields.salePrice,
-                                    expression: "ProductFields.salePrice"
-                                  }
-                                ],
-                                staticClass: "dk-form-field",
-                                attrs: {
-                                  type: "text",
-                                  name: "sale-price",
-                                  id: "sale-price",
-                                  value: "0"
-                                },
-                                domProps: {
-                                  value: _vm.ProductFields.salePrice
-                                },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.ProductFields,
-                                      "salePrice",
-                                      $event.target.value
-                                    )
-                                  }
-                                }
-                              })
-                            ]
-                          )
-                        ])
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "wperp-panel wperp-panel-default panel-miscellaneous"
-                    },
-                    [
-                      _vm._m(7),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "wperp-panel-body" }, [
-                        _c("div", { staticClass: "wperp-row" }, [
-                          _vm._m(8),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
-                            [
-                              _c(
-                                "div",
-                                { staticClass: "with-multiselect" },
-                                [
-                                  _c("multi-select", {
-                                    attrs: {
-                                      options: _vm.vendors,
-                                      multiple: false
-                                    },
-                                    model: {
-                                      value: _vm.ProductFields.vendor,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.ProductFields,
-                                          "vendor",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "ProductFields.vendor"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _vm._m(9),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
-                            [
-                              _c(
-                                "div",
-                                { staticClass: "with-multiselect" },
-                                [
-                                  _c("multi-select", {
-                                    attrs: {
-                                      options: _vm.tax_cats,
-                                      multiple: false
-                                    },
-                                    model: {
-                                      value: _vm.ProductFields.tax_cat_id,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.ProductFields,
-                                          "tax_cat_id",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "ProductFields.tax_cat_id"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            ]
-                          )
-                        ])
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "buttons-wrapper text-right" }, [
-                    _c(
-                      "button",
                       {
-                        staticClass: "wperp-btn btn--default",
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.$parent.$emit("close")
-                          }
-                        }
+                        staticClass:
+                          "wperp-panel wperp-panel-default panel-product-details"
                       },
-                      [_vm._v("Cancel")]
+                      [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "wperp-panel-body" }, [
+                          _c("div", { staticClass: "wperp-row" }, [
+                            _vm._m(2),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "with-multiselect" },
+                                  [
+                                    _c("multi-select", {
+                                      attrs: {
+                                        options: _vm.productType,
+                                        multiple: false
+                                      },
+                                      model: {
+                                        value: _vm.ProductFields.type,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.ProductFields,
+                                            "type",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "ProductFields.type"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "wperp-row" }, [
+                            _vm._m(3),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "with-multiselect" },
+                                  [
+                                    _c("multi-select", {
+                                      attrs: {
+                                        options: _vm.categories,
+                                        multiple: false
+                                      },
+                                      model: {
+                                        value: _vm.ProductFields.categories,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.ProductFields,
+                                            "categories",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "ProductFields.categories"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
+                            )
+                          ])
+                        ])
+                      ]
                     ),
                     _vm._v(" "),
-                    !_vm.product
-                      ? _c(
-                          "button",
-                          { staticClass: "wperp-btn btn--primary" },
-                          [_vm._v("Publish")]
-                        )
-                      : _c(
-                          "button",
-                          { staticClass: "wperp-btn btn--primary" },
-                          [_vm._v("Update")]
-                        )
-                  ])
-                ]
-              )
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "wperp-panel wperp-panel-default panel-product-info"
+                      },
+                      [
+                        _vm._m(4),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "wperp-panel-body" }, [
+                          _c("div", { staticClass: "wperp-row" }, [
+                            _vm._m(5),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.ProductFields.costPrice,
+                                      expression: "ProductFields.costPrice"
+                                    }
+                                  ],
+                                  staticClass: "dk-form-field",
+                                  attrs: {
+                                    type: "text",
+                                    name: "cost-price",
+                                    id: "cost-price",
+                                    value: "0"
+                                  },
+                                  domProps: {
+                                    value: _vm.ProductFields.costPrice
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.ProductFields,
+                                        "costPrice",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "wperp-row" }, [
+                            _vm._m(6),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.ProductFields.salePrice,
+                                      expression: "ProductFields.salePrice"
+                                    }
+                                  ],
+                                  staticClass: "dk-form-field",
+                                  attrs: {
+                                    type: "text",
+                                    name: "sale-price",
+                                    id: "sale-price",
+                                    value: "0"
+                                  },
+                                  domProps: {
+                                    value: _vm.ProductFields.salePrice
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.ProductFields,
+                                        "salePrice",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            )
+                          ])
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "wperp-panel wperp-panel-default panel-miscellaneous"
+                      },
+                      [
+                        _vm._m(7),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "wperp-panel-body" }, [
+                          _c("div", { staticClass: "wperp-row" }, [
+                            _vm._m(8),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "with-multiselect" },
+                                  [
+                                    _c("multi-select", {
+                                      attrs: {
+                                        options: _vm.vendors,
+                                        multiple: false
+                                      },
+                                      model: {
+                                        value: _vm.ProductFields.vendor,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.ProductFields,
+                                            "vendor",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "ProductFields.vendor"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm._m(9),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "wperp-col-sm-9 wperp-col-xs-12" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "with-multiselect" },
+                                  [
+                                    _c("multi-select", {
+                                      attrs: {
+                                        options: _vm.tax_cats,
+                                        multiple: false
+                                      },
+                                      model: {
+                                        value: _vm.ProductFields.tax_cat_id,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            _vm.ProductFields,
+                                            "tax_cat_id",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "ProductFields.tax_cat_id"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
+                            )
+                          ])
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "buttons-wrapper text-right" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "wperp-btn btn--default",
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.$parent.$emit("close")
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                                    Cancel\n                                "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      !_vm.product
+                        ? _c(
+                            "button",
+                            { staticClass: "wperp-btn btn--primary" },
+                            [_vm._v("Publish")]
+                          )
+                        : _c(
+                            "button",
+                            { staticClass: "wperp-btn btn--primary" },
+                            [_vm._v("Update")]
+                          )
+                    ])
+                  ]
+                )
+              ])
             ])
           ])
-        ])
-      ]
-    )
+        ]
+      )
+    ])
   ])
 }
 var staticRenderFns = [
@@ -33476,7 +33491,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "products" },
+    { staticClass: "wperp-products" },
     [
       _vm.showModal
         ? _c("product-modal", {

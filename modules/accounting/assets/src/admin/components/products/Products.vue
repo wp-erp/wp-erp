@@ -1,5 +1,5 @@
 <template>
-    <div class="products">
+    <div class="wperp-products">
         <product-modal v-if="showModal" :product.sync="product"></product-modal>
         <h2 class="add-new-product">
             <span>Products</span>
@@ -174,7 +174,7 @@
 </script>
 
 <style lang="less">
-    .products {
+    .wperp-products {
         .add-new-product {
             margin-top:15px;
             align-items: center;

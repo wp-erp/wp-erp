@@ -1,141 +1,147 @@
 <template>
-    <div class="wperp-container">
-        <div id="wperp-invoice-modal" class="wperp-modal wperp-modal-open wperp-custom-scroll" role="dialog">
-            <div class="wperp-modal-dialog">
-                <div class="wperp-modal-content">
-                    <div class="wperp-modal-header">
-                        <h3 v-if="!product">Add {{ title }}</h3>
-                        <h3 v-else>Update {{ title }}</h3>
-                        <span class="modal-close">
+    <div id="wperp-product-modal">
+        <div class="wperp-container">
+            <div class="wperp-modal wperp-modal-open has-form" role="dialog">
+                <div class="wperp-modal-dialog">
+                    <div class="wperp-modal-content">
+                        <div class="wperp-modal-header">
+                            <h3 v-if="!product">Add {{ title }}</h3>
+                            <h3 v-else>Update {{ title }}</h3>
+                            <span class="modal-close">
                                 <i class="flaticon-close" @click.prevent="$parent.$emit('close')"></i></span>
-                    </div>
-                    <div class="wperp-modal-body">
-                        <ul class="errors" v-if="error_msg.length">
-                            <li v-for="(error, index) in error_msg" :key="index">* {{ error }}</li>
-                        </ul>
-                        <!-- modal body title -->
-                        <!-- add new product form -->
-                        <form action="" method="post" @submit.prevent="saveProduct" class="add-product-form wperp-form-horizontal">
-                            <!-- product name field -->
+                        </div>
+                        <div class="wperp-modal-body">
+                            <ul class="errors" v-if="error_msg.length">
+                                <li v-for="(error, index) in error_msg" :key="index">* {{ error }}</li>
+                            </ul>
+                            <!-- modal body title -->
+                            <!-- add new product form -->
+                            <form action="" method="post" @submit.prevent="saveProduct"
+                                  class="add-product-form wperp-form-horizontal">
+                                <!-- product name field -->
 
-                            <div class="wperp-row">
-                                <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                    <label>Product Name <span class="required-sign">*</span></label>
+                                <div class="wperp-row">
+                                    <div class="wperp-col-sm-3 wperp-col-xs-12">
+                                        <label>Product Name <span class="required-sign">*</span></label>
+                                    </div>
+                                    <div class="wperp-col-sm-9 wperp-col-xs-12">
+                                        <input type="text" class="wperp-form-field"
+                                               placeholder="Enter Product Name Here"
+                                               v-model="ProductFields.name">
+                                    </div>
                                 </div>
-                                <div class="wperp-col-sm-9 wperp-col-xs-12">
-                                    <input type="text" class="wperp-form-field" placeholder="Enter Product Name Here"
-                                        v-model="ProductFields.name">
-                                </div>
-                            </div>
 
-                            <!-- product/service details panel -->
-                            <div class="wperp-panel wperp-panel-default panel-product-details">
-                                <div class="wperp-panel-heading">
-                                    <span class="panel-badge panel-badge-primary"></span>
-                                    <span>Product/Service Details</span>
-                                </div>
-                                <div class="wperp-panel-body">
-                                    <div class="wperp-row">
-                                        <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                            <label>Product Type <span class="required-sign">*</span></label>
-                                        </div>
-                                        <div class="wperp-col-sm-9 wperp-col-xs-12">
-                                            <div class="with-multiselect">
-                                                <multi-select
-                                                    v-model="ProductFields.type"
-                                                    :options="productType"
-                                                    :multiple="false"/>
-                                                <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
+                                <!-- product/service details panel -->
+                                <div class="wperp-panel wperp-panel-default panel-product-details">
+                                    <div class="wperp-panel-heading">
+                                        <span class="panel-badge panel-badge-primary"></span>
+                                        <span>Product/Service Details</span>
+                                    </div>
+                                    <div class="wperp-panel-body">
+                                        <div class="wperp-row">
+                                            <div class="wperp-col-sm-3 wperp-col-xs-12">
+                                                <label>Product Type <span class="required-sign">*</span></label>
+                                            </div>
+                                            <div class="wperp-col-sm-9 wperp-col-xs-12">
+                                                <div class="with-multiselect">
+                                                    <multi-select
+                                                        v-model="ProductFields.type"
+                                                        :options="productType"
+                                                        :multiple="false"/>
+                                                    <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="wperp-row">
-                                        <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                            <label>Category</label>
-                                        </div>
-                                        <div class="wperp-col-sm-9 wperp-col-xs-12">
-                                            <div class="with-multiselect">
-                                                <multi-select
-                                                    v-model="ProductFields.categories"
-                                                    :options="categories"
-                                                    :multiple="false"/>
-                                                <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
+                                        <div class="wperp-row">
+                                            <div class="wperp-col-sm-3 wperp-col-xs-12">
+                                                <label>Category</label>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- product/service details panel -->
-                            <div class="wperp-panel wperp-panel-default panel-product-info">
-                                <div class="wperp-panel-heading">
-                                    <span class="panel-badge panel-badge-info"></span>
-                                    <span>Product Information</span>
-                                </div>
-                                <div class="wperp-panel-body">
-                                    <div class="wperp-row">
-                                        <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                            <label for="cost-price">Cost Price</label>
-                                        </div>
-                                        <div class="wperp-col-sm-9 wperp-col-xs-12">
-                                            <input type="text" name="cost-price" id="cost-price" value="0"
-                                                   class="dk-form-field" v-model="ProductFields.costPrice">
-                                        </div>
-                                    </div>
-                                    <div class="wperp-row">
-                                        <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                            <label for="sale-price">Sale Price <span class="required-sign">*</span></label>
-                                        </div>
-                                        <div class="wperp-col-sm-9 wperp-col-xs-12">
-                                            <input type="text" name="sale-price" id="sale-price" value="0"
-                                                   class="dk-form-field" v-model="ProductFields.salePrice">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Miscellaneous panel -->
-                            <div class="wperp-panel wperp-panel-default panel-miscellaneous">
-                                <div class="wperp-panel-heading">
-                                    <span class="panel-badge panel-badge-secondary"></span>
-                                    <span>Miscellaneous</span>
-                                </div>
-                                <div class="wperp-panel-body">
-                                    <div class="wperp-row">
-                                        <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                            <label>Vendor <span class="required-sign">*</span></label>
-                                        </div>
-                                        <div class="wperp-col-sm-9 wperp-col-xs-12">
-                                            <div class="with-multiselect">
-                                                <multi-select
-                                                    v-model="ProductFields.vendor"
-                                                    :options="vendors"
-                                                    :multiple="false"/>
-                                                <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
-                                            </div>
-                                        </div>
-                                        <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                            <label>Tax Category</label>
-                                        </div>
-                                        <div class="wperp-col-sm-9 wperp-col-xs-12">
-                                            <div class="with-multiselect">
-                                                <multi-select
-                                                    v-model="ProductFields.tax_cat_id"
-                                                    :options="tax_cats"
-                                                    :multiple="false"/>
-                                                <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
+                                            <div class="wperp-col-sm-9 wperp-col-xs-12">
+                                                <div class="with-multiselect">
+                                                    <multi-select
+                                                        v-model="ProductFields.categories"
+                                                        :options="categories"
+                                                        :multiple="false"/>
+                                                    <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- buttons -->
-                            <div class="buttons-wrapper text-right">
-                                <button class="wperp-btn btn--default" @click.prevent="$parent.$emit('close')">Cancel</button>
-                                <button v-if="!product" class="wperp-btn btn--primary">Publish</button>
-                                <button v-else class="wperp-btn btn--primary">Update</button>
-                            </div>
-                        </form>
+
+                                <!-- product/service details panel -->
+                                <div class="wperp-panel wperp-panel-default panel-product-info">
+                                    <div class="wperp-panel-heading">
+                                        <span class="panel-badge panel-badge-info"></span>
+                                        <span>Product Information</span>
+                                    </div>
+                                    <div class="wperp-panel-body">
+                                        <div class="wperp-row">
+                                            <div class="wperp-col-sm-3 wperp-col-xs-12">
+                                                <label for="cost-price">Cost Price</label>
+                                            </div>
+                                            <div class="wperp-col-sm-9 wperp-col-xs-12">
+                                                <input type="text" name="cost-price" id="cost-price" value="0"
+                                                       class="dk-form-field" v-model="ProductFields.costPrice">
+                                            </div>
+                                        </div>
+                                        <div class="wperp-row">
+                                            <div class="wperp-col-sm-3 wperp-col-xs-12">
+                                                <label for="sale-price">Sale Price <span class="required-sign">*</span></label>
+                                            </div>
+                                            <div class="wperp-col-sm-9 wperp-col-xs-12">
+                                                <input type="text" name="sale-price" id="sale-price" value="0"
+                                                       class="dk-form-field" v-model="ProductFields.salePrice">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Miscellaneous panel -->
+                                <div class="wperp-panel wperp-panel-default panel-miscellaneous">
+                                    <div class="wperp-panel-heading">
+                                        <span class="panel-badge panel-badge-secondary"></span>
+                                        <span>Miscellaneous</span>
+                                    </div>
+                                    <div class="wperp-panel-body">
+                                        <div class="wperp-row">
+                                            <div class="wperp-col-sm-3 wperp-col-xs-12">
+                                                <label>Vendor <span class="required-sign">*</span></label>
+                                            </div>
+                                            <div class="wperp-col-sm-9 wperp-col-xs-12">
+                                                <div class="with-multiselect">
+                                                    <multi-select
+                                                        v-model="ProductFields.vendor"
+                                                        :options="vendors"
+                                                        :multiple="false"/>
+                                                    <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
+                                                </div>
+                                            </div>
+                                            <div class="wperp-col-sm-3 wperp-col-xs-12">
+                                                <label>Tax Category</label>
+                                            </div>
+                                            <div class="wperp-col-sm-9 wperp-col-xs-12">
+                                                <div class="with-multiselect">
+                                                    <multi-select
+                                                        v-model="ProductFields.tax_cat_id"
+                                                        :options="tax_cats"
+                                                        :multiple="false"/>
+                                                    <!-- <i class="flaticon-arrow-down-sign-to-navigate"></i> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- buttons -->
+                                <div class="buttons-wrapper text-right">
+                                    <button class="wperp-btn btn--default" @click.prevent="$parent.$emit('close')">
+                                        Cancel
+                                    </button>
+                                    <button v-if="!product" class="wperp-btn btn--primary">Publish</button>
+                                    <button v-else class="wperp-btn btn--primary">Update</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -158,14 +164,14 @@
 
         props: {
             product: {
-                type: Object,
+                type   : Object,
                 default: {}
             }
         },
 
         data() {
             return {
-                error_msg: [],
+                error_msg    : [],
                 ProductFields: {
                     id        : null,
                     name      : '',
@@ -176,25 +182,25 @@
                     vendor    : 0,
                     tax_cat_id: 0
                 },
-                vendors    : [],
-                categories : [],
-                tax_cats   : [],
-                productType: [],
-                title      : 'Product'
+                vendors      : [],
+                categories   : [],
+                tax_cats     : [],
+                productType  : [],
+                title        : 'Product'
             }
         },
 
         created() {
             if (this.product) {
-                let product                       = this.product;
-                    this.ProductFields.name       = product.name;
-                    this.ProductFields.id         = product.id;
-                    this.ProductFields.type       = {id: product.product_type_id, name: product.type_name};
-                    this.ProductFields.categories = {id: product.category_id, name: product.cat_name};
-                    this.ProductFields.tax_cat_id = {id: product.tax_cat_id, name: product.tax_cat_name};
-                    this.ProductFields.vendor     = {id: product.vendor, name: product.vendor_name};
-                    this.ProductFields.salePrice  = product.sale_price;
-                    this.ProductFields.costPrice  = product.cost_price;
+                let product                   = this.product;
+                this.ProductFields.name       = product.name;
+                this.ProductFields.id         = product.id;
+                this.ProductFields.type       = {id: product.product_type_id, name: product.type_name};
+                this.ProductFields.categories = {id: product.category_id, name: product.cat_name};
+                this.ProductFields.tax_cat_id = {id: product.tax_cat_id, name: product.tax_cat_name};
+                this.ProductFields.vendor     = {id: product.vendor, name: product.vendor_name};
+                this.ProductFields.salePrice  = product.sale_price;
+                this.ProductFields.costPrice  = product.cost_price;
             }
 
             this.loaded();
@@ -202,18 +208,18 @@
 
         methods: {
             saveProduct() {
-                if ( ! this.checkForm()) {
+                if (!this.checkForm()) {
                     return false;
                 }
 
-                this.$store.dispatch( 'spinner/setSpinner', true );
+                this.$store.dispatch('spinner/setSpinner', true);
 
                 if (!this.product) {
                     var type = 'post';
-                    var url = 'products';
+                    var url  = 'products';
                 } else {
                     var type = 'put';
-                    var url = 'products/' + this.ProductFields.id;
+                    var url  = 'products/' + this.ProductFields.id;
                 }
 
                 var data = {
@@ -230,11 +236,11 @@
                     this.$parent.$emit('close');
                     this.$parent.getProducts();
                     this.resetForm();
-                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.$store.dispatch('spinner/setSpinner', false);
                     this.showAlert('success', 'put' === type ? 'Product Updated!' : 'Product Created!');
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
+                }).catch(error => {
+                    this.$store.dispatch('spinner/setSpinner', false);
+                });
             },
 
             loaded() {
@@ -272,7 +278,7 @@
                 HTTP.get('products/types').then(response => {
                     this.productType = response.data;
 
-                    this.ProductFields.type = { id: parseInt( response.data[0].id ), name: response.data[0].name };
+                    this.ProductFields.type = {id: parseInt(response.data[0].id), name: response.data[0].name};
                 })
             },
 
@@ -302,7 +308,7 @@
                 }
 
 
-                if (this.ProductFields.salePrice<=0) {
+                if (this.ProductFields.salePrice <= 0) {
                     this.error_msg.push('Product sale should be greater than 0');
                 }
 
@@ -316,22 +322,13 @@
 </script>
 
 <style lang="less">
-    .product-modal {
-        .modal .modal-content {
-            top: 15% !important;
-            width: 800px !important;
+    #wperp-product-modal {
+        .wperp-modal-header {
+            padding: 30px 20px 20px !important;
         }
 
-        .wperp-modal {
-            border: 0 !important;
-            top: 20% !important;
-        }
-
-        .wperp-modal .wperp-modal-content {
-            -webkit-box-shadow: none !important;
-            box-shadow: none;
-            border: 0 !important;
-            border-radius: 0 !important;
+        .modal-close {
+            top: 20px !important;
         }
 
         .errors {
