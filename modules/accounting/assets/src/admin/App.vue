@@ -53,7 +53,7 @@
         padding: 20px 3px !important;
     }
 
-    .content-header-section .wperp-col {
+    .content-header-section:first-child {
         width: 100%;
         display: block !important;
     }
