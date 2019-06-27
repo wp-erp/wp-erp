@@ -231,8 +231,10 @@ function erp_acct_delete_product( $product_id ) {
 
 function erp_get_product_type() {
     global $wpdb;
+
     $types = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_product_types" );
-    return $types;
+
+    return apply_filters( 'erp_acct_product_types', $types );
 }
 
 

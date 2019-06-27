@@ -1549,7 +1549,7 @@ Company'
         // insert product types
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_product_types` LIMIT 0, 1" ) ) {
             $sql = "INSERT INTO `{$wpdb->prefix}erp_acct_product_types` (`id`, `name`)
-                    VALUES (1, 'Product'), (2, 'Service')";
+                    VALUES (1, 'Inventory'), (2, 'Service')";
 
             $wpdb->query( $sql );
         }
