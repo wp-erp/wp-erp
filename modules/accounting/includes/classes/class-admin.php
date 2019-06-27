@@ -77,13 +77,19 @@ class Admin {
             'title'      => __( 'Sales', 'erp' ),
             'capability' => $sale,
             'slug'       => 'transactions/sales',
-            'position'   => 15
+            'position'   => 5
         ] );
         erp_add_submenu( 'accounting', 'transactions', [
             'title'      => __( 'Expenses', 'erp' ),
             'capability' => $expense,
             'slug'       => 'transactions/expenses',
-            'position'   => 25
+            'position'   => 10
+        ] );
+        erp_add_submenu( 'accounting', 'transactions', [
+            'title'      => __( 'Purchases', 'erp' ),
+            'capability' => $sale,
+            'slug'       => 'transactions/purchases',
+            'position'   => 15
         ] );
         erp_add_submenu( 'accounting', 'transactions', [
             'title'      => __( 'Journals', 'erp' ),
@@ -104,28 +110,22 @@ class Admin {
             'position'   => 35
         ] );
         erp_add_menu( 'accounting', [
-            'title'      => __( 'Inventory', 'erp' ),
+            'title'      => __( 'Products', 'erp' ),
             'capability' => 'erp_ac_view_sale',
-            'slug'       => 'inventory',
+            'slug'       => 'products',
             'position'   => 45,
         ] );
-        erp_add_submenu( 'accounting', 'inventory', [
-            'title'      => __( 'Products', 'erp' ),
+        erp_add_submenu( 'accounting', 'products', [
+            'title'      => __( 'Products & Services', 'erp' ),
             'capability' => 'erp_ac_view_sale',
             'slug'       => 'products',
             'position'   => 5,
         ] );
-        erp_add_submenu( 'accounting', 'inventory', [
+        erp_add_submenu( 'accounting', 'products', [
             'title'      => __( 'Product Categories', 'erp' ),
             'capability' => 'erp_ac_view_sale',
-            'slug'       => 'product_categories',
+            'slug'       => 'product-categories',
             'position'   => 10,
-        ] );
-        erp_add_submenu( 'accounting', 'inventory', [
-            'title'      => __( 'Purchases', 'erp' ),
-            'capability' => $sale,
-            'slug'       => 'transactions/purchases',
-            'position'   => 15
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Tax', 'erp' ),
@@ -137,13 +137,13 @@ class Admin {
             'title'      => __( 'Tax Rates', 'erp' ),
             'capability' => $sale,
             'slug'       => 'taxes',
-            'position'   => 15
+            'position'   => 5
         ] );
         erp_add_submenu( 'accounting', 'taxes', [
             'title'      => __( 'Tax Payments', 'erp' ),
             'capability' => $sale,
             'slug'       => 'tax-records',
-            'position'   => 15
+            'position'   => 10
         ] );
         erp_add_menu( 'accounting', [
             'title'      => __( 'Reports', 'erp' ),

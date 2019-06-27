@@ -72,7 +72,7 @@ export default new Router({
                 ]
             },
             {
-                path: '/inventory',
+                path: '/products',
                 component: {
                     render(c) {
                         return c('router-view')
@@ -83,7 +83,6 @@ export default new Router({
                         path: '',
                         name: 'Products',
                         component: Products,
-                        alias: '/products'
                     },
                     {
                         path: 'page/:page',
@@ -319,7 +318,7 @@ export default new Router({
                 ]
             },
             {
-                path: '/product_categories',
+                path: '/product-categories',
                 name: 'ProductCategory',
                 component: ProductCategory
             },
