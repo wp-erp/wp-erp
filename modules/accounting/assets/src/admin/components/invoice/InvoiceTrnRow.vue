@@ -4,8 +4,7 @@
             <multi-select v-model="line.selectedProduct" :options="products" @input="setProductInfo" />
         </th>
         <td class="col--qty column-primary">
-            <input type="number" :class="{'has-err': errors.first('qty')}"
-                v-validate="'required'"
+            <input type="number"
                 v-model="line.qty"
                 @keyup="respondAtChange"
                 name="qty"
