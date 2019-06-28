@@ -31,8 +31,8 @@
 					<span class="paging-input">
 						<span class="tablenav-paging-text">
 							<input :value="currentPage" class="current-page"
-                                   type="text" name="paged" aria-describedby="table-paging" size="1"
-                                   @keyup.enter="goToCustomPage"> of
+                                type="text" name="paged" aria-describedby="table-paging" size="1"
+                                @keyup.enter="goToCustomPage"> of
 							<span class="total-pages">{{ totalPages }}</span>
 						</span>
 					</span>
