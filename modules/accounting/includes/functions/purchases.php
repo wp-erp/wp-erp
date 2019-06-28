@@ -52,6 +52,7 @@ function erp_acct_get_purchase( $purchase_no ) {
 
     $sql = $wpdb->prepare( "SELECT
 
+    voucher.editable,
     purchase.id,
     purchase.voucher_no,
     purchase.vendor_id,
@@ -133,11 +134,14 @@ function erp_acct_insert_purchase( $data ) {
     $data['updated_at'] = date( "Y-m-d H:i:s" );
     $data['updated_by'] = $created_by;
 
+    $purchase_type_order = $draft = 1;
+
     try {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'purchase',
+            'editable'   => 1,
             'created_at' => $data['created_at'],
             'created_by' => $created_by,
             'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
@@ -183,7 +187,7 @@ function erp_acct_insert_purchase( $data ) {
             ) );
         }
 
-        if ( 1 == $purchase_data['purchase_order'] || 1 == $purchase_data['status'] ) {
+        if ( $purchase_type_order == $purchase_data['purchase_order'] || $draft == $purchase_data['status'] ) {
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_purchase( $voucher_no );
         }
@@ -225,86 +229,142 @@ function erp_acct_insert_purchase( $data ) {
 function erp_acct_update_purchase( $data, $purchase_id ) {
     global $wpdb;
 
-    $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
-    $data['updated_by'] = $updated_by;
+    $user_id = get_current_user_id();
+    $purchase_type_order = $draft = 1;
+
+    $data['created_at'] = date('Y-m-d H:i:s');
+    $data['created_by'] = $user_id;
+    $data['updated_at'] = date('Y-m-d H:i:s');
+    $data['updated_by'] = $user_id;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
-        $purchase_data = erp_acct_get_formatted_purchase_data( $data, $purchase_id );
+        if ( $purchase_type_order == $purchase_data['purchase_order'] || $draft == $purchase_data['status'] ) {
+            $purchase_data = erp_acct_get_formatted_purchase_data( $purchase_data, $purchase_id );
 
-        $wpdb->update( $wpdb->prefix . 'erp_acct_purchase', array(
-            'vendor_id'      => $purchase_data['vendor_id'],
-            'vendor_name'    => $purchase_data['vendor_name'],
-            'trn_date'       => $purchase_data['trn_date'],
-            'due_date'       => $purchase_data['due_date'],
-            'amount'         => $purchase_data['amount'],
-            'ref'            => $purchase_data['ref'],
-            'status'         => $purchase_data['status'],
-            'purchase_order' => $purchase_data['purchase_order'],
-            'attachments'    => $purchase_data['attachments'],
-            'particulars'    => $purchase_data['particulars'],
-            'created_at'     => $purchase_data['created_at'],
-            'created_by'     => $purchase_data['created_by'],
-            'updated_at'     => $purchase_data['updated_at'],
-            'updated_by'     => $purchase_data['updated_by'],
-        ), array(
-            'voucher_no' => $purchase_id
-        ) );
-
-        /**
-         *? We can't update `purchase_details` directly
-         *? suppose there were 5 detail rows previously
-         *? but on update there may be 2 detail rows
-         *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
-         *? so, remove previous rows and insert new rows
-         */
-        $prev_detail_ids = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_acct_purchase_details WHERE trn_no = {$purchase_id}", ARRAY_A );
-        $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
-
-        $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_details', [ 'trn_no' => $purchase_id ] );
-
-        $items = $data['line_items'];
-
-        foreach ( $items as $key => $item ) {
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_details', array(
-                'product_id' => $item['product_id'],
-                'qty'        => $item['qty'],
-                'price'      => $item['unit_price'],
-                'amount'     => $item['item_total'],
-                'created_at' => $purchase_data['created_at'],
-                'created_by' => $purchase_data['created_by'],
-                'updated_at' => $purchase_data['updated_at'],
-                'updated_by' => $purchase_data['updated_by']
+            $wpdb->update( $wpdb->prefix . 'erp_acct_purchase', array(
+                'vendor_id'      => $purchase_data['vendor_id'],
+                'vendor_name'    => $purchase_data['vendor_name'],
+                'trn_date'       => $purchase_data['trn_date'],
+                'due_date'       => $purchase_data['due_date'],
+                'amount'         => $purchase_data['amount'],
+                'ref'            => $purchase_data['ref'],
+                'status'         => $purchase_data['status'],
+                'purchase_order' => $purchase_data['purchase_order'],
+                'attachments'    => $purchase_data['attachments'],
+                'particulars'    => $purchase_data['particulars'],
+                'created_at'     => $purchase_data['created_at'],
+                'created_by'     => $purchase_data['created_by'],
+                'updated_at'     => $purchase_data['updated_at'],
+                'updated_by'     => $purchase_data['updated_by'],
             ), array(
-                'trn_no' => $purchase_id
+                'voucher_no' => $purchase_id
             ) );
-        }
 
-        if ( 1 == $purchase_data['purchase_order'] || 1 == $purchase_data['status'] ) {
+            /**
+            *? We can't update `purchase_details` directly
+            *? suppose there were 5 detail rows previously
+            *? but on update there may be 2 detail rows
+            *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
+            *? so, remove previous rows and insert new rows
+            */
+            $prev_detail_ids = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_acct_purchase_details WHERE trn_no = {$purchase_id}", ARRAY_A );
+            $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
+
+            $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_details', [ 'trn_no' => $purchase_id ] );
+
+            $items = $purchase_data['purchase_details'];
+
+            foreach ( $items as $key => $item ) {
+                $wpdb->update( $wpdb->prefix . 'erp_acct_purchase_details', [
+                    'product_id' => $item['product_id'],
+                    'qty'        => $item['qty'],
+                    'price'      => $item['unit_price'],
+                    'amount'     => $item['item_total'],
+                    'created_at' => $purchase_data['created_at'],
+                    'created_by' => $purchase_data['created_by'],
+                    'updated_at' => $purchase_data['updated_at'],
+                    'updated_by' => $purchase_data['updated_by']
+                ], [
+                    'trn_no'     => $voucher_no,
+                ] );
+            }
+
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_purchase( $purchase_id );
+        } else {
+            // disable editing on old bill
+            $wpdb->update( $wpdb->prefix . 'erp_acct_voucher_no', [ 'editable' => 0 ], [ 'id' => $purchase_id ] );
+
+            // insert contra voucher
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
+                'type'       => 'purchase',
+                'currency'   => '',
+                'editable'   => 0,
+                'created_at' => $data['created_at'],
+                'created_by' => $data['created_by'],
+                'updated_at' => $data['updated_at'],
+                'updated_by' => $data['updated_by']
+            ) );
+
+            $voucher_no = $wpdb->insert_id;
+
+            $old_purchase = erp_acct_get_purchase( $purchase_id );
+
+            // insert contra `erp_acct_purchase` (basically a duplication of row)
+            $wpdb->query( $wpdb->prepare("CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_purchase WHERE voucher_no = %d", $purchase_id) );
+            $wpdb->query( $wpdb->prepare(
+                "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
+                0, $voucher_no, $purchase_id, $data['created_at'])
+            );
+            $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_purchase SELECT * FROM acct_tmptable" );
+            $wpdb->query( "DROP TABLE acct_tmptable" );
+
+
+            return;
+
+            // change purchase status and other things
+            $status_closed = 7;
+            $wpdb->query( $wpdb->prepare(
+                "UPDATE {$wpdb->prefix}erp_acct_purchase SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
+                $status_closed, $data['updated_at'], $user_id, $purchase_id, $voucher_no)
+            );
+
+            $items = $old_purchase['purchase_details'];
+
+            foreach ( $items as $key => $item ) {
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_details', array(
+                    'trn_no'     => $voucher_no,
+                    'product_id' => $item['product_id'],
+                    'qty'        => $item['qty'],
+                    'price'      => $item['unit_price'],
+                    'amount'     => $item['item_total'],
+                    'created_at' => $purchase_data['created_at'],
+                    'created_by' => $purchase_data['created_by'],
+                    'updated_at' => $purchase_data['updated_at'],
+                    'updated_by' => $purchase_data['updated_by']
+                ) );
+            }
+
+            $wpdb->update( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
+                'purchase_no' => $purchase_id,
+                'trn_no'      => $voucher_no,
+                'trn_date'    => $purchase_data['trn_date'],
+                'particulars' => $purchase_data['particulars'],
+                'debit'       => $purchase_data['amount'],
+                'created_at'  => $purchase_data['created_at'],
+                'created_by'  => $purchase_data['created_by'],
+                'updated_at'  => $purchase_data['updated_at'],
+                'updated_by'  => $purchase_data['updated_by']
+            ) );
+
+            erp_acct_update_purchase_data_into_ledger( $items, $purchase_id );
+
+            erp_acct_insert_purchase( $purchase_data );
         }
 
-        $wpdb->update( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
-            'purchase_no' => $purchase_id,
-            'trn_date'    => $purchase_data['trn_date'],
-            'particulars' => $purchase_data['particulars'],
-            'debit'       => 0,
-            'credit'      => $purchase_data['amount'],
-            'created_at'  => $purchase_data['created_at'],
-            'created_by'  => $purchase_data['created_by'],
-            'updated_at'  => $purchase_data['updated_at'],
-            'updated_by'  => $purchase_data['updated_by']
-        ), array(
-            'trn_no' => $purchase_id
-        ) );
-
-        erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_id );
-
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'purchase-exception', $e->getMessage() );
@@ -425,27 +485,24 @@ function erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_no
     global $wpdb;
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'inventory' );
+    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'purchase' );
 
     if ( ! $ledger_id ) {
         return new WP_Error( 505, 'Ledger ID not found for purchase', $purchase_data );
     }
 
-    // Update amount in ledger_details
+    // insert contra `erp_acct_ledger_details`
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $ledger_id,
+        'trn_no'      => $purchase_no,
         'particulars' => $purchase_data['particulars'],
-        'debit'       => $purchase_data['amount'],
-        'credit'      => 0,
+        'credit'      => $purchase_data['amount'],
         'trn_date'    => $purchase_data['trn_date'],
         'created_at'  => $purchase_data['created_at'],
         'created_by'  => $purchase_data['created_by'],
         'updated_at'  => $purchase_data['updated_at'],
         'updated_by'  => $purchase_data['updated_by']
-    ), array(
-        'trn_no' => $purchase_no,
     ) );
-
 }
 
 /**

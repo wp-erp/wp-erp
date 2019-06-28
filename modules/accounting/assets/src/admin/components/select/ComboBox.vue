@@ -92,7 +92,7 @@
 			border-radius: 3px;
 			white-space: nowrap;
 			cursor: pointer;
-			min-width: 140px;
+			min-width: 150px;
 		}
 		a:hover {
 			text-decoration: none;

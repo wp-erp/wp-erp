@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">New {{inv_title}}</h2>
+                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} Purchase</h2>
                 </div>
             </div>
         </div>
@@ -65,7 +65,9 @@
                         ></purchase-row>
                         <tr class="add-new-line">
                             <td colspan="9" style="text-align: left;">
-                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger">
+                                    <i class="flaticon-add-plus-button"></i>Add Line
+                                </button>
                             </td>
                         </tr>
 
@@ -73,7 +75,7 @@
                             <td colspan="3" class="text-right">
                                 <span>Total Amount = </span>
                             </td>
-                            <td><input type="text" v-model="finalTotalAmount" class="text-right" readonly></td>
+                            <td><input type="text" v-model="finalTotalAmount" class="wperp-form-field text-right" readonly></td>
                             <td></td>
                         </tr>
 
@@ -231,8 +233,21 @@
                     this.editMode = true;
                     this.voucherNo = this.$route.params.id;
 
-                    let response = await HTTP.get(`/purchases/${this.$route.params.id}`);
-                    this.setDataForEdit( response.data );
+                    let [request1, request2] = await Promise.all([
+                        HTTP.get('/products'),
+                        HTTP.get(`/purchases/${this.$route.params.id}`)
+                    ]);
+
+                    let canEdit = Boolean( Number( request2.data.editable ) );
+
+                    if ( ! canEdit ) {
+                        this.showAlert('error', 'Can\'t edit');
+                        return;
+                    }
+
+                    this.products = request1.data;
+
+                    this.setDataForEdit( request2.data );
 
                     // initialize combo button id with `update`
                     this.$store.dispatch('combo/setBtnID', 'update');
@@ -260,7 +275,7 @@
                 this.basic_fields.due_date        = purchase.due_date;
                 this.status                       = purchase.status;
                 this.transactionLines             = purchase.line_items;
-                this.particulars                  = invoice.particulars;
+                this.particulars                  = purchase.particulars;
                 this.attachments                  = purchase.attachments;
             },
 
@@ -342,9 +357,9 @@
                     if ( line.hasOwnProperty('selectedProduct') ) {
                         lineItems.push({
                             product_id: line.selectedProduct.id,
-                            qty: line.qty,
+                            qty       : line.qty,
                             unit_price: line.unitPrice,
-                            item_total: line.amount,
+                            item_total: line.amount
                         });
                     }
                 });
