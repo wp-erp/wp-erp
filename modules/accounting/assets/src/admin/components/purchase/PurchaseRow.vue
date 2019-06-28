@@ -1,7 +1,7 @@
 <template>
     <tr>
         <th scope="row" class="col--check with-multiselect column-primary product-select">
-            <multi-select v-model="line.selectedProduct" :options="products" />
+            <multi-select v-model="line.selectedProduct" :options="products" @input="setProductInfo" />
         </th>
         <td class="col--qty">
             <input min="0" type="number"
@@ -44,14 +44,6 @@
             MultiSelect
         },
 
-        watch: {
-            'line.selectedProduct'(newVal) {
-                this.line.qty = 1;
-                this.line.unitPrice = newVal.unitPrice;
-                this.calculateAmount();
-            }
-        },
-
         created() {
             // check if editing
             if ( this.$route.params.id ) {
@@ -62,6 +54,14 @@
         methods: {
             prepareRowEdit(row) {
                 row.unitPrice = row.cost_price;
+                row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
+
+                this.calculateAmount();
+            },
+
+            setProductInfo() {
+                this.line.qty = 1;
+                this.line.unitPrice = this.line.selectedProduct.unitPrice;
                 this.calculateAmount();
             },
 

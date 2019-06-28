@@ -66,6 +66,8 @@ function erp_acct_get_invoice( $invoice_no ) {
 
     $sql = $wpdb->prepare( "Select
 
+    voucher.editable,
+
     invoice.id,
     invoice.voucher_no,
     invoice.customer_id,
@@ -87,6 +89,7 @@ function erp_acct_get_invoice( $invoice_no ) {
     inv_acc_detail.credit
 
     FROM {$wpdb->prefix}erp_acct_invoices as invoice
+    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON invoice.voucher_no = voucher.id
     LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details as inv_acc_detail ON invoice.voucher_no = inv_acc_detail.trn_no
     WHERE invoice.voucher_no = %d", $invoice_no );
 
@@ -119,7 +122,7 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
         inv_detail.discount,
         inv_detail.tax,
         inv_detail.item_total,
-        inv_detail.tax_percent,
+        inv_detail.tax_percent AS tax_rate,
 
         product.name,
         product.product_type_id,
@@ -146,18 +149,24 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
 function erp_acct_insert_invoice( $data ) {
     global $wpdb;
 
-    $created_by         = get_current_user_id();
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
-    $data['created_by'] = $created_by;
+    $user_id = get_current_user_id();
+
+    $data['created_at'] = date('Y-m-d H:i:s');
+    $data['created_by'] = $user_id;
+    $data['updated_at'] = date('Y-m-d H:i:s');
+    $data['updated_by'] = $user_id;
+
+    $estimate_type = $draft  = 1;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
-            'type'       => 'invoice',
-            'currency'   => '',
-            'created_at' => $data['created_at'],
-            'created_by' => $data['created_by']
+            'type'        => 'invoice',
+            'currency'    => '',
+            'editable'    => 1,
+            'created_at'  => $data['created_at'],
+            'created_by'  => $data['created_by']
         ) );
 
         $voucher_no = $wpdb->insert_id;
@@ -186,7 +195,7 @@ function erp_acct_insert_invoice( $data ) {
 
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no );
 
-        if ( 1 == $invoice_data['estimate'] || 1 == $invoice_data['status'] ) {
+        if ( $estimate_type == $invoice_data['estimate'] || $draft == $invoice_data['status'] ) {
             $wpdb->query( 'COMMIT' );
             return erp_acct_get_invoice( $voucher_no );
         }
@@ -212,9 +221,17 @@ function erp_acct_insert_invoice( $data ) {
  *
  * @return void
  */
-function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no ) {
+function erp_acct_insert_invoice_details_and_tax($invoice_data, $voucher_no, $contra = false) {
     global $wpdb;
 
+    $user_id = get_current_user_id();
+
+    $invoice_data['created_at'] = date('Y-m-d H:i:s');
+    $invoice_data['created_by'] = $user_id;
+    $invoice_data['updated_at'] = date('Y-m-d H:i:s');
+    $invoice_data['updated_by'] = $user_id;
+
+    $estimate_type = $draft  = 1;
     $tax_agency_details = [];
 
     $items = $invoice_data['line_items'];
@@ -236,8 +253,8 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no ) {
             'created_by'  => $invoice_data['created_by']
         ) );
 
-        if ( 1 == $invoice_data['estimate'] ) {
-            return;
+        if ( $estimate_type == $invoice_data['estimate'] || $draft == $invoice_data['status']  ) {
+            continue;
         }
 
         // calculate tax for every related agency
@@ -267,13 +284,22 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no ) {
 
     // insert data into {$wpdb->prefix}erp_acct_tax_agency_details
     foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
+
+        if ( $contra ) {
+            $debit  = $tax_agency_detail;
+            $credit = 0;
+        } else {
+            $debit  = 0;
+            $credit = $tax_agency_detail;
+        }
+
         $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_agency_details', [
             'agency_id'   => $agency_id,
             'trn_no'      => $voucher_no,
             'trn_date'    => $invoice_data['trn_date'],
             'particulars' => 'sales',
-            'debit'       => 0,
-            'credit'      => $tax_agency_detail,
+            'debit'       => $debit,
+            'credit'      => $credit,
             'created_at'  => $invoice_data['created_at'],
             'created_by'  => $invoice_data['created_by']
         ] );
@@ -289,18 +315,37 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no ) {
  *
  * @return void
  */
-function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no ) {
+function erp_acct_insert_invoice_account_details($invoice_data, $voucher_no, $contra = false) {
     global $wpdb;
 
+    $user_id = get_current_user_id();
+
+    $invoice_data['created_at'] = date('Y-m-d H:i:s');
+    $invoice_data['created_by'] = $user_id;
+    $invoice_data['updated_at'] = date('Y-m-d H:i:s');
+    $invoice_data['updated_by'] = $user_id;
+
+    if ( $contra ) {
+        $invoice_no = $invoice_data['voucher_no'];
+        $debit  = 0;
+        $credit = ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'];
+    } else {
+        $invoice_no = $voucher_no;
+        $debit  = ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'];
+        $credit = 0;
+    }
+
     $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-        'invoice_no'  => $voucher_no,
+        'invoice_no'  => $invoice_no,
         'trn_no'      => $voucher_no,
         'trn_date'    => $invoice_data['trn_date'],
         'particulars' => '',
-        'debit'       => ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'],
-        'credit'      => 0.00,
+        'debit'       => $debit,
+        'credit'      => $credit,
         'created_at'  => $invoice_data['created_at'],
-        'created_by'  => $invoice_data['created_by']
+        'created_by'  => $invoice_data['created_by'],
+        'updated_at'  => $invoice_data['created_at'],
+        'updated_by'  => $invoice_data['created_by']
     ) );
 }
 
@@ -313,76 +358,117 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no ) {
 function erp_acct_update_invoice( $data, $invoice_no ) {
     global $wpdb;
 
-    $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
-    $data['updated_by'] = $updated_by;
+    $user_id = get_current_user_id();
+
+    $data['created_at'] = date('Y-m-d H:i:s');
+    $data['created_by'] = $user_id;
+    $data['updated_at'] = date('Y-m-d H:i:s');
+    $data['updated_by'] = $user_id;
+
+    $estimate_type = $draft  = 1;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
-        $invoice_data = erp_acct_get_formatted_invoice_data( $data, $invoice_no );
+        if ( $estimate_type == $data['estimate'] || $draft == $data['status'] ) {
+            erp_acct_update_draft_and_estimate( $data, $invoice_no );
+        } else {
+            // disable editing on old invoice
+            $wpdb->update( $wpdb->prefix . 'erp_acct_voucher_no', [ 'editable' => 0 ], [ 'id' => $invoice_no ] );
 
-        $wpdb->update( $wpdb->prefix . 'erp_acct_invoices', [
-            'customer_id'     => $invoice_data['customer_id'],
-            'customer_name'   => $invoice_data['customer_name'],
-            'trn_date'        => $invoice_data['trn_date'],
-            'due_date'        => $invoice_data['due_date'],
-            'billing_address' => $invoice_data['billing_address'],
-            'amount'          => $invoice_data['amount'],
-            'discount'        => $invoice_data['discount'],
-            'discount_type'   => $invoice_data['discount_type'],
-            'tax_rate_id'     => $invoice_data['tax_rate_id'],
-            'tax'             => $invoice_data['tax'],
-            'estimate'        => $invoice_data['estimate'],
-            'attachments'     => $invoice_data['attachments'],
-            'status'          => $invoice_data['status'],
-            'particulars'     => $invoice_data['particulars'],
-            'updated_at'      => $invoice_data['updated_at'],
-            'updated_by'      => $invoice_data['updated_by']
-        ], [ 'voucher_no' => $invoice_no ] );
+            // insert contra voucher
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
+                'type'       => 'invoice',
+                'currency'   => '',
+                'editable'   => 0,
+                'created_at' => $data['created_at'],
+                'created_by' => $data['created_by'],
+                'updated_at' => $data['updated_at'],
+                'updated_by' => $data['updated_by']
+            ) );
 
-        /**
-         *? We can't update `invoice_details` directly
-         *? suppose there were 5 detail rows previously
-         *? but on update there may be 2 detail rows
-         *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
-         *? so, remove previous rows and insert new rows
-         */
-        $prev_detail_ids = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_acct_invoice_details WHERE trn_no = {$invoice_no}", ARRAY_A );
-        $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
+            $voucher_no = $wpdb->insert_id;
 
-        // order matter
-        $wpdb->query( "DELETE FROM {$wpdb->prefix}erp_acct_invoice_details_tax WHERE invoice_details_id IN($prev_detail_ids)" );
-        $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_details', [ 'trn_no' => $invoice_no ] );
-        $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agency_details', [ 'trn_no' => $invoice_no ] );
+            $old_invoice = erp_acct_get_invoice( $invoice_no );
 
-        erp_acct_insert_invoice_details_and_tax( $invoice_data, $invoice_no );
+            // insert contra `erp_acct_invoices` (basically a duplication of row)
+            $wpdb->query( $wpdb->prepare("CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_invoices WHERE voucher_no = %d", $invoice_no) );
+            $wpdb->query( $wpdb->prepare(
+                "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
+                0, $voucher_no, $invoice_no, $data['created_at'])
+            );
+            $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_invoices SELECT * FROM acct_tmptable" );
+            $wpdb->query( "DROP TABLE acct_tmptable" );
 
-        if ( 1 == $invoice_data['estimate'] || 1 == $invoice_data['status'] ) {
-            $wpdb->query( 'COMMIT' );
-            return erp_acct_get_invoice( $invoice_no );
+            // change invoice status and other things
+            $status_closed = 7;
+            $wpdb->query( $wpdb->prepare(
+                "UPDATE {$wpdb->prefix}erp_acct_invoices SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
+                $status_closed, $data['updated_at'], $user_id, $invoice_no, $voucher_no)
+            );
+
+            // insert contra `erp_acct_invoice_details` AND `erp_acct_invoice_details_tax`
+            erp_acct_insert_invoice_details_and_tax( $old_invoice, $voucher_no, true );
+
+            // insert contra `erp_acct_invoice_account_details`
+            erp_acct_insert_invoice_account_details( $old_invoice, $voucher_no, true );
+
+            // insert contra `erp_acct_ledger_details`
+            erp_acct_insert_invoice_data_into_ledger( $old_invoice, $voucher_no, true );
+
+            // insert new invoice with edited data
+            erp_acct_insert_invoice( $data );
         }
 
-        $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-            'particulars' => $invoice_data['particulars'],
-            'debit'       => ( $invoice_data['amount'] - $invoice_data['discount'] ) + $invoice_data['tax'],
-            'updated_at'  => $invoice_data['updated_at'],
-            'updated_by'  => $invoice_data['updated_by'],
-        ), array(
-            'trn_no' => $invoice_no,
-            'credit' => 0.00
-        ) );
-
-        erp_acct_update_invoice_data_in_ledger( $invoice_data, $invoice_no );
-
         $wpdb->query( 'COMMIT' );
-
     } catch ( Exception $e ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'invoice-exception', $e->getMessage() );
     }
 
     return erp_acct_get_invoice( $invoice_no );
+}
+
+/**
+ * Update draft & estimate
+ *
+ * @param array $data
+ * @param int $invoice_no
+ * @return void
+ */
+function erp_acct_update_draft_and_estimate( $data, $invoice_no ) {
+
+    $invoice_data = erp_acct_get_formatted_invoice_data( $data, $invoice_no );
+
+    $wpdb->update( $wpdb->prefix . 'erp_acct_invoices', [
+        'customer_id'     => $invoice_data['customer_id'],
+        'customer_name'   => $invoice_data['customer_name'],
+        'trn_date'        => $invoice_data['trn_date'],
+        'due_date'        => $invoice_data['due_date'],
+        'billing_address' => $invoice_data['billing_address'],
+        'amount'          => $invoice_data['amount'],
+        'discount'        => $invoice_data['discount'],
+        'discount_type'   => $invoice_data['discount_type'],
+        'tax_rate_id'     => $invoice_data['tax_rate_id'],
+        'tax'             => $invoice_data['tax'],
+        'estimate'        => $invoice_data['estimate'],
+        'attachments'     => $invoice_data['attachments'],
+        'status'          => $invoice_data['status'],
+        'particulars'     => $invoice_data['particulars'],
+        'updated_at'      => $invoice_data['updated_at'],
+        'updated_by'      => $invoice_data['updated_by']
+    ], [ 'voucher_no' => $invoice_no ] );
+
+    /**
+     *? We can't update `invoice_details` directly
+     *? suppose there were 5 detail rows previously
+     *? but on update there may be 2 detail rows
+     *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
+     *? so, remove previous rows to insert new rows
+     */
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_details', [ 'trn_no' => $invoice_no ] );
+
+    erp_acct_insert_invoice_details_and_tax( $invoice_data, $invoice_no );
 }
 
 /**
@@ -485,40 +571,61 @@ function get_tax_rate_with_agency( $tax_id, $tax_cat_id ) {
  *
  * @return mixed
  */
-function erp_acct_insert_invoice_data_into_ledger( $invoice_data ) {
+function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 0, $contra = false ) {
     global $wpdb;
+
+    $user_id = get_current_user_id();
+    $date    = date('Y-m-d H:i:s');
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
     $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug( 'sales_revenue' );
     $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug( 'sales_discounts' );
 
+    if ( $contra ) {
+        $trn_no = $voucher_no;
+
+        $discount_debit = 0;
+        $sales_credit   = 0;
+
+        $sales_debit     = $invoice_data['amount'];
+        $discount_credit = $invoice_data['discount'];
+    } else {
+        $trn_no = $invoice_data['voucher_no'];
+
+        $sales_debit     = 0;
+        $discount_credit = 0;
+
+        $sales_credit   = $invoice_data['amount'];
+        $discount_debit = $invoice_data['discount'];
+    }
+
     // insert amount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $sales_ledger_id,
-        'trn_no'      => $invoice_data['voucher_no'],
+        'trn_no'      => $trn_no,
         'particulars' => $invoice_data['particulars'],
-        'debit'       => 0,
-        'credit'      => $invoice_data['amount'],
+        'debit'       => $sales_debit,
+        'credit'      => $sales_credit,
         'trn_date'    => $invoice_data['trn_date'],
-        'created_at'  => $invoice_data['created_at'],
-        'created_by'  => $invoice_data['created_by'],
-        'updated_at'  => $invoice_data['updated_at'],
-        'updated_by'  => $invoice_data['updated_by']
+        'created_at'  => $date,
+        'created_by'  => $user_id,
+        'updated_at'  => $date,
+        'updated_by'  => $user_id
     ) );
 
     // insert discount in ledger_details
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $sales_discount_ledger_id,
-        'trn_no'      => $invoice_data['voucher_no'],
+        'trn_no'      => $trn_no,
         'particulars' => $invoice_data['particulars'],
-        'debit'       => $invoice_data['discount'],
-        'credit'      => 0,
+        'debit'       => $discount_debit,
+        'credit'      => $discount_credit,
         'trn_date'    => $invoice_data['trn_date'],
-        'created_at'  => $invoice_data['created_at'],
-        'created_by'  => $invoice_data['created_by'],
-        'updated_at'  => $invoice_data['updated_at'],
-        'updated_by'  => $invoice_data['updated_by']
+        'created_at'  => $date,
+        'created_by'  => $user_id,
+        'updated_at'  => $date,
+        'updated_by'  => $user_id
     ) );
 }
 
@@ -613,7 +720,6 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
         return $wpdb->get_var( $query );
     }
 
-    //error_log(print_r($query, true));
     return $wpdb->get_results( $query, ARRAY_A );
 }
 

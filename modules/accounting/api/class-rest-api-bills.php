@@ -249,9 +249,10 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $paid = 4;
-        if ( $paid === $request['status'] ) {
-            return new WP_Error( 'rest_bill_invalid_status', __( 'Invalid status for update.' ), [ 'status' => 403 ] );
+        $can_edit = erp_acct_check_voucher_edit_state( $id );
+
+        if ( ! $can_edit ) {
+            return new WP_Error( 'rest_bill_invalid_edit', __( 'Invalid edit permission for update.' ), [ 'status' => 403 ] );
         }
 
         $bill_data = $this->prepare_item_for_database( $request );
@@ -416,7 +417,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'sub_component' => __( 'Bill', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => sprintf( __( 'An bill of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'message'       => sprintf( __( 'An bill of %s has been created for %s', 'erp' ), $data['amount'], $data['vendor_id'] ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 
@@ -487,6 +488,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
+            'editable'        => (int) $item->editable,
             'voucher_no'      => (int) $item->voucher_no,
             'vendor_id'       => (int) $item->vendor_id,
             'vendor_name'     => $item->vendor_name,
@@ -496,7 +498,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'bill_details'    => ! empty( $item->bill_details ) ? $item->bill_details : [],
             'amount'          => (int) $item->amount,
             'due'             => ! empty( $item->due ) ? $item->due : $item->amount,
-            'ref'             => $item->ref,
+            'ref'             => ! empty( $item->ref ) ? $item->ref : '',
             'particulars'     => $item->particulars,
             'status'          => $item->status,
             'attachments'     => maybe_unserialize( $item->attachments )

@@ -704,6 +704,7 @@ Company'
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `type` varchar(255) DEFAULT NULL,
                 `currency` varchar(50) DEFAULT NULL,
+                `editable` tinyint DEFAULT 0,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
