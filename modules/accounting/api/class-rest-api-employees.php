@@ -162,7 +162,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_employee( $request ) {
         $user_id = (int) $request['id'];
 
-        $employee  = new Employee( $user_id );
+        $employee  = new \WeDevs\ERP\HRM\Employee( $user_id );
         $people_id = erp_acct_get_people_id_by_user_id( $user_id );
         $item      = (array) erp_get_people( $people_id );
 
@@ -196,14 +196,14 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_employee( $request ) {
         $item_data = $this->prepare_item_for_database( $request );
 
-        $employee = new Employee( null );
+        $employee = new \WeDevs\ERP\HRM\Employee( null );
         $created  = $employee->create_employee( $item_data );
         if ( is_wp_error( $created ) ) {
             return $created;
         }
 
-        $employee                = new Employee( $created->user_id );
-        $item                    = erp_acct_add_employee_as_people( null, $item_data );
+        $employee                = new \WeDevs\ERP\HRM\Employee( $created->user_id );
+        $item                    = erp_acct_add_employee_as_people( $item_data );
         $additional_fields['id'] = $item;
 
         // User Notification
@@ -236,7 +236,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function update_employee( $request ) {
         $id = (int) $request['user_id'];
 
-        $employee = new Employee( $id );
+        $employee = new \WeDevs\ERP\HRM\Employee( $id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
@@ -251,8 +251,8 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $updated_user            = new Employee( $updated->user_id );
-        $item                    = erp_acct_add_employee_as_people( null, $data );
+        $updated_user            = new \WeDevs\ERP\HRM\Employee( $updated->user_id );
+        $item                    = erp_acct_add_employee_as_people( $data );
         $additional_fields['id'] = $item;
         $response                = $this->prepare_item_for_response( $updated_user, $request, $additional_fields );
 

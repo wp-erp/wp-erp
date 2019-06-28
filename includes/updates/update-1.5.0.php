@@ -940,6 +940,19 @@ function erp_acct_populate_transactions() {
 }
 
 /**
+ * Migrate Existing Employees to people
+ */
+function erp_employees_to_people_migration() {
+    $employees = erp_hr_get_employees( array(
+        'number'     => '-1',
+    ) );
+
+    foreach ( $employees as $employee ) {
+        erp_acct_add_employee_as_people( $employee->data );
+    }
+}
+
+/**
  * Populate ledger categories and ledgers
  */
 function erp_acct_populate_charts_ledgers() {
@@ -989,6 +1002,8 @@ function wperp_update_accounting_module_1_5_0() {
     erp_acct_populate_transactions();
 
     erp_acct_populate_charts_ledgers();
+
+    erp_employees_to_people_migration();
 }
 
 wperp_update_accounting_module_1_5_0();
