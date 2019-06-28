@@ -7,33 +7,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Insert employee data as people
  *
- * @param $id
  * @param $data
+ * @param $update
  *
  * @return int
  */
-function erp_acct_add_employee_as_people( $id = null, $data ) {
+function erp_acct_add_employee_as_people( $data, $update = false ) {
     global $wpdb;
 
-    $update    = false;
-    $people_id = 0;
-
-    if ( ! empty( $id ) ) {
-        $data['user_id'] = $id;
+    if ( erp_acct_is_employee_people( $data['user_id'] ) ) {
+        return;
     }
 
-    if ( isset( $data['id'] ) ) {
-        $update    = true;
-        $people_id = $data['id'];
-    }
-
+    $company = new \WeDevs\ERP\Company();
 
     if ( $update ) {
         $wpdb->update( $wpdb->prefix . 'erp_peoples', array(
-            'user_id'       => $data['user_id'],
             'first_name'    => $data['personal']['first_name'],
             'last_name'     => $data['personal']['last_name'],
-            'company'       => $data['company'],
+            'company'       => $company->name,
             'email'         => $data['user_email'],
             'phone'         => $data['personal']['phone'],
             'mobile'        => $data['personal']['mobile'],
@@ -54,14 +46,14 @@ function erp_acct_add_employee_as_people( $id = null, $data ) {
             'created_by'    => get_current_user_id(),
             'created'       => '',
         ), array(
-            'id' => $data['id']
+            'user_id' => $data['user_id']
         ) );
     } else {
         $wpdb->insert( $wpdb->prefix . 'erp_peoples', array(
             'user_id'       => $data['user_id'],
             'first_name'    => $data['personal']['first_name'],
             'last_name'     => $data['personal']['last_name'],
-            'company'       => $data['company'],
+            'company'       => $company->name,
             'email'         => $data['user_email'],
             'phone'         => $data['personal']['phone'],
             'mobile'        => $data['personal']['mobile'],
@@ -88,19 +80,6 @@ function erp_acct_add_employee_as_people( $id = null, $data ) {
 
     return $people_id;
 }
-
-///**
-// * Get transactions of a people
-// *
-// * @return mixed
-// */
-//
-//function erp_acct_get_people_transactions( $people_id ) {
-//    global $wpdb;
-//
-//    $row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_people_trn WHERE people_id = {$people_id}", ARRAY_A );
-//    return $row;
-//}
 
 /**
  * Get transaction by date
@@ -373,4 +352,32 @@ function erp_acct_get_people_name_by_people_id( $people_id ) {
     $row = $wpdb->get_row( "SELECT first_name, last_name FROM {$wpdb->prefix}erp_peoples WHERE id = {$people_id} LIMIT 1" );
 
     return $row->first_name . ' ' . $row->last_name;
+}
+
+/**
+ * Checks if an employee is people
+ *
+ * @param $user_id
+ *
+ * @return boolean
+ */
+function erp_acct_is_employee_people( $user_id ) {
+    global $wpdb;
+
+    if ( !$user_id ) {
+        return false;
+    }
+
+    $sql = "SELECT COUNT(1) FROM {$wpdb->prefix}erp_peoples WHERE user_id={$user_id}";
+
+    $wpdb->get_var( $sql );
+
+    $res = $wpdb->get_var( $sql );
+
+    if ( $res == '1' ) {
+        return true;
+    }
+
+    return false;
+
 }
