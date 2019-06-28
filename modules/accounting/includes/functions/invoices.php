@@ -406,7 +406,7 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['billing_address'] = isset( $data['billing_address'] ) ? maybe_serialize( $data['billing_address'] ) : '';
     $invoice_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
     $invoice_data['discount']        = isset( $data['discount'] ) ? $data['discount'] : 0;
-    $invoice_data['discount_type']   = isset( $data['discount_type'] ) ? $data['discount_type'] : 0;
+    $invoice_data['discount_type']   = isset( $data['discount_type'] ) ? $data['discount_type'] : null;
     $invoice_data['tax_rate_id']     = isset( $data['tax_rate_id'] ) ? $data['tax_rate_id'] : 0;
     $invoice_data['line_items']      = isset( $data['line_items'] ) ? $data['line_items'] : array();
     $invoice_data['trn_by']          = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
@@ -606,7 +606,7 @@ function erp_acct_receive_payments_from_customer( $args = [] ) {
                                     HAVING due > 0
                                 ) as invs
                                 ON invoice.voucher_no = invs.invoice_no
-                                WHERE invoice.customer_id = %d AND invoice.status != 1 AND invoice.estimate != 1 
+                                WHERE invoice.customer_id = %d AND invoice.status != 1 AND invoice.estimate != 1
                                 ORDER BY %s %s $limit", $args['people_id'], $args['orderby'], $args['order'] );
 
     if ( $args['count'] ) {
