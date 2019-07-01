@@ -964,25 +964,40 @@ function erp_acct_populate_charts_ledgers() {
         LEFT JOIN wp_erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id
         LEFT JOIN wp_erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
 
+    foreach ( $old_ledgers as $old_ledger ) {
+        $wpdb->insert(
+            "{$wpdb->prefix}erp_acct_ledgers",
+            [
+                'chart_id' => $old_ledger['chart_id'],
+                'name'     => $old_ledger['name'],
+                'slug'     => slugify( $old_ledger['name'] ),
+                'code'     => $old_ledger['code'],
+                'system'   => $old_ledger['system']
+            ]
+        );
+    }
 
+    if ( get_option( 'erp_acct_new_ledgers' ) ) {
+        return;
+    } else {
+        $ledgers_json = file_get_contents( WPERP_ASSETS . '/ledgers.json' );
+        $ledgers = json_decode( $ledgers_json, true );
 
-    foreach ( array_keys( $ledgers ) as $array_key ) {
-        foreach ( $ledgers[$array_key] as $value ) {
-            $wpdb->insert(
-                "{$wpdb->prefix}erp_acct_ledgers",
-                [
-                    'chart_id' => $this->get_chart_id_by_slug($array_key),
-                    'name'     => $value['name'],
-                    'slug'     => slugify( $value['name'] ),
-                    'code'     => $value['code'],
-                    'system'   => $value['system']
-                ]
-            );
+        foreach ( array_keys( $ledgers ) as $array_key ) {
+            foreach ( $ledgers[$array_key] as $value ) {
+                $wpdb->insert(
+                    "{$wpdb->prefix}erp_acct_ledgers",
+                    [
+                        'chart_id' => $this->get_chart_id_by_slug($array_key),
+                        'name'     => $value['name'],
+                        'slug'     => slugify( $value['name'] ),
+                        'code'     => $value['code'],
+                        'system'   => $value['system']
+                    ]
+                );
+            }
         }
     }
-}
-
-function erp_acct_old_to_new_ledgers_mapping( $old_ledger ) {
 
 }
 
@@ -994,7 +1009,6 @@ function erp_acct_old_to_new_ledgers_mapping( $old_ledger ) {
 function wperp_update_accounting_module_1_5_0() {
     erp_acct_create_accounting_tables();
     erp_acct_populate_data();
-    // erp_acct_remove_previous_tables();
 
     erp_acct_populate_tax_agencies();
     erp_acct_populate_tax_data();
