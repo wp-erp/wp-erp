@@ -469,8 +469,7 @@ if (false) {(function () {
 /* 13 */,
 /* 14 */,
 /* 15 */,
-/* 16 */,
-/* 17 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -526,7 +525,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -578,6 +577,7 @@ if (false) {(function () {
 
 
 /***/ }),
+/* 18 */,
 /* 19 */,
 /* 20 */,
 /* 21 */,
@@ -12693,7 +12693,7 @@ var require;var require;
     }]
   }, {}, [7])(7);
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(16)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(19)))
 
 /***/ }),
 /* 69 */
@@ -15501,6 +15501,34 @@ if (false) {(function () {
     this.fetchData();
   },
   computed: {
+    thisMonth: function thisMonth() {
+      return {
+        labels: this.respData.thisMonth.labels,
+        datasets: [{
+          label: 'Income',
+          data: this.respData.thisMonth.income,
+          backgroundColor: '#208DF8'
+        }, {
+          label: 'Expense',
+          data: this.respData.thisMonth.expense,
+          backgroundColor: '#f86e2d'
+        }]
+      };
+    },
+    lastMonth: function lastMonth() {
+      return {
+        labels: this.respData.lastMonth.labels,
+        datasets: [{
+          label: 'Income',
+          data: this.respData.lastMonth.income,
+          backgroundColor: '#208DF8'
+        }, {
+          label: 'Expense',
+          data: this.respData.lastYear.expense,
+          backgroundColor: '#f86e2d'
+        }]
+      };
+    },
     thisYear: function thisYear() {
       return {
         labels: this.respData.thisYear.labels,
@@ -15626,6 +15654,16 @@ if (false) {(function () {
       var newlabels, newset;
 
       switch (this.chartRange) {
+        case "this_month":
+          newlabels = this.thisMonth.labels;
+          newset = this.thisMonth.datasets;
+          break;
+
+        case "last_month":
+          newlabels = this.lastMonth.labels;
+          newset = this.lastMonth.datasets;
+          break;
+
         case "last_year":
           newlabels = this.lastYear.labels;
           newset = this.lastYear.datasets;
@@ -16492,7 +16530,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_invoice_InvoiceTrnRow_vue__ = __webpack_require__(306);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectCustomers_vue__ = __webpack_require__(130);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
@@ -18509,11 +18547,11 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_people_SelectCustomers_vue__ = __webpack_require__(130);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 
 
 //
@@ -19105,7 +19143,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 
 
 //
@@ -19829,11 +19867,11 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_people_SelectPeople_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 
 //
 //
@@ -20497,7 +20535,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_purchase_PurchaseRow_vue__ = __webpack_require__(373);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectVendors_vue__ = __webpack_require__(149);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
@@ -21450,8 +21488,8 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 
 //
 //
@@ -23172,9 +23210,9 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectPeople_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 
@@ -27087,7 +27125,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 //
 //
@@ -28968,8 +29006,8 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_people_SelectPeople_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 
 
@@ -31985,7 +32023,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_people_People_vue__ = __webpack_require__(239);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_products_Products_vue__ = __webpack_require__(259);
@@ -42153,7 +42191,7 @@ var require;var require;
     }]
   }, {}, [7])(7);
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(16)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(19)))
 
 /***/ }),
 /* 285 */
@@ -42209,6 +42247,14 @@ var render = function() {
                     }
                   },
                   [
+                    _c("option", { attrs: { value: "this_month" } }, [
+                      _vm._v("This Month")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "last_month" } }, [
+                      _vm._v("Last Month")
+                    ]),
+                    _vm._v(" "),
                     _vm.thisQuarter.labels.length
                       ? _c("option", { attrs: { value: "this_quarter" } }, [
                           _vm._v("This Quarter")
@@ -63273,7 +63319,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(19);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_sales__ = __webpack_require__(514);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_expense__ = __webpack_require__(515);

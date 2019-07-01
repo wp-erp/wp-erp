@@ -335,6 +335,28 @@ function erp_acct_get_income_expense_chart_data() {
     $income_chart_id  = 4; //Default db value
     $expense_chart_id = 5; //Default db value
 
+    //Generate current month data
+
+    $incomes          = erp_acct_get_daily_balance_by_chart_id( $income_chart_id, 'current' );
+    $incomes_monthly  = erp_acct_format_daily_data_to_yearly_data( $incomes );
+    $expenses         = erp_acct_get_daily_balance_by_chart_id( $expense_chart_id, 'current' );
+    $expenses_monthly = erp_acct_format_daily_data_to_yearly_data( $expenses );
+
+    $this_month = [
+        'labels' => array_keys( $incomes_monthly ), 'income' => array_values( $incomes_monthly ), 'expense' => array_values( $expenses_monthly )
+    ];
+
+    //Generate last month data
+
+    $incomes          = erp_acct_get_daily_balance_by_chart_id( $income_chart_id, 'last' );
+    $incomes_monthly  = erp_acct_format_daily_data_to_yearly_data( $incomes );
+    $expenses         = erp_acct_get_daily_balance_by_chart_id( $expense_chart_id, 'last' );
+    $expenses_monthly = erp_acct_format_daily_data_to_yearly_data( $expenses );
+
+    $last_month      = [
+        'labels' => array_keys( $incomes_monthly ), 'income' => array_values( $incomes_monthly ), 'expense' => array_values( $expenses_monthly )
+    ];
+
     $current_year = date( 'Y' );
     $start_date   = $current_year . '-01-01';
     $end_date     = $current_year . '-12-31';
@@ -360,10 +382,10 @@ function erp_acct_get_income_expense_chart_data() {
     $expenses     = erp_acct_get_monthly_balance_by_chart_id( $start_date, $end_date, $expense_chart_id );
     $expense_data = erp_acct_format_monthly_data_to_yearly_data( $expenses );
     $last_yr      = [
-        'labels' => array_keys( $income_data ), 'income' => array_values( $expense_data ), 'expense' => array_values( $expense_data )
+        'labels' => array_keys( $income_data ), 'income' => array_values( $income_data ), 'expense' => array_values( $expense_data )
     ];
 
-    return [ 'thisYear' => $this_year, 'lastYear' => $last_yr ];
+    return [ 'thisMonth' => $this_month, 'lastMonth' => $last_month, 'thisYear' => $this_year, 'lastYear' => $last_yr ];
 }
 
 /**
@@ -431,6 +453,69 @@ function erp_acct_format_monthly_data_to_yearly_data( $result ) {
     $this_yr_data = wp_parse_args( $this_yr_data, $default_year_data );
 
     return $this_yr_data;
+}
+
+/**
+ * Get Balance amount for given chart of account in time range
+ *
+ * @param $start_date
+ * @param $end_date
+ * @param $chart_id
+ *
+ * @return array|null|object
+ */
+function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' ) {
+    global $wpdb;
+
+    switch ( $month ) {
+        case 'current':
+            $start_date = date("Y-m-d", strtotime("first day of this month" ) );
+            $end_date   = date("Y-m-d", strtotime("last day of this month" ) );
+            break;
+        case 'last' :
+            $start_date = date("Y-m-d", strtotime("first day of previous month" ) );
+            $end_date   = date("Y-m-d", strtotime("last day of previous month" ) );
+            break;
+        default:
+            break;
+    }
+
+    $ledger_details = $wpdb->prefix . 'erp_acct_ledger_details';
+    $ledgers        = $wpdb->prefix . 'erp_acct_ledgers';
+    $chart_of_accs  = $wpdb->prefix . 'erp_acct_chart_of_accounts';
+
+    $query = "Select ld.trn_date as day, SUM( ld.debit-ld.credit ) as balance
+              From $ledger_details as ld
+              Inner Join $ledgers as al on al.id = ld.ledger_id
+              Inner Join $chart_of_accs as ca on ca.id = al.chart_id
+              Where ca.id = %d
+              AND ld.trn_date BETWEEN %s AND %s
+              Group By ld.trn_date";
+
+    $results = $wpdb->get_results( $wpdb->prepare( $query, $chart_id, $start_date, $end_date ), ARRAY_A );
+    return $results;
+}
+
+/**
+ * Format Daily result to Yearly data
+ *
+ * @param $result
+ *
+ * @return array
+ */
+function erp_acct_format_daily_data_to_yearly_data( $result ) {
+    $result = array_map( function( $item ) {
+        $item['day']     = date('d-m', strtotime($item['day'] ) );
+        $item['balance'] = abs( $item['balance'] );
+        return $item;
+    }, $result );
+
+    $labels  = wp_list_pluck( $result, 'day' );
+    $balance = wp_list_pluck( $result, 'balance' );
+
+    $monthly_data = array_combine( $labels, $balance );
+
+    return $monthly_data;
 }
 
 /**
@@ -611,6 +696,11 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
  * @return boolean
  */
 function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' ) {
+    $company     = new \WeDevs\ERP\Company();
+    $theme_color = '#9e9e9e';
+    $transaction = (object) $request['trn_data'];
+
+    $user_id = '';
 
     $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
     $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : [];
@@ -618,11 +708,6 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
     $body       = isset( $request['message'] ) ? $request['message'] : '';
     $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
 
-    $company     = new \WeDevs\ERP\Company();
-    $theme_color = '#9e9e9e';
-    $transaction = (object) $request['trn_data'];
-
-    $user_id = '';
 
     if ( ! empty( $transaction->customer_id ) ) {
         $user_id = $transaction->customer_id;
