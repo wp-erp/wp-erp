@@ -1248,7 +1248,8 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         'offset'      => 0,
         'orderby'     => 'en.user_id, en.created_on',
         'order'       => 'DESC',
-        'debug'       => false
+        'debug'       => false,
+        'emp_status'  => ''
     );
 
     $args  = wp_parse_args( $args, $defaults );
@@ -1283,10 +1284,15 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         $where .= " AND en.policy_id = " . intval( $args['policy_id'] );
     }
 
-    $query = "SELECT en.*, u.display_name as employee_name, pol.name as policy_name
+    if ( $args['emp_status'] == 'active') {
+        $where .= " AND emp.status = 'active'";
+    }
+
+    $query = "SELECT en.*, u.display_name as employee_name, pol.name as policy_name, emp.status as emp_status
         FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
         LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = en.policy_id
         LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
+        LEFT JOIN wp_erp_hr_employees AS emp ON en.user_id = emp.user_id 
         $where
         ORDER BY {$args['orderby']} {$args['order']}
         LIMIT %d,%d;";
