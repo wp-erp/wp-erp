@@ -469,7 +469,8 @@ if (false) {(function () {
 /* 13 */,
 /* 14 */,
 /* 15 */,
-/* 16 */
+/* 16 */,
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -525,7 +526,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -577,7 +578,6 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 18 */,
 /* 19 */,
 /* 20 */,
 /* 21 */,
@@ -3016,10 +3016,6 @@ if (false) {(function () {
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0718c36b_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_NewTaxZone_vue__ = __webpack_require__(457);
 var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(456)
-}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -3029,7 +3025,7 @@ var normalizeComponent = __webpack_require__(0)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = injectStyle
+var __vue_styles__ = null
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -12701,7 +12697,7 @@ var require;var require;
     }]
   }, {}, [7])(7);
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(19)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(16)))
 
 /***/ }),
 /* 69 */
@@ -16538,7 +16534,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_invoice_InvoiceTrnRow_vue__ = __webpack_require__(306);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectCustomers_vue__ = __webpack_require__(130);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
@@ -18555,11 +18551,11 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_people_SelectCustomers_vue__ = __webpack_require__(130);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 
 
 //
@@ -19151,7 +19147,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 
 
 //
@@ -19875,11 +19871,11 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_people_SelectPeople_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 
 //
 //
@@ -20543,7 +20539,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_purchase_PurchaseRow_vue__ = __webpack_require__(373);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectVendors_vue__ = __webpack_require__(149);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
@@ -21496,8 +21492,8 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 
 //
 //
@@ -23218,9 +23214,9 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectPeople_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 
@@ -26400,7 +26396,7 @@ setTimeout(function () {
         _this.agency = response.data.name;
       });
     },
-    addNewTaxAgency: function addNewTaxAgency() {
+    taxAgencyFormSubmit: function taxAgencyFormSubmit() {
       var _this2 = this;
 
       this.validateForm();
@@ -26413,15 +26409,25 @@ setTimeout(function () {
         return;
       }
 
+      if (this.is_update) {
+        var _rest = 'put',
+            _url = "/tax-agencies/".concat(this.agency_id),
+            _msg = 'Tax Agency Updated!';
+      } else {
+        var _rest2 = 'post',
+            _url2 = "/tax-agencies",
+            _msg2 = 'Tax Agency Created!';
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/tax-agencies', {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */][rest](url, {
         agency_name: this.agency
       }).catch(function (error) {
         _this2.$store.dispatch('spinner/setSpinner', false);
       }).then(function (res) {
         _this2.$store.dispatch('spinner/setSpinner', false);
 
-        _this2.showAlert('success', 'Tax Agency Created!');
+        _this2.showAlert('success', msg);
       }).then(function () {
         _this2.resetData();
 
@@ -26430,38 +26436,6 @@ setTimeout(function () {
         _this2.$emit('close');
 
         _this2.$root.$emit('refetch_tax_data');
-      });
-    },
-    UpdateTaxAgency: function UpdateTaxAgency() {
-      var _this3 = this;
-
-      this.validateForm();
-
-      if (this.form_errors.length) {
-        window.scrollTo({
-          top: 10,
-          behavior: 'smooth'
-        });
-        return;
-      }
-
-      this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].put("/tax-agencies/".concat(this.agency_id), {
-        agency_name: this.agency
-      }).catch(function (error) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
-      }).then(function (res) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
-
-        _this3.showAlert('success', 'Tax Agency Created!');
-      }).then(function () {
-        _this3.resetData();
-
-        _this3.isWorking = false;
-
-        _this3.$emit('close');
-
-        _this3.$root.$emit('refetch_tax_data');
       });
     },
     validateForm: function validateForm() {
@@ -26574,7 +26548,7 @@ setTimeout(function () {
         _this.desc = response.data.description;
       });
     },
-    addNewTaxCat: function addNewTaxCat() {
+    taxCatFormSubmit: function taxCatFormSubmit() {
       var _this2 = this;
 
       this.validateForm();
@@ -26587,8 +26561,18 @@ setTimeout(function () {
         return;
       }
 
+      if (this.is_update) {
+        var _rest = 'put',
+            _url = "/tax-cats/".concat(this.cat_id),
+            _msg = 'Tax Category Updated!';
+      } else {
+        var _rest2 = 'post',
+            _url2 = "/tax-cats",
+            _msg2 = 'Tax Category Created!';
+      }
+
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/tax-cats', {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */][rest](url, {
         name: this.category,
         description: this.desc
       }).catch(function (error) {
@@ -26596,7 +26580,7 @@ setTimeout(function () {
       }).then(function (res) {
         _this2.$store.dispatch('spinner/setSpinner', false);
 
-        _this2.showAlert('success', 'Tax Category Created!');
+        _this2.showAlert('success', msg);
       }).then(function () {
         _this2.resetData();
 
@@ -26605,39 +26589,6 @@ setTimeout(function () {
         _this2.$emit('close');
 
         _this2.$root.$emit('refetch_tax_data');
-      });
-    },
-    updateTaxCat: function updateTaxCat() {
-      var _this3 = this;
-
-      this.validateForm();
-
-      if (this.form_errors.length) {
-        window.scrollTo({
-          top: 10,
-          behavior: 'smooth'
-        });
-        return;
-      }
-
-      this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].put("/tax-cats/".concat(this.cat_id), {
-        name: this.category,
-        description: this.desc
-      }).catch(function (error) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
-      }).then(function (res) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
-
-        _this3.showAlert('success', 'Tax Category Updated!');
-      }).then(function () {
-        _this3.resetData();
-
-        _this3.isWorking = false;
-
-        _this3.$emit('close');
-
-        _this3.$root.$emit('refetch_tax_data');
       });
     },
     validateForm: function validateForm() {
@@ -27040,7 +26991,7 @@ setTimeout(function () {
         _this.tax_number = response.data.tax_number;
       });
     },
-    addNewTaxZone: function addNewTaxZone() {
+    taxZoneFormSubmit: function taxZoneFormSubmit() {
       var _this2 = this;
 
       this.validateForm();
@@ -27054,7 +27005,18 @@ setTimeout(function () {
       }
 
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('/tax-rate-names', {
+
+      if (this.is_update) {
+        var _rest = 'put',
+            _url = "/tax-rate-names/".concat(this.rate_name_id),
+            _msg = 'Tax Zone Updated!';
+      } else {
+        var _rest2 = 'post',
+            _url2 = "/tax-rate-names",
+            _msg2 = 'Tax Zone Created!';
+      }
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */][rest](url, {
         tax_rate_name: this.rate_name,
         tax_number: this.tax_number,
         default: this.is_default
@@ -27063,7 +27025,7 @@ setTimeout(function () {
       }).then(function (res) {
         _this2.$store.dispatch('spinner/setSpinner', false);
 
-        _this2.showAlert('success', 'Tax Zone Created!');
+        _this2.showAlert('success', msg);
       }).then(function () {
         _this2.resetData();
 
@@ -27074,48 +27036,11 @@ setTimeout(function () {
         _this2.$root.$emit('refetch_tax_data');
       });
     },
-    updateTaxRateName: function updateTaxRateName() {
-      var _this3 = this;
-
-      this.validateForm();
-
-      if (this.form_errors.length) {
-        window.scrollTo({
-          top: 10,
-          behavior: 'smooth'
-        });
-        return;
-      }
-
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].put("/tax-rate-names/".concat(this.rate_name_id), {
-        tax_rate_name: this.rate_name,
-        tax_number: this.tax_number,
-        default: this.is_default
-      }).catch(function (error) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
-      }).then(function (res) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
-
-        _this3.showAlert('success', 'Tax Zone Updated !');
-      }).then(function () {
-        _this3.resetData();
-
-        _this3.isWorking = false;
-
-        _this3.$emit('close');
-
-        _this3.$root.$emit('refetch_tax_data');
-      });
-    },
     validateForm: function validateForm() {
       this.form_errors = [];
 
       if (!this.rate_name) {
         this.form_errors.push('Tax Zone Name is required.');
-      }
-
-      if (!this.tax_number) {
-        this.form_errors.push('Tax Number is required.');
       }
     },
     resetData: function resetData() {
@@ -27133,7 +27058,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 //
 //
@@ -29014,8 +28939,8 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_people_SelectPeople_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 
 
@@ -32031,7 +31956,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_people_People_vue__ = __webpack_require__(239);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_products_Products_vue__ = __webpack_require__(259);
@@ -33451,7 +33376,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
       _c("label", [
         _vm._v("Product Name "),
-        _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+        _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
       ])
     ])
   },
@@ -33472,7 +33397,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
       _c("label", [
         _vm._v("Product Type "),
-        _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+        _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
       ])
     ])
   },
@@ -33509,7 +33434,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
       _c("label", { attrs: { for: "sale-price" } }, [
         _vm._v("Sale Price "),
-        _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+        _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
       ])
     ])
   },
@@ -33530,7 +33455,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
       _c("label", [
         _vm._v("Vendor "),
-        _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+        _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
       ])
     ])
   },
@@ -42201,7 +42126,7 @@ var require;var require;
     }]
   }, {}, [7])(7);
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(19)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(16)))
 
 /***/ }),
 /* 285 */
@@ -56418,7 +56343,13 @@ var render = function() {
               "form",
               {
                 staticClass: "modal-form edit-customer-modal",
-                attrs: { action: "", method: "post" }
+                attrs: { action: "", method: "post" },
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.taxAgencyFormSubmit($event)
+                  }
+                }
               },
               [
                 _c("div", { staticClass: "wperp-modal-body" }, [
@@ -56563,7 +56494,13 @@ var render = function() {
               "form",
               {
                 staticClass: "modal-form edit-customer-modal",
-                attrs: { action: "", method: "post" }
+                attrs: { action: "", method: "post" },
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.taxCatFormSubmit($event)
+                  }
+                }
               },
               [
                 _c("div", { staticClass: "wperp-modal-body" }, [
@@ -56579,8 +56516,8 @@ var render = function() {
                           expression: "category"
                         }
                       ],
-                      staticClass: "wperp-required-sign",
-                      attrs: { type: "text" },
+                      staticClass: "wperp-form-field wperp-required-sign",
+                      attrs: { type: "text", required: "" },
                       domProps: { value: _vm.category },
                       on: {
                         input: function($event) {
@@ -56630,22 +56567,10 @@ var render = function() {
                             attrs: {
                               text: "Update Tax Category",
                               working: _vm.isWorking
-                            },
-                            nativeOn: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.updateTaxCat($event)
-                              }
                             }
                           })
                         : _c("submit-button", {
-                            attrs: { text: "Save", working: _vm.isWorking },
-                            nativeOn: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.addNewTaxCat($event)
-                              }
-                            }
+                            attrs: { text: "Save", working: _vm.isWorking }
                           })
                     ],
                     1
@@ -56666,7 +56591,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("label", [
-      _vm._v("Tax Category Name"),
+      _vm._v("Tax Category Name "),
       _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
     ])
   }
@@ -56688,12 +56613,7 @@ if (false) {
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 456 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 456 */,
 /* 457 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -56740,7 +56660,13 @@ var render = function() {
               "form",
               {
                 staticClass: "modal-form edit-customer-modal",
-                attrs: { action: "", method: "post" }
+                attrs: { method: "post" },
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.taxZoneFormSubmit($event)
+                  }
+                }
               },
               [
                 _c("div", { staticClass: "wperp-modal-body" }, [
@@ -56756,7 +56682,8 @@ var render = function() {
                           expression: "rate_name"
                         }
                       ],
-                      attrs: { type: "text" },
+                      staticClass: "wperp-form-field",
+                      attrs: { type: "text", required: "" },
                       domProps: { value: _vm.rate_name },
                       on: {
                         input: function($event) {
@@ -56770,7 +56697,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "wperp-form-group" }, [
-                    _vm._m(1),
+                    _c("label", [_vm._v("Tax Number")]),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -56852,22 +56779,10 @@ var render = function() {
                     [
                       _vm.is_update
                         ? _c("submit-button", {
-                            attrs: { text: "Update", working: _vm.isWorking },
-                            nativeOn: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.updateTaxRateName($event)
-                              }
-                            }
+                            attrs: { text: "Update", working: _vm.isWorking }
                           })
                         : _c("submit-button", {
-                            attrs: { text: "Add New", working: _vm.isWorking },
-                            nativeOn: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.addNewTaxZone($event)
-                              }
-                            }
+                            attrs: { text: "Add New", working: _vm.isWorking }
                           })
                     ],
                     1
@@ -56888,16 +56803,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("label", [
-      _vm._v("Tax Zone Name"),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Tax Number"),
+      _vm._v("Tax Zone Name "),
       _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
     ])
   }
@@ -63295,7 +63201,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(18);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_sales__ = __webpack_require__(514);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_expense__ = __webpack_require__(515);

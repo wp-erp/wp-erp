@@ -10,16 +10,16 @@
                 <!-- end modal body title -->
                 <show-errors :error_msgs="form_errors" ></show-errors>
 
-                <form action="" method="post" class="modal-form edit-customer-modal">
+                <form method="post" class="modal-form edit-customer-modal" @submit.prevent="taxZoneFormSubmit">
                     <div class="wperp-modal-body">
 
                         <div class="wperp-form-group">
-                            <label>Tax Zone Name<span class="wperp-required-sign">*</span></label>
-                            <input type="text" v-model="rate_name" />
+                            <label>Tax Zone Name <span class="wperp-required-sign">*</span></label>
+                            <input type="text" v-model="rate_name" class="wperp-form-field" required>
                         </div>
 
                         <div class="wperp-form-group">
-                            <label>Tax Number<span class="wperp-required-sign">*</span></label>
+                            <label>Tax Number</label>
                             <input type="text" v-model="tax_number" class="wperp-form-field" placeholder="Enter Tax Number">
                         </div>
                         <div class="form-check">
@@ -34,8 +34,8 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <submit-button v-if="is_update" text="Update" @click.native.prevent="updateTaxRateName" :working="isWorking"></submit-button>
-                            <submit-button v-else text="Add New" @click.native.prevent="addNewTaxZone" :working="isWorking"></submit-button>
+                            <submit-button v-if="is_update" text="Update" :working="isWorking"></submit-button>
+                            <submit-button v-else text="Add New" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>
@@ -101,7 +101,7 @@
                 });
             },
 
-            addNewTaxZone() {
+            taxZoneFormSubmit() {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -109,40 +109,23 @@
                         top: 10,
                         behavior: 'smooth'
                     });
+
                     return;
                 }
 
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
-                HTTP.post('/tax-rate-names', {
-                    tax_rate_name: this.rate_name,
-                    tax_number   : this.tax_number,
-                    default      : this.is_default,
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Tax Zone Created!' );
-                }).then(() => {
-                    this.resetData();
-                    this.isWorking = false;
-                    this.$emit('close');
-                    this.$root.$emit('refetch_tax_data');
-                });
-            },
-
-            updateTaxRateName() {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-                    return;
+                if ( this.is_update ) {
+                    let rest = 'put',
+                        url = `/tax-rate-names/${this.rate_name_id}`,
+                        msg = 'Tax Zone Updated!';
+                } else {
+                    let rest = 'post',
+                        url = `/tax-rate-names`,
+                        msg = 'Tax Zone Created!';
                 }
 
-                HTTP.put(`/tax-rate-names/${this.rate_name_id}`, {
+                HTTP[rest](url, {
                     tax_rate_name: this.rate_name,
                     tax_number   : this.tax_number,
                     default      : this.is_default,
@@ -150,7 +133,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Tax Zone Updated !' );
+                    this.showAlert( 'success', msg );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
@@ -165,9 +148,6 @@
                 if ( !this.rate_name ) {
                     this.form_errors.push('Tax Zone Name is required.');
                 }
-                if ( !this.tax_number ) {
-                    this.form_errors.push('Tax Number is required.');
-                }
             },
 
             resetData() {
@@ -177,6 +157,3 @@
         },
     }
 </script>
-<style lang="less">
-
-</style>

@@ -22,7 +22,7 @@
 
                                 <div class="wperp-row">
                                     <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                        <label>Product Name <span class="required-sign">*</span></label>
+                                        <label>Product Name <span class="wperp-required-sign">*</span></label>
                                     </div>
                                     <div class="wperp-col-sm-9 wperp-col-xs-12">
                                         <input type="text" class="wperp-form-field"
@@ -40,7 +40,7 @@
                                     <div class="wperp-panel-body">
                                         <div class="wperp-row">
                                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label>Product Type <span class="required-sign">*</span></label>
+                                                <label>Product Type <span class="wperp-required-sign">*</span></label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <div class="with-multiselect">
@@ -87,7 +87,7 @@
                                         </div>
                                         <div class="wperp-row">
                                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label for="sale-price">Sale Price <span class="required-sign">*</span></label>
+                                                <label for="sale-price">Sale Price <span class="wperp-required-sign">*</span></label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <input type="text" name="sale-price" id="sale-price" value="0"
@@ -106,7 +106,7 @@
                                     <div class="wperp-panel-body">
                                         <div class="wperp-row">
                                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label>Vendor <span class="required-sign">*</span></label>
+                                                <label>Vendor <span class="wperp-required-sign">*</span></label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <div class="with-multiselect">

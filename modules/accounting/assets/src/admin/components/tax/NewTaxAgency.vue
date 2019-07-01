@@ -8,9 +8,9 @@
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
 
-                <show-errors :error_msgs="form_errors" ></show-errors>
+                <show-errors :error_msgs="form_errors"></show-errors>
                 <!-- end modal body title -->
-                <form action="" method="post" class="modal-form edit-customer-modal">
+                <form action="" method="post" class="modal-form edit-customer-modal" @submit.prevent="taxAgencyFormSubmit">
                     <div class="wperp-modal-body">
 
                         <div class="wperp-form-group">
@@ -86,7 +86,7 @@
                 });
             },
 
-            addNewTaxAgency() {
+            taxAgencyFormSubmit() {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -94,44 +94,29 @@
                         top: 10,
                         behavior: 'smooth'
                     });
+
                     return;
                 }
 
+                if ( this.is_update ) {
+                    let rest = 'put',
+                        url = `/tax-agencies/${this.agency_id}`,
+                        msg = 'Tax Agency Updated!';
+                } else {
+                    let rest = 'post',
+                        url = `/tax-agencies`,
+                        msg = 'Tax Agency Created!';
+                }
+
                 this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.post('/tax-agencies', {
+
+                HTTP[rest](url, {
                     agency_name: this.agency,
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Tax Agency Created!' );
-                }).then(() => {
-                    this.resetData();
-                    this.isWorking = false;
-                    this.$emit('close');
-                    this.$root.$emit('refetch_tax_data');
-                });
-            },
-
-            UpdateTaxAgency() {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-                    return;
-                }
-
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.put(`/tax-agencies/${this.agency_id}`, {
-                    agency_name: this.agency,
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Tax Agency Created!' );
+                    this.showAlert( 'success', msg );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
