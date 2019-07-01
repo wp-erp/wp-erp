@@ -71,7 +71,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'amount'          => $trn['sub_total'],
                     'discount'        => 0,
                     'discount_type'   => 'discount-value',
-                    'tax_rate_id'     => 1,
+                    // 'tax_rate_id'     => 1,
                     'tax'             => 0,
                     'estimate'        => 0,
                     'attachments'     => $trn['files'],

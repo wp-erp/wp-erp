@@ -1336,6 +1336,7 @@ if (false) {(function () {
         postal_code: ''
       },
       states: [],
+      emailExists: false,
       showMore: false,
       customers: [],
       url: '',
@@ -1376,6 +1377,12 @@ if (false) {(function () {
     checkForm: function checkForm() {
       this.error_message = [];
 
+      if (this.emailExists) {
+        this.error_message.push('Email already exists as customer/vendor');
+        this.emailExists = false;
+        return false;
+      }
+
       if (this.peopleFields.first_name && this.peopleFields.last_name && this.peopleFields.email) {
         return true;
       }
@@ -1411,7 +1418,7 @@ if (false) {(function () {
 
           _this2.countries.push({
             id: x,
-            name: country[x],
+            name: _this2.decodeHtml(country[x]),
             state: states[x]
           });
         }
@@ -1438,24 +1445,25 @@ if (false) {(function () {
         });
       }
     },
-    isEmailExist: function isEmailExist() {
+    checkEmailExistence: function checkEmailExistence() {
       var _this3 = this;
 
-      var customer;
-      customer = this.customers.filter(function (item) {
-        return _this3.peopleFields.email = item.email;
-      });
-
-      if (customer.length) {
-        return true;
+      if (this.peopleFields.email) {
+        if (!this.people) {
+          __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/people/check-email', {
+            params: {
+              email: this.peopleFields.email
+            }
+          }).then(function (res) {
+            _this3.emailExists = res.data;
+          });
+        }
       }
-
-      return false;
     },
     getCustomers: function getCustomers() {
       var _this4 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('customers').then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/customers').then(function (response) {
         _this4.customers = response.data;
       });
     },
@@ -2892,6 +2900,17 @@ acct.addFilter = function (hookName, namespace, component) {
     },
     getFileName: function getFileName(path) {
       return path.replace(/^.*[\\\/]/, '');
+    },
+    decodeHtml: function decodeHtml(str) {
+      var regex = /^[A-Za-z0-9 ]+$/;
+
+      if (regex.test(str)) {
+        return str;
+      }
+
+      var txt = document.createElement('textarea');
+      txt.innerHTML = str;
+      return txt.value;
     }
   }
 });
@@ -4751,9 +4770,11 @@ var render = function() {
                 )
               })
             : _c("tr", [
-                _c("td", { attrs: { colspan: _vm.colspan } }, [
-                  _vm._v(_vm._s(_vm.notFound))
-                ])
+                _c(
+                  "td",
+                  { staticClass: "not-found", attrs: { colspan: _vm.colspan } },
+                  [_vm._v(_vm._s(_vm.notFound))]
+                )
               ])
         ],
         2
@@ -5118,7 +5139,13 @@ var render = function() {
                 "form",
                 {
                   staticClass: "modal-form edit-customer-modal",
-                  attrs: { action: "", method: "post" }
+                  attrs: { action: "", method: "post" },
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.saveCustomer($event)
+                    }
+                  }
                 },
                 [
                   _c("div", { staticClass: "wperp-modal-body" }, [
@@ -5145,7 +5172,8 @@ var render = function() {
                             attrs: {
                               type: "text",
                               id: "first_name",
-                              placeholder: "First Name"
+                              placeholder: "First Name",
+                              required: ""
                             },
                             domProps: { value: _vm.peopleFields.first_name },
                             on: {
@@ -5186,7 +5214,8 @@ var render = function() {
                             attrs: {
                               type: "text",
                               id: "last_name",
-                              placeholder: "Last Name"
+                              placeholder: "Last Name",
+                              required: ""
                             },
                             domProps: { value: _vm.peopleFields.last_name },
                             on: {
@@ -5227,10 +5256,12 @@ var render = function() {
                             attrs: {
                               type: "email",
                               id: "email",
-                              placeholder: "you@domain.com"
+                              placeholder: "you@domain.com",
+                              required: ""
                             },
                             domProps: { value: _vm.peopleFields.email },
                             on: {
+                              blur: _vm.checkEmailExistence,
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
@@ -5402,7 +5433,7 @@ var render = function() {
                                     ],
                                     staticClass: "wperp-form-field",
                                     attrs: {
-                                      type: "tel",
+                                      type: "url",
                                       id: "website",
                                       placeholder: "www.domain.com"
                                     },
@@ -5822,13 +5853,7 @@ var render = function() {
                             "button",
                             {
                               staticClass: "wperp-btn btn--primary",
-                              attrs: { type: "submit" },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.saveCustomer($event)
-                                }
-                              }
+                              attrs: { type: "submit" }
                             },
                             [_vm._v("Add New")]
                           )
@@ -5836,13 +5861,7 @@ var render = function() {
                             "button",
                             {
                               staticClass: "wperp-btn btn--primary",
-                              attrs: { type: "submit" },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.saveCustomer($event)
-                                }
-                              }
+                              attrs: { type: "submit" }
                             },
                             [_vm._v("Update")]
                           )

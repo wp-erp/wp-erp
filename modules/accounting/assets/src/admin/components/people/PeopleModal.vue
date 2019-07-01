@@ -15,21 +15,21 @@
                             <li v-for="(error, index) in error_message" :key="index">* {{ error }}</li>
                         </ul>
                         <!-- end modal body title -->
-                        <form action="" method="post" class="modal-form edit-customer-modal">
+                        <form action="" method="post" class="modal-form edit-customer-modal" @submit.prevent="saveCustomer">
                             <div class="wperp-modal-body">
                                 <!-- add new product form -->
                                 <div class="wperp-row wperp-gutter-20">
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                         <label for="first_name">First Name <span class="wperp-required-sign">*</span></label>
-                                        <input type="text" v-model="peopleFields.first_name" id="first_name" class="wperp-form-field" placeholder="First Name">
+                                        <input type="text" v-model="peopleFields.first_name" id="first_name" class="wperp-form-field" placeholder="First Name" required>
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                         <label for="last_name">Last Name <span class="wperp-required-sign">*</span></label>
-                                        <input type="text" v-model="peopleFields.last_name" id="last_name" class="wperp-form-field" placeholder="Last Name">
+                                        <input type="text" v-model="peopleFields.last_name" id="last_name" class="wperp-form-field" placeholder="Last Name" required>
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                         <label for="email">Email <span class="wperp-required-sign">*</span></label>
-                                        <input type="email" v-model="peopleFields.email" id="email" class="wperp-form-field" placeholder="you@domain.com">
+                                        <input type="email" @blur="checkEmailExistence" v-model="peopleFields.email" id="email" class="wperp-form-field" placeholder="you@domain.com" required>
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                         <label for="mobile">Mobile</label>
@@ -50,7 +50,7 @@
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="website">Website</label>
-                                            <input type="tel" v-model="peopleFields.website" id="website" class="wperp-form-field" placeholder="www.domain.com">
+                                            <input type="url" v-model="peopleFields.website" id="website" class="wperp-form-field" placeholder="www.domain.com">
                                         </div>
                                         <div class="wperp-col-xs-12 wperp-form-group">
                                             <label for="note">Note</label>
@@ -112,8 +112,8 @@
                                 <!-- buttons -->
                                 <div class="buttons-wrapper text-right">
                                     <button class="wperp-btn btn--default modal-close" @click="$parent.$emit('modal-close')" type="reset">Cancel</button>
-                                    <button v-if="!people" class="wperp-btn btn--primary" type="submit" @click.prevent="saveCustomer">Add New</button>
-                                    <button v-else class="wperp-btn btn--primary" type="submit" @click.prevent="saveCustomer">Update</button>
+                                    <button v-if="!people" class="wperp-btn btn--primary" type="submit">Add New</button>
+                                    <button v-else class="wperp-btn btn--primary" type="submit">Update</button>
                                 </div>
                             </div>
                         </form>
@@ -145,30 +145,31 @@
         data() {
             return {
                 peopleFields: {
-                    id: null,
-                    first_name: '',
-                    last_name: '',
-                    email: '',
-                    mobile: '',
-                    company: '',
-                    phone: '',
-                    website: '',
-                    notes: '',
-                    fax: '',
-                    street_1: '',
-                    street_2: '',
-                    city: '',
-                    country: '',
-                    state: '',
+                    id         : null,
+                    first_name : '',
+                    last_name  : '',
+                    email      : '',
+                    mobile     : '',
+                    company    : '',
+                    phone      : '',
+                    website    : '',
+                    notes      : '',
+                    fax        : '',
+                    street_1   : '',
+                    street_2   : '',
+                    city       : '',
+                    country    : '',
+                    state      : '',
                     postal_code: '',
                 },
-                states: [],
-                showMore: false,
-                customers:[],
-                url: '',
+                states       : [],
+                emailExists  : false,
+                showMore     : false,
+                customers    : [],
+                url          : '',
                 error_message: [],
-                countries: [],
-                get_states: []
+                countries    : [],
+                get_states   : []
             }
         },
         methods: {
@@ -178,14 +179,17 @@
                 }
 
                 this.$store.dispatch( 'spinner/setSpinner', true );
-                if ( !this.people ) {
+
+                if ( ! this.people ) {
                     var url = this.url;
                     var type = 'post';
                 } else {
                     var url = this.url + '/' + this.peopleFields.id;
                     var type = 'put';
                 }
+
                 var message = ( type == 'post' ) ? 'Created' : 'Updated';
+
                 HTTP[type]( url, this.peopleFields ).then( response => {
                     this.$root.$emit('peopleUpdate');
                     this.resetForm();
@@ -193,8 +197,16 @@
                     this.showAlert('success', message);
                 } );
             },
+
             checkForm() {
                 this.error_message = [];
+
+                if ( this.emailExists ) {
+                    this.error_message.push( 'Email already exists as customer/vendor' );
+                    this.emailExists = false;
+
+                    return false;
+                }
 
                 if ( this.peopleFields.first_name && this.peopleFields.last_name && this.peopleFields.email ) {
                     return true;
@@ -211,12 +223,14 @@
                 if ( ! this.peopleFields.email ) {
                     this.error_message.push( 'Email is required' );
                 }
+
                 return false;
             },
 
             showDetails() {
                 this.showMore = !this.showMore;
             },
+
             getCountries() {
                 HTTP.get( 'customers/country' ).then( response => {
                     let country = response.data.country;
@@ -225,7 +239,8 @@
                         if( states[x] == undefined) {
                             states[x] = [];
                         }
-                        this.countries.push( { id: x, name: country[x], state: states[x] });
+
+                        this.countries.push( { id: x, name: this.decodeHtml(country[x]), state: states[x] });
                     }
                     for ( let state in states ) {
                         for ( let x in states[state] ) {
@@ -234,6 +249,7 @@
                     }
                 } );
             },
+
             getState( country ) {
                 let states = this.get_states;
                 this.states = [];
@@ -243,19 +259,22 @@
                 }
             },
 
-            isEmailExist() {
-                var customer;
-                customer = this.customers.filter( item => {
-                    return this.peopleFields.email = item.email;
-                } );
-                if ( customer.length ) {
-                   return true;
+            checkEmailExistence() {
+                if ( this.peopleFields.email ) {
+                    if ( ! this.people ) {
+                        HTTP.get('/people/check-email', {
+                            params: {
+                                email: this.peopleFields.email
+                            }
+                        }).then((res) => {
+                            this.emailExists = res.data;
+                        });
+                    }
                 }
-                return false;
             },
 
             getCustomers() {
-                HTTP.get( 'customers' ).then( response => {
+                HTTP.get( '/customers' ).then( response => {
                     this.customers = response.data;
                 } );
             },
@@ -327,6 +346,7 @@
                 this.peopleFields.post_code  = '';
             }
         },
+
         created() {
             this.url = this.generateUrl();
             this.selectedCountry();
@@ -340,7 +360,7 @@
 <style lang="less">
     #people-modal {
         .errors {
-            margin: 0;
+            margin: 0 20px;
             color: #f44336;
             li {
                 background: #f3f3f3;

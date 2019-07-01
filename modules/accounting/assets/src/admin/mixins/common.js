@@ -34,5 +34,18 @@ export default {
         getFileName(path) {
             return path.replace(/^.*[\\\/]/, '');
         },
+
+        decodeHtml(str) {
+            let regex = /^[A-Za-z0-9 ]+$/;
+
+            if ( regex.test( str ) ) {
+                return str;
+            }
+
+            let txt = document.createElement('textarea');
+            txt.innerHTML = str;
+
+            return txt.value;
+        }
     }
 }

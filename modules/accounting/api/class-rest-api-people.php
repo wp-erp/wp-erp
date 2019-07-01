@@ -73,6 +73,17 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/check-email', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'check_people_email' ],
+                'args'                => [],
+                'permission_callback' => function( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -177,6 +188,22 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
         $transactions = erp_acct_get_people_opening_balance( $args );
 
         return new WP_REST_Response( $transactions, 200 );
+    }
+
+    /**
+     * Check people email existance
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function check_people_email( $request ) {
+        $res = erp_acct_check_people_exists( $request['email'] );
+
+        $response = rest_ensure_response( $res );
+        $response->set_status( 200 );
+
+        return $response;
     }
 
     /**

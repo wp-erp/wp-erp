@@ -49,6 +49,10 @@
         color: #d32f2f;
     }
 
+    .required-sign {
+        color: #d32f2f;
+    }
+
     .attachment-container .attachment-placeholder {
         padding: 20px 3px !important;
     }
