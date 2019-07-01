@@ -1853,7 +1853,7 @@ function erp_bulk_policy_assign( $policy, $employee_ids = [] ) {
         $entitlement       = $entitlement->where( function ( $condition ) use ( $fields, $financial_year ) {
             $financial_start_date = $fields['from_date'] ? $fields['from_date'] : $financial_year['start'];
             $financial_end_date   = $fields['to_date'] ? $fields['to_date'] : $financial_year['end'];
-            $condition->where( 'from_date', '>=', $financial_start_date );
+            $condition->whereBetween( 'from_date', [ $financial_year['start'], $financial_end_date ] );
             $condition->where( 'to_date', '<=', $financial_end_date );
             $condition->where( 'user_id', '=', $fields['user_id'] );
             $condition->where( 'policy_id', '=', $fields['policy_id'] );
