@@ -5,8 +5,8 @@
 
             <div class="wperp-custom-select wperp-custom-select--inline-block wperp-pull-right" v-if="showDropdown">
                 <select name="query_time" class="wperp-form-field" id="att-filter-duration" v-model="chartRange" >
-                    <!--<option value="this_month">This Month</option>-->
-                    <!--<option value="last_month">Last Month</option>-->
+                    <option value="this_month">This Month</option>
+                    <option value="last_month">Last Month</option>
                     <option value="this_quarter" v-if="thisQuarter.labels.length">This Quarter</option>
                     <option value="last_quarter" v-if="lastQuarter.labels.length">Last Quarter</option>
                     <option value="this_year">This Year</option>
@@ -45,6 +45,42 @@
         },
 
         computed: {
+            thisMonth() {
+                return {
+                    labels : this.respData.thisMonth.labels,
+                    datasets : [
+                        {
+                            label: 'Income',
+                            data: this.respData.thisMonth.income,
+                            backgroundColor: '#208DF8'
+                        },
+                        {
+                            label: 'Expense',
+                            data: this.respData.thisMonth.expense,
+                            backgroundColor: '#f86e2d'
+                        }
+                    ]
+                }
+            },
+
+            lastMonth() {
+                return {
+                    labels : this.respData.lastMonth.labels,
+                    datasets : [
+                        {
+                            label: 'Income',
+                            data: this.respData.lastMonth.income,
+                            backgroundColor: '#208DF8'
+                        },
+                        {
+                            label: 'Expense',
+                            data: this.respData.lastYear.expense,
+                            backgroundColor: '#f86e2d'
+                        }
+                    ]
+                }
+            },
+
             thisYear() {
                 return {
                     labels : this.respData.thisYear.labels,
@@ -63,7 +99,7 @@
                 }
             },
 
-            lastYear(){
+            lastYear() {
                 return {
                     labels : this.respData.lastYear.labels,
                     datasets : [
@@ -187,7 +223,15 @@
 
             updateRange(){
                 let newlabels, newset;
-                switch ( this.chartRange ){
+                switch ( this.chartRange ) {
+                    case "this_month":
+                        newlabels = this.thisMonth.labels;
+                        newset = this.thisMonth.datasets;
+                        break;
+                    case "last_month":
+                        newlabels = this.lastMonth.labels;
+                        newset = this.lastMonth.datasets;
+                        break;
                     case "last_year":
                         newlabels = this.lastYear.labels;
                         newset = this.lastYear.datasets;
