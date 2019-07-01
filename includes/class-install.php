@@ -1511,6 +1511,10 @@ Company'
                     );
                 }
             }
+
+            update_option( 'erp_acct_new_ledgers', true );
+        } else {
+            update_option( 'erp_acct_new_ledgers', true );
         }
 
         // insert ledger categories
