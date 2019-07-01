@@ -27,7 +27,7 @@
                                     <div class="wperp-col-sm-9 wperp-col-xs-12">
                                         <input type="text" class="wperp-form-field"
                                                placeholder="Enter Product Name Here"
-                                               v-model="ProductFields.name">
+                                               v-model="ProductFields.name" required>
                                     </div>
                                 </div>
 
@@ -91,7 +91,7 @@
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <input type="text" name="sale-price" id="sale-price" value="0"
-                                                       class="dk-form-field" v-model="ProductFields.salePrice">
+                                                       class="dk-form-field" v-model="ProductFields.salePrice" required>
                                             </div>
                                         </div>
                                     </div>
@@ -295,7 +295,12 @@
             checkForm() {
                 this.error_msg = [];
 
-                if (this.ProductFields.name && this.ProductFields.type && this.ProductFields.vendor && this.ProductFields.salePrice) {
+                if (
+                    this.ProductFields.name &&
+                    this.ProductFields.type &&
+                    this.ProductFields.vendor &&
+                    this.ProductFields.salePrice
+                ) {
                     return true;
                 }
 
@@ -307,14 +312,14 @@
                     this.error_msg.push('Product type is required');
                 }
 
-
                 if (this.ProductFields.salePrice <= 0) {
-                    this.error_msg.push('Product sale should be greater than 0');
+                    this.error_msg.push('Product sale price should be greater than 0');
                 }
 
                 if (!this.ProductFields.vendor) {
                     this.error_msg.push('Vendor is required');
                 }
+
                 return false;
             }
         }

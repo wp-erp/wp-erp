@@ -16,7 +16,7 @@
             </div>
 
             <div class="form-row">
-                <label for="">Select chart of accounts</label>
+                <label for="">Select chart of accounts <span class="required-sign">*</span></label>
                  <treeselect v-model="ledgFields.chart_id"
                     :options="chartAccounts"
                     :disable-branch-nodes="true"
@@ -24,7 +24,7 @@
                     placeholder="Please select" />
             </div>
 
-            <div class="form-row">
+            <!-- <div class="form-row">
                 <label for="">Select Category (optional)</label>
                 <treeselect v-model="ledgFields.category_id"
                     :options="categories"
@@ -34,19 +34,19 @@
 
                     <label slot="option-label" slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" :class="labelClassName">
                         {{ node.label }}
-                        <span v-if="shouldShowCount" :class="countClassName">({{ count }})</span>
+                        <span v-if="shouldShowCount" :class="countClassName">({{ count }})</span> -->
                         <!-- <span class="list-actions" v-if="node.raw.system == null">
                             <strong class="edit" @click.prevent="editCategory(node)">&#9998;</strong>
                             <strong class="remove" @click.prevent="removeCategory(node)">&cross;</strong>
                         </span> -->
-                    </label>
-                </treeselect>
+                    <!-- </label>
+                </treeselect> -->
 
                 <!-- <a href="#" @click.prevent="categoryAddModal" role="button" class="after-select-dropdown">Add new category</a> -->
-            </div>
+            <!-- </div> -->
 
             <div class="form-row">
-                <label for="">Account Name</label>
+                <label for="">Account Name <span class="required-sign">*</span></label>
 
                 <input type="text" class="wperp-form-field" v-model="ledgFields.name" required>
             </div>

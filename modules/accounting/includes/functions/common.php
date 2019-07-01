@@ -499,3 +499,22 @@ function erp_acct_check_voucher_edit_state( $id ) {
 
     return ( $wpdb->get_var( $sql ) ) ? true : false;
 }
+
+/**
+ * Check if people exists (customer/vendor)
+ *
+ * @param string $email
+ * @return bool
+ */
+function erp_acct_check_people_exists( $email ) {
+    $people = erp_get_people_by( 'email', $email );
+
+    // this $email belongs to nobody
+    if ( ! $people ) return false;
+
+    if ( in_array( 'customer', $people->types ) || in_array( 'vendor', $people->types ) ) {
+        return true;
+    }
+
+    return false;
+}

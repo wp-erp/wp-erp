@@ -165,7 +165,7 @@
                 </tr>
             </template>
             <tr v-else>
-                <td :colspan="colspan">{{ notFound }}</td>
+                <td :colspan="colspan" class="not-found">{{ notFound }}</td>
             </tr>
             </tbody>
         </table>
@@ -564,6 +564,10 @@
             bottom: 0;
             right: 0;
         }
+    }
+
+    .not-found {
+        text-align: center !important;
     }
 
     @media (max-width: 782px) {

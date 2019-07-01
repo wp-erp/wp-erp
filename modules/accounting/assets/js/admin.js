@@ -1594,6 +1594,7 @@ if (false) {(function () {
         postal_code: ''
       },
       states: [],
+      emailExists: false,
       showMore: false,
       customers: [],
       url: '',
@@ -1634,6 +1635,12 @@ if (false) {(function () {
     checkForm: function checkForm() {
       this.error_message = [];
 
+      if (this.emailExists) {
+        this.error_message.push('Email already exists as customer/vendor');
+        this.emailExists = false;
+        return false;
+      }
+
       if (this.peopleFields.first_name && this.peopleFields.last_name && this.peopleFields.email) {
         return true;
       }
@@ -1669,7 +1676,7 @@ if (false) {(function () {
 
           _this2.countries.push({
             id: x,
-            name: country[x],
+            name: _this2.decodeHtml(country[x]),
             state: states[x]
           });
         }
@@ -1696,24 +1703,25 @@ if (false) {(function () {
         });
       }
     },
-    isEmailExist: function isEmailExist() {
+    checkEmailExistence: function checkEmailExistence() {
       var _this3 = this;
 
-      var customer;
-      customer = this.customers.filter(function (item) {
-        return _this3.peopleFields.email = item.email;
-      });
-
-      if (customer.length) {
-        return true;
+      if (this.peopleFields.email) {
+        if (!this.people) {
+          __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/people/check-email', {
+            params: {
+              email: this.peopleFields.email
+            }
+          }).then(function (res) {
+            _this3.emailExists = res.data;
+          });
+        }
       }
-
-      return false;
     },
     getCustomers: function getCustomers() {
       var _this4 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('customers').then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/customers').then(function (response) {
         _this4.customers = response.data;
       });
     },
@@ -4040,9 +4048,11 @@ var render = function() {
                 )
               })
             : _c("tr", [
-                _c("td", { attrs: { colspan: _vm.colspan } }, [
-                  _vm._v(_vm._s(_vm.notFound))
-                ])
+                _c(
+                  "td",
+                  { staticClass: "not-found", attrs: { colspan: _vm.colspan } },
+                  [_vm._v(_vm._s(_vm.notFound))]
+                )
               ])
         ],
         2
@@ -4346,7 +4356,13 @@ var render = function() {
                 "form",
                 {
                   staticClass: "modal-form edit-customer-modal",
-                  attrs: { action: "", method: "post" }
+                  attrs: { action: "", method: "post" },
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.saveCustomer($event)
+                    }
+                  }
                 },
                 [
                   _c("div", { staticClass: "wperp-modal-body" }, [
@@ -4373,7 +4389,8 @@ var render = function() {
                             attrs: {
                               type: "text",
                               id: "first_name",
-                              placeholder: "First Name"
+                              placeholder: "First Name",
+                              required: ""
                             },
                             domProps: { value: _vm.peopleFields.first_name },
                             on: {
@@ -4414,7 +4431,8 @@ var render = function() {
                             attrs: {
                               type: "text",
                               id: "last_name",
-                              placeholder: "Last Name"
+                              placeholder: "Last Name",
+                              required: ""
                             },
                             domProps: { value: _vm.peopleFields.last_name },
                             on: {
@@ -4455,10 +4473,12 @@ var render = function() {
                             attrs: {
                               type: "email",
                               id: "email",
-                              placeholder: "you@domain.com"
+                              placeholder: "you@domain.com",
+                              required: ""
                             },
                             domProps: { value: _vm.peopleFields.email },
                             on: {
+                              blur: _vm.checkEmailExistence,
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
@@ -4630,7 +4650,7 @@ var render = function() {
                                     ],
                                     staticClass: "wperp-form-field",
                                     attrs: {
-                                      type: "tel",
+                                      type: "url",
                                       id: "website",
                                       placeholder: "www.domain.com"
                                     },
@@ -5050,13 +5070,7 @@ var render = function() {
                             "button",
                             {
                               staticClass: "wperp-btn btn--primary",
-                              attrs: { type: "submit" },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.saveCustomer($event)
-                                }
-                              }
+                              attrs: { type: "submit" }
                             },
                             [_vm._v("Add New")]
                           )
@@ -5064,13 +5078,7 @@ var render = function() {
                             "button",
                             {
                               staticClass: "wperp-btn btn--primary",
-                              attrs: { type: "submit" },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.saveCustomer($event)
-                                }
-                              }
+                              attrs: { type: "submit" }
                             },
                             [_vm._v("Update")]
                           )
@@ -14318,7 +14326,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       }
 
       if (this.ProductFields.salePrice <= 0) {
-        this.error_msg.push('Product sale should be greater than 0');
+        this.error_msg.push('Product sale price should be greater than 0');
       }
 
       if (!this.ProductFields.vendor) {
@@ -33109,7 +33117,8 @@ var render = function() {
                             staticClass: "wperp-form-field",
                             attrs: {
                               type: "text",
-                              placeholder: "Enter Product Name Here"
+                              placeholder: "Enter Product Name Here",
+                              required: ""
                             },
                             domProps: { value: _vm.ProductFields.name },
                             on: {
@@ -33286,7 +33295,8 @@ var render = function() {
                                     type: "text",
                                     name: "sale-price",
                                     id: "sale-price",
-                                    value: "0"
+                                    value: "0",
+                                    required: ""
                                   },
                                   domProps: {
                                     value: _vm.ProductFields.salePrice
@@ -45274,9 +45284,7 @@ var render = function() {
           "div",
           { staticClass: "form-row" },
           [
-            _c("label", { attrs: { for: "" } }, [
-              _vm._v("Select chart of accounts")
-            ]),
+            _vm._m(0),
             _vm._v(" "),
             _c("treeselect", {
               attrs: {
@@ -45297,59 +45305,8 @@ var render = function() {
           1
         ),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "form-row" },
-          [
-            _c("label", { attrs: { for: "" } }, [
-              _vm._v("Select Category (optional)")
-            ]),
-            _vm._v(" "),
-            _c("treeselect", {
-              attrs: {
-                options: _vm.categories,
-                "disable-branch-nodes": true,
-                "show-count": true,
-                placeholder: "Please select a category"
-              },
-              scopedSlots: _vm._u([
-                {
-                  key: "option-label",
-                  fn: function(ref) {
-                    var node = ref.node
-                    var shouldShowCount = ref.shouldShowCount
-                    var count = ref.count
-                    var labelClassName = ref.labelClassName
-                    var countClassName = ref.countClassName
-                    return _c("label", { class: labelClassName }, [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(node.label) +
-                          "\n                        "
-                      ),
-                      shouldShowCount
-                        ? _c("span", { class: countClassName }, [
-                            _vm._v("(" + _vm._s(count) + ")")
-                          ])
-                        : _vm._e()
-                    ])
-                  }
-                }
-              ]),
-              model: {
-                value: _vm.ledgFields.category_id,
-                callback: function($$v) {
-                  _vm.$set(_vm.ledgFields, "category_id", $$v)
-                },
-                expression: "ledgFields.category_id"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
         _c("div", { staticClass: "form-row" }, [
-          _c("label", { attrs: { for: "" } }, [_vm._v("Account Name")]),
+          _vm._m(1),
           _vm._v(" "),
           _c("input", {
             directives: [
@@ -45415,7 +45372,26 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "" } }, [
+      _vm._v("Select chart of accounts "),
+      _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "" } }, [
+      _vm._v("Account Name "),
+      _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+    ])
+  }
+]
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
