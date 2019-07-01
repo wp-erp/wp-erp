@@ -10,13 +10,13 @@
 
                 <show-errors :error_msgs="form_errors" ></show-errors>
                 <!-- end modal body title -->
-                <form action="" method="post" class="modal-form edit-customer-modal">
+                <form action="" method="post" class="modal-form edit-customer-modal" @submit.prevent="taxCatFormSubmit">
                     <div class="wperp-modal-body">
 
                         <div class="wperp-form-group">
-                            <label>Tax Category Name<span class="wperp-required-sign">*</span></label>
+                            <label>Tax Category Name <span class="wperp-required-sign">*</span></label>
                                 <!--<multi-select v-model="category" :options="categories" />-->
-                                <input type="text" v-model="category" class="wperp-required-sign">
+                                <input type="text" v-model="category" class="wperp-form-field wperp-required-sign" required>
                         </div>
 
                         <div class="wperp-form-group mb-0">
@@ -29,8 +29,8 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <submit-button v-if="is_update" text="Update Tax Category" @click.native.prevent="updateTaxCat" :working="isWorking"></submit-button>
-                            <submit-button v-else text="Save" @click.native.prevent="addNewTaxCat" :working="isWorking"></submit-button>
+                            <submit-button v-if="is_update" text="Update Tax Category" :working="isWorking"></submit-button>
+                            <submit-button v-else text="Save" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>
@@ -93,7 +93,7 @@
                 });
             },
 
-            addNewTaxCat() {
+            taxCatFormSubmit() {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {
@@ -101,46 +101,30 @@
                         top: 10,
                         behavior: 'smooth'
                     });
+
                     return;
                 }
 
+                if ( this.is_update ) {
+                    let rest = 'put',
+                        url = `/tax-cats/${this.cat_id}`,
+                        msg = 'Tax Category Updated!';
+                } else {
+                    let rest = 'post',
+                        url = `/tax-cats`,
+                        msg = 'Tax Category Created!';
+                }
+
                 this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.post('/tax-cats', {
+
+                HTTP[rest](url, {
                     name: this.category,
                     description: this.desc,
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).then(res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Tax Category Created!' );
-                }).then(() => {
-                    this.resetData();
-                    this.isWorking = false;
-                    this.$emit('close');
-                    this.$root.$emit('refetch_tax_data');
-                });
-            },
-
-            updateTaxCat() {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-                    return;
-                }
-
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.put(`/tax-cats/${this.cat_id}`, {
-                    name: this.category,
-                    description: this.desc,
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Tax Category Updated!' );
+                    this.showAlert( 'success', msg );
                 }).then(() => {
                     this.resetData();
                     this.isWorking = false;
