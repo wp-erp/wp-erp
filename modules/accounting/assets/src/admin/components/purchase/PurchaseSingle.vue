@@ -136,7 +136,6 @@
         name: 'PurchaseSingle',
 
         components: {
-            HTTP,
             SendMail,
             Dropdown
         },

@@ -465,6 +465,10 @@
                 if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
                     this.form_errors.push('Payment Method is required.');
                 }
+
+                if ( ! parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Total amount can\'t be zero.');
+                }
             },
 
             showPaymentModal() {

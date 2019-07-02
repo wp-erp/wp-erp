@@ -130,7 +130,6 @@
         name: 'PayBillSingle',
 
         components: {
-            HTTP,
             SendMail,
             Dropdown
         },

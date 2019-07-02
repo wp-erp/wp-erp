@@ -31,7 +31,7 @@
                                 <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferTo.balance)}}</span>
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="transfer_amount">Transfer Amount</label>
+                                <label for="transfer_amount">Transfer Amount <span class="wperp-required-sign">*</span></label>
                                 <input required min="0" type="number" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00" v-model="amount">
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
@@ -43,7 +43,6 @@
                                 <textarea name="particulars" id="particulars" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="particulars"></textarea>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="wperp-modal-footer pt-0">
@@ -65,7 +64,6 @@
         name: "Transfer",
         components: {
             MultiSelect,
-            HTTP,
             Datepicker
         },
 
@@ -95,7 +93,7 @@
                 };
             }
         },
-        
+
         methods: {
             fetchAccounts() {
                 HTTP.get('accounts').then( (response) => {

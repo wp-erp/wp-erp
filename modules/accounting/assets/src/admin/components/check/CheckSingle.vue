@@ -126,7 +126,6 @@
         name: 'CheckSingle',
 
         components: {
-            HTTP,
             SendMail,
             Dropdown
         },

@@ -131,7 +131,6 @@
 
         components: {
             MultiSelect,
-            HTTP,
             Datepicker,
             FileUpload,
             SubmitButton,

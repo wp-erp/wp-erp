@@ -18,36 +18,34 @@
 
                 <show-errors :error_msgs="form_errors" ></show-errors>
 
-                <form action="" class="wperp-form" method="post">
-                    <div class="wperp-row">
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <select-people v-model="basic_fields.people"></select-people>
-                            </div>
-                        </div>
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <label>Check No<span class="wperp-required-sign">*</span></label>
-                                <input type="text" class="wperp-form-field" v-model="basic_fields.check_no"/>
-                            </div>
-                        </div>
-                        <div class="wperp-col-sm-4">
-                            <div class="wperp-form-group">
-                                <label>Payment Date<span class="wperp-required-sign">*</span></label>
-                                <datepicker v-model="basic_fields.trn_date"></datepicker>
-                            </div>
-
-                        </div>
-                        <div class="wperp-col-sm-4 with-multiselect">
-                            <label>From Account<span class="wperp-required-sign">*</span></label>
-                            <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
-                        </div>
-                        <div class="wperp-col-sm-4">
-                            <label>Billing Address</label>
-                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
+                <div class="wperp-row">
+                    <div class="wperp-col-sm-4">
+                        <div class="wperp-form-group">
+                            <select-people v-model="basic_fields.people"></select-people>
                         </div>
                     </div>
-                </form>
+                    <div class="wperp-col-sm-4">
+                        <div class="wperp-form-group">
+                            <label>Check No<span class="wperp-required-sign">*</span></label>
+                            <input type="text" class="wperp-form-field" v-model="basic_fields.check_no" required>
+                        </div>
+                    </div>
+                    <div class="wperp-col-sm-4">
+                        <div class="wperp-form-group">
+                            <label>Payment Date<span class="wperp-required-sign">*</span></label>
+                            <datepicker v-model="basic_fields.trn_date"></datepicker>
+                        </div>
+
+                    </div>
+                    <div class="wperp-col-sm-4 with-multiselect">
+                        <label>From Account<span class="wperp-required-sign">*</span></label>
+                        <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
+                    </div>
+                    <div class="wperp-col-sm-4">
+                        <label>Billing Address</label>
+                        <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -72,14 +70,13 @@
                         <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
                         <td class="col--particulars"><textarea v-model="line.particulars" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="number" min="0" step="0.01" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
+                            <input type="number" min="0" step="0.01" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field">
                         </td>
                         <td class="col--total" data-colname="Total">
-                            <input type="number" :value="line.amount" class="text-right" readonly disabled/>
+                            <input type="number" :value="line.amount" class="text-right wperp-form-field" readonly disabled/>
                         </td>
                         <td class="delete-row" data-colname="Remove Above Selection">
                             <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
-
                         </td>
                     </tr>
                     <tr class="add-new-line">
@@ -91,7 +88,8 @@
                     <tr class="total-amount-row">
                         <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
                         <td class="text-right" data-colname="Total Amount">
-                            <input type="text" class="text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
+                            <input type="text" class="text-right wperp-form-field" name="finalamount" v-model="finalTotalAmount" readonly disabled>
+                        </td>
                         <td class="text-right"></td>
                     </tr>
 
@@ -155,7 +153,6 @@
 
         components: {
             SelectAccounts,
-            HTTP,
             Datepicker,
             MultiSelect,
             FileUpload,
@@ -479,6 +476,17 @@
 
                 if ( parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount) ) {
                     this.form_errors.push('Not enough balance in selected account.');
+                }
+
+                if ( ! parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Total amount can\'t be zero.');
+                }
+
+                for ( let item of this.transactionLines ) {
+                    if ( ! item.hasOwnProperty('ledger_id') ) {
+                        this.form_errors.push('Please select accounts.');
+                        break;
+                    }
                 }
             },
 

@@ -122,7 +122,6 @@
         name: 'PayTaxSingle',
 
         components: {
-            HTTP,
             SendMail,
             Dropdown
         },

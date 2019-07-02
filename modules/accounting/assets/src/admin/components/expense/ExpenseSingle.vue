@@ -128,7 +128,6 @@
         name: 'ExpenseSingle',
 
         components: {
-            HTTP,
             SendMail,
             Dropdown
         },

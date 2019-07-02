@@ -120,7 +120,6 @@
         },
 
         components: {
-            HTTP,
             SendMail,
             Dropdown
         },

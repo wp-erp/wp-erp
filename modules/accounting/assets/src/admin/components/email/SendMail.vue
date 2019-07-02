@@ -62,7 +62,6 @@
         name: "SendMail",
 
         components: {
-            HTTP,
             Dropdown,
             Modal,
             InputTag

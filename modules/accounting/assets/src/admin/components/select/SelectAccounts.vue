@@ -92,7 +92,7 @@
                 });
             },
 
-            transformBalance( val ){
+            transformBalance( val ) {
                 let currency = '$';
                 if ( val < 0 ){
                     return `Cr. ${currency} ${Math.abs(val)}`;

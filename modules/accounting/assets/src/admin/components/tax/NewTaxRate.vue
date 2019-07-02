@@ -114,7 +114,6 @@
         name: "NewTaxRate",
 
         components: {
-            HTTP,
             MultiSelect,
             SubmitButton,
             NewTaxAgency,

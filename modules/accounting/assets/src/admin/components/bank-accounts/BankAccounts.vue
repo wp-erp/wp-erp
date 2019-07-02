@@ -76,7 +76,6 @@
         name: 'BankAccounts',
 
         components: {
-            HTTP,
             Dropdown,
             ComboBox
         },
