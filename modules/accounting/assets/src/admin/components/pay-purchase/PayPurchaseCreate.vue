@@ -40,9 +40,9 @@
                                 <label>Payment Method<span class="wperp-required-sign">*</span></label>
                                 <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
                             </div>
-                            <div class="wperp-col-sm-4 with-multiselect">
+                            <div class="wperp-col-sm-4 with-multiselect" v-show="basic_fields.trn_by && basic_fields.trn_by.id">
                                 <label>Transaction From<span class="wperp-required-sign">*</span></label>
-                                <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
+                                <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart" />
                             </div>
                             <div class="wperp-col-sm-4">
                                 <label>Billing Address</label>

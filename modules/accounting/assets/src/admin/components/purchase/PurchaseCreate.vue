@@ -455,6 +455,17 @@
                 if ( !this.basic_fields.due_date ) {
                     this.form_errors.push('Due Date is required.');
                 }
+
+                if ( ! this.finalTotalAmount ) {
+                    this.form_errors.push('Total amount can\'t be zero.');
+                }
+
+                for ( let item of this.transactionLines ) {
+                    if ( ! item.hasOwnProperty('selectedProduct') ) {
+                        this.form_errors.push('Please select product.');
+                        break;
+                    }
+                }
             },
 
         }

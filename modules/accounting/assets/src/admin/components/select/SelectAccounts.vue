@@ -52,11 +52,20 @@
             },
 
             selectedAccount() {
+                this.balance = 0;
                 this.$emit('input', this.selectedAccount);
             },
 
             override_accts() {
-                this.accounts = this.override_accts;
+                this.accounts = [];
+
+                for ( let acct of this.override_accts ) {
+                    if ( ! acct.hasOwnProperty('name') ) {
+                        continue;
+                    }
+
+                    this.accounts.push( acct );
+                }
             },
 
             reset() {
