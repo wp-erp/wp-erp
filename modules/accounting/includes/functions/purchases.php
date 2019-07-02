@@ -72,6 +72,7 @@ function erp_acct_get_purchase( $purchase_no ) {
     purchase_acc_detail.credit
 
     FROM {$wpdb->prefix}erp_acct_purchase AS purchase
+    LEFT JOIN {$wpdb->prefix}erp_acct_voucher_no as voucher ON purchase.voucher_no = voucher.id
     LEFT JOIN {$wpdb->prefix}erp_acct_purchase_account_details AS purchase_acc_detail ON purchase.voucher_no = purchase_acc_detail.trn_no
     WHERE purchase.voucher_no = %d", $purchase_no );
 
