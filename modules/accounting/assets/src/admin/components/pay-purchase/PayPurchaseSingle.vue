@@ -132,7 +132,6 @@
         name: 'PayPurchaseSingle',
 
         components: {
-            HTTP,
             SendMail,
             Dropdown
         },

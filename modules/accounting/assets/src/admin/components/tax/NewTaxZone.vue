@@ -55,7 +55,6 @@
         name: 'NewTaxZone',
 
         components: {
-            HTTP,
             MultiSelect,
             SubmitButton,
             ShowErrors

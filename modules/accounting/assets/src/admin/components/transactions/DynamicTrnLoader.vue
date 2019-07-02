@@ -8,10 +8,6 @@
     export default {
         name: "DynamicTrnLoader",
 
-        components: {
-            HTTP
-        },
-
         data() {
             return {
                 voucher_no: null,

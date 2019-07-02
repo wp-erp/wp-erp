@@ -288,7 +288,6 @@
         name: 'OpeningBalance',
 
         components: {
-            HTTP,
             SimpleSelect,
             MultiSelect,
             SubmitButton,

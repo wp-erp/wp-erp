@@ -146,7 +146,6 @@
         name: 'BillCreate',
 
         components: {
-            HTTP,
             Datepicker,
             MultiSelect,
             FileUpload,
@@ -437,6 +436,17 @@
 
                 if ( !this.basic_fields.due_date ) {
                     this.form_errors.push('Due Date is required.');
+                }
+
+                if ( ! parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Total amount can\'t be zero.');
+                }
+
+                for ( let item of this.transactionLines ) {
+                    if ( ! item.hasOwnProperty('ledger_id') ) {
+                        this.form_errors.push('Please select accounts.');
+                        break;
+                    }
                 }
             },
 

@@ -34,7 +34,6 @@
         name: 'TaxRateLineEdit',
 
         components: {
-            HTTP,
             MultiSelect,
             TaxRateRow
         },

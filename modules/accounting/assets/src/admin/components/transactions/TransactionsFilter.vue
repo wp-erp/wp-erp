@@ -63,7 +63,6 @@
         name: 'TransactionsFilter',
 
         components: {
-            HTTP,
             Datepicker,
             SimpleSelect
         },

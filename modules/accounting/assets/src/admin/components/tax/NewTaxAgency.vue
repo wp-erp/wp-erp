@@ -8,7 +8,7 @@
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
 
-                <show-errors :error_msgs="form_errors"></show-errors>
+                <show-errors :error_msgs="form_errors" />
                 <!-- end modal body title -->
                 <form action="" method="post" class="modal-form edit-customer-modal" @submit.prevent="taxAgencyFormSubmit">
                     <div class="wperp-modal-body">
@@ -24,8 +24,8 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <submit-button v-if="is_update" text="Update Tax Agency" @click.native.prevent="UpdateTaxAgency" :working="isWorking"></submit-button>
-                            <submit-button v-else text="Save" @click.native.prevent="addNewTaxAgency" :working="isWorking"></submit-button>
+                            <submit-button v-if="is_update" text="Update Tax Agency" :working="isWorking"></submit-button>
+                            <submit-button v-else text="Save" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>

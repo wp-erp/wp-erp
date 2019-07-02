@@ -10,9 +10,9 @@
 
         <div class="wperp-panel wperp-panel-default pb-0">
 	        <div class="wperp-panel-body">
-	            <form action="#" class="wperp-form" method="post">
+	            <form action="#" class="wperp-form" method="post" @submit.prevent="submitForTaxPay">
 
-                    <show-errors :error_msgs="form_errors" ></show-errors>
+                    <show-errors :error_msgs="form_errors" />
 
 	                <div class="wperp-row wperp-gutter-20">
 
@@ -65,7 +65,7 @@
 	                    </div>
 	                    <div class="wperp-col-xs-12">
 	                    	<div class="wperp-form-group text-right mt-10 mb-0">
-                                <submit-button text="Save" @click.native.prevent="SubmitForTaxPay" :working="isWorking"></submit-button>
+                                <submit-button text="Save" :working="isWorking"></submit-button>
                             </div>
 	                    </div>
 	                </div>
@@ -188,7 +188,7 @@
                 } );
             },
 
-            SubmitForTaxPay() {
+            submitForTaxPay() {
                 this.validateForm();
 
                 if ( this.form_errors.length ) {

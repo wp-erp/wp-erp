@@ -16,7 +16,7 @@
         <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
             <div class="wperp-panel-body">
 
-                <show-errors :error_msgs="form_errors" ></show-errors>
+                <show-errors :error_msgs="form_errors"></show-errors>
 
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
@@ -401,6 +401,9 @@
                     this.form_errors.push('Not enough balance in selected account.');
                 }
 
+                if ( ! parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Total amount can\'t be zero.');
+                }
             },
 
             showPaymentModal() {

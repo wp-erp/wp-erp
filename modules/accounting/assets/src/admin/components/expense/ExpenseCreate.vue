@@ -50,7 +50,7 @@
                                 <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                             </div>
 
-                            <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
+                            <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields" />
                         </div>
                     </form>
 
@@ -81,14 +81,13 @@
                                 <textarea v-model="line.particulars" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea>
                             </td>
                             <td class="col--amount" data-colname="Amount">
-                                <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right"/>
+                                <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field" required>
                             </td>
                             <td class="col--total" data-colname="Total">
-                                <input type="text" :value="line.amount" class="text-right" readonly disabled/>
+                                <input type="text" :value="line.amount" class="text-right wperp-form-field" readonly disabled>
                             </td>
                             <td class="delete-row" data-colname="Remove Above Selection">
                                 <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
-
                             </td>
                         </tr>
                         <tr class="add-new-line">
@@ -100,7 +99,7 @@
                         <tr class="total-amount-row">
                             <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
                             <td class="text-right" data-colname="Total Amount">
-                                <input type="text" class="text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
+                                <input type="text" class="text-right wperp-form-field" name="finalamount" v-model="finalTotalAmount" readonly disabled></td>
                             <td class="text-right"></td>
                         </tr>
 
@@ -556,8 +555,20 @@
                 if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
                     this.form_errors.push('Payment Method is required.');
                 }
+
                 if ( parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount) ) {
                     this.form_errors.push('Not enough balance in selected account.');
+                }
+
+                if ( ! parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Total amount can\'t be zero.');
+                }
+
+                for ( let item of this.transactionLines ) {
+                    if ( ! item.hasOwnProperty('ledger_id') ) {
+                        this.form_errors.push('Please select accounts.');
+                        break;
+                    }
                 }
             },
 

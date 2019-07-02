@@ -136,7 +136,6 @@
         name: 'BillSingle',
 
         components: {
-            HTTP,
             SendMail,
             Dropdown
         },

@@ -35,7 +35,6 @@
         name: "Transfers",
 
         components: {
-            HTTP,
             ListTable
         },
 

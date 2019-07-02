@@ -40,7 +40,7 @@
                                 <label>Payment Method<span class="wperp-required-sign">*</span></label>
                                 <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
                             </div>
-                            <div class="wperp-col-sm-4 with-multiselect" v-show="basic_fields.trn_by && basic_fields.trn_by.id">
+                            <div class="wperp-col-sm-4 with-multiselect">
                                 <label>Transaction From<span class="wperp-required-sign">*</span></label>
                                 <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart" />
                             </div>
@@ -412,6 +412,10 @@
 
                 if ( parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount) ) {
                     this.form_errors.push('Not enough balance in selected account.');
+                }
+
+                if ( ! parseFloat(this.finalTotalAmount) ) {
+                    this.form_errors.push('Total amount can\'t be zero.');
                 }
             },
 

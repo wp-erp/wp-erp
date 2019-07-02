@@ -469,7 +469,8 @@ if (false) {(function () {
 /* 13 */,
 /* 14 */,
 /* 15 */,
-/* 16 */
+/* 16 */,
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -525,7 +526,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -577,7 +578,6 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 18 */,
 /* 19 */,
 /* 20 */,
 /* 21 */,
@@ -2190,9 +2190,6 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "DynamicTrnLoader",
-  components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */]
-  },
   data: function data() {
     return {
       voucher_no: null,
@@ -2498,10 +2495,39 @@ var STATUS_INITIAL = 0,
       this.balance = val.balance;
     },
     selectedAccount: function selectedAccount() {
+      this.balance = 0;
       this.$emit('input', this.selectedAccount);
     },
     override_accts: function override_accts() {
-      this.accounts = this.override_accts;
+      this.accounts = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.override_accts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var acct = _step.value;
+
+          if (!acct.hasOwnProperty('name')) {
+            continue;
+          }
+
+          this.accounts.push(acct);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
     },
     reset: function reset() {
       this.selectedAccount = [];
@@ -2710,7 +2736,6 @@ var STATUS_INITIAL = 0,
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "SendMail",
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Dropdown_vue__["a" /* default */],
     Modal: __WEBPACK_IMPORTED_MODULE_2_admin_components_modal_Modal_vue__["a" /* default */],
     InputTag: __WEBPACK_IMPORTED_MODULE_3_vue_input_tag___default.a
@@ -12697,7 +12722,7 @@ var require;var require;
     }]
   }, {}, [7])(7);
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(19)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(16)))
 
 /***/ }),
 /* 69 */
@@ -16534,7 +16559,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_invoice_InvoiceTrnRow_vue__ = __webpack_require__(306);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectCustomers_vue__ = __webpack_require__(130);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
@@ -17178,6 +17203,38 @@ if (false) {(function () {
 
       if (!this.basic_fields.due_date) {
         this.form_errors.push('Due Date is required.');
+      }
+
+      if (!parseFloat(this.finalTotalAmount)) {
+        this.form_errors.push('Total amount can\'t be zero.');
+      }
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.transactionLines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var item = _step.value;
+
+          if (!item.hasOwnProperty('product_id')) {
+            this.form_errors.push('Please select products.');
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
     }
   }
@@ -18551,11 +18608,11 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_people_SelectCustomers_vue__ = __webpack_require__(130);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 
 
 //
@@ -19056,6 +19113,10 @@ if (false) {(function () {
       if (!this.basic_fields.trn_by.hasOwnProperty('id')) {
         this.form_errors.push('Payment Method is required.');
       }
+
+      if (!parseFloat(this.finalTotalAmount)) {
+        this.form_errors.push('Total amount can\'t be zero.');
+      }
     },
     showPaymentModal: function showPaymentModal() {
       this.getDueInvoices();
@@ -19147,7 +19208,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 
 
 //
@@ -19294,7 +19355,6 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'BillCreate',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */],
     Datepicker: __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_8_admin_components_select_MultiSelect_vue__["a" /* default */],
     FileUpload: __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__["a" /* default */],
@@ -19634,6 +19694,38 @@ if (false) {(function () {
       if (!this.basic_fields.due_date) {
         this.form_errors.push('Due Date is required.');
       }
+
+      if (!parseFloat(this.finalTotalAmount)) {
+        this.form_errors.push('Total amount can\'t be zero.');
+      }
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.transactionLines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var item = _step.value;
+
+          if (!item.hasOwnProperty('ledger_id')) {
+            this.form_errors.push('Please select accounts.');
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
     },
     formatTrnLines: function formatTrnLines(trn_lines) {
       var line_items = [];
@@ -19803,7 +19895,6 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'BillSingle',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
   },
@@ -19871,11 +19962,11 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_people_SelectPeople_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 
 //
 //
@@ -20283,6 +20374,10 @@ if (false) {(function () {
       if (parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount)) {
         this.form_errors.push('Not enough balance in selected account.');
       }
+
+      if (!parseFloat(this.finalTotalAmount)) {
+        this.form_errors.push('Total amount can\'t be zero.');
+      }
     },
     showPaymentModal: function showPaymentModal() {
       this.getDueBills();
@@ -20468,7 +20563,6 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PayBillSingle',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
   },
@@ -20539,7 +20633,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_purchase_PurchaseRow_vue__ = __webpack_require__(373);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectVendors_vue__ = __webpack_require__(149);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
@@ -21029,6 +21123,38 @@ if (false) {(function () {
       if (!this.basic_fields.due_date) {
         this.form_errors.push('Due Date is required.');
       }
+
+      if (!this.finalTotalAmount) {
+        this.form_errors.push('Total amount can\'t be zero.');
+      }
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.transactionLines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var item = _step.value;
+
+          if (!item.hasOwnProperty('selectedProduct')) {
+            this.form_errors.push('Please select product.');
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
     }
   }
 });
@@ -21039,6 +21165,8 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
+//
+//
 //
 //
 //
@@ -21421,7 +21549,6 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PurchaseSingle',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
   },
@@ -21492,8 +21619,8 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 
 //
 //
@@ -21911,6 +22038,10 @@ if (false) {(function () {
       if (parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount)) {
         this.form_errors.push('Not enough balance in selected account.');
       }
+
+      if (!parseFloat(this.finalTotalAmount)) {
+        this.form_errors.push('Total amount can\'t be zero.');
+      }
     },
     showPaymentModal: function showPaymentModal() {
       this.getDuePurchases();
@@ -22107,7 +22238,6 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PayPurchaseSingle',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
   },
@@ -22418,6 +22548,10 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -22428,7 +22562,6 @@ if (false) {(function () {
   name: "JournalCreate",
   components: {
     MultiSelect: __WEBPACK_IMPORTED_MODULE_4_admin_components_select_MultiSelect_vue__["a" /* default */],
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     Datepicker: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__["a" /* default */],
     FileUpload: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_FileUpload_vue__["a" /* default */],
     SubmitButton: __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__["a" /* default */],
@@ -22520,8 +22653,16 @@ if (false) {(function () {
     validateForm: function validateForm() {
       this.form_errors = [];
 
+      if (this.account_ids.length < 2) {
+        this.form_errors.push('Accounts are required.');
+      }
+
       if (!this.basic_fields.trn_date) {
         this.form_errors.push('Transaction Date is required.');
+      }
+
+      if (!this.debit_total) {
+        this.form_errors.push('Total amount can\'t be zero.');
       }
 
       if (this.isWorking) {
@@ -22552,6 +22693,10 @@ if (false) {(function () {
       var lineItems = [];
 
       for (var idx = 0; idx < this.transactionLines.length; idx++) {
+        if (!Object.keys(this.transactionLines[idx]).length) {
+          continue;
+        }
+
         var item = {};
         item.ledger_id = this.account_ids[idx].id;
         item.particulars = this.particulars[idx];
@@ -22802,7 +22947,6 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "Transfers",
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     ListTable: __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__["a" /* default */]
   },
   data: function data() {
@@ -22921,7 +23065,6 @@ if (false) {(function () {
 //
 //
 //
-//
 
 
 
@@ -22929,7 +23072,6 @@ if (false) {(function () {
   name: "Transfer",
   components: {
     MultiSelect: __WEBPACK_IMPORTED_MODULE_0_admin_components_select_MultiSelect_vue__["a" /* default */],
-    HTTP: __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */],
     Datepicker: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__["a" /* default */]
   },
   data: function data() {
@@ -23163,7 +23305,6 @@ if (false) {(function () {
     };
   },
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
   },
@@ -23214,15 +23355,14 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectPeople_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_check_CheckFields_vue__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 
 
 
-//
 //
 //
 //
@@ -23818,6 +23958,38 @@ if (false) {(function () {
 
       if (parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount)) {
         this.form_errors.push('Not enough balance in selected account.');
+      }
+
+      if (!parseFloat(this.finalTotalAmount)) {
+        this.form_errors.push('Total amount can\'t be zero.');
+      }
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.transactionLines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var item = _step.value;
+
+          if (!item.hasOwnProperty('ledger_id')) {
+            this.form_errors.push('Please select accounts.');
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
     },
     removeRow: function removeRow(index) {
@@ -24873,7 +25045,6 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'TransactionsFilter',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     Datepicker: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__["a" /* default */],
     SimpleSelect: __WEBPACK_IMPORTED_MODULE_2_admin_components_select_SimpleSelect_vue__["a" /* default */]
   },
@@ -25776,7 +25947,6 @@ setTimeout(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'ExpenseSingle',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
   },
@@ -26729,7 +26899,6 @@ setTimeout(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "NewTaxRate",
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
     SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */],
     NewTaxAgency: __WEBPACK_IMPORTED_MODULE_3_admin_components_tax_NewTaxAgency_vue__["a" /* default */],
@@ -26949,7 +27118,6 @@ setTimeout(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'NewTaxZone',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
     SubmitButton: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_SubmitButton_vue__["a" /* default */],
     ShowErrors: __WEBPACK_IMPORTED_MODULE_3_admin_components_base_ShowErrors_vue__["a" /* default */]
@@ -27058,7 +27226,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 //
 //
@@ -27265,7 +27433,7 @@ setTimeout(function () {
         _this4.dueAmount = parseFloat(response.data);
       });
     },
-    SubmitForTaxPay: function SubmitForTaxPay() {
+    submitForTaxPay: function submitForTaxPay() {
       var _this5 = this;
 
       this.validateForm();
@@ -28718,7 +28886,6 @@ setTimeout(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PayTaxSingle',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
   },
@@ -28857,7 +29024,6 @@ setTimeout(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'BankAccounts',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Dropdown_vue__["a" /* default */],
     ComboBox: __WEBPACK_IMPORTED_MODULE_2_admin_components_select_ComboBox_vue__["a" /* default */]
   },
@@ -28939,13 +29105,11 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_people_SelectPeople_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 
 
-//
-//
 //
 //
 //
@@ -29097,7 +29261,6 @@ setTimeout(function () {
   name: 'CheckCreate',
   components: {
     SelectAccounts: __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__["a" /* default */],
-    HTTP: __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */],
     Datepicker: __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Datepicker_vue__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_5_admin_components_select_MultiSelect_vue__["a" /* default */],
     FileUpload: __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__["a" /* default */],
@@ -29474,6 +29637,38 @@ setTimeout(function () {
       if (parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount)) {
         this.form_errors.push('Not enough balance in selected account.');
       }
+
+      if (!parseFloat(this.finalTotalAmount)) {
+        this.form_errors.push('Total amount can\'t be zero.');
+      }
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.transactionLines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var item = _step.value;
+
+          if (!item.hasOwnProperty('ledger_id')) {
+            this.form_errors.push('Please select accounts.');
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
     },
     resetFields: function resetFields() {
       this.basic_fields = {
@@ -29663,7 +29858,6 @@ setTimeout(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'CheckSingle',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
   },
@@ -30068,7 +30262,6 @@ setTimeout(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'TaxRateLineEdit',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__["a" /* default */],
     TaxRateRow: __WEBPACK_IMPORTED_MODULE_2_admin_components_tax_TaxRateRow_vue__["a" /* default */]
   },
@@ -31092,7 +31285,6 @@ setTimeout(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'OpeningBalance',
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */],
     SimpleSelect: __WEBPACK_IMPORTED_MODULE_2_admin_components_select_SimpleSelect_vue__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_3_admin_components_select_MultiSelect_vue__["a" /* default */],
     SubmitButton: __WEBPACK_IMPORTED_MODULE_4_admin_components_base_SubmitButton_vue__["a" /* default */],
@@ -31956,7 +32148,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_people_People_vue__ = __webpack_require__(239);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_products_Products_vue__ = __webpack_require__(259);
@@ -42126,7 +42318,7 @@ var require;var require;
     }]
   }, {}, [7])(7);
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(19)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)(module), __webpack_require__(16)))
 
 /***/ }),
 /* 285 */
@@ -45881,6 +46073,7 @@ var render = function() {
             expression: "check_fields.bank_name"
           }
         ],
+        staticClass: "wperp-form-field",
         attrs: { type: "text" },
         domProps: { value: _vm.check_fields.bank_name },
         on: {
@@ -45909,6 +46102,7 @@ var render = function() {
             expression: "check_fields.payer_name"
           }
         ],
+        staticClass: "wperp-form-field",
         attrs: { type: "text" },
         domProps: { value: _vm.check_fields.payer_name },
         on: {
@@ -45937,6 +46131,7 @@ var render = function() {
             expression: "check_fields.check_no"
           }
         ],
+        staticClass: "wperp-form-field",
         attrs: { type: "text" },
         domProps: { value: _vm.check_fields.check_no },
         on: {
@@ -48654,7 +48849,7 @@ var render = function() {
           }
         ],
         staticClass: "wperp-form-field",
-        attrs: { min: "0", type: "number", name: "qty" },
+        attrs: { min: "0", type: "number", name: "qty", required: "" },
         domProps: { value: _vm.line.qty },
         on: {
           keyup: _vm.calculateAmount,
@@ -48685,7 +48880,7 @@ var render = function() {
             }
           ],
           staticClass: "wperp-form-field text-right",
-          attrs: { min: "0", type: "number" },
+          attrs: { min: "0", type: "number", required: "" },
           domProps: { value: _vm.line.unitPrice },
           on: {
             keyup: _vm.calculateAmount,
@@ -51061,7 +51256,13 @@ var render = function() {
                                 }
                               ],
                               staticClass: "wperp-form-field text-right",
-                              attrs: { type: "text" },
+                              attrs: {
+                                type: "text",
+                                required:
+                                  (Number(_vm.creditLine[key]) || 0) === 0
+                                    ? true
+                                    : false
+                              },
                               domProps: { value: _vm.debitLine[key] },
                               on: {
                                 keyup: function($event) {
@@ -51099,7 +51300,13 @@ var render = function() {
                                 }
                               ],
                               staticClass: "wperp-form-field text-right",
-                              attrs: { type: "text" },
+                              attrs: {
+                                type: "text",
+                                required:
+                                  (Number(_vm.debitLine[key]) || 0) === 0
+                                    ? true
+                                    : false
+                              },
                               domProps: { value: _vm.creditLine[key] },
                               on: {
                                 keyup: function($event) {
@@ -51181,7 +51388,7 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", { attrs: { "data-colname": "Debit" } }, [
                         _c("input", {
-                          staticClass: "text-right",
+                          staticClass: "wperp-form-field text-right",
                           attrs: { type: "text", readonly: "" },
                           domProps: {
                             value: isNaN(_vm.totalDebit)
@@ -51193,7 +51400,7 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", { attrs: { "data-colname": "Credit" } }, [
                         _c("input", {
-                          staticClass: "text-right",
+                          staticClass: "wperp-form-field text-right",
                           attrs: { type: "text", readonly: "" },
                           domProps: {
                             value: isNaN(_vm.totalCredit)
@@ -51981,9 +52188,7 @@ var render = function() {
                       "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
                   },
                   [
-                    _c("label", { attrs: { for: "transfer_amount" } }, [
-                      _vm._v("Transfer Amount")
-                    ]),
+                    _vm._m(1),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -52076,7 +52281,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm._m(1)
+            _vm._m(2)
           ]
         )
       ])
@@ -52096,6 +52301,15 @@ var staticRenderFns = [
           ])
         ])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "transfer_amount" } }, [
+      _vm._v("Transfer Amount "),
+      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
     ])
   },
   function() {
@@ -52776,8 +52990,12 @@ var render = function() {
                                 expression: "line.amount"
                               }
                             ],
-                            staticClass: "text-right",
-                            attrs: { type: "text", name: "amount" },
+                            staticClass: "text-right wperp-form-field",
+                            attrs: {
+                              type: "text",
+                              name: "amount",
+                              required: ""
+                            },
                             domProps: { value: line.amount },
                             on: {
                               keyup: _vm.updateFinalAmount,
@@ -52800,7 +53018,7 @@ var render = function() {
                         },
                         [
                           _c("input", {
-                            staticClass: "text-right",
+                            staticClass: "text-right wperp-form-field",
                             attrs: { type: "text", readonly: "", disabled: "" },
                             domProps: { value: line.amount }
                           })
@@ -52889,7 +53107,7 @@ var render = function() {
                               expression: "finalTotalAmount"
                             }
                           ],
-                          staticClass: "text-right",
+                          staticClass: "text-right wperp-form-field",
                           attrs: {
                             type: "text",
                             name: "finalamount",
@@ -56390,22 +56608,10 @@ var render = function() {
                             attrs: {
                               text: "Update Tax Agency",
                               working: _vm.isWorking
-                            },
-                            nativeOn: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.UpdateTaxAgency($event)
-                              }
                             }
                           })
                         : _c("submit-button", {
-                            attrs: { text: "Save", working: _vm.isWorking },
-                            nativeOn: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.addNewTaxAgency($event)
-                              }
-                            }
+                            attrs: { text: "Save", working: _vm.isWorking }
                           })
                     ],
                     1
@@ -57413,7 +57619,16 @@ var render = function() {
       _c("div", { staticClass: "wperp-panel-body" }, [
         _c(
           "form",
-          { staticClass: "wperp-form", attrs: { action: "#", method: "post" } },
+          {
+            staticClass: "wperp-form",
+            attrs: { action: "#", method: "post" },
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.submitForTaxPay($event)
+              }
+            }
+          },
           [
             _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
             _vm._v(" "),
@@ -57603,13 +57818,7 @@ var render = function() {
                   { staticClass: "wperp-form-group text-right mt-10 mb-0" },
                   [
                     _c("submit-button", {
-                      attrs: { text: "Save", working: _vm.isWorking },
-                      nativeOn: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.SubmitForTaxPay($event)
-                        }
-                      }
+                      attrs: { text: "Save", working: _vm.isWorking }
                     })
                   ],
                   1
@@ -59263,142 +59472,133 @@ var render = function() {
               [
                 _c("show-errors", { attrs: { error_msgs: _vm.form_errors } }),
                 _vm._v(" "),
-                _c(
-                  "form",
-                  {
-                    staticClass: "wperp-form",
-                    attrs: { action: "", method: "post" }
-                  },
-                  [
-                    _c("div", { staticClass: "wperp-row" }, [
-                      _c("div", { staticClass: "wperp-col-sm-4" }, [
-                        _c(
-                          "div",
-                          { staticClass: "wperp-form-group" },
-                          [
-                            _c("select-people", {
-                              model: {
-                                value: _vm.basic_fields.people,
-                                callback: function($$v) {
-                                  _vm.$set(_vm.basic_fields, "people", $$v)
-                                },
-                                expression: "basic_fields.people"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "wperp-col-sm-4" }, [
-                        _c("div", { staticClass: "wperp-form-group" }, [
-                          _vm._m(1),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.basic_fields.check_no,
-                                expression: "basic_fields.check_no"
-                              }
-                            ],
-                            staticClass: "wperp-form-field",
-                            attrs: { type: "text" },
-                            domProps: { value: _vm.basic_fields.check_no },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.basic_fields,
-                                  "check_no",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "wperp-col-sm-4" }, [
-                        _c(
-                          "div",
-                          { staticClass: "wperp-form-group" },
-                          [
-                            _vm._m(2),
-                            _vm._v(" "),
-                            _c("datepicker", {
-                              model: {
-                                value: _vm.basic_fields.trn_date,
-                                callback: function($$v) {
-                                  _vm.$set(_vm.basic_fields, "trn_date", $$v)
-                                },
-                                expression: "basic_fields.trn_date"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "wperp-col-sm-4 with-multiselect" },
-                        [
-                          _vm._m(3),
-                          _vm._v(" "),
-                          _c("select-accounts", {
-                            attrs: { override_accts: _vm.accts_by_chart },
-                            model: {
-                              value: _vm.basic_fields.deposit_to,
-                              callback: function($$v) {
-                                _vm.$set(_vm.basic_fields, "deposit_to", $$v)
-                              },
-                              expression: "basic_fields.deposit_to"
-                            }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "wperp-col-sm-4" }, [
-                        _c("label", [_vm._v("Billing Address")]),
-                        _vm._v(" "),
-                        _c("textarea", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model.trim",
-                              value: _vm.basic_fields.billing_address,
-                              expression: "basic_fields.billing_address",
-                              modifiers: { trim: true }
-                            }
-                          ],
-                          staticClass: "wperp-form-field",
-                          attrs: { rows: "3", placeholder: "Type here" },
-                          domProps: { value: _vm.basic_fields.billing_address },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.basic_fields,
-                                "billing_address",
-                                $event.target.value.trim()
-                              )
+                _c("div", { staticClass: "wperp-row" }, [
+                  _c("div", { staticClass: "wperp-col-sm-4" }, [
+                    _c(
+                      "div",
+                      { staticClass: "wperp-form-group" },
+                      [
+                        _c("select-people", {
+                          model: {
+                            value: _vm.basic_fields.people,
+                            callback: function($$v) {
+                              _vm.$set(_vm.basic_fields, "people", $$v)
                             },
-                            blur: function($event) {
-                              return _vm.$forceUpdate()
-                            }
+                            expression: "basic_fields.people"
                           }
                         })
-                      ])
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-col-sm-4" }, [
+                    _c("div", { staticClass: "wperp-form-group" }, [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.basic_fields.check_no,
+                            expression: "basic_fields.check_no"
+                          }
+                        ],
+                        staticClass: "wperp-form-field",
+                        attrs: { type: "text", required: "" },
+                        domProps: { value: _vm.basic_fields.check_no },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.basic_fields,
+                              "check_no",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
                     ])
-                  ]
-                )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-col-sm-4" }, [
+                    _c(
+                      "div",
+                      { staticClass: "wperp-form-group" },
+                      [
+                        _vm._m(2),
+                        _vm._v(" "),
+                        _c("datepicker", {
+                          model: {
+                            value: _vm.basic_fields.trn_date,
+                            callback: function($$v) {
+                              _vm.$set(_vm.basic_fields, "trn_date", $$v)
+                            },
+                            expression: "basic_fields.trn_date"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "wperp-col-sm-4 with-multiselect" },
+                    [
+                      _vm._m(3),
+                      _vm._v(" "),
+                      _c("select-accounts", {
+                        attrs: { override_accts: _vm.accts_by_chart },
+                        model: {
+                          value: _vm.basic_fields.deposit_to,
+                          callback: function($$v) {
+                            _vm.$set(_vm.basic_fields, "deposit_to", $$v)
+                          },
+                          expression: "basic_fields.deposit_to"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-col-sm-4" }, [
+                    _c("label", [_vm._v("Billing Address")]),
+                    _vm._v(" "),
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model.trim",
+                          value: _vm.basic_fields.billing_address,
+                          expression: "basic_fields.billing_address",
+                          modifiers: { trim: true }
+                        }
+                      ],
+                      staticClass: "wperp-form-field",
+                      attrs: { rows: "3", placeholder: "Type here" },
+                      domProps: { value: _vm.basic_fields.billing_address },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.basic_fields,
+                            "billing_address",
+                            $event.target.value.trim()
+                          )
+                        },
+                        blur: function($event) {
+                          return _vm.$forceUpdate()
+                        }
+                      }
+                    })
+                  ])
+                ])
               ],
               1
             )
@@ -59482,7 +59682,7 @@ var render = function() {
                                 expression: "line.amount"
                               }
                             ],
-                            staticClass: "text-right",
+                            staticClass: "text-right wperp-form-field",
                             attrs: {
                               type: "number",
                               min: "0",
@@ -59511,7 +59711,7 @@ var render = function() {
                         },
                         [
                           _c("input", {
-                            staticClass: "text-right",
+                            staticClass: "text-right wperp-form-field",
                             attrs: {
                               type: "number",
                               readonly: "",
@@ -59604,7 +59804,7 @@ var render = function() {
                               expression: "finalTotalAmount"
                             }
                           ],
-                          staticClass: "text-right",
+                          staticClass: "text-right wperp-form-field",
                           attrs: {
                             type: "text",
                             name: "finalamount",
@@ -63200,7 +63400,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(18);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_sales__ = __webpack_require__(513);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_expense__ = __webpack_require__(514);

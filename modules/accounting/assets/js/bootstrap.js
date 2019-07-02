@@ -187,7 +187,7 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 17:
+/***/ 18:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1938,9 +1938,6 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "DynamicTrnLoader",
-  components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */]
-  },
   data: function data() {
     return {
       voucher_no: null,
@@ -2248,10 +2245,39 @@ var STATUS_INITIAL = 0,
       this.balance = val.balance;
     },
     selectedAccount: function selectedAccount() {
+      this.balance = 0;
       this.$emit('input', this.selectedAccount);
     },
     override_accts: function override_accts() {
-      this.accounts = this.override_accts;
+      this.accounts = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.override_accts[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var acct = _step.value;
+
+          if (!acct.hasOwnProperty('name')) {
+            continue;
+          }
+
+          this.accounts.push(acct);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
     },
     reset: function reset() {
       this.selectedAccount = [];
@@ -2519,7 +2545,6 @@ if (false) {(function () {
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "SendMail",
   components: {
-    HTTP: __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */],
     Dropdown: __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Dropdown_vue__["a" /* default */],
     Modal: __WEBPACK_IMPORTED_MODULE_2_admin_components_modal_Modal_vue__["a" /* default */],
     InputTag: __WEBPACK_IMPORTED_MODULE_3_vue_input_tag___default.a
@@ -2778,7 +2803,7 @@ if (false) {(function () {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Dropdown_vue__ = __webpack_require__(4);
@@ -2792,7 +2817,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_base_SubmitButton_vue__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_admin_components_select_SelectAccounts_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_admin_components_timepicker_TimePicker_vue__ = __webpack_require__(535);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_admin_components_people_SelectPeople_vue__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_vuelidate__ = __webpack_require__(203);
