@@ -30,7 +30,7 @@
 
         <li>
             <h3>Balance Sheet</h3>
-            <p>This is a report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year.</p>
+            <p>This report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'BalanceSheet' }">View Report</router-link>
         </li>
