@@ -68,10 +68,10 @@
                             <input type="text" v-model="particulars[key]" class="wperp-form-field">
                         </td>
                         <td class="col--debit" data-colname="Debit">
-                            <input type="text" @keyup="calculateAmount(key)" v-model="debitLine[key]" class="wperp-form-field text-right">
+                            <input type="text" @keyup="calculateAmount(key)" v-model="debitLine[key]" class="wperp-form-field text-right" :required="(Number(creditLine[key]) || 0) === 0 ? true : false">
                         </td>
                         <td class="col--credit" data-colname="Credit">
-                            <input type="text" @keyup="calculateAmount(key)" v-model="creditLine[key]" class="wperp-form-field text-right">
+                            <input type="text" @keyup="calculateAmount(key)" v-model="creditLine[key]" class="wperp-form-field text-right" :required="(Number(debitLine[key]) || 0) === 0 ? true : false">
                         </td>
                         <td class="col--actions delete-row" data-colname="Remove Selection">
                             <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
@@ -86,8 +86,12 @@
                         <td colspan="3" class="pl-10 text-right col--total-amount">
                             <span>Total Amount</span>
                         </td>
-                        <td data-colname="Debit"><input type="text" class="text-right" :value="isNaN(totalDebit)?debit_total:totalDebit" readonly ></td>
-                        <td data-colname="Credit"><input type="text" class="text-right" :value="isNaN(totalCredit)?credit_total:totalCredit" readonly ></td>
+                        <td data-colname="Debit">
+                            <input type="text" class="wperp-form-field text-right" :value="isNaN(totalDebit)?debit_total:totalDebit" readonly>
+                        </td>
+                        <td data-colname="Credit">
+                            <input type="text" class="wperp-form-field text-right" :value="isNaN(totalCredit)?credit_total:totalCredit" readonly>
+                        </td>
                         <td></td>
                     </tr>
                     </tbody>
@@ -184,7 +188,7 @@
             },
 
             remove_item(index) {
-                this.$delete(this.transactionLines,index );
+                this.$delete( this.transactionLines, index );
             },
 
             SubmitForJournalCreate() {
@@ -195,6 +199,7 @@
                         top: 10,
                         behavior: 'smooth'
                     });
+
                     return;
                 }
 
@@ -223,8 +228,16 @@
             validateForm() {
                 this.form_errors = [];
 
+                if ( this.account_ids.length < 2 ) {
+                    this.form_errors.push('Accounts are required.');
+                }
+
                 if ( !this.basic_fields.trn_date ) {
                     this.form_errors.push('Transaction Date is required.');
+                }
+
+                if ( ! this.debit_total ) {
+                    this.form_errors.push('Total amount can\'t be zero.');
                 }
 
                 if ( this.isWorking ) {
@@ -251,7 +264,11 @@
             formatLineItems() {
                 var lineItems = [];
 
-                for(let idx = 0; idx < this.transactionLines.length; idx++) {
+                for ( let idx = 0; idx < this.transactionLines.length; idx++ ) {
+                    if ( ! Object.keys(this.transactionLines[idx]).length ) {
+                        continue;
+                    }
+
                     let item = {};
                     item.ledger_id = this.account_ids[idx].id;
                     item.particulars = this.particulars[idx];
