@@ -10,14 +10,14 @@
             <div class="wperp-date-group">
                 <datepicker v-model="start_date"></datepicker>
                 <datepicker v-model="end_date"></datepicker>
+
+                <button class="wperp-btn btn--primary add-line-trigger" type="submit">Filter</button>
+
+                <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
+                    <i class="flaticon-printer-1"></i>
+                    &nbsp; Print
+                </a>
             </div>
-
-            <button class="wperp-btn btn--primary add-line-trigger" type="submit">Filter</button>
-
-            <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
-                <i class="flaticon-printer-1"></i>
-                &nbsp; Print
-            </a>
 
         </form>
 
@@ -104,7 +104,9 @@
         watch: {
             selectedLedger(newVal) {
                 if ( ! isNaN( newVal.id ) ) {
-                    this.rows = [];
+                    this.rows        = [];
+                    this.totalDebit  = 0;
+                    this.totalCredit = 0;
                     this.$router.push({ params: { id: parseInt(newVal.id) } });
                 }
             }
@@ -200,6 +202,10 @@
             padding-top: 15px;
         }
 
+        .print-btn {
+            float: right;
+        }
+
         .tablenav,
         .column-cb,
         .check-column {
@@ -207,11 +213,9 @@
         }
 
         .query-options {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: inline-block !important;
             padding: 20px 0;
-            width: 900px;
+            width: 100%;
         }
 
         .with-multiselect {
