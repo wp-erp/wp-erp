@@ -212,17 +212,22 @@
         .tablenav.bottom {
             display: none;
         }
+
+        .print-btn {
+            float: right;
+        }
+
+        .query-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 20px 0;
+        }
     }
     .income-statement .t-foot td {
         color: #2196f3;
         font-weight: bold;
-    }
-    .query-options {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 500px;
-        padding: 20px 0;
     }
     .income-statement-balance tr td {
         background-color: #f2f2f2;
