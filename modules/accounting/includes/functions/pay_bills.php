@@ -182,7 +182,7 @@ function erp_acct_insert_pay_bill( $data ) {
             erp_acct_insert_check_data( $pay_bill_data );
         }
 
-        do_action( 'erp_acct_pay_bill_people_transaction', $pay_bill_data, $voucher_no );
+        do_action( 'erp_acct_after_pay_bill_create', $pay_bill_data, $voucher_no );
 
         $wpdb->query( 'COMMIT' );
 

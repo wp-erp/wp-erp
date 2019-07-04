@@ -280,6 +280,8 @@ function erp_acct_insert_expense( $data ) {
             erp_acct_insert_source_expense_data_into_ledger( $expense_data );
         }
 
+        do_action( 'erp_acct_after_expense_create', $expense_data, $voucher_no );
+
         $wpdb->query( 'COMMIT' );
 
     } catch ( Exception $e ) {

@@ -188,7 +188,7 @@ function erp_acct_insert_purchase( $data ) {
             ) );
         }
 
-        do_action( 'erp_acct_after_purchase', $purchase_data, $voucher_no );
+        do_action( 'erp_acct_after_purchase_create', $purchase_data, $voucher_no );
 
         if ( $purchase_type_order == $purchase_data['purchase_order'] || $draft == $purchase_data['status'] ) {
             $wpdb->query( 'COMMIT' );
@@ -229,7 +229,7 @@ function erp_acct_insert_purchase( $data ) {
  * @param $due
  * @return mixed
  */
-function erp_acct_update_purchase( $data, $purchase_id ) {
+function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
     global $wpdb;
 
     $user_id = get_current_user_id();
@@ -290,7 +290,7 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
                     'updated_at' => $purchase_data['updated_at'],
                     'updated_by' => $purchase_data['updated_by']
                 ], [
-                    'trn_no'     => $voucher_no,
+                    'trn_no'     => $purchase_id,
                 ] );
             }
 
@@ -324,9 +324,6 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
             $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_purchase SELECT * FROM acct_tmptable" );
             $wpdb->query( "DROP TABLE acct_tmptable" );
 
-
-            return;
-
             // change purchase status and other things
             $status_closed = 7;
             $wpdb->query( $wpdb->prepare(
@@ -350,7 +347,7 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
                 ) );
             }
 
-            $wpdb->update( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
                 'purchase_no' => $purchase_id,
                 'trn_no'      => $voucher_no,
                 'trn_date'    => $purchase_data['trn_date'],
@@ -361,6 +358,8 @@ function erp_acct_update_purchase( $data, $purchase_id ) {
                 'updated_at'  => $purchase_data['updated_at'],
                 'updated_by'  => $purchase_data['updated_by']
             ) );
+
+            do_action( 'erp_acct_after_purchase_update', $purchase_data, $purchase_id );
 
             erp_acct_update_purchase_data_into_ledger( $items, $purchase_id );
 
