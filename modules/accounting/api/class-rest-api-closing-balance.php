@@ -46,7 +46,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'get_closest_fn_year' ],
                 'args'                => [],
                 'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_expenses_voucher' );
+                    return current_user_can( 'erp_ac_view_expense' );
                 },
             ],
         ] );
@@ -57,7 +57,7 @@ class Closing_Balance_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'get_next_fn_year' ],
                 'args'                => [],
                 'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_expenses_voucher' );
+                    return current_user_can( 'erp_ac_view_expense' );
                 },
             ],
         ] );
