@@ -203,6 +203,8 @@ function erp_acct_insert_invoice( $data ) {
         erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no );
         erp_acct_insert_invoice_data_into_ledger( $invoice_data );
 
+        do_action( 'erp_acct_after_sales_create', $invoice_data, $voucher_no );
+
         $wpdb->query( 'COMMIT' );
 
     } catch ( Exception $e ) {
@@ -418,6 +420,9 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 
             // insert new invoice with edited data
             erp_acct_insert_invoice( $data );
+
+            do_action( 'erp_acct_after_sales_update', $data, $voucher_no );
+
         }
 
         $wpdb->query( 'COMMIT' );
@@ -437,6 +442,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
  * @return void
  */
 function erp_acct_update_draft_and_estimate( $data, $invoice_no ) {
+    global $wpdb;
 
     $invoice_data = erp_acct_get_formatted_invoice_data( $data, $invoice_no );
 

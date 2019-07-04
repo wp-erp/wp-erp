@@ -214,7 +214,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
     try {
         $wpdb->query( 'START TRANSACTION' );
 
-        if ( $draft == $bill_data['status'] ) {
+        if ( $draft == $data['status'] ) {
             erp_acct_update_draft_bill( $data, $bill_id );
         } else {
             // disable editing on old bill
