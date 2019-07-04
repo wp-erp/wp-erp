@@ -31,7 +31,7 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'get_currencies' ],
                 'args'                => [],
                 'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_journal' );
+                    return current_user_can( 'erp_ac_view_dashboard' );
                 },
             ],
             'schema' => [ $this, 'get_item_schema' ],
