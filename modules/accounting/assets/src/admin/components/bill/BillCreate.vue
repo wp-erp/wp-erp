@@ -426,24 +426,24 @@
             validateForm() {
                 this.form_errors = [];
 
-                if ( !this.basic_fields.user.hasOwnProperty('id') ) {
+                if (!this.basic_fields.user.hasOwnProperty('id')) {
                     this.form_errors.push('People Name is required.');
                 }
 
-                if ( !this.basic_fields.trn_date ) {
+                if (!this.basic_fields.trn_date) {
                     this.form_errors.push('Transaction Date is required.');
                 }
 
-                if ( !this.basic_fields.due_date ) {
+                if (!this.basic_fields.due_date) {
                     this.form_errors.push('Due Date is required.');
                 }
 
-                if ( ! parseFloat(this.finalTotalAmount) ) {
+                if (!parseFloat(this.finalTotalAmount)) {
                     this.form_errors.push('Total amount can\'t be zero.');
                 }
 
-                for ( let item of this.transactionLines ) {
-                    if ( ! item.hasOwnProperty('ledger_id') ) {
+                for (let item of this.transactionLines) {
+                    if (!item.hasOwnProperty('ledger_id')) {
                         this.form_errors.push('Please select accounts.');
                         break;
                     }
