@@ -229,12 +229,37 @@ function erp_acct_delete_product( $product_id ) {
     return $product_id;
 }
 
-function erp_get_product_type() {
+
+/**
+ * Get product types
+ *
+ * @param $product_id
+ *
+ * @return int
+ */
+
+function erp_acct_get_product_types() {
     global $wpdb;
 
     $types = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_acct_product_types" );
 
     return apply_filters( 'erp_acct_product_types', $types );
+}
+
+/**
+ * Get product type id by product id
+ *
+ * @param $product_id
+ *
+ * @return int
+ */
+
+function erp_acct_get_product_type_id_by_product_id( $product_id ) {
+    global $wpdb;
+
+    $type_id = $wpdb->get_var( "SELECT product_type_id FROM {$wpdb->prefix}erp_acct_products WHERE id={$product_id}" );
+
+    return $type_id;
 }
 
 

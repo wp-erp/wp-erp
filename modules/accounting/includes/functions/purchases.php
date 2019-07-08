@@ -188,7 +188,7 @@ function erp_acct_insert_purchase( $data ) {
             ) );
         }
 
-        do_action( 'erp_acct_after_purchase_create', $purchase_data, $voucher_no );
+        do_action( 'erp_acct_after_purchase_create', $data, $voucher_no );
 
         if ( $purchase_type_order == $purchase_data['purchase_order'] || $draft == $purchase_data['status'] ) {
             $wpdb->query( 'COMMIT' );

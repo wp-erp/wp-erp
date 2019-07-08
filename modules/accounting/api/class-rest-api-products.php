@@ -390,7 +390,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return object
      */
     public function get_product_types() {
-        $types    = erp_get_product_type();
+        $types    = erp_acct_get_product_types();
         $response = rest_ensure_response( $types );
         return $response;
     }

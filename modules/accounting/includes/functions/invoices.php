@@ -78,7 +78,6 @@ function erp_acct_get_invoice( $invoice_no ) {
     invoice.amount,
     invoice.discount,
     invoice.discount_type,
-    invoice.tax_rate_id,
     invoice.tax,
     invoice.estimate,
     invoice.attachments,
@@ -122,7 +121,6 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
         inv_detail.discount,
         inv_detail.tax,
         inv_detail.item_total,
-        inv_detail.tax_percent AS tax_rate,
 
         product.name,
         product.product_type_id,
@@ -203,7 +201,7 @@ function erp_acct_insert_invoice( $data ) {
         erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no );
         erp_acct_insert_invoice_data_into_ledger( $invoice_data );
 
-        do_action( 'erp_acct_after_sales_create', $invoice_data, $voucher_no );
+        do_action( 'erp_acct_after_sales_create', $data, $voucher_no );
 
         $wpdb->query( 'COMMIT' );
 

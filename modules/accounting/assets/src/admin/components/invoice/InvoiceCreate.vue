@@ -579,7 +579,7 @@
             validateForm() {
                 this.form_errors = [];
 
-                if ( ! this.basic_fields.customer.hasOwnProperty('id') ) {
+                if (!this.basic_fields.customer.hasOwnProperty('id')) {
                     this.form_errors.push('Customer Name is required.');
                 }
 
@@ -591,13 +591,13 @@
                     this.form_errors.push('Due Date is required.');
                 }
 
-                if ( ! parseFloat(this.finalTotalAmount) ) {
+                if (!parseFloat(this.finalTotalAmount)) {
                     this.form_errors.push('Total amount can\'t be zero.');
                 }
 
-                for ( let item of this.transactionLines ) {
-                    if ( ! item.hasOwnProperty('product_id') ) {
-                        this.form_errors.push('Please select products.');
+                for (let item of this.transactionLines) {
+                    if (!item.hasOwnProperty('selectedProduct')) {
+                        this.form_errors.push('Please select product.');
                         break;
                     }
                 }
