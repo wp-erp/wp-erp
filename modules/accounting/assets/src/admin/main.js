@@ -3,11 +3,12 @@ import router from './router'
 import store from './store/store'
 
 // get lib reference
-let Vue = acct_get_lib('Vue');
+let Vue            = acct_get_lib('Vue');
 let VueSweetalert2 = acct_get_lib('VueSweetalert2');
-let Loading = acct_get_lib('Loading');
-let Vuelidate = acct_get_lib('Vuelidate');
-let commonMixins = acct_get_lib('commonMixins');
+let Loading        = acct_get_lib('Loading');
+let Vuelidate      = acct_get_lib('Vuelidate');
+let commonMixins   = acct_get_lib('commonMixins');
+let i18nMixin      = acct_get_lib('i18nMixin');
 
 // config
 Vue.config.productionTip = false
@@ -19,6 +20,7 @@ Vue.use(Vuelidate)
 
 // mixin
 Vue.mixin(commonMixins);
+Vue.mixin(i18nMixin);
 
 // vue click outside directive
 Vue.directive('click-outside', {

@@ -61,22 +61,6 @@ module.exports = function(grunt) {
             ]
         },
 
-        // Generate POT files.
-        makepot: {
-            target: {
-                options: {
-                    exclude: ['build/.*', 'node_modules/*', 'assets/*'],
-                    domainPath: '/i18n/languages/', // Where to save the POT file.
-                    potFilename: 'wp-erp.pot', // Name of the POT file.
-                    type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).
-                    potHeaders: {
-                        'report-msgid-bugs-to': 'http://wperp.com/support/',
-                        'language-team': 'LANGUAGE <EMAIL@ADDRESS>'
-                    }
-                }
-            }
-        },
-
         watch: {
             less: {
                 files: [
@@ -174,7 +158,6 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask( 'release', [
-        'makepot',
         'uglify',
     ]);
 
