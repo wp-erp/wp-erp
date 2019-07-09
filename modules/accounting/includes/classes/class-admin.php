@@ -33,7 +33,7 @@ class Admin {
 
         $slug = 'erp-accounting';
 
-        add_submenu_page( 'erp', __( 'Accounting', 'erp' ), 'Accounting', 'erp_ac_manager', $slug, [ $this, 'plugin_page' ] );
+        add_submenu_page( 'erp', __( 'Accounting', 'erp' ), 'Accounting', 'erp_ac_manager', $slug, [ $this, 'erp_accounting_page' ] );
 
         erp_add_menu_header( 'accounting', 'Accounting', '<svg id="Group_235" data-name="Group 235" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 239 341.4"><defs><style>.cls-1{fill:#9ca1a6}</style></defs><path id="Path_281" data-name="Path 281" class="cls-1"/></svg>' );
 
@@ -250,7 +250,12 @@ class Admin {
      *
      * @return void
      */
-    public function plugin_page() {
+    public function erp_accounting_page() {
+        ?>
+        <script>
+            window.erpAcct = JSON.parse('<?php echo json_encode( apply_filters( 'erp_localized_data', [] ) ); ?>');
+        </script>
+        <?php
         echo '<div class="wrap"><div id="erp-accounting"></div></div>';
 
         $component = 'accounting';

@@ -1,8 +1,0 @@
-msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=utf-8\n"
-"X-Generator: babel-plugin-makepot\n"
-
-#: modules/accounting/assets/src/admin/components/menu/AccountingMenu.vue:47
-msgid "Accounting"
-msgstr ""

@@ -1,12 +1,11 @@
 const webpack = require('webpack');
 const path = require('path');
-const package = require('./package.json');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 
 // Naming and path settings
-var appName = 'erp';
+var appName = 'wp-erp';
 
 var exportPath = path.resolve(__dirname, './assets/js');
 
@@ -25,7 +24,6 @@ var moduleEntryPoints = {
     'accounting': {
         'frontend': 'assets/src/frontend/main.js',
         'admin': 'assets/src/admin/main.js',
-        // 'vendor': Object.keys(pkg.dependencies),
         'bootstrap': 'assets/src/admin/bootstrap.js',
         'style': 'assets/less/style.less',
         // 'master': 'assets/less/master.less'
@@ -66,20 +64,6 @@ plugins.push(new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
     minChunks: ({ resource }) => /node_modules/.test(resource),
 }));
-
-// plugins.push(new BrowserSyncPlugin( {
-//     proxy: {
-//         target: config.proxyURL
-//     },
-//     files: [
-//         '**/*.php'
-//     ],
-//     cors: true,
-//     reloadDelay: 0
-// } ));
-
-// Generate a 'manifest' chunk to be inlined in the HTML template
-// plugins.push(new webpack.optimize.CommonsChunkPlugin('manifest'));
 
 // Compress extracted CSS. We are using this plugin so that possible
 // duplicated CSS from different components can be deduped.
@@ -134,9 +118,6 @@ module.exports = {
             path.resolve('./node_modules'),
             path.resolve(path.join(__dirname, 'assets/src/')),
         ]
-    },
-    externals: {
-        jquery: 'jQuery'
     },
 
     plugins,
