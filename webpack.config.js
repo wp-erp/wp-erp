@@ -1,25 +1,48 @@
 const webpack = require('webpack');
 const path = require('path');
-const pkg = require('./package.json');
+const package = require('./package.json');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
-// const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' );
-
-// const config = require( './config.json' );
 
 // Naming and path settings
-var appName = 'accounting';
-var entryPoint = {
-    frontend: './assets/src/frontend/main.js',
-    admin: './assets/src/admin/main.js',
-    vendor: Object.keys(pkg.dependencies),
-    bootstrap: './assets/src/admin/bootstrap.js',
-    style: './assets/less/style.less',
-    // master: './assets/less/master.less'
-};
+var appName = 'erp';
 
 var exportPath = path.resolve(__dirname, './assets/js');
+
+var entryPoints = {};
+
+var rootEntryPoints = {
+    // 'vue-pro-admin': './src/admin/main.js',
+    // style: './less/style.less',
+};
+
+var moduleEntryPoints = {
+    'hr': {},
+
+    'crm': {},
+
+    'accounting': {
+        'frontend': 'assets/src/frontend/main.js',
+        'admin': 'assets/src/admin/main.js',
+        // 'vendor': Object.keys(pkg.dependencies),
+        'bootstrap': 'assets/src/admin/bootstrap.js',
+        'style': 'assets/less/style.less',
+        // 'master': 'assets/less/master.less'
+    }
+};
+
+Object.keys(rootEntryPoints).forEach(function (output) {
+    entryPoints[ output ] = rootEntryPoints[output];
+});
+
+Object.keys(moduleEntryPoints).forEach(function (erpModule) {
+    var modulePath = `modules/${erpModule}`;
+
+    Object.keys(moduleEntryPoints[erpModule]).forEach(function (moduleOutput) {
+        entryPoints[`../../${modulePath}/assets/js/${moduleOutput}`] = `./${modulePath}/${moduleEntryPoints[erpModule][moduleOutput]}`;
+    });
+});
 
 // Enviroment flag
 var plugins = [];
@@ -31,7 +54,9 @@ function isProduction() {
 
 // extract css into its own file
 const extractCss = new ExtractTextPlugin({
-    filename: '../css/[name].css',
+    filename(getPath) {
+        return getPath('../css/[name].css').replace('assets/js', 'assets/css');
+    }
 });
 
 plugins.push( extractCss );
@@ -83,8 +108,12 @@ if ( isProduction() ) {
     appName = '[name].js';
 }
 
+plugins.push(new webpack.ProvidePlugin({
+    $: 'jquery'
+}));
+
 module.exports = {
-    entry: entryPoint,
+    entry: entryPoints,
     output: {
         path: exportPath,
         filename: appName,
@@ -95,20 +124,24 @@ module.exports = {
     resolve: {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
-            'assets': path.resolve('./assets/'),
+            'assets': path.resolve('./modules/accounting/assets/'),
             '@': path.resolve('./assets/src/'),
             'frontend': path.resolve('./assets/src/frontend/'),
-            'admin': path.resolve('./assets/src/admin/'),
+            // 'admin': path.resolve('./assets/src/admin/'),
+            'admin': path.resolve('./modules/accounting/assets/src/admin/'),
         },
         modules: [
             path.resolve('./node_modules'),
             path.resolve(path.join(__dirname, 'assets/src/')),
         ]
     },
+    externals: {
+        jquery: 'jQuery'
+    },
 
     plugins,
 
-        module: {
+    module: {
         rules: [
             {
                 test: /\.js$/,
@@ -129,9 +162,9 @@ module.exports = {
                 test: /\.less$/,
                 use: extractCss.extract({
                     use: [{
-                        loader: 'css-loader'
+                        loader: "css-loader"
                     }, {
-                        loader: 'less-loader'
+                        loader: "less-loader"
                     }]
                 })
             },

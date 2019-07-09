@@ -117,8 +117,8 @@ class Assets {
     public function get_scripts() {
         $scripts = [
             'accounting-vendor'   => [
-                'src'       => ERP_ACCOUNTING_ASSETS . '/js/vendor.js',
-                'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/vendor.js' ),
+                'src'       => WPERP_ASSETS . '/js/vendor.js',
+                'version'   => filemtime( WPERP_PATH . '/assets/js/vendor.js' ),
                 'in_footer' => true
             ],
             'accounting-hook'     => [
