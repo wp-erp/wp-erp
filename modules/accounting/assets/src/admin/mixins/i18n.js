@@ -1,7 +1,7 @@
 export default {
     methods: {
-        __(text) {
-            return __(text);
+        __(text, domain) {
+            return __(text, domain);
         },
 
         sprintf(fmt, ...args) {
