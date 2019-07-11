@@ -72,7 +72,7 @@
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Balance:</span> {{ getCurrencySign() + journal.total }}</li>
+                                        <li><span>Balance:</span> {{ moneyFormat(journal.total) }}</li>
                                     </ul>
                                 </td>
                             </tr>

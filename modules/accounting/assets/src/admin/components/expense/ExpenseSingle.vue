@@ -83,15 +83,15 @@
                                 <td>{{ line.ledger_name}}</td>
                                 <td>{{ line.trn_no }}</td>
                                 <td>{{ line.particulars }}</td>
-                                <td>{{ getCurrencySign() + line.amount }}</td>
+                                <td>{{ moneyFormat(line.amount) }}</td>
                             </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ getCurrencySign() + expense_data.total }}</li>
-                                        <li><span>Total:</span> {{ getCurrencySign() + expense_data.total }}</li>
+                                        <li><span>Subtotal:</span> {{ moneyFormat(expense_data.total) }}</li>
+                                        <li><span>Total:</span> {{ moneyFormat(expense_data.total) }}</li>
                                     </ul>
                                 </td>
                             </tr>

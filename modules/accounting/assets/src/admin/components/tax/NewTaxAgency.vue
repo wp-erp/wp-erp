@@ -61,9 +61,9 @@
 
         data() {
             return {
-                agencies: [],
-                agency: null,
-                isWorking: false,
+                agencies   : [],
+                agency     : null,
+                isWorking  : false,
                 form_errors: [],
             };
         },

@@ -2,7 +2,7 @@
     <div class="income-statement">
         <h2 class="content-header__title">Income Statement</h2>
 
-        <form action="" @submit.prevent="fetchItems" class="query-options no-print">
+        <form @submit.prevent="fetchItems" class="query-options no-print">
 
             <div class="wperp-date-group">
                 <datepicker v-model="start_date"></datepicker>
@@ -58,7 +58,7 @@
                 <tbody class="wperp-col-sm-12">
                 <tr>
                     <td><strong>Profit</strong></td>
-                    <td>{{ getCurrencySign() + Math.abs(profit) }}</td>
+                    <td>{{ moneyFormat( Math.abs(profit) ) }}</td>
                     <td class="no-print"></td>
                 </tr>
                 </tbody>
@@ -67,7 +67,7 @@
                 <tbody class="wperp-col-sm-12">
                     <tr>
                         <td><strong>Loss</strong></td>
-                        <td>{{ getCurrencySign() + Math.abs(loss) }}</td>
+                        <td>{{ moneyFormat(Math.abs(loss)) }}</td>
                         <td class="no-print"></td>
                     </tr>
                 </tbody>
@@ -174,12 +174,12 @@
                 if ( null === val && typeof val === 'object' ) {
                     val = 0;
                 }
-                let currency = '$';
+
                 if ( val < 0 ) {
-                    return `Cr. ${currency}${Math.abs(val)}`;
+                    return `Cr. ${this.moneyFormat( Math.abs(val) )}`;
                 }
 
-                return `Dr. ${currency}${val}`;
+                return `Dr. ${this.moneyFormat( val )}`;
             },
 
             printPopup() {

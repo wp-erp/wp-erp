@@ -236,7 +236,7 @@ class Admin {
         wp_enqueue_style( 'accounting-admin' );
 
         // load hook
-        wp_enqueue_script( 'accounting-hook' );
+        wp_enqueue_script( 'accounting-bootstrap' );
 
         // JS do action
         do_action( 'erp_acct_js_hook_loaded' );

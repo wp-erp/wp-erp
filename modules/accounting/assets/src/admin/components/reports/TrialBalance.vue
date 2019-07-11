@@ -19,7 +19,10 @@
             </a>
         </form>
 
-        <p><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></p>
+        <p>
+            <strong>For the period of ( Transaction date ):</strong>
+            <em>{{ start_date }}</em> to <em>{{ end_date }}</em>
+        </p>
 
         <table class="wperp-table table-striped table-dark widefat">
             <thead>
@@ -38,22 +41,22 @@
                             <summary>{{ row.name }}</summary>
                             <p :key="additional.id" v-for="additional in row.additional">
                                 <strong>{{ additional.name }}</strong>
-                                <em>{{ getCurrencySign() + Math.abs(additional.balance) }}</em>
+                                <em>{{ moneyFormat( Math.abs(additional.balance) ) }}</em>
                             </p>
                         </details>
 
                         <span v-else>{{ row.name }}</span>
                     </td>
 
-                    <td>{{ Math.sign(row.balance) === 1 ? getCurrencySign() + row.balance : '' }}</td>
-                    <td>{{ Math.sign(row.balance) === -1 ? getCurrencySign() + Math.abs(row.balance) : '' }}</td>
+                    <td>{{ Math.sign(row.balance) === 1 ? moneyFormat( row.balance ) : '' }}</td>
+                    <td>{{ Math.sign(row.balance) === -1 ? moneyFormat( Math.abs(row.balance) ) : '' }}</td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr class="t-foot">
                     <td>Total</td>
-                    <td>{{ getCurrencySign() + totalDebit }}</td>
-                    <td>{{ getCurrencySign() + Math.abs(totalCredit) }}</td>
+                    <td>{{ moneyFormat( totalDebit ) }}</td>
+                    <td>{{ moneyFormat( Math.abs(totalCredit) ) }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -107,20 +110,6 @@
             }
         },
 
-        watch: {
-            // start_date() {
-            //     if ( this.selectedYear ) {
-            //         this.selectedYear = null;
-            //     }
-            // },
-
-            // end_date() {
-            //     if (  null !== this.selectedYear ) {
-            //         this.selectedYear = null;
-            //     }
-            // }
-        },
-
         created() {
             //? why is nextTick here ...? i don't know.
             this.$nextTick(function () {
@@ -147,7 +136,6 @@
                 this.end_date   = this.selectedYear.end_date;
 
                 this.selectedYear = { id: parseInt(this.selectedYear.id), name: this.selectedYear.name };
-
 
                 this.getTrialBalance();
             },

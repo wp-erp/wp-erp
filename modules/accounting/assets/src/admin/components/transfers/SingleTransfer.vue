@@ -79,7 +79,7 @@
                                 <tr>
                                     <th>#{{ voucher.voucher }}</th>
                                     <th>{{ voucher.ac_from }}</th>
-                                    <th>{{ voucher.amount }}</th>
+                                    <th>{{ moneyFormat(voucher.amount) }}</th>
                                     <th>{{ voucher.ac_to }}</th>
                                 </tr>
                             </tbody>

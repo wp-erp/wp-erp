@@ -50,15 +50,6 @@
                     {namedRoute: 'PayBillCreate', name: 'Pay Bill'},
                 ],
             };
-        },
-
-        created() {
-            // this.$root.$on('comboSelected', (selected) => {
-            //     console.log(selected);
-            // });
         }
     };
 </script>
-
-<style scoped>
-</style>

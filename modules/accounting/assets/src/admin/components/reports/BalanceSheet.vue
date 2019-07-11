@@ -5,7 +5,7 @@
         </h2>
 
         <div class="blnce-sheet-top">
-            <form action="" method="" @submit.prevent="fetchItems" class="query-options no-print">
+            <form @submit.prevent="fetchItems" class="query-options no-print">
 
                 <div v-if="!closingBtnVisibility" class="wperp-date-group">
                     <datepicker v-model="start_date"></datepicker>
@@ -19,7 +19,8 @@
                     </div>
 
                     <div v-if="selectedYear">
-                        Balance showing from <em>{{ selectedYear.start_date }}</em> to <em>{{ selectedYear.end_date }}</em>
+                        Balance showing from <em>{{ selectedYear.start_date }}</em> to
+                        <em>{{ selectedYear.end_date }}</em>
                     </div>
                 </div>
 
@@ -258,12 +259,12 @@
                 if ( null === val && typeof val === 'object' ) {
                     val = 0;
                 }
-                let currency = '$';
+
                 if ( val < 0 ) {
-                    return `Cr. ${currency}${Math.abs(val)}`;
+                    return `Cr. ${this.moneyFormat( Math.abs(val) )}`;
                 }
 
-                return `Dr. ${currency}${val}`;
+                return `Dr. ${this.moneyFormat( val )}`;
             },
 
             fetchFnYears() {

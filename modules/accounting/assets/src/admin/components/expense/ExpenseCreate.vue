@@ -84,7 +84,7 @@
                                 <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field" required>
                             </td>
                             <td class="col--total" data-colname="Total">
-                                <input type="text" :value="line.amount" class="text-right wperp-form-field" readonly disabled>
+                                <input type="text" :value="moneyFormat(line.amount)" class="text-right wperp-form-field" readonly disabled>
                             </td>
                             <td class="delete-row" data-colname="Remove Above Selection">
                                 <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -99,7 +99,7 @@
                         <tr class="total-amount-row">
                             <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
                             <td class="text-right" data-colname="Total Amount">
-                                <input type="text" class="text-right wperp-form-field" name="finalamount" v-model="finalTotalAmount" readonly disabled></td>
+                                <input type="text" class="text-right wperp-form-field" name="finalamount" :value="moneyFormat(finalTotalAmount)" readonly disabled></td>
                             <td class="text-right"></td>
                         </tr>
 

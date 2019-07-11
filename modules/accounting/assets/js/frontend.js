@@ -1,13 +1,22 @@
 pluginWebpack([2],{
 
+<<<<<<< HEAD
 /***/ 204:
+=======
+/***/ 203:
+>>>>>>> Format currency with account js
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(23);
+<<<<<<< HEAD
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue__ = __webpack_require__(207);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(211);
+=======
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(210);
+>>>>>>> Format currency with account js
 
 
 
@@ -24,17 +33,29 @@ new __WEBPACK_IMPORTED_MODULE_0_vue__["default"]({
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ 207:
+=======
+/***/ 206:
+>>>>>>> Format currency with account js
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(87);
 /* unused harmony namespace reexport */
+<<<<<<< HEAD
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_64847977_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(210);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(208)
+=======
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_64847977_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(209);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(207)
+>>>>>>> Format currency with account js
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -81,14 +102,22 @@ if (false) {(function () {
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ 208:
+=======
+/***/ 207:
+>>>>>>> Format currency with account js
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ 210:
+=======
+/***/ 209:
+>>>>>>> Format currency with account js
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -111,7 +140,11 @@ if (false) {
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ 211:
+=======
+/***/ 210:
+>>>>>>> Format currency with account js
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -141,4 +174,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
 
 /***/ })
 
+<<<<<<< HEAD
 },[204]);
+=======
+},[203]);
+>>>>>>> Format currency with account js

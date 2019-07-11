@@ -24,7 +24,7 @@
         <ul class="report-header" v-if="null !== selectedLedger">
             <li><strong>Account No:</strong> <em>{{ selectedLedger.code }}</em></li>
             <li><strong>Account Name:</strong> <em>{{ selectedLedger.name }}</em></li>
-            <li><strong>Currency:</strong> <em>Dollar</em></li>
+            <li><strong>Currency:</strong> <em>{{ symbol }}</em></li>
             <li><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></li>
         </ul>
 
@@ -41,20 +41,20 @@
                 </strong>
             </template>
             <template slot="balance" slot-scope="data">
-                {{ data.row.balance }}
+                {{ moneyFormat(data.row.balance) }}
             </template>
             <template slot="debit" slot-scope="data">
-                {{ data.row.debit }}
+                {{ moneyFormat(data.row.debit) }}
             </template>
             <template slot="credit" slot-scope="data">
-                {{ data.row.credit }}
+                {{ moneyFormat(data.row.credit) }}
             </template>
             <template slot="tfoot">
                 <tr class="tfoot">
                     <td colspan="3"></td>
                     <td>Total =</td>
-                    <td>{{ totalDebit.toFixed(2) }}</td>
-                    <td>{{ totalCredit.toFixed(2) }}</td>
+                    <td>{{ moneyFormat(totalDebit) }}</td>
+                    <td>{{ moneyFormat(totalCredit) }}</td>
                     <td></td>
                 </tr>
             </template>
@@ -97,7 +97,8 @@
                 },
                 rows       : [],
                 totalDebit : 0,
-                totalCredit: 0
+                totalCredit: 0,
+                symbol     : erp_acct_var.symbol
             };
         },
 

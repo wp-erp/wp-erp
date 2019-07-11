@@ -42,7 +42,7 @@
                             </tr>
                             <tr>
                                 <th>Amount Due:</th>
-                                <td>{{ getCurrencySign() + invoice.total_due }}</td>
+                                <td>{{ moneyFormat( invoice.total_due ) }}</td>
                             </tr>
                         </table>
                     </div>
@@ -65,18 +65,18 @@
                             <th>{{ index+1 }}</th>
                             <th>{{ detail.name }}</th>
                             <td>{{ detail.qty }}</td>
-                            <td>{{ getCurrencySign() + detail.unit_price }}</td>
-                            <td>{{ getCurrencySign() + detail.item_total }}</td>
+                            <td>{{ moneyFormat( detail.unit_price ) }}</td>
+                            <td>{{ moneyFormat( detail.item_total ) }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td class="wperp-invoice-amounts" colspan="7">
                                 <ul>
-                                    <li><span>Subtotal:</span> {{ getCurrencySign() + invoice.amount }}</li>
-                                    <li><span>Discount:</span> (-) {{ getCurrencySign() + invoice.discount }}</li>
-                                    <li><span>Tax:</span> (+) {{ getCurrencySign() + invoice.tax }}</li>
-                                    <li><span>Total:</span> {{ getCurrencySign() + invoice.amount }}</li>
+                                    <li><span>Subtotal:</span> {{ moneyFormat( invoice.amount ) }}</li>
+                                    <li><span>Discount:</span> (-) {{ moneyFormat( invoice.discount ) }}</li>
+                                    <li><span>Tax:</span> (+) {{ moneyFormat( invoice.tax ) }}</li>
+                                    <li><span>Total:</span> {{ moneyFormat( invoice.amount ) }}</li>
                                 </ul>
                             </td>
                         </tr>
@@ -85,11 +85,11 @@
             </div>
 
         </div>
-        
+
         <div class="invoice-attachments d-print-none">
             <h4>Attachments</h4>
             <a class="attachment-item" :href="attachment"
-                :key="index" 
+                :key="index"
                 v-for="(attachment, index) in invoice.attachments" download>
                 <img :src="acct_var.acct_assets + '/images/file-thumb.png'">
                 <div class="attachment-meta">
@@ -103,8 +103,6 @@
 </template>
 
 <script>
-    // Uses `getCurrencySign()` from common.js - mixin
-
     import HTTP from 'admin/http'
 
     export default {

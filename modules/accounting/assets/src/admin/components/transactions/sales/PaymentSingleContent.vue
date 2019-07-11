@@ -56,15 +56,15 @@
                     <tbody>
                         <tr :key="index" v-for="(detail, index) in payment.line_items">
                             <th>#{{ detail.invoice_no }}</th>
-                            <td>{{ getCurrencySign() + detail.amount }}</td>
+                            <td>{{ moneyFormat( detail.amount ) }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="7">
                                 <ul>
-                                    <li><span>Subtotal:</span> {{ getCurrencySign() + payment.amount }}</li>
-                                    <li><span>Total:</span> {{ getCurrencySign() + payment.amount }}</li>
+                                    <li><span>Subtotal:</span> {{ moneyFormat( payment.amount ) }}</li>
+                                    <li><span>Total:</span> {{ moneyFormat( payment.amount ) }}</li>
                                 </ul>
                             </td>
                         </tr>
@@ -91,8 +91,6 @@
 </template>
 
 <script>
-    // Uses `getCurrencySign()` from common.js - mixin
-
     import HTTP from 'admin/http'
 
     export default {
@@ -112,6 +110,5 @@
                 acct_var: erp_acct_var
             }
         }
-
     }
 </script>

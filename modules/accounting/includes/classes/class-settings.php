@@ -73,12 +73,12 @@ class Settings extends ERP_Settings_Page {
                 'default' => '.'
             ),
 
-            array(
-                'title'   => __( 'Number of Decimals', 'erp' ),
-                'type'    => 'text',
-                'id'      => 'erp_ac_nm_decimal',
-                'default' => 2
-            ),
+            // array(
+            //     'title'   => __( 'Number of Decimals', 'erp' ),
+            //     'type'    => 'text',
+            //     'id'      => 'erp_ac_nm_decimal',
+            //     'default' => 2
+            // ),
 
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
 

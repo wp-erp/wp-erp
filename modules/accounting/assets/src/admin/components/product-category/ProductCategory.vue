@@ -138,6 +138,7 @@
                     }
                 }
             },
+
             onBulkAction(action, items) {
                 if ('trash' == action) {
                     if (confirm('Are you sure want to delete?')) {
@@ -178,10 +179,9 @@
                     this.parentCategory = 0;
 
                     this.$store.dispatch('spinner/setSpinner', false);
-                })
-                    .catch((error) => {
-                        this.$store.dispatch('spinner/setSpinner', false);
-                    })
+                }).catch((error) => {
+                    this.$store.dispatch('spinner/setSpinner', false);
+                });
             },
 
             updateCategory(row) {

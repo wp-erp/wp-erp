@@ -81,15 +81,15 @@
                             <tr :key="index" v-for="(line, index) in expense_data.bill_details">
                                 <td>{{ line.voucher_no }}</td>
                                 <td>{{ line.particulars }}</td>
-                                <td>{{ getCurrencySign() + line.amount }}</td>
+                                <td>{{ moneyFormat(line.amount) }}</td>
                             </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ getCurrencySign() + expense_data.total }}</li>
-                                        <li><span>Total:</span> {{ getCurrencySign() + expense_data.total }}</li>
+                                        <li><span>Subtotal:</span> {{ moneyFormat(expense_data.total) }}</li>
+                                        <li><span>Total:</span> {{ moneyFormat(expense_data.total) }}</li>
                                     </ul>
                                 </td>
                             </tr>

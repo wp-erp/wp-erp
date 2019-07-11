@@ -93,7 +93,7 @@
             }
         },
 
-        created (){
+        created() {
             this.fetchAccounts();
         },
 
@@ -108,16 +108,16 @@
                 } );
             },
 
-            transformBalance( val ){
+            transformBalance( val ) {
                 if ( 'undefined' === val ) {
                     val = 0;
                 }
-                let currency = '$';
-                if ( val < 0 ){
-                    return `Cr. ${currency} ${Math.abs(val)}`;
+
+                if ( val < 0 ) {
+                    return `Cr. ${this.moneyFormat( Math.abs(val) )}`;
                 }
 
-                return `Dr. ${currency} ${val}`;
+                return `Dr. ${this.moneyFormat( val )}`;
             },
 
             actionClicked( action, account ) {

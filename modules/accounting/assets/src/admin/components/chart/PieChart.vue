@@ -16,7 +16,7 @@
     export default {
         name: 'PieChart',
 
-        props: ['id', 'title', 'sign', 'labels', 'colors', 'data'],
+        props: ['id', 'title', 'labels', 'colors', 'data'],
 
         data() {
             return {}
@@ -56,11 +56,10 @@
                                         </div><div class="chart-label-values">');
                                         if (chart.data.datasets[0].data[i]) {
                                             if (self.id == 'payment') {
-                                                text.push('<span class="chart-value">' + self.sign + chart.data.datasets[0].data[i] + '</span><br>');
+                                                text.push('<span class="chart-value">' + moneyFormat(chart.data.datasets[0].data[i]) + '</span><br>');
                                             } else {
                                                 text.push('<span class="chart-value">' + chart.data.datasets[0].data[i]);
                                             }
-
                                         }
                                         if (chart.data.labels[i]) {
                                             text.push('<span class="chart-label"> ' + chart.data.labels[i] + '</span>');
@@ -80,7 +79,7 @@
                                         var total = 0;
 
                                         data.datasets[tooltipItem.datasetIndex].data.forEach(function (element /*, index, array*/) {
-                                            total += parseFloat(element);
+                                            total += moneyFormat(element);
                                         });
 
                                         var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];

@@ -20,9 +20,7 @@
             <template slot="employee" slot-scope="data">
                 <router-link :to="{ name: 'EmployeeDetails', params: { id: data.row.id } }">{{data.row.employee}}</router-link>
             </template>
-
         </list-table>
-
     </div>
 </template>
 
@@ -82,7 +80,7 @@
         },
 
         methods: {
-            fetchItems(){
+            fetchItems() {
                 this.rows = [];
                 HTTP.get('/employees', {
                     params: {

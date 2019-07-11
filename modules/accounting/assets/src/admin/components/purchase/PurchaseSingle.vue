@@ -90,16 +90,16 @@
                                 <tr :key="index" v-for="(line, index) in purchase.line_items">
                                     <td>{{ line.name }}</td>
                                     <td>{{ line.qty }}</td>
-                                    <td>{{ getCurrencySign() + line.cost_price }}</td>
-                                    <td>{{ getCurrencySign() + line.amount }}</td>
+                                    <td>{{ moneyFormat(line.cost_price) }}</td>
+                                    <td>{{ moneyFormat(line.amount) }}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ getCurrencySign() + purchase.amount }}</li>
-                                        <li><span>Total:</span> {{ getCurrencySign() + purchase.amount }}</li>
+                                        <li><span>Subtotal:</span> {{ moneyFormat(purchase.amount) }}</li>
+                                        <li><span>Total:</span> {{ moneyFormat(purchase.amount) }}</li>
                                     </ul>
                                 </td>
                             </tr>

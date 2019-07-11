@@ -18,12 +18,11 @@
                 <i class="flaticon-printer-1"></i>
                 &nbsp; Print
             </a>
-
         </form>
 
         <ul class="report-header" v-if="null !== selectedAgency">
             <li><strong>Account Name:</strong> <em>{{ selectedAgency.name }}</em></li>
-            <li><strong>Currency:</strong> <em>Dollar</em></li>
+            <li><strong>Currency:</strong> <em>{{ symbol }}</em></li>
             <li><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></li>
         </ul>
 
@@ -40,20 +39,20 @@
                 </strong>
             </template>
             <template slot="debit" slot-scope="data">
-                {{ data.row.debit }}
+                {{ moneyFormat(data.row.debit) }}
             </template>
             <template slot="credit" slot-scope="data">
-                {{ data.row.credit }}
+                {{ moneyFormat(data.row.credit) }}
             </template>
             <template slot="balance" slot-scope="data">
-                {{ data.row.balance }}
+                {{ moneyFormat(data.row.balance) }}
             </template>
             <template slot="tfoot">
                 <tr class="tfoot">
                     <td colspan="3"></td>
                     <td>Total =</td>
-                    <td>{{ totalDebit }}</td>
-                    <td>{{ totalCredit }}</td>
+                    <td>{{ moneyFormat(totalDebit) }}</td>
+                    <td>{{ moneyFormat(totalCredit) }}</td>
                     <td></td>
                 </tr>
             </template>
@@ -94,7 +93,8 @@
                     'debit'      : { label: 'Debit' },
                     'credit'     : { label: 'Credit' },
                     'balance'    : { label: 'Balance' }
-                }
+                },
+                symbol: erp_acct_var.symbol
             };
         },
 
