@@ -85,15 +85,15 @@
                             <tr :key="index" v-for="(line, index) in payBill.bill_details">
                                 <td>{{ line.id }}</td>
                                 <td>{{ line.bill_no }}</td>
-                                <td>{{ getCurrencySign() + line.amount }}</td>
+                                <td>{{ moneyFormat(line.amount) }}</td>
                             </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ getCurrencySign() + payBill.amount }}</li>
-                                        <li><span>Total:</span> {{ getCurrencySign() + payBill.amount }}</li>
+                                        <li><span>Subtotal:</span> {{ moneyFormat(payBill.amount) }}</li>
+                                        <li><span>Total:</span> {{ moneyFormat(payBill.amount) }}</li>
                                     </ul>
                                 </td>
                             </tr>

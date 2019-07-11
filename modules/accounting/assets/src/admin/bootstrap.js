@@ -1,4 +1,4 @@
-import './i18n';
+import './i18n'
 import Vue from 'vue'
 import Datepicker from 'admin/components/base/Datepicker.vue'
 import ListTable from 'admin/components/list-table/ListTable.vue'

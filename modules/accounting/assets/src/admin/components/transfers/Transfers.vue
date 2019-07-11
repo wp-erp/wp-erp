@@ -59,7 +59,7 @@
             };
         },
 
-        created(){
+        created() {
             this.$store.dispatch( 'spinner/setSpinner', true );
             this.get_transfer_list();
         },

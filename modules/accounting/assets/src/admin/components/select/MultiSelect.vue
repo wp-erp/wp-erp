@@ -13,15 +13,6 @@
     @select="onSelect"
     @search-change="asyncFind">
 
-    <!-- <template slot="tag" slot-scope="{ option }">
-      <span class="custom__tag">
-        <span>{{ option.name }}</span>
-        <span class="custom__remove" @click.prevent="onRemove(option, true)">
-           &#9747;
-        </span>
-      </span>
-    </template> -->
-
     <span slot="noResult">Oops! No elements found.</span>
   </multiselect>
 </template>

@@ -83,13 +83,13 @@
                     }
                 ],
                 columns: {
-                    'trn_date': { label: 'Transaction Date' },
-                    'created_at': { label: 'Created At' },
-                    'voucher_no': { label: 'Voucher No' },
+                    'trn_date'   : { label: 'Transaction Date' },
+                    'created_at' : { label: 'Created At' },
+                    'voucher_no' : { label: 'Voucher No' },
                     'particulars': { label: 'Particulars' },
-                    'debit': { label: 'Debit' },
-                    'credit': { label: 'Credit' },
-                    'balance': { label: 'Balance' },
+                    'debit'      : { label: 'Debit' },
+                    'credit'     : { label: 'Credit' },
+                    'balance'    : { label: 'Balance' },
                 },
                 actions : [
                     { key: 'edit', label: 'Edit' },

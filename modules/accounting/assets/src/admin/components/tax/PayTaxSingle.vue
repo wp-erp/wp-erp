@@ -82,14 +82,14 @@
                                 <td>{{ tax_pay_data.voucher_no }}</td>
                                 <td>{{ tax_pay_data.ledger_id}}</td>
                                 <td>{{ tax_pay_data.voucher_type }}</td>
-                                <td>{{ getCurrencySign() + tax_pay_data.amount }}</td>
+                                <td>{{ moneyFormat(tax_pay_data.amount) }}</td>
                             </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Total:</span> {{ getCurrencySign() + tax_pay_data.amount }}</li>
+                                        <li><span>Total:</span> {{ moneyFormat(tax_pay_data.amount) }}</li>
                                     </ul>
                                 </td>
                             </tr>

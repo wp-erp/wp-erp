@@ -3,10 +3,9 @@
         <select v-model="select_val" @change="onChange">
             <option :key="option.id" v-for="option in options" :value="option.id">{{ option.name }}</option>
         </select>
-        <i class="select--icon"/>
+        <i class="select--icon" />
     </div>
 </template>
-
 
 <script>
     export default {

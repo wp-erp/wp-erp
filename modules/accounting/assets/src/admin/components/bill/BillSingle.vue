@@ -69,7 +69,7 @@
                                     </tr>
                                     <tr>
                                         <th>Amount Due:</th>
-                                        <td>{{ getCurrencySign() + bill.due }}</td>
+                                        <td>{{ moneyFormat(bill.due) }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -91,15 +91,15 @@
                                 <td>{{ line.trn_no}}</td>
                                 <td>{{ line.ledger_name }}</td>
                                 <td>{{ line.particulars }}</td>
-                                <td>{{ getCurrencySign() + line.amount }}</td>
+                                <td>{{ moneyFormat(line.amount) }}</td>
                             </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ getCurrencySign() + bill.amount }}</li>
-                                        <li><span>Total:</span> {{ getCurrencySign() + bill.amount }}</li>
+                                        <li><span>Subtotal:</span> {{ moneyFormat(bill.amount) }}</li>
+                                        <li><span>Total:</span> {{ moneyFormat(bill.amount) }}</li>
                                     </ul>
                                 </td>
                             </tr>

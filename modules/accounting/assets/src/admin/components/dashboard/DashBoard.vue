@@ -143,14 +143,14 @@
        },
 
         methods: {
-            fetchReceivables(){
+            fetchReceivables() {
                 this.to_receive = [];
                 HTTP.get( 'invoices/overview-receivable' ).then( (res) => {
                    this.to_receive = res.data;
                 } );
             },
 
-            fetchPayables(){
+            fetchPayables() {
                 this.to_pay = [];
                 HTTP.get( 'bills/overview-payable' ).then( (res) => {
                     this.to_pay = res.data;

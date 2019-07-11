@@ -7,7 +7,6 @@
                         <pie-chart v-if="chartExpense.values.length"
                                    id="payment"
                                    title="Payment"
-                                   :sign="getCurrencySign()"
                                    :labels="chartExpense.labels"
                                    :colors="chartExpense.colors"
                                    :data="chartExpense.values" />

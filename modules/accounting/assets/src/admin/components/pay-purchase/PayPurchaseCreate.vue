@@ -73,8 +73,8 @@
                         <tr :key="key" v-for="(item,key) in pay_purchases">
                             <td scope="row" class="col--id column-primary">{{key+1}}</td>
                             <td class="col--due-date" data-colname="Due Date">{{item.due_date}}</td>
-                            <td class="col--total" data-colname="Total">{{item.total}}</td>
-                            <td class="col--due" data-colname="Due">{{item.due}}</td>
+                            <td class="col--total" data-colname="Total">{{moneyFormat(item.total)}}</td>
+                            <td class="col--due" data-colname="Due">{{moneyFormat(item.due)}}</td>
                             <td class="col--amount" data-colname="Amount">
                                 <input type="number" min="0" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
                             </td>
@@ -86,7 +86,8 @@
                         <tr class="total-amount-row">
                             <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
                             <td class="text-right" data-colname="Total Amount">
-                                <input type="text" class="text-right" name="finalamount" v-model="finalTotalAmount" readonly disabled/></td>
+                                <input type="text" class="text-right" name="finalamount"
+                                :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
                             <td class="text-right"></td>
                         </tr>
                         </tbody>

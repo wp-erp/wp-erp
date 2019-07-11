@@ -16,7 +16,7 @@
                             <summary>{{ data.name }}</summary>
                             <p :key="additional.id" v-for="additional in data.additional">
                                 {{ additional.name }}
-                                {{ getCurrencySign() + Math.abs(additional.balance) }}
+                                {{ moneyFormat(Math.abs(additional.balance)) }}
                             </p>
                         </details>
                         <span v-else>{{ data.name }}</span>

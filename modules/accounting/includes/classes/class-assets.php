@@ -80,17 +80,24 @@ class Assets {
             } );
         }
 
-        wp_localize_script( 'accounting-hook', 'erp_acct_var', array(
-            'user_id'        => $u_id,
-            'site_url'       => $site_url,
-            'rest_nonce'     => $rest_nonce,
-            'logout_url'     => $logout_url,
-            'acct_assets'    => ERP_ACCOUNTING_ASSETS,
-            'erp_assets'     => WPERP_ASSETS,
-            'erp_acct_menus' => $menus,
-            'erp_acct_url'   => $acct_url,
-            'erp_debug_mode' => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
-            'current_date'   => date( 'Y-m-d' ),
+        $erp_acct_dec_separator = erp_get_option('erp_ac_de_separator');
+        $erp_acct_ths_separator = erp_get_option('erp_ac_th_separator');
+
+        wp_localize_script( 'accounting-bootstrap', 'erp_acct_var', array(
+            'user_id'            => $u_id,
+            'site_url'           => $site_url,
+            'rest_nonce'         => $rest_nonce,
+            'logout_url'         => $logout_url,
+            'acct_assets'        => ERP_ACCOUNTING_ASSETS,
+            'erp_assets'         => WPERP_ASSETS,
+            'erp_acct_menus'     => $menus,
+            'erp_acct_url'       => $acct_url,
+            'decimal_separator'  => erp_get_option('erp_ac_de_separator', false, '.'),
+            'thousand_separator' => erp_get_option('erp_ac_th_separator', false, ','),
+            'currency_format'    => erp_acct_get_price_format(),
+            'symbol'             => erp_acct_get_currency_symbol(),
+            'erp_debug_mode'     => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
+            'current_date'       => date( 'Y-m-d' ),
         ) );
     }
 
@@ -121,7 +128,7 @@ class Assets {
                 'version'   => filemtime( WPERP_PATH . '/assets/js/vendor.js' ),
                 'in_footer' => true
             ],
-            'accounting-hook'     => [
+            'accounting-bootstrap'     => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/bootstrap.js',
                 'deps'      => [ 'accounting-vendor' ],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/bootstrap.js' ),

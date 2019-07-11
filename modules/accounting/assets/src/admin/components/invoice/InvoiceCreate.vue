@@ -94,7 +94,7 @@
                                         class="tax-rates"
                                         placeholder="Select sales tax" />
                                 </td>
-                                <td><input type="text" class="wperp-form-field" v-model="taxTotalAmount" readonly></td>
+                                <td><input type="text" class="wperp-form-field" :value="moneyFormat(taxTotalAmount)" readonly></td>
                                 <td></td>
                             </tr>
 
@@ -102,7 +102,7 @@
                                 <td colspan="4" class="text-right">
                                     <span>Total Amount = </span>
                                 </td>
-                                <td><input type="text" class="wperp-form-field" v-model="finalTotalAmount" readonly></td>
+                                <td><input type="text" class="wperp-form-field" :value="moneyFormat(finalTotalAmount)" readonly></td>
                                 <td></td>
                             </tr>
                             <tr class="wperp-form-group">

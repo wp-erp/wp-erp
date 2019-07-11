@@ -9,26 +9,24 @@
                     <div class="wperp-row">
                         <div class="wperp-col-sm-4">
                             <pie-chart v-if="paymentData.length"
-                                       id="payment"
-                                       :title="paymentChart.title"
-                                       :sign="getCurrencySign()"
-                                       :labels="paymentChart.labels"
-                                       :colors="paymentChart.colors"
-                                       :data="paymentData"/>
+                                id="payment"
+                                :title="paymentChart.title"
+                                :labels="paymentChart.labels"
+                                :colors="paymentChart.colors"
+                                :data="paymentData"/>
                         </div>
                         <div class="wperp-col-sm-4">
                             <pie-chart v-if="statusData.length"
-                                       id="status"
-                                       :title="statusChart.title"
-                                       :sign="getCurrencySign()"
-                                       :labels="statusLabel"
-                                       :colors="statusChart.colors"
-                                       :data="statusData"/>
+                                id="status"
+                                :title="statusChart.title"
+                                :labels="statusLabel"
+                                :colors="statusChart.colors"
+                                :data="statusData"/>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-chart-block">
                                 <h3>Outstanding</h3>
-                                <div class="wperp-total"><h2>{{ getCurrencySign() + outstanding }}</h2></div>
+                                <div class="wperp-total"><h2>{{ moneyFormat( outstanding ) }}</h2></div>
                             </div>
                         </div>
                     </div>
@@ -118,10 +116,9 @@
                     params: {}
                 }).then((response) => {
                     this.resData = response.data;
-                }).catch((error) => {
-                    console.log(error);
                 });
             },
+
             getTransactions() {
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
@@ -133,6 +130,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
+
             filterTransaction( filters = {} ) {
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get( this.url + '/' + this.userId + '/transactions/filter', {
@@ -149,6 +147,7 @@
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 } );
             },
+
             formatLineItems() {
                 this.transactions.forEach(line => {
                     if(line.balance === null && typeof line.balance === "object") {

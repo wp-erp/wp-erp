@@ -97,7 +97,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="form-check">
                                     <label class="form-check-label mb-0" for="show_more">
                                         <input class="form-check-input" name="show_more" id="show_more" type="checkbox" @click="showDetails">

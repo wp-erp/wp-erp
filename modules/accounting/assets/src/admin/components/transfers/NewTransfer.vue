@@ -70,13 +70,13 @@
         data() {
             return {
                 transferFrom: { balance : 0 },
-                transferTo: { balance : 0 },
-                accounts: [],
-                fa: [],
-                ta: [],
+                transferTo  : { balance : 0 },
+                accounts    : [],
+                fa          : [],
+                ta          : [],
                 transferdate: erp_acct_var.current_date,
                 particulars : '',
-                amount: '',
+                amount      : '',
             };
         },
 
@@ -104,21 +104,20 @@
             },
 
             transformBalance( val ) {
-                let currency = '$';
-                if ( val < 0 ){
-                    return `Cr. ${currency} ${Math.abs(val)}`;
+                if ( val < 0 ) {
+                    return `Cr. ${this.moneyFormat( Math.abs(val) )}`;
                 }
-                return `Dr. ${currency} ${val}`;
+                return `Dr. ${this.moneyFormat( val )}`;
             },
 
-            submitTransfer(){
+            submitTransfer() {
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.post( '/accounts/transfer', {
-                    date : this.transferdate,
-                    from_account_id : this.transferFrom.id,
-                    to_account_id : this.transferTo.id,
-                    amount : this.amount,
-                    particulars : this.particulars,
+                    date           : this.transferdate,
+                    from_account_id: this.transferFrom.id,
+                    to_account_id  : this.transferTo.id,
+                    amount         : this.amount,
+                    particulars    : this.particulars,
                 }).then( res => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
                     this.showAlert( 'success', 'Transfer Successful!' );
@@ -132,24 +131,24 @@
                 });
             },
 
-            resetData(){
+            resetData() {
                 this.transferFrom = { balance : 0 };
-                this.transferTo = { balance : 0 };
-                this.accounts = [];
+                this.transferTo   = { balance : 0 };
+                this.accounts     = [];
                 this.transferdate = erp_acct_var.current_date;
-                this.particulars = '';
-                this.amount = '';
+                this.particulars  = '';
+                this.amount       = '';
             },
         },
         watch: {
-            'transferFrom'(){
+            'transferFrom'() {
                 let id = this.transferFrom.id;
                 this.ta = jQuery.grep(this.accounts, function(e){
                     return e.id != id;
                 });
             },
 
-            'transferTo'(){
+            'transferTo'() {
                 let id = this.transferTo.id;
                 this.fa = jQuery.grep(this.accounts, function(e){
                     return e.id != id;

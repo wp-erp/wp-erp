@@ -93,13 +93,12 @@
             },
 
             transformBalance( val ) {
-                let currency = '$';
-                if ( val < 0 ){
-                    return `Cr. ${currency} ${Math.abs(val)}`;
+                if ( val < 0 ) {
+                    return `Cr. ${this.moneyFormat( Math.abs(val) )}`;
                 }
 
-                return `Dr. ${currency} ${val}`;
-            },
+                return `Dr. ${this.moneyFormat( val )}`;
+            }
         }
     }
 </script>

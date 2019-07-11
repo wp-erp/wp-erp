@@ -55,7 +55,6 @@
                             <pie-chart v-if="paymentData.length"
                                        id="payment"
                                        :title="paymentChart.title"
-                                       :sign="getCurrencySign()"
                                        :labels="paymentChart.labels"
                                        :colors="paymentChart.colors"
                                        :data="paymentData"/>
@@ -64,7 +63,6 @@
                             <pie-chart v-if="statusData.length"
                                        id="status"
                                        :title="statusChart.title"
-                                       :sign="getCurrencySign()"
                                        :labels="statusLabel"
                                        :colors="statusChart.colors"
                                        :data="statusData"/>
@@ -72,7 +70,7 @@
                         <div class="wperp-col-sm-4">
                             <div class="wperp-chart-block">
                                 <h3>Outstanding</h3>
-                                <div class="wperp-total"><h2>{{ getCurrencySign() + outstanding }}</h2></div>
+                                <div class="wperp-total"><h2>{{ moneyFormat( outstanding ) }}</h2></div>
                             </div>
                         </div>
                     </div>
@@ -158,10 +156,6 @@
                     params: { 'include': 'department,designation,reporting_to,avatar' }
                 }).then((response) => {
                     this.user = response.data;
-                }).catch((error) => {
-                    console.log(error);
-                }).then(() => {
-                    //ready
                 });
             },
 
@@ -212,7 +206,3 @@
         }
     }
 </script>
-
-<style lang="less">
-
-</style>

@@ -85,7 +85,7 @@
             }
         },
         computed: {
-            user(){
+            user() {
                 return this.userData;
             }
         },
@@ -99,7 +99,7 @@
         },
 
         created() {
-            this.title    =   ( this.$route.name.toLowerCase() == 'customers' ) ? 'customer' : 'vendor';
+            this.title = ( this.$route.name.toLowerCase() == 'customers' ) ? 'customer' : 'vendor';
             this.$on('modal-close', function() {
                 this.showModal = false;
             });
@@ -112,7 +112,3 @@
     }
 
 </script>
-
-<style lang="less" scoped>
-
-</style>

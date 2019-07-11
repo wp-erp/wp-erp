@@ -85,17 +85,17 @@
                             <tbody>
                                 <tr :key="index" v-for="(line, index) in payPurchase.purchase_details">
                                     <td>{{ line.voucher_no }}</td>
-                                    <td>{{ line.purchase_no }}</td
+                                    <td>{{ line.purchase_no }}</td>
                                     <td>{{ line.vendor_name }}</td>
-                                    <td>{{ getCurrencySign() + line.amount }}</td>
+                                    <td>{{ moneyFormat(line.amount) }}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ getCurrencySign() + payPurchase.amount }}</li>
-                                        <li><span>Total:</span> {{ getCurrencySign() + payPurchase.amount }}</li>
+                                        <li><span>Subtotal:</span> {{ moneyFormat(payPurchase.amount) }}</li>
+                                        <li><span>Total:</span> {{ moneyFormat(payPurchase.amount) }}</li>
                                     </ul>
                                 </td>
                             </tr>

@@ -7,7 +7,6 @@
                         <pie-chart v-if="chartPayment.values.length"
                             id="payment"
                             title="Payment"
-                            :sign="getCurrencySign()"
                             :labels="chartPayment.labels"
                             :colors="chartPayment.colors"
                             :data="chartPayment.values" />
@@ -16,7 +15,6 @@
                         <pie-chart v-if="chartStatus.values.length"
                             id="status"
                             title="Status"
-                            sign=""
                             :labels="chartStatus.labels"
                             :colors="chartStatus.colors"
                             :data="chartStatus.values" />
@@ -111,7 +109,3 @@
 
     }
 </script>
-
-<style scoped>
-
-</style>

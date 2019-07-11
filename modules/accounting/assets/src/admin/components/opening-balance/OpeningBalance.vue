@@ -260,8 +260,12 @@
                     <td class="pl-10 text-right col--total-amount" style="width: 60%;">
                         <span>Total Amount</span>
                     </td>
-                    <td data-colname="Total Debit"><input type="text" class="text-right" :value="finalTotalDebit" readonly ></td>
-                    <td data-colname="Total Credit"><input type="text" class="text-right" :value="finalTotalCredit" readonly ></td>
+                    <td data-colname="Total Debit">
+                        <input type="text" class="text-right" :value="moneyFormat(finalTotalDebit)" readonly>
+                    </td>
+                    <td data-colname="Total Credit">
+                        <input type="text" class="text-right" :value="moneyFormat(finalTotalCredit)" readonly>
+                    </td>
                 </tr>
                 <tr class="wperp-form-group">
                     <td colspan="9" style="text-align: left;">

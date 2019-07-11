@@ -5,21 +5,20 @@
                 <div class="wperp-row">
                     <div class="wperp-col-sm-4">
                         <pie-chart v-if="chartPurchase.values.length"
-                                   id="payment"
-                                   title="Payment"
-                                   :sign="getCurrencySign()"
-                                   :labels="chartPurchase.labels"
-                                   :colors="chartPurchase.colors"
-                                   :data="chartPurchase.values" />
+                            id="payment"
+                            title="Payment"
+                            :labels="chartPurchase.labels"
+                            :colors="chartPurchase.colors"
+                            :data="chartPurchase.values" />
                     </div>
                     <div class="wperp-col-sm-4">
                         <pie-chart v-if="chartStatus.values.length"
-                                   id="status"
-                                   title="Status"
-                                   sign=""
-                                   :labels="chartStatus.labels"
-                                   :colors="chartStatus.colors"
-                                   :data="chartStatus.values" />
+                            id="status"
+                            title="Status"
+                            sign=""
+                            :labels="chartStatus.labels"
+                            :colors="chartStatus.colors"
+                            :data="chartStatus.values" />
                     </div>
                     <div class="wperp-col-sm-4">
                         <div class="wperp-chart-block">
