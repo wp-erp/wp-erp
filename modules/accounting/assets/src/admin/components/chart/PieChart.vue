@@ -56,7 +56,7 @@
                                         </div><div class="chart-label-values">');
                                         if (chart.data.datasets[0].data[i]) {
                                             if (self.id == 'payment') {
-                                                text.push('<span class="chart-value">' + moneyFormat(chart.data.datasets[0].data[i]) + '</span><br>');
+                                                text.push('<span class="chart-value">' + this.moneyFormat(chart.data.datasets[0].data[i]) + '</span><br>');
                                             } else {
                                                 text.push('<span class="chart-value">' + chart.data.datasets[0].data[i]);
                                             }
@@ -79,7 +79,7 @@
                                         var total = 0;
 
                                         data.datasets[tooltipItem.datasetIndex].data.forEach(function (element /*, index, array*/) {
-                                            total += moneyFormat(element);
+                                            total += this.moneyFormat(element);
                                         });
 
                                         var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
