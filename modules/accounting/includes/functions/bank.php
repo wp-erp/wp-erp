@@ -452,3 +452,23 @@ function erp_acct_get_balance_by_ledger( $id ) {
 
     return $result;
 }
+
+/**
+ * Get bank accounts dropdown with cash
+ *
+ * @param $id array
+ *
+ * @return array
+ */
+function erp_acct_get_bank_dropdown() {
+    $accounts = [];
+    $banks    = erp_acct_get_banks( true, true, false );
+
+    if ( $banks ) {
+        foreach ($banks as $bank) {
+            $accounts[ $bank['id'] ] = sprintf( '%s', $bank['name'] );
+        }
+    }
+
+    return $accounts;
+}
