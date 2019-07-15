@@ -186,6 +186,11 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $item = erp_acct_get_invoice( $id );
 
+        $link_hash           = erp_acct_get_invoice_link_hash( $id, 'invoice' );
+        $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id' => $id, 'auth' => $link_hash ], site_url() );
+
+        $item['readonly_url'] = $readonly_url;
+
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
         $item                           = $this->prepare_item_for_response( $item, $request, $additional_fields );

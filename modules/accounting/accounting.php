@@ -169,6 +169,7 @@ final class Accounting {
      */
     public function init_actions() {
         add_action( 'init', [ $this, 'init_classes' ] );
+        add_action( 'template_redirect', [ $this, 'readonly_invoice_template' ] );
     }
 
     /**
@@ -269,6 +270,37 @@ final class Accounting {
         if ( is_plugin_active( 'accounting/accounting.php' ) ) {
             deactivate_plugins( 'accounting/accounting.php' );
         }
+    }
+
+    /**
+     * Callback to template_redirect hook
+     * Shows template when invoice readonly link is called
+     *
+     * @return mixed
+     */
+    function readonly_invoice_template() {
+
+        $query          = isset( $_REQUEST['query'] ) ? esc_attr( $_REQUEST['query'] ) : '';
+        $transaction_id = isset( $_REQUEST['trans_id'] ) ? intval( $_REQUEST['trans_id'] ) : '';
+        $auth_id        = isset( $_REQUEST['auth'] ) ? esc_attr( $_REQUEST['auth'] ) : '';
+        $verified       = false;
+
+        if ( ! $query || ! $transaction_id || ! $auth_id ) {
+            return;
+        }
+
+        $transaction = erp_acct_get_transaction( $transaction_id );
+
+        if ( $transaction ) {
+            $verified = erp_acct_verify_invoice_link_hash( $transaction_id, $transaction['type'], $auth_id );
+        }
+
+        if ( $verified ) {
+            include ERP_ACCOUNTING_VIEWS . '/transactions/invoice-readonly.php';
+            exit();
+        }
+
+        return;
     }
 
 } // ERP_Accounting

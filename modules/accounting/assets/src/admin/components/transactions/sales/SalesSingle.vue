@@ -23,6 +23,11 @@
                             </ul>
                         </template>
                     </dropdown>
+
+                    <a href="#" class="wperp-btn btn--default print-btn"
+                       v-clipboard="copyLink"
+                       @success="handleSuccess"
+                       @error="handleError">Copy Link</a>
                 </div>
             </div>
 
@@ -54,15 +59,15 @@
 
         data() {
             return {
-                isWorking: false,
-                invoice  : null,
-                payment  : null,
-                type     : null,
-                company  : null,
-                acct_var : erp_acct_var,
-                showModal: false,
-                print_data: null
-
+                isWorking : false,
+                invoice   : null,
+                payment   : null,
+                type      : null,
+                company   : null,
+                acct_var  : erp_acct_var,
+                showModal : false,
+                print_data: null,
+                copyLink  : '#'
             }
         },
 
@@ -134,7 +139,8 @@
                     this.invoice = response.data;
                 }).then( e => {} ).then(() => {
                     this.print_data = this.invoice;
-                    this.isWorking = false;
+                    this.copyLink   = this.invoice.readonly_url;
+                    this.isWorking  = false;
                 });
             },
 
@@ -152,6 +158,16 @@
             printPopup() {
                 window.print();
             },
+
+            handleSuccess (e) {
+                console.log(e);
+                alert('Link has been copied.')
+            },
+
+            handleError (e) {
+                e.preventDefault();
+                alert('Failed to copy link.')
+            }
         },
 
     }

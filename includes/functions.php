@@ -785,7 +785,7 @@ function erp_performance_rating( $selected = '' ) {
 /**
  * Get erp option from settings framework
  *
- * @param  sting  $option_name name of the option
+ * @param  string $option_name name of the option
  * @param  string $section name of the section. if it's a separate option, don't provide any
  * @param  string $default default option
  *

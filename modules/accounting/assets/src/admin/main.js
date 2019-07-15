@@ -7,6 +7,7 @@ let Vue            = acct_get_lib('Vue');
 let VueSweetalert2 = acct_get_lib('VueSweetalert2');
 let Loading        = acct_get_lib('Loading');
 let Vuelidate      = acct_get_lib('Vuelidate');
+let VueClipboards  = acct_get_lib('VueClipboards');
 let commonMixins   = acct_get_lib('commonMixins');
 let i18nMixin      = acct_get_lib('i18nMixin');
 
@@ -16,7 +17,8 @@ Vue.config.productionTip = false
 // vue uses
 Vue.use(VueSweetalert2);
 Vue.use(Loading);
-Vue.use(Vuelidate)
+Vue.use(Vuelidate);
+Vue.use(VueClipboards);
 
 // mixin
 Vue.mixin(commonMixins);
