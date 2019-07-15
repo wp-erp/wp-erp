@@ -23,11 +23,6 @@
                             </ul>
                         </template>
                     </dropdown>
-
-                    <a href="#" class="wperp-btn btn--default print-btn"
-                       v-clipboard="copyData"
-                       @success="handleSuccess"
-                       @error="handleError">Copy Link</a>
                 </div>
             </div>
 
@@ -154,8 +149,7 @@
                 acct_var   : erp_acct_var,
                 print_data : null,
                 type       : 'bill',
-                showModal  : false,
-                copyData   : 'copy data'
+                showModal  : false
             }
         },
 

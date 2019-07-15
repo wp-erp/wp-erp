@@ -906,7 +906,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
 
     $file_name = sprintf( '%s_%s.pdf', $trn_id, date( 'd-m-Y' ) );
-    $trn_pdf->render( $file_name, $output_method );
+    $trn_pdf->render( $file_name, 'F' );
     $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
     $file_name = $attach_pdf ? $file_name : '';
 

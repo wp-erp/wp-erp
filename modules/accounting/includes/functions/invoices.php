@@ -67,6 +67,7 @@ function erp_acct_get_invoice( $invoice_no ) {
     $sql = $wpdb->prepare( "Select
 
     voucher.editable,
+    voucher.currency,
 
     invoice.id,
     invoice.voucher_no,
