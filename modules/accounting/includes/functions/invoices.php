@@ -210,7 +210,13 @@ function erp_acct_insert_invoice( $data ) {
         return new WP_error( 'invoice-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_invoice( $voucher_no );
+    $invoice = erp_acct_get_invoice( $voucher_no );
+
+    $invoice['email'] = erp_get_people_email( $data['customer_id'] );
+
+    do_action( 'erp_acct_new_transaction_sales', $voucher_no, $invoice );
+
+    return $invoice;
 }
 
 /**

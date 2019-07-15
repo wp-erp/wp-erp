@@ -788,7 +788,7 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
         }
 
         $trn_pdf->add_badge( __( 'PENDING', 'erp' ) );
-        $trn_pdf->add_total( __( 'DUE', 'erp' ), $transaction->due );
+        $trn_pdf->add_total( __( 'DUE', 'erp' ), $transaction->total_due );
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
