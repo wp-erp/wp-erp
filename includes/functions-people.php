@@ -257,6 +257,8 @@ function erp_delete_people( $data = [] ) {
         }
 
         do_action( 'erp_after_delete_people', $people_id, $data );
+        // e.g.: erp_acct_delete_customer, erp_acct_delete_vendor
+        do_action( "erp_acct_delete_{$data['type']}", $data );
     }
 }
 
@@ -643,6 +645,8 @@ function erp_insert_people( $args = array(), $return_object = false ) {
 
     if ( ! $existing_people->id ) {
         do_action( 'erp_create_new_people', $people->id, $args, $people_type );
+        // e.g.: erp_acct_after_new_customer, erp_acct_after_new_vendor
+        do_action( "erp_acct_after_new_{$people_type}", $people->id, $args );
     } else {
         do_action( 'erp_update_people', $people->id, $args, $people_type );
     }
