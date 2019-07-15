@@ -19900,11 +19900,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 
@@ -19922,8 +19917,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
       acct_var: erp_acct_var,
       print_data: null,
       type: 'bill',
-      showModal: false,
-      copyData: 'copy data'
+      showModal: false
     };
   },
   created: function created() {
@@ -47446,24 +47440,6 @@ var render = function() {
                   ])
                 ],
                 2
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  directives: [
-                    {
-                      name: "clipboard",
-                      rawName: "v-clipboard",
-                      value: _vm.copyData,
-                      expression: "copyData"
-                    }
-                  ],
-                  staticClass: "wperp-btn btn--default print-btn",
-                  attrs: { href: "#" },
-                  on: { success: _vm.handleSuccess, error: _vm.handleError }
-                },
-                [_vm._v("Copy Link")]
               )
             ],
             1
