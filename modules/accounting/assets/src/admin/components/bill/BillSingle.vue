@@ -18,10 +18,16 @@
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
+                                <li><a href="#" @click.prevent="showModal = true">Copy Link</a></li>
                                 <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
                             </ul>
                         </template>
                     </dropdown>
+
+                    <a href="#" class="wperp-btn btn--default print-btn"
+                       v-clipboard="copyData"
+                       @success="handleSuccess"
+                       @error="handleError">Copy Link</a>
                 </div>
             </div>
 
@@ -148,7 +154,8 @@
                 acct_var   : erp_acct_var,
                 print_data : null,
                 type       : 'bill',
-                showModal  : false
+                showModal  : false,
+                copyData   : 'copy data'
             }
         },
 
@@ -186,7 +193,7 @@
 
             printPopup() {
                 window.print();
-            }
+            },
         },
 
     }

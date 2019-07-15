@@ -927,3 +927,126 @@ function erp_acct_get_transaction_type( $voucher_no ) {
 
     return $wpdb->get_var( $sql );
 }
+
+/**
+ * @param $transaction_id
+ *
+ * @return mixed
+ */
+function erp_acct_get_transaction( $transaction_id ) {
+
+    $transaction = [];
+
+    $transaction_type    = erp_acct_get_transaction_type( $transaction_id );
+    $link_hash           = erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type );
+    $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id' => $transaction_id, 'auth' => $link_hash ], site_url() );
+
+    switch ( $transaction_type ) {
+        case 'invoice':
+            $transaction = erp_acct_get_invoice( $transaction_id );
+            break;
+        case 'payment':
+            $transaction = erp_acct_get_payment( $transaction_id );
+            break;
+        case 'bill':
+            $transaction = erp_acct_get_bill( $transaction_id );
+            break;
+        case 'pay_bill':
+            $transaction = erp_acct_get_pay_bill( $transaction_id );
+            break;
+        case 'purchase':
+            $transaction = erp_acct_get_purchase( $transaction_id );
+            break;
+        case 'pay_purchase':
+            $transaction = erp_acct_get_pay_purchase( $transaction_id );
+            break;
+        case 'expense':
+            $transaction = erp_acct_get_expense( $transaction_id );
+            break;
+        case 'transfer_voucher':
+            $transaction = erp_acct_get_single_voucher( $transaction_id );
+            break;
+        default:
+            break;
+    }
+
+    $transaction['type']          = $transaction_type;
+    $transaction['readonly_url'] = $readonly_url;
+
+    return $transaction;
+
+}
+
+/**
+ * Varify transaction hash
+ *
+ * @param int $transaction
+ * @param string $transaction_type
+ * @param string $hash_to_verify
+ *  * @param string $algo
+ *
+ * @return bool
+ */
+function erp_acct_verify_invoice_link_hash( $transaction_id, $transaction_type, $hash_to_verify = '', $algo = 'sha256' ) {
+
+    if ( $transaction_id && $transaction_type && $hash_to_verify ) {
+
+        $to_hash       = $transaction_id . $transaction_type;
+        $hash_original = hash( $algo, $to_hash );
+
+        if ( $hash_original === $hash_to_verify ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Get unique transaction hash for sharing
+ *
+ * @param int $transaction
+ * @param string $transaction_type
+ * @param string $algo
+ *
+ * @since 1.1.2
+ * @return string
+ */
+function erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $algo = 'sha256' ) {
+
+    if ( $transaction_id && $transaction_type ) {
+
+        $to_hash     = $transaction_id . $transaction_type;
+        $hash_string = hash( $algo, $to_hash );
+    }
+
+    return $hash_string;
+}
+
+
+/**
+ * Format the price with a currency symbol.
+ *
+ * @param float $price
+ *
+ * @param array $args (default: array())
+ *
+ * @return string
+ */
+function erp_acct_get_price( $main_price, $args = array() ) {
+    extract( apply_filters( 'erp_ac_price_args', wp_parse_args( $args, array(
+        'currency'           => erp_get_currency(),
+        'decimal_separator'  => erp_get_option('erp_ac_de_separator', false, '.'),
+        'thousand_separator' => erp_get_option('erp_ac_th_separator', false, ','),
+        'decimals'           => absint( erp_get_option( 'erp_ac_nm_decimal', false, 2 ) ),
+        'price_format'       => erp_acct_get_price_format(),
+        'symbol'             => true,
+        'currency_symbol'    => erp_acct_get_currency_symbol()
+    ) ) ) );
+
+    $price           = number_format( abs( $main_price ), $decimals, $decimal_separator, $thousand_separator );
+    $formatted_price = $symbol ? sprintf( $price_format, $currency_symbol, $price ) : $price;
+    $formatted_price = ( $main_price < 0 ) ? '(' . $formatted_price . ')' : $formatted_price;
+
+    return apply_filters( 'erp_acct_price', $formatted_price, $price, $args );
+}

@@ -25,7 +25,7 @@ class Assets {
         if ( is_admin() ) {
             $screen = get_current_screen();
             if ( $screen->base == 'wp-erp_page_erp-settings' ) {
-                wp_enqueue_script( 'accounting-helper', ERP_ACCOUNTING_ASSETS . '/js/accounting.js', array( 'jquery' ), false, true );
+                wp_enqueue_script( 'accounting-helper', ERP_ACCOUNTING_ASSETS . '/js/accounting-helper.js', array( 'jquery', 'erp-tiptip' ), false, true );
                 return;
             } elseif ( $screen->base != 'wp-erp_page_erp-accounting' ) {
                 return;
