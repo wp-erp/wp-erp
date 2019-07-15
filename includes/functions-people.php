@@ -835,3 +835,22 @@ function erp_convert_to_people( $args = [] ) {
 
     return $people_id;
 }
+
+/**
+ * Get people email
+ *
+ * Get people email by id
+ *
+ * @since 1.4.7
+ *
+ * @param array $id
+ *
+ * @return string
+ */
+function erp_get_people_email( $id ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare( "SELECT email FROM {$wpdb->prefix}erp_peoples WHERE id = %d", absint($id) );
+
+    return $wpdb->get_var( $sql );
+}

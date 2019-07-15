@@ -150,7 +150,7 @@ function erp_acct_format_check_line_items( $voucher_no ) {
         expense_detail.particulars,
 
         ledger.name AS ledger_name,
-        
+
         cheque.bank,
         cheque.name,
         cheque.check_no,
@@ -289,11 +289,23 @@ function erp_acct_insert_expense( $data ) {
         return new WP_error( 'expense-exception', $e->getMessage() );
     }
 
+    $email = erp_get_people_email( $data['vendor_id'] );
+
     if ( 'check' === $type ) {
-        return erp_acct_get_check( $voucher_no );
+        $check = erp_acct_get_check( $voucher_no );
+        $check['email'] = $email;
+
+        do_action( 'erp_acct_new_transaction_check', $voucher_no, $check );
+
+        return $check;
     }
 
-    return erp_acct_get_expense( $voucher_no );
+    $expense = erp_acct_get_expense( $voucher_no );
+    $expense['email'] = $email;
+
+    do_action( 'erp_acct_new_transaction_expense', $voucher_no, $expense );
+
+    return $expense;
 }
 
 /**
