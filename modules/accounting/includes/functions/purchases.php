@@ -190,9 +190,18 @@ function erp_acct_insert_purchase( $data ) {
 
         do_action( 'erp_acct_after_purchase_create', $data, $voucher_no );
 
+        $email = erp_get_people_email( $purchase_data['vendor_id'] );
+
         if ( $purchase_type_order == $purchase_data['purchase_order'] || $draft == $purchase_data['status'] ) {
             $wpdb->query( 'COMMIT' );
-            return erp_acct_get_purchase( $voucher_no );
+
+            $purchase_order = erp_acct_get_purchase( $voucher_no );
+
+            $purchase_order['email'] = $email;
+
+            do_action( 'erp_acct_new_transaction_purchase_order', $voucher_no, $purchase_order );
+
+            return $purchase_order;
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
@@ -217,8 +226,13 @@ function erp_acct_insert_purchase( $data ) {
         return new WP_error( 'purchase-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_purchase( $purchase_no );
+    $purchase = erp_acct_get_purchase( $purchase_no );
 
+    $purchase['email'] = $email;
+
+    do_action( 'erp_acct_new_transaction_purchase', $voucher_no, $purchase );
+
+    return $purchase;
 }
 
 /**

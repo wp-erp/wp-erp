@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} Purchase</h2>
+                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} {{ page_title }}</h2>
                 </div>
             </div>
         </div>
@@ -180,7 +180,8 @@
                 erp_acct_assets : erp_acct_var.acct_assets,
                 isWorking       : false,
                 purchase_title  : '',
-                purchase_order  : 0
+                purchase_order  : 0,
+                page_title      : ''
             }
         },
 
@@ -196,10 +197,10 @@
 
         created() {
             if ( 'PurchaseOrderCreate' === this.$route.name ) {
-                this.inv_title = 'Purchase Order';
+                this.page_title = 'Purchase Order';
                 this.purchase_order = 1;
             } else {
-                this.inv_title = 'Purchase';
+                this.page_title = 'Purchase';
                 this.purchase_order = 0;
             }
 
