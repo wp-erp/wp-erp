@@ -269,8 +269,6 @@ function erp_acct_insert_expense( $data ) {
             return erp_acct_get_expense( $voucher_no );
         }
 
-
-
         if ( isset( $expense_data['trn_by'] ) && $expense_data['trn_by'] === 3 ) {
             erp_acct_insert_check_data( $expense_data );
         } elseif ( isset( $expense_data['trn_by'] ) && $expense_data['trn_by'] === 4 ) {
@@ -289,7 +287,7 @@ function erp_acct_insert_expense( $data ) {
         return new WP_error( 'expense-exception', $e->getMessage() );
     }
 
-    $email = erp_get_people_email( $data['vendor_id'] );
+    $email = erp_get_people_email( $expense_data['people_id'] );
 
     if ( 'check' === $type ) {
         $check = erp_acct_get_check( $voucher_no );
