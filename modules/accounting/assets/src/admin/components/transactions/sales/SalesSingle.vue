@@ -160,12 +160,10 @@
             },
 
             handleSuccess (e) {
-                console.log(e);
                 alert('Link has been copied.')
             },
 
             handleError (e) {
-                e.preventDefault();
                 alert('Failed to copy link.')
             }
         },

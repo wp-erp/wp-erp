@@ -76,7 +76,7 @@
                                     <li><span>Subtotal:</span> {{ moneyFormat( invoice.amount ) }}</li>
                                     <li><span>Discount:</span> (-) {{ moneyFormat( invoice.discount ) }}</li>
                                     <li><span>Tax:</span> (+) {{ moneyFormat( invoice.tax ) }}</li>
-                                    <li><span>Total:</span> {{ moneyFormat( invoice.amount ) }}</li>
+                                    <li><span>Total:</span> {{ moneyFormat( total ) }}</li>
                                 </ul>
                             </td>
                         </tr>
@@ -119,8 +119,13 @@
 
         data() {
             return {
-                acct_var: erp_acct_var
+                acct_var: erp_acct_var,
+                total   : null
             }
+        },
+
+        created() {
+            this.total = parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
         },
 
         methods: {
