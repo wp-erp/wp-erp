@@ -20846,7 +20846,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
       erp_acct_assets: erp_acct_var.acct_assets,
       isWorking: false,
       purchase_title: '',
-      purchase_order: 0
+      purchase_order: 0,
+      page_title: ''
     };
   },
   watch: {
@@ -20863,10 +20864,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
     var _this = this;
 
     if ('PurchaseOrderCreate' === this.$route.name) {
-      this.inv_title = 'Purchase Order';
+      this.page_title = 'Purchase Order';
       this.purchase_order = 1;
     } else {
-      this.inv_title = 'Purchase';
+      this.page_title = 'Purchase';
       this.purchase_order = 0;
     }
 
@@ -48963,7 +48964,11 @@ var render = function() {
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
           _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v(_vm._s(_vm.editMode ? "Edit" : "New") + " Purchase")
+            _vm._v(
+              _vm._s(_vm.editMode ? "Edit" : "New") +
+                " " +
+                _vm._s(_vm.page_title)
+            )
           ])
         ])
       ])
