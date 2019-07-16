@@ -1931,7 +1931,7 @@ if (false) {(function () {
 
                 if (chart.data.datasets[0].data[i]) {
                   if (self.id == 'payment') {
-                    text.push('<span class="chart-value">' + this.moneyFormat(chart.data.datasets[0].data[i]) + '</span><br>');
+                    text.push('<span class="chart-value">' + self.moneyFormat(chart.data.datasets[0].data[i]) + '</span><br>');
                   } else {
                     text.push('<span class="chart-value">' + chart.data.datasets[0].data[i]);
                   }
@@ -1957,7 +1957,7 @@ if (false) {(function () {
                 data.datasets[tooltipItem.datasetIndex].data.forEach(function (element
                 /*, index, array*/
                 ) {
-                  total += this.moneyFormat(element);
+                  total += self.moneyFormat(element);
                 });
                 var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                 var percentTxt = Math.round(value / total * 100);

@@ -189,7 +189,13 @@ function erp_acct_insert_bill( $data ) {
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_bill( $voucher_no );
+    $bill = erp_acct_get_bill( $voucher_no );
+
+    $bill['email'] = erp_get_people_email( $bill_data['vendor_id'] );
+
+    do_action( 'erp_acct_new_transaction_bill', $voucher_no, $bill );
+
+    return $bill;
 }
 
 /**
