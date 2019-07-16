@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Dashboard</h2>
+                    <h2 class="content-header__title">{{ __('Dashboard', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -111,7 +111,6 @@
                 msg           : 'Accounting',
                 to_receive    : [],
                 to_pay        : [],
-                dashboardTitle: null,
                 sampleLists   : window.acct.hooks.applyFilters( 'acctHomeSampleList', [] ),
             }
         },

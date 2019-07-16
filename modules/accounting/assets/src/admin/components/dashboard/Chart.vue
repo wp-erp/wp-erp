@@ -1,7 +1,7 @@
 <template>
     <div class="income-expense-section wperp-panel wperp-panel-default">
         <div class="wperp-panel-heading wperp-bg-white">
-            <h4>Income & Expense</h4>
+            <h4>{{ __('Income & Expense', 'erp') }}</h4>
 
             <div class="wperp-custom-select wperp-custom-select--inline-block wperp-pull-right" v-if="showDropdown">
                 <select name="query_time" class="wperp-form-field" id="att-filter-duration" v-model="chartRange" >

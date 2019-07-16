@@ -15333,7 +15333,6 @@ if (false) {(function () {
       msg: 'Accounting',
       to_receive: [],
       to_pay: [],
-      dashboardTitle: null,
       sampleLists: window.acct.hooks.applyFilters('acctHomeSampleList', [])
     };
   },
@@ -42313,7 +42312,7 @@ var render = function() {
     { staticClass: "income-expense-section wperp-panel wperp-panel-default" },
     [
       _c("div", { staticClass: "wperp-panel-heading wperp-bg-white" }, [
-        _c("h4", [_vm._v("Income & Expense")]),
+        _c("h4", [_vm._v(_vm._s(_vm.__("Income & Expense", "erp")))]),
         _vm._v(" "),
         _vm.showDropdown
           ? _c(
@@ -42423,7 +42422,15 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "wperp-containers" }, [
-    _vm._m(0),
+    _c("div", { staticClass: "content-header-section separator" }, [
+      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
+        _c("div", { staticClass: "wperp-col" }, [
+          _c("h2", { staticClass: "content-header__title" }, [
+            _vm._v(_vm._s(_vm.__("Dashboard", "erp")))
+          ])
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "wperp-dashboard" }, [
       _c("div", { staticClass: "wperp-row" }, [
@@ -42450,7 +42457,7 @@ var render = function() {
               staticClass: "invoice-own-section wperp-panel wperp-panel-default"
             },
             [
-              _vm._m(1),
+              _vm._m(0),
               _vm._v(" "),
               _c("div", { staticClass: "wperp-panel-body pb-0" }, [
                 Object.values(_vm.to_receive).length
@@ -42524,7 +42531,7 @@ var render = function() {
               staticClass: "invoice-own-section wperp-panel wperp-panel-default"
             },
             [
-              _vm._m(2),
+              _vm._m(1),
               _vm._v(" "),
               _c("div", { staticClass: "wperp-panel-body pb-0" }, [
                 Object.values(_vm.to_pay).length
@@ -42589,20 +42596,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "content-header-section separator" }, [
-      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
-        _c("div", { staticClass: "wperp-col" }, [
-          _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v("Dashboard")
-          ])
-        ])
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
