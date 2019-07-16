@@ -52,8 +52,8 @@ $transaction = erp_acct_get_transaction( $transaction_id );
                             <td><?php echo strtotime( $transaction['due_date'] ) < 0 ? '&mdash;' : erp_format_date( $transaction['due_date'] ); ?></td>
                         </tr>
                         <tr>
-                            <th class="table-row-title"><?php _e( 'Amount', 'erp' ); ?>:</th>
-                            <td><?php echo erp_acct_get_price( $transaction['total_due'] ); ?></td>
+                            <th class="table-row-title"><?php _e( 'Total', 'erp' ); ?>:</th>
+                            <td><?php echo erp_acct_get_price( $transaction['amount'] + $transaction['tax'] - $transaction['discount'] ); ?></td>
                         </tr>
                         </tbody>
                     </table>
@@ -115,7 +115,7 @@ $transaction = erp_acct_get_transaction( $transaction_id );
                         </tr>
                         <tr>
                             <th class="table-row-title"><?php _e( 'Total', 'erp' ); ?></th>
-                            <td><?php echo erp_acct_get_price( $transaction['amount'] ); ?></td>
+                            <td><?php echo erp_acct_get_price( $transaction['amount'] + $transaction['tax'] - $transaction['discount'] ); ?></td>
                         </tr>
                         </tbody>
                     </table>
