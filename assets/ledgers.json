@@ -2,305 +2,305 @@
   "asset": [
     {
       "name"  : "Cash",
-      "code"  : 100,
+      "code"  : 1000,
       "system": 1
     },
     {
       "name"  : "Allowance for Doubtful Accounts",
-      "code"  : 101,
+      "code"  : 1001,
       "system": 1
     },
     {
       "name"  : "Interest Receivable",
-      "code"  : 102,
+      "code"  : 1002,
       "system": 1
     },
     {
       "name"  : "Supplies",
-      "code"  : 103,
+      "code"  : 1003,
       "system": 1
     },
     {
       "name"  : "Prepaid Insurance",
-      "code"  : 104,
+      "code"  : 1004,
       "system": 1
     },
     {
       "name"  : "Prepaid Rent",
-      "code"  : 105,
+      "code"  : 1005,
       "system": 1
     },
     {
       "name"  : "Prepaid Salary",
-      "code"  : 106,
+      "code"  : 1006,
       "system": 1
     },
     {
       "name"  : "Land",
-      "code"  : 107,
+      "code"  : 1007,
       "system": 1
     },
     {
       "name"  : "Equipment",
-      "code"  : 108,
+      "code"  : 1008,
       "system": 1
     },
     {
       "name"  : "Furniture & Fixture",
-      "code"  : 109,
+      "code"  : 1009,
       "system": 1
     },
     {
       "name"  : "Buildings",
-      "code"  : 110,
+      "code"  : 1010,
       "system": 1
     },
     {
       "name"  : "Copyrights",
-      "code"  : 111,
+      "code"  : 1011,
       "system": 1
     },
     {
       "name"  : "Goodwill",
-      "code"  : 112,
+      "code"  : 1012,
       "system": 1
     },
     {
       "name"  : "Patents",
-      "code"  : 113,
+      "code"  : 1013,
       "system": 1
     },
     {
       "name"  : "Accoumulated Depreciation- Equipment",
-      "code"  : 114,
+      "code"  : 1014,
       "system": 1
     },
     {
       "name"  : "Accoumulated Depreciation- Buildings",
-      "code"  : 115,
+      "code"  : 1015,
       "system": 1
     },
     {
       "name"  : "Accoumulated Depreciation- Furniture & Fixtur",
-      "code"  : 116,
+      "code"  : 1016,
       "system": 1
     }
   ],
   "liability": [
     {
       "name"  : "Notes Payable",
-      "code"  : 200,
+      "code"  : 1200,
       "system": 1
     },
     {
       "name"  : "Unearned Revenue",
-      "code"  : 201,
+      "code"  : 1201,
       "system": 1
     },
     {
       "name"  : "Salaries and Wages Payable",
-      "code"  : 202,
+      "code"  : 1202,
       "system": 1
     },
     {
       "name"  : "Unearned Rent Revenue",
-      "code"  : 203,
+      "code"  : 1203,
       "system": 1
     },
     {
       "name"  : "Interest Payable",
-      "code"  : 204,
+      "code"  : 1204,
       "system": 1
     },
     {
       "name"  : "Dividends Payable",
-      "code"  : 205,
+      "code"  : 1205,
       "system": 1
     },
     {
       "name"  : "Income Tax Payable",
-      "code"  : 206,
+      "code"  : 1206,
       "system": 1
     },
     {
       "name"  : "Bonds Payable",
-      "code"  : 207,
+      "code"  : 1207,
       "system": 1
     },
     {
       "name"  : "Discount on Bonds Payable",
-      "code"  : 208,
+      "code"  : 1208,
       "system": 1
     },
     {
       "name"  : "Premium on Bonds Payable",
-      "code"  : 209,
+      "code"  : 1209,
       "system": 1
     },
     {
       "name"  : "Mortgage Payable",
-      "code"  : 210,
+      "code"  : 1210,
       "system": 1
     }
   ],
   "equity": [
     {
       "name"  : "Owner's Equity",
-      "code"  : 300,
+      "code"  : 1300,
       "system": 1
     },
     {
       "name"  : "Common Stock",
-      "code"  : 301,
+      "code"  : 1301,
       "system": 1
     },
     {
       "name"  : "Paid- in Capital in Excess of Par- Common Stock",
-      "code"  : 302,
+      "code"  : 1302,
       "system": 1
     },
     {
       "name"  : "Paid- in Capital in Excess of Par- Preferred Stock",
-      "code"  : 303,
+      "code"  : 1303,
       "system": 1
     },
     {
       "name"  : "Preferred Stock",
-      "code"  : 304,
+      "code"  : 1304,
       "system": 1
     },
     {
       "name"  : "Treasury Stock",
-      "code"  : 305,
+      "code"  : 1305,
       "system": 1
     },
     {
       "name"  : "Retained Earnings",
-      "code"  : 306,
+      "code"  : 1306,
       "system": 1
     },
     {
       "name"  : "Dividends",
-      "code"  : 307,
+      "code"  : 1307,
       "system": 1
     },
     {
       "name"  : "Income Summary",
-      "code"  : 308,
+      "code"  : 1308,
       "system": 1
     }
   ],
   "income": [
     {
       "name"  : "Service Revenue",
-      "code"  : 400,
+      "code"  : 1400,
       "system": 1
     },
     {
       "name"  : "Sales Revenue",
-      "code"  : 401,
+      "code"  : 1401,
       "system": 1
     },
     {
       "name"  : "Sales Discounts",
-      "code"  : 402,
+      "code"  : 1402,
       "system": 1
     },
     {
       "name"  : "Sales Returns and Allowance",
-      "code"  : 403,
+      "code"  : 1403,
       "system": 1
     },
     {
       "name"  : "Interest Revenue",
-      "code"  : 404,
+      "code"  : 1404,
       "system": 1
     },
     {
       "name"  : "Gain on Disposal of Plant Assets",
-      "code"  : 405,
+      "code"  : 1405,
       "system": 1
     }
   ],
   "expense": [
     {
       "name"  : "Advertising Expense",
-      "code"  : 500,
+      "code"  : 1500,
       "system": 1
     },
     {
       "name"  : "Amortization Expense",
-      "code"  : 501,
+      "code"  : 1501,
       "system": 1
     },
     {
       "name"  : "Bad Debt Expense",
-      "code"  : 502,
+      "code"  : 1502,
       "system": 1
     },
     {
       "name"  : "Cost of Goods Sold",
-      "code"  : 503,
+      "code"  : 1503,
       "system": 1
     },
     {
       "name"  : "Depreciation Expense",
-      "code"  : 504,
+      "code"  : 1504,
       "system": 1
     },
     {
       "name"  : "Freight -Out",
-      "code"  : 505,
+      "code"  : 1505,
       "system": 1
     },
     {
       "name"  : "Income Tax Expense",
-      "code"  : 506,
+      "code"  : 1506,
       "system": 1
     },
     {
       "name"  : "Insurance Expense",
-      "code"  : 507,
+      "code"  : 1507,
       "system": 1
     },
     {
       "name"  : "Interest Expense",
-      "code"  : 508,
+      "code"  : 1508,
       "system": 1
     },
     {
       "name"  : "Loss on Disposal of Plant Assets",
-      "code"  : 509,
+      "code"  : 1509,
       "system": 1
     },
     {
       "name"  : "Maintenance and Repairs Expense",
-      "code"  : 510,
+      "code"  : 1510,
       "system": 1
     },
     {
       "name"  : "Salaries and wages Expense",
-      "code"  : 511,
+      "code"  : 1511,
       "system": 1
     },
     {
       "name"  : "Rent Expense",
-      "code"  : 512,
+      "code"  : 1512,
       "system": 1
     },
     {
       "name"  : "Supplies Expense",
-      "code"  : 513,
+      "code"  : 1513,
       "system": 1
     },
     {
       "name"  : "Utilites Expense",
-      "code"  : 514,
+      "code"  : 1514,
       "system": 1
     },
     {
       "name"  : "Purchase",
-      "code"  : 515,
+      "code"  : 1515,
       "system": 1
     }
   ]
