@@ -437,3 +437,17 @@ function erp_acct_get_opb_bill_purchase_account_details( $fy_start_date ) {
 
     return (float) $bill_amount + (float) $purchase_amount;
 }
+
+/**
+ *Get lower and upper bound of financial years
+ */
+function erp_acct_get_date_boundary() {
+    global $wpdb;
+
+    $sql = "SELECT MIN(start_date) as lower, MAX(end_date) as upper FROM {$wpdb->prefix}erp_acct_financial_years";
+
+    $result = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $result;
+
+}

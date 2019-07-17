@@ -83,6 +83,8 @@ class Assets {
         $erp_acct_dec_separator = erp_get_option('erp_ac_de_separator');
         $erp_acct_ths_separator = erp_get_option('erp_ac_th_separator');
 
+        $fy_ranges = erp_acct_get_date_boundary();
+
         wp_localize_script( 'accounting-bootstrap', 'erp_acct_var', array(
             'user_id'            => $u_id,
             'site_url'           => $site_url,
@@ -98,6 +100,8 @@ class Assets {
             'symbol'             => erp_acct_get_currency_symbol(),
             'erp_debug_mode'     => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
             'current_date'       => date( 'Y-m-d' ),
+            'fy_lower_range'     => $fy_ranges['lower'],
+            'fy_upper_range'     => $fy_ranges['upper']
         ) );
     }
 
