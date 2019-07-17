@@ -49,7 +49,7 @@
 	                            <label>Tax Amount</label>
 	                            <input type="number" v-model="tax_amount" class="wperp-form-field" placeholder="Enter Tax Amount">
 
-                                <span>Due Amount: <span class="text-theme">${{ moneyFormat(dueAmount) }}</span></span>
+                                <span>Due Amount: <span class="text-theme">{{ moneyFormat(dueAmount) }}</span></span>
 	                        </div>
 	                    </div>
                         <div class="wperp-col-sm-4 wperp-col-xs-12">

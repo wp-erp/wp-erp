@@ -30007,6 +30007,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
 //
 //
 //
+//
 
 
 
@@ -57622,7 +57623,7 @@ var render = function() {
                   _c("span", [
                     _vm._v("Due Amount: "),
                     _c("span", { staticClass: "text-theme" }, [
-                      _vm._v("$" + _vm._s(_vm.moneyFormat(_vm.dueAmount)))
+                      _vm._v(_vm._s(_vm.moneyFormat(_vm.dueAmount)))
                     ])
                   ])
                 ])
@@ -60983,6 +60984,7 @@ var render = function() {
               "action-column": "actions",
               columns: _vm.columns,
               rows: _vm.rows,
+              showCb: false,
               "total-items": _vm.paginationData.totalItems,
               "total-pages": _vm.paginationData.totalPages,
               "per-page": _vm.paginationData.perPage,
