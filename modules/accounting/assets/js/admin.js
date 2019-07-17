@@ -13572,6 +13572,8 @@ if (false) {(function () {
 //
 //
 //
+//
+//
 
 
 
@@ -32149,6 +32151,13 @@ var render = function() {
     { attrs: { id: "erp-accounting" } },
     [
       _c("accounting-menu"),
+      _vm._v(" "),
+      _c("h2", {
+        attrs: {
+          role: "erp-wp-notice",
+          "data-text": "Don't remove me, I am super important for admin notice"
+        }
+      }),
       _vm._v(" "),
       _c("router-view"),
       _vm._v(" "),

@@ -1,6 +1,8 @@
 <template>
     <div id="erp-accounting">
         <accounting-menu></accounting-menu>
+        <h2 role="erp-wp-notice" data-text="Don't remove me, I am super important for admin notice"></h2>
+
         <router-view/>
         <loading
             :active.sync="loader"
@@ -51,10 +53,5 @@
 
     .attachment-container .attachment-placeholder {
         padding: 20px 3px !important;
-    }
-
-    .content-header-section:first-child {
-        width: 100%;
-        display: block !important;
     }
 </style>
