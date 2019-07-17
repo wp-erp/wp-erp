@@ -9533,7 +9533,10 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
         contentStyle: {
           color: '#fff'
         },
-        dates: new Date()
+        dates: {
+          start: new Date(erp_acct_var.fy_lower_range),
+          end: new Date(erp_acct_var.fy_upper_range)
+        }
       }],
       selectedDate: ''
     };
