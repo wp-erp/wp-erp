@@ -104,7 +104,7 @@ function erp_acct_get_invoice( $invoice_no ) {
     }
 
     $row['attachments'] = unserialize( $row['attachments'] );
-    $row['total_due']   = $row['debit'] - $row['credit'];
+    $row['total_due']   = erp_acct_get_invoice_due( $invoice_no );
 
     return $row;
 }
