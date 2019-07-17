@@ -1485,10 +1485,14 @@ Company'
 
             foreach ( array_keys( $ledgers ) as $array_key ) {
                 foreach ( $ledgers[$array_key] as $value ) {
+                    if ( $wpdb->get_var( "SELECT count(*) FROM `{$wpdb->prefix}erp_ac_ledger` WHERE code={$value['code']}" ) ) {
+                        $value['code'] = $value['code'] . '0';
+                    }
+
                     $wpdb->insert(
                         "{$wpdb->prefix}erp_acct_ledgers",
                         [
-                            'chart_id' => $this->get_chart_id_by_slug($array_key),
+                            'chart_id' => erp_acct_get_chart_id_by_slug($array_key),
                             'name'     => $value['name'],
                             'slug'     => slugify( $value['name'] ),
                             'code'     => $value['code'],
@@ -1497,9 +1501,6 @@ Company'
                     );
                 }
             }
-
-            update_option( 'erp_acct_new_ledgers', true );
-        } else {
             update_option( 'erp_acct_new_ledgers', true );
         }
 
@@ -1574,43 +1575,6 @@ Company'
             $wpdb->query( $sql );
         }
     }
-
-    /**
-     * Get chart of account id by slug
-     *
-     * @param string $key
-     *
-     * @return int
-     */
-    private function get_chart_id_by_slug( $key ) {
-		switch ($key) {
-			case 'asset':
-				$id = 1;
-				break;
-			case 'liability':
-				$id = 2;
-				break;
-			case 'equity':
-				$id = 3;
-				break;
-			case 'income':
-				$id = 4;
-				break;
-			case 'expense':
-				$id = 5;
-				break;
-			case 'asset_liability':
-				$id = 6;
-				break;
-			case 'bank':
-				$id = 7;
-				break;
-			default:
-				$id = null;
-		}
-
-		return $id;
-	}
 
     /**
      * Set default module for initial erp setup

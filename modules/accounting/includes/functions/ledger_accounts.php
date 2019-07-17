@@ -322,3 +322,40 @@ function erp_acct_ledger_balance_with_opening_balance( $ledgers, $data, $opening
 
     return $temp_data;
 }
+
+/**
+ * Get chart of account id by slug
+ *
+ * @param string $key
+ *
+ * @return int
+ */
+function erp_acct_get_chart_id_by_slug( $key ) {
+    switch ($key) {
+        case 'asset':
+            $id = 1;
+            break;
+        case 'liability':
+            $id = 2;
+            break;
+        case 'equity':
+            $id = 3;
+            break;
+        case 'income':
+            $id = 4;
+            break;
+        case 'expense':
+            $id = 5;
+            break;
+        case 'asset_liability':
+            $id = 6;
+            break;
+        case 'bank':
+            $id = 7;
+            break;
+        default:
+            $id = null;
+    }
+
+    return $id;
+}

@@ -393,19 +393,6 @@ function erp_acct_create_accounting_tables() {
             PRIMARY KEY (`id`)
         ) $collate;",
 
-        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_details` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `product_id` int(11) DEFAULT NULL,
-            `trn_no` int(11) DEFAULT NULL,
-            `stock_in` int(11) DEFAULT NULL,
-            `stock_out` int(11) DEFAULT NULL,
-            `created_at` date DEFAULT NULL,
-            `created_by` varchar(50) DEFAULT NULL,
-            `updated_at` date DEFAULT NULL,
-            `updated_by` varchar(50) DEFAULT NULL,
-            PRIMARY KEY (`id`)
-        ) $collate;",
-
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_types` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `name` varchar(255) DEFAULT NULL,
@@ -701,7 +688,7 @@ function erp_acct_populate_data() {
                 $wpdb->insert(
                     "{$wpdb->prefix}erp_acct_ledgers",
                     [
-                        'chart_id' => get_chart_id_by_slug($array_key),
+                        'chart_id' => erp_acct_get_chart_id_by_slug($array_key),
                         'name'     => $value['name'],
                         'slug'     => slugify( $value['name'] ),
                         'code'     => $value['code'],
@@ -710,6 +697,7 @@ function erp_acct_populate_data() {
                 );
             }
         }
+        update_option( 'erp_acct_new_ledgers', true );
     }
 
     // insert payment methods
@@ -760,43 +748,6 @@ function erp_acct_populate_data() {
 
         $wpdb->query( $sql );
     }
-}
-
-/**
- * Get chart of account id by slug
- *
- * @param string $key
- *
- * @return int
- */
-function get_chart_id_by_slug( $key ) {
-    switch ($key) {
-        case 'asset':
-            $id = 1;
-            break;
-        case 'liability':
-            $id = 2;
-            break;
-        case 'equity':
-            $id = 3;
-            break;
-        case 'income':
-            $id = 4;
-            break;
-        case 'expense':
-            $id = 5;
-            break;
-        case 'asset_liability':
-            $id = 6;
-            break;
-        case 'bank':
-            $id = 7;
-            break;
-        default:
-            $id = null;
-    }
-
-    return $id;
 }
 
 /**
@@ -988,7 +939,7 @@ function erp_acct_populate_charts_ledgers() {
                 $wpdb->insert(
                     "{$wpdb->prefix}erp_acct_ledgers",
                     [
-                        'chart_id' => $this->get_chart_id_by_slug($array_key),
+                        'chart_id' => erp_acct_get_chart_id_by_slug($array_key),
                         'name'     => $value['name'],
                         'slug'     => slugify( $value['name'] ),
                         'code'     => $value['code'],
