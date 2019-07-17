@@ -25,6 +25,7 @@
                 action-column="actions"
                 :columns="columns"
                 :rows="rows"
+                :showCb="false"
                 :total-items="paginationData.totalItems"
                 :total-pages="paginationData.totalPages"
                 :per-page="paginationData.perPage"
