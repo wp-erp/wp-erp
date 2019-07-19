@@ -259,6 +259,7 @@ function erp_acct_create_accounting_tables() {
             `name` varchar(255) DEFAULT NULL,
             `slug` varchar(255) DEFAULT NULL,
             `code` int(11) DEFAULT NULL,
+            `unused` tinyint(1) DEFAULT NULL,
             `system` tinyint(1) DEFAULT NULL,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
@@ -677,28 +678,7 @@ function erp_acct_populate_data() {
             ] );
         }
     }
-
-    // insert ledgers
-    if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledgers` LIMIT 0, 1" ) ) {
-        $ledgers_json = file_get_contents( WPERP_ASSETS . '/ledgers.json' );
-        $ledgers = json_decode( $ledgers_json, true );
-
-        foreach ( array_keys( $ledgers ) as $array_key ) {
-            foreach ( $ledgers[$array_key] as $value ) {
-                $wpdb->insert(
-                    "{$wpdb->prefix}erp_acct_ledgers",
-                    [
-                        'chart_id' => erp_acct_get_chart_id_by_slug($array_key),
-                        'name'     => $value['name'],
-                        'slug'     => slugify( $value['name'] ),
-                        'code'     => $value['code'],
-                        'system'   => $value['system']
-                    ]
-                );
-            }
-        }
-        update_option( 'erp_acct_new_ledgers', true );
-    }
+    
 
     // insert payment methods
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_payment_methods` LIMIT 0, 1" ) ) {
@@ -918,6 +898,10 @@ function erp_acct_populate_charts_ledgers() {
         LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
 
     foreach ( $old_ledgers as $old_ledger ) {
+        if ( '120' == $old_ledger['code'] || '200' == $old_ledger['code'] ) {
+            $value['unused'] = true;
+        }
+
         $wpdb->insert(
             "{$wpdb->prefix}erp_acct_ledgers",
             [
@@ -925,6 +909,7 @@ function erp_acct_populate_charts_ledgers() {
                 'name'     => $old_ledger['name'],
                 'slug'     => slugify( $old_ledger['name'] ),
                 'code'     => $old_ledger['code'],
+                'unused'   => isset( $old_ledger['unused'] ) ? $old_ledger['unused'] : null,
                 'system'   => $old_ledger['system']
             ]
         );

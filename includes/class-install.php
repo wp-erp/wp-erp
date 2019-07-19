@@ -958,6 +958,7 @@ Company'
                 `name` varchar(255) DEFAULT NULL,
                 `slug` varchar(255) DEFAULT NULL,
                 `code` int(11) DEFAULT NULL,
+                `unused` tinyint(1) DEFAULT NULL,
                 `system` tinyint(1) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
@@ -1484,6 +1485,10 @@ Company'
             $old_ledgers = json_decode( $old_ledgers_json, true );
 
             foreach ( $old_ledgers as $value ) {
+                if ( '120' == $value['code'] || '200' == $value['code'] ) {
+                    $value['unused'] = true;
+                }
+
                 $wpdb->insert(
                     "{$wpdb->prefix}erp_acct_ledgers",
                     [
@@ -1491,6 +1496,7 @@ Company'
                         'name'     => $value['name'],
                         'slug'     => slugify( $value['name'] ),
                         'code'     => $value['code'],
+                        'unused'   => isset( $value['unused'] ) ? $value['unused'] : null,
                         'system'   => $value['system']
                     ]
                 );
@@ -1501,8 +1507,10 @@ Company'
 
             foreach ( array_keys( $ledgers ) as $array_key ) {
                 foreach ( $ledgers[$array_key] as $value ) {
-                    if ( $wpdb->get_var( "SELECT count(*) FROM `{$wpdb->prefix}erp_ac_ledger` WHERE code={$value['code']}" ) ) {
-                        $value['code'] = $value['code'] . '0';
+                    if ( $wpdb->query( "show tables like `{$wpdb->prefix}erp_ac_ledger`" ) ) {
+                        if ( $wpdb->get_var( "SELECT count(*) FROM `{$wpdb->prefix}erp_ac_ledger` WHERE code={$value['code']}" ) ) {
+                            $value['code'] = $value['code'] . '0';
+                        }
                     }
 
                     $wpdb->insert(

@@ -98,11 +98,6 @@
       "system": 1
     },
     {
-      "name": "Income Tax Payable",
-      "code": 1206,
-      "system": 1
-    },
-    {
       "name": "Bonds Payable",
       "code": 1207,
       "system": 1
@@ -150,11 +145,6 @@
       "system": 1
     },
     {
-      "name": "Retained Earnings",
-      "code": 1306,
-      "system": 1
-    },
-    {
       "name": "Dividends",
       "code": 1307,
       "system": 1
@@ -199,18 +189,8 @@
       "system": 1
     },
     {
-      "name": "Income Tax Expense",
-      "code": 1506,
-      "system": 1
-    },
-    {
       "name": "Insurance Expense",
       "code": 1507,
-      "system": 1
-    },
-    {
-      "name": "Interest Expense",
-      "code": 1508,
       "system": 1
     },
     {
