@@ -176,7 +176,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $ledgers = erp_acct_get_all_ledgers();
+        $ledgers = erp_acct_get_ledgers_with_balances();
 
         foreach ( $ledgers as $ledger ) {
             $data              = $this->prepare_ledger_for_response( $ledger, $request, $additional_fields );

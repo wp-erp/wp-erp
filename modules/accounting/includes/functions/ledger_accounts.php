@@ -171,19 +171,6 @@ function erp_acct_get_ledger_balance( $ledger_id ) {
  * ===============*/
 
 /**
- * Get all ledgers
- */
-function erp_acct_get_all_ledgers() {
-    global $wpdb;
-
-    $sql = "SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE unused IS NULL";
-
-    $ledgers = $wpdb->get_results( $sql, ARRAY_A );
-
-    return $ledgers;
-}
-
-/**
  * Get a ledger by id
  *
  * @param $id
@@ -258,7 +245,7 @@ function erp_acct_get_ledgers_with_balances() {
     $sql = "SELECT ledger.id, ledger.chart_id, ledger.category_id, ledger.name,
         ledger.slug, ledger.code, ledger.system, chart_of_account.name as account_name
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id";
+        LEFT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id WHERE ledger.unused IS NULL";
 
     $ledgers = $wpdb->get_results( $sql, ARRAY_A );
 
