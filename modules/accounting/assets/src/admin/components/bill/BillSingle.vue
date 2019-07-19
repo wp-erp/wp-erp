@@ -6,7 +6,7 @@
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
-                        &nbsp; Print
+                        &nbsp; {{ __('Print', 'erp') }}
                     </a>
                     <!-- todo: more action has some dropdown and will implement later please consider as planning -->
                     <dropdown>
@@ -18,8 +18,8 @@
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
-                                <li><a href="#" @click.prevent="showModal = true">Copy Link</a></li>
-                                <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
+                                <li><a href="#" @click.prevent="showModal = true">{{ __('Copy Link', 'erp') }}</a></li>
+                                <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
                     </dropdown>
@@ -57,19 +57,19 @@
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>Bill No</th>
+                                        <th>{{ __('Bill No', 'erp') }}</th>
                                         <td>#{{ bill.voucher_no }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Bill Date:</th>
+                                        <th>{{ __('Bill Date', 'erp') }}:</th>
                                         <td>{{ bill.trn_date }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Due Date:</th>
+                                        <th>{{ __('Due Date', 'erp') }}:</th>
                                         <td>{{ bill.due_date }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Amount Due:</th>
+                                        <th>{{ __('Amount Due', 'erp') }}:</th>
                                         <td>{{ moneyFormat(bill.due) }}</td>
                                     </tr>
                                 </table>
@@ -81,10 +81,10 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>Voucher No</th>
-                                <th>Account</th>
-                                <th>Particulars</th>
-                                <th>Amount</th>
+                                <th>{{ __('Voucher No', 'erp') }}</th>
+                                <th>{{ __('Account', 'erp') }}</th>
+                                <th>{{ __('Particulars', 'erp') }}</th>
+                                <th>{{ __('Amount', 'erp') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -99,8 +99,8 @@
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ moneyFormat(bill.amount) }}</li>
-                                        <li><span>Total:</span> {{ moneyFormat(bill.amount) }}</li>
+                                        <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(bill.amount) }}</li>
+                                        <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(bill.amount) }}</li>
                                     </ul>
                                 </td>
                             </tr>
@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="invoice-attachments d-print-none">
-                    <h4>Attachments</h4>
+                    <h4>{{ __('Attachments', 'erp') }}</h4>
                     <a class="attachment-item" :href="attachment"
                        :key="index"
                        v-for="(attachment, index) in bill.attachments" download>

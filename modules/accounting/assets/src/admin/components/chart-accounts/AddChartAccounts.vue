@@ -4,7 +4,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ editMode ? 'Update' : 'Create New' }} Account</h2>
+                    <h2 class="content-header__title">{{ editMode ? 'Update' : 'Create New' }} {{ __('Account', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -16,7 +16,7 @@
             </div>
 
             <div class="form-row">
-                <label for="">Select chart of accounts <span class="required-sign">*</span></label>
+                <label for="">{{ __('Select chart of accounts', 'erp') }} <span class="required-sign">*</span></label>
                  <treeselect v-model="ledgFields.chart_id"
                     :options="chartAccounts"
                     :disable-branch-nodes="true"
@@ -46,13 +46,13 @@
             <!-- </div> -->
 
             <div class="form-row">
-                <label for="">Account Name <span class="required-sign">*</span></label>
+                <label for="">{{ __('Account Name', 'erp') }} <span class="required-sign">*</span></label>
 
                 <input type="text" class="wperp-form-field" v-model="ledgFields.name" required>
             </div>
 
             <div class="form-row">
-                <label for="">Code (optional)</label>
+                <label for="">{{ __('Code (optional)', 'erp') }}</label>
 
                 <input type="number" class="wperp-form-field" v-model="ledgFields.code">
             </div>
