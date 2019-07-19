@@ -678,7 +678,7 @@ function erp_acct_populate_data() {
             ] );
         }
     }
-    
+
 
     // insert payment methods
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_payment_methods` LIMIT 0, 1" ) ) {
