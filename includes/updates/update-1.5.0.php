@@ -909,11 +909,13 @@ function erp_employees_to_people_migration() {
 function erp_acct_populate_charts_ledgers() {
     global $wpdb;
 
+    $wpdb->query( "UPDATE {$wpdb->prefix}erp_ac_ledger SET name='Cash' WHERE name='Petty Cash'" );
+
     $old_ledgers = $wpdb->get_results( "SELECT 
         ledger.id, chart.id as chart_id, chart_cat.id category_id, ledger.name, ledger.code, ledger.system 
-        FROM wp_erp_ac_ledger as ledger
-        LEFT JOIN wp_erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id
-        LEFT JOIN wp_erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
+        FROM {$wpdb->prefix}erp_ac_ledger as ledger
+        LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id
+        LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
 
     foreach ( $old_ledgers as $old_ledger ) {
         $wpdb->insert(
