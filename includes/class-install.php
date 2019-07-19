@@ -1480,6 +1480,22 @@ Company'
 
         // insert ledgers
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledgers` LIMIT 0, 1" ) ) {
+            $old_ledgers_json = file_get_contents( WPERP_ASSETS . '/old_ledgers.json' );
+            $old_ledgers = json_decode( $old_ledgers_json, true );
+
+            foreach ( $old_ledgers as $value ) {
+                $wpdb->insert(
+                    "{$wpdb->prefix}erp_acct_ledgers",
+                    [
+                        'chart_id' => $value['chart_id'],
+                        'name'     => $value['name'],
+                        'slug'     => slugify( $value['name'] ),
+                        'code'     => $value['code'],
+                        'system'   => $value['system']
+                    ]
+                );
+            }
+
             $ledgers_json = file_get_contents( WPERP_ASSETS . '/ledgers.json' );
             $ledgers = json_decode( $ledgers_json, true );
 
