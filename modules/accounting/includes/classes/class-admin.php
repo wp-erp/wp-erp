@@ -302,6 +302,13 @@ class Admin {
         return $people_id;
     }
 
+    /**
+     * Save Financial Year settings
+     *
+     * @param integer $id
+     * @param array $data
+     * @return bool
+     */
     public function save_accounting_settings() {
         global $wpdb;
         $fin_years = [];

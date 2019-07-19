@@ -34,21 +34,8 @@ function erp_get_ledger_name_by_id( $ledger_id ) {
 }
 
 /**
- * Ledger count
- *
- * @return array
- */
-// function erp_acct_get_chart_count() {
-//     global $wpdb;
-
-//     return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . 'erp_acct_ledger' );
-// }
-
-
-/**
  * Get ledger categories
  */
-
 function erp_acct_get_ledger_categories( $chart_id ) {
     global $wpdb;
 
@@ -263,7 +250,6 @@ function erp_acct_update_ledger( $item, $id ) {
  *
  * @return array
  */
-
 function erp_acct_get_ledgers_with_balances() {
     global $wpdb;
 
