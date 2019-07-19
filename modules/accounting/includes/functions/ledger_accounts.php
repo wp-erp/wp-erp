@@ -131,7 +131,7 @@ function erp_acct_delete_ledger_category( $id ) {
 function erp_acct_get_ledgers_by_chart_id( $chart_id ) {
     global $wpdb;
 
-    $charts = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE chart_id = {$chart_id} ", ARRAY_A );
+    $charts = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE chart_id = {$chart_id} AND unused IS NULL", ARRAY_A );
 
     return $charts;
 }
@@ -183,6 +183,25 @@ function erp_acct_get_ledger_balance( $ledger_id ) {
  * Ledger CRUD
  * ===============*/
 
+/**
+ * Get all ledgers
+ */
+function erp_acct_get_all_ledgers() {
+    global $wpdb;
+
+    $sql = "SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE unused IS NULL";
+
+    $ledgers = $wpdb->get_results( $sql, ARRAY_A );
+
+    return $ledgers;
+}
+
+/**
+ * Get a ledger by id
+ *
+ * @param $id
+ * @return array|object|void|null
+ */
 function erp_acct_get_ledger( $id ) {
     global $wpdb;
 
@@ -191,6 +210,12 @@ function erp_acct_get_ledger( $id ) {
     return $wpdb->get_row( $sql );
 }
 
+/**
+ * Insert a ledger
+ *
+ * @param $item
+ * @return array|object|void|null
+ */
 function erp_acct_insert_ledger( $item ) {
     global $wpdb;
 
@@ -205,6 +230,13 @@ function erp_acct_insert_ledger( $item ) {
     return erp_acct_get_ledger( $wpdb->insert_id );
 }
 
+/**
+ * Update a ledger
+ *
+ * @param $item
+ * @param $id
+ * @return array|object|void|null
+ */
 function erp_acct_update_ledger( $item, $id ) {
     global $wpdb;
 

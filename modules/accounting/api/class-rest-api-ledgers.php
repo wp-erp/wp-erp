@@ -176,7 +176,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $ledgers = erp_acct_get_ledgers_with_balances();
+        $ledgers = erp_acct_get_all_ledgers();
 
         foreach ( $ledgers as $ledger ) {
             $data              = $this->prepare_ledger_for_response( $ledger, $request, $additional_fields );
@@ -561,21 +561,9 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_ledger_for_response( $item, $request, $additional_fields = [] ) {
-        $item = (object) $item;
+        $item = (array) $item;
 
-        $data = [
-            'id'          => $item->id,
-            'chart_id'    => $item->chart_id,
-            'category_id' => $item->category_id,
-            'name'        => $item->name,
-            'slug'        => $item->slug,
-            'code'        => $item->code,
-            'trn_count'   => erp_acct_get_ledger_trn_count( $item->id ),
-            'system'      => $item->system,
-            'balance'     => $item->balance
-        ];
-
-        $data = array_merge( $data, $additional_fields );
+        $data = array_merge( $item, $additional_fields );
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
