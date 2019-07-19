@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} Bill</h2>
+                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} {{ __('Bill', 'erp') }}</h2>
                 </div>
             </div>
         </div> <!-- End .header-section -->
@@ -26,18 +26,18 @@
                             </div>
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
-                                    <label>Bill Date<span class="wperp-required-sign">*</span></label>
+                                    <label>{{ __('Bill Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
                                     <datepicker v-model="basic_fields.trn_date"></datepicker>
                                 </div>
                             </div>
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
-                                    <label>Due Date<span class="wperp-required-sign">*</span></label>
+                                    <label>{{ __('Due Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
                                     <datepicker v-model="basic_fields.due_date"></datepicker>
                                 </div>
                             </div>
                             <div class="wperp-col-xs-12">
-                                <label>Billing Address</label>
+                                <label>{{ __('Billing Address', 'erp') }}</label>
                                 <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                             </div>
                         </div>
@@ -52,11 +52,11 @@
                     <table class="wperp-table wperp-form-table">
                         <thead>
                         <tr>
-                            <th scope="col" class="col--id column-primary">SL No.</th>
-                            <th scope="col">Account</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">Total</th>
+                            <th scope="col" class="col--id column-primary">{{ __('SL No', 'erp') }}.</th>
+                            <th scope="col">{{ __('Account', 'erp') }}</th>
+                            <th scope="col">{{ __('Description', 'erp') }}</th>
+                            <th scope="col">{{ __('Amount', 'erp') }}</th>
+                            <th scope="col">{{ __('Total', 'erp') }}</th>
                             <th scope="col" class="col--actions"></th>
                         </tr>
                         </thead>
@@ -77,19 +77,19 @@
                         </tr>
                         <tr class="add-new-line">
                             <td colspan="9" style="text-align: left;">
-                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                                <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Line', 'erp') }}</button>
                             </td>
                         </tr>
 
                         <tr class="total-amount-row">
-                            <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
+                            <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
                             <td class="text-right" data-colname="Total Amount">
                                 <input type="text" class="wperp-form-field text-right" name="finalamount" :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
                             <td class="text-right"></td>
                         </tr>
                         <tr class="wperp-form-group">
                             <td colspan="9" style="text-align: left;">
-                                <label>Particulars</label>
+                                <label>{{ __('Particulars', 'erp') }}</label>
                                 <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
                             </td>
                         </tr>
@@ -108,7 +108,7 @@
                         <tr class="add-attachment-row">
                             <td colspan="9" style="text-align: left;">
                                 <div class="attachment-container">
-                                    <label class="col--attachement">Attachment</label>
+                                    <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
                                     <file-upload v-model="attachments" url="/bills/attachments"/>
                                 </div>
                             </td>

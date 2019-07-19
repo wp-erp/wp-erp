@@ -3,7 +3,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ pageTitle }}</h2>
+                    <h2 class="content-header__title">{{ __('Accounts', 'erp') }}</h2>
                     <combo-box :options="pages" :hasUrl="true" placeholder="New Transaction" />
                 </div>
             </div>
@@ -24,14 +24,14 @@
                                 </div>
                                 <!-- account number -->
                                 <div class="account-number-info">
-                                    <span class="account-number-label">Account Number:</span>
+                                    <span class="account-number-label">{{ __('Account Number', 'erp') }}:</span>
                                     <span class="account-number">{{account.id}}</span>
                                 </div>
                                 <!-- account balance info -->
                                 <div class="account-balance-info">
                                     <!-- available balance -->
                                     <div class="available-balance">
-                                        <span class="account-balance-label">Available Balance:</span>
+                                        <span class="account-balance-label">{{ __('Available Balance', 'erp') }}:</span>
                                         <strong v-if="undefined === account.balance" class="account-balance">{{transformBalance(0)}}</strong>
                                         <strong v-else class="account-balance">{{transformBalance(account.balance)}}</strong>
                                     </div>
@@ -80,9 +80,8 @@
             ComboBox
         },
 
-        data () {
+        data() {
             return {
-                pageTitle: 'Accounts',
                 accounts: [],
                 actions : [
                     { key: 'transfer', label: 'Transfer', iconClass: 'flaticon-sent-mail' },
