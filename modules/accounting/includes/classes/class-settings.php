@@ -27,7 +27,7 @@ class Settings extends ERP_Settings_Page {
     public function get_sections() {
         $sections = array(
             'currency_option' => __( 'Currency Settings', 'erp' ),
-            'opening_balance' => __( 'Opening Balance', 'erp' )
+            'opening_balance' => __( 'Financial Years', 'erp' )
         );
 
         return apply_filters( 'erp_get_sections_' . $this->id, $sections );
@@ -87,7 +87,7 @@ class Settings extends ERP_Settings_Page {
         $fields['opening_balance'] = array(
 
             array(
-                'title' => __( 'Opening Balance', 'erp' ),
+                'title' => __( 'Financial Years', 'erp' ),
                 'type'  => 'title',
                 'desc'  => __( '', 'erp' ),
                 'id'    => 'erp_acct_ob_options'
@@ -132,6 +132,9 @@ class Settings extends ERP_Settings_Page {
         return apply_filters( 'erp_ac_settings_general', $fields );
     }
 
+    /**
+     * Render Financial Years settings page
+     */
     function acct_opening_balance() {
         global $wpdb;
 

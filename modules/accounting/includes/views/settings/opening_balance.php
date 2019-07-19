@@ -1,6 +1,5 @@
 <div class="erp-acct-ob-settings-wrap">
     <div class="erp-ac-multiple-ob-field">
-        <h4><?php _e( 'Financial years', 'erp' ); ?></h4>
         <div class="erp-ac-ob-fields">
             <?php if ( ! $rows ) { ?>
                 <div class="row">

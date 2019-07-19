@@ -1483,11 +1483,13 @@ Company'
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledgers` LIMIT 0, 1" ) ) {
             $old_ledgers_json = file_get_contents( WPERP_ASSETS . '/old_ledgers.json' );
             $old_ledgers = json_decode( $old_ledgers_json, true );
+            $old_codes = [];
 
             foreach ( $old_ledgers as $value ) {
                 if ( '120' == $value['code'] || '200' == $value['code'] ) {
                     $value['unused'] = true;
                 }
+                $old_codes[] = $value['code'];
 
                 $wpdb->insert(
                     "{$wpdb->prefix}erp_acct_ledgers",
@@ -1507,10 +1509,8 @@ Company'
 
             foreach ( array_keys( $ledgers ) as $array_key ) {
                 foreach ( $ledgers[$array_key] as $value ) {
-                    if ( $wpdb->query( "show tables like `{$wpdb->prefix}erp_ac_ledger`" ) ) {
-                        if ( $wpdb->get_var( "SELECT count(*) FROM `{$wpdb->prefix}erp_ac_ledger` WHERE code={$value['code']}" ) ) {
-                            $value['code'] = $value['code'] . '0';
-                        }
+                    if ( in_array( $value['code'], $old_codes ) ) {
+                        $value['code'] = $value['code'] . '0';
                     }
 
                     $wpdb->insert(
@@ -1597,6 +1597,31 @@ Company'
                     VALUES (1, 'USD', '$'), (2, 'EUR', '€')";
 
             $wpdb->query( $sql );
+        }
+
+        //Insert default financial years
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_financial_years` LIMIT 0, 1" ) ) {
+
+            $general         = get_option( 'erp_settings_general', array() );
+            $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
+
+            $start_date = new DateTime( date( 'Y-' . $financial_month . '-1' ) );
+
+            $start_date = $start_date->format( "Y-m-d" );
+
+            $end_date = date( $start_date, strtotime( "+1 year" ) );
+            $end_date = new DateTime( $end_date );
+            $end_date->modify( "-1 day" );
+
+            $end_date = $end_date->format( "Y-m-d" );
+
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
+                'name'       => date( "Y" ),
+                'start_date' => $start_date,
+                'end_date'   => $end_date,
+                'created_at' => date( "Y-m-d" ),
+                'created_by' => get_current_user_id()
+            ) );
         }
     }
 
