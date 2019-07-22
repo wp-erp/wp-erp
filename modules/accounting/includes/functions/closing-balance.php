@@ -168,8 +168,8 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
         );
     }
 
-    // owner's equity ( ledger_id: 29 ) with profit/loss
-    $owners_equity_ledger = 29;
+    $ledger_map           = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+    $owners_equity_ledger = $ledger_map->get_ledger_id_by_slug( 'owner_s_equity' );
     $chart_equity_id      = 3;
 
     if ( $balance_sheet['owners_equity'] == 0 ) {

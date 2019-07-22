@@ -65,7 +65,10 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
     $bank_accts = [];
     $uniq_accts = [];
 
-    $c_balance = get_ledger_balance_with_opening_balance( 1, $args['start_date'], $args['end_date'] );
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'cash' );
+
+    $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
     $balance   = empty( $c_balance->balance ) ? 0 : $c_balance->balance;
 
     foreach ( $temp_accts as $temp_acct ) {
@@ -114,7 +117,11 @@ function erp_acct_get_dashboard_banks() {
     $args['end_date']   = $closest_fy_date['end_date'];
 
     $results   = [];
-    $c_balance = get_ledger_balance_with_opening_balance( 1, $args['start_date'], $args['end_date'] );
+
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'cash' );
+
+    $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
     $balance   = empty( $c_balance['balance'] ) ? 0 : $c_balance['balance'];
 
     $results[] = [
