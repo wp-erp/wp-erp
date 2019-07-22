@@ -37,44 +37,44 @@
     },
     {
       "name": "Furniture & Fixture",
-      "code": 1009,
+      "code": 1008,
       "system": 1
     },
     {
       "name": "Buildings",
-      "code": 1010,
+      "code": 1009,
       "system": 1
     },
     {
       "name": "Copyrights",
-      "code": 1011,
+      "code": 1010,
       "system": 1
     },
     {
       "name": "Goodwill",
-      "code": 1012,
+      "code": 1011,
       "system": 1
     },
     {
       "name": "Patents",
-      "code": 1013,
+      "code": 1012,
       "system": 1
     },
     {
       "name": "Accoumulated Depreciation- Buildings",
-      "code": 1015,
+      "code": 1013,
       "system": 1
     },
     {
       "name": "Accoumulated Depreciation- Furniture & Fixtures",
-      "code": 1016,
+      "code": 1014,
       "system": 1
     }
   ],
   "liability": [
     {
       "name": "Notes Payable",
-      "code": 1200,
+      "code": 1201,
       "system": 1
     },
     {
@@ -99,29 +99,29 @@
     },
     {
       "name": "Bonds Payable",
-      "code": 1207,
+      "code": 1206,
       "system": 1
     },
     {
       "name": "Discount on Bonds Payable",
-      "code": 1208,
+      "code": 1207,
       "system": 1
     },
     {
       "name": "Premium on Bonds Payable",
-      "code": 1209,
+      "code": 1208,
       "system": 1
     },
     {
       "name": "Mortgage Payable",
-      "code": 1210,
+      "code": 1209,
       "system": 1
     }
   ],
   "equity": [
     {
       "name": "Owner's Equity",
-      "code": 1300,
+      "code": 1301,
       "system": 1
     },
     {
@@ -146,24 +146,24 @@
     },
     {
       "name": "Dividends",
-      "code": 1307,
+      "code": 1306,
       "system": 1
     },
     {
       "name": "Income Summary",
-      "code": 1308,
+      "code": 1307,
       "system": 1
     }
   ],
   "income": [
     {
       "name": "Service Revenue",
-      "code": 1400,
+      "code": 1401,
       "system": 1
     },
     {
       "name": "Sales Revenue",
-      "code": 1401,
+      "code": 1402,
       "system": 1
     },
     {
@@ -173,7 +173,7 @@
     },
     {
       "name": "Gain on Disposal of Plant Assets",
-      "code": 1405,
+      "code": 1404,
       "system": 1
     }
   ],
@@ -185,27 +185,27 @@
     },
     {
       "name": "Freight -Out",
-      "code": 1505,
+      "code": 1502,
       "system": 1
     },
     {
       "name": "Insurance Expense",
-      "code": 1507,
+      "code": 1503,
       "system": 1
     },
     {
       "name": "Loss on Disposal of Plant Assets",
-      "code": 1509,
+      "code": 1504,
       "system": 1
     },
     {
       "name": "Maintenance and Repairs Expense",
-      "code": 1510,
+      "code": 1505,
       "system": 1
     },
     {
       "name": "Purchase",
-      "code": 1515,
+      "code": 1506,
       "system": 1
     }
   ]
