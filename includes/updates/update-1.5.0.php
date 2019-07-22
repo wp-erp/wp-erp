@@ -1253,12 +1253,9 @@ function erp_acct_migrate_balance_sheet() {
     $general         = get_option( 'erp_settings_general', array() );
     $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
 
-    $start_date = new DateTime( date( $last_fy . '-' . $financial_month . '-1' ) );
+    $start_date = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
 
-    $start_date = $start_date->format( "Y-m-d" );
-
-    $end_date = date( $start_date, strtotime( "+1 year" ) );
-    $end_date = new DateTime( $end_date );
+    $end_date = new DateTime();
     $end_date->modify( "-1 day" );
 
     $end_date = $end_date->format( "Y-m-d" );
@@ -1272,9 +1269,11 @@ function erp_acct_migrate_balance_sheet() {
             'created_at' => date( "Y-m-d" ),
             'created_by' => get_current_user_id()
         ) );
+        $data['year'] = $wpdb->insert_id;
+    } else {
+        $data['year'] = $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_financial_years` WHERE name='{$last_fy}'" );
     }
 
-    $data['year'] = $wpdb->insert_id;
 
     if ( ! empty( $data['acct_rec'] ) ) {
         foreach ( $data['acct_rec'] as $acct_rec ) {
@@ -1395,6 +1394,14 @@ function erp_acct_migrate_balance_sheet() {
         'created_at'        => date( "Y-m-d" ),
         'created_by'        => get_current_user_id()
     ] );
+
+    $args = [
+        'f_year_id'  => (int) $data['year'],
+        'start_date' => $start_date,
+        'end_date'   => $end_date
+    ];
+
+    erp_acct_clsbl_close_balance_sheet_now( $args );
 
 }
 
