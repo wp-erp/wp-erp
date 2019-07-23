@@ -22730,10 +22730,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
       var lineItems = [];
 
       for (var idx = 0; idx < this.transactionLines.length; idx++) {
-        if (!Object.keys(this.transactionLines[idx]).length) {
-          continue;
-        }
-
         var item = {};
         item.ledger_id = this.account_ids[idx].id;
         item.particulars = this.particulars[idx];
@@ -29075,7 +29071,6 @@ setTimeout(function () {
   },
   data: function data() {
     return {
-      pageTitle: 'Accounts',
       accounts: [],
       actions: [{
         key: 'transfer',
@@ -45323,7 +45318,11 @@ var render = function() {
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
           _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v(_vm._s(_vm.editMode ? "Update" : "Create New") + " Account")
+            _vm._v(
+              _vm._s(_vm.editMode ? "Update" : "Create New") +
+                " " +
+                _vm._s(_vm.__("Account", "erp"))
+            )
           ])
         ])
       ])
@@ -45354,7 +45353,10 @@ var render = function() {
           "div",
           { staticClass: "form-row" },
           [
-            _vm._m(0),
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v(_vm._s(_vm.__("Select chart of accounts", "erp")) + " "),
+              _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+            ]),
             _vm._v(" "),
             _c("treeselect", {
               attrs: {
@@ -45376,7 +45378,10 @@ var render = function() {
         ),
         _vm._v(" "),
         _c("div", { staticClass: "form-row" }, [
-          _vm._m(1),
+          _c("label", { attrs: { for: "" } }, [
+            _vm._v(_vm._s(_vm.__("Account Name", "erp")) + " "),
+            _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+          ]),
           _vm._v(" "),
           _c("input", {
             directives: [
@@ -45402,7 +45407,9 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "form-row" }, [
-          _c("label", { attrs: { for: "" } }, [_vm._v("Code (optional)")]),
+          _c("label", { attrs: { for: "" } }, [
+            _vm._v(_vm._s(_vm.__("Code (optional)", "erp")))
+          ]),
           _vm._v(" "),
           _c("input", {
             directives: [
@@ -45442,26 +45449,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "" } }, [
-      _vm._v("Select chart of accounts "),
-      _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "" } }, [
-      _vm._v("Account Name "),
-      _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -46759,7 +46747,11 @@ var render = function() {
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
           _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v(_vm._s(_vm.editMode ? "Edit" : "New") + " Bill")
+            _vm._v(
+              _vm._s(_vm.editMode ? "Edit" : "New") +
+                " " +
+                _vm._s(_vm.__("Bill", "erp"))
+            )
           ])
         ])
       ])
@@ -46822,7 +46814,14 @@ var render = function() {
                           "div",
                           { staticClass: "wperp-form-group" },
                           [
-                            _vm._m(0),
+                            _c("label", [
+                              _vm._v(_vm._s(_vm.__("Bill Date", "erp"))),
+                              _c(
+                                "span",
+                                { staticClass: "wperp-required-sign" },
+                                [_vm._v("*")]
+                              )
+                            ]),
                             _vm._v(" "),
                             _c("datepicker", {
                               model: {
@@ -46843,7 +46842,14 @@ var render = function() {
                           "div",
                           { staticClass: "wperp-form-group" },
                           [
-                            _vm._m(1),
+                            _c("label", [
+                              _vm._v(_vm._s(_vm.__("Due Date", "erp"))),
+                              _c(
+                                "span",
+                                { staticClass: "wperp-required-sign" },
+                                [_vm._v("*")]
+                              )
+                            ]),
                             _vm._v(" "),
                             _c("datepicker", {
                               model: {
@@ -46860,7 +46866,9 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "wperp-col-xs-12" }, [
-                        _c("label", [_vm._v("Billing Address")]),
+                        _c("label", [
+                          _vm._v(_vm._s(_vm.__("Billing Address", "erp")))
+                        ]),
                         _vm._v(" "),
                         _c("textarea", {
                           directives: [
@@ -46900,7 +46908,39 @@ var render = function() {
         _c("div", { staticClass: "wperp-table-responsive" }, [
           _c("div", { staticClass: "table-container" }, [
             _c("table", { staticClass: "wperp-table wperp-form-table" }, [
-              _vm._m(2),
+              _c("thead", [
+                _c("tr", [
+                  _c(
+                    "th",
+                    {
+                      staticClass: "col--id column-primary",
+                      attrs: { scope: "col" }
+                    },
+                    [_vm._v(_vm._s(_vm.__("SL No", "erp")) + ".")]
+                  ),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.__("Account", "erp")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.__("Description", "erp")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.__("Amount", "erp")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.__("Total", "erp")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", {
+                    staticClass: "col--actions",
+                    attrs: { scope: "col" }
+                  })
+                ])
+              ]),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -47055,7 +47095,7 @@ var render = function() {
                             _c("i", {
                               staticClass: "flaticon-add-plus-button"
                             }),
-                            _vm._v("Add Line")
+                            _vm._v(_vm._s(_vm.__("Add Line", "erp")))
                           ]
                         )
                       ]
@@ -47069,7 +47109,7 @@ var render = function() {
                         staticClass: "text-right pr-0 hide-sm",
                         attrs: { colspan: "4" }
                       },
-                      [_vm._v("Total Amount")]
+                      [_vm._v(_vm._s(_vm.__("Total Amount", "erp")))]
                     ),
                     _vm._v(" "),
                     _c(
@@ -47105,7 +47145,9 @@ var render = function() {
                         attrs: { colspan: "9" }
                       },
                       [
-                        _c("label", [_vm._v("Particulars")]),
+                        _c("label", [
+                          _vm._v(_vm._s(_vm.__("Particulars", "erp")))
+                        ]),
                         _vm._v(" "),
                         _c("textarea", {
                           directives: [
@@ -47186,7 +47228,7 @@ var render = function() {
                           { staticClass: "attachment-container" },
                           [
                             _c("label", { staticClass: "col--attachement" }, [
-                              _vm._v("Attachment")
+                              _vm._v(_vm._s(_vm.__("Attachment", "erp")))
                             ]),
                             _vm._v(" "),
                             _c("file-upload", {
@@ -47237,50 +47279,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Bill Date"),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Due Date"),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c(
-          "th",
-          { staticClass: "col--id column-primary", attrs: { scope: "col" } },
-          [_vm._v("SL No.")]
-        ),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Account")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Description")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Amount")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Total")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "col--actions", attrs: { scope: "col" } })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -47388,7 +47387,11 @@ var render = function() {
                 },
                 [
                   _c("i", { staticClass: "flaticon-printer-1" }),
-                  _vm._v("\n                      Print\n                ")
+                  _vm._v(
+                    "\n                      " +
+                      _vm._s(_vm.__("Print", "erp")) +
+                      "\n                "
+                  )
                 ]
               ),
               _vm._v(" "),
@@ -47425,7 +47428,7 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("Copy Link")]
+                          [_vm._v(_vm._s(_vm.__("Copy Link", "erp")))]
                         )
                       ]),
                       _vm._v(" "),
@@ -47441,7 +47444,7 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("Send Mail")]
+                          [_vm._v(_vm._s(_vm.__("Send Mail", "erp")))]
                         )
                       ])
                     ])
@@ -47522,25 +47525,31 @@ var render = function() {
                     _c("div", { staticClass: "wperp-col-sm-6" }, [
                       _c("table", { staticClass: "invoice-info" }, [
                         _c("tr", [
-                          _c("th", [_vm._v("Bill No")]),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Bill No", "erp")))]),
                           _vm._v(" "),
                           _c("td", [_vm._v("#" + _vm._s(_vm.bill.voucher_no))])
                         ]),
                         _vm._v(" "),
                         _c("tr", [
-                          _c("th", [_vm._v("Bill Date:")]),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Bill Date", "erp")) + ":")
+                          ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(_vm.bill.trn_date))])
                         ]),
                         _vm._v(" "),
                         _c("tr", [
-                          _c("th", [_vm._v("Due Date:")]),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")
+                          ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(_vm.bill.due_date))])
                         ]),
                         _vm._v(" "),
                         _c("tr", [
-                          _c("th", [_vm._v("Amount Due:")]),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Amount Due", "erp")) + ":")
+                          ]),
                           _vm._v(" "),
                           _c("td", [
                             _vm._v(_vm._s(_vm.moneyFormat(_vm.bill.due)))
@@ -47560,7 +47569,21 @@ var render = function() {
                       staticClass: "wperp-table wperp-form-table invoice-table"
                     },
                     [
-                      _vm._m(0),
+                      _c("thead", [
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Account", "erp")))]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Particulars", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                        ])
+                      ]),
                       _vm._v(" "),
                       _c(
                         "tbody",
@@ -47585,14 +47608,20 @@ var render = function() {
                           _c("td", { attrs: { colspan: "7" } }, [
                             _c("ul", [
                               _c("li", [
-                                _c("span", [_vm._v("Subtotal:")]),
+                                _c("span", [
+                                  _vm._v(
+                                    _vm._s(_vm.__("Subtotal", "erp")) + ":"
+                                  )
+                                ]),
                                 _vm._v(
                                   " " + _vm._s(_vm.moneyFormat(_vm.bill.amount))
                                 )
                               ]),
                               _vm._v(" "),
                               _c("li", [
-                                _c("span", [_vm._v("Total:")]),
+                                _c("span", [
+                                  _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                                ]),
                                 _vm._v(
                                   " " + _vm._s(_vm.moneyFormat(_vm.bill.amount))
                                 )
@@ -47611,7 +47640,7 @@ var render = function() {
             "div",
             { staticClass: "invoice-attachments d-print-none" },
             [
-              _c("h4", [_vm._v("Attachments")]),
+              _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
               _vm._v(" "),
               _vm._l(_vm.bill.attachments, function(attachment, index) {
                 return _c(
@@ -47652,24 +47681,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Voucher No")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Account")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Particulars")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Amount")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -59084,7 +59096,7 @@ var render = function() {
           { staticClass: "wperp-col" },
           [
             _c("h2", { staticClass: "content-header__title" }, [
-              _vm._v(_vm._s(_vm.pageTitle))
+              _vm._v(_vm._s(_vm.__("Accounts", "erp")))
             ]),
             _vm._v(" "),
             _c("combo-box", {
@@ -59123,7 +59135,7 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { staticClass: "account-number-info" }, [
                         _c("span", { staticClass: "account-number-label" }, [
-                          _vm._v("Account Number:")
+                          _vm._v(_vm._s(_vm.__("Account Number", "erp")) + ":")
                         ]),
                         _vm._v(" "),
                         _c("span", { staticClass: "account-number" }, [
@@ -59134,7 +59146,9 @@ var render = function() {
                       _c("div", { staticClass: "account-balance-info" }, [
                         _c("div", { staticClass: "available-balance" }, [
                           _c("span", { staticClass: "account-balance-label" }, [
-                            _vm._v("Available Balance:")
+                            _vm._v(
+                              _vm._s(_vm.__("Available Balance", "erp")) + ":"
+                            )
                           ]),
                           _vm._v(" "),
                           undefined === account.balance
