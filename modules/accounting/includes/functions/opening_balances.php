@@ -380,9 +380,12 @@ function get_ledger_balance_with_opening_balance( $ledger_id, $start_date, $end_
 
     $final_balance = $opening_balance + $res['balance'];
 
+    $l_data = erp_acct_get_ledger_by_id( $ledger_id );
+
     return [
         'id'           => $ledger_id,
-        'name'         => erp_acct_get_ledger_name_by_id( $ledger_id ),
+        'name'         => $l_data->name,
+        'code'         => $l_data->code,
         'obalance'     => $opening_balance,
         'balance'      => $final_balance,
         'total_debit'  => $total_debit,

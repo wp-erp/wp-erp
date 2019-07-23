@@ -25,7 +25,7 @@
                                 <!-- account number -->
                                 <div class="account-number-info">
                                     <span class="account-number-label">{{ __('Account Number', 'erp') }}:</span>
-                                    <span class="account-number">{{account.id}}</span>
+                                    <span class="account-number">{{account.code}}</span>
                                 </div>
                                 <!-- account balance info -->
                                 <div class="account-balance-info">

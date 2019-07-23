@@ -54,7 +54,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
 
     $sub_query      = "SELECT id FROM $ledgers" . $where . $cash_ledger;
     $ledger_details = $wpdb->prefix . 'erp_acct_ledger_details';
-    $query          = "Select l.id, ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance
+    $query          = "Select l.id, ld.ledger_id, l.code, l.name, SUM(ld.debit - ld.credit) as balance
               From $ledger_details as ld
               LEFT JOIN $ledgers as l ON l.id = ld.ledger_id
               Where ld.ledger_id IN ($sub_query)
@@ -69,7 +69,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
     $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'cash' );
 
     $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
-    $balance   = empty( $c_balance->balance ) ? 0 : $c_balance->balance;
+    $balance   = isset( $c_balance->balance ) ? $c_balance->balance : 0;
 
     foreach ( $temp_accts as $temp_acct ) {
         $bank_accts[] = get_ledger_balance_with_opening_balance( $temp_acct['id'], $args['start_date'], $args['end_date'] );
@@ -122,11 +122,10 @@ function erp_acct_get_dashboard_banks() {
     $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'cash' );
 
     $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
-    $balance   = empty( $c_balance['balance'] ) ? 0 : $c_balance['balance'];
 
     $results[] = [
         'name'    => 'Cash',
-        'balance' => $balance,
+        'balance' => isset( $c_balance['balance'] ) ? $c_balance['balance'] : 0,
     ];
 
     $results[] = [
