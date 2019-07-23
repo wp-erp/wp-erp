@@ -59139,7 +59139,7 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("span", { staticClass: "account-number" }, [
-                          _vm._v(_vm._s(account.id))
+                          _vm._v(_vm._s(account.code))
                         ])
                       ]),
                       _vm._v(" "),
