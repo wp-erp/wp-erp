@@ -115,11 +115,11 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
 
                 if ( this.is_update ) {
-                    let rest = 'put',
+                    var rest = 'put',
                         url = `/tax-rate-names/${this.rate_name_id}`,
                         msg = 'Tax Zone Updated!';
                 } else {
-                    let rest = 'post',
+                    var rest = 'post',
                         url = `/tax-rate-names`,
                         msg = 'Tax Zone Created!';
                 }

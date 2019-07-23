@@ -26622,13 +26622,13 @@ setTimeout(function () {
       }
 
       if (this.is_update) {
-        var _rest = 'put',
-            _url = "/tax-agencies/".concat(this.agency_id),
-            _msg = 'Tax Agency Updated!';
+        var rest = 'put',
+            url = "/tax-agencies/".concat(this.agency_id),
+            msg = 'Tax Agency Updated!';
       } else {
-        var _rest2 = 'post',
-            _url2 = "/tax-agencies",
-            _msg2 = 'Tax Agency Created!';
+        var rest = 'post',
+            url = "/tax-agencies",
+            msg = 'Tax Agency Created!';
       }
 
       this.$store.dispatch('spinner/setSpinner', true);
@@ -26774,13 +26774,13 @@ setTimeout(function () {
       }
 
       if (this.is_update) {
-        var _rest = 'put',
-            _url = "/tax-cats/".concat(this.cat_id),
-            _msg = 'Tax Category Updated!';
+        var rest = 'put',
+            url = "/tax-cats/".concat(this.cat_id),
+            msg = 'Tax Category Updated!';
       } else {
-        var _rest2 = 'post',
-            _url2 = "/tax-cats",
-            _msg2 = 'Tax Category Created!';
+        var rest = 'post',
+            url = "/tax-cats",
+            msg = 'Tax Category Created!';
       }
 
       this.$store.dispatch('spinner/setSpinner', true);
@@ -27217,13 +27217,13 @@ setTimeout(function () {
       this.$store.dispatch('spinner/setSpinner', true);
 
       if (this.is_update) {
-        var _rest = 'put',
-            _url = "/tax-rate-names/".concat(this.rate_name_id),
-            _msg = 'Tax Zone Updated!';
+        var rest = 'put',
+            url = "/tax-rate-names/".concat(this.rate_name_id),
+            msg = 'Tax Zone Updated!';
       } else {
-        var _rest2 = 'post',
-            _url2 = "/tax-rate-names",
-            _msg2 = 'Tax Zone Created!';
+        var rest = 'post',
+            url = "/tax-rate-names",
+            msg = 'Tax Zone Created!';
       }
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */][rest](url, {

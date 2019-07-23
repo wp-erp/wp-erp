@@ -106,11 +106,11 @@
                 }
 
                 if ( this.is_update ) {
-                    let rest = 'put',
+                    var rest = 'put',
                         url = `/tax-cats/${this.cat_id}`,
                         msg = 'Tax Category Updated!';
                 } else {
-                    let rest = 'post',
+                    var rest = 'post',
                         url = `/tax-cats`,
                         msg = 'Tax Category Created!';
                 }

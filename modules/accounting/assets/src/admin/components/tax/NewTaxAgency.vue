@@ -99,11 +99,11 @@
                 }
 
                 if ( this.is_update ) {
-                    let rest = 'put',
+                    var rest = 'put',
                         url = `/tax-agencies/${this.agency_id}`,
                         msg = 'Tax Agency Updated!';
                 } else {
-                    let rest = 'post',
+                    var rest = 'post',
                         url = `/tax-agencies`,
                         msg = 'Tax Agency Created!';
                 }
