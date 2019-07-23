@@ -93,10 +93,10 @@ function erp_acct_get_sales_transactions( $args = [] ) {
 function erp_acct_get_sales_chart_status( $args = [] ) {
     global $wpdb;
 
-    $where = '';
+    $where = 'WHERE invoice.estimate<>1';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
 
     if ( ! empty( $args['people_id'] ) ) {
@@ -119,7 +119,7 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
 function erp_acct_get_sales_chart_payment( $args = [] ) {
     global $wpdb;
 
-    $where = ' WHERE invoice.estimate = 0 AND invoice.status != 1';
+    $where = ' WHERE invoice.estimate<>1 AND invoice.status<>1';
 
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
@@ -211,7 +211,7 @@ function erp_acct_get_bill_chart_status( $args = [] ) {
 function erp_acct_get_purchase_chart_data( $args = [] ) {
     global $wpdb;
 
-    $where = ' WHERE purchase.purchase_order = 0 AND purchase.status != 1';
+    $where = ' WHERE purchase.purchase_order<>1 AND purchase.status<>1';
 
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
@@ -243,19 +243,19 @@ function erp_acct_get_purchase_chart_data( $args = [] ) {
 function erp_acct_get_purchase_chart_status( $args = [] ) {
     global $wpdb;
 
-    $where = '';
+    $where = 'WHERE purchase.purchase_order<>1';
 
     if ( ! empty( $args['start_date'] ) ) {
-        $where .= "WHERE bill.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
+        $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
 
     if ( ! empty( $args['people_id'] ) ) {
-        $where .= " AND bill.vendor_id = {$args['people_id']} ";
+        $where .= " AND purchase.vendor_id = {$args['people_id']} ";
     }
 
-    $sql = "SELECT status_type.type_name, COUNT(bill.status) AS sub_total
+    $sql = "SELECT status_type.type_name, COUNT(purchase.status) AS sub_total
             FROM {$wpdb->prefix}erp_acct_trn_status_types AS status_type
-            LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS bill ON bill.status = status_type.id {$where}
+            LEFT JOIN {$wpdb->prefix}erp_acct_purchase AS purchase ON purchase.status = status_type.id {$where}
             GROUP BY status_type.id
             HAVING sub_total > 0
             ORDER BY status_type.type_name ASC";
