@@ -1609,7 +1609,7 @@ Company'
 
             $start_date = $start_date->format( "Y-m-d" );
 
-            $end_date = date( $start_date, strtotime( "+1 year" ) );
+            $end_date = date( 'Y-m-d', strtotime( '+1 year', strtotime( $start_date ) ) );
             $end_date = new DateTime( $end_date );
             $end_date->modify( "-1 day" );
 

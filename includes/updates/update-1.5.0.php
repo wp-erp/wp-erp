@@ -957,7 +957,8 @@ function _erp_ac_get_opening_income_expense( $financial_end = false ) {
     $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
     $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
 
-    $financial_end = date( "Y-m-d H:i:s" );
+    $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
+    $financial_end = $wpdb->get_var( "SELECT end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date={$start_date} LIMIT 1" );
 
     $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
 
@@ -985,9 +986,10 @@ function _erp_ac_get_opening_income_expense( $financial_end = false ) {
  * @return array
  */
 function _erp_ac_reporting_query( $financial_end = false ) {
-    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    global $wpdb;
 
-    $financial_end = date( "Y-m-d H:i:s" );
+    $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
+    $financial_end = $wpdb->get_var( "SELECT end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date={$start_date} LIMIT 1" );
 
     $unit_balance      = _erp_ac_get_asset_liability_equity_balance( $financial_end );
     $ope_in_ex_balance = _erp_ac_get_opening_income_expense( $financial_end );
@@ -1009,7 +1011,8 @@ function _erp_ac_get_asset_liability_equity_balance( $financial_end = false ) {
     $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
     $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
 
-    $financial_end = date( "Y-m-d H:i:s" );
+    $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
+    $financial_end = $wpdb->get_var( "SELECT end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date={$start_date} LIMIT 1" );
 
     $sql = $wpdb->prepare(
         "SELECT ledger.id, ledger.code, ledger.name, ledger.type_id, type.name as type_name, type.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
@@ -1041,7 +1044,8 @@ function _erp_ac_get_closing_income_expense( $financial_end = false ) {
     $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
     $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
 
-    $financial_end = date( "Y-m-d H:i:s" );
+    $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
+    $financial_end = $wpdb->get_var( "SELECT end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date={$start_date} LIMIT 1" );
 
     $sql = $wpdb->prepare(
         "SELECT sum(jour.debit) as debit, sum(jour.credit) as credit
@@ -1189,10 +1193,10 @@ function _erp_ac_get_sales_tax_total( $charts ) {
  * @return int
  */
 function _erp_ac_get_good_sold_total_amount( $financial_end = false ) {
-
-    $financial_end = date( "Y-m-d H:i:s" );
-
     global $wpdb;
+
+    $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
+    $financial_end = $wpdb->get_var( "SELECT end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date={$start_date} LIMIT 1" );
 
     $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
     $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
@@ -1239,6 +1243,7 @@ function _erp_ac_get_expense_total_with_tax( $charts ) {
  */
 function erp_acct_migrate_balance_sheet() {
     global $wpdb;
+
     $ob_data = [];
     $data    = [];
 
@@ -1255,11 +1260,17 @@ function erp_acct_migrate_balance_sheet() {
 
     $start_date = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
 
-    $end_date = new DateTime();
-    $end_date->modify( "-1 day" );
+    $end_date = $wpdb->get_var( "SELECT MIN(start_date) FROM {$wpdb->prefix}erp_acct_financial_years LIMIT 1" );
 
-    $end_date = $end_date->format( "Y-m-d" );
+    if ( $start_date < $end_date ) {
+        $end_date = new DateTime( $end_date );
+        $end_date->modify( "-1 day" );
 
+        $end_date = $end_date->format( "Y-m-d" );
+    } else {
+        $start_date = $end_date;
+        $end_date   = $wpdb->get_var( "SELECT end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE start_date={$start_date} LIMIT 1" );
+    }
 
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_financial_years` WHERE name='{$last_fy}' LIMIT 0, 1" ) ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
@@ -1273,7 +1284,6 @@ function erp_acct_migrate_balance_sheet() {
     } else {
         $data['year'] = $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_financial_years` WHERE name='{$last_fy}'" );
     }
-
 
     if ( ! empty( $data['acct_rec'] ) ) {
         foreach ( $data['acct_rec'] as $acct_rec ) {
@@ -1303,9 +1313,8 @@ function erp_acct_migrate_balance_sheet() {
         }
     }
 
-    $end                  = date( "Y-m-d H:i:s" );
-    $ledgers              = _erp_ac_reporting_query( $end );
-    $clos_inc_exp_balance = _erp_ac_get_closing_income_expense( $end );
+    $ledgers              = _erp_ac_reporting_query( $end_date );
+    $clos_inc_exp_balance = _erp_ac_get_closing_income_expense( $end_date );
 
     $closing_balance = ( $clos_inc_exp_balance->credit > 0 ) ? $clos_inc_exp_balance->credit : -$clos_inc_exp_balance->debit;
 
@@ -1320,7 +1329,7 @@ function erp_acct_migrate_balance_sheet() {
     $equities    = isset( $charts[5] ) ? $charts[5] : [];
 
     $sales_total   = _erp_ac_get_sales_total_without_tax( $charts ) + _erp_ac_get_sales_tax_total( $charts );
-    $goods_sold    = _erp_ac_get_good_sold_total_amount( $end );
+    $goods_sold    = _erp_ac_get_good_sold_total_amount( $end_date );
     $expense_total = _erp_ac_get_expense_total_with_tax( $charts );
     $expense_total = $expense_total - $goods_sold;
     $tax_total     = _erp_ac_get_sales_tax_total( $charts );
@@ -1352,7 +1361,7 @@ function erp_acct_migrate_balance_sheet() {
             continue;
         }
 
-        $liability = (array)$liability[0];
+        $liability = (array) $liability[0];
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
             'financial_year_id' => $data['year'],
@@ -1395,8 +1404,10 @@ function erp_acct_migrate_balance_sheet() {
         'created_by'        => get_current_user_id()
     ] );
 
+    $f_data = erp_acct_clsbl_get_closest_next_fn_year( $start_date );
+
     $args = [
-        'f_year_id'  => (int) $data['year'],
+        'f_year_id'  => (int) $f_data->id,
         'start_date' => $start_date,
         'end_date'   => $end_date
     ];
