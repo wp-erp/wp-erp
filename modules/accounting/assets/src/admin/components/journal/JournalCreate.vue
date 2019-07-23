@@ -266,10 +266,6 @@
                 var lineItems = [];
 
                 for ( let idx = 0; idx < this.transactionLines.length; idx++ ) {
-                    if ( ! Object.keys(this.transactionLines[idx]).length ) {
-                        continue;
-                    }
-
                     let item = {};
                     item.ledger_id = this.account_ids[idx].id;
                     item.particulars = this.particulars[idx];
