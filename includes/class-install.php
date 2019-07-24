@@ -1463,7 +1463,7 @@ Company'
         }
 
         /** ===========
-         * Accounitng
+         * Accounting
          * ============
          */
 
@@ -1656,9 +1656,9 @@ Company'
             ],
 
             'accounting' => [
-                'title'       => __( 'Accountig Management', 'erp' ),
+                'title'       => __( 'Accounting Management', 'erp' ),
                 'slug'        => 'erp-accounting',
-                'description' => __( 'Accountig Management', 'erp' ),
+                'description' => __( 'Accounting Management', 'erp' ),
                 'callback'    => '\WeDevs\ERP\Accounting\Accounting',
                 'modules'     => apply_filters( 'erp_accounting_modules', [] )
             ]
