@@ -20,6 +20,7 @@ function erp_acct_create_accounting_tables() {
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `type` varchar(255) DEFAULT NULL,
             `currency` varchar(50) DEFAULT NULL,
+            `editable` tinyint DEFAULT 0,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
@@ -121,7 +122,6 @@ function erp_acct_create_accounting_tables() {
             `discount` decimal(10,2) DEFAULT 0,
             `tax` decimal(10,2) DEFAULT 0,
             `item_total` decimal(10,2) DEFAULT 0,
-            `tax_percent` decimal(10,2) DEFAULT 0,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
@@ -171,7 +171,6 @@ function erp_acct_create_accounting_tables() {
             `amount` decimal(10,2) DEFAULT 0,
             `discount` decimal(10,2) DEFAULT 0,
             `discount_type` varchar(255) DEFAULT NULL,
-            `tax_rate_id` int(11) DEFAULT NULL,
             `tax` decimal(10,2) DEFAULT 0,
             `estimate` boolean DEFAULT NULL,
             `attachments` varchar(255) DEFAULT NULL,
@@ -641,6 +640,51 @@ function erp_acct_create_accounting_tables() {
             PRIMARY KEY (`id`)
         ) $collate;",
 
+        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_account_details` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `people_id` varchar(255) DEFAULT NULL,
+            `trn_no` int(11) DEFAULT NULL,
+            `trn_date` date DEFAULT NULL,
+            `trn_by` varchar(255) DEFAULT NULL,
+            `voucher_type` varchar(255) DEFAULT NULL,
+            `particulars` varchar(255) DEFAULT NULL,
+            `debit` decimal(10,2) DEFAULT 0,
+            `credit` decimal(10,2) DEFAULT 0,
+            `created_at` date DEFAULT NULL,
+            `created_by` varchar(50) DEFAULT NULL,
+            `updated_at` date DEFAULT NULL,
+            `updated_by` varchar(50) DEFAULT NULL,
+            PRIMARY KEY (`id`)
+        ) $collate;",
+
+        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_opening_balances` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `financial_year_id` int(11) DEFAULT NULL,
+            `chart_id` int(11) DEFAULT NULL,
+            `ledger_id` int(11) DEFAULT NULL,
+            `type` varchar(50) DEFAULT NULL,
+            `debit` decimal(10,2) DEFAULT 0,
+            `credit` decimal(10,2) DEFAULT 0,
+            `created_at` date DEFAULT NULL,
+            `created_by` varchar(50) DEFAULT NULL,
+            `updated_at` date DEFAULT NULL,
+            `updated_by` varchar(50) DEFAULT NULL,
+            PRIMARY KEY (`id`)
+        ) $collate;",
+
+        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_financial_years` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `name` VARCHAR(11) DEFAULT NULL,
+            `start_date` date DEFAULT NULL,
+            `end_date` date DEFAULT NULL,
+            `description` varchar(255) DEFAULT NULL,
+            `created_at` date DEFAULT NULL,
+            `created_by` varchar(50) DEFAULT NULL,
+            `updated_at` date DEFAULT NULL,
+            `updated_by` varchar(50) DEFAULT NULL,
+            PRIMARY KEY (`id`)
+        ) $collate;",
+
     ];
 
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -916,8 +960,8 @@ function erp_acct_populate_charts_ledgers() {
 
     $wpdb->query( "UPDATE {$wpdb->prefix}erp_ac_ledger SET name='Cash' WHERE name='Petty Cash'" );
 
-    $old_ledgers = $wpdb->get_results( "SELECT 
-        ledger.id, chart.id as chart_id, chart_cat.id category_id, ledger.name, ledger.code, ledger.system 
+    $old_ledgers = $wpdb->get_results( "SELECT
+        ledger.id, chart.id as chart_id, chart_cat.id category_id, ledger.name, ledger.code, ledger.system
         FROM {$wpdb->prefix}erp_ac_ledger as ledger
         LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id
         LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
@@ -1437,14 +1481,13 @@ function erp_acct_migrate_balance_sheet() {
  */
 function wperp_update_accounting_module_1_5_0() {
     erp_acct_create_accounting_tables();
+    erp_acct_populate_charts_ledgers();
     erp_acct_populate_data();
 
     erp_acct_populate_tax_agencies();
     erp_acct_populate_tax_data();
 
     erp_acct_populate_transactions();
-
-    erp_acct_populate_charts_ledgers();
 
     erp_employees_to_people_migration();
 
