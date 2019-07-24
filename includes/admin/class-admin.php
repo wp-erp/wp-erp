@@ -238,8 +238,8 @@ class Admin_Page {
         } ?>
 
         <div class="notice notice-info is-dismissible" id="erp-accounting-survey-notice">
-            <p>We are revamping the Accounting module with some necessary breaking changes. Please answer some simple <a href="#" target="_blank">questions</a> so that we can help you with smooth transition to this superlative Accounting system.</p>
-            <p><a href="#" target="_blank">Read more ...</a></p>
+            <p>We are revamping the Accounting module with some necessary breaking changes. Please answer some simple <a href="https://wperp.com/wp-erp-accounting-survey/" target="_blank">questions</a> so that we can help you with smooth transition to this superlative Accounting system.</p>
+            <p><a href="https://wperp.com/45641/new-improved-powerful-wp-erp-accounting-module/" target="_blank">Read more ...</a></p>
         </div><!-- #erp-accounting-survey-notice -->
         
         <style>
