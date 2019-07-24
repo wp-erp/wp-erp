@@ -246,9 +246,10 @@ class Entitlement_List_Table extends \WP_List_Table {
         $search                = ( isset( $_REQUEST['s'] ) ) ? $_REQUEST['s'] : false;
 
         $args = [
-            'offset' => $offset,
-            'number' => $per_page,
-            'search' => $search
+            'offset'      => $offset,
+            'number'      => $per_page,
+            'search'      => $search,
+            'emp_status'  => 'active'
         ];
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
