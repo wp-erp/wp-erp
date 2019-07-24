@@ -1248,7 +1248,8 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         'offset'      => 0,
         'orderby'     => 'en.user_id, en.created_on',
         'order'       => 'DESC',
-        'debug'       => false
+        'debug'       => false,
+        'emp_status'  => ''
     );
 
     $args  = wp_parse_args( $args, $defaults );
@@ -1283,10 +1284,15 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         $where .= " AND en.policy_id = " . intval( $args['policy_id'] );
     }
 
-    $query = "SELECT en.*, u.display_name as employee_name, pol.name as policy_name
+    if ( $args['emp_status'] == 'active') {
+        $where .= " AND emp.status = 'active'";
+    }
+
+    $query = "SELECT en.*, u.display_name as employee_name, pol.name as policy_name, emp.status as emp_status
         FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
         LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = en.policy_id
         LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
+        LEFT JOIN wp_erp_hr_employees AS emp ON en.user_id = emp.user_id 
         $where
         ORDER BY {$args['orderby']} {$args['order']}
         LIMIT %d,%d;";
@@ -1853,7 +1859,7 @@ function erp_bulk_policy_assign( $policy, $employee_ids = [] ) {
         $entitlement       = $entitlement->where( function ( $condition ) use ( $fields, $financial_year ) {
             $financial_start_date = $fields['from_date'] ? $fields['from_date'] : $financial_year['start'];
             $financial_end_date   = $fields['to_date'] ? $fields['to_date'] : $financial_year['end'];
-            $condition->where( 'from_date', '>=', $financial_start_date );
+            $condition->whereBetween( 'from_date', [ $financial_year['start'], $financial_end_date ] );
             $condition->where( 'to_date', '<=', $financial_end_date );
             $condition->where( 'user_id', '=', $fields['user_id'] );
             $condition->where( 'policy_id', '=', $fields['policy_id'] );
