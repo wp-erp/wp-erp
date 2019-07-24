@@ -32,6 +32,7 @@ class Ajax {
         $this->action( 'wp_ajax_erp-api-key', 'new_api_key');
         $this->action( 'wp_ajax_erp-api-delete-key', 'delete_api_key');
         $this->action( 'wp_ajax_erp-dismiss-promotional-offer-notice', 'dismiss_promotional_offer');
+        $this->action( 'wp_ajax_erp-dismiss-accounting-survey-notice', 'dismiss_accounting_survey');
     }
 
     function file_delete() {
@@ -533,6 +534,22 @@ class Ajax {
             update_option( 'erp_promotional_offer_notice_quiz-aug17', 'hide' );
         }
     }
+    
+    /**
+     * Dismiss accounting survey
+     *
+     * @since 1.4.6
+     *
+     * @return void
+     */
+    public function dismiss_accounting_survey() {
+        if ( ! empty( $_POST['dismissed'] ) ) {
+            update_option( 'erp_accounting_survey_notice', 'hide' );
+        }
+        
+        wp_die();
+    }
+
 }
 
 new Ajax();
