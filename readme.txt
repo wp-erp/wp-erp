@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs, ediamin, sabbir1991, asaquzzama
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.2.1
+Tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -245,6 +245,14 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.4.6 -> July 24, 2019 =
+[new] Added 'switch to' button at the employee list if 'User Switching' plugin activated.
+[tweak] Changed contact & company deleting message when checking if it has a relationship.
+[fix] Terminated employees are also shown at leave entitlement list.
+[fix] Prevent cron job to duplicate existing job entitlement at the same financial year or policy update.
+[fix] Company or contact does not get trashed.
+[fix] CRM mail template issues.
 
 = v1.4.5 -> June 12, 2019 =
 [tweak] Leave reason field is made required. Closes #824
