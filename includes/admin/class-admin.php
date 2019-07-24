@@ -21,6 +21,7 @@ class Admin_Page {
         $this->action( 'admin_init', 'admin_redirects' );
         add_action( 'admin_footer', 'erp_include_popup_markup' );
         //$this->action( 'admin_notices', 'promotional_offer' );
+        $this->action( 'admin_notices', 'accounting_survey_notice' );
     }
 
     /**
@@ -214,6 +215,49 @@ class Admin_Page {
                 });
             </script>
         <?php
+    }
+    
+    /**
+     * Accounting survey notice
+     *
+     * @since 1.4.6
+     *
+     * @return void
+     */
+    public function accounting_survey_notice() {
+        // Show only to Admins
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // check if it has already been dismissed
+        $hide_notice = get_option( 'erp_accounting_survey_notice', 'no' );
+
+        if ( 'hide' == $hide_notice ) {
+            return;
+        } ?>
+
+        <div class="notice notice-info is-dismissible" id="erp-accounting-survey-notice">
+            <p>We are revamping the Accounting module with some necessary breaking changes. Please answer some simple <a href="https://wperp.com/wp-erp-accounting-survey/" target="_blank">questions</a> so that we can help you with smooth transition to this superlative Accounting system.</p>
+            <p><a href="https://wperp.com/45641/new-improved-powerful-wp-erp-accounting-module/" target="_blank">Read more ...</a></p>
+        </div><!-- #erp-accounting-survey-notice -->
+        
+        <style>
+            #erp-accounting-survey-notice p {
+                font-size: 16px;
+            }
+        </style>
+
+        <script type='text/javascript'>
+            jQuery('body').on('click', '#erp-accounting-survey-notice .notice-dismiss', function(e) {
+                e.preventDefault();
+
+                wp.ajax.post('erp-dismiss-accounting-survey-notice', {
+                    dismissed: true
+                });
+            });
+        </script>
+    <?php
     }
 }
 

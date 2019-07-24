@@ -357,6 +357,18 @@ class Ajax_Handler {
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
         $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
+        // Check if this contact OR company has relationship with any company OR contact
+        $if_customer_has_relations = ( !is_array( $customer_id ) ) ? erp_crm_check_company_contact_relations( $customer_id, $type ) : 0;
+
+        if ( $if_customer_has_relations != 0 ) {
+            if ( $type == 'contact') {
+                $this->send_error( __( "You can't delete this contact as this contact has a relation with a company. Please make sure this contract is not assigned to any company before deleting.", 'erp' ) );
+            }
+            if ( $type == 'company') {
+                $this->send_error( __( "You can't delete this company as this company has a relation with a contact. Please make sure this company is not assigned to any contact before deleting.", 'erp' ) );
+            }
+        }
+
         // Check permission for trashing and permanent deleting contact;
         if ( is_array( $customer_id ) ) {
             foreach ( $customer_id as $contact_id ) {
