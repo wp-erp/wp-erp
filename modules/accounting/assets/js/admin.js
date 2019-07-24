@@ -19090,7 +19090,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
             }
           });
         });
-      } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
+      } else if ("undefined" !== erp_reimbursement_var.erp_reimbursement_module && '1' === erp_reimbursement_var.erp_reimbursement_module) {
         __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this5.accts_by_chart = response.data;
 
@@ -20359,7 +20359,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
             }
           });
         });
-      } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
+      } else if ("undefined" !== erp_reimbursement_var.erp_reimbursement_module && '1' === erp_reimbursement_var.erp_reimbursement_module) {
         __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this6.accts_by_chart = response.data;
 
@@ -22037,7 +22037,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
             }
           });
         });
-      } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
+      } else if ("undefined" !== erp_reimbursement_var.erp_reimbursement_module && '1' === erp_reimbursement_var.erp_reimbursement_module) {
         __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this5.accts_by_chart = response.data;
 
@@ -23935,7 +23935,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
             }
           });
         });
-      } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
+      } else if ("undefined" !== erp_reimbursement_var.erp_reimbursement_module && '1' === erp_reimbursement_var.erp_reimbursement_module) {
         __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this8.accts_by_chart = response.data;
 
@@ -27445,7 +27445,7 @@ setTimeout(function () {
             }
           });
         });
-      } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
+      } else if ("undefined" !== erp_reimbursement_var.erp_reimbursement_module && '1' === erp_reimbursement_var.erp_reimbursement_module) {
         __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this2.accts_by_chart = response.data;
 
@@ -29645,7 +29645,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { if
             }
           });
         });
-      } else if ("undefined" !== erp_people_trn_var.people_trn_module && '1' === erp_people_trn_var.people_trn_module) {
+      } else if ("undefined" !== erp_reimbursement_var.erp_reimbursement_module && '1' === erp_reimbursement_var.erp_reimbursement_module) {
         __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
           _this7.accts_by_chart = response.data;
 

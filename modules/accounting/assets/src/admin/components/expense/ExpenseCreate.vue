@@ -495,7 +495,7 @@
                             }
                         });
                     });
-                } else if ( "undefined" !== erp_people_trn_var.people_trn_module &&  '1' === erp_people_trn_var.people_trn_module ) {
+                } else if ( "undefined" !== erp_reimbursement_var.erp_reimbursement_module &&  '1' === erp_reimbursement_var.erp_reimbursement_module ) {
                     HTTP.get('/people-transactions/balances').then((response) => {
                         this.accts_by_chart = response.data;
                         this.accts_by_chart.forEach( element =>{
