@@ -23,8 +23,6 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 	protected function task( $trn_id ) {
         global $wpdb;
 
-        $wpdb->get_results();
-
         $trn = $wpdb->get_row(
                 $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_ac_transactions WHERE id = %d", $trn_id),
             ARRAY_A );
@@ -56,8 +54,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             );
 
             $voucher_no = $wpdb->insert_id;
-
-            // Have to fix => tax_rate_id, attachment and status
+            $status     = erp_acct_trn_status_by_id('closed');
 
             $wpdb->insert(
                 // `erp_acct_invoices`
@@ -71,11 +68,10 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'amount'          => $trn['sub_total'],
                     'discount'        => 0,
                     'discount_type'   => 'discount-value',
-                    // 'tax_rate_id'     => 1,
                     'tax'             => 0,
                     'estimate'        => 0,
                     'attachments'     => $trn['files'],
-                    'status'          => 3,
+                    'status'          => $status,
                     'particulars'     => $trn['summary'],
                     'created_at'      => $this->get_created_at( $trn['created_at'] ),
                     'created_by'      => $trn['created_by']
@@ -83,11 +79,6 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             );
 
             $invoices[$voucher_no] = $wpdb->insert_id;
-
-            $this->_helper_invoice_account_details_migration($trn, $voucher_no, $voucher_no);
-            $this->_helper_invoice_people_details_migration($trn, $voucher_no);
-            $this->_helper_invoice_ledger_details_migration($trn, $voucher_no);
-
         } // invoice
 
         elseif ( 'payment' === $trn['form_type'] ) {
@@ -343,7 +334,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
         $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug('sales_revenue');
-        $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discounts');
+        $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discount');
 
         $wpdb->insert(
             // `erp_acct_ledger_details`
@@ -455,12 +446,6 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         $transaction_items = $wpdb->get_results($sql1, ARRAY_A);
 
-
-        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-
-        $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug('sales_revenue');
-        $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discounts');
-
         for ( $i = 0; $i < count($transaction_items); $i++ ) {
             $trn_item = $transaction_items[$i];
 
@@ -480,36 +465,14 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'discount'    => $discount,
                     'tax'         => $tax,
                     'item_total'  => $item_total,
-                    'tax_percent' => $trn_item['tax_rate'],
                     'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
                     'created_by'  => $trn_item['created_by']
                 ]
             );
 
-            $details_id = $wpdb->insert_id;
+            $sql = "UPDATE {$wpdb->prefix}erp_acct_invoices SET discount = discount + {$discount}, tax = tax + {$tax} WHERE voucher_no = %d";
 
-            $wpdb->insert(
-                // `erp_acct_invoice_details_tax`
-                "{$wpdb->prefix}erp_acct_invoice_details_tax", [
-                    'invoice_details_id' => $details_id,
-                    'agency_id'          => null,
-                    'tax_rate'           => $trn_item['tax_rate'],
-                    'tax_amount'         => $tax,
-                    'created_at'         => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by'         => $trn_item['created_by']
-                ]
-            );
-
-            $sqls = [
-                "UPDATE {$wpdb->prefix}erp_acct_invoices SET discount = discount + {$discount}, tax = tax + {$tax} WHERE voucher_no = %d",
-                "UPDATE {$wpdb->prefix}erp_acct_invoice_account_details SET debit = debit + {$item_total} + {$tax} WHERE trn_no = %d",
-                "UPDATE {$wpdb->prefix}erp_acct_people_details SET debit = debit + {$item_total} + {$tax} WHERE trn_no = %d",
-                "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET debit = debit + {$discount} WHERE ledger_id = {$sales_discount_ledger_id} AND trn_no = %d"
-            ];
-
-            foreach ( $sqls as $sql ) {
-                $wpdb->query( $wpdb->prepare( $sql, $trn_no) );
-            }
+            $wpdb->query( $wpdb->prepare( $sql, $trn_no) );
         }
     }
 

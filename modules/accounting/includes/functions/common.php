@@ -518,3 +518,18 @@ function erp_acct_check_people_exists( $email ) {
 
     return false;
 }
+
+/**
+ * Get transaction id by status slug
+ *
+ * @param string $slug
+ * @return int
+ */
+function erp_acct_trn_status_by_id( $slug ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}erp_acct_trn_status_types WHERE slug = %s", $slug );
+
+    return $wpdb->get_var( $sql );
+}
+
