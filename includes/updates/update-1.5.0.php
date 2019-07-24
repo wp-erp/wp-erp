@@ -1137,7 +1137,7 @@ function _erp_ac_get_all_tax( $args = [] ) {
 
     $sql = "SELECT * FROM {$wpdb->prefix}erp_ac_tax";
 
-    $items = $wpdb->get_results( $sql, ARRAY_A );
+    $items = $wpdb->get_results( $sql );
 
     return $items;
 }
@@ -1171,7 +1171,7 @@ function _erp_ac_get_tax_payable_ledger() {
 
     $payables = $wpdb->query( "CREATE TEMPORARY TABLE IF NOT EXISTS erp_acct_temp_tax_ledger as ( SELECT * FROM {$wpdb->prefix}erp_ac_ledger AS ledger WHERE tax IN ('" . $array . "') )" );
 
-    $payables = $wpdb->get_results( "SELECT * FROM erp_acct_temp_tax_ledger as ledger LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS type ON ledger.type_id = type.id WHERE type.class_id = 2" );
+    $payables = $wpdb->get_results( "SELECT * FROM erp_acct_temp_tax_ledger as ledger LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS type ON ledger.type_id = type.id WHERE type.class_id = 2", ARRAY_A );
 
     foreach ( $payables as $key => $payable ) {
         if ( ! count( $payable['charts'] ) ) {
