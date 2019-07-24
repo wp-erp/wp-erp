@@ -1172,6 +1172,20 @@ Company'
             ) $collate;",
 
 
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_details` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `product_id` int(11) DEFAULT NULL,
+                `trn_no` int(11) DEFAULT NULL,
+                `stock_in` int(11) DEFAULT NULL,
+                `stock_out` int(11) DEFAULT NULL,
+                `created_at` date DEFAULT NULL,
+                `created_by` varchar(50) DEFAULT NULL,
+                `updated_at` date DEFAULT NULL,
+                `updated_by` varchar(50) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $collate;",
+
+
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `voucher_no` int(11) DEFAULT NULL,
