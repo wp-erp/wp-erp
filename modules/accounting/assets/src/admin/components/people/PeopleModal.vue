@@ -9,7 +9,7 @@
                             <h3 v-if="!people">{{ title }}</h3>
                             <h3 v-else>Update {{ title }}</h3>
                             <span class="modal-close">
-                                <i class="flaticon-close" @click="$emit('close')"></i></span>
+                                <i class="flaticon-close" @click="$parent.$emit('modal-close')"></i></span>
                         </div>
                         <ul class="errors" v-if="error_message.length">
                             <li v-for="(error, index) in error_message" :key="index">* {{ error }}</li>
