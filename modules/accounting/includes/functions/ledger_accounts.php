@@ -336,7 +336,7 @@ function erp_acct_ledger_balance_with_opening_balance( $ledgers, $data, $opening
  * @return int
  */
 function erp_acct_get_chart_id_by_slug( $key ) {
-    switch ($key) {
+    switch ( $key ) {
         case 'asset':
             $id = 1;
             break;

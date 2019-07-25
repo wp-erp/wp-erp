@@ -286,7 +286,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             $due   = 0;
 
             $purchase_id[$key] = $item['purchase_id'];
-            $total            += $item['line_total'];
+            $total             += $item['line_total'];
 
             $purchase_data['amount'] = $total;
 

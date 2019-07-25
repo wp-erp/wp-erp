@@ -463,7 +463,7 @@ function erp_acct_get_current_financial_year( $date = '' ) {
     global $wpdb;
 
     if ( $date == '' ) {
-        $date = date('Y-m-d' );
+        $date = date( 'Y-m-d' );
     }
 
     $sql = "SELECT id,name,start_date,end_date FROM {$wpdb->prefix}erp_acct_financial_years WHERE '{$date}' between start_date AND end_date";

@@ -168,7 +168,9 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function create_journal( $request ) {
         $trans_data = $this->prepare_item_for_database( $request );
 
-        $items = $trans_data['line_items']; $vocher_amount_dr = []; $vocher_amount_cr = [];
+        $items            = $trans_data['line_items'];
+        $vocher_amount_dr = [];
+        $vocher_amount_cr = [];
 
         foreach ( $items as $key => $item ) {
             $vocher_amount_dr[$key] = $item['debit'];

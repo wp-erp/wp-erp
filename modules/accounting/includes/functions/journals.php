@@ -104,6 +104,8 @@ function erp_acct_insert_journal( $data ) {
     $data['created_at'] = date( "Y-m-d H:i:s" );
     $data['created_by'] = $created_by;
 
+    $voucher_no = null;
+
     try {
         $wpdb->query( 'START TRANSACTION' );
 

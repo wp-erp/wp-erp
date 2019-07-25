@@ -129,7 +129,7 @@ function erp_acct_insert_purchase( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $voucher_no         = 0;
+    $voucher_no         = null;
     $data['created_at'] = date( "Y-m-d H:i:s" );
     $data['created_by'] = $created_by;
     $data['updated_at'] = date( "Y-m-d H:i:s" );
@@ -246,12 +246,12 @@ function erp_acct_insert_purchase( $data ) {
 function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
     global $wpdb;
 
-    $user_id = get_current_user_id();
+    $user_id             = get_current_user_id();
     $purchase_type_order = $draft = 1;
 
-    $data['created_at'] = date('Y-m-d H:i:s');
+    $data['created_at'] = date( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date('Y-m-d H:i:s');
+    $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
 
     try {
@@ -280,12 +280,12 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             ) );
 
             /**
-            *? We can't update `purchase_details` directly
-            *? suppose there were 5 detail rows previously
-            *? but on update there may be 2 detail rows
-            *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
-            *? so, remove previous rows and insert new rows
-            */
+             *? We can't update `purchase_details` directly
+             *? suppose there were 5 detail rows previously
+             *? but on update there may be 2 detail rows
+             *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
+             *? so, remove previous rows and insert new rows
+             */
             $prev_detail_ids = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_acct_purchase_details WHERE trn_no = {$purchase_id}", ARRAY_A );
             $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
 
@@ -304,7 +304,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
                     'updated_at' => $purchase_data['updated_at'],
                     'updated_by' => $purchase_data['updated_by']
                 ], [
-                    'trn_no'     => $purchase_id,
+                    'trn_no' => $purchase_id,
                 ] );
             }
 
@@ -330,10 +330,10 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             $old_purchase = erp_acct_get_purchase( $purchase_id );
 
             // insert contra `erp_acct_purchase` (basically a duplication of row)
-            $wpdb->query( $wpdb->prepare("CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_purchase WHERE voucher_no = %d", $purchase_id) );
+            $wpdb->query( $wpdb->prepare( "CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_purchase WHERE voucher_no = %d", $purchase_id ) );
             $wpdb->query( $wpdb->prepare(
                 "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
-                0, $voucher_no, $purchase_id, $data['created_at'])
+                0, $voucher_no, $purchase_id, $data['created_at'] )
             );
             $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_purchase SELECT * FROM acct_tmptable" );
             $wpdb->query( "DROP TABLE acct_tmptable" );
@@ -342,7 +342,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             $status_closed = 7;
             $wpdb->query( $wpdb->prepare(
                 "UPDATE {$wpdb->prefix}erp_acct_purchase SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
-                $status_closed, $data['updated_at'], $user_id, $purchase_id, $voucher_no)
+                $status_closed, $data['updated_at'], $user_id, $purchase_id, $voucher_no )
             );
 
             $items = $old_purchase['purchase_details'];

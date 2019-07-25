@@ -80,8 +80,8 @@ class Assets {
             } );
         }
 
-        $erp_acct_dec_separator = erp_get_option('erp_ac_de_separator');
-        $erp_acct_ths_separator = erp_get_option('erp_ac_th_separator');
+        $erp_acct_dec_separator = erp_get_option( 'erp_ac_de_separator' );
+        $erp_acct_ths_separator = erp_get_option( 'erp_ac_th_separator' );
 
         $fy_ranges = erp_acct_get_date_boundary();
 
@@ -94,8 +94,8 @@ class Assets {
             'erp_assets'         => WPERP_ASSETS,
             'erp_acct_menus'     => $menus,
             'erp_acct_url'       => $acct_url,
-            'decimal_separator'  => erp_get_option('erp_ac_de_separator', false, '.'),
-            'thousand_separator' => erp_get_option('erp_ac_th_separator', false, ','),
+            'decimal_separator'  => erp_get_option( 'erp_ac_de_separator', false, '.' ),
+            'thousand_separator' => erp_get_option( 'erp_ac_th_separator', false, ',' ),
             'currency_format'    => erp_acct_get_price_format(),
             'symbol'             => erp_acct_get_currency_symbol(),
             'erp_debug_mode'     => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
@@ -127,24 +127,24 @@ class Assets {
      */
     public function get_scripts() {
         $scripts = [
-            'accounting-vendor'   => [
+            'accounting-vendor'    => [
                 'src'       => WPERP_ASSETS . '/js/vendor.js',
                 'version'   => filemtime( WPERP_PATH . '/assets/js/vendor.js' ),
                 'in_footer' => true
             ],
-            'accounting-bootstrap'     => [
+            'accounting-bootstrap' => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/bootstrap.js',
                 'deps'      => [ 'accounting-vendor' ],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/bootstrap.js' ),
                 'in_footer' => true
             ],
-            'accounting-frontend' => [
+            'accounting-frontend'  => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/frontend.js',
                 'deps'      => [ 'jquery', 'accounting-vendor' ],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/frontend.js' ),
                 'in_footer' => true
             ],
-            'accounting-admin'    => [
+            'accounting-admin'     => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/admin.js',
                 'deps'      => [ 'jquery', 'accounting-vendor' ],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/admin.js' ),

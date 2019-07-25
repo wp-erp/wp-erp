@@ -112,6 +112,7 @@ function erp_acct_insert_bill( $data ) {
     global $wpdb;
 
     $created_by = get_current_user_id();
+    $voucher_no = null;
     $draft      = 1;
 
     $data['created_at'] = date( 'Y-m-d H:i:s' );
@@ -212,9 +213,9 @@ function erp_acct_update_bill( $data, $bill_id ) {
     $user_id = get_current_user_id();
     $draft   = 1;
 
-    $data['created_at'] = date('Y-m-d H:i:s');
+    $data['created_at'] = date( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date('Y-m-d H:i:s');
+    $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
 
     try {
@@ -242,10 +243,10 @@ function erp_acct_update_bill( $data, $bill_id ) {
             $old_bill = erp_acct_get_bill( $bill_id );
 
             // insert contra `erp_acct_bills` (basically a duplication of row)
-            $wpdb->query( $wpdb->prepare("CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_bills WHERE voucher_no = %d", $bill_id) );
+            $wpdb->query( $wpdb->prepare( "CREATE TEMPORARY TABLE acct_tmptable SELECT * FROM {$wpdb->prefix}erp_acct_bills WHERE voucher_no = %d", $bill_id ) );
             $wpdb->query( $wpdb->prepare(
                 "UPDATE acct_tmptable SET id = %d, voucher_no = %d, particulars = 'Contra entry for voucher no \#%d', created_at = '%s'",
-                0, $voucher_no, $bill_id, $data['created_at'])
+                0, $voucher_no, $bill_id, $data['created_at'] )
             );
             $wpdb->query( "INSERT INTO {$wpdb->prefix}erp_acct_bills SELECT * FROM acct_tmptable" );
             $wpdb->query( "DROP TABLE acct_tmptable" );
@@ -254,7 +255,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
             $status_closed = 7;
             $wpdb->query( $wpdb->prepare(
                 "UPDATE {$wpdb->prefix}erp_acct_bills SET status = %d, updated_at ='%s', updated_by = %d WHERE voucher_no IN (%d, %d)",
-                $status_closed, $data['updated_at'], $user_id, $bill_id, $voucher_no)
+                $status_closed, $data['updated_at'], $user_id, $bill_id, $voucher_no )
             );
 
             $items = $old_bill['bill_details'];
@@ -304,7 +305,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
  * @param array $bill_data
  * @return void
  */
-function erp_acct_update_draft_bill($data, $bill_id) {
+function erp_acct_update_draft_bill( $data, $bill_id ) {
     global $wpdb;
 
     $bill_data = erp_acct_get_formatted_bill_data( $data, $bill_id );
@@ -325,12 +326,12 @@ function erp_acct_update_draft_bill($data, $bill_id) {
     ) );
 
     /**
-    *? We can't update `bill_details` directly
-    *? suppose there were 5 detail rows previously
-    *? but on update there may be 2 detail rows
-    *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
-    *? so, remove previous rows and insert new rows
-    */
+     *? We can't update `bill_details` directly
+     *? suppose there were 5 detail rows previously
+     *? but on update there may be 2 detail rows
+     *? that's why we can't update because the foreach will iterate only 2 times, not 5 times
+     *? so, remove previous rows and insert new rows
+     */
     $prev_detail_ids = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_acct_bill_details WHERE trn_no = {$bill_id}", ARRAY_A );
     $prev_detail_ids = implode( ',', array_map( 'absint', $prev_detail_ids ) );
 
@@ -470,9 +471,9 @@ function erp_acct_update_bill_data_into_ledger( $bill_data, $bill_no, $item_data
 
     $user_id = get_current_user_id();
 
-    $bill_data['created_at'] = date('Y-m-d H:i:s');
+    $bill_data['created_at'] = date( 'Y-m-d H:i:s' );
     $bill_data['created_by'] = $user_id;
-    $bill_data['updated_at'] = date('Y-m-d H:i:s');
+    $bill_data['updated_at'] = date( 'Y-m-d H:i:s' );
     $bill_data['updated_by'] = $user_id;
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
