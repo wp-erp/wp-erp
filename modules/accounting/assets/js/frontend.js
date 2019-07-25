@@ -1,9 +1,143 @@
 pluginWebpack([2],{
 
 /***/ 203:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__App_vue__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(210);
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].config.productionTip = false;
+/* eslint-disable no-new */
+
+new __WEBPACK_IMPORTED_MODULE_0_vue__["default"]({
+  el: '#vue-frontend-app',
+  router: __WEBPACK_IMPORTED_MODULE_2__router__["a" /* default */],
+  render: function render(h) {
+    return h(__WEBPACK_IMPORTED_MODULE_1__App_vue__["a" /* default */]);
+  }
+});
+
+/***/ }),
+
+/***/ 206:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(87);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_64847977_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(209);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(207)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_64847977_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/accounting/assets/src/frontend/App.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-64847977", Component.options)
+  } else {
+    hotAPI.reload("data-v-64847977", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+
+/***/ 207:
 /***/ (function(module, exports) {
 
-throw new Error("Module build failed: SyntaxError: /Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/package.json: Error while parsing JSON - Unexpected token < in JSON at position 2\n    at JSON.parse (<anonymous>)\n    at /Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/@babel/core/lib/config/files/package.js:57:20\n    at /Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/@babel/core/lib/config/files/utils.js:29:12\n    at cachedFunction (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/@babel/core/lib/config/caching.js:33:19)\n    at findPackageData (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/@babel/core/lib/config/files/package.js:33:11)\n    at buildRootChain (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/@babel/core/lib/config/config-chain.js:105:85)\n    at loadPrivatePartialConfig (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/@babel/core/lib/config/partial.js:85:55)\n    at Object.loadPartialConfig (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/@babel/core/lib/config/partial.js:110:18)\n    at Object.<anonymous> (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/babel-loader/lib/index.js:144:26)\n    at Generator.next (<anonymous>)\n    at asyncGeneratorStep (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/babel-loader/lib/index.js:3:103)\n    at _next (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/babel-loader/lib/index.js:5:194)\n    at /Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/babel-loader/lib/index.js:5:364\n    at new Promise (<anonymous>)\n    at Object.<anonymous> (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/babel-loader/lib/index.js:5:97)\n    at Object.loader (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/babel-loader/lib/index.js:60:18)\n    at Object.<anonymous> (/Applications/MAMP/htdocs/wedevs/wp-content/plugins/wp-erp/node_modules/babel-loader/lib/index.js:55:12)");
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 209:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { attrs: { id: "accounting-frontend-app" } })
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-64847977", esExports)
+  }
+}
+
+/***/ }),
+
+/***/ 210:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(88);
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
+/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
+  routes: []
+}));
+
+/***/ }),
+
+/***/ 87:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'App'
+});
 
 /***/ })
 
