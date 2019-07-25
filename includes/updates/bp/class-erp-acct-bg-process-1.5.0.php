@@ -183,20 +183,16 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         } // vendor_credit
 
         elseif ( 'bank' === $trn['form_type'] ) {
-            $trn = $wpdb->get_row(
-                $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_ac_transactions WHERE id = %d", $trn_id),
-                ARRAY_A );
             $wpdb->insert(
-            // `erp_acct_voucher_no`
+                // `erp_acct_voucher_no`
                 "{$wpdb->prefix}erp_acct_voucher_no", [
+                    'id'         => $trn_id,
                     'type'       => 'transfer_voucher',
                     'currency'   => $this->get_currecny_id( $trn['currency'] ),
                     'created_at' => $this->get_created_at( $trn['created_at'] ),
                     'created_by' => $trn['created_by']
                 ]
             );
-
-            $voucher_no = $wpdb->insert_id;
 
             $this->_helper_bank_transfers_migration($trn, $voucher_no, $trn_id);
         } // transfer

@@ -1509,7 +1509,7 @@ function wperp_update_accounting_module_1_5_0() {
 
     erp_employees_to_people_migration();
 
-    // erp_acct_migrate_balance_sheet();
+    erp_acct_migrate_balance_sheet();
 }
 
 wperp_update_accounting_module_1_5_0();
