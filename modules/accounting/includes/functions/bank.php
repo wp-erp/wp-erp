@@ -116,7 +116,7 @@ function erp_acct_get_dashboard_banks() {
     $args['start_date'] = $closest_fy_date['start_date'];
     $args['end_date']   = $closest_fy_date['end_date'];
 
-    $results   = [];
+    $results = [];
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
     $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'cash' );
@@ -471,8 +471,8 @@ function erp_acct_get_bank_dropdown() {
     $banks    = erp_acct_get_banks( true, true, false );
 
     if ( $banks ) {
-        foreach ($banks as $bank) {
-            $accounts[ $bank['id'] ] = sprintf( '%s', $bank['name'] );
+        foreach ( $banks as $bank ) {
+            $accounts[$bank['id']] = sprintf( '%s', $bank['name'] );
         }
     }
 

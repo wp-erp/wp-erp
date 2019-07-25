@@ -374,7 +374,7 @@ function erp_acct_get_check_trn_type_by_id( $trn_type_id ) {
  * @return array
  */
 function erp_acct_quick_access_menu() {
-    $menus =  [
+    $menus = [
         'invoice'         => [
             'title' => 'Invoice',
             'slug'  => 'invoice',
@@ -495,7 +495,7 @@ function erp_acct_get_ledger_name_by_id( $id ) {
 function erp_acct_check_voucher_edit_state( $id ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare("SELECT editable FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = %d", $id);
+    $sql = $wpdb->prepare( "SELECT editable FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = %d", $id );
 
     return ( $wpdb->get_var( $sql ) ) ? true : false;
 }
@@ -510,7 +510,9 @@ function erp_acct_check_people_exists( $email ) {
     $people = erp_get_people_by( 'email', $email );
 
     // this $email belongs to nobody
-    if ( ! $people ) return false;
+    if ( ! $people ) {
+        return false;
+    }
 
     if ( in_array( 'customer', $people->types ) || in_array( 'vendor', $people->types ) ) {
         return true;

@@ -89,8 +89,8 @@ function erp_acct_get_price_format() {
 function erp_acct_get_price( $main_price, $args = array() ) {
     extract( apply_filters( 'erp_acct_price_args', wp_parse_args( $args, array(
         'currency'           => erp_get_currency(),
-        'decimal_separator'  => erp_get_option('erp_ac_de_separator', false, '.'),
-        'thousand_separator' => erp_get_option('erp_ac_th_separator', false, ','),
+        'decimal_separator'  => erp_get_option( 'erp_ac_de_separator', false, '.' ),
+        'thousand_separator' => erp_get_option( 'erp_ac_th_separator', false, ',' ),
         'decimals'           => absint( erp_get_option( 'erp_ac_nm_decimal', false, 2 ) ),
         'price_format'       => erp_acct_get_price_format(),
         'symbol'             => true,

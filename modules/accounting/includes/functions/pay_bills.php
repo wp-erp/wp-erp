@@ -108,7 +108,8 @@ function erp_acct_insert_pay_bill( $data ) {
     $data['created_by'] = $created_by;
     $data['updated_at'] = date( "Y-m-d H:i:s" );
     $data['updated_by'] = $created_by;
-    $bill_no            = '';
+
+    $voucher_no = null;
 
     try {
         $wpdb->query( 'START TRANSACTION' );

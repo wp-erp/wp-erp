@@ -353,7 +353,7 @@ function erp_acct_get_income_expense_chart_data() {
     $expenses         = erp_acct_get_daily_balance_by_chart_id( $expense_chart_id, 'last' );
     $expenses_monthly = erp_acct_format_daily_data_to_yearly_data( $expenses );
 
-    $last_month      = [
+    $last_month = [
         'labels' => array_keys( $incomes_monthly ), 'income' => array_values( $incomes_monthly ), 'expense' => array_values( $expenses_monthly )
     ];
 
@@ -469,12 +469,12 @@ function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' )
 
     switch ( $month ) {
         case 'current':
-            $start_date = date("Y-m-d", strtotime("first day of this month" ) );
-            $end_date   = date("Y-m-d", strtotime("last day of this month" ) );
+            $start_date = date( "Y-m-d", strtotime( "first day of this month" ) );
+            $end_date   = date( "Y-m-d", strtotime( "last day of this month" ) );
             break;
         case 'last' :
-            $start_date = date("Y-m-d", strtotime("first day of previous month" ) );
-            $end_date   = date("Y-m-d", strtotime("last day of previous month" ) );
+            $start_date = date( "Y-m-d", strtotime( "first day of previous month" ) );
+            $end_date   = date( "Y-m-d", strtotime( "last day of previous month" ) );
             break;
         default:
             break;
@@ -505,7 +505,7 @@ function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' )
  */
 function erp_acct_format_daily_data_to_yearly_data( $result ) {
     $result = array_map( function( $item ) {
-        $item['day']     = date('d-m', strtotime($item['day'] ) );
+        $item['day']     = date( 'd-m', strtotime( $item['day'] ) );
         $item['balance'] = abs( $item['balance'] );
         return $item;
     }, $result );
@@ -937,9 +937,9 @@ function erp_acct_get_transaction( $transaction_id ) {
 
     $transaction = [];
 
-    $transaction_type    = erp_acct_get_transaction_type( $transaction_id );
-    $link_hash           = erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type );
-    $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id' => $transaction_id, 'auth' => $link_hash ], site_url() );
+    $transaction_type = erp_acct_get_transaction_type( $transaction_id );
+    $link_hash        = erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type );
+    $readonly_url     = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id' => $transaction_id, 'auth' => $link_hash ], site_url() );
 
     switch ( $transaction_type ) {
         case 'invoice':
@@ -970,7 +970,7 @@ function erp_acct_get_transaction( $transaction_id ) {
             break;
     }
 
-    $transaction['type']          = $transaction_type;
+    $transaction['type']         = $transaction_type;
     $transaction['readonly_url'] = $readonly_url;
 
     return $transaction;
@@ -1009,8 +1009,8 @@ function erp_acct_verify_invoice_link_hash( $transaction_id, $transaction_type, 
  * @param string $transaction_type
  * @param string $algo
  *
- * @since 1.1.2
  * @return string
+ * @since 1.1.2
  */
 function erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $algo = 'sha256' ) {
 

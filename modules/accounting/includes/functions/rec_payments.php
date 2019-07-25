@@ -104,7 +104,7 @@ function erp_acct_insert_payment( $data ) {
     $created_by         = get_current_user_id();
     $data['created_at'] = date( "Y-m-d H:i:s" );
     $data['created_by'] = $created_by;
-    $voucher_no         = 0;
+    $voucher_no         = null;
 
     try {
         $wpdb->query( 'START TRANSACTION' );

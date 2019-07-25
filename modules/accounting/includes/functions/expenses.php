@@ -203,6 +203,9 @@ function erp_acct_insert_expense( $data ) {
     $data['created_by'] = $created_by;
     $data['updated_at'] = date( "Y-m-d H:i:s" );
     $data['updated_by'] = $created_by;
+
+    $voucher_no = null;
+
     try {
         $wpdb->query( 'START TRANSACTION' );
 
@@ -290,7 +293,7 @@ function erp_acct_insert_expense( $data ) {
     $email = erp_get_people_email( $expense_data['people_id'] );
 
     if ( 'check' === $type ) {
-        $check = erp_acct_get_check( $voucher_no );
+        $check          = erp_acct_get_check( $voucher_no );
         $check['email'] = $email;
 
         do_action( 'erp_acct_new_transaction_check', $voucher_no, $check );
@@ -298,7 +301,7 @@ function erp_acct_insert_expense( $data ) {
         return $check;
     }
 
-    $expense = erp_acct_get_expense( $voucher_no );
+    $expense          = erp_acct_get_expense( $voucher_no );
     $expense['email'] = $email;
 
     do_action( 'erp_acct_new_transaction_expense', $voucher_no, $expense );

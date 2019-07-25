@@ -364,7 +364,7 @@ function erp_acct_get_people_name_by_people_id( $people_id ) {
 function erp_acct_is_employee_people( $user_id ) {
     global $wpdb;
 
-    if ( !$user_id ) {
+    if ( ! $user_id ) {
         return false;
     }
 
