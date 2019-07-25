@@ -442,6 +442,7 @@ function erp_acct_create_accounting_tables() {
             `amount` decimal(10,2) DEFAULT 0,
             `ref` varchar(255) DEFAULT NULL,
             `status` int(11) DEFAULT NULL,
+            `purchase_order` boolean DEFAULT NULL,
             `attachments` varchar(255) DEFAULT NULL,
             `particulars` varchar(255) DEFAULT NULL,
             `created_at` date DEFAULT NULL,
@@ -950,7 +951,7 @@ function erp_acct_populate_transactions() {
 
     // loop through transactions
     for ( $i = 0; $i < count( $transactions ); $i++ ) {
-        $bg_process->push_to_queue( $transactions[$i] );
+        $bg_process->push_to_queue( $transactions[$i]['id'] );
     }
 
     $bg_process->save()->dispatch();
@@ -1508,7 +1509,7 @@ function wperp_update_accounting_module_1_5_0() {
 
     erp_employees_to_people_migration();
 
-    erp_acct_migrate_balance_sheet();
+    // erp_acct_migrate_balance_sheet();
 }
 
 wperp_update_accounting_module_1_5_0();
