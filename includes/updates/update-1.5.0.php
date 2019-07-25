@@ -714,6 +714,8 @@ function erp_acct_create_accounting_tables() {
 function erp_acct_populate_data() {
     global $wpdb;
 
+    do_action( 'erp_acct_before_new_acct_populate_data' );
+
     // check if people_types exists
     $sql = "INSERT IGNORE INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`) VALUES (5, 'employee')";
 
@@ -810,6 +812,8 @@ function erp_acct_populate_data() {
             'created_by' => get_current_user_id()
         ) );
     }
+
+    do_action( 'erp_acct_after_new_acct_populate_data' );
 }
 
 /**
