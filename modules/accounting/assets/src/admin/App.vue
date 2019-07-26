@@ -54,4 +54,12 @@
     .attachment-container .attachment-placeholder {
         padding: 20px 3px !important;
     }
+
+    .wperp-table tfoot tr td:first-child {
+        padding-left: 20px;
+    }
+
+    .wperp-table th {
+        font-weight: 300;
+    }
 </style>

@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <div class="wperp-transactions-section wperp-section">
+        <div class="wperp-transactions-section wperp-section" v-if="accounts.length">
             <!-- wperp-accounts-table class is required class for only this component -->
             <div class="table-container">
                 <table class="wperp-table table-striped table-dark widefat table2 wperp-accounts-table">
@@ -63,6 +63,8 @@
 
             </div>
         </div>
+
+        <p v-else>No data found.</p>
 
     </div>
 </template>
