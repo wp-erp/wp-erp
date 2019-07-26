@@ -4,7 +4,6 @@
             <span>Employees</span>
         </h2>
         <list-table
-            tableClass="wp-ListTable widefat fixed employee-list"
             action-column="actions"
             :columns="columns"
             :rows="row_data"
@@ -114,55 +113,4 @@
 
     };
 </script>
-<style lang="less" scoped>
-    .app-employees {
-        .add-new-people {
-            margin-top: 10px;
-            align-items: center;
-            display: flex;
-            span {
-                font-size: 18px;
-                font-weight: bold;
-            }
-        }
-        .employee-list {
-            border-radius: 3px;
-            tbody {
-                background: #FAFAFA;
-            }
-            th ul,
-            th li {
-                margin: 0;
-            }
-            th li {
-                display: flex;
-                align-items: center;
-                img {
-                    width: 14px;
-                    padding-right: 5px;
-                }
-            }
-            .column.title {
-                &.selected {
-                    color: #1A9ED4;
-                }
-                a {
-                    color: #222;
-                    font-weight: normal;
-                    &:hover {
-                        color: #1A9ED4;
-                    }
-                }
-            }
-        }
-        .widefat {
-            tfoot td,
-            tbody th {
-                line-height: 2.5em;
-            }
-            tbody td {
-                line-height: 3em;
-            }
-        }
-    }
-</style>
+

@@ -157,18 +157,13 @@
     }
 </script>
 
-<style>
-    .chart-list tr .ledger_name {
-        width: 40%;
-    }
-</style>
-
-<style lang="less" scoped>
+<style lang="less">
     .chart-accounts {
+        .tablenav,
         .tablenav,
         .column-cb,
         .check-column {
-            display: none;
+            display: none !important;
         }
 
         li {
@@ -195,7 +190,7 @@
         }
     }
 
-    .tablenav-pages {
-        display: none !important;
+    .chart-list tr .ledger_name {
+        width: 40%;
     }
 </style>

@@ -14537,7 +14537,6 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -29060,6 +29059,8 @@ setTimeout(function () {
 //
 //
 //
+//
+//
 
 
 
@@ -33803,12 +33804,8 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Employees_vue__ = __webpack_require__(110);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_79d8951b_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Employees_vue__ = __webpack_require__(256);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_79d8951b_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Employees_vue__ = __webpack_require__(640);
 var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(255)
-}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -33818,14 +33815,14 @@ var normalizeComponent = __webpack_require__(0)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = injectStyle
+var __vue_styles__ = null
 /* scopeId */
-var __vue_scopeId__ = "data-v-79d8951b"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Employees_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_79d8951b_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Employees_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_79d8951b_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Employees_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -33853,98 +33850,8 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 255 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 256 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "app-employees" },
-    [
-      _vm._m(0),
-      _vm._v(" "),
-      _c("list-table", {
-        attrs: {
-          tableClass: "wp-ListTable widefat fixed employee-list",
-          "action-column": "actions",
-          columns: _vm.columns,
-          rows: _vm.row_data,
-          "total-items": _vm.paginationData.totalItems,
-          "total-pages": _vm.paginationData.totalPages,
-          "per-page": _vm.paginationData.perPage,
-          "current-page": _vm.paginationData.currentPage,
-          showCb: false
-        },
-        on: { pagination: _vm.goToPage },
-        scopedSlots: _vm._u([
-          {
-            key: "title",
-            fn: function(data) {
-              return [
-                _c("strong", [
-                  _c("a", { attrs: { href: "#" } }, [
-                    _vm._v(_vm._s(data.row.title))
-                  ])
-                ])
-              ]
-            }
-          },
-          {
-            key: "employee",
-            fn: function(data) {
-              return [
-                _c(
-                  "router-link",
-                  {
-                    attrs: {
-                      to: {
-                        name: "EmployeeDetails",
-                        params: { id: data.row.id }
-                      }
-                    }
-                  },
-                  [_vm._v(_vm._s(data.row.employee))]
-                )
-              ]
-            }
-          }
-        ])
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("h2", { staticClass: "add-new-people" }, [
-      _c("span", [_vm._v("Employees")])
-    ])
-  }
-]
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-79d8951b", esExports)
-  }
-}
-
-/***/ }),
+/* 255 */,
+/* 256 */,
 /* 257 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -44767,12 +44674,11 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ChartOfAccounts_vue__ = __webpack_require__(130);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_dc7bda52_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ChartOfAccounts_vue__ = __webpack_require__(300);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_dc7bda52_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ChartOfAccounts_vue__ = __webpack_require__(642);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(298)
-  __webpack_require__(299)
+  __webpack_require__(641)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -44785,12 +44691,12 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-dc7bda52"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ChartOfAccounts_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_dc7bda52_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ChartOfAccounts_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_dc7bda52_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ChartOfAccounts_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -44818,168 +44724,9 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 298 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 299 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 300 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wperp-container chart-accounts" }, [
-    _c("div", { staticClass: "content-header-section separator" }, [
-      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
-        _c("div", { staticClass: "wperp-col" }, [
-          _c(
-            "h2",
-            { staticClass: "content-header__title" },
-            [
-              _vm._v(
-                "\n                    Chart of Accounts\n                    "
-              ),
-              _c(
-                "router-link",
-                {
-                  staticClass: "wperp-btn btn--primary",
-                  attrs: { to: { name: "AddChartAccounts" } }
-                },
-                [_vm._v("Add New")]
-              )
-            ],
-            1
-          )
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "ul",
-      _vm._l(_vm.chartAccounts, function(chart, index) {
-        return _c(
-          "li",
-          { key: index },
-          [
-            _c("h3", [_vm._v(_vm._s(chart.label))]),
-            _vm._v(" "),
-            _c("list-table", {
-              attrs: {
-                tableClass:
-                  "wperp-table table-striped table-dark widefat table2 chart-list",
-                "action-column": "actions",
-                columns: _vm.columns,
-                actions: _vm.actions,
-                showCb: false,
-                rows: _vm.ledgers[parseInt(chart.id)]
-              },
-              on: { "action:click": _vm.onActionClick },
-              scopedSlots: _vm._u(
-                [
-                  {
-                    key: "ledger_name",
-                    fn: function(data) {
-                      return [
-                        _c(
-                          "router-link",
-                          {
-                            attrs: {
-                              to: {
-                                name: "LedgerSingle",
-                                params: {
-                                  id: data.row.id,
-                                  ledgerID: data.row.id,
-                                  ledgerName: data.row.name,
-                                  ledgerCode: data.row.code
-                                }
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              _vm._s(data.row.name) + "\n                    "
-                            )
-                          ]
-                        )
-                      ]
-                    }
-                  },
-                  {
-                    key: "trn_count",
-                    fn: function(data) {
-                      return [
-                        _c(
-                          "router-link",
-                          {
-                            attrs: {
-                              to: {
-                                name: "LedgerReport",
-                                params: {
-                                  id: data.row.id,
-                                  ledgerID: data.row.id,
-                                  ledgerName: data.row.name,
-                                  ledgerCode: data.row.code
-                                }
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              _vm._s(data.row.trn_count) +
-                                "\n                    "
-                            )
-                          ]
-                        )
-                      ]
-                    }
-                  },
-                  {
-                    key: "row-actions",
-                    fn: function(data) {
-                      return data.row.system != null
-                        ? [
-                            _c("strong", { staticClass: "sys-acc" }, [
-                              _vm._v("System")
-                            ])
-                          ]
-                        : undefined
-                    }
-                  }
-                ],
-                null,
-                true
-              )
-            })
-          ],
-          1
-        )
-      }),
-      0
-    )
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-dc7bda52", esExports)
-  }
-}
-
-/***/ }),
+/* 298 */,
+/* 299 */,
+/* 300 */,
 /* 301 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -45762,6 +45509,7 @@ var render = function() {
                         expression: "categoryName"
                       }
                     ],
+                    staticClass: "wperp-form-field",
                     attrs: { type: "text" },
                     domProps: { value: _vm.categoryName },
                     on: {
@@ -45848,6 +45596,7 @@ var render = function() {
                           return data.row.isEdit
                             ? [
                                 _c("input", {
+                                  staticClass: "wperp-form-field",
                                   attrs: {
                                     type: "text",
                                     id: "cat-" + data.row.id
@@ -59112,133 +58861,163 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "wperp-transactions-section wperp-section" }, [
-      _c("div", { staticClass: "table-container" }, [
-        _c(
-          "table",
-          {
-            staticClass:
-              "wperp-table table-striped table-dark widefat table2 wperp-accounts-table"
-          },
-          [
+    _vm.accounts.length
+      ? _c("div", { staticClass: "wperp-transactions-section wperp-section" }, [
+          _c("div", { staticClass: "table-container" }, [
             _c(
-              "tbody",
+              "table",
+              {
+                staticClass:
+                  "wperp-table table-striped table-dark widefat table2 wperp-accounts-table"
+              },
               [
-                _c("tr"),
-                _vm._v(" "),
-                _vm._l(_vm.accounts, function(account, index) {
-                  return _c("tr", { key: index }, [
-                    _c("td", { staticClass: "col--account-infos" }, [
-                      _c("div", { staticClass: "account-name" }, [
-                        _c("h4", [_vm._v(_vm._s(account.name))])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "account-number-info" }, [
-                        _c("span", { staticClass: "account-number-label" }, [
-                          _vm._v(_vm._s(_vm.__("Account Number", "erp")) + ":")
-                        ]),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "account-number" }, [
-                          _vm._v(_vm._s(account.code))
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "account-balance-info" }, [
-                        _c("div", { staticClass: "available-balance" }, [
-                          _c("span", { staticClass: "account-balance-label" }, [
-                            _vm._v(
-                              _vm._s(_vm.__("Available Balance", "erp")) + ":"
-                            )
+                _c(
+                  "tbody",
+                  [
+                    _c("tr"),
+                    _vm._v(" "),
+                    _vm._l(_vm.accounts, function(account, index) {
+                      return _c("tr", { key: index }, [
+                        _c("td", { staticClass: "col--account-infos" }, [
+                          _c("div", { staticClass: "account-name" }, [
+                            _c("h4", [_vm._v(_vm._s(account.name))])
                           ]),
                           _vm._v(" "),
-                          undefined === account.balance
-                            ? _c("strong", { staticClass: "account-balance" }, [
-                                _vm._v(_vm._s(_vm.transformBalance(0)))
-                              ])
-                            : _c("strong", { staticClass: "account-balance" }, [
-                                _vm._v(
-                                  _vm._s(_vm.transformBalance(account.balance))
-                                )
-                              ])
-                        ])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "col--actions" }, [
-                      _c(
-                        "div",
-                        { staticClass: "row-actions" },
-                        [
-                          _vm._t("row-actions", [
+                          _c("div", { staticClass: "account-number-info" }, [
                             _c(
-                              "dropdown",
-                              { attrs: { placement: "left-start" } },
+                              "span",
+                              { staticClass: "account-number-label" },
                               [
-                                _c("template", { slot: "button" }, [
-                                  _c("a", { staticClass: "dropdown-trigger" }, [
-                                    _c("i", { staticClass: "flaticon-menu" })
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("template", { slot: "dropdown" }, [
-                                  _c(
-                                    "ul",
-                                    {
-                                      attrs: {
-                                        slot: "action-items",
-                                        role: "menu"
-                                      },
-                                      slot: "action-items"
-                                    },
-                                    _vm._l(_vm.actions, function(action) {
-                                      return _c(
-                                        "li",
-                                        { key: action.key, class: action.key },
+                                _vm._v(
+                                  _vm._s(_vm.__("Account Number", "erp")) + ":"
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "account-number" }, [
+                              _vm._v(_vm._s(account.code))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "account-balance-info" }, [
+                            _c("div", { staticClass: "available-balance" }, [
+                              _c(
+                                "span",
+                                { staticClass: "account-balance-label" },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.__("Available Balance", "erp")) +
+                                      ":"
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              undefined === account.balance
+                                ? _c(
+                                    "strong",
+                                    { staticClass: "account-balance" },
+                                    [_vm._v(_vm._s(_vm.transformBalance(0)))]
+                                  )
+                                : _c(
+                                    "strong",
+                                    { staticClass: "account-balance" },
+                                    [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm.transformBalance(account.balance)
+                                        )
+                                      )
+                                    ]
+                                  )
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "col--actions" }, [
+                          _c(
+                            "div",
+                            { staticClass: "row-actions" },
+                            [
+                              _vm._t("row-actions", [
+                                _c(
+                                  "dropdown",
+                                  { attrs: { placement: "left-start" } },
+                                  [
+                                    _c("template", { slot: "button" }, [
+                                      _c(
+                                        "a",
+                                        { staticClass: "dropdown-trigger" },
                                         [
-                                          _c(
-                                            "a",
-                                            {
-                                              attrs: { href: "#" },
-                                              on: {
-                                                click: function($event) {
-                                                  $event.preventDefault()
-                                                  return _vm.actionClicked(
-                                                    action.key,
-                                                    account
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [
-                                              _c("i", {
-                                                class: action.iconClass
-                                              }),
-                                              _vm._v(_vm._s(action.label))
-                                            ]
-                                          )
+                                          _c("i", {
+                                            staticClass: "flaticon-menu"
+                                          })
                                         ]
                                       )
-                                    }),
-                                    0
-                                  )
-                                ])
-                              ],
-                              2
-                            )
-                          ])
-                        ],
-                        2
-                      )
-                    ])
-                  ])
-                })
-              ],
-              2
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("template", { slot: "dropdown" }, [
+                                      _c(
+                                        "ul",
+                                        {
+                                          attrs: {
+                                            slot: "action-items",
+                                            role: "menu"
+                                          },
+                                          slot: "action-items"
+                                        },
+                                        _vm._l(_vm.actions, function(action) {
+                                          return _c(
+                                            "li",
+                                            {
+                                              key: action.key,
+                                              class: action.key
+                                            },
+                                            [
+                                              _c(
+                                                "a",
+                                                {
+                                                  attrs: { href: "#" },
+                                                  on: {
+                                                    click: function($event) {
+                                                      $event.preventDefault()
+                                                      return _vm.actionClicked(
+                                                        action.key,
+                                                        account
+                                                      )
+                                                    }
+                                                  }
+                                                },
+                                                [
+                                                  _c("i", {
+                                                    class: action.iconClass
+                                                  }),
+                                                  _vm._v(_vm._s(action.label))
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        }),
+                                        0
+                                      )
+                                    ])
+                                  ],
+                                  2
+                                )
+                              ])
+                            ],
+                            2
+                          )
+                        ])
+                      ])
+                    })
+                  ],
+                  2
+                )
+              ]
             )
-          ]
-        )
-      ])
-    ])
+          ])
+        ])
+      : _c("p", [_vm._v("No data found.")])
   ])
 }
 var staticRenderFns = []
@@ -63678,6 +63457,385 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
+
+/***/ }),
+/* 502 */,
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */,
+/* 510 */,
+/* 511 */,
+/* 512 */,
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */,
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */,
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */,
+/* 602 */,
+/* 603 */,
+/* 604 */,
+/* 605 */,
+/* 606 */,
+/* 607 */,
+/* 608 */,
+/* 609 */,
+/* 610 */,
+/* 611 */,
+/* 612 */,
+/* 613 */,
+/* 614 */,
+/* 615 */,
+/* 616 */,
+/* 617 */,
+/* 618 */,
+/* 619 */,
+/* 620 */,
+/* 621 */,
+/* 622 */,
+/* 623 */,
+/* 624 */,
+/* 625 */,
+/* 626 */,
+/* 627 */,
+/* 628 */,
+/* 629 */,
+/* 630 */,
+/* 631 */,
+/* 632 */,
+/* 633 */,
+/* 634 */,
+/* 635 */,
+/* 636 */,
+/* 637 */,
+/* 638 */,
+/* 639 */,
+/* 640 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "app-employees" },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("list-table", {
+        attrs: {
+          "action-column": "actions",
+          columns: _vm.columns,
+          rows: _vm.row_data,
+          "total-items": _vm.paginationData.totalItems,
+          "total-pages": _vm.paginationData.totalPages,
+          "per-page": _vm.paginationData.perPage,
+          "current-page": _vm.paginationData.currentPage,
+          showCb: false
+        },
+        on: { pagination: _vm.goToPage },
+        scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function(data) {
+              return [
+                _c("strong", [
+                  _c("a", { attrs: { href: "#" } }, [
+                    _vm._v(_vm._s(data.row.title))
+                  ])
+                ])
+              ]
+            }
+          },
+          {
+            key: "employee",
+            fn: function(data) {
+              return [
+                _c(
+                  "router-link",
+                  {
+                    attrs: {
+                      to: {
+                        name: "EmployeeDetails",
+                        params: { id: data.row.id }
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(data.row.employee))]
+                )
+              ]
+            }
+          }
+        ])
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h2", { staticClass: "add-new-people" }, [
+      _c("span", [_vm._v("Employees")])
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-79d8951b", esExports)
+  }
+}
+
+/***/ }),
+/* 641 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 642 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wperp-container chart-accounts" }, [
+    _c("div", { staticClass: "content-header-section separator" }, [
+      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
+        _c("div", { staticClass: "wperp-col" }, [
+          _c(
+            "h2",
+            { staticClass: "content-header__title" },
+            [
+              _vm._v(
+                "\n                    Chart of Accounts\n                    "
+              ),
+              _c(
+                "router-link",
+                {
+                  staticClass: "wperp-btn btn--primary",
+                  attrs: { to: { name: "AddChartAccounts" } }
+                },
+                [_vm._v("Add New")]
+              )
+            ],
+            1
+          )
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "ul",
+      _vm._l(_vm.chartAccounts, function(chart, index) {
+        return _c(
+          "li",
+          { key: index },
+          [
+            _c("h3", [_vm._v(_vm._s(chart.label))]),
+            _vm._v(" "),
+            _c("list-table", {
+              attrs: {
+                tableClass:
+                  "wperp-table table-striped table-dark widefat table2 chart-list",
+                "action-column": "actions",
+                columns: _vm.columns,
+                actions: _vm.actions,
+                showCb: false,
+                rows: _vm.ledgers[parseInt(chart.id)]
+              },
+              on: { "action:click": _vm.onActionClick },
+              scopedSlots: _vm._u(
+                [
+                  {
+                    key: "ledger_name",
+                    fn: function(data) {
+                      return [
+                        _c(
+                          "router-link",
+                          {
+                            attrs: {
+                              to: {
+                                name: "LedgerSingle",
+                                params: {
+                                  id: data.row.id,
+                                  ledgerID: data.row.id,
+                                  ledgerName: data.row.name,
+                                  ledgerCode: data.row.code
+                                }
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(data.row.name) + "\n                    "
+                            )
+                          ]
+                        )
+                      ]
+                    }
+                  },
+                  {
+                    key: "trn_count",
+                    fn: function(data) {
+                      return [
+                        _c(
+                          "router-link",
+                          {
+                            attrs: {
+                              to: {
+                                name: "LedgerReport",
+                                params: {
+                                  id: data.row.id,
+                                  ledgerID: data.row.id,
+                                  ledgerName: data.row.name,
+                                  ledgerCode: data.row.code
+                                }
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(data.row.trn_count) +
+                                "\n                    "
+                            )
+                          ]
+                        )
+                      ]
+                    }
+                  },
+                  {
+                    key: "row-actions",
+                    fn: function(data) {
+                      return data.row.system != null
+                        ? [
+                            _c("strong", { staticClass: "sys-acc" }, [
+                              _vm._v("System")
+                            ])
+                          ]
+                        : undefined
+                    }
+                  }
+                ],
+                null,
+                true
+              )
+            })
+          ],
+          1
+        )
+      }),
+      0
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-dc7bda52", esExports)
+  }
+}
 
 /***/ })
 ],[211]);

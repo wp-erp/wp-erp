@@ -8,7 +8,7 @@
                         <form id="erp-acct-product-category">
                             <div :class="['form-field term-name-wrap', { 'form-invalid': error }]">
                                 <label>Category Name</label>
-                                <input type="text" v-model="categoryName">
+                                <input type="text" class="wperp-form-field" v-model="categoryName">
                             </div>
                             <div class="form-field">
                                 <label>Parent Category</label>
@@ -41,7 +41,7 @@
                                 @bulk:click="onBulkAction">
                         >
                         <template slot="name" slot-scope="data" v-if="data.row.isEdit">
-                            <input type="text" :value="data.row.name" :id="'cat-'+data.row.id">
+                            <input type="text" class="wperp-form-field" :value="data.row.name" :id="'cat-'+data.row.id">
                             <div class="buttons-wrapper text-right" style="margin-top: 10px">
                                 <button class="wperp-btn btn--primary" @click="updateCategory(data.row)">Update</button>
                                 <button class="wperp-btn btn--default" @click.prevent="data.row.isEdit = false">Cancel
