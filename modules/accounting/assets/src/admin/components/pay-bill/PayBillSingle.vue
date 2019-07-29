@@ -92,8 +92,8 @@
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Subtotal:</span> {{ moneyFormat(payBill.amount) }}</li>
-                                        <li><span>Total:</span> {{ moneyFormat(payBill.amount) }}</li>
+                                        <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat(payBill.amount) }}</li>
+                                        <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat(payBill.amount) }}</li>
                                     </ul>
                                 </td>
                             </tr>

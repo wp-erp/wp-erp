@@ -47,7 +47,7 @@
 	                    <div class="wperp-col-sm-4 wperp-col-xs-12">
 	                        <div class="wperp-form-group">
 	                            <label>{{ __('Tax Amount', 'erp') }}</label>
-	                            <input type="number" v-model="tax_amount" class="wperp-form-field" placeholder="Enter Tax Amount">
+	                            <input type="number" v-model="tax_amount" class="wperp-form-field" :placeholder="__('Enter Tax Amount', 'erp')">
 
                                 <span>{{ __('Due Amount', 'erp') }}: <span class="text-theme">{{ moneyFormat(dueAmount) }}</span></span>
 	                        </div>
@@ -55,13 +55,13 @@
                         <div class="wperp-col-sm-4 wperp-col-xs-12">
                             <div class="wperp-form-group with-multiselect">
                                 <label>{{ __('Voucher Type', 'erp') }}</label>
-                                <multi-select v-model="voucher_type" :options="voucher_types" placeholder="Enter Voucher Type" />
+                                <multi-select v-model="voucher_type" :options="voucher_types" :placeholder="__('Enter Voucher Type', 'erp')" />
                             </div>
                         </div>
 
 	                    <div class="wperp-col-xs-12">
 	                        <label>{{ __('Particulars', 'erp') }}</label>
-	                        <textarea rows="3" v-model="particulars" class="wperp-form-field" placeholder="Enter Particulars"></textarea>
+	                        <textarea rows="3" v-model="particulars" class="wperp-form-field" :placeholder="__('Enter Particulars', 'erp')"></textarea>
 	                    </div>
 	                    <div class="wperp-col-xs-12">
 	                    	<div class="wperp-form-group text-right mt-10 mb-0">

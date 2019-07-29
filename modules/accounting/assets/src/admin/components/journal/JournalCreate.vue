@@ -33,7 +33,7 @@
                     </div>
                     <div class="wperp-col-sm-4">
                         <label>{{ __('Particulars', 'erp') }}</label>
-                        <textarea v-model="journal_parti" rows="1" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                        <textarea v-model="journal_parti" rows="1" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                     </div>
                 </div>
 

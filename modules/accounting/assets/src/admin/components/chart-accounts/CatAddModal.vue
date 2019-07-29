@@ -18,7 +18,7 @@
                                 :options="categories"
                                 :disable-branch-nodes="true"
                                 :show-count="true"
-                                placeholder="Please select a category" />
+                                :placeholder="__('Please select a category', 'erp')" />
                         </div>
 
                         <div class="form-row">

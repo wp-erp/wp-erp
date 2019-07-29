@@ -21,11 +21,11 @@
                                 <div class="wperp-row wperp-gutter-20">
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                         <label for="first_name">{{ __('First Name', 'erp') }} <span class="wperp-required-sign">*</span></label>
-                                        <input type="text" v-model="peopleFields.first_name" id="first_name" class="wperp-form-field" placeholder="First Name" required>
+                                        <input type="text" v-model="peopleFields.first_name" id="first_name" class="wperp-form-field" :placeholder="__('First Name', 'erp')" required>
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                         <label for="last_name">{{ __('Last Name', 'erp') }} <span class="wperp-required-sign">*</span></label>
-                                        <input type="text" v-model="peopleFields.last_name" id="last_name" class="wperp-form-field" placeholder="Last Name" required>
+                                        <input type="text" v-model="peopleFields.last_name" id="last_name" class="wperp-form-field" :placeholder="__('Last Name', 'erp')" required>
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                         <label for="email">{{ __('Email', 'erp') }} <span class="wperp-required-sign">*</span></label>
@@ -42,7 +42,7 @@
                                     <div class="wperp-row wperp-gutter-20">
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="company">{{ __('Company', 'erp') }}</label>
-                                            <input type="text" v-model="peopleFields.company" id="company" class="wperp-form-field" placeholder="ABC Corporation">
+                                            <input type="text" v-model="peopleFields.company" id="company" class="wperp-form-field" :placeholder="__('ABC Corporation', 'erp')">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="phone">{{ __('Phone', 'erp') }}</label>
@@ -54,23 +54,23 @@
                                         </div>
                                         <div class="wperp-col-xs-12 wperp-form-group">
                                             <label for="note">{{ __('Note', 'erp') }}</label>
-                                            <textarea v-model="peopleFields.notes" id="note" cols="30" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
+                                            <textarea v-model="peopleFields.notes" id="note" cols="30" rows="4" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="fax">{{ __('Fax', 'erp') }}</label>
-                                            <input type="text" v-model="peopleFields.fax" id="fax" class="wperp-form-field" placeholder="Type here">
+                                            <input type="text" v-model="peopleFields.fax" id="fax" class="wperp-form-field" :placeholder="__('Type here', 'erp')">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="street1">{{ __('Street 1', 'erp') }}</label>
-                                            <input type="text" v-model="peopleFields.street_1" id="street1" class="wperp-form-field" placeholder="Street 1">
+                                            <input type="text" v-model="peopleFields.street_1" id="street1" class="wperp-form-field" :placeholder="__('Street 1', 'erp')">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="street2">{{ __('Street 2', 'erp') }}</label>
-                                            <input type="text" v-model="peopleFields.street_2" id="street2" class="wperp-form-field" placeholder="Street 2">
+                                            <input type="text" v-model="peopleFields.street_2" id="street2" class="wperp-form-field" :placeholder="__('Street 2', 'erp')">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="city">{{ __('City', 'erp') }}</label>
-                                            <input type="text" v-model="peopleFields.city" id="city" class="wperp-form-field" placeholder="City/Town">
+                                            <input type="text" v-model="peopleFields.city" id="city" class="wperp-form-field" :placeholder="__('City/Town', 'erp')">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label>{{ __('Country', 'erp') }}</label>
@@ -92,7 +92,7 @@
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="post_code">{{ __('Post Code', 'erp') }}</label>
-                                            <input type="text" v-model="peopleFields.postal_code" id="post_code" class="wperp-form-field" placeholder="Post Code">
+                                            <input type="text" v-model="peopleFields.postal_code" id="post_code" class="wperp-form-field" :placeholder="__('Post Code', 'erp')">
                                         </div>
                                     </div>
                                 </div>

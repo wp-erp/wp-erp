@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="wperp-col-sm-9 wperp-col-xs-12">
                                         <input type="text" class="wperp-form-field"
-                                               placeholder="Enter Product Name Here"
+                                               :placeholder="__('Enter Product Name Here', 'erp')"
                                                v-model="ProductFields.name" required>
                                     </div>
                                 </div>

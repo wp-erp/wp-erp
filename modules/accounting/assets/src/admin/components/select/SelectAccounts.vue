@@ -1,6 +1,6 @@
 <template>
     <div class="with-multiselect">
-        <multi-select placeholder="Select Account" v-model="selectedAccount" :options="accounts" />
+        <multi-select :placeholder="__('Select Account', 'erp')" v-model="selectedAccount" :options="accounts" />
         <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(balance)}}</span>
     </div>
 </template>

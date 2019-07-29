@@ -273,7 +273,7 @@
                 <tr class="wperp-form-group">
                     <td colspan="9" style="text-align: left;">
                         <label>{{ __('Description', 'erp') }}</label>
-                        <textarea v-model="description" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                        <textarea v-model="description" rows="4" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                     </td>
                 </tr>
                 </tbody>

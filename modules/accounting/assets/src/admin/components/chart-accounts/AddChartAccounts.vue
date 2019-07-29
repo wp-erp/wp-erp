@@ -21,7 +21,7 @@
                     :options="chartAccounts"
                     :disable-branch-nodes="true"
                     :show-count="true"
-                    placeholder="Please select" />
+                    :placeholder="__('Please select', 'erp')" />
             </div>
 
             <!-- <div class="form-row">
@@ -30,7 +30,7 @@
                     :options="categories"
                     :disable-branch-nodes="true"
                     :show-count="true"
-                    placeholder="Please select a category">
+                    :placeholder="__('Please select a category', 'erp')">
 
                     <label slot="option-label" slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" :class="labelClassName">
                         {{ node.label }}
@@ -58,7 +58,7 @@
             </div>
 
             <button class="wperp-btn btn--primary" type="submit">
-                {{ editMode ? 'Update' : 'Save' }}
+                {{ editMode ? __('Update', 'erp') : __('Save', 'erp') }}
             </button>
         </form>
 

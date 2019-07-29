@@ -18,7 +18,7 @@
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                 <label for="transfer_funds_from">{{ __('Transfer Funds From', 'erp') }}</label>
                                 <div class="wperp-custom-select with-multiselect">
-                                    <multi-select id="transfer_funds_from" name="from" v-model="transferFrom" :multiple="false" :options="fa" placeholder="Select Account"></multi-select>
+                                    <multi-select id="transfer_funds_from" name="from" v-model="transferFrom" :multiple="false" :options="fa" :placeholder="__('Select Account', 'erp')"></multi-select>
                                 </div>
                                 <span class="balance mt-10 display-inline-block">{{ __('Balance', 'erp') }}: {{transformBalance(transferFrom.balance)}}</span>
                             </div>
@@ -26,7 +26,7 @@
                                 <label for="transfer_funds_to">{{ __('Transfer Funds To', 'erp') }}</label>
 
                                 <div class="wperp-custom-select with-multiselect">
-                                    <multi-select id="transfer_funds_to" name="to" v-model="transferTo" :multiple="false" :options="ta" placeholder="Select Account"></multi-select>
+                                    <multi-select id="transfer_funds_to" name="to" v-model="transferTo" :multiple="false" :options="ta" :placeholder="__('Select Account', 'erp')"></multi-select>
                                 </div>
                                 <span class="balance mt-10 display-inline-block">{{ __('Balance', 'erp') }}: {{transformBalance(transferTo.balance)}}</span>
                             </div>
@@ -40,7 +40,7 @@
                             </div>
                             <div class="wperp-col-xs-12 wperp-form-group">
                                 <label for="particulars">{{ __('Particulars', 'erp') }}</label>
-                                <textarea name="particulars" id="particulars" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="particulars"></textarea>
+                                <textarea name="particulars" id="particulars" rows="3" class="wperp-form-field" :placeholder="__('Type Here', 'erp')" v-model="particulars"></textarea>
                             </div>
                         </div>
                     </div>
