@@ -379,7 +379,7 @@ function erp_acct_clsbl_vendor_ap_opening_balance_by_fn_year_id( $id ) {
  * @param array $arr1
  * @param array $arr2
  *
- * @return void
+ * @return array
  */
 function erp_acct_clsbl_get_formatted_people_balance( $arr ) {
     $temp = [];
@@ -401,6 +401,14 @@ function erp_acct_clsbl_get_formatted_people_balance( $arr ) {
     return $temp;
 }
 
+/**
+ * Sales tax agency with closing balance
+ *
+ * @param array $args
+ * @param array $type
+ *
+ * @return float
+ */
 function erp_acct_clsbl_sales_tax_agency( $args, $type ) {
     global $wpdb;
 

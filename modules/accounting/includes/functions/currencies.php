@@ -7,10 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get all currencies
  *
- * @return array
+ * @return mixed
  */
-function erp_acct_get_all_currencies() {
+function erp_acct_get_all_currencies( $count = false ) {
     global $wpdb;
+
+    if ( $count ) {
+        return $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_acct_currency_info" );
+    }
 
     return $wpdb->get_results( "SELECT id, name, sign FROM {$wpdb->prefix}erp_acct_currency_info", ARRAY_A );
 }
