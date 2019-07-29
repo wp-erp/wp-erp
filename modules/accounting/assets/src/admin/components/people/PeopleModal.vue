@@ -7,7 +7,7 @@
                         <!-- modal body title -->
                         <div class="wperp-modal-header">
                             <h3 v-if="!people">{{ title }}</h3>
-                            <h3 v-else>Update {{ title }}</h3>
+                            <h3 v-else>{{ __('Update', 'erp') }} {{ title }}</h3>
                             <span class="modal-close">
                                 <i class="flaticon-close" @click="$parent.$emit('modal-close')"></i></span>
                         </div>
@@ -20,19 +20,19 @@
                                 <!-- add new product form -->
                                 <div class="wperp-row wperp-gutter-20">
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                        <label for="first_name">First Name <span class="wperp-required-sign">*</span></label>
+                                        <label for="first_name">{{ __('First Name', 'erp') }} <span class="wperp-required-sign">*</span></label>
                                         <input type="text" v-model="peopleFields.first_name" id="first_name" class="wperp-form-field" placeholder="First Name" required>
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                        <label for="last_name">Last Name <span class="wperp-required-sign">*</span></label>
+                                        <label for="last_name">{{ __('Last Name', 'erp') }} <span class="wperp-required-sign">*</span></label>
                                         <input type="text" v-model="peopleFields.last_name" id="last_name" class="wperp-form-field" placeholder="Last Name" required>
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                        <label for="email">Email <span class="wperp-required-sign">*</span></label>
+                                        <label for="email">{{ __('Email', 'erp') }} <span class="wperp-required-sign">*</span></label>
                                         <input type="email" @blur="checkEmailExistence" v-model="peopleFields.email" id="email" class="wperp-form-field" placeholder="you@domain.com" required>
                                     </div>
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                        <label for="mobile">Mobile</label>
+                                        <label for="mobile">{{ __('Mobile', 'erp') }}</label>
                                         <input type="tel" v-model="peopleFields.mobile" id="mobile" class="wperp-form-field">
                                     </div>
                                 </div>
@@ -41,39 +41,39 @@
                                 <div class="wperp-more-fields" v-if="showMore">
                                     <div class="wperp-row wperp-gutter-20">
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="company">Company</label>
+                                            <label for="company">{{ __('Company', 'erp') }}</label>
                                             <input type="text" v-model="peopleFields.company" id="company" class="wperp-form-field" placeholder="ABC Corporation">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="phone">Phone</label>
+                                            <label for="phone">{{ __('Phone', 'erp') }}</label>
                                             <input type="tel" v-model="peopleFields.phone" id="phone" class="wperp-form-field" placeholder="(123) 456-789">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="website">Website</label>
+                                            <label for="website">{{ __('Website', 'erp') }}</label>
                                             <input type="url" v-model="peopleFields.website" id="website" class="wperp-form-field" placeholder="www.domain.com">
                                         </div>
                                         <div class="wperp-col-xs-12 wperp-form-group">
-                                            <label for="note">Note</label>
+                                            <label for="note">{{ __('Note', 'erp') }}</label>
                                             <textarea v-model="peopleFields.notes" id="note" cols="30" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="fax">Fax</label>
+                                            <label for="fax">{{ __('Fax', 'erp') }}</label>
                                             <input type="text" v-model="peopleFields.fax" id="fax" class="wperp-form-field" placeholder="Type here">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="street1">Street 1</label>
+                                            <label for="street1">{{ __('Street 1', 'erp') }}</label>
                                             <input type="text" v-model="peopleFields.street_1" id="street1" class="wperp-form-field" placeholder="Street 1">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="street2">Street 2</label>
+                                            <label for="street2">{{ __('Street 2', 'erp') }}</label>
                                             <input type="text" v-model="peopleFields.street_2" id="street2" class="wperp-form-field" placeholder="Street 2">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="city">City</label>
+                                            <label for="city">{{ __('City', 'erp') }}</label>
                                             <input type="text" v-model="peopleFields.city" id="city" class="wperp-form-field" placeholder="City/Town">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label>Country</label>
+                                            <label>{{ __('Country', 'erp') }}</label>
                                             <div class="with-multiselect">
                                                 <multi-select
                                                 v-model="peopleFields.country"
@@ -82,7 +82,7 @@
                                             </div>
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label>Province/State</label>
+                                            <label>{{ __('Province/State', 'erp') }}</label>
                                             <div class="with-multiselect">
                                                 <multi-select
                                                 v-model="peopleFields.state"
@@ -91,7 +91,7 @@
                                             </div>
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="post_code">Post Code</label>
+                                            <label for="post_code">{{ __('Post Code', 'erp') }}</label>
                                             <input type="text" v-model="peopleFields.postal_code" id="post_code" class="wperp-form-field" placeholder="Post Code">
                                         </div>
                                     </div>
@@ -101,7 +101,7 @@
                                     <label class="form-check-label mb-0" for="show_more">
                                         <input class="form-check-input" name="show_more" id="show_more" type="checkbox" @click="showDetails">
                                         <span class="form-check-sign"></span>
-                                        <span class="field-label">Show More</span>
+                                        <span class="field-label">{{ __('Show More', 'erp') }}</span>
                                     </label>
                                 </div>
 
@@ -110,9 +110,9 @@
                             <div class="wperp-modal-footer pt-0">
                                 <!-- buttons -->
                                 <div class="buttons-wrapper text-right">
-                                    <button class="wperp-btn btn--default modal-close" @click="$parent.$emit('modal-close')" type="reset">Cancel</button>
-                                    <button v-if="!people" class="wperp-btn btn--primary" type="submit">Add New</button>
-                                    <button v-else class="wperp-btn btn--primary" type="submit">Update</button>
+                                    <button class="wperp-btn btn--default modal-close" @click="$parent.$emit('modal-close')" type="reset">{{ __('Cancel', 'erp') }}</button>
+                                    <button v-if="!people" class="wperp-btn btn--primary" type="submit">{{ __('Add New', 'erp') }}</button>
+                                    <button v-else class="wperp-btn btn--primary" type="submit">{{ __('Update', 'erp') }}</button>
                                 </div>
                             </div>
                         </form>

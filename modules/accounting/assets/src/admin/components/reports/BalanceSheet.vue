@@ -1,7 +1,7 @@
 <template>
     <div class="balance-sheet">
         <h2 class="content-header__title">
-            <span>Balance Sheet</span>
+            <span>{{ __('Balance Sheet', 'erp') }}</span>
         </h2>
 
         <div class="blnce-sheet-top">
@@ -10,7 +10,7 @@
                 <div v-if="!closingBtnVisibility" class="wperp-date-group">
                     <datepicker v-model="start_date"></datepicker>
                     <datepicker v-model="end_date"></datepicker>
-                    <button class="wperp-btn btn--primary add-line-trigger" type="submit">Filter</button>
+                    <button class="wperp-btn btn--primary add-line-trigger" type="submit">{{ __('Filter', 'erp') }}</button>
                 </div>
 
                 <div v-else class="fn-year-info">
@@ -19,7 +19,7 @@
                     </div>
 
                     <div v-if="selectedYear">
-                        Balance showing from <em>{{ selectedYear.start_date }}</em> to
+                        {{ __('Balance showing from', 'erp') }} <em>{{ selectedYear.start_date }}</em> {{ __('to', 'erp') }}
                         <em>{{ selectedYear.end_date }}</em>
                     </div>
                 </div>
@@ -29,21 +29,21 @@
             <div class="closing-blnc no-print">
                 <div class="close-check">
                     <input type="checkbox" id="prepare-close" v-model="closingBtnVisibility">
-                    <label for="prepare-close">Prepare for closing</label>
+                    <label for="prepare-close">{{ __('Prepare for closing', 'erp') }}</label>
                 </div>
 
                 <a @click.prevent="checkClosingPossibility"
                     :class="[{ 'visible': closingBtnVisibility }, 'wperp-btn btn--primary close-now-btn']"
-                    href="#">Close Now</a>
+                    href="#">{{ __('Close Now', 'erp') }}</a>
 
                 <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                     <i class="flaticon-printer-1"></i>
-                    &nbsp; Print
+                    &nbsp; {{ __('Print', 'erp') }}
                 </a>
             </div>
         </div>
 
-        <p><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></p>
+        <p><strong>{{ __('For the period of ( Transaction date )', 'erp') }}:</strong> <em>{{ start_date }}</em> {{ __('to', 'erp') }} <em>{{ end_date }}</em></p>
 
         <div class="wperp-panel-body">
             <div class="wperp-row">
@@ -63,7 +63,7 @@
                         </template>
                         <template slot="tfoot">
                             <tr class="t-foot">
-                                <td>Total Asset</td>
+                                <td>{{ __('Total Asset', 'erp') }}</td>
                                 <td>{{ transformBalance(totalAsset) }}</td>
                             </tr>
                         </template>
@@ -86,7 +86,7 @@
                         </template>
                         <template slot="tfoot">
                             <tr class="t-foot">
-                                <td>Total Liability</td>
+                                <td>{{ __('Total Liability', 'erp') }}</td>
                                 <td>{{ transformBalance(totalLiability) }}</td>
                             </tr>
                         </template>
@@ -109,7 +109,7 @@
                         </template>
                         <template slot="tfoot">
                             <tr class="t-foot">
-                                <td>Total Equity</td>
+                                <td>{{ __('Total Equity', 'erp') }}</td>
                                 <td>{{ transformBalance(totalEquity) }}</td>
                             </tr>
                         </template>
@@ -119,13 +119,13 @@
                 <table class="wperp-table table-striped table-dark widefat liability-equity-balance report-table">
                     <tbody>
                         <tr>
-                            <td><strong>Assets = </strong></td>
+                            <td><strong>{{ __('Assets', 'erp') }} = </strong></td>
                             <td>{{ transformBalance(totalAsset) }}</td>
                             <td class="no-print"></td>
                             <td class="no-print"></td>
                         </tr>
                         <tr>
-                            <td><strong>Liability + Equity = </strong></td>
+                            <td><strong>{{ __('Liability', 'erp') }} + {{ __('Equity', 'erp') }} = </strong></td>
                             <td>{{ transformBalance(liability_equity) }}</td>
                             <td class="no-print"></td>
                             <td class="no-print"></td>

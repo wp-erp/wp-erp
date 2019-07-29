@@ -25,7 +25,7 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-chart-block">
-                                <h3>Outstanding</h3>
+                                <h3>{{ __('Outstanding', 'erp') }}</h3>
                                 <div class="wperp-total"><h2>{{ moneyFormat( outstanding ) }}</h2></div>
                             </div>
                         </div>

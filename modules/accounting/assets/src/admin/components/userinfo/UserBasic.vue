@@ -19,23 +19,23 @@
                 <div class="wperp-col-lg-9 wperp-col-md-8 wperp-col-sm-8 wperp-col-xs-12">
                     <ul class="customer-meta">
                         <li>
-                            <strong>Phone:</strong>
+                            <strong>{{ __('Phone', 'erp') }}:</strong>
                             <span>{{ user.phone }}</span>
                         </li>
                         <li>
-                            <strong>Mobile:</strong>
+                            <strong>{{ __('Mobile', 'erp') }}:</strong>
                             <span>{{ user.mobile }}</span>
                         </li>
                         <li>
-                            <strong>Website:</strong>
+                            <strong>{{ __('Website', 'erp') }}:</strong>
                             <span>{{ user.website }}</span>
                         </li>
                         <li>
-                            <strong>Fax:</strong>
+                            <strong>{{ __('Fax', 'erp') }}:</strong>
                             <span>{{ user.fax }}</span>
                         </li>
                         <li>
-                            <strong>Address:</strong>
+                            <strong>{{ __('Address', 'erp') }}:</strong>
                             <span v-if="userData.billing">{{ userData.billing.street_1 }}, {{ userData.billing.city }} </span>
                         </li>
                     </ul>

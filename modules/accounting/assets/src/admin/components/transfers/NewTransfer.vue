@@ -4,7 +4,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Transfer Money</h2>
+                    <h2 class="content-header__title">{{ __('Transfer Money', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -16,37 +16,37 @@
                         <!-- add new product form -->
                         <div class="wperp-row wperp-gutter-20">
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="transfer_funds_from">Transfer Funds From</label>
+                                <label for="transfer_funds_from">{{ __('Transfer Funds From', 'erp') }}</label>
                                 <div class="wperp-custom-select with-multiselect">
                                     <multi-select id="transfer_funds_from" name="from" v-model="transferFrom" :multiple="false" :options="fa" placeholder="Select Account"></multi-select>
                                 </div>
-                                <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferFrom.balance)}}</span>
+                                <span class="balance mt-10 display-inline-block">{{ __('Balance', 'erp') }}: {{transformBalance(transferFrom.balance)}}</span>
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="transfer_funds_to">Transfer Funds To</label>
+                                <label for="transfer_funds_to">{{ __('Transfer Funds To', 'erp') }}</label>
 
                                 <div class="wperp-custom-select with-multiselect">
                                     <multi-select id="transfer_funds_to" name="to" v-model="transferTo" :multiple="false" :options="ta" placeholder="Select Account"></multi-select>
                                 </div>
-                                <span class="balance mt-10 display-inline-block">Balance: {{transformBalance(transferTo.balance)}}</span>
+                                <span class="balance mt-10 display-inline-block">{{ __('Balance', 'erp') }}: {{transformBalance(transferTo.balance)}}</span>
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="transfer_amount">Transfer Amount <span class="wperp-required-sign">*</span></label>
+                                <label for="transfer_amount">{{ __('Transfer Amount', 'erp') }} <span class="wperp-required-sign">*</span></label>
                                 <input required min="0" type="number" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00" v-model="amount">
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                <label for="transfer_date">Transfer Date</label>
+                                <label for="transfer_date">{{ __('Transfer Date', 'erp') }}</label>
                                 <datepicker id="transfer_date" name="transfer_date" v-model="transferdate"></datepicker>
                             </div>
                             <div class="wperp-col-xs-12 wperp-form-group">
-                                <label for="particulars">Particulars</label>
+                                <label for="particulars">{{ __('Particulars', 'erp') }}</label>
                                 <textarea name="particulars" id="particulars" rows="3" class="wperp-form-field" placeholder="Type Here" v-model="particulars"></textarea>
                             </div>
                         </div>
                     </div>
 
                     <div class="wperp-modal-footer pt-0">
-                        <button class="wperp-btn btn--primary" type="submit">Transfer Money</button>
+                        <button class="wperp-btn btn--primary" type="submit">{{ __('Transfer Money', 'erp') }}</button>
                     </div>
                 </form>
             </div>

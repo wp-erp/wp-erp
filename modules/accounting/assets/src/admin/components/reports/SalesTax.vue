@@ -1,6 +1,6 @@
 <template>
     <div class="sales-tax-report">
-        <h2>Sales Tax Report</h2>
+        <h2>{{ __('Sales Tax Report', 'erp') }}</h2>
 
         <form action="" method="" @submit.prevent="getSalesTaxReport" class="query-options no-print">
             <div class="with-multiselect">
@@ -12,18 +12,18 @@
                 <datepicker v-model="end_date"></datepicker>
             </div>
 
-            <button class="wperp-btn btn--primary add-line-trigger" type="submit">View</button>
+            <button class="wperp-btn btn--primary add-line-trigger" type="submit">{{ __('View', 'erp') }}</button>
 
             <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                 <i class="flaticon-printer-1"></i>
-                &nbsp; Print
+                &nbsp; {{ __('Print', 'erp') }}
             </a>
         </form>
 
         <ul class="report-header" v-if="null !== selectedAgency">
-            <li><strong>Account Name:</strong> <em>{{ selectedAgency.name }}</em></li>
-            <li><strong>Currency:</strong> <em>{{ symbol }}</em></li>
-            <li><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></li>
+            <li><strong>{{ __('Account Name', 'erp') }}:</strong> <em>{{ selectedAgency.name }}</em></li>
+            <li><strong>{{ __('Currency', 'erp') }}:</strong> <em>{{ symbol }}</em></li>
+            <li><strong>{{ __('For the period of ( Transaction date )', 'erp') }}:</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></li>
         </ul>
 
         <list-table
@@ -50,7 +50,7 @@
             <template slot="tfoot">
                 <tr class="tfoot">
                     <td colspan="3"></td>
-                    <td>Total =</td>
+                    <td>{{ __('Total', 'erp') }} =</td>
                     <td>{{ moneyFormat(totalDebit) }}</td>
                     <td>{{ moneyFormat(totalCredit) }}</td>
                     <td></td>

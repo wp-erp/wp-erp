@@ -16,7 +16,7 @@
             <div class="wperp-panel wperp-panel-default" style="padding-bottom: 0;">
                 <div class="wperp-panel-body">
 
-                    <show-errors :error_msgs="form_errors" ></show-errors>
+                    <show-errors :error_msgs="form_errors"></show-errors>
 
                         <div class="wperp-row">
                             <div class="wperp-col-sm-4">
@@ -24,18 +24,18 @@
                             </div>
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
-                                    <label>Transaction Date<span class="wperp-required-sign">*</span></label>
+                                    <label>{{ __('Transaction Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
                                     <datepicker v-model="basic_fields.trn_date"></datepicker>
                                 </div>
                             </div>
                             <div class="wperp-col-sm-4">
                                 <div class="wperp-form-group">
-                                    <label>Due Date<span class="wperp-required-sign">*</span></label>
+                                    <label>{{ __('Due Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
                                     <datepicker v-model="basic_fields.due_date"></datepicker>
                                 </div>
                             </div>
                             <div class="wperp-col-xs-12">
-                                <label>Billing Address</label>
+                                <label>{{ __('Billing Address', 'erp') }}</label>
                                 <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                             </div>
                         </div>
@@ -49,10 +49,10 @@
                     <table class="wperp-table wperp-form-table">
                         <thead>
                         <tr>
-                            <td scope="col" class="col--product">Product/Service</td>
-                            <th scope="col">Qty</th>
-                            <th scope="col">Unit Price</th>
-                            <th scope="col">Amount</th>
+                            <td scope="col" class="col--product">{{ __('Product/Service', 'erp') }}</td>
+                            <th scope="col">{{ __('Qty', 'erp') }}</th>
+                            <th scope="col">{{ __('Unit Price', 'erp') }}</th>
+                            <th scope="col">{{ __('Amount', 'erp') }}</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -66,14 +66,14 @@
                         <tr class="add-new-line">
                             <td colspan="9" style="text-align: left;">
                                 <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger">
-                                    <i class="flaticon-add-plus-button"></i>Add Line
+                                    <i class="flaticon-add-plus-button"></i>{{ __('Add Line', 'erp') }}
                                 </button>
                             </td>
                         </tr>
 
                         <tr class="total-amount-row">
                             <td colspan="3" class="text-right">
-                                <span>Total Amount = </span>
+                                <span>{{ __('Total Amount', 'erp') }} = </span>
                             </td>
                             <td><input type="text" v-model="finalTotalAmount" class="wperp-form-field text-right" readonly></td>
                             <td></td>
@@ -81,7 +81,7 @@
 
                         <tr class="wperp-form-group">
                             <td colspan="9" style="text-align: left;">
-                                <label>Particulars</label>
+                                <label>{{ __('Particulars', 'erp') }}</label>
                                 <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Particulars"></textarea>
                             </td>
                         </tr>
@@ -100,7 +100,7 @@
                         <tr class="add-attachment-row" >
                             <td colspan="9" style="text-align: left;">
                                 <div class="attachment-container">
-                                    <label class="col--attachement">Attachment</label>
+                                    <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
                                     <file-upload v-model="attachments" url="/invoices/attachments"/>
                                 </div>
                             </td>

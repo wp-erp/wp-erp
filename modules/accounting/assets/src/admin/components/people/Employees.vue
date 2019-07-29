@@ -1,7 +1,7 @@
 <template>
     <div class="app-employees">
         <h2 class="add-new-people">
-            <span>Employees</span>
+            <span>{{ __('Employees', 'erp') }}</span>
         </h2>
         <list-table
             action-column="actions"

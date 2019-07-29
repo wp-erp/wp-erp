@@ -1,38 +1,38 @@
 <template>
     <ul>
         <li>
-            <h3>Trial Balance</h3>
-            <p>Trial balance is the bookkeeping or accounting report that lists the balances in each of general ledger accounts.</p>
+            <h3>{{ __('Trial Balance', 'erp') }}</h3>
+            <p>{{ __('Trial balance is the bookkeeping or accounting report that lists the balances in each of general ledger accounts', 'erp') }}.</p>
 
-            <router-link class="wperp-btn btn--primary" :to="{ name: 'TrialBalance' }">View Report</router-link>
+            <router-link class="wperp-btn btn--primary" :to="{ name: 'TrialBalance' }">{{ __('View Report', 'erp') }}</router-link>
         </li>
 
         <li>
-            <h3>Ledger Report</h3>
-            <p>Ledger report</p>
+            <h3>{{ __('Ledger Report', 'erp') }}</h3>
+            <p>{{ __('Ledger report', 'erp') }}</p>
 
-            <router-link class="wperp-btn btn--primary" :to="{ name: 'LedgerSingle', params: { id: 1 } }">View Report</router-link>
+            <router-link class="wperp-btn btn--primary" :to="{ name: 'LedgerSingle', params: { id: 1 } }">{{ __('View Report', 'erp') }}</router-link>
         </li>
 
         <li>
-            <h3>Income Statement</h3>
-            <p>A summary of a management's performance as reflecte the profitability of an organization during the time interval.</p>
+            <h3>{{ __('text', 'erp') }}</h3>
+            <p>{{ __('A summary of a management\'s performance as reflecte the profitability of an organization during the time interval', 'erp') }}.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'IncomeStatement' }">View Report</router-link>
         </li>
 
         <li>
-            <h3>Sales Tax</h3>
-            <p>It generates report based on the sales tax charged or paid for the current financial cycle/year.</p>
+            <h3>{{ __('Sales Tax', 'erp') }}</h3>
+            <p>{{ __('It generates report based on the sales tax charged or paid for the current financial cycle/year', 'erp') }}.</p>
 
-            <router-link class="wperp-btn btn--primary" :to="{ name: 'SalesTax' }">View Report</router-link>
+            <router-link class="wperp-btn btn--primary" :to="{ name: 'SalesTax' }">{{ __('View Report', 'erp') }}</router-link>
         </li>
 
         <li>
-            <h3>Balance Sheet</h3>
-            <p>This report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year.</p>
+            <h3>{{ __('Balance Sheet', 'erp') }}</h3>
+            <p>{{ __('This report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year', 'erp') }}.</p>
 
-            <router-link class="wperp-btn btn--primary" :to="{ name: 'BalanceSheet' }">View Report</router-link>
+            <router-link class="wperp-btn btn--primary" :to="{ name: 'BalanceSheet' }">{{ __('View Report', 'erp') }}</router-link>
         </li>
 
         <component

@@ -2,11 +2,11 @@
     <div class="wperp-modal-dialog sales-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h2>Transfer Money</h2>
+                <h2>{{ __('Transfer Money', 'erp') }}</h2>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
-                        &nbsp; Print
+                        &nbsp; {{ __('Print', 'erp') }}
                     </a>
                     <!-- todo: more action has some dropdown and will implement later please consider as planning -->
 
@@ -14,12 +14,12 @@
                         <template slot="button">
                             <a href="#" class="wperp-btn btn--default">
                                 <i class="flaticon-settings-work-tool"></i>
-                                &nbsp; More Action
+                                &nbsp; {{ __('More Action', 'erp') }}
                             </a>
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
-                                <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
+                                <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
                     </dropdown>
@@ -44,10 +44,10 @@
                     </div>
 
                     <div class="invoice-body">
-                        <h4>Transfer Money</h4>
+                        <h4>{{ __('Transfer Money', 'erp') }}</h4>
                         <div class="wperp-row" v-if="voucher.created_by">
                             <div class="wperp-col-sm-6">
-                                <h5>Created By:</h5>
+                                <h5>{{ __('Created By', 'erp') }}:</h5>
                                 <div class="persons-info">
                                     <strong>{{ voucher.created_by.display_name }}</strong><br>
                                     {{ voucher.created_by.user_email }}
@@ -55,9 +55,8 @@
                             </div>
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
-
                                     <tr>
-                                        <th>Transaction Date:</th>
+                                        <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ voucher.trn_date }}</td>
                                     </tr>
                                 </table>
@@ -69,10 +68,10 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                                 <tr>
-                                    <th>Voucher No</th>
-                                    <th>Account From</th>
-                                    <th>Amount</th>
-                                    <th>Account To</th>
+                                    <th>{{ __('Voucher No', 'erp') }}</th>
+                                    <th>{{ __('Account From', 'erp') }}</th>
+                                    <th>{{ __('Amount', 'erp') }}</th>
+                                    <th>{{ __('Account To', 'erp') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,7 +85,7 @@
                             <tfoot>
                                 <tr>
                                     <td class="wperp-invoice-amounts" colspan="7">
-                                        <h2>Particulars</h2>
+                                        <h2>{{ __('Particulars', 'erp') }}</h2>
                                         <p v-if="voucher.particulars">{{ voucher.particulars }}</p>
                                     </td>
                                 </tr>

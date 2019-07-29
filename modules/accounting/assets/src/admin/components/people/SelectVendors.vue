@@ -5,7 +5,7 @@
         <multi-select v-model="selected" :options="options" />
 
         <a href="#" class="add-new-customer" @click="showModal = true">
-            <i class="flaticon-add-plus-button"></i>Add new
+            <i class="flaticon-add-plus-button"></i>{{ __('Add new', 'erp') }}
         </a>
     </div>
 </template>
