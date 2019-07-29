@@ -64,8 +64,7 @@
             </div>
         </div>
 
-        <p v-else>No data found.</p>
-
+        <p v-else>{{ __('No data found.', 'erp') }}</p>
     </div>
 </template>
 

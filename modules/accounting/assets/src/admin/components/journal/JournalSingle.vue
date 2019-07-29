@@ -2,16 +2,16 @@
     <div class="wperp-modal-dialog journal-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h2>Journal</h2>
+                <h2>{{ __('Journal', 'erp') }}</h2>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
-                        &nbsp; Print
+                        &nbsp; {{ __('Print', 'erp') }}
                     </a>
                     <!-- todo: more action has some dropdown and will implement later please consider as planning -->
                     <a href="#" class="wperp-btn btn--default">
                         <i class="flaticon-settings-work-tool"></i>
-                        &nbsp; More Action
+                        &nbsp; {{ __('More Action', 'erp') }}
                     </a>
                 </div>
             </div>
@@ -33,16 +33,16 @@
                     </div>
 
                     <div class="invoice-body">
-                        <h4>Journal</h4>
+                        <h4>{{ __('Journal', 'erp') }}</h4>
                         <div class="wperp-row" v-if="null != journal">
                             <div class="wperp-col-sm-12 pull-right">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>Journal No</th>
+                                        <th>{{ __('Journal No', 'erp') }}</th>
                                         <td>#{{ journal.id }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Journal Date:</th>
+                                        <th>{{ __('Journal Date', 'erp') }}:</th>
                                         <td>{{ journal.trn_date }}</td>
                                     </tr>
                                 </table>
@@ -54,10 +54,10 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>Account</th>
-                                <th>Particulars</th>
-                                <th>Debit</th>
-                                <th>Credit</th>
+                                <th>{{ __('Account', 'erp') }}</th>
+                                <th>{{ __('Particulars', 'erp') }}</th>
+                                <th>{{ __('Debit', 'erp') }}</th>
+                                <th>{{ __('Credit', 'erp') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -72,7 +72,7 @@
                             <tr>
                                 <td colspan="7">
                                     <ul>
-                                        <li><span>Balance:</span> {{ moneyFormat(journal.total) }}</li>
+                                        <li><span>{{ __('Balance', 'erp') }}:</span> {{ moneyFormat(journal.total) }}</li>
                                     </ul>
                                 </td>
                             </tr>
@@ -83,7 +83,7 @@
                 </div>
 
                 <div class="invoice-attachments d-print-none">
-                    <h4>Attachments</h4>
+                    <h4>{{ __('Attachments', 'erp') }}</h4>
                     <a class="attachment-item" :href="attachment"
                        :key="index"
                        v-for="(attachment, index) in journal.attachments" download>

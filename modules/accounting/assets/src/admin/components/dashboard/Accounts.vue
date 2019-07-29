@@ -1,7 +1,7 @@
 <template>
     <div :class="['bank-accounts-section', 'wperp-panel', 'wperp-panel-default', ( isEditSettingsEnabled ? 'open-edit':'' )]">
         <div class="wperp-panel-heading wperp-bg-white">
-            <h4>Accounts</h4>
+            <h4>{{ __('Accounts', 'erp') }}</h4>
             <!--<a href="#" @click.prevent="editSettings" id="bank-account-edit" class="panel-badge">-->
                 <!--<span v-if="isEditSettingsEnabled" @click.prevent="saveDashboardBanks">Save</span>-->
                 <!--<i v-else class="flaticon-quick-edit"></i>-->
@@ -30,7 +30,7 @@
         </div>
         <div class="wperp-panel-footer mt-50">
             <div class="bank-accounts-total">
-                <span class="title">Total Balance</span>
+                <span class="title">{{ __('Total Balance', 'erp') }}</span>
                 <span class="price">{{totalAmount}}</span>
             </div>
         </div>

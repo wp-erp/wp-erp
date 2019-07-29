@@ -1,15 +1,15 @@
 <template>
     <div class="wperp-col-sm-12">
         <div class="check-fields">
-            <label>Bank Name</label>
+            <label>{{ __('Bank Name', 'erp') }}</label>
             <input type="text" class="wperp-form-field" @input="updateCheckData" v-model="check_fields.bank_name"/>
         </div>
         <div class="check-fields">
-            <label>Check Name</label>
+            <label>{{ __('Check Name', 'erp') }}</label>
             <input type="text" class="wperp-form-field" @input="updateCheckData" v-model="check_fields.payer_name"/>
         </div>
         <div class="check-fields">
-            <label>Check No</label>
+            <label>{{ __('Check No', 'erp') }}</label>
             <input type="text" class="wperp-form-field" @input="updateCheckData" v-model="check_fields.check_no"/>
         </div>
     </div>
@@ -22,9 +22,9 @@
         data() {
             return {
                 check_fields: {
-                    bank_name: '',
+                    bank_name : '',
                     payer_name: '',
-                    check_no: ''
+                    check_no  : ''
                 }
             }
         },

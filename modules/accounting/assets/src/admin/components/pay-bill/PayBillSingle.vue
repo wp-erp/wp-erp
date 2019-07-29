@@ -2,23 +2,23 @@
     <div class="wperp-modal-dialog paybill-single">
         <div class="wperp-modal-content">
             <div class="wperp-modal-header">
-                <h2>Pay Bill</h2>
+                <h2>{{ __('Pay Bill', 'erp') }}</h2>
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
-                        &nbsp; Print
+                        &nbsp; {{ __('Print', 'erp') }}
                     </a>
                     <!-- todo: more action has some dropdown and will implement later please consider as planning -->
                     <dropdown>
                         <template slot="button">
                             <a href="#" class="wperp-btn btn--default">
                                 <i class="flaticon-settings-work-tool"></i>
-                                &nbsp; More Action
+                                &nbsp; {{ __('More Action', 'erp') }}
                             </a>
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
-                                <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
+                                <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
                     </dropdown>
@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="invoice-body">
-                        <h4>Pay Bill</h4>
+                        <h4>{{ __('Pay Bill', 'erp') }}</h4>
                         <div class="wperp-row" v-if="null != payBill">
                             <div class="wperp-col-sm-6">
                                 <div class="persons-info">
@@ -56,16 +56,16 @@
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>Pay Bill No</th>
+                                        <th>{{ __('Pay Bill No', 'erp') }}</th>
                                         <td>#{{ payBill.voucher_no }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Pay Bill Date:</th>
+                                        <th>{{ __('Pay Bill Date', 'erp') }}:</th>
                                         <td>{{ payBill.trn_date }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Deposit to</th>
-                                        <td>Bank</td>
+                                        <th>{{ __('Deposit to', 'erp') }}</th>
+                                        <td>{{ __('Bank', 'erp') }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -76,9 +76,9 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Bill No</th>
-                                <th>Amount</th>
+                                <th>{{ __('ID', 'erp') }}</th>
+                                <th>{{ __('Bill No', 'erp') }}</th>
+                                <th>{{ __('Amount', 'erp') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -104,7 +104,7 @@
                 </div>
 
                 <div class="invoice-attachments d-print-none">
-                    <h4>Attachments</h4>
+                    <h4>{{ __('Attachments', 'erp') }}</h4>
                     <a class="attachment-item" :href="attachment"
                        :key="index"
                        v-for="(attachment, index) in payBill.attachments" download>

@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">New Journal</h2>
+                    <h2 class="content-header__title">{{ __('New Journal', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -21,18 +21,18 @@
                 <div class="wperp-row">
                     <div class="wperp-col-sm-4">
                         <div class="wperp-form-group">
-                            <label>Transaction Date<span class="wperp-required-sign">*</span></label>
+                            <label>{{ __('Transaction Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
                             <datepicker v-model="basic_fields.trn_date"></datepicker>
                         </div>
                     </div>
                     <div class="wperp-col-sm-4">
                         <div class="wperp-form-group">
-                            <label>Ref.</label>
+                            <label>{{ __('Ref.', 'erp') }}</label>
                             <input type="text" class="wperp-form-field" v-model="basic_fields.trn_ref">
                         </div>
                     </div>
                     <div class="wperp-col-sm-4">
-                        <label>Particulars</label>
+                        <label>{{ __('Particulars', 'erp') }}</label>
                         <textarea v-model="journal_parti" rows="1" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
                     </div>
                 </div>
@@ -46,11 +46,11 @@
                 <table class="wperp-table wperp-form-table new-journal-form">
                     <thead>
                     <tr>
-                        <th scope="col" class="column-primary">SL No.</th>
-                        <th scope="col">Account</th>
-                        <th scope="col">Particulars</th>
-                        <th scope="col">Debit</th>
-                        <th scope="col">Credit</th>
+                        <th scope="col" class="column-primary">{{ __('SL No.', 'erp') }}</th>
+                        <th scope="col">{{ __('Account', 'erp') }}</th>
+                        <th scope="col">{{ __('Particulars', 'erp') }}</th>
+                        <th scope="col">{{ __('Debit', 'erp') }}</th>
+                        <th scope="col">{{ __('Credit', 'erp') }}</th>
                         <th scope="col" class="col--actions"></th>
                     </tr>
                     </thead>
@@ -79,12 +79,12 @@
                     </tr>
                     <tr class="add-new-line">
                         <td colspan="9" style="text-align: left;">
-                            <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                            <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Line', 'erp') }}</button>
                         </td>
                     </tr>
                     <tr class="total-amount-row">
                         <td colspan="3" class="pl-10 text-right col--total-amount">
-                            <span>Total Amount</span>
+                            <span>{{ __('Total Amount', 'erp') }}</span>
                         </td>
                         <td data-colname="Debit">
                             <input type="text" class="wperp-form-field text-right"
@@ -100,7 +100,7 @@
                     <tr class="add-attachment-row">
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
-                                <label class="col--attachement">Attachment</label>
+                                <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
                                 <file-upload v-model="attachments" url="/invoices/attachments"/>
                             </div>
                         </td>

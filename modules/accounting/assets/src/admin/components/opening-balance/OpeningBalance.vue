@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Opening Balances</h2>
+                    <h2 class="content-header__title">{{ __('Opening Balances', 'erp') }}</h2>
                 </div>
             </div>
         </div> <!-- End .header-section -->
@@ -15,21 +15,21 @@
         <form action="" method="post" @submit.prevent="submitOBForm">
             <div class="wperp-row">
                 <div class="wperp-col-sm-6 with-multiselect opening-fyear-select">
-                    <label>Financial Year</label>
+                    <label>{{ __('Financial Year', 'erp') }}</label>
                     <multi-select v-model="fin_year" :options="years" />
                 </div>
 
                 <div class="wperp-col-sm-6">
                     <a href="#" class="wperp-col-sm-4 wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
-                        &nbsp; Print
+                        &nbsp; {{ __('Print', 'erp') }}
                     </a>
                 </div>
             </div>
 
             <div class="wperp-row">
                 <ul class="report-header" v-if="null !== fin_year">
-                    <li><strong>For the period of ( Opening Balance date ):</strong> <em>{{ fin_year.start_date }}</em> to <em>{{ fin_year.end_date }}</em></li>
+                    <li><strong>{{ __('For the period of ( Opening Balance date )', 'erp') }}:</strong> <em>{{ fin_year.start_date }}</em> to <em>{{ fin_year.end_date }}</em></li>
                 </ul>
             </div>
 
@@ -39,14 +39,16 @@
                 <div class="erp-accordion-expand"
                      @click="open5=!open5"
                      :class="open5?'active':'before-border'">
-                    <span class="wp-erp-ob-title">Accounts Receivable</span>
+                    <span class="wp-erp-ob-title">{{ __('Accounts Receivable', 'erp') }}</span>
                 </div>
                 <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open5">
                     <thead>
                     <tr>
-                        <th>People</th>
-                        <th>Debit <span v-if="accPayRec && '0' != accPayRec.invoice_acc">({{ accPayRec.invoice_acc }})</span></th>
-                        <th>Credit</th>
+                        <th>{{ __('People', 'erp') }}</th>
+                        <th>{{ __('Debit', 'erp') }}
+                            <span v-if="accPayRec && '0' != accPayRec.invoice_acc">({{ accPayRec.invoice_acc }})</span>
+                        </th>
+                        <th>{{ __('Credit', 'erp') }}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -62,7 +64,7 @@
                     </tr>
                     <tr class="add-new-line">
                         <td colspan="9" style="text-align: left;">
-                            <button @click.prevent="acct_rec.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add People</button>
+                            <button @click.prevent="acct_rec.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add People', 'erp') }}</button>
                         </td>
                     </tr>
                     </tbody>
@@ -75,14 +77,16 @@
                 <div class="erp-accordion-expand"
                      @click="open6=!open6"
                      :class="open6?'active':'before-border'">
-                    <span class="wp-erp-ob-title">Accounts Payable</span>
+                    <span class="wp-erp-ob-title">{{ __('Accounts Payable', 'erp') }}</span>
                 </div>
                 <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open6">
                     <thead>
                     <tr>
-                        <th>People</th>
-                        <th>Debit</th>
-                        <th>Credit <span v-if="accPayRec && '0' != accPayRec.bill_purchase_acc">({{ accPayRec.bill_purchase_acc }})</span></th>
+                        <th>{{ __('People', 'erp') }}</th>
+                        <th>{{ __('Debit', 'erp') }}</th>
+                        <th>{{ __('Credit', 'erp') }}
+                            <span v-if="accPayRec && '0' != accPayRec.bill_purchase_acc">({{accPayRec.bill_purchase_acc }})</span>
+                        </th>
                         <th></th>
                     </tr>
                     </thead>
@@ -98,27 +102,26 @@
                     </tr>
                     <tr class="add-new-line">
                         <td colspan="9" style="text-align: left;">
-                            <button @click.prevent="acct_pay.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add People</button>
+                            <button @click.prevent="acct_pay.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add People', 'erp') }}</button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
-
             <!-- Tax Payable Section -->
             <div v-if="tax_pay" class="erp-accordion">
                 <div class="erp-accordion-expand"
                      @click="open7=!open7"
                      :class="open7?'active':'before-border'">
-                    <span class="wp-erp-ob-title">Tax Payable</span>
+                    <span class="wp-erp-ob-title">{{ __('Tax Payable', 'erp') }}</span>
                 </div>
                 <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open7">
                     <thead>
                     <tr>
-                        <th>Agency</th>
-                        <th>Debit</th>
-                        <th>Credit</th>
+                        <th>{{ __('Agency', 'erp') }}</th>
+                        <th>{{ __('Debit', 'erp') }}</th>
+                        <th>{{ __('Credit', 'erp') }}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -133,7 +136,7 @@
                     </tr>
                     <tr class="add-new-line">
                         <td colspan="9" style="text-align: left;">
-                            <button @click.prevent="tax_pay.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add People</button>
+                            <button @click.prevent="tax_pay.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add People', 'erp') }}</button>
                         </td>
                     </tr>
                     </tbody>
@@ -151,9 +154,9 @@
                 <table v-if="ledgers[1]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open1">
                     <thead>
                     <tr>
-                        <th>Account</th>
-                        <th>Debit</th>
-                        <th>Credit</th>
+                        <th>{{ __('Account', 'erp') }}</th>
+                        <th>{{ __('Debit', 'erp') }}</th>
+                        <th>{{ __('Credit', 'erp') }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -177,9 +180,9 @@
                 <table v-if="ledgers[2]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open2">
                     <thead>
                     <tr>
-                        <th>Account</th>
-                        <th>Debit</th>
-                        <th>Credit</th>
+                        <th>{{ __('Account', 'erp') }}</th>
+                        <th>{{ __('Debit', 'erp') }}</th>
+                        <th>{{ __('Credit', 'erp') }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -203,9 +206,9 @@
                 <table v-if="ledgers[3]" class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open3">
                     <thead>
                     <tr>
-                        <th>Account</th>
-                        <th>Debit</th>
-                        <th>Credit</th>
+                        <th>{{ __('Account', 'erp') }}</th>
+                        <th>{{ __('Debit', 'erp') }}</th>
+                        <th>{{ __('Credit', 'erp') }}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -229,9 +232,9 @@
                 <table class="wperp-table wperp-form-table erp-accordion-expand-body" v-show="open4">
                     <thead>
                     <tr>
-                        <th>Account</th>
-                        <th>Debit</th>
-                        <th>Credit</th>
+                        <th>{{ __('Account', 'erp') }}</th>
+                        <th>{{ __('Debit', 'erp') }}</th>
+                        <th>{{ __('Credit', 'erp') }}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -247,7 +250,7 @@
                     </tr>
                     <tr class="add-new-line">
                         <td colspan="9" style="text-align: left;">
-                            <button @click.prevent="ledgers[7].push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Bank</button>
+                            <button @click.prevent="ledgers[7].push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Bank', 'erp') }}</button>
                         </td>
                     </tr>
                     </tbody>
@@ -258,7 +261,7 @@
                 <tbody>
                 <tr class="total-amount-row">
                     <td class="pl-10 text-right col--total-amount" style="width: 60%;">
-                        <span>Total Amount</span>
+                        <span>{{ __('Total Amount', 'erp') }}</span>
                     </td>
                     <td data-colname="Total Debit">
                         <input type="text" class="text-right" :value="moneyFormat(finalTotalDebit)" readonly>
@@ -269,7 +272,7 @@
                 </tr>
                 <tr class="wperp-form-group">
                     <td colspan="9" style="text-align: left;">
-                        <label>Description</label>
+                        <label>{{ __('Description', 'erp') }}</label>
                         <textarea v-model="description" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
                     </td>
                 </tr>

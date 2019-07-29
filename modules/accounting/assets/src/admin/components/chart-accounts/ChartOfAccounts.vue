@@ -4,8 +4,10 @@
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
                     <h2 class="content-header__title">
-                        Chart of Accounts
-                        <router-link class="wperp-btn btn--primary" :to="{ name: 'AddChartAccounts'}">Add New</router-link>
+                        {{ __('Chart of Accounts', 'erp') }}
+                        <router-link class="wperp-btn btn--primary" :to="{ name: 'AddChartAccounts'}">
+                            {{ __('Add New', 'erp') }}
+                        </router-link>
                     </h2>
                 </div>
             </div>
@@ -42,7 +44,7 @@
                         </router-link>
                     </template>
                     <template slot="row-actions" slot-scope="data" v-if="data.row.system != null">
-                        <strong class="sys-acc">System</strong>
+                        <strong class="sys-acc">{{ __('System', 'erp') }}</strong>
                     </template>
                 </list-table>
             </li>

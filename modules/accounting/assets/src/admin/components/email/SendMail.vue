@@ -9,21 +9,21 @@
         <template slot="body">
             <div class="wperp-form-group wperp-row">
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
-                    <label>To <span class="wperp-required-sign">*</span></label>
+                    <label>{{ __('To', 'erp') }} <span class="wperp-required-sign">*</span></label>
                 </div>
                 <input-tag placeholder="Add Emails" v-model="emails" validate="email"></input-tag>
             </div>
             <div class="wperp-form-group wperp-row">
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
-                    <label>Subject <span class="wperp-required-sign">*</span></label>
+                    <label>{{ __('Subject', 'erp') }} <span class="wperp-required-sign">*</span></label>
                 </div>
                 <div class="wperp-col-sm-9 wperp-col-xs-12">
-                    <input type="text" v-model="subject" class="wperp-form-field" placeholder="Enter Subject Here" />
+                    <input type="text" v-model="subject" class="wperp-form-field" :placeholder="__('Enter Subject Here', 'erp')" />
                 </div>
             </div>
             <div class="wperp-form-group wperp-row">
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
-                    <label>Message <span class="wperp-required-sign">*</span></label>
+                    <label>{{ __('Message', 'erp') }} <span class="wperp-required-sign">*</span></label>
                 </div>
                 <div class="wperp-col-sm-9 wperp-col-xs-12">
                     <textarea v-model="message" class="wperp-form-field" placeholder="Enter Your Message Here" rows="4"></textarea>
@@ -31,13 +31,13 @@
             </div>
             <div class="wperp-row">
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
-                    <label>Attachment <span class="wperp-required-sign">*</span></label>
+                    <label>{{ __('Attachment', 'erp') }} <span class="wperp-required-sign">*</span></label>
                 </div>
                 <div class="wperp-col-sm-9 wperp-col-xs-12">
                     <div class="form-check">
                         <label class="form-check-label mb-0">
                             <input class="form-check-input" v-model="attachment" type="checkbox">
-                            <span class="form-check-sign"></span> <span class="field-label">Attach as PDF</span>
+                            <span class="form-check-sign"></span> <span class="field-label">{{ __('Attach as PDF', 'erp') }}</span>
                         </label>
                     </div>
                 </div>
@@ -45,8 +45,8 @@
         </template>
         <template slot="footer">
             <div class="buttons-wrapper text-right">
-                <button class="wperp-btn btn--default" @click="closeModal">Cancel</button>
-                <button class="wperp-btn btn--primary" type="submit" @click.prevent="sendAsMail">Send</button>
+                <button class="wperp-btn btn--default" @click="closeModal">{{ __('Cancel', 'erp') }}</button>
+                <button class="wperp-btn btn--primary" type="submit" @click.prevent="sendAsMail">{{ __('Send', 'erp') }}</button>
             </div>
         </template>
     </modal>

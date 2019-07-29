@@ -1,7 +1,7 @@
 <template>
     <div v-if="error_msgs.length" class="notify bg-red bigger">
         <div class="message">
-            <p><strong>Please complete these fields:</strong></p>
+            <p><strong>{{ __('Please complete these fields', 'erp') }}:</strong></p>
             <ul :key="idx" v-for="(error, idx) in error_msgs">
                 <li>* {{ error }}</li>
             </ul>
@@ -11,11 +11,11 @@
 
 <script>
     export default {
-        name: "ShowErrors",
+        name: 'ShowErrors',
 
         props: {
             error_msgs: Array
-        },
+        }
     }
 </script>
 
