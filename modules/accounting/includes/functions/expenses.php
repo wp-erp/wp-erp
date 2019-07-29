@@ -204,7 +204,9 @@ function erp_acct_insert_expense( $data ) {
     $data['updated_at'] = date( "Y-m-d H:i:s" );
     $data['updated_by'] = $created_by;
 
-    $voucher_no = null;
+    $voucher_no         = null;
+    $currency           = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
+
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -216,6 +218,7 @@ function erp_acct_insert_expense( $data ) {
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => $type,
+            'currency'   => $currency,
             'created_at' => $data['created_at'],
             'created_by' => $data['created_by'],
             'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',

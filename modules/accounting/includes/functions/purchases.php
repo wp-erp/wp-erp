@@ -135,13 +135,15 @@ function erp_acct_insert_purchase( $data ) {
     $data['updated_at'] = date( "Y-m-d H:i:s" );
     $data['updated_by'] = $created_by;
 
-    $purchase_type_order = $draft = 1;
+    $purchase_type_order= $draft = 1;
+    $currency           = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'purchase',
+            'currency'   => $currency,
             'editable'   => 1,
             'created_at' => $data['created_at'],
             'created_by' => $created_by,
@@ -253,6 +255,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
     $data['created_by'] = $user_id;
     $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
+    $currency  = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -317,7 +320,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             // insert contra voucher
             $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
                 'type'       => 'purchase',
-                'currency'   => '',
+                'currency'   => $currency,
                 'editable'   => 0,
                 'created_at' => $data['created_at'],
                 'created_by' => $data['created_by'],

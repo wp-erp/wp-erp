@@ -157,13 +157,14 @@ function erp_acct_insert_invoice( $data ) {
 
     $voucher_no    = null;
     $estimate_type = $draft = 1;
+    $currency      = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'invoice',
-            'currency'   => '',
+            'currency'   => $currency,
             'editable'   => 1,
             'created_at' => $data['created_at'],
             'created_by' => $data['created_by']
@@ -374,6 +375,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
     $data['updated_by'] = $user_id;
 
     $estimate_type = $draft = 1;
+    $currency      = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -387,7 +389,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
             // insert contra voucher
             $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
                 'type'       => 'invoice',
-                'currency'   => '',
+                'currency'   => $currency,
                 'editable'   => 0,
                 'created_at' => $data['created_at'],
                 'created_by' => $data['created_by'],
