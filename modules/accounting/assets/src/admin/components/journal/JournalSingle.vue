@@ -8,11 +8,6 @@
                         <i class="flaticon-printer-1"></i>
                         &nbsp; {{ __('Print', 'erp') }}
                     </a>
-                    <!-- todo: more action has some dropdown and will implement later please consider as planning -->
-                    <a href="#" class="wperp-btn btn--default">
-                        <i class="flaticon-settings-work-tool"></i>
-                        &nbsp; {{ __('More Action', 'erp') }}
-                    </a>
                 </div>
             </div>
             <div class="wperp-modal-body">

@@ -301,7 +301,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mtr_datepicker_min__ = __webpack_require__(525);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mtr_datepicker_min__ = __webpack_require__(523);
 //
 //
 //
@@ -9845,7 +9845,7 @@ var STATUS_INITIAL = 0,
 //
 //
 /* harmony default export */ __webpack_exports__["a"] = ({
-  name: "ShowErrors",
+  name: 'ShowErrors',
   props: {
     error_msgs: Array
   }
@@ -10401,20 +10401,20 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 502:
+/***/ 500:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__i18n__ = __webpack_require__(503);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__i18n__ = __webpack_require__(501);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Dropdown_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_email_SendMail_vue__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vue_sweetalert2__ = __webpack_require__(514);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__mixins_common__ = __webpack_require__(518);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_i18n__ = __webpack_require__(520);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vue_sweetalert2__ = __webpack_require__(512);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__mixins_common__ = __webpack_require__(516);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_i18n__ = __webpack_require__(518);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_loading_overlay__ = __webpack_require__(91);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vue_loading_overlay___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_vue_loading_overlay__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_http__ = __webpack_require__(1);
@@ -10423,13 +10423,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_admin_components_base_SubmitButton_vue__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_admin_components_timepicker_TimePicker_vue__ = __webpack_require__(521);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_admin_components_timepicker_TimePicker_vue__ = __webpack_require__(519);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_admin_components_people_SelectPeople_vue__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_vuelidate__ = __webpack_require__(527);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_vuelidate__ = __webpack_require__(525);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_vuelidate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_18_vuelidate__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_admin_components_chart_PieChart_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20_admin_components_transactions_DynamicTrnLoader_vue__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_vue_clipboards__ = __webpack_require__(530);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_vue_clipboards__ = __webpack_require__(528);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__wordpress_hooks__ = __webpack_require__(85);
 
 
@@ -10499,11 +10499,11 @@ acct.addFilter = function (hookName, namespace, component) {
 
 /***/ }),
 
-/***/ 503:
+/***/ 501:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__ = __webpack_require__(504);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__ = __webpack_require__(502);
 
 Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["b" /* setLocaleData */])(erpAcct.locale_data, 'erp');
 window.__ = __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["a" /* __ */];
@@ -10568,11 +10568,11 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 518:
+/***/ 516:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting__ = __webpack_require__(519);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting__ = __webpack_require__(517);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_accounting__);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -10632,14 +10632,7 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 52:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 520:
+/***/ 518:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10680,19 +10673,19 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 521:
+/***/ 519:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TimePicker_vue__ = __webpack_require__(201);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_240bd389_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TimePicker_vue__ = __webpack_require__(526);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_240bd389_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TimePicker_vue__ = __webpack_require__(524);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
+  __webpack_require__(520)
+  __webpack_require__(521)
   __webpack_require__(522)
-  __webpack_require__(523)
-  __webpack_require__(524)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -10739,6 +10732,27 @@ if (false) {(function () {
 
 /***/ }),
 
+/***/ 52:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 520:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 521:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ 522:
 /***/ (function(module, exports) {
 
@@ -10747,20 +10761,6 @@ if (false) {(function () {
 /***/ }),
 
 /***/ 523:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 524:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 525:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11632,7 +11632,7 @@ function MtrDatepicker(a) {
 
 /***/ }),
 
-/***/ 526:
+/***/ 524:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11894,7 +11894,13 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { class: { "table-loading": _vm.loading } }, [
     _vm.loading
-      ? _c("div", { staticClass: "table-loader-wrap" }, [_vm._m(0)])
+      ? _c("div", { staticClass: "table-loader-wrap" }, [
+          _c("div", { staticClass: "table-loader-center" }, [
+            _c("div", { staticClass: "table-loader" }, [
+              _vm._v(_vm._s(_vm.__("Loading", "erp")))
+            ])
+          ])
+        ])
       : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "tablenav top" }, [
@@ -11903,7 +11909,9 @@ var render = function() {
       _c("div", { staticClass: "tablenav-pages" }, [
         _vm.showItemNumbers
           ? _c("span", { staticClass: "displaying-num" }, [
-              _vm._v(_vm._s(_vm.itemsTotal) + " items")
+              _vm._v(
+                _vm._s(_vm.itemsTotal) + " " + _vm._s(_vm.__("items", "erp"))
+              )
             ])
           : _vm._e(),
         _vm._v(" "),
@@ -12351,7 +12359,7 @@ var render = function() {
                                   }
                                 }),
                                 _vm._v(" "),
-                                _vm._m(1, true)
+                                _vm._m(0, true)
                               ])
                             ])
                           ]
@@ -12680,14 +12688,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "table-loader-center" }, [
-      _c("div", { staticClass: "table-loader" }, [_vm._v("Loading")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("span", { staticClass: "form-check-sign" }, [
       _c("span", { staticClass: "check" })
     ])
@@ -12864,7 +12864,13 @@ var render = function() {
               _c("div", { staticClass: "wperp-modal-header" }, [
                 !_vm.people
                   ? _c("h3", [_vm._v(_vm._s(_vm.title))])
-                  : _c("h3", [_vm._v("Update " + _vm._s(_vm.title))]),
+                  : _c("h3", [
+                      _vm._v(
+                        _vm._s(_vm.__("Update", "erp")) +
+                          " " +
+                          _vm._s(_vm.title)
+                      )
+                    ]),
                 _vm._v(" "),
                 _c("span", { staticClass: "modal-close" }, [
                   _c("i", {
@@ -12913,7 +12919,12 @@ var render = function() {
                             "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
                         },
                         [
-                          _vm._m(0),
+                          _c("label", { attrs: { for: "first_name" } }, [
+                            _vm._v(_vm._s(_vm.__("First Name", "erp")) + " "),
+                            _c("span", { staticClass: "wperp-required-sign" }, [
+                              _vm._v("*")
+                            ])
+                          ]),
                           _vm._v(" "),
                           _c("input", {
                             directives: [
@@ -12955,7 +12966,12 @@ var render = function() {
                             "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
                         },
                         [
-                          _vm._m(1),
+                          _c("label", { attrs: { for: "last_name" } }, [
+                            _vm._v(_vm._s(_vm.__("Last Name", "erp")) + " "),
+                            _c("span", { staticClass: "wperp-required-sign" }, [
+                              _vm._v("*")
+                            ])
+                          ]),
                           _vm._v(" "),
                           _c("input", {
                             directives: [
@@ -12997,7 +13013,12 @@ var render = function() {
                             "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
                         },
                         [
-                          _vm._m(2),
+                          _c("label", { attrs: { for: "email" } }, [
+                            _vm._v(_vm._s(_vm.__("Email", "erp")) + " "),
+                            _c("span", { staticClass: "wperp-required-sign" }, [
+                              _vm._v("*")
+                            ])
+                          ]),
                           _vm._v(" "),
                           _c("input", {
                             directives: [
@@ -13041,7 +13062,7 @@ var render = function() {
                         },
                         [
                           _c("label", { attrs: { for: "mobile" } }, [
-                            _vm._v("Mobile")
+                            _vm._v(_vm._s(_vm.__("Mobile", "erp")))
                           ]),
                           _vm._v(" "),
                           _c("input", {
@@ -13087,7 +13108,7 @@ var render = function() {
                                 },
                                 [
                                   _c("label", { attrs: { for: "company" } }, [
-                                    _vm._v("Company")
+                                    _vm._v(_vm._s(_vm.__("Company", "erp")))
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -13132,7 +13153,7 @@ var render = function() {
                                 },
                                 [
                                   _c("label", { attrs: { for: "phone" } }, [
-                                    _vm._v("Phone")
+                                    _vm._v(_vm._s(_vm.__("Phone", "erp")))
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -13175,7 +13196,7 @@ var render = function() {
                                 },
                                 [
                                   _c("label", { attrs: { for: "website" } }, [
-                                    _vm._v("Website")
+                                    _vm._v(_vm._s(_vm.__("Website", "erp")))
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -13220,7 +13241,7 @@ var render = function() {
                                 },
                                 [
                                   _c("label", { attrs: { for: "note" } }, [
-                                    _vm._v("Note")
+                                    _vm._v(_vm._s(_vm.__("Note", "erp")))
                                   ]),
                                   _vm._v(" "),
                                   _c("textarea", {
@@ -13264,7 +13285,7 @@ var render = function() {
                                 },
                                 [
                                   _c("label", { attrs: { for: "fax" } }, [
-                                    _vm._v("Fax")
+                                    _vm._v(_vm._s(_vm.__("Fax", "erp")))
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -13307,7 +13328,7 @@ var render = function() {
                                 },
                                 [
                                   _c("label", { attrs: { for: "street1" } }, [
-                                    _vm._v("Street 1")
+                                    _vm._v(_vm._s(_vm.__("Street 1", "erp")))
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -13352,7 +13373,7 @@ var render = function() {
                                 },
                                 [
                                   _c("label", { attrs: { for: "street2" } }, [
-                                    _vm._v("Street 2")
+                                    _vm._v(_vm._s(_vm.__("Street 2", "erp")))
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -13397,7 +13418,7 @@ var render = function() {
                                 },
                                 [
                                   _c("label", { attrs: { for: "city" } }, [
-                                    _vm._v("City")
+                                    _vm._v(_vm._s(_vm.__("City", "erp")))
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -13439,7 +13460,9 @@ var render = function() {
                                     "wperp-col-sm-6 wperp-col-xs-12 wperp-form-group"
                                 },
                                 [
-                                  _c("label", [_vm._v("Country")]),
+                                  _c("label", [
+                                    _vm._v(_vm._s(_vm.__("Country", "erp")))
+                                  ]),
                                   _vm._v(" "),
                                   _c(
                                     "div",
@@ -13482,7 +13505,11 @@ var render = function() {
                                     "wperp-col-sm-6 wperp-col-xs-12 wperp-form-group"
                                 },
                                 [
-                                  _c("label", [_vm._v("Province/State")]),
+                                  _c("label", [
+                                    _vm._v(
+                                      _vm._s(_vm.__("Province/State", "erp"))
+                                    )
+                                  ]),
                                   _vm._v(" "),
                                   _c(
                                     "div",
@@ -13519,7 +13546,7 @@ var render = function() {
                                 },
                                 [
                                   _c("label", { attrs: { for: "post_code" } }, [
-                                    _vm._v("Post Code")
+                                    _vm._v(_vm._s(_vm.__("Post Code", "erp")))
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -13581,7 +13608,7 @@ var render = function() {
                           _c("span", { staticClass: "form-check-sign" }),
                           _vm._v(" "),
                           _c("span", { staticClass: "field-label" }, [
-                            _vm._v("Show More")
+                            _vm._v(_vm._s(_vm.__("Show More", "erp")))
                           ])
                         ]
                       )
@@ -13601,7 +13628,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("Cancel")]
+                        [_vm._v(_vm._s(_vm.__("Cancel", "erp")))]
                       ),
                       _vm._v(" "),
                       !_vm.people
@@ -13611,7 +13638,7 @@ var render = function() {
                               staticClass: "wperp-btn btn--primary",
                               attrs: { type: "submit" }
                             },
-                            [_vm._v("Add New")]
+                            [_vm._v(_vm._s(_vm.__("Add New", "erp")))]
                           )
                         : _c(
                             "button",
@@ -13619,7 +13646,7 @@ var render = function() {
                               staticClass: "wperp-btn btn--primary",
                               attrs: { type: "submit" }
                             },
-                            [_vm._v("Update")]
+                            [_vm._v(_vm._s(_vm.__("Update", "erp")))]
                           )
                     ])
                   ])
@@ -13632,35 +13659,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "first_name" } }, [
-      _vm._v("First Name "),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "last_name" } }, [
-      _vm._v("Last Name "),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "email" } }, [
-      _vm._v("Email "),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -13915,7 +13914,7 @@ var render = function() {
     { attrs: { enctype: "multipart/form-data", novalidate: "" } },
     [
       _c("div", { staticClass: "attachment-placeholder" }, [
-        _vm._v(" To attach\n        "),
+        _vm._v(" " + _vm._s(_vm.__("To attach", "erp")) + "\n        "),
         _c("input", {
           staticClass: "display-none",
           attrs: {
@@ -13933,17 +13932,37 @@ var render = function() {
           }
         }),
         _vm._v(" "),
-        _c("label", { attrs: { for: "attachment" } }, [_vm._v("Select files")]),
-        _vm._v(" from your computer\n        "),
+        _c("label", { attrs: { for: "attachment" } }, [
+          _vm._v(_vm._s(_vm.__("Select files", "erp")))
+        ]),
+        _vm._v(
+          " " + _vm._s(_vm.__("from your computer", "erp")) + "\n        "
+        ),
         _vm.isSaving
           ? _c("span", { staticClass: "upload-count" }, [
-              _vm._v(" (uploading " + _vm._s(_vm.fileCount) + " file(s) ...)")
+              _vm._v(
+                " (" +
+                  _vm._s(_vm.__("uploading", "erp")) +
+                  " " +
+                  _vm._s(_vm.fileCount) +
+                  " " +
+                  _vm._s(_vm.__("file(s)", "erp")) +
+                  " ...)"
+              )
             ])
           : _vm._e(),
         _vm._v(" "),
         _vm.isUploaded
           ? _c("span", { staticClass: "upload-count" }, [
-              _vm._v(" (uploaded " + _vm._s(_vm.fileCount) + " file(s) ...)")
+              _vm._v(
+                " (" +
+                  _vm._s(_vm.__("uploaded", "erp")) +
+                  " " +
+                  _vm._s(_vm.fileCount) +
+                  " " +
+                  _vm._s(_vm.__("file(s)", "erp")) +
+                  " ...)"
+              )
             ])
           : _vm._e()
       ])
@@ -13984,7 +14003,13 @@ var render = function() {
           "div",
           { staticClass: "message" },
           [
-            _vm._m(0),
+            _c("p", [
+              _c("strong", [
+                _vm._v(
+                  _vm._s(_vm.__("Please complete these fields", "erp")) + ":"
+                )
+              ])
+            ]),
             _vm._v(" "),
             _vm._l(_vm.error_msgs, function(error, idx) {
               return _c("ul", { key: idx }, [
@@ -13997,14 +14022,7 @@ var render = function() {
       ])
     : _vm._e()
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", [_c("strong", [_vm._v("Please complete these fields:")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -14146,7 +14164,7 @@ var render = function() {
           [
             _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
               _c("label", [
-                _vm._v("To "),
+                _vm._v(_vm._s(_vm.__("To", "erp")) + " "),
                 _c("span", { staticClass: "wperp-required-sign" }, [
                   _vm._v("*")
                 ])
@@ -14170,7 +14188,7 @@ var render = function() {
         _c("div", { staticClass: "wperp-form-group wperp-row" }, [
           _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
             _c("label", [
-              _vm._v("Subject "),
+              _vm._v(_vm._s(_vm.__("Subject", "erp")) + " "),
               _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
             ])
           ]),
@@ -14186,7 +14204,10 @@ var render = function() {
                 }
               ],
               staticClass: "wperp-form-field",
-              attrs: { type: "text", placeholder: "Enter Subject Here" },
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("Enter Subject Here", "erp")
+              },
               domProps: { value: _vm.subject },
               on: {
                 input: function($event) {
@@ -14203,7 +14224,7 @@ var render = function() {
         _c("div", { staticClass: "wperp-form-group wperp-row" }, [
           _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
             _c("label", [
-              _vm._v("Message "),
+              _vm._v(_vm._s(_vm.__("Message", "erp")) + " "),
               _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
             ])
           ]),
@@ -14236,7 +14257,7 @@ var render = function() {
         _c("div", { staticClass: "wperp-row" }, [
           _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
             _c("label", [
-              _vm._v("Attachment "),
+              _vm._v(_vm._s(_vm.__("Attachment", "erp")) + " "),
               _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
             ])
           ]),
@@ -14286,7 +14307,7 @@ var render = function() {
                 _c("span", { staticClass: "form-check-sign" }),
                 _vm._v(" "),
                 _c("span", { staticClass: "field-label" }, [
-                  _vm._v("Attach as PDF")
+                  _vm._v(_vm._s(_vm.__("Attach as PDF", "erp")))
                 ])
               ])
             ])
@@ -14302,7 +14323,7 @@ var render = function() {
               staticClass: "wperp-btn btn--default",
               on: { click: _vm.closeModal }
             },
-            [_vm._v("Cancel")]
+            [_vm._v(_vm._s(_vm.__("Cancel", "erp")))]
           ),
           _vm._v(" "),
           _c(
@@ -14317,7 +14338,7 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("Send")]
+            [_vm._v(_vm._s(_vm.__("Send", "erp")))]
           )
         ])
       ])
@@ -14376,4 +14397,4 @@ if (false) {
 
 /***/ })
 
-},[502]);
+},[500]);
