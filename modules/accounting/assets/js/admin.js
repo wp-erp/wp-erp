@@ -9788,8 +9788,6 @@ Object(__WEBPACK_IMPORTED_MODULE_1_v_calendar__["setupCalendar"])({
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: "DynamicTrnLoader",
@@ -27451,7 +27449,7 @@ setTimeout(function () {
 
       this.accts_by_chart = [];
 
-      if ('2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id) {
+      if ('2' === this.trn_by.id || '3' === this.trn_by.id) {
         __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/ledgers/bank-accounts').then(function (response) {
           _this2.accts_by_chart = response.data;
 
@@ -27461,7 +27459,7 @@ setTimeout(function () {
             }
           });
         });
-      } else if ('1' === this.basic_fields.trn_by.id) {
+      } else if ('1' === this.trn_by.id) {
         __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/ledgers/cash-accounts').then(function (response) {
           _this2.accts_by_chart = response.data;
 
@@ -28833,8 +28831,6 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(4);
-//
-//
 //
 //
 //
@@ -53508,7 +53504,7 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "wperp-row" }, [
           _c("div", { staticClass: "wperp-col-sm-6" }, [
-            _c("h5", [_vm._v("Bill to:")]),
+            _c("h5", [_vm._v(_vm._s(_vm.__("Bill to", "erp")) + ":")]),
             _vm._v(" "),
             _c("div", { staticClass: "persons-info" }, [
               _c("strong", [_vm._v(_vm._s(_vm.invoice.customer_name))]),
@@ -53524,25 +53520,25 @@ var render = function() {
           _c("div", { staticClass: "wperp-col-sm-6" }, [
             _c("table", { staticClass: "invoice-info" }, [
               _c("tr", [
-                _c("th", [_vm._v("Invoice No.")]),
+                _c("th", [_vm._v(_vm._s(_vm.__("Invoice No", "erp")) + ".")]),
                 _vm._v(" "),
                 _c("td", [_vm._v("#" + _vm._s(_vm.invoice.voucher_no))])
               ]),
               _vm._v(" "),
               _c("tr", [
-                _c("th", [_vm._v("Invoice Date:")]),
+                _c("th", [_vm._v(_vm._s(_vm.__("Invoice Date", "erp")) + ":")]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(_vm.invoice.trn_date))])
               ]),
               _vm._v(" "),
               _c("tr", [
-                _c("th", [_vm._v("Due Date:")]),
+                _c("th", [_vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(_vm.invoice.due_date))])
               ]),
               _vm._v(" "),
               _c("tr", [
-                _c("th", [_vm._v("Amount Due:")]),
+                _c("th", [_vm._v(_vm._s(_vm.__("Amount Due", "erp")) + ":")]),
                 _vm._v(" "),
                 _c("td", [
                   _vm._v(_vm._s(_vm.moneyFormat(_vm.invoice.total_due)))
@@ -53558,7 +53554,19 @@ var render = function() {
           "table",
           { staticClass: "wperp-table wperp-form-table invoice-table" },
           [
-            _vm._m(0),
+            _c("thead", [
+              _c("tr", [
+                _c("th", [_vm._v(_vm._s(_vm.__("Sl", "erp")) + ".")]),
+                _vm._v(" "),
+                _c("th", [_vm._v(_vm._s(_vm.__("Product", "erp")))]),
+                _vm._v(" "),
+                _c("th", [_vm._v(_vm._s(_vm.__("Qty", "erp")))]),
+                _vm._v(" "),
+                _c("th", [_vm._v(_vm._s(_vm.__("Unit Price", "erp")))]),
+                _vm._v(" "),
+                _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+              ])
+            ]),
             _vm._v(" "),
             _c(
               "tbody",
@@ -53591,14 +53599,18 @@ var render = function() {
                   [
                     _c("ul", [
                       _c("li", [
-                        _c("span", [_vm._v("Subtotal:")]),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.__("Subtotal", "erp")) + ":")
+                        ]),
                         _vm._v(
                           " " + _vm._s(_vm.moneyFormat(_vm.invoice.amount))
                         )
                       ]),
                       _vm._v(" "),
                       _c("li", [
-                        _c("span", [_vm._v("Discount:")]),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.__("Discount", "erp")) + ":")
+                        ]),
                         _vm._v(
                           " (-) " +
                             _vm._s(_vm.moneyFormat(_vm.invoice.discount))
@@ -53606,14 +53618,18 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("li", [
-                        _c("span", [_vm._v("Tax:")]),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.__("Tax", "erp")) + ":")
+                        ]),
                         _vm._v(
                           " (+) " + _vm._s(_vm.moneyFormat(_vm.invoice.tax))
                         )
                       ]),
                       _vm._v(" "),
                       _c("li", [
-                        _c("span", [_vm._v("Total:")]),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                        ]),
                         _vm._v(" " + _vm._s(_vm.moneyFormat(_vm.total)))
                       ])
                     ])
@@ -53630,7 +53646,7 @@ var render = function() {
       "div",
       { staticClass: "invoice-attachments d-print-none" },
       [
-        _c("h4", [_vm._v("Attachments")]),
+        _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
         _vm._v(" "),
         _vm._l(_vm.invoice.attachments, function(attachment, index) {
           return _c(
@@ -53665,26 +53681,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Sl.")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Product")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Qty")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Unit Price")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Amount")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -53794,11 +53791,11 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "invoice-body" }, [
-        _c("h4", [_vm._v("Payment")]),
+        _c("h4", [_vm._v(_vm._s(_vm.__("Payment", "erp")))]),
         _vm._v(" "),
         _c("div", { staticClass: "wperp-row" }, [
           _c("div", { staticClass: "wperp-col-sm-6" }, [
-            _c("h5", [_vm._v("Payment From:")]),
+            _c("h5", [_vm._v(_vm._s(_vm.__("Payment From", "erp")) + ":")]),
             _vm._v(" "),
             _c("div", { staticClass: "persons-info" }, [
               _c("strong", [_vm._v(_vm._s(_vm.payment.customer_name))]),
@@ -53809,19 +53806,19 @@ var render = function() {
           _c("div", { staticClass: "wperp-col-sm-6" }, [
             _c("table", { staticClass: "invoice-info" }, [
               _c("tr", [
-                _c("th", [_vm._v("Payment No.")]),
+                _c("th", [_vm._v(_vm._s(_vm.__("Payment No", "erp")) + ".")]),
                 _vm._v(" "),
                 _c("td", [_vm._v("#" + _vm._s(_vm.payment.voucher_no))])
               ]),
               _vm._v(" "),
               _c("tr", [
-                _c("th", [_vm._v("Payment Date:")]),
+                _c("th", [_vm._v(_vm._s(_vm.__("Payment Date", "erp")) + ":")]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(_vm.payment.trn_date))])
               ]),
               _vm._v(" "),
               _c("tr", [
-                _c("th", [_vm._v("Deposit To:")]),
+                _c("th", [_vm._v(_vm._s(_vm.__("Deposit To", "erp")) + ":")]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(_vm.payment.account))])
               ])
@@ -53835,7 +53832,13 @@ var render = function() {
           "table",
           { staticClass: "wperp-table wperp-form-table invoice-table" },
           [
-            _vm._m(0),
+            _c("thead", [
+              _c("tr", [
+                _c("th", [_vm._v(_vm._s(_vm.__("Invoice ID", "erp")))]),
+                _vm._v(" "),
+                _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+              ])
+            ]),
             _vm._v(" "),
             _c(
               "tbody",
@@ -53854,12 +53857,16 @@ var render = function() {
                 _c("td", { attrs: { colspan: "7" } }, [
                   _c("ul", [
                     _c("li", [
-                      _c("span", [_vm._v("Subtotal:")]),
+                      _c("span", [
+                        _vm._v(_vm._s(_vm.__("Subtotal", "erp")) + ":")
+                      ]),
                       _vm._v(" " + _vm._s(_vm.moneyFormat(_vm.payment.amount)))
                     ]),
                     _vm._v(" "),
                     _c("li", [
-                      _c("span", [_vm._v("Total:")]),
+                      _c("span", [
+                        _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                      ]),
                       _vm._v(" " + _vm._s(_vm.moneyFormat(_vm.payment.amount)))
                     ])
                   ])
@@ -53875,7 +53882,7 @@ var render = function() {
       "div",
       { staticClass: "invoice-attachments d-print-none" },
       [
-        _c("h4", [_vm._v("Attachments")]),
+        _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
         _vm._v(" "),
         _vm._l(_vm.payment.attachments, function(attachment, index) {
           return _c(
@@ -53910,20 +53917,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Invoice ID")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Amount")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -53979,7 +53973,11 @@ var render = function() {
                 },
                 [
                   _c("i", { staticClass: "flaticon-printer-1" }),
-                  _vm._v("\n                      Print\n                ")
+                  _vm._v(
+                    "\n                      " +
+                      _vm._s(_vm.__("Print", "erp")) +
+                      "\n                "
+                  )
                 ]
               ),
               _vm._v(" "),
@@ -53996,7 +53994,9 @@ var render = function() {
                       [
                         _c("i", { staticClass: "flaticon-settings-work-tool" }),
                         _vm._v(
-                          "\n                              More Action\n                        "
+                          "\n                              " +
+                            _vm._s(_vm.__("More Action", "erp")) +
+                            "\n                        "
                         )
                       ]
                     )
@@ -54016,7 +54016,7 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("Send Mail")]
+                          [_vm._v(_vm._s(_vm.__("Send Mail", "erp")))]
                         )
                       ])
                     ])
@@ -54040,7 +54040,7 @@ var render = function() {
                   attrs: { href: "#" },
                   on: { success: _vm.handleSuccess, error: _vm.handleError }
                 },
-                [_vm._v("Copy Link")]
+                [_vm._v(_vm._s(_vm.__("Copy Link", "erp")))]
               )
             ],
             1
@@ -54371,7 +54371,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "wperp-col-sm-4" }, [
             _c("div", { staticClass: "wperp-chart-block" }, [
-              _c("h3", [_vm._v("Outstanding")]),
+              _c("h3", [_vm._v(_vm._s(_vm.__("Outstanding", "erp")))]),
               _vm._v(" "),
               _c("div", { staticClass: "wperp-total" }, [
                 _c("h2", [
@@ -54475,7 +54475,14 @@ var render = function() {
         "div",
         { staticClass: "table-container" },
         [
-          _vm._m(0),
+          _c("div", { staticClass: "bulk-action" }, [
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "flaticon-trash" }),
+              _vm._v(_vm._s(_vm.__("Trash", "erp")))
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
           _vm._v(" "),
           _c("list-table", {
             attrs: {
@@ -54687,16 +54694,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "bulk-action" }, [
-      _c("a", { attrs: { href: "#" } }, [
-        _c("i", { staticClass: "flaticon-trash" }),
-        _vm._v("Trash")
-      ]),
-      _vm._v(" "),
-      _c("a", { staticClass: "dismiss-bulk-action", attrs: { href: "#" } }, [
-        _c("i", { staticClass: "flaticon-close" })
-      ])
-    ])
+    return _c(
+      "a",
+      { staticClass: "dismiss-bulk-action", attrs: { href: "#" } },
+      [_c("i", { staticClass: "flaticon-close" })]
+    )
   }
 ]
 render._withStripped = true
@@ -54799,7 +54801,11 @@ var render = function() {
     { staticClass: "content-header-section separator wperp-has-border-top" },
     [
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
-        _vm._m(0),
+        _c("div", { staticClass: "wperp-col" }, [
+          _c("h2", { staticClass: "content-header__title" }, [
+            _vm._v(_vm._s(_vm.__("Transactions", "erp")))
+          ])
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "wperp-col" }, [
           _c(
@@ -54837,7 +54843,10 @@ var render = function() {
                       }
                     },
                     [
-                      _vm._m(1),
+                      _c("span", [
+                        _c("i", { staticClass: "flaticon-search-segment" }),
+                        _vm._v(_vm._s(_vm.__("Filters", "erp")))
+                      ]),
                       _vm._v(" "),
                       _c("i", {
                         staticClass: "flaticon-arrow-down-sign-to-navigate"
@@ -54859,10 +54868,10 @@ var render = function() {
                             "wperp-panel wperp-panel-default wperp-filter-panel"
                         },
                         [
-                          _c("h3", [_vm._v("Filter")]),
+                          _c("h3", [_vm._v(_vm._s(_vm.__("Filter", "erp")))]),
                           _vm._v(" "),
                           _c("div", { staticClass: "wperp-panel-body" }, [
-                            _c("h3", [_vm._v("Date")]),
+                            _c("h3", [_vm._v(_vm._s(_vm.__("Date", "erp")))]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-fields" }, [
                               _c(
@@ -54887,7 +54896,7 @@ var render = function() {
                               ),
                               _vm._v(" "),
                               _c("span", { staticClass: "label-to" }, [
-                                _vm._v("To")
+                                _vm._v(_vm._s(_vm.__("To", "erp")))
                               ]),
                               _vm._v(" "),
                               _c(
@@ -54914,7 +54923,7 @@ var render = function() {
                             _vm._v(" "),
                             _c("br"),
                             _vm._v(" "),
-                            _c("h3", [_vm._v("Status")]),
+                            _c("h3", [_vm._v(_vm._s(_vm.__("Status", "erp")))]),
                             _vm._v(" "),
                             _c(
                               "div",
@@ -54954,7 +54963,7 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _vm._m(2)
+              _vm._m(0)
             ]
           )
         ])
@@ -54963,25 +54972,6 @@ var render = function() {
   )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wperp-col" }, [
-      _c("h2", { staticClass: "content-header__title" }, [
-        _vm._v("Transactions")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", [
-      _c("i", { staticClass: "flaticon-search-segment" }),
-      _vm._v("Filters")
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -55032,7 +55022,7 @@ var render = function() {
             { staticClass: "wperp-col" },
             [
               _c("h2", { staticClass: "content-header__title" }, [
-                _vm._v("Sales Transactions")
+                _vm._v(_vm._s(_vm.__("Sales Transactions", "erp")))
               ]),
               _vm._v(" "),
               _c("combo-box", {
@@ -55236,7 +55226,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "wperp-col-sm-4" }, [
             _c("div", { staticClass: "wperp-chart-block" }, [
-              _c("h3", [_vm._v("Outstanding")]),
+              _c("h3", [_vm._v(_vm._s(_vm.__("Outstanding", "erp")))]),
               _vm._v(" "),
               _c("div", { staticClass: "wperp-total" }, [
                 _c("h2", [
@@ -55340,7 +55330,14 @@ var render = function() {
         "div",
         { staticClass: "table-container" },
         [
-          _vm._m(0),
+          _c("div", { staticClass: "bulk-action" }, [
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "flaticon-trash" }),
+              _vm._v(_vm._s(_vm.__("Trash", "erp")))
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
           _vm._v(" "),
           _c("list-table", {
             attrs: {
@@ -55437,16 +55434,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "bulk-action" }, [
-      _c("a", { attrs: { href: "#" } }, [
-        _c("i", { staticClass: "flaticon-trash" }),
-        _vm._v("Trash")
-      ]),
-      _vm._v(" "),
-      _c("a", { staticClass: "dismiss-bulk-action", attrs: { href: "#" } }, [
-        _c("i", { staticClass: "flaticon-close" })
-      ])
-    ])
+    return _c(
+      "a",
+      { staticClass: "dismiss-bulk-action", attrs: { href: "#" } },
+      [_c("i", { staticClass: "flaticon-close" })]
+    )
   }
 ]
 render._withStripped = true
@@ -55479,7 +55471,7 @@ var render = function() {
             { staticClass: "wperp-col" },
             [
               _c("h2", { staticClass: "content-header__title" }, [
-                _vm._v("Expenses Transactions")
+                _vm._v(_vm._s(_vm.__("Expenses Transactions", "erp")))
               ]),
               _vm._v(" "),
               _c("combo-box", {
@@ -56078,7 +56070,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "wperp-col-sm-4" }, [
             _c("div", { staticClass: "wperp-chart-block" }, [
-              _c("h3", [_vm._v("Outstanding")]),
+              _c("h3", [_vm._v(_vm._s(_vm.__("Outstanding", "erp")))]),
               _vm._v(" "),
               _c("div", { staticClass: "wperp-total" }, [
                 _c("h2", [
@@ -56184,7 +56176,14 @@ var render = function() {
         "div",
         { staticClass: "table-container" },
         [
-          _vm._m(0),
+          _c("div", { staticClass: "bulk-action" }, [
+            _c("a", { attrs: { href: "#" } }, [
+              _c("i", { staticClass: "flaticon-trash" }),
+              _vm._v(_vm._s(_vm.__("Trash", "erp")))
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
           _vm._v(" "),
           _c("list-table", {
             attrs: {
@@ -56416,16 +56415,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "bulk-action" }, [
-      _c("a", { attrs: { href: "#" } }, [
-        _c("i", { staticClass: "flaticon-trash" }),
-        _vm._v("Trash")
-      ]),
-      _vm._v(" "),
-      _c("a", { staticClass: "dismiss-bulk-action", attrs: { href: "#" } }, [
-        _c("i", { staticClass: "flaticon-close" })
-      ])
-    ])
+    return _c(
+      "a",
+      { staticClass: "dismiss-bulk-action", attrs: { href: "#" } },
+      [_c("i", { staticClass: "flaticon-close" })]
+    )
   }
 ]
 render._withStripped = true
@@ -56458,7 +56452,7 @@ var render = function() {
             { staticClass: "wperp-col" },
             [
               _c("h2", { staticClass: "content-header__title" }, [
-                _vm._v("Purchases Transactions")
+                _vm._v(_vm._s(_vm.__("Purchases Transactions", "erp")))
               ]),
               _vm._v(" "),
               _c("combo-box", {
@@ -56523,7 +56517,11 @@ var render = function() {
           [
             _c("div", { staticClass: "wperp-modal-header" }, [
               _c("h3", [
-                _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Agency")
+                _vm._v(
+                  _vm._s(_vm.is_update ? "Edit" : "Add") +
+                    " " +
+                    _vm._s(_vm.__("Tax Agency", "erp"))
+                )
               ]),
               _vm._v(" "),
               _c(
@@ -56558,7 +56556,12 @@ var render = function() {
               [
                 _c("div", { staticClass: "wperp-modal-body" }, [
                   _c("div", { staticClass: "wperp-form-group" }, [
-                    _vm._m(0),
+                    _c("label", [
+                      _vm._v(_vm._s(_vm.__("Tax Agency Name", "erp"))),
+                      _c("span", { staticClass: "wperp-required-sign" }, [
+                        _vm._v("*")
+                      ])
+                    ]),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -56612,17 +56615,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Tax Agency Name"),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -56662,7 +56655,11 @@ var render = function() {
           [
             _c("div", { staticClass: "wperp-modal-header" }, [
               _c("h3", [
-                _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Category")
+                _vm._v(
+                  _vm._s(_vm.is_update ? "Edit" : "Add") +
+                    " " +
+                    _vm._s(_vm.__("Tax Category", "erp"))
+                )
               ]),
               _vm._v(" "),
               _c(
@@ -56697,7 +56694,12 @@ var render = function() {
               [
                 _c("div", { staticClass: "wperp-modal-body" }, [
                   _c("div", { staticClass: "wperp-form-group" }, [
-                    _vm._m(0),
+                    _c("label", [
+                      _vm._v(_vm._s(_vm.__("Tax Category Name", "erp")) + " "),
+                      _c("span", { staticClass: "wperp-required-sign" }, [
+                        _vm._v("*")
+                      ])
+                    ]),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -56723,7 +56725,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "wperp-form-group mb-0" }, [
-                    _c("label", [_vm._v("Description")]),
+                    _c("label", [_vm._v(_vm._s(_vm.__("Description", "erp")))]),
                     _vm._v(" "),
                     _c("textarea", {
                       directives: [
@@ -56777,17 +56779,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Tax Category Name "),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -56827,7 +56819,11 @@ var render = function() {
           [
             _c("div", { staticClass: "wperp-modal-header" }, [
               _c("h3", [
-                _vm._v(_vm._s(_vm.is_update ? "Edit" : "Add") + " Tax Zone")
+                _vm._v(
+                  _vm._s(_vm.is_update ? "Edit" : "Add") +
+                    " " +
+                    _vm._s(_vm.__("Tax Zone", "erp"))
+                )
               ]),
               _vm._v(" "),
               _c(
@@ -56862,7 +56858,12 @@ var render = function() {
               [
                 _c("div", { staticClass: "wperp-modal-body" }, [
                   _c("div", { staticClass: "wperp-form-group" }, [
-                    _vm._m(0),
+                    _c("label", [
+                      _vm._v(_vm._s(_vm.__("Tax Zone Name", "erp")) + " "),
+                      _c("span", { staticClass: "wperp-required-sign" }, [
+                        _vm._v("*")
+                      ])
+                    ]),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -56888,7 +56889,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "wperp-form-group" }, [
-                    _c("label", [_vm._v("Tax Number")]),
+                    _c("label", [_vm._v(_vm._s(_vm.__("Tax Number", "erp")))]),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -56957,7 +56958,9 @@ var render = function() {
                       _c("span", { staticClass: "form-check-sign" }),
                       _vm._v(" "),
                       _c("span", { staticClass: "field-label" }, [
-                        _vm._v("Is this tax default?")
+                        _vm._v(
+                          _vm._s(_vm.__("Is this tax default", "erp")) + "?"
+                        )
                       ])
                     ])
                   ])
@@ -56988,17 +56991,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Tax Zone Name "),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -57019,7 +57012,15 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "wperp-container" }, [
-    _vm._m(0),
+    _c("div", { staticClass: "content-header-section separator" }, [
+      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
+        _c("div", { staticClass: "wperp-col" }, [
+          _c("h2", { staticClass: "content-header__title" }, [
+            _vm._v(_vm._s(_vm.__("Add New Tax Rate", "erp")))
+          ])
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c(
       "div",
@@ -57043,7 +57044,12 @@ var render = function() {
                     "div",
                     { staticClass: "wperp-form-group wperp-col-sm-6" },
                     [
-                      _vm._m(1),
+                      _c("label", [
+                        _vm._v(_vm._s(_vm.__("Tax Zone Name", "erp"))),
+                        _c("span", { staticClass: "wperp-required-sign" }, [
+                          _vm._v("*")
+                        ])
+                      ]),
                       _vm._v(" "),
                       _c(
                         "div",
@@ -57122,7 +57128,10 @@ var render = function() {
                           _c("span", { staticClass: "form-check-sign" }),
                           _vm._v(" "),
                           _c("span", { staticClass: "field-label" }, [
-                            _vm._v("Is this tax compound?")
+                            _vm._v(
+                              _vm._s(_vm.__("Is this tax compound", "erp")) +
+                                "?"
+                            )
                           ])
                         ])
                       ])
@@ -57138,7 +57147,35 @@ var render = function() {
                         "wperp-table wperp-form-table new-journal-form"
                     },
                     [
-                      _vm._m(2),
+                      _c("thead", [
+                        _c("tr", [
+                          _c(
+                            "th",
+                            {
+                              staticClass: "column-primary",
+                              attrs: { scope: "col" }
+                            },
+                            [_vm._v(_vm._s(_vm.__("Component Name", "erp")))]
+                          ),
+                          _vm._v(" "),
+                          _c("th", { attrs: { scope: "col" } }, [
+                            _vm._v(_vm._s(_vm.__("Agency", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", { attrs: { scope: "col" } }, [
+                            _vm._v(_vm._s(_vm.__("Tax Category", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", { attrs: { scope: "col" } }, [
+                            _vm._v(_vm._s(_vm.__("Tax Rate", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", {
+                            staticClass: "col--actions",
+                            attrs: { scope: "col" }
+                          })
+                        ])
+                      ]),
                       _vm._v(" "),
                       _c(
                         "tbody",
@@ -57199,7 +57236,11 @@ var render = function() {
                                           }
                                         }
                                       },
-                                      [_vm._v("component")]
+                                      [
+                                        _vm._v(
+                                          _vm._s(_vm.__("component", "erp"))
+                                        )
+                                      ]
                                     ),
                                     _vm._v(" "),
                                     _c("button", {
@@ -57245,7 +57286,13 @@ var render = function() {
                                           }
                                         }
                                       },
-                                      [_vm._v("Add Tax Agency")]
+                                      [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm.__("Add Tax Agency", "erp")
+                                          )
+                                        )
+                                      ]
                                     )
                                   ],
                                   1
@@ -57282,7 +57329,13 @@ var render = function() {
                                           }
                                         }
                                       },
-                                      [_vm._v("Add Tax Category")]
+                                      [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm.__("Add Tax Category", "erp")
+                                          )
+                                        )
+                                      ]
                                     )
                                   ],
                                   1
@@ -57334,7 +57387,11 @@ var render = function() {
                                           }
                                         }
                                       },
-                                      [_vm._v("tax rate")]
+                                      [
+                                        _vm._v(
+                                          _vm._s(_vm.__("tax rate", "erp"))
+                                        )
+                                      ]
                                     )
                                   ]
                                 ),
@@ -57399,7 +57456,10 @@ var render = function() {
                                             "flaticon-add-plus-button"
                                         }),
                                         _vm._v(
-                                          "Add Component\n                                "
+                                          _vm._s(
+                                            _vm.__("Add Component", "erp")
+                                          ) +
+                                            "\n                                "
                                         )
                                       ]
                                     )
@@ -57472,51 +57532,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "content-header-section separator" }, [
-      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
-        _c("div", { staticClass: "wperp-col" }, [
-          _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v("Add New Tax Rate")
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Tax Zone Name"),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { staticClass: "column-primary", attrs: { scope: "col" } }, [
-          _vm._v("Component Name")
-        ]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Agency")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Tax Category")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Tax Rate")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "col--actions", attrs: { scope: "col" } })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -57599,7 +57615,15 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "app-customers" }, [
-    _vm._m(0),
+    _c("div", { staticClass: "content-header-section separator" }, [
+      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
+        _c("div", { staticClass: "wperp-col" }, [
+          _c("h2", { staticClass: "content-header__title" }, [
+            _vm._v(_vm._s(_vm.__("Record Sales Tax Payment", "erp")))
+          ])
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "wperp-panel wperp-panel-default pb-0" }, [
       _c("div", { staticClass: "wperp-panel-body" }, [
@@ -57623,7 +57647,12 @@ var render = function() {
                 "div",
                 { staticClass: "wperp-col-sm-4 with-multiselect" },
                 [
-                  _vm._m(1),
+                  _c("label", [
+                    _vm._v(_vm._s(_vm.__("Payment Method", "erp"))),
+                    _c("span", { staticClass: "wperp-required-sign" }, [
+                      _vm._v("*")
+                    ])
+                  ]),
                   _vm._v(" "),
                   _c("multi-select", {
                     attrs: { options: _vm.pay_methods },
@@ -57645,8 +57674,12 @@ var render = function() {
                 [
                   _c("label", [
                     "debit" == _vm.voucher_type.id
-                      ? _c("span", [_vm._v("Payment From")])
-                      : _c("span", [_vm._v("Deposit To")]),
+                      ? _c("span", [
+                          _vm._v(_vm._s(_vm.__("Payment From", "erp")))
+                        ])
+                      : _c("span", [
+                          _vm._v(_vm._s(_vm.__("Deposit To", "erp")))
+                        ]),
                     _vm._v(" "),
                     _c("span", { staticClass: "wperp-required-sign" }, [
                       _vm._v("*")
@@ -57669,7 +57702,7 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "wperp-col-sm-4 wperp-col-xs-12" }, [
                 _c("div", { staticClass: "wperp-form-group" }, [
-                  _c("label", [_vm._v("Payment Date")]),
+                  _c("label", [_vm._v(_vm._s(_vm.__("Payment Date", "erp")))]),
                   _vm._v(" "),
                   _c(
                     "div",
@@ -57695,7 +57728,7 @@ var render = function() {
                   "div",
                   { staticClass: "wperp-form-group with-multiselect" },
                   [
-                    _c("label", [_vm._v("Payment To")]),
+                    _c("label", [_vm._v(_vm._s(_vm.__("Payment To", "erp")))]),
                     _vm._v(" "),
                     _c("multi-select", {
                       attrs: { options: _vm.agencies },
@@ -57714,7 +57747,7 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "wperp-col-sm-4 wperp-col-xs-12" }, [
                 _c("div", { staticClass: "wperp-form-group" }, [
-                  _c("label", [_vm._v("Tax Amount")]),
+                  _c("label", [_vm._v(_vm._s(_vm.__("Tax Amount", "erp")))]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -57739,7 +57772,7 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _c("span", [
-                    _vm._v("Due Amount: "),
+                    _vm._v(_vm._s(_vm.__("Due Amount", "erp")) + ": "),
                     _c("span", { staticClass: "text-theme" }, [
                       _vm._v(_vm._s(_vm.moneyFormat(_vm.dueAmount)))
                     ])
@@ -57752,7 +57785,9 @@ var render = function() {
                   "div",
                   { staticClass: "wperp-form-group with-multiselect" },
                   [
-                    _c("label", [_vm._v("Voucher Type")]),
+                    _c("label", [
+                      _vm._v(_vm._s(_vm.__("Voucher Type", "erp")))
+                    ]),
                     _vm._v(" "),
                     _c("multi-select", {
                       attrs: {
@@ -57773,7 +57808,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "wperp-col-xs-12" }, [
-                _c("label", [_vm._v("Particulars")]),
+                _c("label", [_vm._v(_vm._s(_vm.__("Particulars", "erp")))]),
                 _vm._v(" "),
                 _c("textarea", {
                   directives: [
@@ -57818,31 +57853,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "content-header-section separator" }, [
-      _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
-        _c("div", { staticClass: "wperp-col" }, [
-          _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v("Record Sales Tax Payment")
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", [
-      _vm._v("Payment Method"),
-      _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -57931,14 +57942,16 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "tax-section" }, [
-    _c("div", { staticClass: "sectionHeader" }, [_vm._v("Tax Shortcuts")]),
+    _c("div", { staticClass: "sectionHeader" }, [
+      _vm._v(_vm._s(_vm.__("Tax Shortcuts", "erp")))
+    ]),
     _vm._v(" "),
     _c("ul", [
       _c(
         "li",
         [
           _c("router-link", { attrs: { to: { name: "TaxZones" } } }, [
-            _vm._v("View Tax Zones")
+            _vm._v(_vm._s(_vm.__("View Tax Zones", "erp")))
           ])
         ],
         1
@@ -57948,7 +57961,7 @@ var render = function() {
         "li",
         [
           _c("router-link", { attrs: { to: { name: "TaxCategories" } } }, [
-            _vm._v("View Tax Categories")
+            _vm._v(_vm._s(_vm.__("View Tax Categories", "erp")))
           ])
         ],
         1
@@ -57958,30 +57971,23 @@ var render = function() {
         "li",
         [
           _c("router-link", { attrs: { to: { name: "TaxAgencies" } } }, [
-            _vm._v("View Tax Agencies")
+            _vm._v(_vm._s(_vm.__("View Tax Agencies", "erp")))
           ])
         ],
         1
       ),
       _vm._v(" "),
-      _vm._m(0)
+      _c("li", [
+        _c(
+          "a",
+          { staticClass: "link", attrs: { id: "learnMoreLink", href: "#" } },
+          [_vm._v(_vm._s(_vm.__("Tax Help", "erp")))]
+        )
+      ])
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", [
-      _c(
-        "a",
-        { staticClass: "link", attrs: { id: "learnMoreLink", href: "#" } },
-        [_vm._v("Tax Help")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -58009,7 +58015,7 @@ var render = function() {
         _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
           _c("div", { staticClass: "wperp-col" }, [
             _c("h2", { staticClass: "content-header__title" }, [
-              _vm._v("Tax Agencies")
+              _vm._v(_vm._s(_vm.__("Tax Agencies", "erp")))
             ]),
             _vm._v(" "),
             _c(
@@ -58023,7 +58029,7 @@ var render = function() {
                   }
                 }
               },
-              [_c("span", [_vm._v("Add Tax Agency")])]
+              [_c("span", [_vm._v(_vm._s(_vm.__("Add Tax Agency", "erp")))])]
             )
           ])
         ])
@@ -58165,7 +58171,7 @@ var render = function() {
         _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
           _c("div", { staticClass: "wperp-col" }, [
             _c("h2", { staticClass: "content-header__title" }, [
-              _vm._v("Tax Categories")
+              _vm._v(_vm._s(_vm.__("Tax Categories", "erp")))
             ]),
             _vm._v(" "),
             _c(
@@ -58179,7 +58185,7 @@ var render = function() {
                   }
                 }
               },
-              [_c("span", [_vm._v("Add Tax Category")])]
+              [_c("span", [_vm._v(_vm._s(_vm.__("Add Tax Category", "erp")))])]
             )
           ])
         ])
@@ -58321,7 +58327,7 @@ var render = function() {
         _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
           _c("div", { staticClass: "wperp-col" }, [
             _c("h2", { staticClass: "content-header__title" }, [
-              _vm._v("Tax Zones")
+              _vm._v(_vm._s(_vm.__("Tax Zones", "erp")))
             ]),
             _vm._v(" "),
             _c(
@@ -58335,7 +58341,7 @@ var render = function() {
                   }
                 }
               },
-              [_c("span", [_vm._v("Add Tax Zone")])]
+              [_c("span", [_vm._v(_vm._s(_vm.__("Add Tax Zone", "erp")))])]
             )
           ])
         ])
@@ -58491,7 +58497,7 @@ var render = function() {
         _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
           _c("div", { staticClass: "wperp-col" }, [
             _c("h2", { staticClass: "content-header__title" }, [
-              _vm._v("Tax Rates")
+              _vm._v(_vm._s(_vm.__("Tax Rates", "erp")))
             ]),
             _vm._v(" "),
             _c(
@@ -58505,7 +58511,7 @@ var render = function() {
                   }
                 }
               },
-              [_c("span", [_vm._v("Add Tax Rate")])]
+              [_c("span", [_vm._v(_vm._s(_vm.__("Add Tax Rate", "erp")))])]
             )
           ])
         ])
@@ -58690,7 +58696,7 @@ var render = function() {
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
         _c("div", { staticClass: "wperp-col" }, [
           _c("h2", { staticClass: "content-header__title" }, [
-            _vm._v("Tax Payments")
+            _vm._v(_vm._s(_vm.__("Tax Payments", "erp")))
           ]),
           _vm._v(" "),
           _c(
@@ -58704,7 +58710,7 @@ var render = function() {
                 }
               }
             },
-            [_c("span", [_vm._v("New Tax Payment")])]
+            [_c("span", [_vm._v(_vm._s(_vm.__("New Tax Payment", "erp")))])]
           )
         ])
       ])
@@ -58861,7 +58867,7 @@ var render = function() {
       { staticClass: "wperp-modal-content" },
       [
         _c("div", { staticClass: "wperp-modal-header" }, [
-          _c("h2", [_vm._v("Tax Payment")]),
+          _c("h2", [_vm._v(_vm._s(_vm.__("Tax Payment", "erp")))]),
           _vm._v(" "),
           _c(
             "div",
@@ -58881,7 +58887,11 @@ var render = function() {
                 },
                 [
                   _c("i", { staticClass: "flaticon-printer-1" }),
-                  _vm._v("\n                      Print\n                ")
+                  _vm._v(
+                    "\n                      " +
+                      _vm._s(_vm.__("Print", "erp")) +
+                      "\n                "
+                  )
                 ]
               ),
               _vm._v(" "),
@@ -58898,7 +58908,9 @@ var render = function() {
                       [
                         _c("i", { staticClass: "flaticon-settings-work-tool" }),
                         _vm._v(
-                          "\n                              More Action\n                        "
+                          "\n                              " +
+                            _vm._s(_vm.__("More Action", "erp")) +
+                            "\n                        "
                         )
                       ]
                     )
@@ -58918,7 +58930,7 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("Send Mail")]
+                          [_vm._v(_vm._s(_vm.__("Send Mail", "erp")))]
                         )
                       ])
                     ])
@@ -58980,7 +58992,7 @@ var render = function() {
               : _vm._e(),
             _vm._v(" "),
             _c("div", { staticClass: "invoice-body" }, [
-              _c("h4", [_vm._v("Tax Payment to")]),
+              _c("h4", [_vm._v(_vm._s(_vm.__("Tax Payment to", "erp")))]),
               _vm._v(" "),
               null != _vm.tax_pay_data
                 ? _c("div", { staticClass: "wperp-row" }, [
@@ -58996,7 +59008,9 @@ var render = function() {
                     _c("div", { staticClass: "wperp-col-sm-6" }, [
                       _c("table", { staticClass: "invoice-info" }, [
                         _c("tr", [
-                          _c("th", [_vm._v("Voucher No")]),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")))
+                          ]),
                           _vm._v(" "),
                           _c("td", [
                             _vm._v("#" + _vm._s(_vm.tax_pay_data.voucher_no))
@@ -59004,7 +59018,9 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("tr", [
-                          _c("th", [_vm._v("Payment Date:")]),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Payment Date", "erp")) + ":")
+                          ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(_vm.tax_pay_data.trn_date))])
                         ])
@@ -59022,7 +59038,21 @@ var render = function() {
                       staticClass: "wperp-table wperp-form-table invoice-table"
                     },
                     [
-                      _vm._m(0),
+                      _c("thead", [
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Account", "erp")))]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Voucher Type", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                        ])
+                      ]),
                       _vm._v(" "),
                       _c("tbody", [
                         _c("tr", [
@@ -59051,7 +59081,9 @@ var render = function() {
                           _c("td", { attrs: { colspan: "7" } }, [
                             _c("ul", [
                               _c("li", [
-                                _c("span", [_vm._v("Total:")]),
+                                _c("span", [
+                                  _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                                ]),
                                 _vm._v(
                                   " " +
                                     _vm._s(
@@ -59073,7 +59105,9 @@ var render = function() {
                               attrs: { colspan: "7" }
                             },
                             [
-                              _c("h2", [_vm._v("Particulars")]),
+                              _c("h2", [
+                                _vm._v(_vm._s(_vm.__("Particulars", "erp")))
+                              ]),
                               _vm._v(" "),
                               _vm.tax_pay_data.particulars
                                 ? _c("p", [
@@ -59095,24 +59129,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Voucher No")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Account")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Voucher Type")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Amount")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -60550,7 +60567,7 @@ var render = function() {
       _c("div", { staticClass: "wperp-modal-dialog" }, [
         _c("div", { staticClass: "wperp-modal-content" }, [
           _c("div", { staticClass: "wperp-modal-header" }, [
-            _c("h3", [_vm._v("Add New")]),
+            _c("h3", [_vm._v(_vm._s(_vm.__("Add New", "erp")))]),
             _vm._v(" "),
             _c(
               "span",
@@ -60571,7 +60588,7 @@ var render = function() {
             _c("div", { staticClass: "wperp-panel-body" }, [
               _c("div", { staticClass: "wperp-row" }, [
                 _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-                  _c("label", [_vm._v("Component")]),
+                  _c("label", [_vm._v(_vm._s(_vm.__("Component", "erp")))]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -60602,7 +60619,7 @@ var render = function() {
                       "wperp-col-sm-3 wperp-col-xs-12 with-multiselect"
                   },
                   [
-                    _c("label", [_vm._v("Agency")]),
+                    _c("label", [_vm._v(_vm._s(_vm.__("Agency", "erp")))]),
                     _vm._v(" "),
                     _c("multi-select", {
                       attrs: { options: _vm.agencies },
@@ -60625,7 +60642,9 @@ var render = function() {
                       "wperp-col-sm-3 wperp-col-xs-12 with-multiselect"
                   },
                   [
-                    _c("label", [_vm._v("Tax Category")]),
+                    _c("label", [
+                      _vm._v(_vm._s(_vm.__("Tax Category", "erp")))
+                    ]),
                     _vm._v(" "),
                     _c("multi-select", {
                       attrs: { options: _vm.categories },
@@ -60642,7 +60661,7 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-                  _c("label", [_vm._v("Tax Rate")]),
+                  _c("label", [_vm._v(_vm._s(_vm.__("Tax Rate", "erp")))]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -60841,7 +60860,7 @@ var render = function() {
       "div",
       { staticClass: "wperp-col-sm-3 wperp-col-xs-12" },
       [
-        _c("label", [_vm._v("Component")]),
+        _c("label", [_vm._v(_vm._s(_vm.__("Component", "erp")))]),
         _vm._v(" "),
         _vm.is_update
           ? [
@@ -60879,7 +60898,7 @@ var render = function() {
       "div",
       { staticClass: "wperp-col-sm-3 wperp-col-xs-12 with-multiselect" },
       [
-        _c("label", [_vm._v("Agency")]),
+        _c("label", [_vm._v(_vm._s(_vm.__("Agency", "erp")))]),
         _vm._v(" "),
         _vm.is_update
           ? [
@@ -60903,7 +60922,7 @@ var render = function() {
       "div",
       { staticClass: "wperp-col-sm-3 wperp-col-xs-12 with-multiselect" },
       [
-        _c("label", [_vm._v("Tax Category")]),
+        _c("label", [_vm._v(_vm._s(_vm.__("Tax Category", "erp")))]),
         _vm._v(" "),
         _vm.is_update
           ? [
@@ -60927,7 +60946,7 @@ var render = function() {
       "div",
       { staticClass: "wperp-col-sm-3 wperp-col-xs-12" },
       [
-        _c("label", [_vm._v("Tax Rate")]),
+        _c("label", [_vm._v(_vm._s(_vm.__("Tax Rate", "erp")))]),
         _vm._v(" "),
         _vm.is_update
           ? [
@@ -61094,7 +61113,7 @@ var render = function() {
                   }
                 }
               },
-              [_c("span", [_vm._v("Add New Line")])]
+              [_c("span", [_vm._v(_vm._s(_vm.__("Add New Line", "erp")))])]
             )
           ])
         ])

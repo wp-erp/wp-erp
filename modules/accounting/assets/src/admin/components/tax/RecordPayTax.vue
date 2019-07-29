@@ -142,7 +142,7 @@
 
             changeAccounts() {
                 this.accts_by_chart = [];
-                if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
+                if ( '2' === this.trn_by.id || '3' === this.trn_by.id ) {
                     HTTP.get('/ledgers/bank-accounts').then((response) => {
                         this.accts_by_chart = response.data;
                         this.accts_by_chart.forEach( element =>{
@@ -151,7 +151,7 @@
                             }
                         });
                     });
-                } else if ( '1' === this.basic_fields.trn_by.id ) {
+                } else if ( '1' === this.trn_by.id ) {
                     HTTP.get('/ledgers/cash-accounts').then((response) => {
                         this.accts_by_chart = response.data;
                         this.accts_by_chart.forEach( element =>{
