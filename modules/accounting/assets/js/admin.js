@@ -12014,7 +12014,7 @@ var render = function() {
                             attrs: {
                               type: "text",
                               id: "first_name",
-                              placeholder: "First Name",
+                              placeholder: _vm.__("First Name", "erp"),
                               required: ""
                             },
                             domProps: { value: _vm.peopleFields.first_name },
@@ -12061,7 +12061,7 @@ var render = function() {
                             attrs: {
                               type: "text",
                               id: "last_name",
-                              placeholder: "Last Name",
+                              placeholder: _vm.__("Last Name", "erp"),
                               required: ""
                             },
                             domProps: { value: _vm.peopleFields.last_name },
@@ -12199,7 +12199,10 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "company",
-                                      placeholder: "ABC Corporation"
+                                      placeholder: _vm.__(
+                                        "ABC Corporation",
+                                        "erp"
+                                      )
                                     },
                                     domProps: {
                                       value: _vm.peopleFields.company
@@ -12333,7 +12336,7 @@ var render = function() {
                                       id: "note",
                                       cols: "30",
                                       rows: "4",
-                                      placeholder: "Type here"
+                                      placeholder: _vm.__("Type here", "erp")
                                     },
                                     domProps: { value: _vm.peopleFields.notes },
                                     on: {
@@ -12376,7 +12379,7 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "fax",
-                                      placeholder: "Type here"
+                                      placeholder: _vm.__("Type here", "erp")
                                     },
                                     domProps: { value: _vm.peopleFields.fax },
                                     on: {
@@ -12419,7 +12422,7 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "street1",
-                                      placeholder: "Street 1"
+                                      placeholder: _vm.__("Street 1", "erp")
                                     },
                                     domProps: {
                                       value: _vm.peopleFields.street_1
@@ -12464,7 +12467,7 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "street2",
-                                      placeholder: "Street 2"
+                                      placeholder: _vm.__("Street 2", "erp")
                                     },
                                     domProps: {
                                       value: _vm.peopleFields.street_2
@@ -12509,7 +12512,7 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "city",
-                                      placeholder: "City/Town"
+                                      placeholder: _vm.__("City/Town", "erp")
                                     },
                                     domProps: { value: _vm.peopleFields.city },
                                     on: {
@@ -12637,7 +12640,7 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "post_code",
-                                      placeholder: "Post Code"
+                                      placeholder: _vm.__("Post Code", "erp")
                                     },
                                     domProps: {
                                       value: _vm.peopleFields.postal_code
@@ -13112,7 +13115,10 @@ var render = function() {
     { staticClass: "with-multiselect" },
     [
       _c("multi-select", {
-        attrs: { placeholder: "Select Account", options: _vm.accounts },
+        attrs: {
+          placeholder: _vm.__("Select Account", "erp"),
+          options: _vm.accounts
+        },
         model: {
           value: _vm.selectedAccount,
           callback: function($$v) {
@@ -13232,7 +13238,10 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("input-tag", {
-              attrs: { placeholder: "Add Emails", validate: "email" },
+              attrs: {
+                placeholder: _vm.__("Add Emails", "erp"),
+                validate: "email"
+              },
               model: {
                 value: _vm.emails,
                 callback: function($$v) {
@@ -13300,7 +13309,10 @@ var render = function() {
                 }
               ],
               staticClass: "wperp-form-field",
-              attrs: { placeholder: "Enter Your Message Here", rows: "4" },
+              attrs: {
+                placeholder: _vm.__("Enter Your Message Here", "erp"),
+                rows: "4"
+              },
               domProps: { value: _vm.message },
               on: {
                 input: function($event) {
@@ -32276,6 +32288,10 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_53_admin_components_reports_BalanceSheet_vue__ = __webpack_require__(487);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_54_admin_components_transactions_DynamicTrnLoader_vue__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_55_admin_components_opening_balance_OpeningBalance_vue__ = __webpack_require__(490);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_56_admin_components_help_HelpContent_vue__ = __webpack_require__(636);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_57_admin_components_help_TaxHelpContent_vue__ = __webpack_require__(639);
+
+
 
 
 
@@ -32892,6 +32908,22 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
       name: 'OpeningBalance',
       component: __WEBPACK_IMPORTED_MODULE_55_admin_components_opening_balance_OpeningBalance_vue__["a" /* default */]
     }]
+  }, {
+    path: '/erp-ac-help',
+    component: {
+      render: function render(c) {
+        return c('router-view');
+      }
+    },
+    children: [{
+      path: '',
+      name: 'HelpContent',
+      component: __WEBPACK_IMPORTED_MODULE_56_admin_components_help_HelpContent_vue__["a" /* default */]
+    }, {
+      path: 'tax',
+      name: 'TaxHelpContent',
+      component: __WEBPACK_IMPORTED_MODULE_57_admin_components_help_TaxHelpContent_vue__["a" /* default */]
+    }]
   }])
 }));
 
@@ -33331,7 +33363,10 @@ var render = function() {
                             staticClass: "wperp-form-field",
                             attrs: {
                               type: "text",
-                              placeholder: "Enter Product Name Here",
+                              placeholder: _vm.__(
+                                "Enter Product Name Here",
+                                "erp"
+                              ),
                               required: ""
                             },
                             domProps: { value: _vm.ProductFields.name },
@@ -44369,7 +44404,10 @@ var render = function() {
                       }
                     ],
                     staticClass: "wperp-form-field",
-                    attrs: { rows: "4", placeholder: "Type here" },
+                    attrs: {
+                      rows: "4",
+                      placeholder: _vm.__("Type here", "erp")
+                    },
                     domProps: { value: _vm.basic_fields.billing_address },
                     on: {
                       input: function($event) {
@@ -44599,7 +44637,7 @@ var render = function() {
                               staticClass: "tax-rates",
                               attrs: {
                                 options: _vm.taxRates,
-                                placeholder: "Select sales tax"
+                                placeholder: _vm.__("Select sales tax", "erp")
                               },
                               model: {
                                 value: _vm.taxRate,
@@ -44677,7 +44715,10 @@ var render = function() {
                                 }
                               ],
                               staticClass: "wperp-form-field display-flex",
-                              attrs: { rows: "4", placeholder: "Particulars" },
+                              attrs: {
+                                rows: "4",
+                                placeholder: _vm.__("Particulars", "erp")
+                              },
                               domProps: { value: _vm.particulars },
                               on: {
                                 input: function($event) {
@@ -45258,7 +45299,7 @@ var render = function() {
                           options: _vm.categories,
                           "disable-branch-nodes": true,
                           "show-count": true,
-                          placeholder: "Please select a category"
+                          placeholder: _vm.__("Please select a category", "erp")
                         },
                         model: {
                           value: _vm.parent,
@@ -45435,7 +45476,7 @@ var render = function() {
                 options: _vm.chartAccounts,
                 "disable-branch-nodes": true,
                 "show-count": true,
-                placeholder: "Please select"
+                placeholder: _vm.__("Please select", "erp")
               },
               model: {
                 value: _vm.ledgFields.chart_id,
@@ -45512,7 +45553,9 @@ var render = function() {
           [
             _vm._v(
               "\n                " +
-                _vm._s(_vm.editMode ? "Update" : "Save") +
+                _vm._s(
+                  _vm.editMode ? _vm.__("Update", "erp") : _vm.__("Save", "erp")
+                ) +
                 "\n            "
             )
           ]
@@ -46410,7 +46453,10 @@ var render = function() {
                               }
                             ],
                             staticClass: "wperp-form-field",
-                            attrs: { rows: "4", placeholder: "Type here" },
+                            attrs: {
+                              rows: "4",
+                              placeholder: _vm.__("Type here", "erp")
+                            },
                             domProps: {
                               value: _vm.basic_fields.billing_address
                             },
@@ -46645,7 +46691,10 @@ var render = function() {
                         }
                       ],
                       staticClass: "wperp-form-field display-flex",
-                      attrs: { rows: "4", placeholder: "Internal Information" },
+                      attrs: {
+                        rows: "4",
+                        placeholder: _vm.__("Internal Information", "erp")
+                      },
                       domProps: { value: _vm.particulars },
                       on: {
                         input: function($event) {
@@ -46974,7 +47023,10 @@ var render = function() {
                             }
                           ],
                           staticClass: "wperp-form-field",
-                          attrs: { rows: "4", placeholder: "Type here" },
+                          attrs: {
+                            rows: "4",
+                            placeholder: _vm.__("Type here", "erp")
+                          },
                           domProps: { value: _vm.basic_fields.billing_address },
                           on: {
                             input: function($event) {
@@ -47079,7 +47131,10 @@ var render = function() {
                             }
                           ],
                           staticClass: "wperp-form-field display-flex",
-                          attrs: { rows: "1", placeholder: "Particulars" },
+                          attrs: {
+                            rows: "1",
+                            placeholder: _vm.__("Particulars", "erp")
+                          },
                           domProps: { value: line.description },
                           on: {
                             input: function($event) {
@@ -47255,7 +47310,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "4",
-                            placeholder: "Internal Information"
+                            placeholder: _vm.__("Internal Information", "erp")
                           },
                           domProps: { value: _vm.particulars },
                           on: {
@@ -48037,7 +48092,10 @@ var render = function() {
                           }
                         ],
                         staticClass: "wperp-form-field",
-                        attrs: { rows: "3", placeholder: "Type here" },
+                        attrs: {
+                          rows: "3",
+                          placeholder: _vm.__("Type here", "erp")
+                        },
                         domProps: { value: _vm.basic_fields.billing_address },
                         on: {
                           input: function($event) {
@@ -48074,7 +48132,39 @@ var render = function() {
         _c("div", { staticClass: "wperp-table-responsive" }, [
           _c("div", { staticClass: "table-container" }, [
             _c("table", { staticClass: "wperp-table wperp-form-table" }, [
-              _vm._m(0),
+              _c("thead", [
+                _c("tr", [
+                  _c(
+                    "th",
+                    {
+                      staticClass: "col--id column-primary",
+                      attrs: { scope: "col" }
+                    },
+                    [_vm._v(_vm._s(_vm.__("Bill No", "erp")))]
+                  ),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.__("Due Date", "erp")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.__("Total", "erp")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.__("Due", "erp")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _vm._v(_vm._s(_vm.__("Amount", "erp")))
+                  ]),
+                  _vm._v(" "),
+                  _c("th", {
+                    staticClass: "col--actions",
+                    attrs: { scope: "col" }
+                  })
+                ])
+              ]),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -48189,7 +48279,7 @@ var render = function() {
                         staticClass: "text-right pr-0 hide-sm",
                         attrs: { colspan: "4" }
                       },
-                      [_vm._v("Total Amount")]
+                      [_vm._v(_vm._s(_vm.__("Total Amount", "erp")))]
                     ),
                     _vm._v(" "),
                     _c(
@@ -48223,7 +48313,7 @@ var render = function() {
                     attrs: { colspan: "9" }
                   },
                   [
-                    _c("label", [_vm._v("Particulars")]),
+                    _c("label", [_vm._v(_vm._s(_vm.__("Particulars", "erp")))]),
                     _vm._v(" "),
                     _c("textarea", {
                       directives: [
@@ -48235,7 +48325,10 @@ var render = function() {
                         }
                       ],
                       staticClass: "wperp-form-field display-flex",
-                      attrs: { rows: "4", placeholder: "Internal Information" },
+                      attrs: {
+                        rows: "4",
+                        placeholder: _vm.__("Internal Information", "erp")
+                      },
                       domProps: { value: _vm.particulars },
                       on: {
                         input: function($event) {
@@ -48263,7 +48356,7 @@ var render = function() {
                       { staticClass: "attachment-container" },
                       [
                         _c("label", { staticClass: "col--attachement" }, [
-                          _vm._v("Attachment")
+                          _vm._v(_vm._s(_vm.__("Attachment", "erp")))
                         ]),
                         _vm._v(" "),
                         _c("file-upload", {
@@ -48307,32 +48400,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c(
-          "th",
-          { staticClass: "col--id column-primary", attrs: { scope: "col" } },
-          [_vm._v("Bill No")]
-        ),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Due Date")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Total")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Due")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Amount")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "col--actions", attrs: { scope: "col" } })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -48633,7 +48701,11 @@ var render = function() {
                           _c("td", { attrs: { colspan: "7" } }, [
                             _c("ul", [
                               _c("li", [
-                                _c("span", [_vm._v("Subtotal:")]),
+                                _c("span", [
+                                  _vm._v(
+                                    _vm._s(_vm.__("Subtotal", "erp")) + ":"
+                                  )
+                                ]),
                                 _vm._v(
                                   " " +
                                     _vm._s(_vm.moneyFormat(_vm.payBill.amount))
@@ -48641,7 +48713,9 @@ var render = function() {
                               ]),
                               _vm._v(" "),
                               _c("li", [
-                                _c("span", [_vm._v("Total:")]),
+                                _c("span", [
+                                  _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                                ]),
                                 _vm._v(
                                   " " +
                                     _vm._s(_vm.moneyFormat(_vm.payBill.amount))
@@ -49193,7 +49267,10 @@ var render = function() {
                         }
                       ],
                       staticClass: "wperp-form-field",
-                      attrs: { rows: "4", placeholder: "Type here" },
+                      attrs: {
+                        rows: "4",
+                        placeholder: _vm.__("Type here", "erp")
+                      },
                       domProps: { value: _vm.basic_fields.billing_address },
                       on: {
                         input: function($event) {
@@ -49347,7 +49424,10 @@ var render = function() {
                             }
                           ],
                           staticClass: "wperp-form-field display-flex",
-                          attrs: { rows: "4", placeholder: "Particulars" },
+                          attrs: {
+                            rows: "4",
+                            placeholder: _vm.__("Particulars", "erp")
+                          },
                           domProps: { value: _vm.particulars },
                           on: {
                             input: function($event) {
@@ -50120,7 +50200,10 @@ var render = function() {
                           }
                         ],
                         staticClass: "wperp-form-field",
-                        attrs: { rows: "3", placeholder: "Type here" },
+                        attrs: {
+                          rows: "3",
+                          placeholder: _vm.__("Type here", "erp")
+                        },
                         domProps: { value: _vm.basic_fields.billing_address },
                         on: {
                           input: function($event) {
@@ -50356,7 +50439,10 @@ var render = function() {
                         }
                       ],
                       staticClass: "wperp-form-field display-flex",
-                      attrs: { rows: "4", placeholder: "Internal Information" },
+                      attrs: {
+                        rows: "4",
+                        placeholder: _vm.__("Internal Information", "erp")
+                      },
                       domProps: { value: _vm.particulars },
                       on: {
                         input: function($event) {
@@ -51167,7 +51253,10 @@ var render = function() {
                       }
                     ],
                     staticClass: "wperp-form-field display-flex",
-                    attrs: { rows: "1", placeholder: "Internal Information" },
+                    attrs: {
+                      rows: "1",
+                      placeholder: _vm.__("Internal Information", "erp")
+                    },
                     domProps: { value: _vm.journal_parti },
                     on: {
                       input: function($event) {
@@ -52120,7 +52209,7 @@ var render = function() {
                             name: "from",
                             multiple: false,
                             options: _vm.fa,
-                            placeholder: "Select Account"
+                            placeholder: _vm.__("Select Account", "erp")
                           },
                           model: {
                             value: _vm.transferFrom,
@@ -52171,7 +52260,7 @@ var render = function() {
                             name: "to",
                             multiple: false,
                             options: _vm.ta,
-                            placeholder: "Select Account"
+                            placeholder: _vm.__("Select Account", "erp")
                           },
                           model: {
                             value: _vm.transferTo,
@@ -52288,7 +52377,7 @@ var render = function() {
                       name: "particulars",
                       id: "particulars",
                       rows: "3",
-                      placeholder: "Type Here"
+                      placeholder: _vm.__("Type Here", "erp")
                     },
                     domProps: { value: _vm.particulars },
                     on: {
@@ -52913,7 +53002,10 @@ var render = function() {
                               }
                             ],
                             staticClass: "wperp-form-field",
-                            attrs: { rows: "3", placeholder: "Type here" },
+                            attrs: {
+                              rows: "3",
+                              placeholder: _vm.__("Type here", "erp")
+                            },
                             domProps: {
                               value: _vm.basic_fields.billing_address
                             },
@@ -53031,7 +53123,10 @@ var render = function() {
                             }
                           ],
                           staticClass: "wperp-form-field display-flex",
-                          attrs: { rows: "1", placeholder: "Particulars" },
+                          attrs: {
+                            rows: "1",
+                            placeholder: _vm.__("Particulars", "erp")
+                          },
                           domProps: { value: line.particulars },
                           on: {
                             input: function($event) {
@@ -53210,7 +53305,7 @@ var render = function() {
                           staticClass: "wperp-form-field display-flex",
                           attrs: {
                             rows: "4",
-                            placeholder: "Internal Information"
+                            placeholder: _vm.__("Internal Information", "erp")
                           },
                           domProps: { value: _vm.particulars },
                           on: {
@@ -55029,7 +55124,7 @@ var render = function() {
                 attrs: {
                   options: _vm.pages,
                   hasUrl: true,
-                  placeholder: "New Transaction"
+                  placeholder: _vm.__("New Transaction", "erp")
                 }
               })
             ],
@@ -55478,7 +55573,7 @@ var render = function() {
                 attrs: {
                   options: _vm.pages,
                   hasUrl: true,
-                  placeholder: "New Transaction"
+                  placeholder: _vm.__("New Transaction", "erp")
                 }
               })
             ],
@@ -56459,7 +56554,7 @@ var render = function() {
                 attrs: {
                   options: _vm.pages,
                   hasUrl: true,
-                  placeholder: "New Transaction"
+                  placeholder: _vm.__("New Transaction", "erp")
                 }
               })
             ],
@@ -56901,7 +56996,10 @@ var render = function() {
                         }
                       ],
                       staticClass: "wperp-form-field",
-                      attrs: { type: "text", placeholder: "Enter Tax Number" },
+                      attrs: {
+                        type: "text",
+                        placeholder: _vm.__("Enter Tax Number", "erp")
+                      },
                       domProps: { value: _vm.tax_number },
                       on: {
                         input: function($event) {
@@ -57759,7 +57857,10 @@ var render = function() {
                       }
                     ],
                     staticClass: "wperp-form-field",
-                    attrs: { type: "number", placeholder: "Enter Tax Amount" },
+                    attrs: {
+                      type: "number",
+                      placeholder: _vm.__("Enter Tax Amount", "erp")
+                    },
                     domProps: { value: _vm.tax_amount },
                     on: {
                       input: function($event) {
@@ -57792,7 +57893,7 @@ var render = function() {
                     _c("multi-select", {
                       attrs: {
                         options: _vm.voucher_types,
-                        placeholder: "Enter Voucher Type"
+                        placeholder: _vm.__("Enter Voucher Type", "erp")
                       },
                       model: {
                         value: _vm.voucher_type,
@@ -57820,7 +57921,10 @@ var render = function() {
                     }
                   ],
                   staticClass: "wperp-form-field",
-                  attrs: { rows: "3", placeholder: "Enter Particulars" },
+                  attrs: {
+                    rows: "3",
+                    placeholder: _vm.__("Enter Particulars", "erp")
+                  },
                   domProps: { value: _vm.particulars },
                   on: {
                     input: function($event) {
@@ -57977,13 +58081,15 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("li", [
-        _c(
-          "a",
-          { staticClass: "link", attrs: { id: "learnMoreLink", href: "#" } },
-          [_vm._v(_vm._s(_vm.__("Tax Help", "erp")))]
-        )
-      ])
+      _c(
+        "li",
+        [
+          _c("router-link", { attrs: { to: { name: "TaxHelpContent" } } }, [
+            _vm._v(_vm._s(_vm.__("Tax Help", "erp")))
+          ])
+        ],
+        1
+      )
     ])
   ])
 }
@@ -59226,7 +59332,7 @@ var render = function() {
               attrs: {
                 options: _vm.pages,
                 hasUrl: true,
-                placeholder: "New Transaction"
+                placeholder: _vm.__("New Transaction", "erp")
               }
             })
           ],
@@ -59636,7 +59742,10 @@ var render = function() {
                         }
                       ],
                       staticClass: "wperp-form-field",
-                      attrs: { rows: "3", placeholder: "Type here" },
+                      attrs: {
+                        rows: "3",
+                        placeholder: _vm.__("Type here", "erp")
+                      },
                       domProps: { value: _vm.basic_fields.billing_address },
                       on: {
                         input: function($event) {
@@ -59742,7 +59851,10 @@ var render = function() {
                             }
                           ],
                           staticClass: "wperp-form-field display-flex",
-                          attrs: { rows: "1", placeholder: "Particulars" },
+                          attrs: {
+                            rows: "1",
+                            placeholder: _vm.__("Particulars", "erp")
+                          },
                           domProps: { value: line.particulars },
                           on: {
                             input: function($event) {
@@ -59989,7 +60101,7 @@ var render = function() {
                           { staticClass: "attachment-container" },
                           [
                             _c("label", { staticClass: "col--attachement" }, [
-                              _vm._v("Attachment")
+                              _vm._v(_vm._s(_vm.__("Attachment", "erp")))
                             ]),
                             _vm._v(" "),
                             _c("file-upload", {
@@ -63358,7 +63470,10 @@ var render = function() {
                         }
                       ],
                       staticClass: "wperp-form-field display-flex",
-                      attrs: { rows: "4", placeholder: "Internal Information" },
+                      attrs: {
+                        rows: "4",
+                        placeholder: _vm.__("Internal Information", "erp")
+                      },
                       domProps: { value: _vm.description },
                       on: {
                         input: function($event) {
@@ -63823,6 +63938,334 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
+
+/***/ }),
+/* 500 */,
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */,
+/* 510 */,
+/* 511 */,
+/* 512 */,
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */,
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */,
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */,
+/* 602 */,
+/* 603 */,
+/* 604 */,
+/* 605 */,
+/* 606 */,
+/* 607 */,
+/* 608 */,
+/* 609 */,
+/* 610 */,
+/* 611 */,
+/* 612 */,
+/* 613 */,
+/* 614 */,
+/* 615 */,
+/* 616 */,
+/* 617 */,
+/* 618 */,
+/* 619 */,
+/* 620 */,
+/* 621 */,
+/* 622 */,
+/* 623 */,
+/* 624 */,
+/* 625 */,
+/* 626 */,
+/* 627 */,
+/* 628 */,
+/* 629 */,
+/* 630 */,
+/* 631 */,
+/* 632 */,
+/* 633 */,
+/* 634 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: "HelpContent"
+});
+
+/***/ }),
+/* 635 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: "TaxHelpContent"
+});
+
+/***/ }),
+/* 636 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HelpContent_vue__ = __webpack_require__(634);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_37b316c0_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HelpContent_vue__ = __webpack_require__(638);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(637)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-37b316c0"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_HelpContent_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_37b316c0_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_HelpContent_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/accounting/assets/src/admin/components/help/HelpContent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-37b316c0", Component.options)
+  } else {
+    hotAPI.reload("data-v-37b316c0", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 637 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 638 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("h2", [_vm._v("Accounting Help Content Page")])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-37b316c0", esExports)
+  }
+}
+
+/***/ }),
+/* 639 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxHelpContent_vue__ = __webpack_require__(635);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_26d98d96_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxHelpContent_vue__ = __webpack_require__(641);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(640)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-26d98d96"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TaxHelpContent_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_26d98d96_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TaxHelpContent_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/accounting/assets/src/admin/components/help/TaxHelpContent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-26d98d96", Component.options)
+  } else {
+    hotAPI.reload("data-v-26d98d96", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 640 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 641 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("h2", [_vm._v("Tax Help Content Page")])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-26d98d96", esExports)
+  }
+}
 
 /***/ })
 ],[211]);

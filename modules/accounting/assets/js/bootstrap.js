@@ -12937,7 +12937,7 @@ var render = function() {
                             attrs: {
                               type: "text",
                               id: "first_name",
-                              placeholder: "First Name",
+                              placeholder: _vm.__("First Name", "erp"),
                               required: ""
                             },
                             domProps: { value: _vm.peopleFields.first_name },
@@ -12984,7 +12984,7 @@ var render = function() {
                             attrs: {
                               type: "text",
                               id: "last_name",
-                              placeholder: "Last Name",
+                              placeholder: _vm.__("Last Name", "erp"),
                               required: ""
                             },
                             domProps: { value: _vm.peopleFields.last_name },
@@ -13122,7 +13122,10 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "company",
-                                      placeholder: "ABC Corporation"
+                                      placeholder: _vm.__(
+                                        "ABC Corporation",
+                                        "erp"
+                                      )
                                     },
                                     domProps: {
                                       value: _vm.peopleFields.company
@@ -13256,7 +13259,7 @@ var render = function() {
                                       id: "note",
                                       cols: "30",
                                       rows: "4",
-                                      placeholder: "Type here"
+                                      placeholder: _vm.__("Type here", "erp")
                                     },
                                     domProps: { value: _vm.peopleFields.notes },
                                     on: {
@@ -13299,7 +13302,7 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "fax",
-                                      placeholder: "Type here"
+                                      placeholder: _vm.__("Type here", "erp")
                                     },
                                     domProps: { value: _vm.peopleFields.fax },
                                     on: {
@@ -13342,7 +13345,7 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "street1",
-                                      placeholder: "Street 1"
+                                      placeholder: _vm.__("Street 1", "erp")
                                     },
                                     domProps: {
                                       value: _vm.peopleFields.street_1
@@ -13387,7 +13390,7 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "street2",
-                                      placeholder: "Street 2"
+                                      placeholder: _vm.__("Street 2", "erp")
                                     },
                                     domProps: {
                                       value: _vm.peopleFields.street_2
@@ -13432,7 +13435,7 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "city",
-                                      placeholder: "City/Town"
+                                      placeholder: _vm.__("City/Town", "erp")
                                     },
                                     domProps: { value: _vm.peopleFields.city },
                                     on: {
@@ -13560,7 +13563,7 @@ var render = function() {
                                     attrs: {
                                       type: "text",
                                       id: "post_code",
-                                      placeholder: "Post Code"
+                                      placeholder: _vm.__("Post Code", "erp")
                                     },
                                     domProps: {
                                       value: _vm.peopleFields.postal_code
@@ -14046,7 +14049,10 @@ var render = function() {
     { staticClass: "with-multiselect" },
     [
       _c("multi-select", {
-        attrs: { placeholder: "Select Account", options: _vm.accounts },
+        attrs: {
+          placeholder: _vm.__("Select Account", "erp"),
+          options: _vm.accounts
+        },
         model: {
           value: _vm.selectedAccount,
           callback: function($$v) {
@@ -14170,7 +14176,10 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("input-tag", {
-              attrs: { placeholder: "Add Emails", validate: "email" },
+              attrs: {
+                placeholder: _vm.__("Add Emails", "erp"),
+                validate: "email"
+              },
               model: {
                 value: _vm.emails,
                 callback: function($$v) {
@@ -14238,7 +14247,10 @@ var render = function() {
                 }
               ],
               staticClass: "wperp-form-field",
-              attrs: { placeholder: "Enter Your Message Here", rows: "4" },
+              attrs: {
+                placeholder: _vm.__("Enter Your Message Here", "erp"),
+                rows: "4"
+              },
               domProps: { value: _vm.message },
               on: {
                 input: function($event) {
