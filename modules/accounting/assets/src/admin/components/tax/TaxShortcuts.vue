@@ -5,7 +5,7 @@
             <li><router-link :to="{ name: 'TaxZones' }">{{ __('View Tax Zones', 'erp') }}</router-link></li>
             <li><router-link :to="{ name: 'TaxCategories' }">{{ __('View Tax Categories', 'erp') }}</router-link></li>
             <li><router-link :to="{ name: 'TaxAgencies' }">{{ __('View Tax Agencies', 'erp') }}</router-link></li>
-            <li><a class="link" id="learnMoreLink" href="#">{{ __('Tax Help', 'erp') }}</a></li>
+            <li><router-link :to="{ name: 'TaxHelpContent' }">{{ __('Tax Help', 'erp') }}</router-link></li>
         </ul>
     </div>
 </template>
