@@ -4,7 +4,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Add New Tax Rate</h2>
+                    <h2 class="content-header__title">{{ __('Add New Tax Rate', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -12,12 +12,12 @@
 
         <div class="wperp-panel wperp-panel-default pb-0 new-tax-rate">
             <div class="wperp-panel-body">
-                <show-errors :error_msgs="form_errors" ></show-errors>
+                <show-errors :error_msgs="form_errors"></show-errors>
 
                 <form action="" method="post" class="wperp-form">
                     <div class="wperp-row wperp-gutter-20">
                         <div class="wperp-form-group wperp-col-sm-6">
-                            <label>Tax Zone Name<span class="wperp-required-sign">*</span></label>
+                            <label>{{ __('Tax Zone Name', 'erp') }}<span class="wperp-required-sign">*</span></label>
                             <div class="wperp-custom-select with-multiselect">
                                 <multi-select v-model="tax_name" :options="rate_names"/>
                             </div>
@@ -28,7 +28,7 @@
                                     <input type="checkbox" v-model="is_compound" class="form-check-input"
                                         @change="isCompoundTax = !isCompoundTax">
                                     <span class="form-check-sign"></span>
-                                    <span class="field-label">Is this tax compound?</span>
+                                    <span class="field-label">{{ __('Is this tax compound', 'erp') }}?</span>
                                 </label>
                             </div>
                         </div>
@@ -38,10 +38,10 @@
                         <table class="wperp-table wperp-form-table new-journal-form">
                             <thead>
                             <tr>
-                                <th scope="col" class="column-primary">Component Name</th>
-                                <th scope="col">Agency</th>
-                                <th scope="col">Tax Category</th>
-                                <th scope="col">Tax Rate</th>
+                                <th scope="col" class="column-primary">{{ __('Component Name', 'erp') }}</th>
+                                <th scope="col">{{ __('Agency', 'erp') }}</th>
+                                <th scope="col">{{ __('Tax Category', 'erp') }}</th>
+                                <th scope="col">{{ __('Tax Rate', 'erp') }}</th>
                                 <th scope="col" class="col--actions"></th>
                             </tr>
                             </thead>
@@ -50,7 +50,7 @@
                                 v-for="(line,key) in componentLines">
                                 <td scope="row" class="col--component-name column-primary">
                                     <input type="text" class="wperp-form-field" v-model="line.component_name">
-                                    <a href="#" @click.prevent="" class="vis-hide after-select-dropdown">component</a>
+                                    <a href="#" @click.prevent="" class="vis-hide after-select-dropdown">{{ __('component', 'erp') }}</a>
 
                                     <button type="button" class="wperp-toggle-row"
                                             @click.prevent="isRowExpanded = !isRowExpanded"></button>
@@ -58,16 +58,16 @@
                                 <td class="col--agency with-multiselect" data-colname="Agency">
                                     <multi-select v-model="line.agency_id" :options="agencies"/>
                                     <a href="#" @click.prevent="showAgencyModal = true" role="button"
-                                       class="after-select-dropdown">Add Tax Agency</a>
+                                       class="after-select-dropdown">{{ __('Add Tax Agency', 'erp') }}</a>
                                 </td>
                                 <td class="col--tax-category with-multiselect" data-colname="Tax Category">
                                     <multi-select v-model="line.tax_category" :options="categories"/>
                                     <a href="#" @click.prevent="showCatModal = true" role="button"
-                                       class="after-select-dropdown">Add Tax Category</a>
+                                       class="after-select-dropdown">{{ __('Add Tax Category', 'erp') }}</a>
                                 </td>
                                 <td class="col--tax-rate" data-colname="Tax Rate">
                                     <input type="text" class="wperp-form-field text-right" v-model="line.tax_rate">
-                                    <a href="#" @click.prevent="" class="vis-hide after-select-dropdown">tax rate</a>
+                                    <a href="#" @click.prevent="" class="vis-hide after-select-dropdown">{{ __('tax rate', 'erp') }}</a>
                                 </td>
                                 <td class="col--actions delete-row" data-colname="Remove Above Selection">
                                     <a @click.prevent="removeRow(key)" href="#"><i class="flaticon-trash"></i></a>
@@ -77,7 +77,7 @@
                                 <td colspan="9" class="text-left">
                                     <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"
                                             type="button"><i
-                                        class="flaticon-add-plus-button"></i>Add Component
+                                        class="flaticon-add-plus-button"></i>{{ __('Add Component', 'erp') }}
                                     </button>
                                 </td>
                             </tr>

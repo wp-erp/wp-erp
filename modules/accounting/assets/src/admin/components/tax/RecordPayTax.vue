@@ -3,7 +3,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Record Sales Tax Payment</h2>
+                    <h2 class="content-header__title">{{ __('Record Sales Tax Payment', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -17,13 +17,13 @@
 	                <div class="wperp-row wperp-gutter-20">
 
                         <div class="wperp-col-sm-4 with-multiselect">
-                            <label>Payment Method<span class="wperp-required-sign">*</span></label>
+                            <label>{{ __('Payment Method', 'erp') }}<span class="wperp-required-sign">*</span></label>
                             <multi-select v-model="trn_by" :options="pay_methods"></multi-select>
                         </div>
                         <div class="wperp-col-sm-4 mb-20">
                             <label>
-                                <span v-if="'debit' == voucher_type.id">Payment From</span>
-                                <span v-else>Deposit To</span>
+                                <span v-if="'debit' == voucher_type.id">{{ __('Payment From', 'erp') }}</span>
+                                <span v-else>{{ __('Deposit To', 'erp') }}</span>
                                 <span class="wperp-required-sign">*</span>
                             </label>
 
@@ -31,7 +31,7 @@
                         </div>
 	                    <div class="wperp-col-sm-4 wperp-col-xs-12">
 	                        <div class="wperp-form-group">
-	                            <label>Payment Date</label>
+	                            <label>{{ __('Payment Date', 'erp') }}</label>
 	                            <div class="wperp-has-datepicker pay-tax-date">
                                     <datepicker v-model="trn_date"></datepicker>
 	                            </div>
@@ -40,27 +40,27 @@
 
 	                    <div class="wperp-col-sm-4 wperp-col-xs-12">
 	                        <div class="wperp-form-group with-multiselect">
-	                            <label>Payment To</label>
+	                            <label>{{ __('Payment To', 'erp') }}</label>
                                 <multi-select v-model="agency" :options="agencies" />
 	                        </div>
 	                    </div>
 	                    <div class="wperp-col-sm-4 wperp-col-xs-12">
 	                        <div class="wperp-form-group">
-	                            <label>Tax Amount</label>
+	                            <label>{{ __('Tax Amount', 'erp') }}</label>
 	                            <input type="number" v-model="tax_amount" class="wperp-form-field" placeholder="Enter Tax Amount">
 
-                                <span>Due Amount: <span class="text-theme">{{ moneyFormat(dueAmount) }}</span></span>
+                                <span>{{ __('Due Amount', 'erp') }}: <span class="text-theme">{{ moneyFormat(dueAmount) }}</span></span>
 	                        </div>
 	                    </div>
                         <div class="wperp-col-sm-4 wperp-col-xs-12">
                             <div class="wperp-form-group with-multiselect">
-                                <label>Voucher Type</label>
+                                <label>{{ __('Voucher Type', 'erp') }}</label>
                                 <multi-select v-model="voucher_type" :options="voucher_types" placeholder="Enter Voucher Type" />
                             </div>
                         </div>
 
 	                    <div class="wperp-col-xs-12">
-	                        <label>Particulars</label>
+	                        <label>{{ __('Particulars', 'erp') }}</label>
 	                        <textarea rows="3" v-model="particulars" class="wperp-form-field" placeholder="Enter Particulars"></textarea>
 	                    </div>
 	                    <div class="wperp-col-xs-12">

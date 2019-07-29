@@ -4,7 +4,7 @@
             <div class="wperp-modal-content">
                 <!-- modal body title -->
                 <div class="wperp-modal-header">
-                    <h3>{{ is_update ? 'Edit' : 'Add' }} Tax Agency</h3>
+                    <h3>{{ is_update ? 'Edit' : 'Add' }} {{ __('Tax Agency', 'erp') }}</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
 
@@ -14,7 +14,7 @@
                     <div class="wperp-modal-body">
 
                         <div class="wperp-form-group">
-                            <label>Tax Agency Name<span class="wperp-required-sign">*</span></label>
+                            <label>{{ __('Tax Agency Name', 'erp') }}<span class="wperp-required-sign">*</span></label>
                             <!--<multi-select v-model="agency" :options="agencies" />-->
                             <input type="text" v-model="agency" class="wperp-form-field">
                         </div>

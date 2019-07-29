@@ -17,10 +17,10 @@
             </div>
 
             <div class="invoice-body">
-                <h4>Payment</h4>
+                <h4>{{ __('Payment', 'erp') }}</h4>
                 <div class="wperp-row">
                     <div class="wperp-col-sm-6">
-                        <h5>Payment From:</h5>
+                        <h5>{{ __('Payment From', 'erp') }}:</h5>
                         <div class="persons-info">
                             <strong>{{ payment.customer_name }}</strong><br>
                             <!-- {{ payment.billing_address }} -->
@@ -29,15 +29,15 @@
                     <div class="wperp-col-sm-6">
                         <table class="invoice-info">
                             <tr>
-                                <th>Payment No.</th>
+                                <th>{{ __('Payment No', 'erp') }}.</th>
                                 <td>#{{ payment.voucher_no }}</td>
                             </tr>
                             <tr>
-                                <th>Payment Date:</th>
+                                <th>{{ __('Payment Date', 'erp') }}:</th>
                                 <td>{{ payment.trn_date }}</td>
                             </tr>
                             <tr>
-                                <th>Deposit To:</th>
+                                <th>{{ __('Deposit To', 'erp') }}:</th>
                                 <td>{{ payment.account }}</td>
                             </tr>
                         </table>
@@ -49,8 +49,8 @@
                 <table class="wperp-table wperp-form-table invoice-table">
                     <thead>
                         <tr>
-                            <th>Invoice ID</th>
-                            <th>Amount</th>
+                            <th>{{ __('Invoice ID', 'erp') }}</th>
+                            <th>{{ __('Amount', 'erp') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,8 +63,8 @@
                         <tr>
                             <td colspan="7">
                                 <ul>
-                                    <li><span>Subtotal:</span> {{ moneyFormat( payment.amount ) }}</li>
-                                    <li><span>Total:</span> {{ moneyFormat( payment.amount ) }}</li>
+                                    <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat( payment.amount ) }}</li>
+                                    <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat( payment.amount ) }}</li>
                                 </ul>
                             </td>
                         </tr>
@@ -75,7 +75,7 @@
         </div>
 
         <div class="invoice-attachments d-print-none">
-            <h4>Attachments</h4>
+            <h4>{{ __('Attachments', 'erp') }}</h4>
             <a class="attachment-item" :href="attachment"
                :key="index"
                v-for="(attachment, index) in payment.attachments" download>

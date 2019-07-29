@@ -6,7 +6,7 @@
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
-                        &nbsp; Print
+                        &nbsp; {{ __('Print', 'erp') }}
                     </a>
                     <!-- todo: more action has some dropdown and will implement later please consider as planning -->
 
@@ -14,12 +14,12 @@
                         <template slot="button">
                             <a href="#" class="wperp-btn btn--default">
                                 <i class="flaticon-settings-work-tool"></i>
-                                &nbsp; More Action
+                                &nbsp; {{ __('More Action', 'erp') }}
                             </a>
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
-                                <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
+                                <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
                     </dropdown>
@@ -27,7 +27,7 @@
                     <a href="#" class="wperp-btn btn--default print-btn"
                        v-clipboard="copyLink"
                        @success="handleSuccess"
-                       @error="handleError">Copy Link</a>
+                       @error="handleError">{{ __('Copy Link', 'erp') }}</a>
                 </div>
             </div>
 

@@ -1,11 +1,11 @@
 <template>
     <div class="tax-section">
-        <div class="sectionHeader">Tax Shortcuts</div>
+        <div class="sectionHeader">{{ __('Tax Shortcuts', 'erp') }}</div>
         <ul>
-            <li><router-link :to="{ name: 'TaxZones' }">View Tax Zones</router-link></li>
-            <li><router-link :to="{ name: 'TaxCategories' }">View Tax Categories</router-link></li>
-            <li><router-link :to="{ name: 'TaxAgencies' }">View Tax Agencies</router-link></li>
-            <li><a class="link" id="learnMoreLink" href="#">Tax Help</a></li>
+            <li><router-link :to="{ name: 'TaxZones' }">{{ __('View Tax Zones', 'erp') }}</router-link></li>
+            <li><router-link :to="{ name: 'TaxCategories' }">{{ __('View Tax Categories', 'erp') }}</router-link></li>
+            <li><router-link :to="{ name: 'TaxAgencies' }">{{ __('View Tax Agencies', 'erp') }}</router-link></li>
+            <li><a class="link" id="learnMoreLink" href="#">{{ __('Tax Help', 'erp') }}</a></li>
         </ul>
     </div>
 </template>
@@ -20,7 +20,6 @@
     .sectionHeader {
         font-weight: bold;
         margin-bottom: 10px;
-        font-family: "Trebuchet MS";
     }
     .tax-section {
         width: 240px;

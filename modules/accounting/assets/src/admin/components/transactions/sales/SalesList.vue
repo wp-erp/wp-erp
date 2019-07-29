@@ -5,7 +5,7 @@
         <!-- Start .wperp-crm-table -->
         <div class="table-container">
             <div class="bulk-action">
-                <a href="#"><i class="flaticon-trash"></i>Trash</a>
+                <a href="#"><i class="flaticon-trash"></i>{{ __('Trash', 'erp') }}</a>
                 <a href="#" class="dismiss-bulk-action"><i class="flaticon-close"></i></a>
             </div>
 

@@ -4,29 +4,29 @@
             <div class="wperp-modal-content">
                 <!-- modal body title -->
                 <div class="wperp-modal-header">
-                    <h3>{{ is_update ? 'Edit' : 'Add' }} Tax Zone</h3>
+                    <h3>{{ is_update ? 'Edit' : 'Add' }} {{ __('Tax Zone', 'erp') }}</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
                 <!-- end modal body title -->
-                <show-errors :error_msgs="form_errors" ></show-errors>
+                <show-errors :error_msgs="form_errors"></show-errors>
 
                 <form method="post" class="modal-form edit-customer-modal" @submit.prevent="taxZoneFormSubmit">
                     <div class="wperp-modal-body">
 
                         <div class="wperp-form-group">
-                            <label>Tax Zone Name <span class="wperp-required-sign">*</span></label>
+                            <label>{{ __('Tax Zone Name', 'erp') }} <span class="wperp-required-sign">*</span></label>
                             <input type="text" v-model="rate_name" class="wperp-form-field" required>
                         </div>
 
                         <div class="wperp-form-group">
-                            <label>Tax Number</label>
+                            <label>{{ __('Tax Number', 'erp') }}</label>
                             <input type="text" v-model="tax_number" class="wperp-form-field" placeholder="Enter Tax Number">
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input type="checkbox" v-model="is_default" class="form-check-input">
                                 <span class="form-check-sign"></span>
-                                <span class="field-label">Is this tax default?</span>
+                                <span class="field-label">{{ __('Is this tax default', 'erp') }}?</span>
                             </label>
                         </div>
                     </div>
