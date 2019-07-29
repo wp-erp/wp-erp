@@ -4,7 +4,7 @@
             <div class="wperp-modal-content">
                 <!-- modal body title -->
                 <div class="wperp-modal-header">
-                    <h3>Add New</h3>
+                    <h3>{{ __('Add New', 'erp') }}</h3>
                     <span class="modal-close" @click.prevent="closeModal"><i class="flaticon-close"></i></span>
                 </div>
 
@@ -12,23 +12,23 @@
                     <div class="wperp-panel-body">
                         <div class="wperp-row">
                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                <label>Component</label>
+                                <label>{{ __('Component', 'erp') }}</label>
                                 <input type="text" v-model="component_name" />
                             </div>
                             <div class="wperp-col-sm-3 wperp-col-xs-12 with-multiselect">
-                                <label>Agency</label>
+                                <label>{{ __('Agency', 'erp') }}</label>
                                 <multi-select
                                     v-model="agency"
                                     :options="agencies"/>
                             </div>
                             <div class="wperp-col-sm-3 wperp-col-xs-12 with-multiselect">
-                                <label>Tax Category</label>
+                                <label>{{ __('Tax Category', 'erp') }}</label>
                                     <multi-select
                                     v-model="category"
                                     :options="categories" />
                             </div>
                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                <label>Tax Rate</label>
+                                <label>{{ __('Tax Rate', 'erp') }}</label>
                                 <input type="text" v-model="tax_rate"/>
                             </div>
 

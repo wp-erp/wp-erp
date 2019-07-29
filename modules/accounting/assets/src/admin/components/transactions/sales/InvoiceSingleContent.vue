@@ -20,7 +20,7 @@
                 <h4>{{getInvoiceType()}}</h4>
                 <div class="wperp-row">
                     <div class="wperp-col-sm-6">
-                        <h5>Bill to:</h5>
+                        <h5>{{ __('Bill to', 'erp') }}:</h5>
                         <div class="persons-info">
                             <strong>{{ invoice.customer_name }}</strong><br>
                             {{ invoice.billing_address }}
@@ -29,19 +29,19 @@
                     <div class="wperp-col-sm-6">
                         <table class="invoice-info">
                             <tr>
-                                <th>Invoice No.</th>
+                                <th>{{ __('Invoice No', 'erp') }}.</th>
                                 <td>#{{ invoice.voucher_no }}</td>
                             </tr>
                             <tr>
-                                <th>Invoice Date:</th>
+                                <th>{{ __('Invoice Date', 'erp') }}:</th>
                                 <td>{{ invoice.trn_date }}</td>
                             </tr>
                             <tr>
-                                <th>Due Date:</th>
+                                <th>{{ __('Due Date', 'erp') }}:</th>
                                 <td>{{ invoice.due_date }}</td>
                             </tr>
                             <tr>
-                                <th>Amount Due:</th>
+                                <th>{{ __('Amount Due', 'erp') }}:</th>
                                 <td>{{ moneyFormat( invoice.total_due ) }}</td>
                             </tr>
                         </table>
@@ -53,11 +53,11 @@
                 <table class="wperp-table wperp-form-table invoice-table">
                     <thead>
                         <tr>
-                            <th>Sl.</th>
-                            <th>Product</th>
-                            <th>Qty</th>
-                            <th>Unit Price</th>
-                            <th>Amount</th>
+                            <th>{{ __('Sl', 'erp') }}.</th>
+                            <th>{{ __('Product', 'erp') }}</th>
+                            <th>{{ __('Qty', 'erp') }}</th>
+                            <th>{{ __('Unit Price', 'erp') }}</th>
+                            <th>{{ __('Amount', 'erp') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,10 +73,10 @@
                         <tr>
                             <td class="wperp-invoice-amounts" colspan="7">
                                 <ul>
-                                    <li><span>Subtotal:</span> {{ moneyFormat( invoice.amount ) }}</li>
-                                    <li><span>Discount:</span> (-) {{ moneyFormat( invoice.discount ) }}</li>
-                                    <li><span>Tax:</span> (+) {{ moneyFormat( invoice.tax ) }}</li>
-                                    <li><span>Total:</span> {{ moneyFormat( total ) }}</li>
+                                    <li><span>{{ __('Subtotal', 'erp') }}:</span> {{ moneyFormat( invoice.amount ) }}</li>
+                                    <li><span>{{ __('Discount', 'erp') }}:</span> (-) {{ moneyFormat( invoice.discount ) }}</li>
+                                    <li><span>{{ __('Tax', 'erp') }}:</span> (+) {{ moneyFormat( invoice.tax ) }}</li>
+                                    <li><span>{{ __('Total', 'erp') }}:</span> {{ moneyFormat( total ) }}</li>
                                 </ul>
                             </td>
                         </tr>
@@ -87,7 +87,7 @@
         </div>
 
         <div class="invoice-attachments d-print-none">
-            <h4>Attachments</h4>
+            <h4>{{ __('Attachments', 'erp') }}</h4>
             <a class="attachment-item" :href="attachment"
                 :key="index"
                 v-for="(attachment, index) in invoice.attachments" download>

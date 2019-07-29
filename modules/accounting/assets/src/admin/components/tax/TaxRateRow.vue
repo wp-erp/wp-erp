@@ -1,12 +1,12 @@
 <template>
     <div class="wperp-row">
         <div class="wperp-col-sm-3 wperp-col-xs-12">
-            <label>Component</label>
+            <label>{{ __('Component', 'erp') }}</label>
             <template v-if="is_update"><input type="text" v-model="component_line.component_name"/></template>
             <template v-else>{{component_line.component_name}}</template>
         </div>
         <div class="wperp-col-sm-3 wperp-col-xs-12 with-multiselect">
-            <label>Agency</label>
+            <label>{{ __('Agency', 'erp') }}</label>
             <template v-if="is_update">
             <multi-select
                 v-model="component_line.agency"
@@ -15,7 +15,7 @@
             <template v-else>{{component_line.agency_name}}</template>
         </div>
         <div class="wperp-col-sm-3 wperp-col-xs-12 with-multiselect">
-            <label>Tax Category</label>
+            <label>{{ __('Tax Category', 'erp') }}</label>
             <template v-if="is_update">
                 <multi-select
                 v-model="component_line.category"
@@ -24,7 +24,7 @@
             <template v-else>{{component_line.tax_cat_name}}</template>
         </div>
         <div class="wperp-col-sm-3 wperp-col-xs-12">
-            <label>Tax Rate</label>
+            <label>{{ __('Tax Rate', 'erp') }}</label>
             <template v-if="is_update"><input type="text" v-model="component_line.tax_rate"/></template>
             <template v-else>{{component_line.tax_rate}}</template>
         </div>

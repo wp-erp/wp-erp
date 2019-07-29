@@ -6,7 +6,7 @@
                     <h2 class="content-header__title">{{ $route.params.name }}</h2>
 
                     <a class="wperp-btn btn--primary" @click.prevent="addNewLine = true">
-                        <span>Add New Line</span>
+                        <span>{{ __('Add New Line', 'erp') }}</span>
                     </a>
                 </div>
             </div>

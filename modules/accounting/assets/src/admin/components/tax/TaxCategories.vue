@@ -3,9 +3,9 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Tax Categories</h2>
+                    <h2 class="content-header__title">{{ __('Tax Categories', 'erp') }}</h2>
                     <a class="wperp-btn btn--primary" @click.prevent="showModal = true">
-                        <span>Add Tax Category</span>
+                        <span>{{ __('Add Tax Category', 'erp') }}</span>
                     </a>
                 </div>
             </div>

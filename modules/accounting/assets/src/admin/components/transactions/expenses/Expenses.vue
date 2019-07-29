@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Expenses Transactions</h2>
+                    <h2 class="content-header__title">{{ __('Expenses Transactions', 'erp') }}</h2>
                     <combo-box :options="pages" :hasUrl="true" placeholder="New Transaction" />
                 </div>
             </div>
