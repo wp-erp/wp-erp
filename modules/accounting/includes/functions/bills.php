@@ -119,12 +119,14 @@ function erp_acct_insert_bill( $data ) {
     $data['created_by'] = $created_by;
     $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $created_by;
+    $currency           = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'bill',
+            'currency'   => $currency,
             'editable'   => 1,
             'created_at' => $data['created_at'],
             'created_by' => $data['created_by'],
@@ -217,6 +219,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
     $data['created_by'] = $user_id;
     $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $user_id;
+    $currency           = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -230,7 +233,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
             // insert contra voucher
             $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
                 'type'       => 'bill',
-                'currency'   => '',
+                'currency'   => $currency,
                 'editable'   => 0,
                 'created_at' => $data['created_at'],
                 'created_by' => $data['created_by'],

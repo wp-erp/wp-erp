@@ -104,14 +104,15 @@ function erp_acct_insert_journal( $data ) {
     $data['created_at'] = date( "Y-m-d H:i:s" );
     $data['created_by'] = $created_by;
 
-    $voucher_no = null;
+    $voucher_no         = null;
+    $currency           = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_voucher_no', array(
             'type'       => 'journal',
-            'currency'   => '',
+            'currency'   => $currency,
             'created_at' => $data['created_at'],
             'created_by' => $data['created_by'],
             'updated_at' => isset( $data['updated_at'] ) ? $data['updated_at'] : '',
