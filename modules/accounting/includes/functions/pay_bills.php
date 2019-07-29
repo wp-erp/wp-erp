@@ -264,7 +264,7 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
                 'trn_no' => $pay_bill_id
             ) );
 
-            erp_acct_update_bill_data_into_ledger( $pay_bill_data, $pay_bill_id, $item );
+            erp_acct_update_pay_bill_data_into_ledger( $pay_bill_data, $pay_bill_id, $item );
         }
 
         $wpdb->query( 'COMMIT' );

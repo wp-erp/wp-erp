@@ -51,7 +51,8 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
 
-        $items = erp_acct_get_all_currencies();
+        $items       = erp_acct_get_all_currencies();
+        $total_items = erp_acct_get_all_currencies( true );
 
         $formatted_items = [];
         foreach ( $items as $item ) {

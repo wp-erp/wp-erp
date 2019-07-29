@@ -466,6 +466,8 @@ function erp_acct_format_monthly_data_to_yearly_data( $result ) {
  */
 function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' ) {
     global $wpdb;
+    $start_date = null;
+    $end_date   = null;
 
     switch ( $month ) {
         case 'current':
@@ -700,7 +702,8 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
     $theme_color = '#9e9e9e';
     $transaction = (object) $request['trn_data'];
 
-    $user_id = '';
+    $user_id = null;
+    $trn_id  = null;
 
     $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
     $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : [];
@@ -1013,9 +1016,9 @@ function erp_acct_verify_invoice_link_hash( $transaction_id, $transaction_type, 
  * @since 1.1.2
  */
 function erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $algo = 'sha256' ) {
+    $hash_string = '';
 
     if ( $transaction_id && $transaction_type ) {
-
         $to_hash     = $transaction_id . $transaction_type;
         $hash_string = hash( $algo, $to_hash );
     }

@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function erp_acct_add_employee_as_people( $data, $update = false ) {
     global $wpdb;
+    $people_id = null;
 
     if ( erp_acct_is_employee_people( $data['user_id'] ) ) {
         return;
