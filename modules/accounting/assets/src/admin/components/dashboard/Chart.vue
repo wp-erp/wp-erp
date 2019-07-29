@@ -5,12 +5,12 @@
 
             <div class="wperp-custom-select wperp-custom-select--inline-block wperp-pull-right" v-if="showDropdown">
                 <select name="query_time" class="wperp-form-field" id="att-filter-duration" v-model="chartRange" >
-                    <option value="this_month">This Month</option>
-                    <option value="last_month">Last Month</option>
-                    <option value="this_quarter" v-if="thisQuarter.labels.length">This Quarter</option>
-                    <option value="last_quarter" v-if="lastQuarter.labels.length">Last Quarter</option>
-                    <option value="this_year">This Year</option>
-                    <option value="last_year" v-if="lastYear.labels.length">Last Year</option>
+                    <option value="this_month">{{ __('This Month', 'erp') }}</option>
+                    <option value="last_month">{{ __('Last Month', 'erp') }}</option>
+                    <option value="this_quarter" v-if="thisQuarter.labels.length">{{ __('This Quarter', 'erp') }}</option>
+                    <option value="last_quarter" v-if="lastQuarter.labels.length">{{ __('Last Quarter', 'erp') }}</option>
+                    <option value="this_year">{{ __('This Year', 'erp') }}</option>
+                    <option value="last_year" v-if="lastYear.labels.length">{{ __('Last Year', 'erp') }}</option>
                 </select>
                 <i class="flaticon-arrow-down-sign-to-navigate"></i>
             </div>

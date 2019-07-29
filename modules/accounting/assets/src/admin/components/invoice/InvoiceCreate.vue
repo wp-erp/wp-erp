@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} {{inv_title}}</h2>
+                    <h2 class="content-header__title">{{ editMode ? __('Edit', 'erp') : __('New', 'erp') }} {{inv_title}}</h2>
                 </div>
             </div>
         </div>
@@ -24,18 +24,18 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Transaction Date<span class="wperp-required-sign">*</span></label>
+                                <label>{{ __('Transaction Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.trn_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Due Date<span class="wperp-required-sign">*</span></label>
+                                <label>{{ __('Due Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.due_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-6">
-                            <label>Billing Address</label>
+                            <label>{{ __('Billing Address', 'erp') }}</label>
                             <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
                     </div>
@@ -50,11 +50,11 @@
                     <table class="wperp-table wperp-form-table">
                         <thead>
                             <tr>
-                                <th scope="col" class="col--products">Product/Service</th>
-                                <th scope="col" class="col--qty">Qty</th>
-                                <th scope="col" class="col--unit-price">Unit Price</th>
-                                <th scope="col" class="col--amount">Amount</th>
-                                <th scope="col" class="col--tax">Tax</th>
+                                <th scope="col" class="col--products">{{ __('Product/Service', 'erp') }}</th>
+                                <th scope="col" class="col--qty">{{ __('Qty', 'erp') }}</th>
+                                <th scope="col" class="col--unit-price">{{ __('Unit Price', 'erp') }}</th>
+                                <th scope="col" class="col--amount">{{ __('Amount', 'erp') }}</th>
+                                <th scope="col" class="col--tax">{{ __('Tax', 'erp') }}</th>
                                 <th scope="col" class="col--actions"></th>
                             </tr>
                         </thead>
@@ -69,15 +69,15 @@
 
                             <tr class="add-new-line">
                                 <td colspan="9" style="text-align: left;">
-                                    <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>Add Line</button>
+                                    <button @click.prevent="addLine" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Line', 'erp') }}</button>
                                 </td>
                             </tr>
 
                             <tr class="discount-rate-row">
                                 <td colspan="4" class="text-right with-multiselect">
                                     <select v-model="discountType">
-                                        <option value="discount-percent">Discount percent</option>
-                                        <option value="discount-value">Discount value</option>
+                                        <option value="discount-percent">{{ __('Discount percent', 'erp') }}</option>
+                                        <option value="discount-value">{{ __('Discount value', 'erp') }}</option>
                                     </select>
                                 </td>
                                 <td><input type="text" class="wperp-form-field" v-model="discount"
@@ -100,14 +100,14 @@
 
                             <tr class="total-amount-row">
                                 <td colspan="4" class="text-right">
-                                    <span>Total Amount = </span>
+                                    <span>{{ __('Total Amount', 'erp') }} =</span>
                                 </td>
                                 <td><input type="text" class="wperp-form-field" :value="moneyFormat(finalTotalAmount)" readonly></td>
                                 <td></td>
                             </tr>
                             <tr class="wperp-form-group">
                                 <td colspan="9" style="text-align: left;">
-                                    <label>Particulars</label>
+                                    <label>{{ __('Particulars', 'erp') }}</label>
                                     <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Particulars"></textarea>
                                 </td>
                             </tr>
@@ -126,7 +126,7 @@
                             <tr class="add-attachment-row">
                                 <td colspan="9" style="text-align: left;">
                                     <div class="attachment-container">
-                                        <label class="col--attachement">Attachment</label>
+                                        <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
                                         <file-upload v-model="attachments" url="/invoices/attachments"/>
                                     </div>
                                 </td>

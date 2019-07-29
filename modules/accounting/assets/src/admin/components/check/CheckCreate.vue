@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">New Check</h2>
+                    <h2 class="content-header__title">{{ __('New Check', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -26,23 +26,23 @@
                     </div>
                     <div class="wperp-col-sm-4">
                         <div class="wperp-form-group">
-                            <label>Check No<span class="wperp-required-sign">*</span></label>
+                            <label>{{ __('Check No', 'erp') }}<span class="wperp-required-sign">*</span></label>
                             <input type="text" class="wperp-form-field" v-model="basic_fields.check_no" required>
                         </div>
                     </div>
                     <div class="wperp-col-sm-4">
                         <div class="wperp-form-group">
-                            <label>Payment Date<span class="wperp-required-sign">*</span></label>
+                            <label>{{ __('Payment Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
                             <datepicker v-model="basic_fields.trn_date"></datepicker>
                         </div>
 
                     </div>
                     <div class="wperp-col-sm-4 with-multiselect">
-                        <label>From Account<span class="wperp-required-sign">*</span></label>
+                        <label>{{ __('From Account', 'erp') }}<span class="wperp-required-sign">*</span></label>
                         <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
                     </div>
                     <div class="wperp-col-sm-4">
-                        <label>Billing Address</label>
+                        <label>{{ __('Billing Address', 'erp') }}</label>
                         <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                     </div>
                 </div>
@@ -56,11 +56,11 @@
                 <table class="wperp-table wperp-form-table">
                     <thead>
                     <tr>
-                        <th scope="col" class="col--id column-primary">SL No.</th>
-                        <th scope="col">Account</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Total</th>
+                        <th scope="col" class="col--id column-primary">{{ __('SL No.', 'erp') }}</th>
+                        <th scope="col">{{ __('Account', 'erp') }}</th>
+                        <th scope="col">{{ __('Description', 'erp') }}</th>
+                        <th scope="col">{{ __('Amount', 'erp') }}</th>
+                        <th scope="col">{{ __('Total', 'erp') }}</th>
                         <th scope="col" class="col--actions"></th>
                     </tr>
                     </thead>
@@ -86,7 +86,7 @@
                     </tr>
 
                     <tr class="total-amount-row">
-                        <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
+                        <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
                         <td class="text-right" data-colname="Total Amount">
                             <input type="text" class="text-right wperp-form-field" name="finalamount" :value="moneyFormat(finalTotalAmount)" readonly disabled>
                         </td>
@@ -95,8 +95,8 @@
 
                     <tr class="wperp-form-group">
                         <td colspan="9" style="text-align: left;">
-                            <label>Particulars</label>
-                            <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                            <label>{{ __('Particulars', 'erp') }}</label>
+                            <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -173,9 +173,9 @@
                 },
 
                 check_data: {
-                    bank_name: '',
+                    bank_name : '',
                     payer_name: '',
-                    check_no: ''
+                    check_no  : ''
                 },
 
                 form_errors: [],

@@ -3,8 +3,8 @@
         <journal-modal :entry_id="journal_id" v-if="journalModal"/>
 
         <h2 class="add-new-journal">
-            <span>Journals</span>
-            <a href="#" class="erp-journal-new" @click.prevent="newJournal">New Journal Entry</a>
+            <span>{{ __('Journals', 'erp') }}</span>
+            <a href="#" class="erp-journal-new" @click.prevent="newJournal">{{ __('New Journal Entry', 'erp') }}</a>
         </h2>
 
         <list-table
@@ -25,7 +25,6 @@
                     </router-link>
                 </strong>
             </template>
-
         </list-table>
 
     </div>

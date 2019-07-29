@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">New Bill Payment</h2>
+                    <h2 class="content-header__title">{{ __('New Bill Payment', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -26,26 +26,26 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Reference</label>
+                                <label>{{ __('Reference', 'erp') }}</label>
                                 <input type="text" class="wperp-form-field" v-model="basic_fields.trn_ref"/>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Payment Date<span class="wperp-required-sign">*</span></label>
+                                <label>{{ __('Payment Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.payment_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4 with-multiselect">
-                            <label>Payment Method</label>
+                            <label>{{ __('Payment Method', 'erp') }}</label>
                             <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
                         </div>
                         <div class="wperp-col-sm-4">
-                            <label>Transaction From</label>
+                            <label>{{ __('Transaction From', 'erp') }}</label>
                             <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
                         </div>
                         <div class="wperp-col-sm-4">
-                            <label>Billing Address</label>
+                            <label>{{ __('Billing Address', 'erp') }}</label>
                             <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
 

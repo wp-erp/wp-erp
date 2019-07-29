@@ -3,7 +3,7 @@
 
         <div v-if="loading" class="table-loader-wrap">
             <div class="table-loader-center">
-                <div class="table-loader">Loading</div>
+                <div class="table-loader">{{ __('Loading', 'erp') }}</div>
             </div>
         </div>
 
@@ -14,7 +14,7 @@
             </div>
 
             <div class="tablenav-pages">
-                <span v-if="showItemNumbers" class="displaying-num">{{ itemsTotal }} items</span>
+                <span v-if="showItemNumbers" class="displaying-num">{{ itemsTotal }} {{ __('items', 'erp') }}</span>
 
                 <span v-if="hasPagination" class="pagination-links">
 					<span v-if="disableFirst" class="tablenav-pages-navspan"
@@ -66,8 +66,8 @@
                         <label class="form-check-label">
                             <input v-model="selectAll" type="checkbox" class="form-check-input">
                             <span class="form-check-sign">
-	                                <span class="check"></span>
-	                            </span>
+                                <span class="check"></span>
+                            </span>
                         </label>
                     </div>
                 </td>

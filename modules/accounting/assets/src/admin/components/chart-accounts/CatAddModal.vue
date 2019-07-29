@@ -3,7 +3,7 @@
         <div class="wperp-modal-dialog" v-click-outside="outside" @click="inside">
             <div class="wperp-modal-content">
                 <div class="wperp-modal-header">
-                    <h4>{{ `${catData.title} Category` }}</h4>
+                    <h4>{{ `${catData.title} __('Category', 'erp')` }}</h4>
                 </div>
                 <div class="wperp-modal-body">
                     <form action="" class="ledger-cat-form" @submit.prevent="saveCategory">
@@ -13,7 +13,7 @@
                         </div>
 
                         <div class="form-row">
-                            <label for="">Parent Category (optional)</label>
+                            <label for="">{{ __('Parent Category (optional)', 'erp') }}</label>
                             <treeselect v-model="parent"
                                 :options="categories"
                                 :disable-branch-nodes="true"
@@ -22,17 +22,23 @@
                         </div>
 
                         <div class="form-row">
-                            <label for="">Name of Category</label>
+                            <label for="">{{ __('Name of Category', 'erp') }}</label>
 
                             <input type="text" v-model="category" required>
                         </div>
 
                         <div class="wperp-modal-footer pt-0">
                             <div class="buttons-wrapper text-right">
-                                <button class="wperp-btn btn--default modal-close" @click.prevent="outside">Cancel</button>
+                                <button class="wperp-btn btn--default modal-close" @click.prevent="outside">
+                                    {{ __('Cancel', 'erp') }}
+                                </button>
                                 <button class="wperp-btn btn--primary" type="submit">
-                                    <template v-if="catData.node">{{ isCatSaving ? 'Updating...' : 'Update' }}</template>
-                                    <template v-else>{{ isCatSaving ? 'Saving...' : 'Save' }}</template>
+                                    <template v-if="catData.node">
+                                        {{ isCatSaving ? __('Updating...', 'erp') : __('Update', 'erp') }}
+                                    </template>
+                                    <template v-else>
+                                        {{ isCatSaving ? __('Saving...', 'erp') : __('Save', 'erp') }}
+                                    </template>
                                 </button>
                             </div>
                         </div>

@@ -6,19 +6,19 @@
                 <div class="d-print-none">
                     <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                         <i class="flaticon-printer-1"></i>
-                        &nbsp; Print
+                        &nbsp; {{ __('Print', 'erp') }}
                     </a>
                     <!-- todo: more action has some dropdown and will implement later please consider as planning -->
                     <dropdown>
                         <template slot="button">
                             <a href="#" class="wperp-btn btn--default">
                                 <i class="flaticon-settings-work-tool"></i>
-                                &nbsp; More Action
+                                &nbsp; {{ __('More Action', 'erp') }}
                             </a>
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
-                                <li><a href="#" @click.prevent="showModal = true">Send Mail</a></li>
+                                <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
                     </dropdown>
@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="invoice-body">
-                        <h4>Check</h4>
+                        <h4>{{ __('Check', 'erp') }}</h4>
                         <div class="wperp-row" v-if="null != expense_data">
                             <div class="wperp-col-sm-6">
                                 <div class="persons-info">
@@ -56,11 +56,11 @@
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>Check No</th>
+                                        <th>{{ __('Check No', 'erp') }}</th>
                                         <td>#{{ expense_data.check_no }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Check Date:</th>
+                                        <th>{{ __('Check Date', 'erp') }}:</th>
                                         <td>{{ expense_data.date }}</td>
                                     </tr>
                                 </table>
@@ -72,9 +72,9 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>Voucher No</th>
-                                <th>Particulars</th>
-                                <th>Amount</th>
+                                <th>{{ __('Voucher No', 'erp') }}</th>
+                                <th>{{ __('Particulars', 'erp') }}</th>
+                                <th>{{ __('Amount', 'erp') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -100,7 +100,7 @@
                 </div>
 
                 <div class="invoice-attachments d-print-none">
-                    <h4>Attachments</h4>
+                    <h4>{{ __('Attachments', 'erp') }}</h4>
                     <a class="attachment-item" :href="attachment"
                        :key="index"
                        v-for="(attachment, index) in expense_data.attachments" download>

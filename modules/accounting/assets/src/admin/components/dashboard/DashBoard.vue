@@ -29,23 +29,25 @@
                     <div class="wperp-col-sm-6 wperp-col-xs-12" >
                         <!-- Start .invoice-own-section -->
                         <div class="invoice-own-section wperp-panel wperp-panel-default">
-                            <div class="wperp-panel-heading wperp-bg-white"><h4>Invoice payable to you</h4></div>
+                            <div class="wperp-panel-heading wperp-bg-white">
+                                <h4>{{ __('Invoice payable to you', 'erp') }}</h4>
+                            </div>
                             <div class="wperp-panel-body pb-0">
                                 <ul class="wperp-list-unstyled list-table-content" v-if="Object.values(to_receive).length">
                                     <li>
-                                        <span class="title">1-30 days overdue</span>
+                                        <span class="title">{{ __('1-30 days overdue', 'erp') }}</span>
                                         <span class="price">{{formatAmount(to_receive.amount.first)}}</span>
                                     </li>
                                     <li>
-                                        <span class="title">31-60 days overdue</span>
+                                        <span class="title">{{ __('31-60 days overdue', 'erp') }}</span>
                                         <span class="price">{{formatAmount(to_receive.amount.second)}}</span>
                                     </li>
                                     <li>
-                                        <span class="title">61-90 days overdue</span>
+                                        <span class="title">{{ __('61-90 days overdue', 'erp') }}</span>
                                         <span class="price">{{formatAmount(to_receive.amount.third)}}</span>
                                     </li>
                                     <li class="total">
-                                        <span class="title">Total Balance</span>
+                                        <span class="title">{{ __('Total Balance', 'erp') }}</span>
                                         <span class="price">{{total_receivable}}</span>
                                     </li>
                                 </ul>
@@ -56,23 +58,25 @@
                     <div class="wperp-col-sm-6 wperp-col-xs-12 ">
                         <!-- Start .invoice-own-section -->
                         <div class="invoice-own-section wperp-panel wperp-panel-default">
-                            <div class="wperp-panel-heading wperp-bg-white"><h4>Bills you need to pay</h4></div>
+                            <div class="wperp-panel-heading wperp-bg-white">
+                                <h4>{{ __('Bills you need to pay', 'erp') }}</h4>
+                            </div>
                             <div class="wperp-panel-body pb-0">
                                 <ul class="wperp-list-unstyled list-table-content"  v-if="Object.values(to_pay).length">
                                     <li>
-                                        <span class="title">1-30 days overdue</span>
+                                        <span class="title">{{ __('1-30 days overdue', 'erp') }}</span>
                                         <span class="price">{{formatAmount(to_pay.amount.first)}}</span>
                                     </li>
                                     <li>
-                                        <span class="title">31-60 days overdue</span>
+                                        <span class="title">{{ __('31-60 days overdue', 'erp') }}</span>
                                         <span class="price">{{formatAmount(to_pay.amount.second)}}</span>
                                     </li>
                                     <li>
-                                        <span class="title">61-90 days overdue</span>
+                                        <span class="title">{{ __('61-90 days overdue', 'erp') }}</span>
                                         <span class="price">{{formatAmount(to_pay.amount.third)}}</span>
                                     </li>
                                     <li class="total">
-                                        <span class="title">Total Balance</span>
+                                        <span class="title">{{ __('Total Balance', 'erp') }}</span>
                                         <span class="price">{{total_payable}}</span>
                                     </li>
                                 </ul>

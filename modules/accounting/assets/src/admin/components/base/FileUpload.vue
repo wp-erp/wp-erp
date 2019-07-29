@@ -1,13 +1,13 @@
 <template>
     <form enctype="multipart/form-data" novalidate>
-        <div class="attachment-placeholder"> To attach
+        <div class="attachment-placeholder"> {{ __('To attach', 'erp') }}
             <input type="file" id="attachment" multiple accept="image/*,.jpg,.png,.doc,.pdf"
                 :name="uploadFieldName"
                 :disabled="isSaving"
                 @change="filesChange($event)" class="display-none">
-            <label for="attachment">Select files</label> from your computer
-            <span v-if="isSaving" class="upload-count"> (uploading {{ fileCount }} file(s) ...)</span>
-            <span v-if="isUploaded" class="upload-count"> (uploaded {{ fileCount }} file(s) ...)</span>
+            <label for="attachment">{{ __('Select files', 'erp') }}</label> {{ __('from your computer', 'erp') }}
+            <span v-if="isSaving" class="upload-count"> ({{ __('uploading', 'erp') }} {{ fileCount }} {{ __('file(s)', 'erp') }} ...)</span>
+            <span v-if="isUploaded" class="upload-count"> ({{ __('uploaded', 'erp') }} {{ fileCount }} {{ __('file(s)', 'erp') }} ...)</span>
         </div>
     </form>
 </template>
@@ -16,20 +16,20 @@
     import HTTP from 'admin/http'
 
     const STATUS_INITIAL = 0,
-        STATUS_SAVING = 1,
-        STATUS_SUCCESS = 2,
-        STATUS_FAILED = 3;
+          STATUS_SAVING  = 1,
+          STATUS_SUCCESS = 2,
+          STATUS_FAILED  = 3;
 
     export default {
         name: 'FileUpload',
 
         data() {
             return {
-                fileCount: 0,
-                isUploaded: false,
-                uploadedFiles: [],
-                uploadError: null,
-                currentStatus: null,
+                fileCount      : 0,
+                isUploaded     : false,
+                uploadedFiles  : [],
+                uploadError    : null,
+                currentStatus  : null,
                 uploadFieldName: 'attachments[]'
             }
         },
