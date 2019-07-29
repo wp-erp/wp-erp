@@ -11,7 +11,7 @@
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
                     <label>{{ __('To', 'erp') }} <span class="wperp-required-sign">*</span></label>
                 </div>
-                <input-tag placeholder="Add Emails" v-model="emails" validate="email"></input-tag>
+                <input-tag :placeholder="__('Add Emails', 'erp')" v-model="emails" validate="email"></input-tag>
             </div>
             <div class="wperp-form-group wperp-row">
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
@@ -26,7 +26,7 @@
                     <label>{{ __('Message', 'erp') }} <span class="wperp-required-sign">*</span></label>
                 </div>
                 <div class="wperp-col-sm-9 wperp-col-xs-12">
-                    <textarea v-model="message" class="wperp-form-field" placeholder="Enter Your Message Here" rows="4"></textarea>
+                    <textarea v-model="message" class="wperp-form-field" :placeholder="__('Enter Your Message Here', 'erp')" rows="4"></textarea>
                 </div>
             </div>
             <div class="wperp-row">

@@ -38,7 +38,7 @@
                             </div>
                             <div class="wperp-col-xs-12">
                                 <label>{{ __('Billing Address', 'erp') }}</label>
-                                <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
+                                <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
                             </div>
                         </div>
                     </form>
@@ -64,7 +64,7 @@
                         <tr :key="key" v-for="(line, key) in transactionLines">
                             <td scope="row" class="col--id column-primary">{{key+1}}</td>
                             <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
-                            <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
+                            <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea></td>
                             <td class="col--amount" data-colname="Amount">
                                 <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="wperp-form-field text-right"/>
                             </td>
@@ -90,7 +90,7 @@
                         <tr class="wperp-form-group">
                             <td colspan="9" style="text-align: left;">
                                 <label>{{ __('Particulars', 'erp') }}</label>
-                                <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                                <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                             </td>
                         </tr>
                         <tr>

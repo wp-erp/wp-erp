@@ -20,7 +20,7 @@
 
                         <div class="wperp-form-group">
                             <label>{{ __('Tax Number', 'erp') }}</label>
-                            <input type="text" v-model="tax_number" class="wperp-form-field" placeholder="Enter Tax Number">
+                            <input type="text" v-model="tax_number" class="wperp-form-field" :placeholder="__('Enter Tax Number', 'erp')">
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">

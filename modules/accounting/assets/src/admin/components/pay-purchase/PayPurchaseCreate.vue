@@ -46,7 +46,7 @@
                             </div>
                             <div class="wperp-col-sm-4">
                                 <label>{{ __('Billing Address', 'erp') }}</label>
-                                <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
+                                <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
                             </div>
 
                             <check-fields v-if="basic_fields.trn_by.id === paymentMethods.check" @updateCheckFields="setCheckFields"></check-fields>
@@ -94,7 +94,7 @@
                         <tr class="wperp-form-group">
                             <td colspan="9" style="text-align: left;">
                                 <label>{{ __('Particulars', 'erp') }}</label>
-                                <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                                <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                             </td>
                         </tr>
                         <tr class="add-attachment-row">

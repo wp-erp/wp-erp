@@ -36,7 +36,7 @@
                             </div>
                             <div class="wperp-col-xs-12">
                                 <label>{{ __('Billing Address', 'erp') }}</label>
-                                <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
+                                <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
                             </div>
                         </div>
 
@@ -82,7 +82,7 @@
                         <tr class="wperp-form-group">
                             <td colspan="9" style="text-align: left;">
                                 <label>{{ __('Particulars', 'erp') }}</label>
-                                <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Particulars"></textarea>
+                                <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                             </td>
                         </tr>
                         <tr>

@@ -46,7 +46,7 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <label>{{ __('Billing Address', 'erp') }}</label>
-                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
+                            <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
                         </div>
 
                         <check-fields v-if="basic_fields.trn_by.id === '3'" @updateCheckFields="setCheckFields"></check-fields>
@@ -61,11 +61,11 @@
                 <table class="wperp-table wperp-form-table">
                     <thead>
                     <tr>
-                        <th scope="col" class="col--id column-primary">Bill No</th>
-                        <th scope="col">Due Date</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Due</th>
-                        <th scope="col">Amount</th>
+                        <th scope="col" class="col--id column-primary">{{ __('Bill No', 'erp') }}</th>
+                        <th scope="col">{{ __('Due Date', 'erp') }}</th>
+                        <th scope="col">{{ __('Total', 'erp') }}</th>
+                        <th scope="col">{{ __('Due', 'erp') }}</th>
+                        <th scope="col">{{ __('Amount', 'erp') }}</th>
                         <th scope="col" class="col--actions"></th>
                     </tr>
                     </thead>
@@ -84,7 +84,7 @@
                     </tr>
 
                     <tr class="total-amount-row">
-                        <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
+                        <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
                         <td class="text-right" data-colname="Total Amount">
                             <input type="text" class="text-right" :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
                         <td class="text-right"></td>
@@ -92,14 +92,14 @@
                     </tbody>
                     <tr class="wperp-form-group">
                         <td colspan="9" style="text-align: left;">
-                            <label>Particulars</label>
-                            <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
+                            <label>{{ __('Particulars', 'erp') }}</label>
+                            <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
                         </td>
                     </tr>
                     <tr class="add-attachment-row" >
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
-                                <label class="col--attachement">Attachment</label>
+                                <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
                                 <file-upload v-model="attachments" url="/invoices/attachments"/>
                             </div>
                         </td>

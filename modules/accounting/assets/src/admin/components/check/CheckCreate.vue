@@ -43,7 +43,7 @@
                     </div>
                     <div class="wperp-col-sm-4">
                         <label>{{ __('Billing Address', 'erp') }}</label>
-                        <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" placeholder="Type here"></textarea>
+                        <textarea v-model.trim="basic_fields.billing_address" rows="3" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
                     </div>
                 </div>
 
@@ -68,7 +68,7 @@
                     <tr :key="key" v-for="(line,key) in transactionLines">
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
                         <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
-                        <td class="col--particulars"><textarea v-model="line.particulars" rows="1" class="wperp-form-field display-flex" placeholder="Particulars"></textarea></td>
+                        <td class="col--particulars"><textarea v-model="line.particulars" rows="1" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea></td>
                         <td class="col--amount" data-colname="Amount">
                             <input type="number" min="0" step="0.01" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field">
                         </td>
@@ -114,7 +114,7 @@
                     <tr class="add-attachment-row">
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
-                                <label class="col--attachement">Attachment</label>
+                                <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
                                 <file-upload v-model="attachments" url="/invoices/attachments"/>
                             </div>
                         </td>
