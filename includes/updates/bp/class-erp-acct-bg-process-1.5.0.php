@@ -194,7 +194,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
-            $this->_helper_bank_transfers_migration($trn, $voucher_no, $trn_id);
+            $this->_helper_bank_transfers_migration($trn, $trn_id);
         } // transfer
 
 		return false;
@@ -411,7 +411,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      *
      * @return void
      */
-    protected function _helper_bank_transfers_migration( $transfer, $voucher_no, $trn_id ) {
+    protected function _helper_bank_transfers_migration( $transfer, $trn_id ) {
         global $wpdb;
 
         $trns = $wpdb->get_results(
@@ -424,7 +424,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
                 $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
                     'ledger_id'   => $trn['ledger_id'],
-                    'trn_no'      => $voucher_no,
+                    'trn_no'      => $trn_id,
                     'particulars' => $transfer['summary'],
                     'debit'       => 0,
                     'credit'      => $transfer['total'],
@@ -439,7 +439,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
                 $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', array(
                     'ledger_id'   => $trn['ledger_id'],
-                    'trn_no'      => $voucher_no,
+                    'trn_no'      => $trn_id,
                     'particulars' => $transfer['summary'],
                     'debit'       => $transfer['total'],
                     'credit'      => 0,
@@ -451,7 +451,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_transfer_voucher', array(
-            'voucher_no' => $voucher_no,
+            'voucher_no' => $trn_id,
             'amount'     => $transfer['total'],
             'ac_from'    => $transfer['from_account_id'],
             'ac_to'      => $transfer['to_account_id'],
@@ -460,8 +460,6 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             'created_at' => $this->get_created_at( $transfer['created_at'] ),
             'created_by' => get_current_user_id(),
         ) );
-
-        $transfers[$voucher_no] = $wpdb->insert_id;
     }
 
 }
