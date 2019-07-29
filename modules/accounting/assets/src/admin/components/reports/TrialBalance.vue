@@ -1,6 +1,6 @@
 <template>
     <div class="trial-balance">
-        <h2>Trial Balance</h2>
+        <h2>{{ __('Trial Balance', 'erp') }}</h2>
 
         <div class="with-multiselect fyear-select">
             <multi-select v-model="selectedYear" @input="onYearSelected" :options="fyears" />
@@ -12,24 +12,24 @@
                 <datepicker v-model="end_date"></datepicker>
             </div>
 
-            <button class="wperp-btn btn--primary add-line-trigger" type="submit">View</button>
+            <button class="wperp-btn btn--primary add-line-trigger" type="submit">{{ __('View', 'erp') }}</button>
 
             <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
-                <i class="flaticon-printer-1"></i> &nbsp; Print
+                <i class="flaticon-printer-1"></i> &nbsp; {{ __('Print', 'erp') }}
             </a>
         </form>
 
         <p>
-            <strong>For the period of ( Transaction date ):</strong>
-            <em>{{ start_date }}</em> to <em>{{ end_date }}</em>
+            <strong>{{ __('For the period of ( Transaction date )', 'erp') }}:</strong>
+            <em>{{ start_date }}</em> {{ __('to', 'erp') }} <em>{{ end_date }}</em>
         </p>
 
         <table class="wperp-table table-striped table-dark widefat">
             <thead>
                 <tr>
-                    <th>Account Name</th>
-                    <th>Debit Total</th>
-                    <th>Credit Total</th>
+                    <th>{{ __('Account Name', 'erp') }}</th>
+                    <th>{{ __('Debit Total', 'erp') }}</th>
+                    <th>{{ __('Credit Total', 'erp') }}</th>
                 </tr>
             </thead>
             <tbody :key="key" v-for="(chart, key) in chrtAcct">
@@ -54,7 +54,7 @@
             </tbody>
             <tfoot>
                 <tr class="t-foot">
-                    <td>Total</td>
+                    <td>{{ __('Total', 'erp') }}</td>
                     <td>{{ moneyFormat( totalDebit ) }}</td>
                     <td>{{ moneyFormat( Math.abs(totalCredit) ) }}</td>
                 </tr>

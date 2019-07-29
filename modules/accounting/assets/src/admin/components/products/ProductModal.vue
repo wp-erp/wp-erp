@@ -5,10 +5,11 @@
                 <div class="wperp-modal-dialog">
                     <div class="wperp-modal-content">
                         <div class="wperp-modal-header">
-                            <h3 v-if="!product">Add {{ title }}</h3>
-                            <h3 v-else>Update {{ title }}</h3>
+                            <h3 v-if="!product">{{ __('Add', 'erp') }} {{ title }}</h3>
+                            <h3 v-else>{{ __('Update', 'erp') }} {{ title }}</h3>
                             <span class="modal-close">
-                                <i class="flaticon-close" @click.prevent="$parent.$emit('close')"></i></span>
+                                <i class="flaticon-close" @click.prevent="$parent.$emit('close')"></i>
+                            </span>
                         </div>
                         <div class="wperp-modal-body">
                             <ul class="errors" v-if="error_msg.length">
@@ -22,7 +23,7 @@
 
                                 <div class="wperp-row">
                                     <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                        <label>Product Name <span class="wperp-required-sign">*</span></label>
+                                        <label>{{ __('Product Name', 'erp') }} <span class="wperp-required-sign">*</span></label>
                                     </div>
                                     <div class="wperp-col-sm-9 wperp-col-xs-12">
                                         <input type="text" class="wperp-form-field"
@@ -35,12 +36,12 @@
                                 <div class="wperp-panel wperp-panel-default panel-product-details">
                                     <div class="wperp-panel-heading">
                                         <span class="panel-badge panel-badge-primary"></span>
-                                        <span>Product/Service Details</span>
+                                        <span>{{ __('Product/Service Details', 'erp') }}</span>
                                     </div>
                                     <div class="wperp-panel-body">
                                         <div class="wperp-row">
                                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label>Product Type <span class="wperp-required-sign">*</span></label>
+                                                <label>{{ __('Product Type', 'erp') }} <span class="wperp-required-sign">*</span></label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <div class="with-multiselect">
@@ -54,7 +55,7 @@
                                         </div>
                                         <div class="wperp-row">
                                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label>Category</label>
+                                                <label>{{ __('Category', 'erp') }}</label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <div class="with-multiselect">
@@ -73,12 +74,12 @@
                                 <div class="wperp-panel wperp-panel-default panel-product-info">
                                     <div class="wperp-panel-heading">
                                         <span class="panel-badge panel-badge-info"></span>
-                                        <span>Product Information</span>
+                                        <span>{{ __('Product Information', 'erp') }}</span>
                                     </div>
                                     <div class="wperp-panel-body">
                                         <div class="wperp-row">
                                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label for="cost-price">Cost Price</label>
+                                                <label for="cost-price">{{ __('Cost Price', 'erp') }}</label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <input type="text" name="cost-price" id="cost-price" value="0"
@@ -87,7 +88,7 @@
                                         </div>
                                         <div class="wperp-row">
                                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label for="sale-price">Sale Price <span class="wperp-required-sign">*</span></label>
+                                                <label for="sale-price">{{ __('Sale Price', 'erp') }} <span class="wperp-required-sign">*</span></label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <input type="text" name="sale-price" id="sale-price" value="0"
@@ -101,12 +102,12 @@
                                 <div class="wperp-panel wperp-panel-default panel-miscellaneous">
                                     <div class="wperp-panel-heading">
                                         <span class="panel-badge panel-badge-secondary"></span>
-                                        <span>Miscellaneous</span>
+                                        <span>{{ __('Miscellaneous', 'erp') }}</span>
                                     </div>
                                     <div class="wperp-panel-body">
                                         <div class="wperp-row">
                                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label>Vendor <span class="wperp-required-sign">*</span></label>
+                                                <label>{{ __('Vendor', 'erp') }} <span class="wperp-required-sign">*</span></label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <div class="with-multiselect">
@@ -118,7 +119,7 @@
                                                 </div>
                                             </div>
                                             <div class="wperp-col-sm-3 wperp-col-xs-12">
-                                                <label>Tax Category</label>
+                                                <label>{{ __('Tax Category', 'erp') }}</label>
                                             </div>
                                             <div class="wperp-col-sm-9 wperp-col-xs-12">
                                                 <div class="with-multiselect">
@@ -135,10 +136,10 @@
                                 <!-- buttons -->
                                 <div class="buttons-wrapper text-right">
                                     <button class="wperp-btn btn--default" @click.prevent="$parent.$emit('close')">
-                                        Cancel
+                                        {{ __('Cancel', 'erp') }}
                                     </button>
-                                    <button v-if="!product" class="wperp-btn btn--primary">Publish</button>
-                                    <button v-else class="wperp-btn btn--primary">Update</button>
+                                    <button v-if="!product" class="wperp-btn btn--primary">{{ __('Publish', 'erp') }}</button>
+                                    <button v-else class="wperp-btn btn--primary">{{ __('Update', 'erp') }}</button>
                                 </div>
                             </form>
                         </div>

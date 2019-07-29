@@ -1,23 +1,23 @@
 <template>
     <div class="income-statement">
-        <h2 class="content-header__title">Income Statement</h2>
+        <h2 class="content-header__title">{{ __('Income Statement', 'erp') }}</h2>
 
         <form @submit.prevent="fetchItems" class="query-options no-print">
 
             <div class="wperp-date-group">
                 <datepicker v-model="start_date"></datepicker>
                 <datepicker v-model="end_date"></datepicker>
-                <button class="wperp-btn btn--primary add-line-trigger" type="submit">Filter</button>
+                <button class="wperp-btn btn--primary add-line-trigger" type="submit">{{ __('Filter', 'erp') }}</button>
             </div>
 
             <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                 <i class="flaticon-printer-1"></i>
-                &nbsp; Print
+                &nbsp; {{ __('Print', 'erp') }}
             </a>
 
         </form>
 
-        <p><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></p>
+        <p><strong>{{ __('For the period of ( Transaction date )', 'erp') }}:</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></p>
 
         <list-table
             tableClass="wperp-table table-striped table-dark widefat income-statement income-balance-report"
@@ -30,7 +30,7 @@
             </template>
             <template slot="tfoot">
                 <tr class="t-foot">
-                    <td>Total Income</td>
+                    <td>{{ __('Total Income', 'erp') }}</td>
                     <td>{{ transformBalance(Math.abs(income)) }}</td>
                 </tr>
             </template>
@@ -47,7 +47,7 @@
             </template>
             <template slot="tfoot">
                 <tr class="t-foot">
-                    <td>Total Expense</td>
+                    <td>{{ __('Total Expense', 'erp') }}</td>
                     <td>{{ transformBalance(Math.abs(expense)) }}</td>
                 </tr>
             </template>
@@ -57,7 +57,7 @@
             <template v-if="profit>=0">
                 <tbody class="wperp-col-sm-12">
                 <tr>
-                    <td><strong>Profit</strong></td>
+                    <td><strong>{{ __('Profit', 'erp') }}</strong></td>
                     <td>{{ moneyFormat( Math.abs(profit) ) }}</td>
                     <td class="no-print"></td>
                 </tr>
@@ -66,7 +66,7 @@
             <template v-else>
                 <tbody class="wperp-col-sm-12">
                     <tr>
-                        <td><strong>Loss</strong></td>
+                        <td><strong>{{ __('Loss', 'erp') }}</strong></td>
                         <td>{{ moneyFormat(Math.abs(loss)) }}</td>
                         <td class="no-print"></td>
                     </tr>

@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Receive Payment</h2>
+                    <h2 class="content-header__title">{{ __('Receive Payment', 'erp') }}</h2>
                 </div>
             </div>
         </div>
@@ -28,26 +28,26 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Reference</label>
+                                <label>{{ __('Reference', 'erp') }}</label>
                                 <input type="text" class="wperp-form-field" v-model="basic_fields.trn_ref"/>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-form-group">
-                                <label>Payment Date<span class="wperp-required-sign">*</span></label>
+                                <label>{{ __('Payment Date', 'erp') }}<span class="wperp-required-sign">*</span></label>
                                 <datepicker v-model="basic_fields.payment_date"></datepicker>
                             </div>
                         </div>
                         <div class="wperp-col-sm-4 with-multiselect">
-                            <label>Payment Method<span class="wperp-required-sign">*</span></label>
+                            <label>{{ __('Payment Method', 'erp') }}<span class="wperp-required-sign">*</span></label>
                             <multi-select v-model="basic_fields.trn_by" :options="pay_methods"></multi-select>
                         </div>
                         <div class="wperp-col-sm-4">
-                            <label>Deposit to<span class="wperp-required-sign">*</span></label>
+                            <label>{{ __('Deposit to', 'erp') }}<span class="wperp-required-sign">*</span></label>
                             <select-accounts v-model="basic_fields.deposit_to" :reset="reset" :override_accts="accts_by_chart"></select-accounts>
                         </div>
                         <div class="wperp-col-sm-4">
-                            <label>Billing Address</label>
+                            <label>{{ __('Billing Address', 'erp') }}</label>
                             <textarea v-model.trim="basic_fields.billing_address" rows="4" class="wperp-form-field" placeholder="Type here"></textarea>
                         </div>
 
@@ -64,11 +64,11 @@
                 <table class="wperp-table wperp-form-table">
                     <thead>
                     <tr>
-                        <th scope="col" class="col--id column-primary">Voucher No</th>
-                        <th scope="col">Due Date</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Due</th>
-                        <th scope="col">Amount</th>
+                        <th scope="col" class="col--id column-primary">{{ __('Voucher No', 'erp') }}</th>
+                        <th scope="col">{{ __('Due Date', 'erp') }}</th>
+                        <th scope="col">{{ __('Total', 'erp') }}</th>
+                        <th scope="col">{{ __('Due', 'erp') }}</th>
+                        <th scope="col">{{ __('Amount', 'erp') }}</th>
                         <th scope="col" class="col--actions"></th>
                     </tr>
                     </thead>
@@ -87,7 +87,7 @@
                     </tr>
 
                     <tr class="total-amount-row">
-                        <td class="text-right pr-0 hide-sm" colspan="4">Total Amount</td>
+                        <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
                         <td class="text-right" data-colname="Total Amount">
                             <input type="text" class="text-right" name="finalamount"
                             :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
@@ -96,7 +96,7 @@
                     </tbody>
                     <tr class="wperp-form-group">
                         <td colspan="9" style="text-align: left;">
-                            <label>Particulars</label>
+                            <label>{{ __('Particulars', 'erp') }}</label>
                             <textarea v-model="particulars" rows="4" class="wperp-form-field display-flex" placeholder="Internal Information"></textarea>
                         </td>
                     </tr>
@@ -115,7 +115,7 @@
                     <tr class="add-attachment-row">
                         <td colspan="9" style="text-align: left;">
                             <div class="attachment-container">
-                                <label class="col--attachement">Attachment</label>
+                                <label class="col--attachement">{{ __('Attachment', 'erp') }}</label>
                                 <file-upload v-model="attachments" url="/invoices/attachments"/>
                             </div>
                         </td>

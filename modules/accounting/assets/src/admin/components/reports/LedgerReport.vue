@@ -1,6 +1,6 @@
 <template>
     <div class="ledger-report">
-        <h2>Ledger Report</h2>
+        <h2>{{ __('Ledger Report', 'erp') }}</h2>
 
         <form action="" method="" @submit.prevent="getLedgerReport" class="query-options no-print">
             <div class="with-multiselect">
@@ -11,21 +11,21 @@
                 <datepicker v-model="start_date"></datepicker>
                 <datepicker v-model="end_date"></datepicker>
 
-                <button class="wperp-btn btn--primary add-line-trigger" type="submit">Filter</button>
+                <button class="wperp-btn btn--primary add-line-trigger" type="submit">{{ __('Filter', 'erp') }}</button>
 
                 <a href="#" class="wperp-btn btn--default print-btn" @click.prevent="printPopup">
                     <i class="flaticon-printer-1"></i>
-                    &nbsp; Print
+                    &nbsp; {{ __('Print', 'erp') }}
                 </a>
             </div>
 
         </form>
 
         <ul class="report-header" v-if="null !== selectedLedger">
-            <li><strong>Account No:</strong> <em>{{ selectedLedger.code }}</em></li>
-            <li><strong>Account Name:</strong> <em>{{ selectedLedger.name }}</em></li>
-            <li><strong>Currency:</strong> <em>{{ symbol }}</em></li>
-            <li><strong>For the period of ( Transaction date ):</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></li>
+            <li><strong>{{ __('Account No', 'erp') }}:</strong> <em>{{ selectedLedger.code }}</em></li>
+            <li><strong>{{ __('Account Name', 'erp') }}:</strong> <em>{{ selectedLedger.name }}</em></li>
+            <li><strong>{{ __('Currency', 'erp') }}:</strong> <em>{{ symbol }}</em></li>
+            <li><strong>{{ __('For the period of ( Transaction date )', 'erp') }}:</strong> <em>{{ start_date }}</em> to <em>{{ end_date }}</em></li>
         </ul>
 
         <list-table
@@ -52,7 +52,7 @@
             <template slot="tfoot">
                 <tr class="tfoot">
                     <td colspan="3"></td>
-                    <td>Total =</td>
+                    <td>{{ __('Total', 'erp') }} =</td>
                     <td>{{ moneyFormat(totalDebit) }}</td>
                     <td>{{ moneyFormat(totalCredit) }}</td>
                     <td></td>

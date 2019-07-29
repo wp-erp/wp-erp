@@ -4,14 +4,14 @@
             <div id="col-left">
                 <div class="col-wrap">
                     <div class="form-wrap">
-                        <h2>Add new category</h2>
+                        <h2>{{ __('Add new category', 'erp') }}</h2>
                         <form id="erp-acct-product-category">
                             <div :class="['form-field term-name-wrap', { 'form-invalid': error }]">
-                                <label>Category Name</label>
+                                <label>{{ __('Category Name', 'erp') }}</label>
                                 <input type="text" class="wperp-form-field" v-model="categoryName">
                             </div>
                             <div class="form-field">
-                                <label>Parent Category</label>
+                                <label>{{ __('Parent Category', 'erp') }}</label>
                                 <div class="with-multiselect">
                                     <multi-select
                                         v-model="parentCategory"
@@ -43,8 +43,8 @@
                         <template slot="name" slot-scope="data" v-if="data.row.isEdit">
                             <input type="text" class="wperp-form-field" :value="data.row.name" :id="'cat-'+data.row.id">
                             <div class="buttons-wrapper text-right" style="margin-top: 10px">
-                                <button class="wperp-btn btn--primary" @click="updateCategory(data.row)">Update</button>
-                                <button class="wperp-btn btn--default" @click.prevent="data.row.isEdit = false">Cancel
+                                <button class="wperp-btn btn--primary" @click="updateCategory(data.row)">{{ __('Update', 'erp') }}</button>
+                                <button class="wperp-btn btn--default" @click.prevent="data.row.isEdit = false">{{ __('Cancel', 'erp') }}
                                 </button>
                             </div>
                         </template>

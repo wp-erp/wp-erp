@@ -4,8 +4,8 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">Transfer Money</h2>
-                    <router-link class="wperp-btn btn--primary" :to="{ name: 'NewTransfer'}">Add new</router-link>
+                    <h2 class="content-header__title">{{ __('Transfer Money', 'erp') }}</h2>
+                    <router-link class="wperp-btn btn--primary" :to="{ name: 'NewTransfer'}">{{ __('Add new', 'erp') }}</router-link>
                 </div>
             </div>
         </div>

@@ -22,23 +22,23 @@
                 <div class="wperp-col-lg-9 wperp-col-md-8 wperp-col-sm-8 wperp-col-xs-12">
                     <ul class="customer-meta">
                         <li>
-                            <strong>Phone:</strong>
+                            <strong>{{ __('Phone', 'erp') }}:</strong>
                             <span>{{ user.phone }}</span>
                         </li>
                         <li>
-                            <strong>Mobile:</strong>
+                            <strong>{{ __('Mobile', 'erp') }}:</strong>
                             <span>{{ user.mobile }}</span>
                         </li>
                         <li>
-                            <strong style="margin-right: 10px">Department:</strong>
+                            <strong style="margin-right: 10px">{{ __('Department', 'erp') }}:</strong>
                             <span v-if="user.department">{{ user.department }}</span>
                         </li>
                         <li>
-                            <strong style="margin-right: 10px">Designation:</strong>
+                            <strong style="margin-right: 10px">{{ __('Designation', 'erp') }}:</strong>
                             <span v-if="user.designation">{{ user.designation }}</span>
                         </li>
                         <li>
-                            <strong>Address:</strong>
+                            <strong>{{ __('Address', 'erp') }}:</strong>
                             <span >{{ user.address }} </span>
                         </li>
                     </ul>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="wperp-col-sm-4">
                             <div class="wperp-chart-block">
-                                <h3>Outstanding</h3>
+                                <h3>{{ __('Outstanding', 'erp') }}</h3>
                                 <div class="wperp-total"><h2>{{ moneyFormat( outstanding ) }}</h2></div>
                             </div>
                         </div>
