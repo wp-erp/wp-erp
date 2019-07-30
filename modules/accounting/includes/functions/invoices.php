@@ -99,7 +99,7 @@ function erp_acct_get_invoice( $invoice_no ) {
 
     // calculate every line total
     foreach ( $row['line_items'] as $key => $value ) {
-        $total                                 = ( $value['item_total'] + $value['tax'] ) - $value['discount'];
+        $total = ( $value['item_total'] + $value['tax'] ) - $value['discount'];
         $row['line_items'][$key]['line_total'] = $total;
     }
 
@@ -184,7 +184,6 @@ function erp_acct_insert_invoice( $data ) {
             'amount'          => $invoice_data['amount'],
             'discount'        => $invoice_data['discount'],
             'discount_type'   => $invoice_data['discount_type'],
-            // 'tax_rate_id'     => $invoice_data['tax_rate_id'],
             'tax'             => $invoice_data['tax'],
             'estimate'        => $invoice_data['estimate'],
             'attachments'     => $invoice_data['attachments'],
@@ -256,7 +255,6 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
             'unit_price' => $item['unit_price'],
             'discount'   => $item['discount'],
             'tax'        => $item['tax'],
-            // 'tax_percent' => $item['tax_rate'],
             'item_total' => $sub_total,
             'created_at' => $invoice_data['created_at'],
             'created_by' => $invoice_data['created_by']
@@ -266,8 +264,12 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
             continue;
         }
 
-        // calculate tax for every related agency
-        $tax_rate_agency = get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
+        if ( empty( $invoice_data['tax_rate_id'] ) && empty( $item['tax_cat_id'] ) ) {
+            $tax_rate_agency = $item['tax_rate_agency'];
+        } else {
+            // calculate tax for every related agency
+            $tax_rate_agency = get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
+        }
 
         foreach ( $tax_rate_agency as $rate_agency ) {
             /*==== calculate tax amount ====*/
@@ -496,13 +498,18 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data = [];
 
     // We can pass the name from view... to reduce DB query load
-    $customer = erp_get_people( $data['customer_id'] );
+    if ( empty( $data['customer_name'] ) ) {
+        $customer = erp_get_people( $data['customer_id'] );
+        $customer_name = $customer->first_name . ' ' . $customer->last_name;
+    } else {
+        $customer_name = $data['customer_name'];
+    }
 
     $invoice_data['voucher_no']      = ! empty( $voucher_no ) ? $voucher_no : 0;
     $invoice_data['customer_id']     = isset( $data['customer_id'] ) ? $data['customer_id'] : null;
-    $invoice_data['customer_name']   = $customer->first_name . ' ' . $customer->last_name;
-    $invoice_data['trn_date']        = isset( $data['date'] ) ? $data['date'] : date( "Y-m-d" );
-    $invoice_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : date( "Y-m-d" );
+    $invoice_data['customer_name']   = $customer_name;
+    $invoice_data['trn_date']        = isset( $data['date'] ) ? $data['date'] : date( 'Y-m-d' );
+    $invoice_data['due_date']        = isset( $data['due_date'] ) ? $data['due_date'] : date( 'Y-m-d' );
     $invoice_data['billing_address'] = isset( $data['billing_address'] ) ? maybe_serialize( $data['billing_address'] ) : '';
     $invoice_data['amount']          = isset( $data['amount'] ) ? $data['amount'] : 0;
     $invoice_data['discount']        = isset( $data['discount'] ) ? $data['discount'] : 0;
@@ -594,7 +601,7 @@ function erp_acct_insert_invoice_data_into_ledger( $invoice_data, $voucher_no = 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
     $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug( 'sales_revenue' );
-    $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug( 'sales_discounts' );
+    $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug( 'sales_discount' );
 
     if ( $contra ) {
         $trn_no = $voucher_no;

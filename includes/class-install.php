@@ -1132,8 +1132,6 @@ Company'
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
                 `parent` int(11) NOT NULL,
-                `ecommerce_type` varchar(255) DEFAULT NULL,
-                `ecommerce_data_id` int(11) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -1162,8 +1160,6 @@ Company'
                 `vendor` int(11) DEFAULT NULL,
                 `cost_price` decimal(10,2) DEFAULT 0,
                 `sale_price` decimal(10,2) DEFAULT 0,
-                `ecommerce_type` varchar(255) DEFAULT NULL,
-                `ecommerce_data_id` int(11) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -1242,7 +1238,6 @@ Company'
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(100) DEFAULT NULL,
                 `description` varchar(255) DEFAULT NULL,
-                `ecommerce_type` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -1256,8 +1251,6 @@ Company'
                 `tax_rate_name` varchar(255) DEFAULT NULL,
                 `tax_number` varchar(100) DEFAULT NULL,
                 `default` boolean DEFAULT NULL,
-                `ecommerce_type` varchar(255) DEFAULT NULL,
-                `ecommerce_data_id` int(11) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -1273,7 +1266,6 @@ Company'
                 `tax_cat_id` int(11) DEFAULT NULL,
                 `agency_id` int(11) DEFAULT NULL,
                 `tax_rate` decimal(10,2) DEFAULT 0,
-                `ecommerce_type` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -1285,7 +1277,6 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agencies` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
-                `ecommerce_type` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -1544,9 +1535,9 @@ Company'
 
         // insert ledger categories
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledger_categories` LIMIT 0, 1" ) ) {
-            $wpdb->query("INSERT INTO `{$wpdb->prefix}erp_acct_ledger_categories` 
-                (id,name,chart_id) 
-                    VALUES 
+            $wpdb->query("INSERT INTO `{$wpdb->prefix}erp_acct_ledger_categories`
+                (id,name,chart_id)
+                    VALUES
                 (1,'Current Asset',1),
                 (2,'Fixed Asset',1),
                 (3,'Inventory',1),
