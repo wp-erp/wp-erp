@@ -15,7 +15,7 @@
         </li>
 
         <li>
-            <h3>{{ __('text', 'erp') }}</h3>
+            <h3>{{ __('Income Statement', 'erp') }}</h3>
             <p>{{ __('A summary of a management\'s performance as reflecte the profitability of an organization during the time interval', 'erp') }}.</p>
 
             <router-link class="wperp-btn btn--primary" :to="{ name: 'IncomeStatement' }">View Report</router-link>
