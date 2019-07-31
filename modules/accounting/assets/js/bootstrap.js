@@ -1954,10 +1954,10 @@ if (false) {(function () {
             callbacks: {
               label: function label(tooltipItem, data) {
                 var total = 0;
-                data.datasets[tooltipItem.datasetIndex].data.forEach(function (element
-                /*, index, array*/
-                ) {
-                  total += self.moneyFormat(element);
+                data.datasets[tooltipItem.datasetIndex].data.forEach(function (element) {
+                  if (0 != element) {
+                    total += element;
+                  }
                 });
                 var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                 var percentTxt = Math.round(value / total * 100);
