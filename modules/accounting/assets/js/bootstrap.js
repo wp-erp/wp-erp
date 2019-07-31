@@ -10503,7 +10503,12 @@ acct.addFilter = function (hookName, namespace, component) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__ = __webpack_require__(510);
 
-Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["b" /* setLocaleData */])(erpAcct.locale_data, 'erp');
+Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["b" /* setLocaleData */])(erpAcct.locale_data, 'erp'); // hook other add-on locale
+
+window.acct_add_locale = function (name, localeData) {
+  Object(__WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["b" /* setLocaleData */])(localeData, name);
+};
+
 window.__ = __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["a" /* __ */];
 window.sprintf = __WEBPACK_IMPORTED_MODULE_0__wordpress_i18n__["c" /* sprintf */];
 
