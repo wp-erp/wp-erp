@@ -152,7 +152,7 @@ function erp_acct_create_accounting_tables() {
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `voucher_no` int(11) DEFAULT NULL,
             `invoice_no` int(11) DEFAULT NULL,
-            `amount` int(11) DEFAULT NULL,
+            `amount` decimal(10,2) DEFAULT 0,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
