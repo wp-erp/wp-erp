@@ -382,7 +382,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'sub_component' => __( 'Transfer', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => sprintf( __( '%s has been transfered from %s to %s', 'erp' ), $data['amount'], $data['from_account_id'], $data['to_account_id'] ),
+            'message'       => sprintf( __( '%s has been transfered from %s to %s', 'erp' ), $data['amount'], erp_acct_get_ledger_name_by_id( $data['from_account_id'] ),erp_acct_get_ledger_name_by_id( $data['to_account_id'] ) ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 

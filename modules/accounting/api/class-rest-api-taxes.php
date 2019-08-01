@@ -615,7 +615,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Log when bill payment is created
+     * Log when tax payment is created
      *
      * @param $data
      * @param $action
@@ -623,10 +623,10 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function add_log( $data, $action ) {
         erp_log()->add( [
             'component'     => 'Accounting',
-            'sub_component' => __( 'Pay Bill', 'erp' ),
+            'sub_component' => __( 'Tax Payment', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => sprintf( __( 'A bill payment of %s has been created for %s', 'erp' ), $data['amount'], $data['people_id'] ),
+            'message'       => sprintf( __( 'A tax payment of %s has been created for %s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 

@@ -23,7 +23,7 @@ function erp_acct_get_all_charts() {
  * @param $ledger_id
  * @return mixed
  */
-function erp_get_ledger_name_by_id( $ledger_id ) {
+function erp_acct_get_ledger_name_by_id( $ledger_id ) {
     global $wpdb;
 
     $sql = "SELECT id, name  FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = {$ledger_id}";

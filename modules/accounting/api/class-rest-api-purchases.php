@@ -340,7 +340,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Log when bill payment is created
+     * Log when a purchase is created
      *
      * @param $data
      * @param $action
@@ -348,10 +348,10 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function add_log( $data, $action ) {
         erp_log()->add( [
             'component'     => 'Accounting',
-            'sub_component' => __( 'Pay Bill', 'erp' ),
+            'sub_component' => __( 'Purchase', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => sprintf( __( 'A bill payment of %s has been created for %s', 'erp' ), $data['amount'], $data['vendor_id'] ),
+            'message'       => sprintf( __( 'A purchase of %s has been created for %s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['vendor_id'] ) ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
         ] );
