@@ -470,21 +470,6 @@ function slugify( $str ) {
     return strtolower( $str );
 }
 
-/**
- * Get ledger account name by ledger id
- *
- * @param $id
- * @return mixed
- */
-function erp_acct_get_ledger_name_by_id( $id ) {
-    global $wpdb;
-
-    $sql = $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = %d", $id );
-
-    $result = $wpdb->get_row( $sql );
-
-    return $result->name;
-}
 
 /**
  * Check voucher edit state
