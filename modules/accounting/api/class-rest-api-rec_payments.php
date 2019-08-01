@@ -281,10 +281,10 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function add_log( $data, $action ) {
         erp_log()->add( [
             'component'     => 'Accounting',
-            'sub_component' => __( 'Pay Bill', 'erp' ),
+            'sub_component' => __( 'Receive Payment', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => sprintf( __( 'A bill payment of %s has been created for %s', 'erp' ), $data['amount'], $data['customer_id'] ),
+            'message'       => sprintf( __( 'An invoice payment of %s has been created for %s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 

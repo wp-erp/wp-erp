@@ -417,7 +417,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'sub_component' => __( 'Bill', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => sprintf( __( 'An bill of %s has been created for %s', 'erp' ), $data['amount'], $data['vendor_id'] ),
+            'message'       => sprintf( __( 'A bill of %s has been created for %s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['vendor_id'] ) ),
             'changetype'    => $action,
             'created_by'    => get_current_user_id()
 
