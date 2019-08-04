@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_all_opening_balances( $args = [] ) {
     global $wpdb;
 
@@ -61,7 +60,6 @@ function erp_acct_get_all_opening_balances( $args = [] ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_opening_balance( $year_id ) {
     global $wpdb;
 
@@ -92,7 +90,6 @@ function erp_acct_get_opening_balance( $year_id ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_virtual_acct( $year_id ) {
     global $wpdb;
 
@@ -174,7 +171,7 @@ function erp_acct_insert_opening_balance( $data ) {
 }
 
 /**
- *
+ * Insert virtual accounts data
  *
  * @param $data
  * @param $year_id
@@ -260,6 +257,8 @@ function erp_acct_get_formatted_opening_balance_data( $data ) {
 
 /**
  * Get opening balance names
+ *
+ * @return array
  */
 function erp_acct_get_opening_balance_names() {
     global $wpdb;
@@ -454,7 +453,6 @@ function erp_acct_get_date_boundary() {
     return $result;
 
 }
-
 
 /**
  * Get current financial year

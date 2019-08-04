@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_all_invoices( $args = [] ) {
     global $wpdb;
 
@@ -60,7 +59,6 @@ function erp_acct_get_all_invoices( $args = [] ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_invoice( $invoice_no ) {
     global $wpdb;
 

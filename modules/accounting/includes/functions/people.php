@@ -146,7 +146,6 @@ function erp_acct_format_people_address( $address = [] ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_people_transactions( $args = [] ) {
     global $wpdb;
 

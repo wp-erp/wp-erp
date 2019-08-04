@@ -5,11 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Get all taxes
+ * Get all tax agencies
  *
  * @return mixed
  */
-
 function erp_acct_get_all_tax_agencies( $args = [] ) {
     global $wpdb;
 
@@ -42,13 +41,12 @@ function erp_acct_get_all_tax_agencies( $args = [] ) {
 }
 
 /**
- * Get an single tax
+ * Get an single tax agency
  *
  * @param $tax_no
  *
  * @return mixed
  */
-
 function erp_acct_get_tax_agency( $tax_no ) {
     global $wpdb;
 
@@ -61,7 +59,7 @@ function erp_acct_get_tax_agency( $tax_no ) {
 }
 
 /**
- * Insert tax data
+ * Insert tax agency
  *
  * @param $data
  * @return int
@@ -90,7 +88,7 @@ function erp_acct_insert_tax_agency( $data ) {
 }
 
 /**
- * Update tax data
+ * Update tax agency
  *
  * @param $data
  * @return int
@@ -119,7 +117,7 @@ function erp_acct_update_tax_agency( $data, $id ) {
 }
 
 /**
- * Delete an tax
+ * Delete an tax agency
  *
  * @param $tax_no
  *

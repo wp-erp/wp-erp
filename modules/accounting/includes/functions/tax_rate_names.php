@@ -5,11 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Get all taxes
+ * Get all tax rate names
  *
  * @return mixed
  */
-
 function erp_acct_get_all_tax_rate_names( $args = [] ) {
     global $wpdb;
 
@@ -42,13 +41,12 @@ function erp_acct_get_all_tax_rate_names( $args = [] ) {
 }
 
 /**
- * Get an single tax
+ * Get an single tax rate name
  *
  * @param $tax_no
  *
  * @return mixed
  */
-
 function erp_acct_get_tax_rate_name( $tax_no ) {
     global $wpdb;
 
@@ -60,7 +58,7 @@ function erp_acct_get_tax_rate_name( $tax_no ) {
 }
 
 /**
- * Insert tax data
+ * Insert tax rate name
  *
  * @param $data
  * @return int
@@ -95,7 +93,7 @@ function erp_acct_insert_tax_rate_name( $data ) {
 }
 
 /**
- * Update tax data
+ * Update tax rate name
  *
  * @param $data
  * @return int
@@ -128,7 +126,7 @@ function erp_acct_update_tax_rate_name( $data, $id ) {
 }
 
 /**
- * Delete an tax
+ * Delete an tax rate name
  *
  * @param $tax_no
  *

@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_all_products( $args = [] ) {
     global $wpdb;
 
@@ -69,7 +68,6 @@ function erp_acct_get_all_products( $args = [] ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_product( $product_id ) {
     global $wpdb;
 
@@ -221,7 +219,6 @@ function erp_acct_get_formatted_product_data( $data ) {
  *
  * @return int
  */
-
 function erp_acct_delete_product( $product_id ) {
     global $wpdb;
 
@@ -238,7 +235,6 @@ function erp_acct_delete_product( $product_id ) {
  *
  * @return int
  */
-
 function erp_acct_get_product_types() {
     global $wpdb;
 
@@ -254,7 +250,6 @@ function erp_acct_get_product_types() {
  *
  * @return int
  */
-
 function erp_acct_get_product_type_id_by_product_id( $product_id ) {
     global $wpdb;
 

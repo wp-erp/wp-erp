@@ -422,11 +422,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = [
             'id'      => (int) $item->id,
-//            'code'           => (int) $item->code,
             'name'    => $item->name,
-//            'description'    => $item->description,
-//            'account_number' => isset( $item->bank_details['account_number'] ) ? $item->bank_details['account_number']: '',
-//            'balance'        => erp_acct_get_single_account_balance( intval( $item->id ) ),
             'balance' => ! empty( $item->balance ) ? $item->balance : 0,
         ];
 

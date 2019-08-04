@@ -543,7 +543,6 @@ function erp_acct_get_purchase_count() {
  *
  * @return mixed
  */
-
 function erp_acct_get_due_purchases_by_vendor( $args ) {
     global $wpdb;
 
