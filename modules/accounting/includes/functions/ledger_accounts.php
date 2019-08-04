@@ -64,7 +64,6 @@ function erp_acct_create_ledger_category( $args ) {
     return false;
 }
 
-
 /**
  * Update ledger category
  */

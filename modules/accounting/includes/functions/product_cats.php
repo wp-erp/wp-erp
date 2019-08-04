@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_all_product_cats() {
     global $wpdb;
 
@@ -142,7 +141,6 @@ function erp_acct_get_formatted_product_cat_data( $data ) {
  *
  * @return void
  */
-
 function erp_acct_delete_product_cat( $product_cat_id ) {
     global $wpdb;
 

@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_payments( $args = [] ) {
     global $wpdb;
 
@@ -50,7 +49,6 @@ function erp_acct_get_payments( $args = [] ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_payment( $invoice_no ) {
     global $wpdb;
 
@@ -97,7 +95,6 @@ function erp_acct_get_payment( $invoice_no ) {
  *
  * @return mixed
  */
-
 function erp_acct_insert_payment( $data ) {
     global $wpdb;
 
@@ -386,7 +383,6 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
  *
  * @return void
  */
-
 function erp_acct_delete_payment( $id ) {
     global $wpdb;
 
@@ -402,7 +398,6 @@ function erp_acct_delete_payment( $id ) {
  *
  * @return void
  */
-
 function erp_acct_void_payment( $id ) {
     global $wpdb;
 

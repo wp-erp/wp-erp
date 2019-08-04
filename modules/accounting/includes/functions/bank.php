@@ -356,29 +356,6 @@ function erp_acct_sync_dashboard_accounts() {
  * Get transferrable accounts
  */
 function erp_acct_get_transfer_accounts( $show_balance = false ) {
-    /*
-    global $wpdb;
-
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-    $cash_ledger = $ledger_map->get_ledger_details_by_slug( 'cash' );
-
-    $ledgers = $wpdb->prefix.'erp_acct_ledgers';
-    $chart_id = $cash_ledger->chart_id;
-
-    if ( !$show_balance ) {
-        $query = $wpdb->prepare( "Select * FROM $ledgers WHERE chart_id = %d", $chart_id );
-        $results = $wpdb->get_results( $query, ARRAY_A );
-        return $results;
-    }
-
-    $sub_query = $wpdb->prepare( "Select id FROM $ledgers WHERE chart_id = %d", $chart_id );
-    $cash_ledger = $wpdb->prefix.'erp_acct_ledger_details';
-    $query = "Select ld.ledger_id, l.name, SUM(ld.debit - ld.credit) as balance
-              From $cash_ledger as ld
-              LEFT JOIN $ledgers as l ON l.id = ld.ledger_id
-              Where ld.ledger_id IN ($sub_query)
-              Group BY ld.ledger_id";
-    */
 
     $results = erp_acct_get_banks( true, true, false );
 

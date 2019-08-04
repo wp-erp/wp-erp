@@ -6,11 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 /**
- * Get all invoices
+ * Get all sales transactions
  *
  * @return mixed
  */
-
 function erp_acct_get_sales_transactions( $args = [] ) {
     global $wpdb;
 
@@ -525,7 +524,6 @@ function erp_acct_format_daily_data_to_yearly_data( $result ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_expense_transactions( $args = [] ) {
     global $wpdb;
 
@@ -613,7 +611,6 @@ function erp_acct_get_expense_transactions( $args = [] ) {
  *
  * @return mixed
  */
-
 function erp_acct_get_purchase_transactions( $args = [] ) {
     global $wpdb;
 
