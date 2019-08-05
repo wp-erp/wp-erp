@@ -50246,7 +50246,7 @@ var render = function() {
                       staticClass: "col--id column-primary",
                       attrs: { scope: "col" }
                     },
-                    [_vm._v(_vm._s(_vm.__("Purchase ID", "erp")))]
+                    [_vm._v(_vm._s(_vm.__("Voucher No", "erp")))]
                   ),
                   _vm._v(" "),
                   _c("th", { attrs: { scope: "col" } }, [
@@ -50283,7 +50283,7 @@ var render = function() {
                           staticClass: "col--id column-primary",
                           attrs: { scope: "row" }
                         },
-                        [_vm._v(_vm._s(key + 1))]
+                        [_vm._v("#" + _vm._s(item.voucher_no))]
                       ),
                       _vm._v(" "),
                       _c(
