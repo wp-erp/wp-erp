@@ -53,8 +53,6 @@ function erp_acct_insert_product_cat( $data ) {
         $wpdb->insert( $wpdb->prefix . 'erp_acct_product_categories', array(
             'name'              => $product_cat_data['name'],
             'parent'            => $product_cat_data['parent'],
-            'ecommerce_type'    => $product_cat_data['ecommerce_type'],
-            'ecommerce_data_id' => $product_cat_data['ecommerce_data_id'],
             'created_at'        => $product_cat_data['created_at'],
             'created_by'        => $product_cat_data['created_by'],
             'updated_at'        => $product_cat_data['updated_at'],
@@ -122,14 +120,12 @@ function erp_acct_update_product_cat( $data, $id ) {
  */
 function erp_acct_get_formatted_product_cat_data( $data ) {
 
-    $product_cat_data['name']              = isset( $data['name'] ) ? $data['name'] : '';
-    $product_cat_data['parent']            = isset( $data['parent'] ) ? $data['parent'] : 0;
-    $product_cat_data['ecommerce_type']    = isset( $data['ecommerce_type'] ) ? $data['ecommerce_type'] : null;
-    $product_cat_data['ecommerce_data_id'] = isset( $data['ecommerce_data_id'] ) ? $data['ecommerce_data_id'] : null;
-    $product_cat_data['created_at']        = isset( $data['created_at'] ) ? $data['created_at'] : '';
-    $product_cat_data['created_by']        = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $product_cat_data['updated_at']        = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
-    $product_cat_data['updated_by']        = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $product_cat_data['name']       = isset( $data['name'] ) ? $data['name'] : '';
+    $product_cat_data['parent']     = isset( $data['parent'] ) ? $data['parent'] : 0;
+    $product_cat_data['created_at'] = isset( $data['created_at'] ) ? $data['created_at'] : '';
+    $product_cat_data['created_by'] = isset( $data['created_by'] ) ? $data['created_by'] : '';
+    $product_cat_data['updated_at'] = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
+    $product_cat_data['updated_by'] = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
 
     return $product_cat_data;
 }

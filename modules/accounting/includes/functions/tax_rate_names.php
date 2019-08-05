@@ -81,8 +81,6 @@ function erp_acct_insert_tax_rate_name( $data ) {
         'tax_rate_name'     => $tax_data['tax_rate_name'],
         'tax_number'        => $tax_data['tax_number'],
         'default'           => $tax_data['default'],
-        'ecommerce_type'    => $tax_data['ecommerce_type'],
-        'ecommerce_data_id' => $tax_data['ecommerce_data_id'],
         'created_at'        => $tax_data['created_at'],
         'created_by'        => $tax_data['created_by'],
         'updated_at'        => $tax_data['updated_at'],
@@ -151,15 +149,13 @@ function erp_acct_delete_tax_rate_name( $id ) {
 function erp_acct_get_formatted_tax_rate_name_data( $data ) {
     $tax_data = [];
 
-    $tax_data['tax_rate_name']     = isset( $data['tax_rate_name'] ) ? $data['tax_rate_name'] : '';
-    $tax_data['tax_number']        = isset( $data['tax_number'] ) ? $data['tax_number'] : '';
-    $tax_data['default']           = isset( $data['default'] ) ? $data['default'] : '';
-    $tax_data['ecommerce_type']    = isset( $data['ecommerce_type'] ) ? $data['ecommerce_type'] : '';
-    $tax_data['ecommerce_data_id'] = isset( $data['ecommerce_data_id'] ) ? $data['ecommerce_data_id'] : '';
-    $tax_data['created_at']        = date( 'Y-m-d' );
-    $tax_data['created_by']        = isset( $data['created_by'] ) ? $data['created_by'] : '';
-    $tax_data['updated_at']        = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
-    $tax_data['updated_by']        = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+    $tax_data['tax_rate_name'] = isset( $data['tax_rate_name'] ) ? $data['tax_rate_name'] : '';
+    $tax_data['tax_number']    = isset( $data['tax_number'] ) ? $data['tax_number'] : '';
+    $tax_data['default']       = isset( $data['default'] ) ? $data['default'] : '';
+    $tax_data['created_at']    = date( 'Y-m-d' );
+    $tax_data['created_by']    = isset( $data['created_by'] ) ? $data['created_by'] : '';
+    $tax_data['updated_at']    = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
+    $tax_data['updated_by']    = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
 
     return $tax_data;
 }
