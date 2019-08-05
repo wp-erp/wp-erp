@@ -120,364 +120,365 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex';
 
-    import HTTP from 'admin/http'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
-    import FileUpload from 'admin/components/base/FileUpload.vue'
-    import SelectVendors from 'admin/components/people/SelectVendors.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import CheckFields from 'admin/components/check/CheckFields.vue'
-    import ShowErrors from 'admin/components/base/ShowErrors.vue'
-    import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
-    import ComboButton from 'admin/components/select/ComboButton.vue'
+import HTTP from 'admin/http';
+import Datepicker from 'admin/components/base/Datepicker.vue';
+import FileUpload from 'admin/components/base/FileUpload.vue';
+import SelectVendors from 'admin/components/people/SelectVendors.vue';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import CheckFields from 'admin/components/check/CheckFields.vue';
+import ShowErrors from 'admin/components/base/ShowErrors.vue';
+import SelectAccounts from 'admin/components/select/SelectAccounts.vue';
+import ComboButton from 'admin/components/select/ComboButton.vue';
 
-    export default {
-        name: 'PayPurchaseCreate',
+export default {
+    name: 'PayPurchaseCreate',
 
-        components: {
-            MultiSelect,
-            SelectVendors,
-            Datepicker,
-            FileUpload,
-            ComboButton,
-            CheckFields,
-            SelectAccounts,
-            ShowErrors
+    components: {
+        MultiSelect,
+        SelectVendors,
+        Datepicker,
+        FileUpload,
+        ComboButton,
+        CheckFields,
+        SelectAccounts,
+        ShowErrors
+    },
+
+    data () {
+        return {
+            basic_fields: {
+                vendor         : {},
+                trn_ref        : '',
+                payment_date   : erp_acct_var.current_date, /* global erp_acct_var */
+                deposit_to     : '',
+                billing_address: '',
+                trn_by         : { id: null, name: null }
+            },
+
+            paymentMethods: {
+                cash: '1',
+                bank: '2',
+                check: '3'
+            },
+
+            check_data: {
+                bank_name: '',
+                payer_name: '',
+                check_no: ''
+            },
+
+            createButtons: [
+                { id: 'save', text: 'Save' },
+                { id: 'new_create', text: 'Save and New' },
+                { id: 'draft', text: 'Save as Draft' }
+            ],
+
+            form_errors     : [],
+            pay_methods     : [],
+            deposit_accts   : [],
+            pay_purchases   : [],
+            attachments     : [],
+            totalAmounts    : [],
+            finalTotalAmount: 0,
+            particulars     : '',
+            isWorking       : false,
+            accts_by_chart  : [],
+            acct_assets     : erp_acct_var.acct_assets
+        };
+    },
+
+    computed: {
+        ...mapState({ actionType: state => state.combo.btnID })
+    },
+
+    created () {
+        this.getPayMethods();
+
+        // initialize combo button id with `save`
+        this.$store.dispatch('combo/setBtnID', 'save');
+    },
+
+    mounted () {
+        this.basic_fields.vendor  = {
+            id  : parseInt(this.$route.params.vendor_id),
+            name: this.$route.params.vendor_name
+        };
+    },
+
+    methods: {
+        getPayMethods () {
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.get('/transactions/payment-methods').then(response => {
+                this.pay_methods = response.data;
+
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
         },
 
-        data() {
-            return {
-                basic_fields: {
-                    vendor         : {},
-                    trn_ref        : '',
-                    payment_date   : erp_acct_var.current_date,
-                    deposit_to     : '',
-                    billing_address: '',
-                    trn_by         : { id: null, name: null }
-                },
+        setCheckFields (check_data) {
+            this.check_data = check_data;
+        },
 
-                paymentMethods: {
-                    cash: '1',
-                    bank: '2',
-                    check: '3'
-                },
+        resetData () {
+            this.basic_fields = {
+                vendor         : '',
+                trn_ref        : '',
+                payment_date   : '',
+                deposit_to     : '',
+                billing_address: '',
+                trn_by         : { id: null, name: null }
+            };
 
-                check_data: {
-                    bank_name: '',
-                    payer_name: '',
-                    check_no: ''
-                },
+            this.pay_purchases    = [];
+            this.attachments      = [];
+            this.totalAmounts     = [];
+            this.finalTotalAmount = 0;
+            this.particulars      = '';
+            this.isWorking        = false;
+        },
 
-                createButtons: [
-                    {id: 'save', text: 'Save'},
-                    {id: 'new_create', text: 'Save and New'},
-                    {id: 'draft', text: 'Save as Draft'},
-                ],
+        getDuePurchases () {
+            let idx         = 0;
+            let finalAmount = 0;
 
-                form_errors     : [],
-                pay_methods     : [],
-                deposit_accts   : [],
-                pay_purchases   : [],
-                attachments     : [],
-                totalAmounts    : [],
-                finalTotalAmount: 0,
-                particulars     : '',
-                isWorking       : false,
-                accts_by_chart  : [],
-                acct_assets     : erp_acct_var.acct_assets
+            this.pay_purchases = [];
+
+            if (isNaN(this.basic_fields.vendor.id)) {
+                return;
+            }
+
+            HTTP.get(`/purchases/due/${this.basic_fields.vendor.id}`).then(response => {
+                response.data.forEach(element => {
+                    this.pay_purchases.push({
+                        id        : element.id,
+                        voucher_no: element.voucher_no,
+                        due_date  : element.due_date,
+                        total     : parseFloat(element.amount),
+                        due       : parseFloat(element.due)
+                    });
+                });
+            }).then(() => {
+                this.pay_purchases.forEach(element => {
+                    this.totalAmounts[idx++] = parseFloat(element.due);
+                    finalAmount += parseFloat(element.due);
+                });
+
+                this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+            });
+        },
+
+        getCustomerAddress () {
+            const vendor_id = this.basic_fields.vendor.id;
+
+            if (!vendor_id) {
+                this.basic_fields.billing_address = '';
+                return;
+            }
+
+            HTTP.get(`/people/${vendor_id}`).then(response => {
+                const billing = response.data;
+
+                const address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                this.basic_fields.billing_address = address;
+            });
+        },
+
+        updateFinalAmount () {
+            let finalAmount = 0;
+
+            this.totalAmounts.forEach(element => {
+                finalAmount += parseFloat(element);
+            });
+
+            this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+        },
+
+        SubmitForPayment () {
+            this.pay_purchases.forEach((element, index) => {
+                element['line_total'] = parseFloat(this.totalAmounts[index]);
+            });
+
+            this.validateForm();
+
+            if (this.form_errors.length) {
+                window.scrollTo({
+                    top: 10,
+                    behavior: 'smooth'
+                });
+                return;
+            }
+
+            this.$store.dispatch('spinner/setSpinner', true);
+            let trn_status = null;
+            if (this.actionType === 'draft') {
+                trn_status = 1;
+            } else {
+                trn_status = 4;
+            }
+
+            let deposit_id = this.basic_fields.deposit_to.id;
+
+            if (this.basic_fields.trn_by.id === 4) {
+                deposit_id = this.basic_fields.deposit_to.people_id;
+            }
+
+            HTTP.post('/pay-purchases', {
+                vendor_id       : this.basic_fields.vendor.id,
+                ref             : this.basic_fields.trn_ref,
+                trn_date        : this.basic_fields.payment_date,
+                purchase_details: this.pay_purchases,
+                attachments     : this.attachments,
+                type            : 'pay_purchase',
+                status          : trn_status,
+                particulars     : this.particulars,
+                deposit_to      : deposit_id,
+                trn_by          : this.basic_fields.trn_by.id,
+                check_no        : parseInt(this.check_data.check_no),
+                name            : this.check_data.payer_name
+            }).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Pay Purchase Created!');
+
+                if (this.actionType === 'save' || this.actionType === 'draft') {
+                    this.$router.push({ name: 'Purchases' });
+                } else if (this.actionType === 'new_create') {
+                    this.resetFields();
+                }
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('error', 'Something went wrong!');
+                throw error;
+            });
+        },
+
+        changeAccounts () {
+            this.accts_by_chart = [];
+            if (this.basic_fields.trn_by.id === '2' || this.basic_fields.trn_by.id === '3') {
+                HTTP.get('/ledgers/bank-accounts').then((response) => {
+                    this.accts_by_chart = response.data;
+                    this.accts_by_chart.forEach(element => {
+                        if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                            element.balance = 0;
+                        }
+                    });
+                });
+            } else if (this.basic_fields.trn_by.id === '1') {
+                HTTP.get('/ledgers/cash-accounts').then((response) => {
+                    this.accts_by_chart = response.data;
+                    this.accts_by_chart.forEach(element => {
+                        if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                            element.balance = 0;
+                        }
+                    });
+                });
+                /* global erp_reimbursement_var */
+            } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' &&  erp_reimbursement_var.erp_reimbursement_module === '1') {
+                HTTP.get('/people-transactions/balances').then((response) => {
+                    this.accts_by_chart = response.data;
+                    this.accts_by_chart.forEach(element => {
+                        if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                            element.balance = 0;
+                        }
+                    });
+                });
+            }
+            this.$root.$emit('account-changed');
+        },
+
+        validateForm () {
+            this.form_errors = [];
+
+            if (!Object.prototype.hasOwnProperty.call(this.basic_fields.vendor, 'id')) {
+                this.form_errors.push('Vendor Name is required.');
+            }
+
+            if (!this.basic_fields.payment_date) {
+                this.form_errors.push('Transaction Date is required.');
+            }
+
+            if (!Object.prototype.hasOwnProperty.call(this.basic_fields.deposit_to, 'id')) {
+                this.form_errors.push('Transaction Account is required.');
+            }
+
+            if (!Object.prototype.hasOwnProperty.call(this.basic_fields.trn_by, 'id')) {
+                this.form_errors.push('Payment Method is required.');
+            }
+
+            if (parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount)) {
+                this.form_errors.push('Not enough balance in selected account.');
+            }
+
+            if (!parseFloat(this.finalTotalAmount)) {
+                this.form_errors.push('Total amount can\'t be zero.');
             }
         },
 
-        computed: {
-            ...mapState({ actionType: state => state.combo.btnID }),
+        showPaymentModal () {
+            this.getDuePurchases();
         },
 
-        created() {
-            this.getPayMethods();
+        resetFields () {
+            this.basic_fields = {
+                vendor         : { id: null, name: null },
+                trn_by         : { id: null, name: null },
+                trn_ref        : '',
+                payment_date   : erp_acct_var.current_date,
+                deposit_to     : '',
+                billing_address: ''
+            };
+
+            this.paymentMethods = {
+                cash : '1',
+                bank : '2',
+                check: '3'
+            };
+
+            this.check_data = {
+                bank_name: '',
+                payer_name: '',
+                check_no  : ''
+            };
+
+            this.form_errors      = [];
+            this.attachments      = [];
+            this.totalAmounts     = [];
+            this.finalTotalAmount = 0;
+            this.particulars      = '';
+            this.isWorking        = false;
 
             // initialize combo button id with `save`
             this.$store.dispatch('combo/setBtnID', 'save');
         },
 
-        mounted() {
-            this.basic_fields.vendor  = {
-                id  : parseInt(this.$route.params.vendor_id),
-                name: this.$route.params.vendor_name
-            };
+        remove_item (index) {
+            this.$delete(this.pay_purchases, index);
+            this.$delete(this.totalAmounts, index);
+            this.updateFinalAmount();
+        }
+    },
+
+    watch: {
+        finalTotalAmount (newval) {
+            this.finalTotalAmount = newval;
         },
 
-        methods: {
-            getPayMethods() {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP.get('/transactions/payment-methods').then(response => {
-                    this.pay_methods = response.data;
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
-
-            setCheckFields( check_data ) {
-                this.check_data = check_data;
-            },
-
-            resetData() {
-                this.basic_fields = {
-                    vendor         : '',
-                    trn_ref        : '',
-                    payment_date   : '',
-                    deposit_to     : '',
-                    billing_address: '',
-                    trn_by         : { id: null, name: null }
-                };
-
-                this.pay_purchases    = [];
-                this.attachments      = [];
-                this.totalAmounts     = [];
-                this.finalTotalAmount = 0;
-                this.particulars      = '';
-                this.isWorking        = false;
-            },
-
-            getDuePurchases() {
-                let idx         = 0,
-                    finalAmount = 0;
-
-                this.pay_purchases = [];
-
-                if( isNaN(this.basic_fields.vendor.id) ) {
-                    return;
-                }
-
-                HTTP.get(`/purchases/due/${this.basic_fields.vendor.id}`).then(response => {
-                    response.data.forEach(element => {
-                        this.pay_purchases.push({
-                            id        : element.id,
-                            voucher_no: element.voucher_no,
-                            due_date  : element.due_date,
-                            total     : parseFloat(element.amount),
-                            due       : parseFloat(element.due)
-                        });
-                    });
-                }).then(() => {
-                    this.pay_purchases.forEach(element => {
-                        this.totalAmounts[idx++] = parseFloat(element.due);
-                        finalAmount += parseFloat(element.due);
-                    });
-
-                    this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
-                });
-            },
-
-            getCustomerAddress() {
-                let vendor_id = this.basic_fields.vendor.id;
-
-                if (!vendor_id) {
-                    this.basic_fields.billing_address = '';
-                    return;
-                }
-
-                HTTP.get(`/people/${vendor_id}`).then(response => {
-                    let billing = response.data;
-
-                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
-
-                    this.basic_fields.billing_address = address;
-                });
-            },
-
-            updateFinalAmount() {
-                let finalAmount = 0;
-
-                this.totalAmounts.forEach(element => {
-                    finalAmount += parseFloat(element);
-                });
-
-                this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
-            },
-
-            SubmitForPayment() {
-                this.pay_purchases.forEach( (element,index) => {
-                    element['line_total'] = parseFloat( this.totalAmounts[index] );
-                });
-
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-                    return;
-                }
-
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                let trn_status = null;
-                if ( 'draft' === this.actionType) {
-                    trn_status = 1;
-                } else {
-                    trn_status = 4;
-                }
-
-                let deposit_id = this.basic_fields.deposit_to.id;
-
-                if ( this.basic_fields.trn_by.id === 4 ) {
-                    deposit_id = this.basic_fields.deposit_to.people_id;
-                }
-
-                HTTP.post('/pay-purchases', {
-                    vendor_id       : this.basic_fields.vendor.id,
-                    ref             : this.basic_fields.trn_ref,
-                    trn_date        : this.basic_fields.payment_date,
-                    purchase_details: this.pay_purchases,
-                    attachments     : this.attachments,
-                    type            : 'pay_purchase',
-                    status          : trn_status,
-                    particulars     : this.particulars,
-                    deposit_to      : deposit_id,
-                    trn_by          : this.basic_fields.trn_by.id,
-                    check_no        : parseInt(this.check_data.check_no),
-                    name            : this.check_data.payer_name
-                }).then(res => {
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Pay Purchase Created!' );
-
-                    if ('save' == this.actionType || 'draft' == this.actionType) {
-                        this.$router.push({name: 'Purchases'});
-                    } else if ('new_create' == this.actionType) {
-                        this.resetFields();
-                    }
-                }).catch( error => {
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'error', 'Something went wrong!' );
-                });
-            },
-
-            changeAccounts() {
-                this.accts_by_chart = [];
-                if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
-                    HTTP.get('/ledgers/bank-accounts').then((response) => {
-                        this.accts_by_chart = response.data;
-                        this.accts_by_chart.forEach( element =>{
-                            if ( !element.hasOwnProperty('balance') ) {
-                                element.balance = 0;
-                            }
-                        });
-                    });
-                } else if ( '1' === this.basic_fields.trn_by.id ) {
-                    HTTP.get('/ledgers/cash-accounts').then((response) => {
-                        this.accts_by_chart = response.data;
-                        this.accts_by_chart.forEach( element =>{
-                            if ( !element.hasOwnProperty('balance') ) {
-                                element.balance = 0;
-                            }
-                        });
-                    });
-                } else if ( "undefined" !== erp_reimbursement_var.erp_reimbursement_module &&  '1' === erp_reimbursement_var.erp_reimbursement_module ) {
-                    HTTP.get('/people-transactions/balances').then((response) => {
-                        this.accts_by_chart = response.data;
-                        this.accts_by_chart.forEach( element =>{
-                            if ( !element.hasOwnProperty('balance') ) {
-                                element.balance = 0;
-                            }
-                        });
-                    });
-                }
-                this.$root.$emit('account-changed');
-            },
-
-            validateForm() {
-                this.form_errors = [];
-
-                if ( !this.basic_fields.vendor.hasOwnProperty('id') ) {
-                    this.form_errors.push('Vendor Name is required.');
-                }
-
-                if ( !this.basic_fields.payment_date ) {
-                    this.form_errors.push('Transaction Date is required.');
-                }
-
-                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
-                    this.form_errors.push('Transaction Account is required.');
-                }
-
-                if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
-                    this.form_errors.push('Payment Method is required.');
-                }
-
-                if ( parseFloat(this.basic_fields.deposit_to.balance) < parseFloat(this.finalTotalAmount) ) {
-                    this.form_errors.push('Not enough balance in selected account.');
-                }
-
-                if ( ! parseFloat(this.finalTotalAmount) ) {
-                    this.form_errors.push('Total amount can\'t be zero.');
-                }
-            },
-
-            showPaymentModal() {
-                this.getDuePurchases();
-            },
-
-            resetFields() {
-                this.basic_fields = {
-                    vendor         : {id: null, name: null},
-                    trn_by         : { id: null, name: null },
-                    trn_ref        : '',
-                    payment_date   : erp_acct_var.current_date,
-                    deposit_to     : '',
-                    billing_address: ''
-                };
-
-                this.paymentMethods = {
-                    cash : '1',
-                    bank : '2',
-                    check: '3'
-                };
-
-                this.check_data = {
-                    bank_name: '',
-                    payer_name: '',
-                    check_no  : ''
-                };
-
-                this.form_errors      = [];
-                this.attachments      = [];
-                this.totalAmounts     = [];
-                this.finalTotalAmount = 0;
-                this.particulars      = '';
-                this.isWorking        = false;
-
-                // initialize combo button id with `save`
-                this.$store.dispatch('combo/setBtnID', 'save');
-            },
-
-            remove_item( index ) {
-                this.$delete( this.pay_purchases, index );
-                this.$delete( this.totalAmounts, index );
-                this.updateFinalAmount();
-            }
+        'basic_fields.vendor' () {
+            this.getCustomerAddress();
         },
 
-        watch: {
-            finalTotalAmount( newval ) {
-                this.finalTotalAmount = newval;
-            },
-
-            'basic_fields.vendor'() {
-                this.getCustomerAddress();
-            },
-
-            'basic_fields.trn_by'() {
-                this.changeAccounts();
-            }
-        },
-
+        'basic_fields.trn_by' () {
+            this.changeAccounts();
+        }
     }
+
+};
 </script>
 
 <style lang="less">

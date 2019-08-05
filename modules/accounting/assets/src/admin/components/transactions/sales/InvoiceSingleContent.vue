@@ -103,40 +103,38 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
+export default {
+    name: 'InvoiceSingleContent',
 
-    export default {
-        name: 'InvoiceSingleContent',
-
-        props: {
-            invoice: {
-                type: Object
-            },
-            company: {
-                type: Object
-            }
+    props: {
+        invoice: {
+            type: Object
         },
-
-        data() {
-            return {
-                acct_var: erp_acct_var,
-                total   : null
-            }
-        },
-
-        created() {
-            this.total = parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
-        },
-
-        methods: {
-            getInvoiceType() {
-                if ( this.invoice !== null && '1' === this.invoice.estimate ) {
-                    return "Estimate";
-                } else {
-                    return "Invoice";
-                }
-            },
+        company: {
+            type: Object
         }
+    },
 
+    data () {
+        return {
+            acct_var: erp_acct_var, /* global erp_acct_var */
+            total   : null
+        };
+    },
+
+    created () {
+        this.total = parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
+    },
+
+    methods: {
+        getInvoiceType () {
+            if (this.invoice !== null && this.invoice.estimate === '1') {
+                return 'Estimate';
+            } else {
+                return 'Invoice';
+            }
+        }
     }
+
+};
 </script>

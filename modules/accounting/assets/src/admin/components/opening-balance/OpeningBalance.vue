@@ -33,7 +33,6 @@
                 </ul>
             </div>
 
-
             <!-- Accounts Receivable Section -->
             <div class="erp-accordion">
                 <div class="erp-accordion-expand"
@@ -70,7 +69,6 @@
                     </tbody>
                 </table>
             </div>
-
 
             <!-- Accounts Payable Section -->
             <div v-if="acct_pay" class="erp-accordion">
@@ -143,7 +141,6 @@
                 </table>
             </div>
 
-
             <!-- Assets Section -->
             <div v-if="chartAccounts[0]" class="erp-accordion">
                 <div class="erp-accordion-expand"
@@ -168,7 +165,6 @@
                     </tbody>
                 </table>
             </div>
-
 
             <!-- Liability Section -->
             <div v-if="chartAccounts[1]" class="erp-accordion">
@@ -195,7 +191,6 @@
                 </table>
             </div>
 
-
             <!-- Equity Section -->
             <div v-if="chartAccounts[2]" class="erp-accordion">
                 <div class="erp-accordion-expand"
@@ -220,7 +215,6 @@
                     </tbody>
                 </table>
             </div>
-
 
             <!-- Bank Section -->
             <div v-if="chartAccounts[6]" class="erp-accordion">
@@ -273,7 +267,8 @@
                 <tr class="wperp-form-group">
                     <td colspan="9" style="text-align: left;">
                         <label>{{ __('Description', 'erp') }}</label>
-                        <textarea v-model="description" rows="4" class="wperp-form-field display-flex" :placeholder="__('Internal Information', 'erp')"></textarea>
+                        <textarea v-model="description" rows="4" class="wperp-form-field display-flex"
+                        :placeholder="__('Internal Information', 'erp')"></textarea>
                     </td>
                 </tr>
                 </tbody>
@@ -285,392 +280,389 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import SimpleSelect from 'admin/components/select/SimpleSelect.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import ShowErrors from 'admin/components/base/ShowErrors.vue'
+import HTTP from 'admin/http';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import SubmitButton from 'admin/components/base/SubmitButton.vue';
+import ShowErrors from 'admin/components/base/ShowErrors.vue';
 
-    export default {
-        name: 'OpeningBalance',
+export default {
+    name: 'OpeningBalance',
 
-        components: {
-            SimpleSelect,
-            MultiSelect,
-            SubmitButton,
-            ShowErrors
+    components: {
+        MultiSelect,
+        SubmitButton,
+        ShowErrors
+    },
+
+    props: {
+        title: {
+            type: String,
+            default: 'title'
         },
-
-        props: {
-            title: {
-                type: String,
-                default: 'title'
-            },
-            animation: {
-                type: String,
-                default: 'rightToLeft'
-            }
-        },
-
-        data() {
-            return {
-                open1        : true,
-                open2        : true,
-                open3        : true,
-                open4        : true,
-                open5        : true,
-                open6        : true,
-                open7        : true,
-                form_errors  : [],
-                chartAccounts: [],
-                ledgers      : [],
-                agencies     : null,
-                banks        : [],
-                people       : [],
-                options      : [],
-                fin_year     : null,
-                years        : [],
-                description  : '',
-                all_ledgers  : [],
-                credit_total : 0,
-                debit_total  : 0,
-                isWorking    : false,
-                acct_rec     : [],
-                acct_pay     : [],
-                tax_pay      : [],
-                totalDebit   : 0,
-                totalCredit  : 0,
-                accPayRec    : null
-            }
-        },
-
-        watch: {
-            isWorking(newval) {
-                this.isWorking = newval;
-            },
-
-            fin_year(newVal) {
-                this.getSelectedOB(newVal);
-                this.getOpbAccountDetailsPayableReceivable(newVal.start_date);
-            }
-        },
-
-        computed: {
-            finalTotalDebit() {
-                let invoice_acc_details = 0;
-
-                if ( null !== this.accPayRec && '0' !== this.accPayRec.invoice_acc ) {
-                    invoice_acc_details = this.accPayRec.invoice_acc;
-                }
-
-                return this.totalDebit + invoice_acc_details;
-            },
-
-            finalTotalCredit() {
-                let bill_purchase_acc_details = 0;
-
-                if ( null !== this.accPayRec && '0' !== this.accPayRec.bill_purchase_acc ) {
-                    bill_purchase_acc_details = this.accPayRec.bill_purchase_acc;
-                }
-
-                return this.totalCredit + bill_purchase_acc_details;
-            }
-        },
-
-        created() {
-            this.fetchData();
-        },
-
-        methods: {
-            groupBy(arr, fn) { /* https://30secondsofcode.org/ */
-                return arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val, i) => {
-                    acc[val] = (acc[val] || []).concat(arr[i]);
-                    return acc;
-                }, {})
-            },
-
-            getOpbAccountDetailsPayableReceivable( startDate ) {
-                HTTP.get('/opening-balances/acc-payable-receivable', {
-                    params: {
-                        start_date: startDate
-                    }
-                }).then( response => {
-                    this.accPayRec = response.data;
-                });
-            },
-
-            fetchData() {
-                this.chartAccounts = [];
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                this.getYears();
-                this.fetchLedgers();
-                this.fetchAgencies();
-                this.fetchBanks();
-                this.getPeople();
-                HTTP.get('/ledgers/accounts').then( response => {
-                    this.chartAccounts = response.data;
-
-                    this.getSelectedOB(this.fin_year);
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                });
-            },
-
-            fetchLedgers() {
-                HTTP.get('/ledgers').then( response => {
-                    response.data.forEach( (ledger) => {
-                        ledger.ledger_id = ledger.id;
-                        ledger.balance = this.transformBalance( ledger.balance );
-                    });
-                    this.ledgers = this.groupBy(response.data, 'chart_id');
-                    this.all_ledgers = response.data;
-                });
-            },
-
-            fetchAgencies() {
-                HTTP.get('/tax-agencies').then((response) => {
-                    this.agencies = response.data;
-                }).catch(error => {
-                    console.log(error);
-                });
-            },
-
-            fetchBanks() {
-                HTTP.get('/ledgers/7/accounts').then((response) => {
-                    this.banks = response.data;
-                }).catch(error => {
-                    console.log(error);
-                });
-            },
-
-            transformBalance( val ) {
-                if ( null === val && typeof val === 'object' ) {
-                    val = 0;
-                }
-                let currency = '$';
-                if ( val < 0 ){
-                    return `Cr. ${currency}${Math.abs(val)}`;
-                }
-
-                return `Dr. ${currency}${val}`;
-            },
-
-            calculateAmount() {
-                this.debit_total = 0; this.credit_total = 0;
-
-                for (let key in this.ledgers) {
-                    for ( let idx = 0; idx < this.ledgers[key].length; idx++ ) {
-                        if ( this.ledgers[key][idx].hasOwnProperty('debit') ) {
-                            if ( this.ledgers[key][idx].debit === '' ) {
-                                this.ledgers[key][idx].debit = 0;
-                            }
-                            this.debit_total += parseFloat(this.ledgers[key][idx].debit);
-                        }
-                        if ( this.ledgers[key][idx].hasOwnProperty('credit') ) {
-                            if ( this.ledgers[key][idx].credit === '' ) {
-                                this.ledgers[key][idx].credit = 0;
-                            }
-                            this.credit_total += parseFloat(this.ledgers[key][idx].credit);
-                        }
-                    }
-                }
-
-                for (let key in this.acct_rec) {
-                    if ( this.acct_rec[key].debit === '' ) {
-                        this.acct_rec[key].debit = 0;
-                    }
-                    this.debit_total += parseFloat(this.acct_rec[key].debit);
-                }
-
-                for (let key in this.acct_pay) {
-                    if ( this.acct_pay[key].credit === '' ) {
-                        this.acct_pay[key].credit = 0;
-                    }
-                    this.credit_total += parseFloat(this.acct_pay[key].credit);
-                }
-
-                for (let key in this.tax_pay) {
-                    if ( this.tax_pay[key].credit === '' ) {
-                        this.tax_pay[key].credit = 0;
-                    }
-                    this.credit_total += parseFloat(this.tax_pay[key].credit);
-                }
-
-                let diff = Math.abs( this.debit_total - this.credit_total );
-
-                this.totalDebit = this.debit_total;
-                this.totalCredit = this.credit_total;
-                this.isWorking = true;
-                if( 0 === diff ) {
-                    this.isWorking = false;
-                }
-            },
-
-            validateForm() {
-                this.form_errors = [];
-
-                this.acct_rec.forEach( (element) => {
-                    if ( typeof element !== 'undefined' && !element.hasOwnProperty('people') ) {
-                        this.form_errors.push('People is not selected in Accounts Receivable.');
-                    }
-                });
-
-                this.acct_pay.forEach( (element) => {
-                    if ( typeof element !== 'undefined' && !element.hasOwnProperty('people') ) {
-                        this.form_errors.push('People is not selected in Accounts Payable.');
-                    }
-                });
-
-                this.tax_pay.forEach( (element) => {
-                    if ( typeof element !== 'undefined' && !element.hasOwnProperty('agency') ) {
-                        this.form_errors.push('Agency is not selected in Tax Payable.');
-                    }
-                });
-
-                if ( !this.fin_year.hasOwnProperty('id') ) {
-                    this.form_errors.push('Financial year is required.');
-                }
-
-                if ( this.isWorking ) {
-                    this.form_errors.push('Debit and Credit must be Equal.');
-                }
-            },
-
-            submitOBForm() {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-                    return;
-                }
-
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP.post('/opening-balances', {
-                    year       : this.fin_year.id,
-                    ledgers    : this.ledgers,
-                    acct_pay   : this.acct_pay,
-                    acct_rec   : this.acct_rec,
-                    tax_pay    : this.tax_pay,
-                    total_dr   : this.totalDebit,
-                    total_cr   : this.totalCredit,
-                    description: this.description,
-
-                }).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Opening Balance Created!' );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(() => {
-                    this.isWorking = false;
-                });
-            },
-
-            getYears() {
-                HTTP.get('/opening-balances/names').then( response => {
-                    this.years = response.data;
-                    this.fin_year = this.years.length ? this.years[0] : null;
-                });
-            },
-
-            getPeople() {
-                HTTP.get('/people', {
-                    params: {
-                        type: 'all'
-                    }
-                }).then(response => {
-                    this.options = response.data;
-                });
-            },
-
-            getSelectedOB(year) {
-                this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
-
-                let count = 0;
-
-                HTTP.get(`/opening-balances/${year.id}/count`).then( response => {
-                    count = parseInt( response.data );
-                }).then(() => {
-                    if ( count == 0 ) {
-                        this.fetchLedgers();
-                        return;
-                    } else {
-                        HTTP.get(`/opening-balances/${year.id}`).then( response => {
-                            this.totalDebit = 0;
-                            this.totalCredit = 0;
-                            response.data.forEach( (ledger) => {
-                                ledger.id = ledger.ledger_id;
-                                ledger.balance = this.transformBalance( ledger.balance );
-                                this.totalDebit += parseFloat( ledger.debit );
-                                this.totalCredit += parseFloat( ledger.credit );
-                            });
-                            this.ledgers = this.groupBy(response.data, 'chart_id');
-                            this.fetchVirtualAccts(year);
-                        }).then(() => {
-                            if ( !this.ledgers.hasOwnProperty('7') ) {
-                                this.ledgers[7] = this.banks;
-                            }
-                        });
-
-                        if ( Object.keys(this.ledgers).length === 0 ) {
-                            this.fetchData();
-                        }
-                    }
-                });
-
-            },
-
-            fetchVirtualAccts(year) {
-
-                HTTP.get(`/opening-balances/virtual-accts/${year.id}`).then( response => {
-                    this.acct_pay = response.data.acct_payable;
-                    this.acct_rec = response.data.acct_receivable;
-                    this.tax_pay  = response.data.tax_payable;
-                }).then(() =>{
-                    this.acct_pay.forEach( (ledger) => {
-                        this.totalCredit += parseFloat( ledger.credit);
-                    });
-                    this.acct_rec.forEach( (ledger) => {
-                        this.totalDebit += parseFloat( ledger.debit );
-                    });
-                    this.tax_pay.forEach( (ledger) => {
-                        this.totalCredit += parseFloat( ledger.credit);
-                    });
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                });
-            },
-
-            printPopup() {
-                window.print();
-            },
-
-            removeAcctRecRow(index) {
-                this.$delete(this.acct_rec, index);
-                this.calculateAmount();
-            },
-
-            removeAcctPayRow(index) {
-                this.$delete(this.acct_pay, index);
-                this.calculateAmount();
-            },
-
-            removeTaxPayRow(index) {
-                this.$delete(this.tax_pay, index);
-                this.calculateAmount();
-            },
-
-            removeBankRow(index) {
-                this.$delete(this.banks, index);
-                this.calculateAmount();
-            }
+        animation: {
+            type: String,
+            default: 'rightToLeft'
         }
+    },
 
+    data () {
+        return {
+            open1: true,
+            open2: true,
+            open3: true,
+            open4: true,
+            open5: true,
+            open6: true,
+            open7: true,
+            form_errors: [],
+            chartAccounts: [],
+            ledgers: [],
+            agencies: null,
+            banks: [],
+            people: [],
+            options: [],
+            fin_year: null,
+            years: [],
+            description: '',
+            all_ledgers: [],
+            credit_total: 0,
+            debit_total: 0,
+            isWorking: false,
+            acct_rec: [],
+            acct_pay: [],
+            tax_pay: [],
+            totalDebit: 0,
+            totalCredit: 0,
+            accPayRec: null
+        };
+    },
+
+    watch: {
+        isWorking (newval) {
+            this.isWorking = newval;
+        },
+
+        fin_year (newVal) {
+            this.getSelectedOB(newVal);
+            this.getOpbAccountDetailsPayableReceivable(newVal.start_date);
+        }
+    },
+
+    computed: {
+        finalTotalDebit () {
+            let invoice_acc_details = 0;
+
+            if (this.accPayRec !== null && this.accPayRec.invoice_acc !== '0') {
+                invoice_acc_details = this.accPayRec.invoice_acc;
+            }
+
+            return this.totalDebit + invoice_acc_details;
+        },
+
+        finalTotalCredit () {
+            let bill_purchase_acc_details = 0;
+
+            if (this.accPayRec !== null && this.accPayRec.bill_purchase_acc !== '0') {
+                bill_purchase_acc_details = this.accPayRec.bill_purchase_acc;
+            }
+
+            return this.totalCredit + bill_purchase_acc_details;
+        }
+    },
+
+    created () {
+        this.fetchData();
+    },
+
+    methods: {
+        groupBy (arr, fn) { /* https://30secondsofcode.org/ */
+            return arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val, i) => {
+                acc[val] = (acc[val] || []).concat(arr[i]);
+                return acc;
+            }, {});
+        },
+
+        getOpbAccountDetailsPayableReceivable (startDate) {
+            HTTP.get('/opening-balances/acc-payable-receivable', {
+                params: {
+                    start_date: startDate
+                }
+            }).then(response => {
+                this.accPayRec = response.data;
+            });
+        },
+
+        fetchData () {
+            this.chartAccounts = [];
+            this.$store.dispatch('spinner/setSpinner', true);
+            this.getYears();
+            this.fetchLedgers();
+            this.fetchAgencies();
+            this.fetchBanks();
+            this.getPeople();
+            HTTP.get('/ledgers/accounts').then(response => {
+                this.chartAccounts = response.data;
+
+                this.getSelectedOB(this.fin_year);
+
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
+
+        fetchLedgers () {
+            HTTP.get('/ledgers').then(response => {
+                response.data.forEach((ledger) => {
+                    ledger.ledger_id = ledger.id;
+                    ledger.balance = this.transformBalance(ledger.balance);
+                });
+                this.ledgers = this.groupBy(response.data, 'chart_id');
+                this.all_ledgers = response.data;
+            });
+        },
+
+        fetchAgencies () {
+            HTTP.get('/tax-agencies').then((response) => {
+                this.agencies = response.data;
+            }).catch(error => {
+                throw error;
+            });
+        },
+
+        fetchBanks () {
+            HTTP.get('/ledgers/7/accounts').then((response) => {
+                this.banks = response.data;
+            }).catch(error => {
+                throw error;
+            });
+        },
+
+        transformBalance (val) {
+            if (val === null && typeof val === 'object') {
+                val = 0;
+            }
+            const currency = '$';
+            if (val < 0) {
+                return `Cr. ${currency}${Math.abs(val)}`;
+            }
+
+            return `Dr. ${currency}${val}`;
+        },
+
+        calculateAmount () {
+            this.debit_total = 0; this.credit_total = 0;
+
+            for (const key in this.ledgers) {
+                for (let idx = 0; idx < this.ledgers[key].length; idx++) {
+                    if (Object.prototype.hasOwnProperty.call(this.ledgers[key][idx], 'debit')) {
+                        if (this.ledgers[key][idx].debit === '') {
+                            this.ledgers[key][idx].debit = 0;
+                        }
+                        this.debit_total += parseFloat(this.ledgers[key][idx].debit);
+                    }
+                    if (Object.prototype.hasOwnProperty.call(this.ledgers[key][idx], 'credit')) {
+                        if (this.ledgers[key][idx].credit === '') {
+                            this.ledgers[key][idx].credit = 0;
+                        }
+                        this.credit_total += parseFloat(this.ledgers[key][idx].credit);
+                    }
+                }
+            }
+
+            for (const key in this.acct_rec) {
+                if (this.acct_rec[key].debit === '') {
+                    this.acct_rec[key].debit = 0;
+                }
+                this.debit_total += parseFloat(this.acct_rec[key].debit);
+            }
+
+            for (const key in this.acct_pay) {
+                if (this.acct_pay[key].credit === '') {
+                    this.acct_pay[key].credit = 0;
+                }
+                this.credit_total += parseFloat(this.acct_pay[key].credit);
+            }
+
+            for (const key in this.tax_pay) {
+                if (this.tax_pay[key].credit === '') {
+                    this.tax_pay[key].credit = 0;
+                }
+                this.credit_total += parseFloat(this.tax_pay[key].credit);
+            }
+
+            const diff = Math.abs(this.debit_total - this.credit_total);
+
+            this.totalDebit = this.debit_total;
+            this.totalCredit = this.credit_total;
+            this.isWorking = true;
+            if (diff === 0) {
+                this.isWorking = false;
+            }
+        },
+
+        validateForm () {
+            this.form_errors = [];
+
+            this.acct_rec.forEach((element) => {
+                if (typeof element !== 'undefined' && Object.prototype.hasOwnProperty.call(element, 'people')) {
+                    this.form_errors.push('People is not selected in Accounts Receivable.');
+                }
+            });
+
+            this.acct_pay.forEach((element) => {
+                if (typeof element !== 'undefined' && Object.prototype.hasOwnProperty.call(element, 'people')) {
+                    this.form_errors.push('People is not selected in Accounts Payable.');
+                }
+            });
+
+            this.tax_pay.forEach((element) => {
+                if (typeof element !== 'undefined' && Object.prototype.hasOwnProperty.call(element, 'agency')) {
+                    this.form_errors.push('Agency is not selected in Tax Payable.');
+                }
+            });
+
+            if (!Object.prototype.hasOwnProperty.call(this.fin_year, 'id')) {
+                this.form_errors.push('Financial year is required.');
+            }
+
+            if (this.isWorking) {
+                this.form_errors.push('Debit and Credit must be Equal.');
+            }
+        },
+
+        submitOBForm () {
+            this.validateForm();
+
+            if (this.form_errors.length) {
+                window.scrollTo({
+                    top: 10,
+                    behavior: 'smooth'
+                });
+                return;
+            }
+
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.post('/opening-balances', {
+                year: this.fin_year.id,
+                ledgers: this.ledgers,
+                acct_pay: this.acct_pay,
+                acct_rec: this.acct_rec,
+                tax_pay: this.tax_pay,
+                total_dr: this.totalDebit,
+                total_cr: this.totalCredit,
+                description: this.description
+
+            }).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Opening Balance Created!');
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
+                this.isWorking = false;
+            });
+        },
+
+        getYears () {
+            HTTP.get('/opening-balances/names').then(response => {
+                this.years = response.data;
+                this.fin_year = this.years.length ? this.years[0] : null;
+            });
+        },
+
+        getPeople () {
+            HTTP.get('/people', {
+                params: {
+                    type: 'all'
+                }
+            }).then(response => {
+                this.options = response.data;
+            });
+        },
+
+        getSelectedOB (year) {
+            this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
+
+            let count = 0;
+
+            HTTP.get(`/opening-balances/${year.id}/count`).then(response => {
+                count = parseInt(response.data);
+            }).then(() => {
+                if (count === 0) {
+                    this.fetchLedgers();
+                } else {
+                    HTTP.get(`/opening-balances/${year.id}`).then(response => {
+                        this.totalDebit = 0;
+                        this.totalCredit = 0;
+                        response.data.forEach((ledger) => {
+                            ledger.id = ledger.ledger_id;
+                            ledger.balance = this.transformBalance(ledger.balance);
+                            this.totalDebit += parseFloat(ledger.debit);
+                            this.totalCredit += parseFloat(ledger.credit);
+                        });
+                        this.ledgers = this.groupBy(response.data, 'chart_id');
+                        this.fetchVirtualAccts(year);
+                    }).then(() => {
+                        if (!Object.prototype.hasOwnProperty.call(this.ledgers, '7')) {
+                            this.ledgers[7] = this.banks;
+                        }
+                    });
+
+                    if (Object.keys(this.ledgers).length === 0) {
+                        this.fetchData();
+                    }
+                }
+            });
+        },
+
+        fetchVirtualAccts (year) {
+            HTTP.get(`/opening-balances/virtual-accts/${year.id}`).then(response => {
+                this.acct_pay = response.data.acct_payable;
+                this.acct_rec = response.data.acct_receivable;
+                this.tax_pay = response.data.tax_payable;
+            }).then(() => {
+                this.acct_pay.forEach((ledger) => {
+                    this.totalCredit += parseFloat(ledger.credit);
+                });
+                this.acct_rec.forEach((ledger) => {
+                    this.totalDebit += parseFloat(ledger.debit);
+                });
+                this.tax_pay.forEach((ledger) => {
+                    this.totalCredit += parseFloat(ledger.credit);
+                });
+                this.$store.dispatch('spinner/setSpinner', false);
+            });
+        },
+
+        printPopup () {
+            window.print();
+        },
+
+        removeAcctRecRow (index) {
+            this.$delete(this.acct_rec, index);
+            this.calculateAmount();
+        },
+
+        removeAcctPayRow (index) {
+            this.$delete(this.acct_pay, index);
+            this.calculateAmount();
+        },
+
+        removeTaxPayRow (index) {
+            this.$delete(this.tax_pay, index);
+            this.calculateAmount();
+        },
+
+        removeBankRow (index) {
+            this.$delete(this.banks, index);
+            this.calculateAmount();
+        }
     }
+
+};
 </script>
 
 <style scoped>

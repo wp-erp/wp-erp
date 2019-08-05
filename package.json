@@ -15,7 +15,7 @@
     "dev-build": "cross-env WEBPACK_ENV=development webpack",
     "build": "cross-env WEBPACK_ENV=production webpack",
     "makepot": "wpvuei18n makepot",
-    "lint": "eslint --ext .js,.vue .",
+    "lint": "eslint --config eslintrc.js --ext .js,.vue .",
     "lint-fix": "npm run lint -- --fix"
   },
   "dependencies": {
@@ -72,6 +72,11 @@
     "cross-env": "^5.2.0",
     "css-loader": "^0.28.8",
     "eslint": "^5.16.0",
+    "eslint-config-standard": "^13.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^5.2.2",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",

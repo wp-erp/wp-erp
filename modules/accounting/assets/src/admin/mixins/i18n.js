@@ -1,11 +1,12 @@
 export default {
+    /* global __, sprintf */
     methods: {
-        __(text, domain) {
+        __ (text, domain) {
             return __(text, domain);
         },
 
-        sprintf(fmt, ...args) {
-            return sprintf(fmt, ...args)
+        sprintf (fmt, ...args) {
+            return sprintf(fmt, ...args);
         }
     }
-}
+};

@@ -43,168 +43,170 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
-    import NewTaxZone from 'admin/components/tax/NewTaxZone.vue'
-    import TaxShortcuts from 'admin/components/tax/TaxShortcuts.vue'
+import HTTP from 'admin/http';
+import ListTable from 'admin/components/list-table/ListTable.vue';
+import NewTaxZone from 'admin/components/tax/NewTaxZone.vue';
+import TaxShortcuts from 'admin/components/tax/TaxShortcuts.vue';
 
-    export default {
-        name: 'TaxZones',
+export default {
+    name: 'TaxZones',
 
-        components: {
-            NewTaxZone,
-            ListTable,
-            TaxShortcuts
+    components: {
+        NewTaxZone,
+        ListTable,
+        TaxShortcuts
+    },
+
+    data () {
+        return {
+            modalParams: null,
+            columns: {
+                tax_rate_name: { label: 'Tax Zone Name' },
+                tax_number   : { label: 'Tax Number' },
+                default      : { label: 'Default' },
+                actions      : { label: 'Actions' }
+            },
+            rows: [],
+            paginationData: {
+                totalItems : 0,
+                totalPages : 0,
+                perPage    : 10,
+                currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+            },
+            actions: [
+                { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
+                { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
+            ],
+            bulkActions: [
+                {
+                    key: 'trash',
+                    label: 'Move to Trash',
+                    iconClass: 'flaticon-trash'
+                }
+            ],
+            taxes                 : [{}],
+            buttonTitle           : '',
+            pageTitle             : '',
+            url                   : '',
+            singleUrl             : '',
+            isActiveOptionDropdown: false,
+            singleTaxRateModal    : false,
+            showModal             : false,
+            rate_name_id          : null,
+            is_update             : false
+        };
+    },
+
+    created () {
+        this.$root.$on('refetch_tax_data', () => {
+            this.fetchItems();
+            this.is_update = false;
+        });
+        this.$root.$on('modal_closed', () => {
+            this.is_update = false;
+        });
+        this.fetchItems();
+    },
+
+    computed: {
+        row_data () {
+            const items = this.rows;
+            items.map(item => {
+                item.tax_id = item.id;
+                item.tax_name = item.name;
+            });
+
+            return items;
+        }
+    },
+
+    methods: {
+
+        fetchItems () {
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            this.rows = [];
+            HTTP.get('/tax-rate-names', {
+                params: {
+                    per_page: this.paginationData.perPage,
+                    page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+                }
+            }).then((response) => {
+                this.rows = response.data;
+                this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch((error) => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
         },
 
-        data() {
-            return {
-                modalParams: null,
-                columns: {
-                    'tax_rate_name': {label: 'Tax Zone Name'},
-                    'tax_number'   : {label: 'Tax Number'},
-                    'default'      : {label: 'Default'},
-                    'actions'      : {label: 'Actions'}
-                },
-                rows: [],
-                paginationData: {
-                    totalItems : 0,
-                    totalPages : 0,
-                    perPage    : 10,
-                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
-                },
-                actions: [
-                    {key: 'edit', label: 'Edit', iconClass: 'flaticon-edit'},
-                    {key: 'trash', label: 'Delete', iconClass: 'flaticon-trash'}
-                ],
-                bulkActions: [
-                    {
-                        key: 'trash',
-                        label: 'Move to Trash',
-                        iconClass: 'flaticon-trash'
-                    }
-                ],
-                taxes                 : [{}],
-                buttonTitle           : '',
-                pageTitle             : '',
-                url                   : '',
-                singleUrl             : '',
-                isActiveOptionDropdown: false,
-                singleTaxRateModal    : false,
-                showModal             : false,
-                rate_name_id          : null,
-                is_update             : false
-            }
-        },
+        goToPage (page) {
+            const queries = Object.assign({}, this.$route.query);
+            this.paginationData.currentPage = page;
+            this.$router.push({
+                name: 'PaginateTaxZones',
+                params: { page: page },
+                query: queries
+            });
 
-        created() {
-            this.$root.$on('refetch_tax_data',() => {
-                this.fetchItems();
-                this.is_update = false;
-            });
-            this.$root.$on('modal_closed',() => {
-                this.is_update = false;
-            });
             this.fetchItems();
         },
 
-        computed: {
-            row_data() {
-                let items = this.rows;
-                items.map(item => {
-                    item.tax_id = item.id;
-                    item.tax_name = item.name;
-                });
+        singleTaxRate (tax_id) {
+            this.$router.push({ name: 'SingleTaxRate', params: { id: tax_id } });
+        },
 
-                return items;
+        onActionClick (action, row, index) {
+            switch (action) {
+            case 'trash':
+                if (confirm('Are you sure to delete?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+                    HTTP.delete('tax-rate-names' + '/' + row.id).then(response => {
+                        this.$delete(this.rows, index);
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        this.showAlert('success', 'Deleted !');
+                    });
+                }
+                break;
+
+            case 'edit':
+                this.showModal = true;
+                this.rate_name_id = row.id;
+                this.is_update = true;
+                this.fetchItems();
+                break;
+
+            default :
+                break;
             }
         },
 
-        methods: {
+        onBulkAction (action, items) {
+            if (action === 'trash') {
+                if (confirm('Are you sure to delete?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+                    HTTP.delete('tax-rate-names/delete/' + items.join(',')).then(response => {
+                        const toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
-            fetchItems() {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                this.rows = [];
-                HTTP.get('/tax-rate-names', {
-                    params: {
-                        per_page: this.paginationData.perPage,
-                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
-                    }
-                }).then((response) => {
-                    this.rows = response.data;
-                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch((error) => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                });
-            },
-
-            goToPage(page) {
-                let queries = Object.assign({}, this.$route.query);
-                this.paginationData.currentPage = page;
-                this.$router.push({
-                    name: 'PaginateTaxZones',
-                    params: {page: page},
-                    query: queries
-                });
-
-                this.fetchItems();
-            },
-
-            singleTaxRate(tax_id) {
-                this.$router.push({name: 'SingleTaxRate', params: {id: tax_id}})
-            },
-
-            onActionClick(action, row, index) {
-                switch (action) {
-                    case 'trash':
-                        if (confirm('Are you sure to delete?')) {
-                            this.$store.dispatch( 'spinner/setSpinner', true );
-                            HTTP.delete('tax-rate-names' + '/' + row.id).then(response => {
-                                this.$delete(this.rows, index);
-                                this.$store.dispatch( 'spinner/setSpinner', false );
-                                this.showAlert( 'success', 'Deleted !' );
-                            });
+                        if (toggleCheckbox.checked) {
+                            // simulate click event to remove checked state
+                            toggleCheckbox.click();
                         }
-                        break;
 
-                    case 'edit':
-                        this.showModal = true;
-                        this.rate_name_id = row.id;
-                        this.is_update = true;
                         this.fetchItems();
-                        break;
-
-                    default :
-                        break;
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        this.showAlert('success', 'Deleted !');
+                    }).catch(error => {
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        throw error;
+                    });
                 }
-            },
-
-            onBulkAction(action, items) {
-                if ('trash' === action) {
-                    if (confirm('Are you sure to delete?')) {
-                        this.$store.dispatch( 'spinner/setSpinner', true );
-                        HTTP.delete('tax-rate-names/delete/' + items.join(',')).then(response => {
-                            let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-                            if (toggleCheckbox.checked) {
-                                // simulate click event to remove checked state
-                                toggleCheckbox.click();
-                            }
-
-                            this.fetchItems();
-                            this.$store.dispatch( 'spinner/setSpinner', false );
-                            this.showAlert( 'success', 'Deleted !' );
-                        }).catch( error => {
-                            this.$store.dispatch( 'spinner/setSpinner', false );
-                        } );
-                    }
-                }
-            },
+            }
         }
     }
+};
 </script>
 <style lang="less">
     .erp-acct-tax-menus {

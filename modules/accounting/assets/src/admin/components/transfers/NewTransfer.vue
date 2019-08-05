@@ -56,106 +56,107 @@
 </template>
 
 <script>
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import HTTP from 'admin/http'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import HTTP from 'admin/http';
+import Datepicker from 'admin/components/base/Datepicker.vue';
 
-    export default {
-        name: "Transfer",
-        components: {
-            MultiSelect,
-            Datepicker
-        },
+export default {
+    name: 'Transfer',
+    components: {
+        MultiSelect,
+        Datepicker
+    },
 
-        data() {
-            return {
-                transferFrom: { balance : 0 },
-                transferTo  : { balance : 0 },
-                accounts    : [],
-                fa          : [],
-                ta          : [],
-                transferdate: erp_acct_var.current_date,
-                particulars : '',
-                amount      : '',
+    data () {
+        return {
+            transferFrom: { balance : 0 },
+            transferTo  : { balance : 0 },
+            accounts    : [],
+            fa          : [],
+            ta          : [],
+            transferdate: erp_acct_var.current_date, /* global erp_acct_var */
+            particulars : '',
+            amount      : ''
+        };
+    },
+
+    created () {
+        this.fetchAccounts();
+    },
+
+    mounted () {
+        // `transfer` request from account list row action
+        if (this.$route.params.ac_id) {
+            this.transferFrom  = {
+                id  : parseInt(this.$route.params.ac_id),
+                name: this.$route.params.ac_name
             };
+        }
+    },
+
+    methods: {
+        fetchAccounts () {
+            HTTP.get('accounts').then((response) => {
+                this.accounts = response.data;
+                this.fa = response.data;
+                this.ta = response.data;
+            });
         },
 
-        created(){
-            this.fetchAccounts();
-        },
-
-        mounted() {
-            // `transfer` request from account list row action
-            if ( this.$route.params.ac_id ) {
-                this.transferFrom  = {
-                    id  : parseInt(this.$route.params.ac_id),
-                    name: this.$route.params.ac_name
-                };
+        transformBalance (val) {
+            if (val < 0) {
+                return `Cr. ${this.moneyFormat(Math.abs(val))}`;
             }
+            return `Dr. ${this.moneyFormat(val)}`;
         },
 
-        methods: {
-            fetchAccounts() {
-                HTTP.get('accounts').then( (response) => {
-                    this.accounts = response.data;
-                    this.fa = response.data;
-                    this.ta = response.data;
-                } );
-            },
-
-            transformBalance( val ) {
-                if ( val < 0 ) {
-                    return `Cr. ${this.moneyFormat( Math.abs(val) )}`;
-                }
-                return `Dr. ${this.moneyFormat( val )}`;
-            },
-
-            submitTransfer() {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.post( '/accounts/transfer', {
-                    date           : this.transferdate,
-                    from_account_id: this.transferFrom.id,
-                    to_account_id  : this.transferTo.id,
-                    amount         : this.amount,
-                    particulars    : this.particulars,
-                }).then( res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Transfer Successful!' );
-                    this.fetchAccounts();
-                    this.resetData();
-                    this.$router.push('/transfers');
-                }).catch( err => {
-                    let msg = err.response.data.message;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'error', msg );
-                });
-            },
-
-            resetData() {
-                this.transferFrom = { balance : 0 };
-                this.transferTo   = { balance : 0 };
-                this.accounts     = [];
-                this.transferdate = erp_acct_var.current_date;
-                this.particulars  = '';
-                this.amount       = '';
-            },
+        submitTransfer () {
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.post('/accounts/transfer', {
+                date           : this.transferdate,
+                from_account_id: this.transferFrom.id,
+                to_account_id  : this.transferTo.id,
+                amount         : this.amount,
+                particulars    : this.particulars
+            }).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Transfer Successful!');
+                this.fetchAccounts();
+                this.resetData();
+                this.$router.push('/transfers');
+            }).catch(err => {
+                const msg = err.response.data.message;
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('error', msg);
+            });
         },
-        watch: {
-            'transferFrom'() {
-                let id = this.transferFrom.id;
-                this.ta = jQuery.grep(this.accounts, function(e){
-                    return e.id != id;
-                });
-            },
 
-            'transferTo'() {
-                let id = this.transferTo.id;
-                this.fa = jQuery.grep(this.accounts, function(e){
-                    return e.id != id;
-                });
-            }
+        resetData () {
+            this.transferFrom = { balance : 0 };
+            this.transferTo   = { balance : 0 };
+            this.accounts     = [];
+            this.transferdate = erp_acct_var.current_date;
+            this.particulars  = '';
+            this.amount       = '';
+        }
+    },
+    watch: {
+        /* global jQuery */
+        'transferFrom' () {
+            const id = this.transferFrom.id;
+            this.ta = jQuery.grep(this.accounts, function (e) {
+                return e.id !== id;
+            });
+        },
+
+        'transferTo' () {
+            const id = this.transferTo.id;
+            this.fa = jQuery.grep(this.accounts, function (e) {
+                return e.id !== id;
+            });
         }
     }
+};
 </script>
 
 <style lang="less">

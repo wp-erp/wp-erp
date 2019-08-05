@@ -11,9 +11,9 @@
 </template>
 
 <script>
-    export default {
-        name: "TaxShortcuts"
-    }
+export default {
+    name: 'TaxShortcuts'
+};
 </script>
 
 <style scoped>

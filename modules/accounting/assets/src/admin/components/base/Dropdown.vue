@@ -16,124 +16,122 @@
 </template>
 
 <script>
-    /* eslint no-underscore-dangle: 0 */
+// Vue click outside
+// https://jsfiddle.net/Linusborg/Lx49LaL8/
+import Popper from 'popper.js';
 
-    // Vue click outside
-    // https://jsfiddle.net/Linusborg/Lx49LaL8/
-    import Popper from 'popper.js'
+export default {
 
-    export default {
+    name: 'Dropdown',
 
-        name: 'Dropdown',
-
-        props: {
-            dropdownClasses: {
-                type: String,
-                default: '',
-            },
-            disabled: {
-                type: Boolean,
-                default: false,
-            },
-            placement: {
-                type: String,
-                default: 'bottom',
-            },
+    props: {
+        dropdownClasses: {
+            type: String,
+            default: ''
         },
-
-        data() {
-            return {
-                visible: false,
-            };
+        disabled: {
+            type: Boolean,
+            default: false
         },
+        placement: {
+            type: String,
+            default: 'bottom'
+        }
+    },
 
-        watch: {
-            visible(newValue, oldValue) {
-                if (newValue !== oldValue) {
-                    if (newValue) {
-                        this.showMenu();
-                    } else {
-                        this.hideMenu();
-                    }
+    data () {
+        return {
+            visible: false
+        };
+    },
+
+    watch: {
+        visible (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                if (newValue) {
+                    this.showMenu();
+                } else {
+                    this.hideMenu();
                 }
-            },
-        },
+            }
+        }
+    },
 
-        created() {
-            // Create non-reactive property
-            this._popper = null;
+    created () {
+        // Create non-reactive property
+        this._popper = null;
 
-            this.$parent.$on('action:click', () => {
-                this.visible = false;
-            });
-        },
-
-        mounted() {
-            window.addEventListener('click', this.closeDropdown);
-        },
-
-        beforeDestroy() {
+        this.$parent.$on('action:click', () => {
             this.visible = false;
+        });
+    },
+
+    mounted () {
+        window.addEventListener('click', this.closeDropdown);
+    },
+
+    beforeDestroy () {
+        this.visible = false;
+        this.removePopper();
+    },
+
+    destroyed () {
+        window.removeEventListener('click', this.closeDropdown);
+    },
+
+    methods: {
+        toggleDropdown () {
+            this.visible = !this.visible;
+        },
+
+        showMenu () {
+            if (this.disabled) {
+                return;
+            }
+
+            const element = this.$el;
+            this.createPopper(element);
+        },
+
+        hideMenu () {
+            this.$root.$emit('hidden');
             this.removePopper();
         },
 
-        destroyed() {
-            window.removeEventListener('click', this.closeDropdown);
+        createPopper (element) {
+            this.removePopper();
+            this._popper = new Popper(element, this.$refs.menu, {
+                placement: this.placement
+            });
         },
 
-        methods: {
-            toggleDropdown() {
-                this.visible = !this.visible;
-            },
-
-            showMenu() {
-                if (this.disabled) {
-                    return;
-                }
-
-                const element = this.$el;
-                this.createPopper(element);
-            },
-
-            hideMenu() {
-                this.$root.$emit('hidden');
-                this.removePopper();
-            },
-
-            createPopper(element) {
-                this.removePopper();
-                this._popper = new Popper(element, this.$refs.menu, {
-                    placement: this.placement,
-                });
-            },
-
-            removePopper() {
-                if (this._popper) {
-                    // Ensure popper event listeners are removed cleanly
-                    this._popper.destroy();
-                }
-                this._popper = null;
-            },
-
-            closeDropdown(e) {
-                if (!this.$el || this.elementContains(this.$el, e.target)
-                    || !this._popper || this.elementContains(this._popper, e.target)
-                ) {
-                    return;
-                }
-
-                this.visible = false;
-            },
-
-            elementContains(elm, otherElm) {
-                if (typeof elm.contains === 'function') {
-                    return elm.contains(otherElm);
-                }
-
-                return false;
-            },
+        removePopper () {
+            if (this._popper) {
+                // Ensure popper event listeners are removed cleanly
+                this._popper.destroy();
+            }
+            this._popper = null;
         },
-    };
+
+        closeDropdown (e) {
+            if (!this.$el || this.elementContains(this.$el, e.target) ||
+                    !this._popper || this.elementContains(this._popper, e.target)
+            ) {
+                return;
+            }
+
+            this.visible = false;
+        },
+
+        elementContains (elm, otherElm) {
+            if (typeof elm.contains === 'function') {
+                return elm.contains(otherElm);
+            }
+
+            return false;
+        }
+    }
+};
 </script>
 
 <style lang="less">

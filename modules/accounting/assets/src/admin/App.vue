@@ -15,27 +15,27 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex';
 
-    import AccountingMenu from 'admin/components/menu/AccountingMenu.vue'
-    import Loading from 'vue-loading-overlay'
-    import 'vue-loading-overlay/dist/vue-loading.css'
-    import 'vue-loading-overlay/dist/vue-loading.css'
-    import '../../font/flaticon.css'
-    import '../../css/master.css'
+import AccountingMenu from 'admin/components/menu/AccountingMenu.vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
-    export default {
-        name: 'Accounting',
+import '../../font/flaticon.css';
+import '../../css/master.css';
 
-        components: {
-            AccountingMenu,
-            Loading
-        },
+export default {
+    name: 'Accounting',
 
-        computed: mapState({
-            loader: state => state.spinner.loader
-        }),
-    }
+    components: {
+        AccountingMenu,
+        Loading
+    },
+
+    computed: mapState({
+        loader: state => state.spinner.loader
+    })
+};
 </script>
 
 <style>

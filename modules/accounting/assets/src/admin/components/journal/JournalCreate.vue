@@ -121,203 +121,203 @@
     </div>
 </template>
 <script>
-    import HTTP from 'admin/http'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
-    import FileUpload from 'admin/components/base/FileUpload.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import ShowErrors from 'admin/components/base/ShowErrors.vue'
+import HTTP from 'admin/http';
+import Datepicker from 'admin/components/base/Datepicker.vue';
+import FileUpload from 'admin/components/base/FileUpload.vue';
+import SubmitButton from 'admin/components/base/SubmitButton.vue';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import ShowErrors from 'admin/components/base/ShowErrors.vue';
 
-    export default {
-        name: "JournalCreate",
+export default {
+    name: 'JournalCreate',
 
-        components: {
-            MultiSelect,
-            Datepicker,
-            FileUpload,
-            SubmitButton,
-            ShowErrors
+    components: {
+        MultiSelect,
+        Datepicker,
+        FileUpload,
+        SubmitButton,
+        ShowErrors
+    },
+
+    data () {
+        return {
+            basic_fields: {
+                journal_no: '',
+                trn_ref: '',
+                trn_date: erp_acct_var.current_date
+            },
+            form_errors     : [],
+            journal_id      : 0,
+            account_ids     : [],
+            transactionLines: [{}, {}],
+            attachments     : [],
+            debitLine       : [],
+            creditLine      : [],
+            ledgers         : [],
+            credit_total    : 0,
+            debit_total     : 0,
+            finalAmount     : 0,
+            journal_parti   : '',
+            particulars     : [],
+            isWorking       : false,
+            acct_assets     : erp_acct_var.acct_assets
+        };
+    },
+
+    created () {
+        this.getLedgers();
+        this.getNextJournalID();
+    },
+
+    methods: {
+        getLedgers () {
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.get('ledgers').then((response) => {
+                this.ledgers = response.data;
+
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
         },
 
-        data() {
-            return {
-                basic_fields: {
-                    journal_no: '',
-                    trn_ref: '',
-                    trn_date: erp_acct_var.current_date,
-                },
-
-                form_errors: [],
-
-                journal_id      : 0,
-                account_ids     : [],
-                transactionLines: [{},{}],
-                attachments     : [],
-                debitLine       : [],
-                creditLine      : [],
-                ledgers         : [],
-                credit_total    : 0,
-                debit_total     : 0,
-                finalAmount     : 0,
-                journal_parti   : '',
-                particulars     : [],
-                isWorking       : false,
-                acct_assets     : erp_acct_var.acct_assets
-            }
+        addLine () {
+            this.transactionLines.push({});
         },
 
-        created() {
-            this.getLedgers();
-            this.getNextJournalID();
+        remove_item (index) {
+            this.$delete(this.transactionLines, index);
         },
 
-        methods: {
-            getLedgers() {
-                this.$store.dispatch( 'spinner/setSpinner', true );
+        SubmitForJournalCreate () {
+            this.validateForm();
 
-                HTTP.get('ledgers').then((response) => {
-                    this.ledgers = response.data;
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
-
-            addLine() {
-                this.transactionLines.push({});
-            },
-
-            remove_item(index) {
-                this.$delete( this.transactionLines, index );
-            },
-
-            SubmitForJournalCreate() {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-
-                    return;
-                }
-
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP.post('/journals', {
-                    trn_date   : this.basic_fields.trn_date,
-                    ref        : this.basic_fields.trn_ref,
-                    line_items : this.formatLineItems(),
-                    attachments: this.attachments,
-                    type       : 'journal',
-                    particulars: this.journal_parti,
-                }).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Journal Entry Added!' );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
-                    this.isWorking = false;
-                    this.$router.push({name: 'Journals'})
+            if (this.form_errors.length) {
+                window.scrollTo({
+                    top: 10,
+                    behavior: 'smooth'
                 });
 
-                this.resetFields();
-            },
+                return;
+            }
 
-            validateForm() {
-                this.form_errors = [];
+            this.$store.dispatch('spinner/setSpinner', true);
 
-                if ( this.account_ids.length < 2 ) {
-                    this.form_errors.push('Accounts are required.');
-                }
-
-                if ( !this.basic_fields.trn_date ) {
-                    this.form_errors.push('Transaction Date is required.');
-                }
-
-                if ( ! this.debit_total ) {
-                    this.form_errors.push('Total amount can\'t be zero.');
-                }
-
-                if ( this.isWorking ) {
-                    this.form_errors.push('Debit and Credit must be Equal.');
-                }
-            },
-
-            calculateAmount(key) {
-                if( this.debitLine[key] > 0 ) {
-                    this.creditLine[key] = 0;
-                } else {
-                    this.debitLine[key] = 0;
-                }
-                this.debit_total = this.debitLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
-                this.credit_total = this.creditLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
-
-                let diff = Math.abs( this.debit_total - this.credit_total );
-                this.isWorking = true;
-                if( 0 === diff ) {
-                    this.isWorking = false;
-                }
-            },
-
-            formatLineItems() {
-                var lineItems = [];
-
-                for ( let idx = 0; idx < this.transactionLines.length; idx++ ) {
-                    let item = {};
-                    item.ledger_id = this.account_ids[idx].id;
-                    item.particulars = this.particulars[idx];
-                    item.debit  = this.debitLine[idx];
-                    item.credit = this.creditLine[idx];
-
-                    lineItems.push( item );
-                }
-
-                return lineItems;
-            },
-
-            getNextJournalID() {
-                HTTP.get(`/journals/next/`).then((response) => {
-                    this.journal_id = response.data.id;
-                })
-            },
-
-            resetFields() {
-                this.basic_fields.journal_no = {id: null, name: null};
-                this.basic_fields.trn_date = erp_acct_var.current_date;
-                this.attachments = [];
-                this.transactionLines = [{}, {}];
+            HTTP.post('/journals', {
+                trn_date   : this.basic_fields.trn_date,
+                ref        : this.basic_fields.trn_ref,
+                line_items : this.formatLineItems(),
+                attachments: this.attachments,
+                type       : 'journal',
+                particulars: this.journal_parti
+            }).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Journal Entry Added!');
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
                 this.isWorking = false;
-                this.debitLine = [];
-                this.creditLine = [];
-                this.ledgers = [];
-                this.credit_total = 0;
-                this.debit_total = 0;
-                this.finalAmount = 0;
-                this.journal_parti = '';
-                this.particulars = [];
-            },
+                this.$router.push({ name: 'Journals' });
+            });
+
+            this.resetFields();
         },
 
-        computed: {
-            totalDebit() {
-                return this.debit_total = this.debitLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
-            },
-            totalCredit() {
-                return this.credit_total = this.creditLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+        validateForm () {
+            this.form_errors = [];
+
+            if (this.account_ids.length < 2) {
+                this.form_errors.push('Accounts are required.');
+            }
+
+            if (!this.basic_fields.trn_date) {
+                this.form_errors.push('Transaction Date is required.');
+            }
+
+            if (!this.debit_total) {
+                this.form_errors.push('Total amount can\'t be zero.');
+            }
+
+            if (this.isWorking) {
+                this.form_errors.push('Debit and Credit must be Equal.');
             }
         },
 
-        watch: {
-            isWorking( newval ) {
-                this.isWorking = newval;
+        calculateAmount (key) {
+            if (this.debitLine[key] > 0) {
+                this.creditLine[key] = 0;
+            } else {
+                this.debitLine[key] = 0;
+            }
+            this.debit_total = this.debitLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            this.credit_total = this.creditLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+
+            const diff = Math.abs(this.debit_total - this.credit_total);
+            this.isWorking = true;
+            if (diff === 0) {
+                this.isWorking = false;
             }
         },
 
+        formatLineItems () {
+            var lineItems = [];
 
+            for (let idx = 0; idx < this.transactionLines.length; idx++) {
+                const item = {};
+                item.ledger_id = this.account_ids[idx].id;
+                item.particulars = this.particulars[idx];
+                item.debit  = this.debitLine[idx];
+                item.credit = this.creditLine[idx];
+
+                lineItems.push(item);
+            }
+
+            return lineItems;
+        },
+
+        getNextJournalID () {
+            HTTP.get(`/journals/next/`).then((response) => {
+                this.journal_id = response.data.id;
+            });
+        },
+
+        resetFields () {
+            this.basic_fields.journal_no = { id: null, name: null };
+            this.basic_fields.trn_date   = erp_acct_var.current_date; /* global erp_acct_var */
+            this.attachments             = [];
+            this.transactionLines        = [{}, {}];
+            this.isWorking               = false;
+            this.debitLine               = [];
+            this.creditLine              = [];
+            this.ledgers                 = [];
+            this.credit_total            = 0;
+            this.debit_total             = 0;
+            this.finalAmount             = 0;
+            this.journal_parti           = '';
+            this.particulars             = [];
+        },
+
+        totalDebit () {
+            this.debit_total = this.debitLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            return this.debit_total;
+        },
+
+        totalCredit () {
+            this.creditLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+            return this.credit_total;
+        }
+    },
+
+    watch: {
+        isWorking (newval) {
+            this.isWorking = newval;
+        }
     }
+
+};
 </script>
 
 <style lang="less" scoped>

@@ -23,32 +23,32 @@
 </template>
 
 <script>
-    import ComboBox from 'admin/components/select/ComboBox.vue'
-    import SalesStats from 'admin/components/transactions/sales/SalesStats.vue'
-    import SalesList from 'admin/components/transactions/sales/SalesList.vue'
-    import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue'
+import ComboBox from 'admin/components/select/ComboBox.vue';
+import SalesStats from 'admin/components/transactions/sales/SalesStats.vue';
+import SalesList from 'admin/components/transactions/sales/SalesList.vue';
+import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
 
-    export default {
-        name: 'Sales',
+export default {
+    name: 'Sales',
 
-        components: {
-            SalesStats,
-            SalesList,
-            TransactionsFilter,
-            ComboBox,
-        },
+    components: {
+        SalesStats,
+        SalesList,
+        TransactionsFilter,
+        ComboBox
+    },
 
-        data() {
-            return {
-                pages: [
-                    {namedRoute: 'InvoiceCreate', name: 'Create Invoice'},
-                    {namedRoute: 'EstimateCreate', name: 'Create Estimate'},
-                    {namedRoute: 'RecPaymentCreate', name: 'Receive Payment'},
-                ],
-            };
-        }
+    data () {
+        return {
+            pages: [
+                { namedRoute: 'InvoiceCreate', name: 'Create Invoice' },
+                { namedRoute: 'EstimateCreate', name: 'Create Estimate' },
+                { namedRoute: 'RecPaymentCreate', name: 'Receive Payment' }
+            ]
+        };
+    }
 
-    };
+};
 </script>
 
 <style scoped>

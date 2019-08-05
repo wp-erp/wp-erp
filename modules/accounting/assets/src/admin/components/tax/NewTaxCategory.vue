@@ -41,113 +41,111 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import ShowErrors from 'admin/components/base/ShowErrors.vue'
+import HTTP from 'admin/http';
+import SubmitButton from 'admin/components/base/SubmitButton.vue';
+import ShowErrors from 'admin/components/base/ShowErrors.vue';
 
-    export default {
-        name: 'NewTaxCategory',
+export default {
+    name: 'NewTaxCategory',
 
-        components: {
-            MultiSelect,
-            SubmitButton,
-            ShowErrors
+    components: {
+        SubmitButton,
+        ShowErrors
+    },
+
+    props: {
+        cat_id: {
+            type: [Number, String]
+        },
+        is_update: {
+            type: Boolean
+        }
+    },
+
+    data () {
+        return {
+            categories: [],
+            category: null,
+            desc: null,
+            isWorking: false,
+            form_errors: []
+        };
+    },
+
+    created () {
+        if (this.is_update) {
+            this.getCategory();
+        }
+    },
+
+    methods: {
+        closeModal: function () {
+            this.$emit('close');
+            this.$root.$emit('modal_closed');
         },
 
-        props: {
-            cat_id: {
-                type: [ Number, String ]
-            },
-            is_update: {
-                type: Boolean
+        getCategory () {
+            HTTP.get(`/tax-cats/${this.cat_id}`).then((response) => {
+                this.category = response.data.name;
+                this.desc = response.data.description;
+            });
+        },
+
+        taxCatFormSubmit () {
+            this.validateForm();
+
+            if (this.form_errors.length) {
+                window.scrollTo({
+                    top: 10,
+                    behavior: 'smooth'
+                });
+
+                return;
             }
-        },
 
-        data() {
-            return {
-                categories: [],
-                category: null,
-                desc: null,
-                isWorking: false,
-                form_errors: [],
-            };
-        },
+            var rest, url, msg;
 
-        created() {
-            if ( this.is_update ) {
-                this.getCategory();
+            if (this.is_update) {
+                rest = 'put';
+                url = `/tax-cats/${this.cat_id}`;
+                msg = 'Tax Category Updated!';
+            } else {
+                rest = 'post';
+                url = `/tax-cats`;
+                msg = 'Tax Category Created!';
             }
-        },
 
-        methods: {
-            closeModal: function(){
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP[rest](url, {
+                name: this.category,
+                description: this.desc
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', msg);
+            }).then(() => {
+                this.resetData();
+                this.isWorking = false;
                 this.$emit('close');
-                this.$root.$emit('modal_closed');
-            },
-
-            getCategory() {
-                HTTP.get(`/tax-cats/${this.cat_id}`).then((response) => {
-                    this.category = response.data.name;
-                    this.desc = response.data.description;
-                });
-            },
-
-            taxCatFormSubmit() {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-
-                    return;
-                }
-
-                if ( this.is_update ) {
-                    var rest = 'put',
-                        url = `/tax-cats/${this.cat_id}`,
-                        msg = 'Tax Category Updated!';
-                } else {
-                    var rest = 'post',
-                        url = `/tax-cats`,
-                        msg = 'Tax Category Created!';
-                }
-
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP[rest](url, {
-                    name: this.category,
-                    description: this.desc,
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', msg );
-                }).then(() => {
-                    this.resetData();
-                    this.isWorking = false;
-                    this.$emit('close');
-                    this.$root.$emit('refetch_tax_data');
-                });
-            },
-
-            validateForm() {
-                this.form_errors = [];
-
-                if ( !this.category ) {
-                    this.form_errors.push('Tax Category Name is required.');
-                }
-            },
-
-            resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
-            },
-
+                this.$root.$emit('refetch_tax_data');
+            });
         },
-   	}
-</script>
-<style lang="less">
 
-</style>
+        validateForm () {
+            this.form_errors = [];
+
+            if (!this.category) {
+                this.form_errors.push('Tax Category Name is required.');
+            }
+        },
+
+        resetData () {
+            Object.assign(this.$data, this.$options.data.call(this));
+        }
+
+    }
+};
+</script>

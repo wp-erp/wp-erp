@@ -8,66 +8,66 @@
 </template>
 
 <script>
-    import MtrDatepicker from './mtr-datepicker.min'
+import MtrDatepicker from './mtr-datepicker.min';
 
-    export default {
+export default {
 
-        name: 'Timepicker',
+    name: 'Timepicker',
 
-        directives: {
-            timepicker: {
-                inserted(el, binding, vnode) {
-                    vnode.context.timepickerObj = new MtrDatepicker({
-                        target: el.id,
-                        disableAmPm: vnode.context.hideAmPmDisplay,
-                        smartHours: true,
-                    });
-                },
-            },
-        },
-
-        props: {
-            value: {
-                type: String,
-                required: true,
-                default: () => '',
-            },
-            elm: {
-                type: String,
-                required: true,
-                default: () => '',
-            },
-            hideAmPmDisplay: {
-                type: Boolean,
-                default: () => false,
-            },
-        },
-
-        data() {
-            return {
-                timepickerObj: null,
-            };
-        },
-
-        mounted() {
-            let format = 'hh:mm A';
-
-            if (this.hideAmPmDisplay) {
-                format = 'hh:mm';
+    directives: {
+        timepicker: {
+            inserted (el, binding, vnode) {
+                vnode.context.timepickerObj = new MtrDatepicker({
+                    target: el.id,
+                    disableAmPm: vnode.context.hideAmPmDisplay,
+                    smartHours: true
+                });
             }
+        }
+    },
 
-            //    this.$emit('input', this.timepickerObj.format(format));
-
-            this.timepickerObj.onChange('all', () => {
-                if (this.hideAmPmDisplay) {
-                    this.$emit('input', this.timepickerObj.format(format));
-                } else {
-                    this.$emit('input', this.timepickerObj.format(format));
-                }
-            });
+    props: {
+        value: {
+            type: String,
+            required: true,
+            default: () => ''
         },
+        elm: {
+            type: String,
+            required: true,
+            default: () => ''
+        },
+        hideAmPmDisplay: {
+            type: Boolean,
+            default: () => false
+        }
+    },
 
-    };
+    data () {
+        return {
+            timepickerObj: null
+        };
+    },
+
+    mounted () {
+        let format = 'hh:mm A';
+
+        if (this.hideAmPmDisplay) {
+            format = 'hh:mm';
+        }
+
+        //    this.$emit('input', this.timepickerObj.format(format));
+
+        this.timepickerObj.onChange('all', () => {
+            if (this.hideAmPmDisplay) {
+                this.$emit('input', this.timepickerObj.format(format));
+            } else {
+                this.$emit('input', this.timepickerObj.format(format));
+            }
+        });
+    }
+
+};
 </script>
 
 <style src="./mtr-datepicker.min.css"></style>

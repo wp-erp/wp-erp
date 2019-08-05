@@ -33,82 +33,82 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import PieChart from 'admin/components/chart/PieChart.vue'
+import HTTP from 'admin/http';
+import PieChart from 'admin/components/chart/PieChart.vue';
 
-    export default {
-        name: 'PurchaseStats',
+export default {
+    name: 'PurchaseStats',
 
-        components: {
-            PieChart, HTTP
-        },
+    components: {
+        PieChart
+    },
 
-        data() {
-            return {
-                chartStatus: {
-                    colors: ['#208DF8', '#E9485E', '#FF9900', '#2DCB67', '#9c27b0'],
-                    labels: [],
-                    values: []
-                },
-                chartPurchase: {
-                    colors: ['#40c4ff', '#e91e63'],
-                    labels: ['Paid', 'Payable'],
-                    values: [],
-                    outstanding: 0
-                },
-            };
-        },
-
-        created() {
-            this.$root.$on('transactions-filter', filters => {
-                this.getChartData(filters);
-            });
-
-            let filters = {};
-
-            if ( this.$route.query.start && this.$route.query.end ) {
-                filters.start_date = this.$route.query.start;
-                filters.end_date = this.$route.query.end;
+    data () {
+        return {
+            chartStatus: {
+                colors: ['#208DF8', '#E9485E', '#FF9900', '#2DCB67', '#9c27b0'],
+                labels: [],
+                values: []
+            },
+            chartPurchase: {
+                colors: ['#40c4ff', '#e91e63'],
+                labels: ['Paid', 'Payable'],
+                values: [],
+                outstanding: 0
             }
+        };
+    },
 
+    created () {
+        this.$root.$on('transactions-filter', filters => {
             this.getChartData(filters);
-        },
+        });
 
-        watch: {
-            '$route': 'getChartData'
-        },
+        const filters = {};
 
-        methods: {
-            getChartData(filters = {}) {
-                HTTP.get('/transactions/purchase/chart-purchase', {
-                    params: {
-                        start_date: filters.start_date,
-                        end_date: filters.end_date
-                    }
-                }).then( response => {
-                    this.chartPurchase.outstanding = response.data.payable;
-
-                    this.chartPurchase.values.push(
-                        response.data.paid,
-                        response.data.payable,
-                    );
-                });
-
-                HTTP.get('/transactions/purchase/chart-status', {
-                    params: {
-                        start_date: filters.start_date,
-                        end_date: filters.end_date
-                    }
-                }).then( response => {
-                    response.data.forEach(element => {
-                        this.chartStatus.labels.push(element.type_name)
-                        this.chartStatus.values.push(element.sub_total)
-                    });
-                });
-            }
+        if (this.$route.query.start && this.$route.query.end) {
+            filters.start_date = this.$route.query.start;
+            filters.end_date = this.$route.query.end;
         }
 
+        this.getChartData(filters);
+    },
+
+    watch: {
+        $route: 'getChartData'
+    },
+
+    methods: {
+        getChartData (filters = {}) {
+            HTTP.get('/transactions/purchase/chart-purchase', {
+                params: {
+                    start_date: filters.start_date,
+                    end_date: filters.end_date
+                }
+            }).then(response => {
+                this.chartPurchase.outstanding = response.data.payable;
+
+                this.chartPurchase.values.push(
+                    response.data.paid,
+                    response.data.payable
+                );
+            });
+
+            HTTP.get('/transactions/purchase/chart-status', {
+                params: {
+                    start_date: filters.start_date,
+                    end_date: filters.end_date
+                }
+            }).then(response => {
+                response.data.forEach(element => {
+                    this.chartStatus.labels.push(element.type_name);
+                    this.chartStatus.values.push(element.sub_total);
+                });
+            });
+        }
     }
+
+};
 </script>
 
 <style scoped>

@@ -124,354 +124,356 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex';
 
-    import HTTP from 'admin/http'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
-    import FileUpload from 'admin/components/base/FileUpload.vue'
-    import ComboButton from 'admin/components/select/ComboButton.vue'
-    import PurchaseRow from 'admin/components/purchase/PurchaseRow.vue'
-    import SelectVendors from 'admin/components/people/SelectVendors.vue'
-    import ShowErrors from 'admin/components/base/ShowErrors.vue'
+import HTTP from 'admin/http';
+import Datepicker from 'admin/components/base/Datepicker.vue';
+import FileUpload from 'admin/components/base/FileUpload.vue';
+import ComboButton from 'admin/components/select/ComboButton.vue';
+import PurchaseRow from 'admin/components/purchase/PurchaseRow.vue';
+import SelectVendors from 'admin/components/people/SelectVendors.vue';
+import ShowErrors from 'admin/components/base/ShowErrors.vue';
 
-    export default {
-        name: 'PurchaseCreate',
+export default {
+    name: 'PurchaseCreate',
 
-        components: {
-            Datepicker,
-            FileUpload,
-            ComboButton,
-            PurchaseRow,
-            SelectVendors,
-            ShowErrors
-        },
+    components: {
+        Datepicker,
+        FileUpload,
+        ComboButton,
+        PurchaseRow,
+        SelectVendors,
+        ShowErrors
+    },
 
-        data() {
-            return {
-                basic_fields: {
-                    vendor         : '',
-                    trn_date       : '',
-                    due_date       : '',
-                    billing_address: ''
-                },
+    data () {
+        return {
+            basic_fields: {
+                vendor         : '',
+                trn_date       : '',
+                due_date       : '',
+                billing_address: ''
+            },
 
-                createButtons: [
-                    {id: 'save', text: 'Save'},
-                    //{id: 'send_create', text: 'Create and Send'},
-                    {id: 'new_create', text: 'Save and New'},
-                    {id: 'draft', text: 'Save as Draft'},
-                ],
+            createButtons: [
+                { id: 'save', text: 'Save' },
+                // {id: 'send_create', text: 'Create and Send'},
+                { id: 'new_create', text: 'Save and New' },
+                { id: 'draft', text: 'Save as Draft' }
+            ],
 
-                updateButtons: [
-                    {id: 'update', text: 'Update Purchase'},
-                    //{id: 'send_update', text: 'Update and Send'},
-                    {id: 'new_update', text: 'Update and New'},
-                    {id: 'draft', text: 'Save as Draft'},
-                ],
+            updateButtons: [
+                { id: 'update', text: 'Update Purchase' },
+                // {id: 'send_update', text: 'Update and Send'},
+                { id: 'new_update', text: 'Update and New' },
+                { id: 'draft', text: 'Save as Draft' }
+            ],
 
-                form_errors     : [],
-                editMode        : false,
-                voucherNo       : 0,
-                products        : [],
-                particulars     : '',
-                attachments     : [],
-                transactionLines: [],
-                finalTotalAmount: 0,
-                erp_acct_assets : erp_acct_var.acct_assets,
-                isWorking       : false,
-                purchase_title  : '',
-                purchase_order  : 0,
-                page_title      : ''
+            form_errors     : [],
+            editMode        : false,
+            voucherNo       : 0,
+            products        : [],
+            particulars     : '',
+            attachments     : [],
+            transactionLines: [],
+            finalTotalAmount: 0,
+            erp_acct_assets : erp_acct_var.acct_assets, /* global erp_acct_var */
+            isWorking       : false,
+            purchase_title  : '',
+            purchase_order  : 0,
+            page_title      : ''
+        };
+    },
+
+    watch: {
+        'basic_fields.vendor' () {
+            this.getvendorAddress();
+        }
+    },
+
+    computed: {
+        ...mapState({ actionType: state => state.combo.btnID })
+    },
+
+    created () {
+        if (this.$route.name === 'PurchaseOrderCreate') {
+            this.page_title = 'Purchase Order';
+            this.purchase_order = 1;
+        } else {
+            this.page_title = 'Purchase';
+            this.purchase_order = 0;
+        }
+
+        this.prepareDataLoad();
+
+        this.$root.$on('remove-row', index => {
+            if (this.transactionLines.length < 2) {
+                return;
             }
-        },
+            this.$delete(this.transactionLines, index);
+            this.updateFinalAmount();
+        });
 
-        watch: {
-            'basic_fields.vendor'() {
-                this.getvendorAddress();
-            }
-        },
+        this.$root.$on('total-updated', amount => {
+            this.updateFinalAmount();
+        });
 
-        computed: {
-            ...mapState({ actionType: state => state.combo.btnID })
-        },
+        // initialize combo button id with `update`
+        this.$store.dispatch('combo/setBtnID', 'update');
+    },
 
-        created() {
-            if ( 'PurchaseOrderCreate' === this.$route.name ) {
-                this.page_title = 'Purchase Order';
-                this.purchase_order = 1;
-            } else {
-                this.page_title = 'Purchase';
-                this.purchase_order = 0;
-            }
+    methods: {
 
-            this.prepareDataLoad();
-
-            this.$root.$on('remove-row', index => {
-                if ( this.transactionLines.length < 2 ) {
-                    return;
-                }
-                this.$delete(this.transactionLines, index);
-                this.updateFinalAmount();
-            });
-
-            this.$root.$on('total-updated', amount => {
-                this.updateFinalAmount();
-            });
-
-            // initialize combo button id with `update`
-            this.$store.dispatch('combo/setBtnID', 'update');
-        },
-
-        methods: {
-
-            async prepareDataLoad() {
-                /**
+        async prepareDataLoad () {
+            /**
                  * ----------------------------------------------
                  * check if editing
                  * -----------------------------------------------
                  */
-                if ( this.$route.params.id ) {
-                    this.editMode = true;
-                    this.voucherNo = this.$route.params.id;
+            if (this.$route.params.id) {
+                this.editMode = true;
+                this.voucherNo = this.$route.params.id;
 
-                    let [request1, request2] = await Promise.all([
-                        HTTP.get('/products'),
-                        HTTP.get(`/purchases/${this.$route.params.id}`)
-                    ]);
+                const [request1, request2] = await Promise.all([
+                    HTTP.get('/products'),
+                    HTTP.get(`/purchases/${this.$route.params.id}`)
+                ]);
 
-                    let canEdit = Boolean( Number( request2.data.editable ) );
+                const canEdit = Boolean(Number(request2.data.editable));
 
-                    if ( ! canEdit ) {
-                        this.showAlert('error', 'Can\'t edit');
-                        return;
-                    }
+                if (!canEdit) {
+                    this.showAlert('error', 'Can\'t edit');
+                    return;
+                }
 
-                    this.products = request1.data;
+                this.products = request1.data;
 
-                    this.setDataForEdit( request2.data );
+                this.setDataForEdit(request2.data);
 
-                    // initialize combo button id with `update`
-                    this.$store.dispatch('combo/setBtnID', 'update');
-                } else {
-                    /**
+                // initialize combo button id with `update`
+                this.$store.dispatch('combo/setBtnID', 'update');
+            } else {
+                /**
                      * ----------------------------------------------
                      * create a new purchase
                      * -----------------------------------------------
                      */
-                    this.getProducts();
+                this.getProducts();
 
-                    this.basic_fields.trn_date = erp_acct_var.current_date;
-                    this.basic_fields.due_date = erp_acct_var.current_date;
-                    this.transactionLines.push({}, {}, {});
+                this.basic_fields.trn_date = erp_acct_var.current_date;
+                this.basic_fields.due_date = erp_acct_var.current_date;
+                this.transactionLines.push({}, {}, {});
 
-                    // initialize combo button id with `save`
-                    this.$store.dispatch('combo/setBtnID', 'save');
-                }
-            },
-
-            setDataForEdit(purchase) {
-                this.basic_fields.vendor          = { id: parseInt(purchase.vendor_id), name: purchase.vendor_name };
-                this.basic_fields.billing_address = purchase.billing_address;
-                this.basic_fields.trn_date        = purchase.trn_date;
-                this.basic_fields.due_date        = purchase.due_date;
-                this.status                       = purchase.status;
-                this.transactionLines             = purchase.line_items;
-                this.particulars                  = purchase.particulars;
-                this.attachments                  = purchase.attachments;
-            },
-
-            resetData() {
-                this.basic_fields = {
-                    vendor         : {id: null, name: null},
-                    trn_date       : erp_acct_var.current_date,
-                    due_date       : erp_acct_var.current_date,
-                    billing_address: ''
-                };
-
-                this.form_errors      = [];
-                this.particulars      = '';
-                this.attachments      = [];
-                this.transactionLines = [];
-                this.finalTotalAmount = 0;
-                this.isWorking        = false;
-
+                // initialize combo button id with `save`
                 this.$store.dispatch('combo/setBtnID', 'save');
-            },
+            }
+        },
 
-            getProducts() {
-                this.products = [];
+        setDataForEdit (purchase) {
+            this.basic_fields.vendor          = { id: parseInt(purchase.vendor_id), name: purchase.vendor_name };
+            this.basic_fields.billing_address = purchase.billing_address;
+            this.basic_fields.trn_date        = purchase.trn_date;
+            this.basic_fields.due_date        = purchase.due_date;
+            this.status                       = purchase.status;
+            this.transactionLines             = purchase.line_items;
+            this.particulars                  = purchase.particulars;
+            this.attachments                  = purchase.attachments;
+        },
 
-                this.$store.dispatch( 'spinner/setSpinner', true );
+        resetData () {
+            this.basic_fields = {
+                vendor         : { id: null, name: null },
+                trn_date       : erp_acct_var.current_date,
+                due_date       : erp_acct_var.current_date,
+                billing_address: ''
+            };
 
-                HTTP.get('/products').then((response) => {
-                    response.data.forEach(element => {
-                        this.products.push({
-                            id       : element.id,
-                            name     : element.name,
-                            unitPrice: element.cost_price
-                        });
+            this.form_errors      = [];
+            this.particulars      = '';
+            this.attachments      = [];
+            this.transactionLines = [];
+            this.finalTotalAmount = 0;
+            this.isWorking        = false;
+
+            this.$store.dispatch('combo/setBtnID', 'save');
+        },
+
+        getProducts () {
+            this.products = [];
+
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.get('/products').then((response) => {
+                response.data.forEach(element => {
+                    this.products.push({
+                        id       : element.id,
+                        name     : element.name,
+                        unitPrice: element.cost_price
                     });
+                });
 
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
 
-            getvendorAddress() {
-                let vendor_id = this.basic_fields.vendor.id;
+        getvendorAddress () {
+            const vendor_id = this.basic_fields.vendor.id;
 
-                if ( ! vendor_id ) {
-                    this.basic_fields.billing_address = '';
-                    return;
+            if (!vendor_id) {
+                this.basic_fields.billing_address = '';
+                return;
+            }
+
+            HTTP.get(`/people/${vendor_id}`).then(response => {
+                const billing = response.data;
+
+                const address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                this.basic_fields.billing_address = address;
+            });
+        },
+
+        addLine () {
+            this.transactionLines.push({});
+        },
+
+        updateFinalAmount () {
+            let finalAmount = 0;
+
+            this.transactionLines.forEach(element => {
+                if (element.qty) {
+                    finalAmount += parseFloat(element.amount);
                 }
+            });
 
-                HTTP.get(`/people/${vendor_id}`).then(response => {
-                    let billing = response.data;
+            this.finalTotalAmount = finalAmount.toFixed(2);
+        },
 
-                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+        formatLineItems () {
+            var lineItems = [];
 
-                    this.basic_fields.billing_address = address;
-                });
-            },
-
-            addLine() {
-                this.transactionLines.push({});
-            },
-
-            updateFinalAmount() {
-                let finalAmount = 0;
-
-                this.transactionLines.forEach(element => {
-                    if ( element.qty ) {
-                        finalAmount += parseFloat(element.amount);
-                    }
-                });
-
-                this.finalTotalAmount = finalAmount.toFixed(2);
-            },
-
-            formatLineItems() {
-                var lineItems = [];
-
-                this.transactionLines.forEach(line => {
-                    if ( line.hasOwnProperty('selectedProduct') ) {
-                        lineItems.push({
-                            product_id: line.selectedProduct.id,
-                            qty       : line.qty,
-                            unit_price: line.unitPrice,
-                            item_total: line.amount
-                        });
-                    }
-                });
-
-                return lineItems;
-            },
-
-            updatePurchase(requestData) {
-                HTTP.put(`/purchases/${this.voucherNo}`, requestData).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert('success', 'Purchase Updated!');
-                }).then(() => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.isWorking = false;
-                    this.reset = true;
-
-                    if ('update' == this.actionType || 'draft' == this.actionType) {
-                        this.$router.push({name: 'Purchases'});
-                    } else if ('new_update' == this.actionType) {
-                        this.resetFields();
-                    }
-                });
-            },
-
-            createPurchase(requestData) {
-                HTTP.post('/purchases', requestData).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert('success', 'Purchase Created!');
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(() => {
-                    if ('save' == this.actionType || 'draft' == this.actionType) {
-                        this.$router.push({name: 'Purchases'});
-                    } else if ('new_create' == this.actionType) {
-                        this.resetFields();
-                    }
-                });
-            },
-
-            SubmitForApproval() {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
+            this.transactionLines.forEach(line => {
+                if (Object.prototype.hasOwnProperty.call(line, 'selectedProduct')) {
+                    lineItems.push({
+                        product_id: line.selectedProduct.id,
+                        qty       : line.qty,
+                        unit_price: line.unitPrice,
+                        item_total: line.amount
                     });
-                    return;
                 }
+            });
 
-                this.isWorking = true;
-                this.$store.dispatch( 'spinner/setSpinner', true );
+            return lineItems;
+        },
 
-                let trn_status = null;
-                if ( 'draft' === this.actionType) {
-                    trn_status = 1;
-                } else {
-                    trn_status = 2;
+        updatePurchase (requestData) {
+            HTTP.put(`/purchases/${this.voucherNo}`, requestData).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Purchase Updated!');
+            }).then(() => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.isWorking = false;
+                this.reset = true;
+
+                if (this.actionType === 'update' || this.actionType === 'draft') {
+                    this.$router.push({ name: 'Purchases' });
+                } else if (this.actionType === 'new_update') {
+                    this.resetFields();
                 }
+            });
+        },
 
-                let requestData = {
-                    vendor_id      : this.basic_fields.vendor.id,
-                    vendor_name    : this.basic_fields.vendor.name,
-                    trn_date       : this.basic_fields.trn_date,
-                    due_date       : this.basic_fields.due_date,
-                    billing_address: this.basic_fields.billing_address,
-                    line_items     : this.formatLineItems(),
-                    particulars    : this.particulars,
-                    attachments    : this.attachments,
-                    type           : 'purchase',
-                    status         : trn_status,
-                    purchase_order : this.purchase_order,
-                };
-
-                if ( this.editMode ) {
-                    this.updatePurchase(requestData);
-                } else {
-                    this.createPurchase(requestData);
+        createPurchase (requestData) {
+            HTTP.post('/purchases', requestData).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Purchase Created!');
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
+                if (this.actionType === 'save' || this.actionType === 'draft') {
+                    this.$router.push({ name: 'Purchases' });
+                } else if (this.actionType === 'new_create') {
+                    this.resetFields();
                 }
-            },
+            });
+        },
 
-            validateForm() {
-                this.form_errors = [];
+        SubmitForApproval () {
+            this.validateForm();
 
-                if (!this.basic_fields.vendor.hasOwnProperty('id')) {
-                    this.form_errors.push('Vendor Name is required.');
+            if (this.form_errors.length) {
+                window.scrollTo({
+                    top: 10,
+                    behavior: 'smooth'
+                });
+                return;
+            }
+
+            this.isWorking = true;
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            let trn_status = null;
+            if (this.actionType === 'draft') {
+                trn_status = 1;
+            } else {
+                trn_status = 2;
+            }
+
+            const requestData = {
+                vendor_id      : this.basic_fields.vendor.id,
+                vendor_name    : this.basic_fields.vendor.name,
+                trn_date       : this.basic_fields.trn_date,
+                due_date       : this.basic_fields.due_date,
+                billing_address: this.basic_fields.billing_address,
+                line_items     : this.formatLineItems(),
+                particulars    : this.particulars,
+                attachments    : this.attachments,
+                type           : 'purchase',
+                status         : trn_status,
+                purchase_order : this.purchase_order
+            };
+
+            if (this.editMode) {
+                this.updatePurchase(requestData);
+            } else {
+                this.createPurchase(requestData);
+            }
+        },
+
+        validateForm () {
+            this.form_errors = [];
+
+            if (!Object.prototype.hasOwnProperty.call(this.basic_fields.vendor, 'id')) {
+                this.form_errors.push('Vendor Name is required.');
+            }
+
+            if (!this.basic_fields.trn_date) {
+                this.form_errors.push('Transaction Date is required.');
+            }
+
+            if (!this.basic_fields.due_date) {
+                this.form_errors.push('Due Date is required.');
+            }
+
+            if (!this.finalTotalAmount) {
+                this.form_errors.push('Total amount can\'t be zero.');
+            }
+
+            for (const item of this.transactionLines) {
+                if (!Object.prototype.hasOwnProperty.call(item, 'selectedProduct')) {
+                    this.form_errors.push('Please select product.');
+                    break;
                 }
-
-                if (!this.basic_fields.trn_date) {
-                    this.form_errors.push('Transaction Date is required.');
-                }
-
-                if (!this.basic_fields.due_date) {
-                    this.form_errors.push('Due Date is required.');
-                }
-
-                if (!this.finalTotalAmount) {
-                    this.form_errors.push('Total amount can\'t be zero.');
-                }
-
-                for (let item of this.transactionLines) {
-                    if (!item.hasOwnProperty('selectedProduct')) {
-                        this.form_errors.push('Please select product.');
-                        break;
-                    }
-                }
-            },
-
+            }
         }
 
     }
+
+};
 </script>
 
 <style lang="less">

@@ -91,24 +91,22 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
+export default {
+    name: 'PaymentSingleContent',
 
-    export default {
-        name: 'PaymentSingleContent',
-
-        props: {
-            payment: {
-                type: Object
-            },
-            company: {
-                type: Object
-            }
+    props: {
+        payment: {
+            type: Object
         },
-
-        data() {
-            return {
-                acct_var: erp_acct_var
-            }
+        company: {
+            type: Object
         }
+    },
+
+    data () {
+        return {
+            acct_var: erp_acct_var /* global erp_acct_var */
+        };
     }
+};
 </script>

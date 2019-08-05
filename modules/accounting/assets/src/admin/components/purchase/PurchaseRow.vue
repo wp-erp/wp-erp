@@ -25,79 +25,79 @@
 </template>
 
 <script>
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
-    export default {
-        name: 'PurchaseRow',
+export default {
+    name: 'PurchaseRow',
 
-        props: {
-            products: {
-                type: Array,
-                default: () => []
-            },
-
-            line: {
-                type: Object,
-                default: () => {}
-            }
+    props: {
+        products: {
+            type: Array,
+            default: () => []
         },
 
-        components: {
-            MultiSelect
+        line: {
+            type: Object,
+            default: () => {}
+        }
+    },
+
+    components: {
+        MultiSelect
+    },
+
+    created () {
+        // check if editing
+        if (this.$route.params.id) {
+            this.prepareRowEdit(this.line);
+        }
+    },
+
+    methods: {
+        prepareRowEdit (row) {
+            row.unitPrice = row.cost_price;
+            row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
+
+            this.calculateAmount();
         },
 
-        created() {
-            // check if editing
-            if ( this.$route.params.id ) {
-                this.prepareRowEdit(this.line);
-            }
+        setProductInfo () {
+            this.line.qty = 1;
+            this.line.unitPrice = this.line.selectedProduct.unitPrice;
+            this.calculateAmount();
         },
 
-        methods: {
-            prepareRowEdit(row) {
-                row.unitPrice = row.cost_price;
-                row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
-
-                this.calculateAmount();
-            },
-
-            setProductInfo() {
-                this.line.qty = 1;
-                this.line.unitPrice = this.line.selectedProduct.unitPrice;
-                this.calculateAmount();
-            },
-
-            getAmount() {
-                if ( ! this.line.qty ) {
-                    this.line.qty = 0;
-                }
-
-                if ( ! this.line.qty || ! this.line.unitPrice ) {
-                    this.line.amount = 0;
-
-                    return false;
-                }
-
-                // Set Amount
-                return parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
-            },
-
-            calculateAmount() {
-                let amount = this.getAmount();
-                if ( ! amount ) return;
-
-                this.line.amount = amount.toFixed(2);
-
-                // Send amount to parent for total calculation
-                this.$root.$emit('total-updated', this.line.amount);
-                this.$forceUpdate(); // why? should use computed? or vue.set()?
-            },
-
-            removeRow() {
-                this.$root.$emit('remove-row', this.$vnode.key)
+        getAmount () {
+            if (!this.line.qty) {
+                this.line.qty = 0;
             }
+
+            if (!this.line.qty || !this.line.unitPrice) {
+                this.line.amount = 0;
+
+                return false;
+            }
+
+            // Set Amount
+            return parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
+        },
+
+        calculateAmount () {
+            const amount = this.getAmount();
+            if (!amount) return;
+
+            this.line.amount = amount.toFixed(2);
+
+            // Send amount to parent for total calculation
+            this.$root.$emit('total-updated', this.line.amount);
+            this.$forceUpdate(); // why? should use computed? or vue.set()?
+        },
+
+        removeRow () {
+            this.$root.$emit('remove-row', this.$vnode.key);
         }
     }
+};
 </script>
 
 <style lang="less" scoped>

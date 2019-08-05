@@ -3,21 +3,21 @@
 </template>
 
 <script>
-    export default {
-        name: 'SubmitButton',
+export default {
+    name: 'SubmitButton',
 
-        props: {
-            text: {
-                type: String,
-                default: 'Submit'
-            },
+    props: {
+        text: {
+            type: String,
+            default: 'Submit'
+        },
 
-            working: {
-                type: Boolean,
-                default: false
-            }
+        working: {
+            type: Boolean,
+            default: false
         }
     }
+};
 </script>
 
 <style lang="less">
@@ -114,4 +114,3 @@
     }
 
 </style>
-

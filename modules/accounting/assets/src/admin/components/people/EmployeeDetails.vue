@@ -82,127 +82,125 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import UserBasicInfo from 'admin/components/userinfo/UserBasic.vue'
-    import PieChart from 'admin/components/chart/PieChart.vue'
-    import PeopleTransaction from 'admin/components/people/PeopleTransaction.vue'
+import HTTP from 'admin/http';
+import PieChart from 'admin/components/chart/PieChart.vue';
+import PeopleTransaction from 'admin/components/people/PeopleTransaction.vue';
 
-    export default {
-        name: 'EmployeeDetails',
-        components: {
-            UserBasicInfo,
-            PieChart,
-            PeopleTransaction
-        },
+export default {
+    name: 'EmployeeDetails',
+    components: {
+        PieChart,
+        PeopleTransaction
+    },
 
-        data(){
-            return {
-                userId : '',
-                user: {},
-                userData : {
-                    'id': '',
-                    'name': '-',
-                    'email': '-',
-                    // 'img_url': erp_acct_var.acct_assets  + '/images/dummy-user.png',
-                    'meta': {
-                        'company': '-',
-                        'website': '-',
-                        'phone': '-',
-                        'mobile': '-',
-                        'address': '-',
-                    }
-                },
-                url: '',
-                paymentChart: {
-                    title: 'Payment',
-                    labels: ['Recieved', 'Outstanding'],
-                    colors: ['#55D8FE', '#FF8373'],
-                },
-                statusChart: {
-                    title: 'Status',
-                    colors: ['#208DF8', '#E9485E']
-                },
-
-                transactions: [],
-                paymentData: [],
-                statusLabel: [],
-                statusData: [],
-                outstanding: 0,
-                temp: null
-            }
-        },
-
-        created(){
-            this.url = this.$route.params.route;
-            this.userId = this.$route.params.id;
-            if ( typeof this.url === 'undefined' ) {
-                this.url = this.$route.path.split('/')[1];
-            }
-            this.fetchItem( this.userId );
-            this.getTransactions();
-            this.getChartData();
-            this.$root.$on( 'people-transaction-filter', filter => {
-                this.filterTransaction( filter );
-            } );
-        },
-
-        computed: {
-
-        },
-
-        methods: {
-            fetchItem( id ) {
-                HTTP.get( this.url+'/'+id, {
-                    params: { 'include': 'department,designation,reporting_to,avatar' }
-                }).then((response) => {
-                    this.user = response.data;
-                });
+    data () {
+        return {
+            userId : '',
+            user: {},
+            userData : {
+                id: '',
+                name: '-',
+                email: '-',
+                // 'img_url': erp_acct_var.acct_assets  + '/images/dummy-user.png',
+                meta: {
+                    company: '-',
+                    website: '-',
+                    phone: '-',
+                    mobile: '-',
+                    address: '-'
+                }
+            },
+            url: '',
+            paymentChart: {
+                title: 'Payment',
+                labels: ['Recieved', 'Outstanding'],
+                colors: ['#55D8FE', '#FF8373']
+            },
+            statusChart: {
+                title: 'Status',
+                colors: ['#208DF8', '#E9485E']
             },
 
-            getTransactions() {
-                HTTP.get( '/employees/' + this.userId + '/transactions' ).then( res => {
-                    this.transactions = res.data;
-                } );
-            },
+            transactions: [],
+            paymentData: [],
+            statusLabel: [],
+            statusData: [],
+            outstanding: 0,
+            temp: null
+        };
+    },
 
-            filterTransaction( filters = {} ) {
-                HTTP.get('/employees/' + this.userId + '/transactions/filter', {
-                    params: {
-                        start_date: filters.start_date,
-                        end_date: filters.end_date
-                    }
-                } ).then( res => {
-                    this.transactions = res.data;
-                } );
-            },
+    created () {
+        this.url = this.$route.params.route;
+        this.userId = this.$route.params.id;
+        if (typeof this.url === 'undefined') {
+            this.url = this.$route.path.split('/')[1];
+        }
+        this.fetchItem(this.userId);
+        this.getTransactions();
+        this.getChartData();
+        this.$root.$on('people-transaction-filter', filter => {
+            this.filterTransaction(filter);
+        });
+    },
 
-            getChartData(filters = {}) {
-                HTTP.get(`/transactions/people-chart/trn-amount/${this.userId}`, {
-                    params: {
-                        start_date: filters.start_date,
-                        end_date: filters.end_date
-                    }
-                }).then( response => {
-                    this.outstanding = response.data.payable;
-                    this.paymentData.push(
-                        response.data.paid,
-                        response.data.payable,
-                    );
+    computed: {
+
+    },
+
+    methods: {
+        fetchItem (id) {
+            HTTP.get(this.url + '/' + id, {
+                params: { include: 'department,designation,reporting_to,avatar' }
+            }).then((response) => {
+                this.user = response.data;
+            });
+        },
+
+        getTransactions () {
+            HTTP.get('/employees/' + this.userId + '/transactions').then(res => {
+                this.transactions = res.data;
+            });
+        },
+
+        filterTransaction (filters = {}) {
+            HTTP.get('/employees/' + this.userId + '/transactions/filter', {
+                params: {
+                    start_date: filters.start_date,
+                    end_date: filters.end_date
+                }
+            }).then(res => {
+                this.transactions = res.data;
+            });
+        },
+
+        getChartData (filters = {}) {
+            HTTP.get(`/transactions/people-chart/trn-amount/${this.userId}`, {
+                params: {
+                    start_date: filters.start_date,
+                    end_date: filters.end_date
+                }
+            }).then(response => {
+                this.outstanding = response.data.payable;
+                this.paymentData.push(
+                    response.data.paid,
+                    response.data.payable
+                );
+            });
+
+            HTTP.get(`/transactions/people-chart/trn-status/${this.userId}`, {
+                params: {
+                    start_date: filters.start_date,
+                    end_date: filters.end_date
+                }
+            }).then(response => {
+                this.temp = response.data;
+                response.data.forEach(element => {
+                    this.statusLabel.push(element.type_name);
+                    this.statusData.push(element.sub_total);
                 });
-
-                HTTP.get(`/transactions/people-chart/trn-status/${this.userId}`, {
-                    params: {
-                        start_date: filters.start_date,
-                        end_date: filters.end_date
-                    }
-                }).then( response => {
-                    this.temp = response.data;
-                    response.data.forEach(element => {
-                        this.statusLabel.push(element.type_name);
-                        this.statusData.push(element.sub_total);
-                    });
-                });
-            }
+            });
         }
     }
+};
 </script>
