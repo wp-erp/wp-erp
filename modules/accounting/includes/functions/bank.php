@@ -323,8 +323,6 @@ function erp_acct_perform_transfer( $item ) {
             'updated_by'  => $updated_by,
         ) );
 
-        erp_acct_sync_dashboard_accounts();
-
         $wpdb->query( 'COMMIT' );
 
     } catch ( Exception $e ) {
