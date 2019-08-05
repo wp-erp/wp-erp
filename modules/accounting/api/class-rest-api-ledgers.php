@@ -386,7 +386,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
 
         $item[]            = [
-            'id'           => 1,
+            'id'           => $ledger_id,
             'name'         => 'Cash',
             'obalance'     => $c_balance['obalance'],
             'balance'      => $c_balance['balance'],
