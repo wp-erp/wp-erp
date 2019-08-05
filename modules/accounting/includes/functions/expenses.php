@@ -212,7 +212,7 @@ function erp_acct_insert_expense( $data ) {
         $wpdb->query( 'START TRANSACTION' );
 
         $type = 'expense';
-        if ( isset( $data['trn_by'] ) && $data['trn_by'] === 3 ) {
+        if ( isset( $data['voucher_type'] ) && $data['voucher_type'] == 'check' ) {
             $type = 'check';
         }
 
@@ -275,7 +275,7 @@ function erp_acct_insert_expense( $data ) {
             return erp_acct_get_expense( $voucher_no );
         }
 
-        if ( isset( $expense_data['trn_by'] ) && $expense_data['trn_by'] === 3 ) {
+        if ( $type == 'check' ) {
             erp_acct_insert_check_data( $expense_data );
         } elseif ( isset( $expense_data['trn_by'] ) && $expense_data['trn_by'] === 4 ) {
             do_action( 'erp_acct_expense_people_transaction', $expense_data, $voucher_no );
