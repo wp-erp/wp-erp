@@ -39,7 +39,7 @@
                     </div>
                     <div class="wperp-col-sm-4 with-multiselect">
                         <label>{{ __('From Account', 'erp') }}<span class="wperp-required-sign">*</span></label>
-                        <select-accounts v-model="basic_fields.deposit_to" :override_accts="accts_by_chart"></select-accounts>
+                        <multi-select v-model="basic_fields.deposit_to" :options="bank_accts"></multi-select>
                     </div>
                     <div class="wperp-col-sm-4">
                         <label>{{ __('Billing Address', 'erp') }}</label>
@@ -145,14 +145,12 @@
     import FileUpload from 'admin/components/base/FileUpload.vue'
     import SelectPeople from 'admin/components/people/SelectPeople.vue'
     import ComboButton from 'admin/components/select/ComboButton.vue'
-    import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
     import ShowErrors from 'admin/components/base/ShowErrors.vue'
 
     export default {
         name: 'CheckCreate',
 
         components: {
-            SelectAccounts,
             Datepicker,
             MultiSelect,
             FileUpload,
@@ -206,7 +204,8 @@
                 billModal       : false,
                 particulars     : '',
                 isWorking       : false,
-                accts_by_chart: [],
+                accts_by_chart  : [],
+                bank_accts      : [],
                 erp_acct_assets : erp_acct_var.acct_assets
             }
         },
@@ -260,6 +259,7 @@
                      * -----------------------------------------------
                      */
                     this.getLedgers();
+                    this.getBanks();
 
                     this.basic_fields.trn_date = erp_acct_var.current_date;
                     this.basic_fields.due_date = erp_acct_var.current_date;
@@ -299,6 +299,18 @@
                 this.$store.dispatch( 'spinner/setSpinner', true );
                 HTTP.get(`/ledgers/${expense_chart_id}/accounts`).then(response => {
                     this.ledgers = response.data;
+
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                } );
+            },
+
+            getBanks() {
+                let bank_chart_id = 7;
+                this.$store.dispatch( 'spinner/setSpinner', true );
+                HTTP.get(`/ledgers/${bank_chart_id}/accounts`).then(response => {
+                    this.bank_accts = response.data;
 
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
@@ -420,39 +432,6 @@
                     this.createCheck(requestData);
                 }
 
-            },
-
-            changeAccounts() {
-                this.accts_by_chart = [];
-                if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
-                    HTTP.get('/ledgers/bank-accounts').then((response) => {
-                        this.accts_by_chart = response.data;
-                        this.accts_by_chart.forEach( element =>{
-                            if ( !element.hasOwnProperty('balance') ) {
-                                element.balance = 0;
-                            }
-                        });
-                    });
-                } else if ( '1' === this.basic_fields.trn_by.id ) {
-                    HTTP.get('/ledgers/cash-accounts').then((response) => {
-                        this.accts_by_chart = response.data;
-                        this.accts_by_chart.forEach( element =>{
-                            if ( !element.hasOwnProperty('balance') ) {
-                                element.balance = 0;
-                            }
-                        });
-                    });
-                } else if ( "undefined" !== erp_reimbursement_var.erp_reimbursement_module &&  '1' === erp_reimbursement_var.erp_reimbursement_module ) {
-                    HTTP.get('/people-transactions/balances').then((response) => {
-                        this.accts_by_chart = response.data;
-                        this.accts_by_chart.forEach( element =>{
-                            if ( !element.hasOwnProperty('balance') ) {
-                                element.balance = 0;
-                            }
-                        });
-                    });
-                }
-                this.$root.$emit('account-changed');
             },
 
             validateForm() {

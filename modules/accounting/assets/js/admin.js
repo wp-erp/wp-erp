@@ -29179,8 +29179,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_people_SelectPeople_vue__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 
 
 
@@ -29334,17 +29333,15 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 
 
-
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'CheckCreate',
   components: {
-    SelectAccounts: __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__["a" /* default */],
     Datepicker: __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Datepicker_vue__["a" /* default */],
     MultiSelect: __WEBPACK_IMPORTED_MODULE_5_admin_components_select_MultiSelect_vue__["a" /* default */],
     FileUpload: __WEBPACK_IMPORTED_MODULE_6_admin_components_base_FileUpload_vue__["a" /* default */],
     ComboButton: __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__["a" /* default */],
     SelectPeople: __WEBPACK_IMPORTED_MODULE_7_admin_components_people_SelectPeople_vue__["a" /* default */],
-    ShowErrors: __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__["a" /* default */]
+    ShowErrors: __WEBPACK_IMPORTED_MODULE_9_admin_components_base_ShowErrors_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -29397,6 +29394,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       particulars: '',
       isWorking: false,
       accts_by_chart: [],
+      bank_accts: [],
       erp_acct_assets: erp_acct_var.acct_assets
     };
   },
@@ -29461,7 +29459,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                 this.setDataForEdit(request2.data); // initialize combo button id with `update`
 
                 this.$store.dispatch('combo/setBtnID', 'update');
-                _context.next = 22;
+                _context.next = 23;
                 break;
 
               case 17:
@@ -29471,13 +29469,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                  * -----------------------------------------------
                  */
                 this.getLedgers();
+                this.getBanks();
                 this.basic_fields.trn_date = erp_acct_var.current_date;
                 this.basic_fields.due_date = erp_acct_var.current_date;
                 this.transactionLines.push({}, {}, {}); // initialize combo button id with `save`
 
                 this.$store.dispatch('combo/setBtnID', 'save');
 
-              case 22:
+              case 23:
               case "end":
                 return _context.stop();
             }
@@ -29537,11 +29536,24 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         _this3.$store.dispatch('spinner/setSpinner', false);
       });
     },
+    getBanks: function getBanks() {
+      var _this4 = this;
+
+      var bank_chart_id = 7;
+      this.$store.dispatch('spinner/setSpinner', true);
+      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/ledgers/".concat(bank_chart_id, "/accounts")).then(function (response) {
+        _this4.bank_accts = response.data;
+
+        _this4.$store.dispatch('spinner/setSpinner', false);
+      }).catch(function (error) {
+        _this4.$store.dispatch('spinner/setSpinner', false);
+      });
+    },
     setCheckFields: function setCheckFields(check_data) {
       this.check_data = check_data;
     },
     getPeopleAddress: function getPeopleAddress() {
-      var _this4 = this;
+      var _this5 = this;
 
       var people_id = this.basic_fields.people.id;
 
@@ -29553,7 +29565,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get("/people/".concat(people_id)).then(function (response) {
         var billing = response.data;
         var address = "Street: ".concat(billing.street_1, " ").concat(billing.street_2, " \nCity: ").concat(billing.city, " \nState: ").concat(billing.state, " \nCountry: ").concat(billing.country);
-        _this4.basic_fields.billing_address = address;
+        _this5.basic_fields.billing_address = address;
       });
     },
     updateFinalAmount: function updateFinalAmount() {
@@ -29569,48 +29581,48 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.transactionLines.push({});
     },
     updateCheck: function updateCheck(requestData) {
-      var _this5 = this;
-
-      this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].put("/expenses/".concat(this.voucherNo), requestData).then(function (res) {
-        _this5.$store.dispatch('spinner/setSpinner', false);
-
-        _this5.showAlert('success', 'Check Updated!');
-      }).catch(function (error) {
-        _this5.$store.dispatch('spinner/setSpinner', false);
-      }).then(function () {
-        _this5.isWorking = false;
-        _this5.reset = true;
-
-        if ('update' == _this5.actionType || 'draft' == _this5.actionType) {
-          _this5.$router.push({
-            name: 'Expenses'
-          });
-        } else if ('new_update' == _this5.actionType) {
-          _this5.resetFields();
-        }
-      });
-    },
-    createCheck: function createCheck(requestData) {
       var _this6 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].post('/expenses', requestData).then(function (res) {
+      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].put("/expenses/".concat(this.voucherNo), requestData).then(function (res) {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
-        _this6.showAlert('success', 'Check Created!');
+        _this6.showAlert('success', 'Check Updated!');
       }).catch(function (error) {
         _this6.$store.dispatch('spinner/setSpinner', false);
       }).then(function () {
         _this6.isWorking = false;
         _this6.reset = true;
 
-        if ('save' == _this6.actionType || 'draft' == _this6.actionType) {
+        if ('update' == _this6.actionType || 'draft' == _this6.actionType) {
           _this6.$router.push({
             name: 'Expenses'
           });
-        } else if ('new_create' == _this6.actionType) {
+        } else if ('new_update' == _this6.actionType) {
           _this6.resetFields();
+        }
+      });
+    },
+    createCheck: function createCheck(requestData) {
+      var _this7 = this;
+
+      this.$store.dispatch('spinner/setSpinner', true);
+      __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].post('/expenses', requestData).then(function (res) {
+        _this7.$store.dispatch('spinner/setSpinner', false);
+
+        _this7.showAlert('success', 'Check Created!');
+      }).catch(function (error) {
+        _this7.$store.dispatch('spinner/setSpinner', false);
+      }).then(function () {
+        _this7.isWorking = false;
+        _this7.reset = true;
+
+        if ('save' == _this7.actionType || 'draft' == _this7.actionType) {
+          _this7.$router.push({
+            name: 'Expenses'
+          });
+        } else if ('new_create' == _this7.actionType) {
+          _this7.resetFields();
         }
       });
     },
@@ -29653,45 +29665,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       } else {
         this.createCheck(requestData);
       }
-    },
-    changeAccounts: function changeAccounts() {
-      var _this7 = this;
-
-      this.accts_by_chart = [];
-
-      if ('2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id) {
-        __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/ledgers/bank-accounts').then(function (response) {
-          _this7.accts_by_chart = response.data;
-
-          _this7.accts_by_chart.forEach(function (element) {
-            if (!element.hasOwnProperty('balance')) {
-              element.balance = 0;
-            }
-          });
-        });
-      } else if ('1' === this.basic_fields.trn_by.id) {
-        __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/ledgers/cash-accounts').then(function (response) {
-          _this7.accts_by_chart = response.data;
-
-          _this7.accts_by_chart.forEach(function (element) {
-            if (!element.hasOwnProperty('balance')) {
-              element.balance = 0;
-            }
-          });
-        });
-      } else if ("undefined" !== erp_reimbursement_var.erp_reimbursement_module && '1' === erp_reimbursement_var.erp_reimbursement_module) {
-        __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-          _this7.accts_by_chart = response.data;
-
-          _this7.accts_by_chart.forEach(function (element) {
-            if (!element.hasOwnProperty('balance')) {
-              element.balance = 0;
-            }
-          });
-        });
-      }
-
-      this.$root.$emit('account-changed');
     },
     validateForm: function validateForm() {
       this.form_errors = [];
@@ -59756,8 +59729,8 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("select-accounts", {
-                        attrs: { override_accts: _vm.accts_by_chart },
+                      _c("multi-select", {
+                        attrs: { options: _vm.bank_accts },
                         model: {
                           value: _vm.basic_fields.deposit_to,
                           callback: function($$v) {
