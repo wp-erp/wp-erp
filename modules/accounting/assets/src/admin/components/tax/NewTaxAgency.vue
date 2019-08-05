@@ -24,8 +24,8 @@
                     <div class="wperp-modal-footer pt-0">
                         <!-- buttons -->
                         <div class="buttons-wrapper text-right">
-                            <submit-button v-if="is_update" text="Update Tax Agency" :working="isWorking"></submit-button>
-                            <submit-button v-else text="Save" :working="isWorking"></submit-button>
+                            <submit-button v-if="is_update" :text="__( 'Update', 'erp' )" :working="isWorking"></submit-button>
+                            <submit-button v-else :text="__( 'Save', 'erp' )" :working="isWorking"></submit-button>
                         </div>
                     </div>
                 </form>
