@@ -21820,7 +21820,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
-//
 
 
 
@@ -51654,7 +51653,11 @@ var render = function() {
                         staticStyle: { "text-align": "right" },
                         attrs: { colspan: "9" }
                       },
-                      [_c("submit-button", { attrs: { text: "Submit" } })],
+                      [
+                        _c("submit-button", {
+                          attrs: { text: _vm.__("Save", "erp") }
+                        })
+                      ],
                       1
                     )
                   ])
@@ -56716,12 +56719,15 @@ var render = function() {
                       _vm.is_update
                         ? _c("submit-button", {
                             attrs: {
-                              text: "Update Tax Agency",
+                              text: _vm.__("Update", "erp"),
                               working: _vm.isWorking
                             }
                           })
                         : _c("submit-button", {
-                            attrs: { text: "Save", working: _vm.isWorking }
+                            attrs: {
+                              text: _vm.__("Save", "erp"),
+                              working: _vm.isWorking
+                            }
                           })
                     ],
                     1
@@ -56880,12 +56886,15 @@ var render = function() {
                       _vm.is_update
                         ? _c("submit-button", {
                             attrs: {
-                              text: "Update Tax Category",
+                              text: _vm.__("Update", "erp"),
                               working: _vm.isWorking
                             }
                           })
                         : _c("submit-button", {
-                            attrs: { text: "Save", working: _vm.isWorking }
+                            attrs: {
+                              text: _vm.__("Save", "erp"),
+                              working: _vm.isWorking
+                            }
                           })
                     ],
                     1
@@ -57097,10 +57106,16 @@ var render = function() {
                     [
                       _vm.is_update
                         ? _c("submit-button", {
-                            attrs: { text: "Update", working: _vm.isWorking }
+                            attrs: {
+                              text: _vm.__("Update", "erp"),
+                              working: _vm.isWorking
+                            }
                           })
                         : _c("submit-button", {
-                            attrs: { text: "Add New", working: _vm.isWorking }
+                            attrs: {
+                              text: _vm.__("Save", "erp"),
+                              working: _vm.isWorking
+                            }
                           })
                     ],
                     1
@@ -57634,7 +57649,7 @@ var render = function() {
                     { staticClass: "buttons-wrapper text-right" },
                     [
                       _c("submit-button", {
-                        attrs: { text: "Save" },
+                        attrs: { text: _vm.__("Save", "erp") },
                         nativeOn: {
                           click: function($event) {
                             $event.preventDefault()
@@ -57969,7 +57984,10 @@ var render = function() {
                   { staticClass: "wperp-form-group text-right mt-10 mb-0" },
                   [
                     _c("submit-button", {
-                      attrs: { text: "Save", working: _vm.isWorking }
+                      attrs: {
+                        text: _vm.__("Save", "erp"),
+                        working: _vm.isWorking
+                      }
                     })
                   ],
                   1
@@ -60829,7 +60847,7 @@ var render = function() {
                     { staticClass: "wperp-form-group text-right mt-10 mb-0" },
                     [
                       _c("submit-button", {
-                        attrs: { text: "Add Tax Rate" },
+                        attrs: { text: _vm.__("Save", "erp") },
                         nativeOn: {
                           click: function($event) {
                             $event.preventDefault()
@@ -61125,7 +61143,7 @@ var render = function() {
         [
           _vm.is_update
             ? _c("submit-button", {
-                attrs: { text: "Update Tax Rate" },
+                attrs: { text: _vm.__("Update", "erp") },
                 nativeOn: {
                   click: function($event) {
                     $event.preventDefault()
@@ -63516,7 +63534,7 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("submit-button", { attrs: { text: "Add Opening Balance" } })
+          _c("submit-button", { attrs: { text: _vm.__("Save", "erp") } })
         ],
         1
       )

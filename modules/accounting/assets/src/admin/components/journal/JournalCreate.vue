@@ -108,7 +108,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="9" style="text-align: right;">
-                            <submit-button text="Submit"></submit-button>
+                            <submit-button :text="__( 'Save', 'erp' )"></submit-button>
                         </td>
                     </tr>
                     </tfoot>

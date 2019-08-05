@@ -65,7 +65,7 @@
 	                    </div>
 	                    <div class="wperp-col-xs-12">
 	                    	<div class="wperp-form-group text-right mt-10 mb-0">
-                                <submit-button text="Save" :working="isWorking"></submit-button>
+                                <submit-button :text="__( 'Save', 'erp' )" :working="isWorking"></submit-button>
                             </div>
 	                    </div>
 	                </div>

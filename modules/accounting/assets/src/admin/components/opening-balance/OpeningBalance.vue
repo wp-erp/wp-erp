@@ -278,7 +278,7 @@
                 </tr>
                 </tbody>
             </table>
-            <submit-button text="Add Opening Balance"></submit-button>
+            <submit-button :text="__( 'Save', 'erp' )"></submit-button>
 
         </form>
     </div>

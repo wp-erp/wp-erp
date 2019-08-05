@@ -109,7 +109,6 @@
                         <tr>
                             <td colspan="9" style="text-align: right;">
                                 <combo-button :options="createButtons" />
-                                <!-- <submit-button text="Pay Purchase"></submit-button> -->
                             </td>
                         </tr>
                         </tfoot>

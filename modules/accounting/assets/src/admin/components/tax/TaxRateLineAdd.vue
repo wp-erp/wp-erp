@@ -34,7 +34,7 @@
 
                             <div class="wperp-col-sm-12">
                                 <div class="wperp-form-group text-right mt-10 mb-0">
-                                    <submit-button text="Add Tax Rate" @click.native.prevent="addTaxRate"></submit-button>
+                                    <submit-button :text="__( 'Save', 'erp' )" @click.native.prevent="addTaxRate"></submit-button>
                                 </div>
                             </div>
                         </div>

@@ -31,7 +31,7 @@
 
         <div class="wperp-col-sm-12">
             <div class="wperp-form-group text-right mt-10 mb-0">
-                <submit-button v-if="is_update" text="Update Tax Rate" @click.native.prevent="UpdateTaxRate"></submit-button>
+                <submit-button v-if="is_update" :text="__( 'Update', 'erp' )" @click.native.prevent="UpdateTaxRate"></submit-button>
             </div>
         </div>
     </div>
