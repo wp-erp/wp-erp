@@ -61,7 +61,7 @@
                     <table class="wperp-table wperp-form-table">
                         <thead>
                         <tr>
-                            <th scope="col" class="col--id column-primary">{{ __('Purchase ID', 'erp') }}</th>
+                            <th scope="col" class="col--id column-primary">{{ __('Voucher No', 'erp') }}</th>
                             <th scope="col">{{ __('Due Date', 'erp') }}</th>
                             <th scope="col">{{ __('Total', 'erp') }}</th>
                             <th scope="col">{{ __('Due', 'erp') }}</th>
@@ -71,7 +71,7 @@
                         </thead>
                         <tbody>
                         <tr :key="key" v-for="(item,key) in pay_purchases">
-                            <td scope="row" class="col--id column-primary">{{key+1}}</td>
+                            <td scope="row" class="col--id column-primary">#{{item.voucher_no}}</td>
                             <td class="col--due-date" data-colname="Due Date">{{item.due_date}}</td>
                             <td class="col--total" data-colname="Total">{{moneyFormat(item.total)}}</td>
                             <td class="col--due" data-colname="Due">{{moneyFormat(item.due)}}</td>
