@@ -10636,6 +10636,26 @@ if (false) {(function () {
         format: erp_acct_var.currency_format
       };
       return __WEBPACK_IMPORTED_MODULE_0_accounting___default.a.formatMoney(number, options);
+    },
+    moneyFormatwithDrCr: function moneyFormatwithDrCr(value) {
+      console.log(value);
+      var DrCr = null;
+      var options = {
+        symbol: erp_acct_var.symbol,
+        decimal: erp_acct_var.decimal_separator,
+        thousand: erp_acct_var.thousand_separator,
+        format: erp_acct_var.currency_format
+      };
+
+      if (value.indexOf('Dr') > 0) {
+        DrCr = 'Dr ';
+      } else if (value.indexOf('Dr') === -1) {
+        DrCr = 'Cr ';
+      }
+
+      ;
+      var money = __WEBPACK_IMPORTED_MODULE_0_accounting___default.a.formatMoney(value, options);
+      return DrCr + money;
     }
   }
 });

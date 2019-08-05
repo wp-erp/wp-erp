@@ -43239,7 +43239,7 @@ var render = function() {
                 return [
                   _vm._v(
                     "\n            " +
-                      _vm._s(_vm.moneyFormat(data.row.balance)) +
+                      _vm._s(_vm.moneyFormatwithDrCr(data.row.balance)) +
                       "\n        "
                   )
                 ]
