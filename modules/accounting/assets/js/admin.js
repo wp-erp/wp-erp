@@ -31593,17 +31593,17 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       this.form_errors = [];
       this.acct_rec.forEach(function (element) {
-        if (typeof element !== 'undefined' && element.hasOwnProperty('people')) {
+        if (typeof element !== 'undefined' && !element.hasOwnProperty('people')) {
           _this6.form_errors.push('People is not selected in Accounts Receivable.');
         }
       });
       this.acct_pay.forEach(function (element) {
-        if (typeof element !== 'undefined' && element.hasOwnProperty('people')) {
+        if (typeof element !== 'undefined' && !element.hasOwnProperty('people')) {
           _this6.form_errors.push('People is not selected in Accounts Payable.');
         }
       });
       this.tax_pay.forEach(function (element) {
-        if (typeof element !== 'undefined' && element.hasOwnProperty('agency')) {
+        if (typeof element !== 'undefined' && !element.hasOwnProperty('agency')) {
           _this6.form_errors.push('Agency is not selected in Tax Payable.');
         }
       });
