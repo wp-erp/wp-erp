@@ -103,56 +103,56 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import SendMail from 'admin/components/email/SendMail.vue'
-    import Dropdown from 'admin/components/base/Dropdown.vue'
-    export default {
-        name: 'SingleTransfer',
+import HTTP from 'admin/http';
+import SendMail from 'admin/components/email/SendMail.vue';
+import Dropdown from 'admin/components/base/Dropdown.vue';
+export default {
+    name: 'SingleTransfer',
 
-        data() {
-            return {
-                voucher: {},
-                company: '',
-                showModal: false,
-                print_data: null,
-            }
+    data () {
+        return {
+            voucher: {},
+            company: '',
+            showModal: false,
+            print_data: null
+        };
+    },
+
+    components: {
+        SendMail,
+        Dropdown
+    },
+
+    created () {
+        this.$store.dispatch('spinner/setSpinner', true);
+        this.getCompanyInfo();
+        this.getVoucher();
+    },
+
+    methods: {
+        getCompanyInfo () {
+            HTTP.get(`/company`).then(response => {
+                this.company = response.data;
+            });
         },
 
-        components: {
-            SendMail,
-            Dropdown
+        getVoucher () {
+            HTTP.get(`/accounts/transfer/${this.$route.params.id}`).then(response => {
+                this.voucher = response.data;
+                this.print_data = this.voucher;
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
         },
 
-        created() {
-            this.$store.dispatch( 'spinner/setSpinner', true );
-            this.getCompanyInfo();
-            this.getVoucher();
-
-        },
-
-        methods: {
-            getCompanyInfo() {
-                HTTP.get(`/company`).then(response => {
-                    this.company = response.data;
-                })
-            },
-
-            getVoucher() {
-                HTTP.get(`/accounts/transfer/${this.$route.params.id}`).then(response => {
-                    this.voucher = response.data;
-                    this.print_data = this.voucher;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
-
-            printPopup() {
-                window.print();
-            },
-        },
-
+        printPopup () {
+            window.print();
+        }
     }
+
+};
 </script>
 
 <style lang="less">
@@ -185,7 +185,6 @@
         }
     }
 
-
     .sales-single {
         max-width: 960px;
         margin: 0 auto;
@@ -212,4 +211,3 @@
         }
     }
 </style>
-

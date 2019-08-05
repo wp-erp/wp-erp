@@ -48,80 +48,81 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+import HTTP from 'admin/http';
+import SubmitButton from 'admin/components/base/SubmitButton.vue';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
-    export default {
-        name: 'TaxRateLineEdit',
+export default {
+    name: 'TaxRateLineEdit',
 
-        components: {
-            MultiSelect,
-            SubmitButton
+    components: {
+        MultiSelect,
+        SubmitButton
+    },
+
+    data () {
+        return {
+            component_name: '',
+            agency: '',
+            category: '',
+            tax_rate: '',
+            agencies: [],
+            categories: []
+        };
+    },
+
+    created () {
+        this.fetchData();
+    },
+
+    methods: {
+        closeModal: function () {
+            this.$emit('close');
         },
 
-        data() {
-            return {
-                component_name: '',
-                agency        : '',
-                category      : '',
-                tax_rate      : '',
-                agencies      : [],
-                categories    : [],
-            };
+        addTaxRate () {
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.post(`/taxes/${this.$route.params.id}/line-add`, {
+                tax_id: this.$route.params.id,
+                component_name: this.component_name,
+                agency_id: this.agency.id,
+                tax_cat_id: this.category.id,
+                tax_rate: this.tax_rate
+            }).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Tax Rate Updated!');
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
+                this.resetData();
+                this.isWorking = false;
+                this.$emit('line_close');
+                this.$root.$emit('refetch_tax_data');
+            });
         },
 
-        created() {
-            this.fetchData();
+        fetchData () {
+            HTTP.get('/tax-agencies').then((response) => {
+                this.agencies = response.data;
+            }).catch(error => {
+                throw error;
+            });
+
+            HTTP.get('/tax-cats').then((response) => {
+                this.categories = response.data;
+            }).catch(error => {
+                throw error;
+            });
         },
 
-        methods: {
-            closeModal: function(){
-                this.$emit('close');
-            },
-
-            addTaxRate() {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP.post(`/taxes/${this.$route.params.id}/line-add`, {
-                    tax_id        : this.$route.params.id,
-                    component_name: this.component_name,
-                    agency_id     : this.agency.id,
-                    tax_cat_id    : this.category.id,
-                    tax_rate      : this.tax_rate
-                }).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Tax Rate Updated!' );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
-                    this.resetData();
-                    this.isWorking = false;
-                    this.$emit('line_close');
-                    this.$root.$emit('refetch_tax_data');
-                });
-            },
-
-            fetchData() {
-                HTTP.get('/tax-agencies').then((response) => {
-                    this.agencies = response.data;
-                }).catch(error => {
-                    console.log(error);
-                });
-
-                HTTP.get('/tax-cats').then((response) => {
-                    this.categories = response.data;
-                }).catch(error => {
-                    console.log(error);
-                });
-            },
-
-            resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
-            },
-
+        resetData () {
+            Object.assign(this.$data, this.$options.data.call(this));
         }
+
     }
+};
 </script>
 <style lang="less">
     .wperp-modal-dialog {

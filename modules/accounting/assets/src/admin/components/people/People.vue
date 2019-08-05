@@ -34,169 +34,171 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
-    import PeopleModal from 'admin/components/people/PeopleModal.vue'
+import HTTP from 'admin/http';
+import ListTable from 'admin/components/list-table/ListTable.vue';
+import PeopleModal from 'admin/components/people/PeopleModal.vue';
 
-    export default {
-        name: 'People',
+export default {
+    name: 'People',
 
-        components: {
-            ListTable,
-            PeopleModal
-        },
+    components: {
+        ListTable,
+        PeopleModal
+    },
 
-        data() {
-            return {
-                people: null,
-                bulkActions: [
-                    {
-                        key: 'trash',
-                        label: 'Move to Trash',
-                        iconClass: 'flaticon-trash'
-                    }
-                ],
-                columns: {
-                    'customer': { label: 'Name', isColPrimary: true },
-                    'company' : { label: 'Company' },
-                    'email'   : { label: 'Email' },
-                    'phone'   : { label: 'Phone' },
-                    'expense' : { label: 'Expense' },
-                    'actions' : { label: 'Actions' }
-                },
-                rows: [],
-                paginationData: {
-                    totalItems : 0,
-                    totalPages : 0,
-                    perPage    : 10,
-                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
-                },
-                actions : [
-                    { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
-                    { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
-                ],
-                showModal             : false,
-                buttonTitle           : '',
-                pageTitle             : '',
-                url                   : '',
-                singleUrl             : '',
-                isActiveOptionDropdown: false
-            };
-        },
+    data () {
+        return {
+            people: null,
+            bulkActions: [
+                {
+                    key: 'trash',
+                    label: 'Move to Trash',
+                    iconClass: 'flaticon-trash'
+                }
+            ],
+            columns: {
+                customer: { label: 'Name', isColPrimary: true },
+                company : { label: 'Company' },
+                email   : { label: 'Email' },
+                phone   : { label: 'Phone' },
+                expense : { label: 'Expense' },
+                actions : { label: 'Actions' }
+            },
+            rows: [],
+            paginationData: {
+                totalItems : 0,
+                totalPages : 0,
+                perPage    : 10,
+                currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+            },
+            actions : [
+                { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
+                { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
+            ],
+            showModal             : false,
+            buttonTitle           : '',
+            pageTitle             : '',
+            url                   : '',
+            singleUrl             : '',
+            isActiveOptionDropdown: false
+        };
+    },
 
-        created() {
-            this.$store.dispatch( 'spinner/setSpinner', true );
-            var self = this;
-            this.$on('modal-close', function() {
-                this.showModal = false;
-                this.people = null;
+    created () {
+        this.$store.dispatch('spinner/setSpinner', true);
+        var self = this;
+        this.$on('modal-close', function () {
+            this.showModal = false;
+            this.people = null;
+        });
+        this.$root.$on('peopleUpdate', function () {
+            self.showModal = false;
+            self.fetchItems();
+        });
+
+        this.buttonTitle = (this.$route.name.toLowerCase() === 'customers') ? 'Customer' : 'Vendor';
+        this.pageTitle   = this.$route.name;
+        this.url         = this.$route.name.toLowerCase();
+        this.singleUrl   = (this.url === 'customers') ? 'CustomerDetails' : 'VendorDetails';
+        this.fetchItems();
+    },
+
+    computed: {
+        row_data () {
+            const items = this.rows;
+            items.map(item => {
+                item.customer = item.first_name + ' ' + item.last_name;
+                item.expense  = 0;
             });
-            this.$root.$on( 'peopleUpdate', function() {
-                self.showModal = false;
-                self.fetchItems();
-            } );
+            return items;
+        }
+    },
 
-            this.buttonTitle = ( this.$route.name.toLowerCase() == 'customers' ) ? 'Customer' : 'Vendor';
-            this.pageTitle   = this.$route.name;
-            this.url         = this.$route.name.toLowerCase();
-            this.singleUrl   = ( this.url == 'customers' ) ? 'CustomerDetails' : 'VendorDetails';
-            this.fetchItems();
-        },
-
-        computed: {
-            row_data(){
-                let items = this.rows;
-                items.map( item => {
-                    item.customer = item.first_name + ' ' + item.last_name;
-                    item.expense  = 0;
-                } );
-                return items;
-            }
-        },
-
-        methods: {
-            fetchItems() {
-                this.rows = [];
-                HTTP.get( this.url , {
-                    params: {
-                        per_page: this.paginationData.perPage,
-                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
-                    }
-                })
-                .then( (response) => {
+    methods: {
+        fetchItems () {
+            this.rows = [];
+            HTTP.get(this.url, {
+                params: {
+                    per_page: this.paginationData.perPage,
+                    page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+                }
+            })
+                .then((response) => {
                     this.rows = response.data;
                     this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
                     this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.$store.dispatch('spinner/setSpinner', false);
                 })
                 .catch((error) => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
+                    this.$store.dispatch('spinner/setSpinner', false);
+                    throw error;
                 });
-            },
-
-            onActionClick(action, row, index) {
-                switch ( action ) {
-                    case 'trash':
-                        if ( confirm('Are you sure to delete?') ) {
-                            this.$store.dispatch( 'spinner/setSpinner', true );
-                            HTTP.delete( this.url + '/' + row.id).then( response => {
-                                this.$delete(this.rows, index);
-
-                                this.$store.dispatch( 'spinner/setSpinner', false );
-                                this.showAlert( 'success', 'Deleted !' );
-                            }).catch( error => {
-                                this.$store.dispatch( 'spinner/setSpinner', false );
-                            } );
-                        }
-                        break;
-
-                    case 'edit':
-                        this.showModal = true;
-                        this.people = row;
-                        break;
-
-                    default :
-                        break;
-                }
-            },
-
-            onBulkAction(action, items) {
-                if ( 'trash' === action ) {
-                    if ( confirm('Are you sure to delete?') ) {
-                        this.$store.dispatch( 'spinner/setSpinner', true );
-                        HTTP.delete( this.url + '/delete/' + items.join(',')).then(response => {
-                            let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-                            if ( toggleCheckbox.checked ) {
-                                // simulate click event to remove checked state
-                                toggleCheckbox.click();
-                            }
-
-                            this.fetchItems();
-                            this.$store.dispatch( 'spinner/setSpinner', false );
-                            this.showAlert( 'success', 'Deleted !' );
-                        }).catch( error => {
-                            this.$store.dispatch( 'spinner/setSpinner', false );
-                        } );
-                    }
-                }
-            },
-
-            goToPage(page) {
-                let queries = Object.assign({}, this.$route.query);
-                this.paginationData.currentPage = page;
-                this.$router.push({
-                    name: 'PaginateCustomers',
-                    params: { page: page },
-                    query: queries
-                });
-
-                this.fetchItems();
-            },
         },
 
+        onActionClick (action, row, index) {
+            switch (action) {
+            case 'trash':
+                if (confirm('Are you sure to delete?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+                    HTTP.delete(this.url + '/' + row.id).then(response => {
+                        this.$delete(this.rows, index);
 
-    };
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        this.showAlert('success', 'Deleted !');
+                    }).catch(error => {
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        throw error;
+                    });
+                }
+                break;
+
+            case 'edit':
+                this.showModal = true;
+                this.people = row;
+                break;
+
+            default :
+                break;
+            }
+        },
+
+        onBulkAction (action, items) {
+            if (action === 'trash') {
+                if (confirm('Are you sure to delete?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+                    HTTP.delete(this.url + '/delete/' + items.join(',')).then(response => {
+                        const toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
+
+                        if (toggleCheckbox.checked) {
+                            // simulate click event to remove checked state
+                            toggleCheckbox.click();
+                        }
+
+                        this.fetchItems();
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        this.showAlert('success', 'Deleted !');
+                    }).catch(error => {
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        throw error;
+                    });
+                }
+            }
+        },
+
+        goToPage (page) {
+            const queries = Object.assign({}, this.$route.query);
+            this.paginationData.currentPage = page;
+            this.$router.push({
+                name: 'PaginateCustomers',
+                params: { page: page },
+                query: queries
+            });
+
+            this.fetchItems();
+        }
+    }
+
+};
 </script>
 <style lang="less" scoped>
     .app-customers {

@@ -13,92 +13,93 @@
 </template>
 
 <script>
-    import Dropdown from 'admin/components/base/Dropdown.vue'
+import Dropdown from 'admin/components/base/Dropdown.vue';
 
-    import {setupCalendar, Calendar} from 'v-calendar'
-    import 'v-calendar/lib/v-calendar.min.css'
+import { setupCalendar, Calendar } from 'v-calendar';
+import 'v-calendar/lib/v-calendar.min.css';
 
-    setupCalendar({
-        firstDayOfWeek: 2
-    });
+setupCalendar({
+    firstDayOfWeek: 2
+});
 
-    export default {
-        name: 'Datepicker',
+export default {
+    name: 'Datepicker',
 
-        components: {
-            Dropdown,
-            Calendar
-        },
+    components: {
+        Dropdown,
+        Calendar
+    },
 
-        props: {
-            value: {
-                type: String
-            }
-        },
+    props: {
+        value: {
+            type: String
+        }
+    },
 
-        data() {
-            return {
-                pickerAttrs : [{
-                    key         : 'today',
-                    highlight   : {backgroundColor: '#1A9ED4'},
-                    contentStyle: {color: '#fff'},
-                    dates       : {
-                        start: new Date(erp_acct_var.fy_lower_range),
-                        end  : new Date(erp_acct_var.fy_upper_range)
-                    },
-                }],
-                selectedDate: '',
-            }
-        },
-
-        watch: {
-            value(newVal) {
-                if (!newVal) {
-                    this.selectedDate = this.getCurrentDate();
-                } else {
-                    this.selectedDate = newVal;
+    data () {
+        return {
+            pickerAttrs: [{
+                key: 'today',
+                highlight: { backgroundColor: '#1A9ED4' },
+                contentStyle: { color: '#fff' },
+                dates: {
+                    /* global erp_acct_var */
+                    start: new Date(erp_acct_var.fy_lower_range),
+                    end: new Date(erp_acct_var.fy_upper_range)
                 }
+            }],
+            selectedDate: ''
+        };
+    },
 
-                this.$emit('input', this.selectedDate);
+    watch: {
+        value (newVal) {
+            if (!newVal) {
+                this.selectedDate = this.getCurrentDate();
+            } else {
+                this.selectedDate = newVal;
             }
-        },
 
-        created() {
+            this.$emit('input', this.selectedDate);
+        }
+    },
+
+    created () {
+        this.$emit('input', this.selectedDate);
+    },
+
+    methods: {
+        pickerSelect (day) {
+            // add leading zero
+            const days  = day.day < 10 ? `0${day.day}` : day.day;
+            const month = day.month < 10 ? `0${day.month}` : day.month;
+
+            const formattedDate = day.year + '-' + month + '-' + days; // e.g. 2018-07-24
+            this.selectedDate = formattedDate;
+            this.$refs.datePicker.click();
             this.$emit('input', this.selectedDate);
         },
 
-        methods: {
-            pickerSelect(day) {
-                // add leading zero
-                let days  = day.day < 10 ? `0${day.day}` : day.day;
-                let month = day.month < 10 ? `0${day.month}` : day.month;
+        getCurrentDate () {
+            var today = new Date();
+            var dd    = today.getDate();
+            var mm    = today.getMonth() + 1;
+            var yyyy  = today.getFullYear();
 
-                let formattedDate = day.year + '-' + month + '-' + days; //e.g. 2018-07-24
-                this.selectedDate = formattedDate;
-                this.$refs.datePicker.click();
-                this.$emit('input', this.selectedDate);
-            },
-
-            getCurrentDate() {
-                var today = new Date();
-                var dd    = today.getDate();
-                var mm    = today.getMonth() + 1;
-                var yyyy  = today.getFullYear();
-
-                if (dd < 10) {
-                    dd = '0' + dd
-                }
-
-                if (mm < 10) {
-                    mm = '0' + mm
-                }
-
-                today = yyyy + '-' + mm + '-' + dd;
-
-                return today;
+            if (dd < 10) {
+                dd = '0' + dd;
             }
+
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+
+            today = yyyy + '-' + mm + '-' + dd;
+
+            return today;
         }
     }
+};
 </script>
 
 <style lang="less">

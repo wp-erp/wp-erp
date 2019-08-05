@@ -29,19 +29,19 @@ export default {
         header: {
             type: Boolean,
             required: false,
-            default: false,
+            default: false
         },
 
         footer: {
             type: Boolean,
             required: false,
-            default: false,
+            default: false
         },
 
         title: {
             type: String,
             required: false,
-            default: '',
+            default: ''
         },
 
         hasForm: {
@@ -50,13 +50,7 @@ export default {
             default: false
         }
 
-
-    },
-
-    data() {
-        return {};
-    },
-
+    }
 };
 </script>
 

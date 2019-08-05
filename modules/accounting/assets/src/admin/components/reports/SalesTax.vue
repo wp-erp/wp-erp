@@ -61,98 +61,98 @@
 </template>
 
 <script>
-    import HTTP        from 'admin/http'
-    import ListTable   from 'admin/components/list-table/ListTable.vue'
-    import Datepicker  from 'admin/components/base/Datepicker.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+import HTTP        from 'admin/http';
+import ListTable   from 'admin/components/list-table/ListTable.vue';
+import Datepicker  from 'admin/components/base/Datepicker.vue';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
-    export default {
-        name: 'SalesTax',
+export default {
+    name: 'SalesTax',
 
-        components: {
-            ListTable,
-            Datepicker,
-            MultiSelect,
-        },
+    components: {
+        ListTable,
+        Datepicker,
+        MultiSelect
+    },
 
-        data() {
-            return {
-                start_date    : null,
-                end_date      : null,
-                selectedAgency: null,
-                taxAgencies   : [],
-                openingBalance: 0,
-                rows          : [],
-                totalDebit    : 0,
-                totalCredit   : 0,
-                columns       : {
-                    'trn_date'   : { label: 'Trns Date' },
-                    'created_at' : { label: 'Created At' },
-                    'trn_no'     : { label: 'Trns No' },
-                    'particulars': { label: 'Particulars' },
-                    'debit'      : { label: 'Debit' },
-                    'credit'     : { label: 'Credit' },
-                    'balance'    : { label: 'Balance' }
-                },
-                symbol: erp_acct_var.symbol
-            };
-        },
+    data () {
+        return {
+            start_date    : null,
+            end_date      : null,
+            selectedAgency: null,
+            taxAgencies   : [],
+            openingBalance: 0,
+            rows          : [],
+            totalDebit    : 0,
+            totalCredit   : 0,
+            columns       : {
+                trn_date   : { label: 'Trns Date' },
+                created_at : { label: 'Created At' },
+                trn_no     : { label: 'Trns No' },
+                particulars: { label: 'Particulars' },
+                debit      : { label: 'Debit' },
+                credit     : { label: 'Credit' },
+                balance    : { label: 'Balance' }
+            },
+            symbol: erp_acct_var.symbol
+        };
+    },
 
-        watch: {
-            selectedAgency() {
-                this.rows = [];
-            }
-        },
+    watch: {
+        selectedAgency () {
+            this.rows = [];
+        }
+    },
 
-        created() {
-            //? why is nextTick here ...? i don't know.
-            this.$nextTick(function () {
-                // with leading zero, and JS month are zero index based
-                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
+    created () {
+        // ? why is nextTick here ...? i don't know.
+        this.$nextTick(function () {
+            // with leading zero, and JS month are zero index based
+            const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
 
-                this.start_date = `2019-${month}-01`;
-                this.end_date   = erp_acct_var.current_date;
+            this.start_date = `2019-${month}-01`;
+            this.end_date   = erp_acct_var.current_date; /* global erp_acct_var */
+        });
+
+        this.getAgencies();
+    },
+
+    methods: {
+        getAgencies () {
+            HTTP.get('/tax-agencies').then(res => {
+                this.taxAgencies = res.data;
             });
-
-            this.getAgencies();
         },
 
-        methods: {
-            getAgencies() {
-                HTTP.get('/tax-agencies').then(res => {
-                    this.taxAgencies = res.data;
-                });
-            },
+        getSalesTaxReport () {
+            if (this.selectedAgency === null) return;
 
-            getSalesTaxReport() {
-                if ( null === this.selectedAgency ) return;
+            this.$store.dispatch('spinner/setSpinner', true);
 
-                this.$store.dispatch( 'spinner/setSpinner', true );
+            this.rows = [];
 
-                this.rows = [];
+            HTTP.get('/reports/sales-tax-report', {
+                params: {
+                    agency_id : this.selectedAgency.id,
+                    start_date: this.start_date,
+                    end_date  : this.end_date
+                }
+            }).then(response => {
+                this.rows        = response.data.details;
+                this.totalDebit  = response.data.extra.total_debit;
+                this.totalCredit = response.data.extra.total_credit;
 
-                HTTP.get('/reports/sales-tax-report', {
-                    params: {
-                        agency_id : this.selectedAgency.id,
-                        start_date: this.start_date,
-                        end_date  : this.end_date
-                    }
-                }).then(response => {
-                    this.rows        = response.data.details;
-                    this.totalDebit  = response.data.extra.total_debit;
-                    this.totalCredit = response.data.extra.total_credit;
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(e => {
+                this.$store.dispatch('spinner/setSpinner', false);
+            });
+        },
 
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch(e => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                });
-            },
-
-            printPopup() {
-                window.print();
-            }
+        printPopup () {
+            window.print();
         }
     }
+};
 </script>
 
 <style lang="less">
@@ -257,5 +257,3 @@
         }
     }
 </style>
-
-

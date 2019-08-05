@@ -53,110 +53,110 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
+import HTTP from 'admin/http';
+import ListTable from 'admin/components/list-table/ListTable.vue';
 
-    export default {
-        name: 'ChartAccounts',
+export default {
+    name: 'ChartAccounts',
 
-        data() {
-            return {
-                columns: {
-                    'code'       : {label: 'Code'},
-                    'ledger_name': {label: 'Name'},
-                    'type'       : {label: 'Type'},
-                    'balance'    : {label: 'Balance'},
-                    'trn_count'  : {label: 'Count'},
-                    'actions'    : {label: 'Actions'},
-                },
-                actions : [
-                    { key: 'edit', label: 'Edit' }
-                    // { key: 'trash', label: 'Delete' }
-                ],
-
-                chartAccounts: [],
-                ledgers: [],
-            }
-        },
-
-        components: {
-            ListTable
-        },
-
-        created() {
-            this.fetchChartAccounts();
-        },
-
-        methods: {
-            groupBy(arr, fn) { /* https://30secondsofcode.org/ */
-                return arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val, i) => {
-                    acc[val] = (acc[val] || []).concat(arr[i]);
-                    return acc;
-                }, {})
+    data () {
+        return {
+            columns: {
+                code: { label: 'Code' },
+                ledger_name: { label: 'Name' },
+                type: { label: 'Type' },
+                balance: { label: 'Balance' },
+                trn_count: { label: 'Count' },
+                actions: { label: 'Actions' }
             },
+            actions: [
+                { key: 'edit', label: 'Edit' }
+                // { key: 'trash', label: 'Delete' }
+            ],
 
-            fetchChartAccounts() {
-                this.chartAccounts = [];
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get('/ledgers/accounts').then( response => {
-                    this.chartAccounts = response.data;
+            chartAccounts: [],
+            ledgers: []
+        };
+    },
 
-                    this.fetchLedgers();
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
+    components: {
+        ListTable
+    },
 
-            fetchLedgers() {
-                HTTP.get('/ledgers').then( response => {
-                    response.data.forEach( (ledger) => {
-                        ledger.balance = this.transformBalance( ledger.balance );
-                    });
-                    this.ledgers = this.groupBy(response.data, 'chart_id');
+    created () {
+        this.fetchChartAccounts();
+    },
+
+    methods: {
+        groupBy (arr, fn) { /* https://30secondsofcode.org/ */
+            return arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val, i) => {
+                acc[val] = (acc[val] || []).concat(arr[i]);
+                return acc;
+            }, {});
+        },
+
+        fetchChartAccounts () {
+            this.chartAccounts = [];
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.get('/ledgers/accounts').then(response => {
+                this.chartAccounts = response.data;
+
+                this.fetchLedgers();
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
+
+        fetchLedgers () {
+            HTTP.get('/ledgers').then(response => {
+                response.data.forEach((ledger) => {
+                    ledger.balance = this.transformBalance(ledger.balance);
                 });
-            },
+                this.ledgers = this.groupBy(response.data, 'chart_id');
+            });
+        },
 
-            transformBalance( val ) {
-                if ( null === val && typeof val === 'object' ) {
-                    val = 0;
+        transformBalance (val) {
+            if (val === null && typeof val === 'object') {
+                val = 0;
+            }
+            const currency = '$';
+            if (val < 0) {
+                return `Cr. ${currency}${Math.abs(val)}`;
+            }
+
+            return `Dr. ${currency}${val}`;
+        },
+
+        onActionClick (action, row, index) {
+            switch (action) {
+            case 'trash':
+                if (confirm('Are you sure to delete?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+
+                    HTTP.delete(`/ledgers/${row.id}`).then(response => {
+                        this.fetchChartAccounts();
+
+                        this.$store.dispatch('spinner/setSpinner', false);
+                    }).catch(error => {
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        throw error;
+                    });
                 }
-                let currency = '$';
-                if ( val < 0 ){
-                    return `Cr. ${currency}${Math.abs(val)}`;
-                }
+                break;
 
-                return `Dr. ${currency}${val}`;
-            },
+            case 'edit':
+                this.$router.push({ name: 'ChartAccountsEdit', params: { id: row.id } });
+                break;
 
-            onActionClick(action, row, index) {
-
-                switch ( action ) {
-                    case 'trash':
-                        if ( confirm('Are you sure to delete?') ) {
-                            this.$store.dispatch( 'spinner/setSpinner', true );
-
-                            HTTP.delete(`/ledgers/${row.id}`).then( response => {
-                                this.fetchChartAccounts();
-
-                                this.$store.dispatch( 'spinner/setSpinner', false );
-                            }).catch( error => {
-                                this.$store.dispatch( 'spinner/setSpinner', false );
-                            } );
-                        }
-                        break;
-
-                    case 'edit':
-                        this.$router.push({name: 'ChartAccountsEdit', params: { id: row.id } });
-                        break;
-
-                    default :
-
-                }
-            },
-
+            default :
+            }
         }
+
     }
+};
 </script>
 
 <style lang="less">

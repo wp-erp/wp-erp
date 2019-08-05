@@ -128,72 +128,72 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import SendMail from 'admin/components/email/SendMail.vue'
-    import Dropdown from 'admin/components/base/Dropdown.vue'
+import HTTP from 'admin/http';
+import SendMail from 'admin/components/email/SendMail.vue';
+import Dropdown from 'admin/components/base/Dropdown.vue';
 
-    export default {
-        name: 'PurchaseSingle',
+export default {
+    name: 'PurchaseSingle',
 
-        components: {
-            SendMail,
-            Dropdown
+    components: {
+        SendMail,
+        Dropdown
+    },
+
+    data () {
+        return {
+            company  : null,
+            purchase : {},
+            isWorking: false,
+            acct_var : erp_acct_var, /* global erp_acct_var */
+            print_data : null,
+            type       : 'purchase',
+            showModal  : false
+        };
+    },
+
+    created () {
+        this.getCompanyInfo();
+        this.getPurchase();
+
+        this.$root.$on('close', () => {
+            this.showModal = false;
+        });
+    },
+
+    methods: {
+        getCompanyInfo () {
+            HTTP.get(`/company`).then(response => {
+                this.company = response.data;
+            }).then(e => {}).then(() => {
+                this.isWorking = false;
+            });
         },
 
-        data() {
-            return {
-                company  : null,
-                purchase : {},
-                isWorking: false,
-                acct_var : erp_acct_var,
-                print_data : null,
-                type       : 'purchase',
-                showModal  : false
-            }
+        getPurchase () {
+            this.isWorking = true;
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.get(`/purchases/${this.$route.params.id}`).then(response => {
+                this.purchase = response.data;
+
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).then(e => {}).then(() => {
+                this.print_data = this.purchase;
+                this.isWorking = false;
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
         },
 
-        created() {
-            this.getCompanyInfo();
-            this.getPurchase();
-
-            this.$root.$on( 'close', () => {
-                this.showModal = false;
-            })
-        },
-
-        methods: {
-            getCompanyInfo() {
-                HTTP.get(`/company`).then(response => {
-                    this.company = response.data;
-                }).then( e => {} ).then(() => {
-                    this.isWorking = false;
-                });
-            },
-
-            getPurchase() {
-                this.isWorking = true;
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP.get(`/purchases/${this.$route.params.id}`).then(response => {
-                    this.purchase = response.data;
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then( e => {} ).then(() => {
-                    this.print_data = this.purchase;
-                    this.isWorking = false;
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
-
-            printPopup() {
-                window.print();
-            }
-        },
-
+        printPopup () {
+            window.print();
+        }
     }
-</script>
 
+};
+</script>
 
 <style lang="less">
     .purchase-single {

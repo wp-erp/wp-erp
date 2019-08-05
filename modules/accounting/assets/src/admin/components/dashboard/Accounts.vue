@@ -39,82 +39,77 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import Dropdown from 'admin/components/base/Dropdown.vue'
+import HTTP from 'admin/http';
 
-    export default {
-        name: "Accounts",
+export default {
+    name: 'Accounts',
 
-        components : {
-            Dropdown
-        },
+    data () {
+        return {
+            isEditSettingsEnabled: false,
+            accounts             : [],
+            edit_accounts        : []
+        };
+    },
 
-        data() {
-            return {
-                isEditSettingsEnabled: false,
-                accounts             : [],
-                edit_accounts        : []
+    computed: {
+        totalAmount () {
+            if ((typeof this.accounts === 'object' && this.accounts === null)) {
+                return;
             }
-        },
+            let amount = 0;
 
-        computed: {
-            totalAmount() {
-                if ( ( typeof this.accounts === "object" && null === this.accounts ) ) {
-                    return;
-                }
-                let amount = 0;
-
-                if ( this.accounts ) {
-                    this.accounts.forEach( element => {
-                        if ( null === element.balance ) {
-                            element.balance = 0;
-                        }
-                        amount += parseFloat(element.balance);
-                    });
-                }
-
-                if ( isNaN( parseFloat(amount) )) {
-                    amount = 0;
-                }
-
-                return this.formatAmount(amount);
-            },
-        },
-
-        created() {
-            this.fetchAccounts();
-        },
-
-        methods: {
-            fetchAccounts() {
-                HTTP.get('/accounts/cash-at-bank').then( response => {
-                    this.accounts = response.data;
+            if (this.accounts) {
+                this.accounts.forEach(element => {
+                    if (element.balance === null) {
+                        element.balance = 0;
+                    }
+                    amount += parseFloat(element.balance);
                 });
-            },
+            }
 
-            // saveDashboardBanks() {
-            //     HTTP.post('/accounts/cash-at-bank', {
-            //         accounts: this.edit_accounts
-            //     }).then(() => {
-            //         this.fetchAccounts();
-            //         this.isEditSettingsEnabled = false;
-            //     });
-            // },
-            //
-            // removeAccount(key) {
-            //     this.$delete(this.accounts, key);
-            // },
-            //
-            // removeEditAccount(key) {
-            //     this.$delete(this.edit_accounts, key);
-            // },
-            //
-            // editSettings() {
-            //     this.fetchAccounts();
-            //     this.isEditSettingsEnabled = !this.isEditSettingsEnabled;
-            // }
-        },
+            if (isNaN(parseFloat(amount))) {
+                amount = 0;
+            }
+
+            return this.formatAmount(amount);
+        }
+    },
+
+    created () {
+        this.fetchAccounts();
+    },
+
+    methods: {
+        fetchAccounts () {
+            HTTP.get('/accounts/cash-at-bank').then(response => {
+                this.accounts = response.data;
+            });
+        }
+
+        // saveDashboardBanks() {
+        //     HTTP.post('/accounts/cash-at-bank', {
+        //         accounts: this.edit_accounts
+        //     }).then(() => {
+        //         this.fetchAccounts();
+        //         this.isEditSettingsEnabled = false;
+        //     });
+        // },
+        //
+        // removeAccount(key) {
+        //     this.$delete(this.accounts, key);
+        // },
+        //
+        // removeEditAccount(key) {
+        //     this.$delete(this.edit_accounts, key);
+        // },
+        //
+        // editSettings() {
+        //     this.fetchAccounts();
+        //     this.isEditSettingsEnabled = !this.isEditSettingsEnabled;
+        // }
     }
+};
 </script>
 
 <style scoped>

@@ -46,69 +46,68 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import PeopleModal from 'admin/components/people/PeopleModal.vue'
+import PeopleModal from 'admin/components/people/PeopleModal.vue';
 
-    export default {
-        name: 'UserBasicInfo',
-        components: {
-            PeopleModal
-        },
+export default {
+    name: 'UserBasicInfo',
+    components: {
+        PeopleModal
+    },
 
-        props: {
-            userData:{
-                type: Object,
-                required: true,
-                default: () => {
-                    return {
-                        'id' : '',
-                        'name': 'Full Name',
-                        'email': 'email@mail.com',
-                        'img_url' : erp_acct_var.acct_assets + '/images/dummy-user.png',
-                        'meta': {
-                            'phone'  : '+ 88101230123',
-                            'mobile' : '+ 999999999',
-                            'website': 'www.website.com',
-                            'fax'    : '+99898989898',
-                            'address': 'House#1005, Block#B, Avenue#9, Mirpur DOHS',
-                        }
+    props: {
+        userData: {
+            type: Object,
+            required: true,
+            default: () => {
+                return {
+                    id: '',
+                    name: 'Full Name',
+                    email: 'email@mail.com',
+                    img_url: erp_acct_var.acct_assets + '/images/dummy-user.png', /* global erp_acct_var */
+                    meta: {
+                        phone: '+ 88101230123',
+                        mobile: '+ 999999999',
+                        website: 'www.website.com',
+                        fax: '+99898989898',
+                        address: 'House#1005, Block#B, Avenue#9, Mirpur DOHS'
                     }
-                }
+                };
             }
-        },
-
-        data() {
-            return {
-                showModal: false,
-                title: '',
-                img_url: erp_acct_var.acct_assets + '/images/dummy-user.png',
-            }
-        },
-        computed: {
-            user() {
-                return this.userData;
-            }
-        },
-
-        methods: {
-            camelCase(str){
-                return str.toLowerCase().replace(/(?:(^.)|(\s+.))/g, function(match) {
-                    return match.charAt(match.length-1).toUpperCase();
-                });
-            },
-        },
-
-        created() {
-            this.title = ( this.$route.name.toLowerCase() == 'customers' ) ? 'customer' : 'vendor';
-            this.$on('modal-close', function() {
-                this.showModal = false;
-            });
-            var self = this;
-            this.$root.$on( 'peopleUpdate', function() {
-                self.showModal = false;
-                self.$parent.fetchItem( self.$route.params.id );
-            } );
         }
+    },
+
+    data () {
+        return {
+            showModal: false,
+            title: '',
+            img_url: erp_acct_var.acct_assets + '/images/dummy-user.png'
+        };
+    },
+    computed: {
+        user () {
+            return this.userData;
+        }
+    },
+
+    methods: {
+        camelCase (str) {
+            return str.toLowerCase().replace(/(?:(^.)|(\s+.))/g, function (match) {
+                return match.charAt(match.length - 1).toUpperCase();
+            });
+        }
+    },
+
+    created () {
+        this.title = (this.$route.name.toLowerCase() === 'customers') ? 'customer' : 'vendor';
+        this.$on('modal-close', function () {
+            this.showModal = false;
+        });
+        var self = this;
+        this.$root.$on('peopleUpdate', function () {
+            self.showModal = false;
+            self.$parent.fetchItem(self.$route.params.id);
+        });
     }
+};
 
 </script>

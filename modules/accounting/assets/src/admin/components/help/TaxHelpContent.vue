@@ -3,11 +3,7 @@
 </template>
 
 <script>
-    export default {
-        name: "TaxHelpContent"
-    }
+export default {
+    name: 'TaxHelpContent'
+};
 </script>
-
-<style scoped>
-
-</style>

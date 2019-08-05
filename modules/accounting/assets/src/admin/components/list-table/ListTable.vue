@@ -17,38 +17,38 @@
                 <span v-if="showItemNumbers" class="displaying-num">{{ itemsTotal }} {{ __('items', 'erp') }}</span>
 
                 <span v-if="hasPagination" class="pagination-links">
-					<span v-if="disableFirst" class="tablenav-pages-navspan"
+                    <span v-if="disableFirst" class="tablenav-pages-navspan"
                           aria-hidden="true">&laquo;</span>
-					<a v-else href="#"
+                    <a v-else href="#"
                        class="first-page" @click.prevent="goToPage(1);"><span aria-hidden="true">&laquo;</span></a>
 
-					<span v-if="disablePrev" class="tablenav-pages-navspan"
+                    <span v-if="disablePrev" class="tablenav-pages-navspan"
                           aria-hidden="true">&lsaquo;</span>
-					<a v-else href="#"
+                    <a v-else href="#"
                        class="prev-page" @click.prevent="goToPage(currentPage - 1);"><span
                         aria-hidden="true">&lsaquo;</span></a>
 
-					<span class="paging-input">
-						<span class="tablenav-paging-text">
-							<input :value="currentPage" class="current-page"
+                    <span class="paging-input">
+                        <span class="tablenav-paging-text">
+                            <input :value="currentPage" class="current-page"
                                 type="text" name="paged" aria-describedby="table-paging" size="1"
                                 @keyup.enter="goToCustomPage"> of
-							<span class="total-pages">{{ totalPages }}</span>
-						</span>
-					</span>
+                            <span class="total-pages">{{ totalPages }}</span>
+                        </span>
+                    </span>
 
-					<span v-if="disableNext" class="tablenav-pages-navspan"
+                    <span v-if="disableNext" class="tablenav-pages-navspan"
                           aria-hidden="true">&rsaquo;</span>
-					<a v-else href="#"
+                    <a v-else href="#"
                        class="next-page" @click.prevent="goToPage(currentPage + 1);"><span
                         aria-hidden="true">&rsaquo;</span></a>
 
-					<span v-if="disableLast" class="tablenav-pages-navspan"
+                    <span v-if="disableLast" class="tablenav-pages-navspan"
                           aria-hidden="true">&raquo;</span>
-					<a v-else href="#"
+                    <a v-else href="#"
                        class="last-page" @click.prevent="goToPage(totalPages)"><span
                         aria-hidden="true">&raquo;</span></a>
-				</span>
+                </span>
             </div>
         </div>
 
@@ -72,14 +72,14 @@
                     </div>
                 </td>
                 <th v-for="(value, key) in columns" :key="key" :class="[
-						'column',
-						key,
-						(value.isColPrimary) ? 'column-primary' : '',
-						{ 'sortable': isSortable(value) },
-						{ 'sorted': isSorted(key) },
-						{ 'asc': isSorted(key) && sortOrder === 'asc' },
-						{ 'desc': isSorted(key) && sortOrder === 'desc' }
-						]">
+                        'column',
+                        key,
+                        (value.isColPrimary) ? 'column-primary' : '',
+                        { 'sortable': isSortable(value) },
+                        { 'sorted': isSorted(key) },
+                        { 'asc': isSorted(key) && sortOrder === 'asc' },
+                        { 'desc': isSorted(key) && sortOrder === 'desc' }
+                        ]">
                     <template v-if="!isSortable(value)">
                         {{ value.label }}
                     </template>
@@ -105,8 +105,8 @@
                             <label class="form-check-label">
                                 <input v-model="selectAll" type="checkbox" class="form-check-input">
                                 <span class="form-check-sign">
-										<span class="check"></span>
-									</span>
+                                        <span class="check"></span>
+                                    </span>
                             </label>
                         </div>
                     </td>
@@ -125,8 +125,8 @@
                                 <input :value="row[index]" v-model="checkedItems" class="form-check-input"
                                        type="checkbox" name="item[]">
                                 <span class="form-check-sign">
-		                                <span class="check"></span>
-		                            </span>
+                                        <span class="check"></span>
+                                    </span>
                             </label>
                         </div>
                     </th>
@@ -175,313 +175,310 @@
                 <span v-if="showItemNumbers" class="displaying-num">{{ itemsTotal }} items</span>
 
                 <span v-if="hasPagination" class="pagination-links">
-			<span v-if="disableFirst" class="tablenav-pages-navspan" aria-hidden="true">&laquo;</span>
-			<a v-else href="#"
+            <span v-if="disableFirst" class="tablenav-pages-navspan" aria-hidden="true">&laquo;</span>
+            <a v-else href="#"
                class="first-page" @click.prevent="goToPage(1);"><span aria-hidden="true">&laquo;</span></a>
 
-			<span v-if="disablePrev" class="tablenav-pages-navspan"
+            <span v-if="disablePrev" class="tablenav-pages-navspan"
                   aria-hidden="true">&lsaquo;</span>
-			<a v-else href="#"
+            <a v-else href="#"
                class="prev-page" @click.prevent="goToPage(currentPage - 1);"><span
                 aria-hidden="true">&lsaquo;</span></a>
 
-			<span class="paging-input">
-				<span class="tablenav-paging-text">
-					{{ currentPage }} of
-					<span class="total-pages">{{ totalPages }}</span>
-				</span>
-			</span>
+            <span class="paging-input">
+                <span class="tablenav-paging-text">
+                    {{ currentPage }} of
+                    <span class="total-pages">{{ totalPages }}</span>
+                </span>
+            </span>
 
-			<span v-if="disableNext" class="tablenav-pages-navspan"
+            <span v-if="disableNext" class="tablenav-pages-navspan"
                   aria-hidden="true">&rsaquo;</span>
-			<a v-else href="#"
+            <a v-else href="#"
                class="next-page" @click.prevent="goToPage(currentPage + 1);"><span
                 aria-hidden="true">&rsaquo;</span></a>
 
-			<span v-if="disableLast" class="tablenav-pages-navspan"
+            <span v-if="disableLast" class="tablenav-pages-navspan"
                   aria-hidden="true">&raquo;</span>
-			<a v-else href="#"
+            <a v-else href="#"
                class="last-page" @click.prevent="goToPage(totalPages)"><span aria-hidden="true">&raquo;</span></a>
-		</span>
+        </span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    /* eslint-disable */
+import BulkActionsTpl from 'admin/components/list-table/BulkActionsTpl.vue';
+import Dropdown from 'admin/components/base/Dropdown.vue';
 
-    import BulkActionsTpl from 'admin/components/list-table/BulkActionsTpl.vue'
-    import Dropdown from 'admin/components/base/Dropdown.vue'
+export default {
 
-    export default {
+    name: 'ListTable',
 
-        name: 'ListTable',
+    components: {
+        BulkActionsTpl,
+        Dropdown
+    },
 
-        components: {
-            BulkActionsTpl,
-            Dropdown,
+    props: {
+        columns: {
+            type: Object,
+            required: true,
+            default: () => {
+            }
+        },
+        rows: {
+            type: Array, // String, Number, Boolean, Function, Object, Array
+            required: true,
+            default: () => []
+        },
+        index: {
+            type: String,
+            default: 'id'
+        },
+        showCb: {
+            type: Boolean,
+            default: true
+        },
+        loading: {
+            type: Boolean,
+            default: false
+        },
+        actionColumn: {
+            type: String,
+            default: ''
+        },
+        actions: {
+            type: Array,
+            required: false,
+            default: () => []
+        },
+        bulkActions: {
+            type: Array,
+            required: false,
+            default: () => []
+        },
+        tableClass: {
+            type: String,
+            default: 'wp-list-table widefat fixed striped'
+        },
+        notFound: {
+            type: String,
+            default: 'No items found.'
+        },
+        totalItems: {
+            type: Number,
+            default: 0
+        },
+        totalPages: {
+            type: Number,
+            default: 1
+        },
+        perPage: {
+            type: Number,
+            default: 20
+        },
+        currentPage: {
+            type: Number,
+            default: 1
+        },
+        sortBy: {
+            type: String,
+            default: null
+        },
+        sortOrder: {
+            type: String,
+            default: 'asc'
+        },
+        showItemNumbers: {
+            type: Boolean,
+            default: true
+        }
+    },
+
+    data () {
+        return {
+            bulkLocal: '-1',
+            checkedItems: [],
+            isRowExpanded: []
+        };
+    },
+
+    computed: {
+
+        hasActions () {
+            return this.actions.length > 0;
         },
 
-        props: {
-            columns: {
-                type: Object,
-                required: true,
-                default: () => {
-                },
-            },
-            rows: {
-                type: Array, // String, Number, Boolean, Function, Object, Array
-                required: true,
-                default: () => [],
-            },
-            index: {
-                type: String,
-                default: 'id',
-            },
-            showCb: {
-                type: Boolean,
-                default: true,
-            },
-            loading: {
-                type: Boolean,
-                default: false,
-            },
-            actionColumn: {
-                type: String,
-                default: '',
-            },
-            actions: {
-                type: Array,
-                required: false,
-                default: () => [],
-            },
-            bulkActions: {
-                type: Array,
-                required: false,
-                default: () => [],
-            },
-            tableClass: {
-                type: String,
-                default: 'wp-list-table widefat fixed striped',
-            },
-            notFound: {
-                type: String,
-                default: 'No items found.',
-            },
-            totalItems: {
-                type: Number,
-                default: 0,
-            },
-            totalPages: {
-                type: Number,
-                default: 1,
-            },
-            perPage: {
-                type: Number,
-                default: 20,
-            },
-            currentPage: {
-                type: Number,
-                default: 1,
-            },
-            sortBy: {
-                type: String,
-                default: null,
-            },
-            sortOrder: {
-                type: String,
-                default: 'asc',
-            },
-            showItemNumbers: {
-                type: Boolean,
-                default: true,
-            },
+        itemsTotal () {
+            return this.totalItems || this.rows.length;
         },
 
-        data() {
-            return {
-                bulkLocal: '-1',
-                checkedItems: [],
-                isRowExpanded: []
-            };
+        hasPagination () {
+            return this.itemsTotal > this.perPage;
         },
 
-        computed: {
+        disableFirst () {
+            if (this.currentPage === 1 || this.currentPage === 2) {
+                return true;
+            }
 
-            hasActions() {
-                return this.actions.length > 0;
-            },
-
-            itemsTotal() {
-                return this.totalItems || this.rows.length;
-            },
-
-            hasPagination() {
-                return this.itemsTotal > this.perPage;
-            },
-
-            disableFirst() {
-                if (this.currentPage === 1 || this.currentPage === 2) {
-                    return true;
-                }
-
-                return false;
-            },
-
-            disablePrev() {
-                if (this.currentPage === 1) {
-                    return true;
-                }
-
-                return false;
-            },
-
-            disableNext() {
-                if (this.currentPage === this.totalPages) {
-                    return true;
-                }
-
-                return false;
-            },
-
-            disableLast() {
-                if (this.currentPage === this.totalPages || this.currentPage == (this.totalPages - 1)) {
-                    return true;
-                }
-
-                return false;
-            },
-
-            columnsCount() {
-                return Object.keys(this.columns).length;
-            },
-
-            colspan() {
-                let columns = Object.keys(this.columns).length;
-
-                if (this.showCb) {
-                    columns += 1;
-                }
-
-                return columns;
-            },
-
-            selectAll: {
-
-                get() {
-                    if (!this.rows.length) {
-                        return false;
-                    }
-
-                    return this.rows ? this.checkedItems.length == this.rows.length : false;
-                },
-
-                set(value) {
-                    const selected = [];
-                    const self = this;
-
-                    if (value) {
-                        this.rows.forEach((item) => {
-                            if (item[self.index] !== undefined) {
-                                selected.push(item[self.index]);
-                            } else {
-                                selected.push(item.id);
-                            }
-                        });
-                    }
-
-                    this.checkedItems = selected;
-                },
-            },
-
+            return false;
         },
 
-        created() {
-            this.$on('bulk-checkbox', e => {
-                if (!e) {
-                    this.checkedItems = [];
-                }
-            });
+        disablePrev () {
+            if (this.currentPage === 1) {
+                return true;
+            }
 
-            this.$on('bulk-action-click', key => {
-                this.bulkLocal = key;
-                this.handleBulkAction();
-            });
+            return false;
         },
 
-        methods: {
+        disableNext () {
+            if (this.currentPage === this.totalPages) {
+                return true;
+            }
 
-            collapsRow(obj) {
-                if (this.isRowExpanded.findIndex(x => x == obj.id) == -1) {
-                    return '';
-                } else {
-                    return 'is-row-expanded';
+            return false;
+        },
+
+        disableLast () {
+            if (this.currentPage === this.totalPages || this.currentPage === (this.totalPages - 1)) {
+                return true;
+            }
+
+            return false;
+        },
+
+        columnsCount () {
+            return Object.keys(this.columns).length;
+        },
+
+        colspan () {
+            let columns = Object.keys(this.columns).length;
+
+            if (this.showCb) {
+                columns += 1;
+            }
+
+            return columns;
+        },
+
+        selectAll: {
+
+            get () {
+                if (!this.rows.length) {
+                    return false;
                 }
+
+                return this.rows ? this.checkedItems.length === this.rows.length : false;
             },
 
-            toggleRow(obj) {
-                let i = this.isRowExpanded.findIndex(x => x == obj.id);
-                if (i == -1) {
-                    this.isRowExpanded.push(obj.id);
-                } else {
-                    this.isRowExpanded.splice(i, 1);
+            set (value) {
+                const selected = [];
+                const self = this;
+
+                if (value) {
+                    this.rows.forEach((item) => {
+                        if (item[self.index] !== undefined) {
+                            selected.push(item[self.index]);
+                        } else {
+                            selected.push(item.id);
+                        }
+                    });
                 }
-            },
 
-            // Capitalize First Letter
-            ucFirst(string) {
-                return string.replace(/^./, string[0].toUpperCase());
-            },
+                this.checkedItems = selected;
+            }
+        }
 
-            hideActionSeparator(action) {
-                return action === this.actions[this.actions.length - 1].key;
-            },
+    },
 
-            actionClicked(action, row, index) {
+    created () {
+        this.$on('bulk-checkbox', e => {
+            if (!e) {
+                this.checkedItems = [];
+            }
+        });
 
-                this.$emit('action:click', action, row, index);
-            },
+        this.$on('bulk-action-click', key => {
+            this.bulkLocal = key;
+            this.handleBulkAction();
+        });
+    },
 
-            goToPage(page) {
+    methods: {
+
+        collapsRow (obj) {
+            if (this.isRowExpanded.findIndex(x => x === obj.id) === -1) {
+                return '';
+            } else {
+                return 'is-row-expanded';
+            }
+        },
+
+        toggleRow (obj) {
+            const i = this.isRowExpanded.findIndex(x => x === obj.id);
+            if (i === -1) {
+                this.isRowExpanded.push(obj.id);
+            } else {
+                this.isRowExpanded.splice(i, 1);
+            }
+        },
+
+        // Capitalize First Letter
+        ucFirst (string) {
+            return string.replace(/^./, string[0].toUpperCase());
+        },
+
+        hideActionSeparator (action) {
+            return action === this.actions[this.actions.length - 1].key;
+        },
+
+        actionClicked (action, row, index) {
+            this.$emit('action:click', action, row, index);
+        },
+
+        goToPage (page) {
+            this.$emit('pagination', page);
+        },
+
+        goToCustomPage (event) {
+            const page = parseInt(event.target.value, 10);
+
+            if (!isNaN(page) && (page > 0 && page <= this.totalPages)) {
                 this.$emit('pagination', page);
-            },
-
-            goToCustomPage(event) {
-                const page = parseInt(event.target.value, 10);
-
-                if (!isNaN(page) && (page > 0 && page <= this.totalPages)) {
-                    this.$emit('pagination', page);
-                }
-            },
-
-            handleBulkAction() {
-                if (this.bulkLocal === '-1') {
-                    return;
-                }
-
-                this.$emit('bulk:click', this.bulkLocal, this.checkedItems);
-            },
-
-            isSortable(column) {
-                if (column.hasOwnProperty('sortable') && column.sortable === true) {
-                    return true;
-                }
-
-                return false;
-            },
-
-            isSorted(column) {
-                return column === this.sortBy;
-            },
-
-            handleSortBy(column) {
-                const order = this.sortOrder === 'asc' ? 'desc' : 'asc';
-
-                this.$emit('sort', column, order);
-            },
+            }
         },
-    };
+
+        handleBulkAction () {
+            if (this.bulkLocal === '-1') {
+                return;
+            }
+
+            this.$emit('bulk:click', this.bulkLocal, this.checkedItems);
+        },
+
+        isSortable (column) {
+            if (Object.prototype.hasOwnProperty.call(column, 'sortable') && column.sortable === true) {
+                return true;
+            }
+
+            return false;
+        },
+
+        isSorted (column) {
+            return column === this.sortBy;
+        },
+
+        handleSortBy (column) {
+            const order = this.sortOrder === 'asc' ? 'desc' : 'asc';
+
+            this.$emit('sort', column, order);
+        }
+    }
+};
 </script>
 
 <style lang="less">

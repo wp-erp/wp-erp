@@ -53,65 +53,64 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import Dropdown from 'admin/components/base/Dropdown.vue'
-    import Modal from 'admin/components/modal/Modal.vue'
-    import InputTag from 'vue-input-tag'
+import HTTP from 'admin/http';
+import Modal from 'admin/components/modal/Modal.vue';
+import InputTag from 'vue-input-tag';
 
-    export default {
-        name: "SendMail",
+export default {
+    name: 'SendMail',
 
-        components: {
-            Dropdown,
-            Modal,
-            InputTag
+    components: {
+        Modal,
+        InputTag
+    },
+
+    props: {
+        data: Object,
+        type: String
+    },
+
+    data () {
+        return {
+            options: [],
+            emails: [],
+            subject: '',
+            message: '',
+            attachment: ''
+        };
+    },
+
+    methods: {
+        closeModal () {
+            this.$root.$emit('close');
         },
 
-        props: {
-            data: Object,
-            type: String
+        addEmail (newEmail) {
+            const email = {
+                name: newEmail,
+                code: newEmail.substring(0, 2) + Math.floor((Math.random() * 10000000))
+            };
+            this.emails.push(email);
         },
 
-        data() {
-            return {
-                options: [],
-                emails: [],
-                subject: '',
-                message: '',
-                attachment: ''
-            }
-        },
-
-        methods: {
-            closeModal() {
-                this.$root.$emit('close');
-            },
-
-            addEmail(newEmail) {
-                const email = {
-                    name: newEmail,
-                    code: newEmail.substring(0, 2) + Math.floor((Math.random() * 10000000))
-                };
-                this.emails.push(email)
-            },
-
-            sendAsMail() {
-                HTTP.post(`/transactions/send-pdf/${this.$route.params.id}`, {
-                    trn_data: this.data,
-                    type: this.type,
-                    receiver: this.emails,
-                    subject: this.subject,
-                    message: this.message,
-                    attachment: this.attachment
-                }).then(() => {
-                    this.showAlert( 'success', 'Mail Sent!' );
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            }
+        sendAsMail () {
+            HTTP.post(`/transactions/send-pdf/${this.$route.params.id}`, {
+                trn_data: this.data,
+                type: this.type,
+                receiver: this.emails,
+                subject: this.subject,
+                message: this.message,
+                attachment: this.attachment
+            }).then(() => {
+                this.showAlert('success', 'Mail Sent!');
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
         }
     }
+};
 </script>
 
 <style scoped>

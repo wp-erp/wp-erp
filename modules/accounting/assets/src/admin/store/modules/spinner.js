@@ -1,26 +1,26 @@
 // Initial state
 const state = {
     loader: false
-}
+};
 
 // Getters
 const getters = {
     getStatus: (state) => state.loader
-}
+};
 
 // Actions
 const actions = {
-    setSpinner({ commit }, data) {
-        commit('setSpinner', data)
+    setSpinner ({ commit }, data) {
+        commit('setSpinner', data);
     }
-}
+};
 
 // Mutations
 const mutations = {
-    setSpinner(state, data) {
-        state.loader = data
+    setSpinner (state, data) {
+        state.loader = data;
     }
-}
+};
 
 export default {
     namespaced: true,
@@ -28,4 +28,4 @@ export default {
     getters,
     actions,
     mutations
-}
+};

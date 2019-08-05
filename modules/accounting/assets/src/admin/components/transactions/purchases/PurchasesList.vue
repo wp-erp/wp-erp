@@ -75,183 +75,184 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
+import HTTP from 'admin/http';
+import ListTable from 'admin/components/list-table/ListTable.vue';
 
-    export default {
-        name: 'PurchaseList',
+export default {
+    name: 'PurchaseList',
 
-        components: {
-            ListTable,
-        },
+    components: {
+        ListTable
+    },
 
-        data() {
-            return {
-                columns: {
-                    'trn_no':        {label: 'Voucher No.'},
-                    'type':          {label: 'Type'},
-                    'ref':           {label: 'Ref'},
-                    'customer_name': {label: 'Customer'},
-                    'trn_date':      {label: 'Trn Date'},
-                    'due_date':      {label: 'Due Date'},
-                    'due':           {label: 'Due'},
-                    'amount':        {label: 'Total'},
-                    'status':        {label: 'Status'},
-                    'actions':       {label: ''},
+    data () {
+        return {
+            columns: {
+                trn_no:        { label: 'Voucher No.' },
+                type:          { label: 'Type' },
+                ref:           { label: 'Ref' },
+                customer_name: { label: 'Customer' },
+                trn_date:      { label: 'Trn Date' },
+                due_date:      { label: 'Due Date' },
+                due:           { label: 'Due' },
+                amount:        { label: 'Total' },
+                status:        { label: 'Status' },
+                actions:       { label: '' }
 
-                },
-                listLoading   : false,
-                rows          : [],
-                paginationData: {
-                    totalItems : 0,
-                    totalPages : 0,
-                    perPage    : 10,
-                    currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
-                },
-                actions : [],
-                fetched : false
-            };
-        },
-
-        created() {
-            this.$store.dispatch( 'spinner/setSpinner', true );
-            this.$root.$on('transactions-filter', filters => {
-                this.$router.push({ path: '/transactions/purchases', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
-                this.fetchItems(filters);
-                this.fetched = true;
-            });
-
-            let filters = {};
-
-            // Get start & end date from url on page load
-            if ( this.$route.query.start && this.$route.query.end ) {
-                filters.start_date = this.$route.query.start;
-                filters.end_date   = this.$route.query.end;
-            }
-            if ( this.$route.query.status ) {
-                filters.status   = this.$route.query.status;
-            }
-
-            if ( !this.fetched ) {
-                this.fetchItems(filters);
-            }
-        },
-
-        watch: {
-            '$route': 'fetchItems'
-        },
-
-        methods: {
-            fetchItems(filters = {}) {
-                this.rows = [];
-
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get('/transactions/purchases', {
-                    params: {
-                        per_page  : this.paginationData.perPage,
-                        page      : this.$route.params.page === undefined ? this.paginationData.currentPage: this.$route.params.page,
-                        start_date: filters.start_date,
-                        end_date  : filters.end_date,
-                        status    : filters.status
-                    }
-                }).then( (response) => {
-                    let mappedData = response.data.map(item => {
-                        if (( 'purchase' === item.type && item.purchase_order == 0 ) && ( 'Partially Paid' == item.status || 'Awaiting Payment' == item.status ) ) {
-                            item['actions'] = [
-                                { key: 'edit', label: 'Edit' },
-                                { key: 'payment', label: 'Make Payment' },
-                                // { key: 'trash', label: 'Delete' }
-                            ];
-                        } else if ( ( 'purchase' === item.type && 'Paid' != item.status && item.purchase_order == 0 ) || item.purchase_order == 1 ) {
-                            item['actions'] = [
-                                { key: 'edit', label: 'Edit' },
-                            ];
-                        } else {
-                            item['actions'] = [
-                                { key: 'void', label: 'Void' },
-                            ];
-                        }
-
-                        return item;
-                    });
-
-                    this.rows = mappedData;
-
-                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-
-                    this.listLoading = false;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.listLoading = false;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
             },
+            listLoading   : false,
+            rows          : [],
+            paginationData: {
+                totalItems : 0,
+                totalPages : 0,
+                perPage    : 10,
+                currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+            },
+            actions : [],
+            fetched : false
+        };
+    },
 
-            onActionClick(action, row, index) {
+    created () {
+        this.$store.dispatch('spinner/setSpinner', true);
+        this.$root.$on('transactions-filter', filters => {
+            this.$router.push({ path: '/transactions/purchases', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
+            this.fetchItems(filters);
+            this.fetched = true;
+        });
 
-                switch ( action ) {
-                    case 'trash':
-                        if ( confirm('Are you sure to delete?') ) {
-                            HTTP.delete('purchases/' + row.id).then( response => {
-                                this.$delete(this.rows, index);
-                            });
-                        }
-                        break;
+        const filters = {};
 
-                    case 'edit':
-                        if ( 'purchase' == row.type ) {
-                            this.$router.push({ name: 'PurchaseEdit', params: { id: row.id } })
-                        }
+        // Get start & end date from url on page load
+        if (this.$route.query.start && this.$route.query.end) {
+            filters.start_date = this.$route.query.start;
+            filters.end_date   = this.$route.query.end;
+        }
+        if (this.$route.query.status) {
+            filters.status   = this.$route.query.status;
+        }
 
-                        break;
+        if (!this.fetched) {
+            this.fetchItems(filters);
+        }
+    },
 
-                    case 'payment':
-                        if ( 'purchase' == row.type ) {
-                            this.$router.push({
-                                name: 'PayPurchaseCreate', params: {
-                                    vendor_id: row.vendor_id,
-                                    vendor_name: row.vendor_name,
-                                }
-                            });
-                        }
-                        break;
+    watch: {
+        $route: 'fetchItems'
+    },
 
-                    default :
+    methods: {
+        fetchItems (filters = {}) {
+            this.rows = [];
+
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.get('/transactions/purchases', {
+                params: {
+                    per_page  : this.paginationData.perPage,
+                    page      : this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+                    start_date: filters.start_date,
+                    end_date  : filters.end_date,
+                    status    : filters.status
                 }
-            },
+            }).then((response) => {
+                const mappedData = response.data.map(item => {
+                    if ((item.type === 'purchase' && item.purchase_order === 0) && (item.status === 'Partially Paid' || item.status === 'Awaiting Payment')) {
+                        item['actions'] = [
+                            { key: 'edit', label: 'Edit' },
+                            { key: 'payment', label: 'Make Payment' }
+                            // { key: 'trash', label: 'Delete' }
+                        ];
+                    } else if ((item.type === 'purchase' && item.status !== 'Paid' && item.purchase_order === 0) || item.purchase_order === 1) {
+                        item['actions'] = [
+                            { key: 'edit', label: 'Edit' }
+                        ];
+                    } else {
+                        item['actions'] = [
+                            { key: 'void', label: 'Void' }
+                        ];
+                    }
 
-            goToPage(page) {
-                this.listLoading = true;
-
-                let queries = Object.assign({}, this.$route.query);
-                this.paginationData.currentPage = page;
-                this.$router.push({
-                    name  : 'PaginatePurchases',
-                    params: { page: page },
-                    query : queries
+                    return item;
                 });
 
-                this.fetchItems();
-            },
+                this.rows = mappedData;
 
-            isPayment(row) {
-                return row.type === 'pay_purchase' ? true : false;
-            },
+                this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
 
-            getTrnType(row) {
-                if ( row.type === 'purchase' ) {
-                    if ( 1 == row.purchase_order ) {
-                        return 'Purchase Order';
-                    }
-                    return 'Purchase';
-                } else {
-                    return 'Pay Purchase';
+                this.listLoading = false;
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.listLoading = false;
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
+
+        onActionClick (action, row, index) {
+            switch (action) {
+            case 'trash':
+                if (confirm('Are you sure to delete?')) {
+                    HTTP.delete('purchases/' + row.id).then(response => {
+                        this.$delete(this.rows, index);
+                    });
                 }
+                break;
+
+            case 'edit':
+                if (row.type === 'purchase') {
+                    this.$router.push({ name: 'PurchaseEdit', params: { id: row.id } });
+                }
+
+                break;
+
+            case 'payment':
+                if (row.type === 'purchase') {
+                    this.$router.push({
+                        name: 'PayPurchaseCreate',
+                        params: {
+                            vendor_id: row.vendor_id,
+                            vendor_name: row.vendor_name
+                        }
+                    });
+                }
+                break;
+
+            default :
             }
         },
 
+        goToPage (page) {
+            this.listLoading = true;
+
+            const queries = Object.assign({}, this.$route.query);
+            this.paginationData.currentPage = page;
+            this.$router.push({
+                name  : 'PaginatePurchases',
+                params: { page: page },
+                query : queries
+            });
+
+            this.fetchItems();
+        },
+
+        isPayment (row) {
+            return row.type === 'pay_purchase';
+        },
+
+        getTrnType (row) {
+            if (row.type === 'purchase') {
+                if (row.purchase_order === 1) {
+                    return 'Purchase Order';
+                }
+                return 'Purchase';
+            } else {
+                return 'Pay Purchase';
+            }
+        }
     }
+
+};
 </script>
 
 <style lang="less">
@@ -263,4 +264,3 @@
         }
     }
 </style>
-

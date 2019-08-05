@@ -77,116 +77,118 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import Datepicker  from 'admin/components/base/Datepicker.vue'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
+import HTTP from 'admin/http';
+import Datepicker  from 'admin/components/base/Datepicker.vue';
+import ListTable from 'admin/components/list-table/ListTable.vue';
 
-    export default {
-        name: 'IncomeStatement',
+export default {
+    name: 'IncomeStatement',
 
-        components: {
-            ListTable,
-            Datepicker
-        },
+    components: {
+        ListTable,
+        Datepicker
+    },
 
-        data() {
-            return {
-                start_date    : null,
-                end_date      : null,
-                bulkActions: [
-                    {
-                        key: 'trash',
-                        label: 'Move to Trash',
-                        img: erp_acct_var.erp_assets + '/images/trash.png'
-                    }
-                ],
-                columns1: {
-                    'name'  : { label: 'Account Name' },
-                    'amount' : { label: 'Amount' }
-                },
+    data () {
+        return {
+            start_date    : null,
+            end_date      : null,
+            bulkActions: [
+                {
+                    key: 'trash',
+                    label: 'Move to Trash',
+                    img: erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
+                }
+            ],
+            columns1: {
+                name  : { label: 'Account Name' },
+                amount : { label: 'Amount' }
+            },
 
-                columns2: {
-                    'name'  : { label: 'Account Name' },
-                    'amount' : { label: 'Amount' }
-                },
-                rows1: [],
-                rows2: [],
-                income: 0,
-                expense: 0,
-                profit: 0,
-                loss: 0
-            }
-        },
+            columns2: {
+                name  : { label: 'Account Name' },
+                amount : { label: 'Amount' }
+            },
+            rows1: [],
+            rows2: [],
+            income: 0,
+            expense: 0,
+            profit: 0,
+            loss: 0
+        };
+    },
 
-        created() {
-            this.$nextTick(function () {
-                // with leading zero, and JS month are zero index based
-                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
+    created () {
+        this.$nextTick(function () {
+            // with leading zero, and JS month are zero index based
+            const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
 
-                if ( this.$route.query.start ) {
-                    this.start_date = this.$route.query.start;
-                    this.end_date   = this.$route.query.end;
-                } else {
-                    this.start_date = `2019-${month}-01`;
-                    this.end_date   = erp_acct_var.current_date;
-                };
+            if (this.$route.query.start) {
+                this.start_date = this.$route.query.start;
+                this.end_date   = this.$route.query.end;
+            } else {
+                this.start_date = `2019-${month}-01`;
+                this.end_date   = erp_acct_var.current_date;
+            };
 
-                this.updateDate();
+            this.updateDate();
 
-                this.fetchItems();
-            });
-        },
+            this.fetchItems();
+        });
+    },
 
-        methods: {
-             updateDate() {
-                this.$router.push({ path: this.$route.path, query: {
+    methods: {
+        updateDate () {
+            this.$router.push({ path: this.$route.path,
+                query: {
                     start: this.start_date,
                     end  : this.end_date
                 } });
-            },
+        },
 
-            fetchItems() {
-                this.updateDate();
+        fetchItems () {
+            this.updateDate();
 
-                this.rows1 = [];
-                this.rows2 = [];
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get( '/reports/income-statement',{
-                    params: {
-                        start_date: this.start_date,
-                        end_date  : this.end_date
-                    }
-                }).then(response => {
-                    this.rows1   = response.data.rows1;
-                    this.rows2   = response.data.rows2;
-                    this.income  = response.data.income;
-                    this.expense = response.data.expense;
-                    this.profit  = response.data.profit;
-                    this.loss    = response.data.loss;
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
-
-            transformBalance( val ) {
-                if ( null === val && typeof val === 'object' ) {
-                    val = 0;
+            this.rows1 = [];
+            this.rows2 = [];
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.get('/reports/income-statement', {
+                params: {
+                    start_date: this.start_date,
+                    end_date  : this.end_date
                 }
+            }).then(response => {
+                this.rows1   = response.data.rows1;
+                this.rows2   = response.data.rows2;
+                this.income  = response.data.income;
+                this.expense = response.data.expense;
+                this.profit  = response.data.profit;
+                this.loss    = response.data.loss;
 
-                if ( val < 0 ) {
-                    return `Cr. ${this.moneyFormat( Math.abs(val) )}`;
-                }
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
 
-                return `Dr. ${this.moneyFormat( val )}`;
-            },
-
-            printPopup() {
-                window.print();
+        transformBalance (val) {
+            if (val === null && typeof val === 'object') {
+                val = 0;
             }
+
+            if (val < 0) {
+                return `Cr. ${this.moneyFormat(Math.abs(val))}`;
+            }
+
+            return `Dr. ${this.moneyFormat(val)}`;
+        },
+
+        printPopup () {
+            window.print();
         }
     }
+};
 </script>
 
 <style lang="less">

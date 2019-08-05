@@ -55,55 +55,54 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
-    import SimpleSelect from 'admin/components/select/SimpleSelect.vue'
+import HTTP from 'admin/http';
+import Datepicker from 'admin/components/base/Datepicker.vue';
+import SimpleSelect from 'admin/components/select/SimpleSelect.vue';
 
-    export default {
-        name: 'TransactionsFilter',
+export default {
+    name: 'TransactionsFilter',
 
-        components: {
-            Datepicker,
-            SimpleSelect
-        },
+    components: {
+        Datepicker,
+        SimpleSelect
+    },
 
-        data() {
-            return {
-                showFilters: false,
-                filters: {
-                    start_date: '',
-                    end_date: '',
-                    status: ''
-                },
-                statuses: [],
-            }
-        },
-
-        created() {
-            HTTP.get('/transactions/statuses').then(response => {
-                this.statuses = response.data;
-            }).catch(error => {
-                console.log(error);
-            });
-
-            this.$root.$on( 'SimpleSelectChange', (data) => {
-                let status = this.statuses.find(o => o.id === data.selected);
-                this.filters.status = parseInt(status.id);
-            });
-        },
-
-        methods: {
-            toggleFilter() {
-                this.showFilters = !this.showFilters;
+    data () {
+        return {
+            showFilters: false,
+            filters: {
+                start_date: '',
+                end_date: '',
+                status: ''
             },
+            statuses: []
+        };
+    },
 
-            filterList() {
-                this.toggleFilter();
+    created () {
+        HTTP.get('/transactions/statuses').then(response => {
+            this.statuses = response.data;
+        }).catch(error => {
+            throw error;
+        });
 
-                this.$root.$emit('transactions-filter', this.filters);
-            },
+        this.$root.$on('SimpleSelectChange', (data) => {
+            const status = this.statuses.find(o => o.id === data.selected);
+            this.filters.status = parseInt(status.id);
+        });
+    },
 
+    methods: {
+        toggleFilter () {
+            this.showFilters = !this.showFilters;
+        },
 
+        filterList () {
+            this.toggleFilter();
+
+            this.$root.$emit('transactions-filter', this.filters);
         }
+
     }
+};
 </script>

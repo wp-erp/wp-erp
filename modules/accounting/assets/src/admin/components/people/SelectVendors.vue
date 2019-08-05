@@ -11,90 +11,90 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex';
 
-    import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import PeopleModal from 'admin/components/people/PeopleModal.vue'
+import HTTP from 'admin/http';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import PeopleModal from 'admin/components/people/PeopleModal.vue';
 
-    export default {
-        name: 'SelectVendors',
+export default {
+    name: 'SelectVendors',
 
-        components: {
-            MultiSelect,
-            PeopleModal
+    components: {
+        MultiSelect,
+        PeopleModal
+    },
+
+    props: {
+        value: {
+            type: [String, Object, Array],
+            default: ''
         },
 
-        props: {
-            value: {
-                type: [String, Object, Array],
-                default: ''
-            },
-
-            reset: {
-                type: Boolean,
-                default: false
-            }
-        },
-
-        data() {
-            return {
-                selected: null,
-                showModal: false,
-            }
-        },
-
-        watch: {
-            value(newVal) {
-                this.selected = newVal;
-            },
-
-            selected() {
-                this.$emit('input', this.selected);
-            },
-
-            reset() {
-                this.selected = [];
-            }
-        },
-
-        computed: mapState({
-            options: state => state.purchase.vendors
-        }),
-
-        created() {
-            this.$store.dispatch('purchase/fetchVendors');
-
-            this.$root.$on( 'options-query', query => {
-                if ( query ) {
-                    this.getvendors(query);
-                }
-            } );
-
-            this.$on('modal-close', () => {
-                this.showModal = false;
-                this.people = null;
-            });
-
-            this.$root.$on( 'peopleUpdate', () => {
-                self.showModal = false;
-            } );
-        },
-
-        methods: {
-            getvendors(query) {
-                HTTP.get('/people', {
-                    params: {
-                        type: 'vendor',
-                        search: query
-                    }
-                }).then(response => {
-                    this.$store.dispatch('purchase/fillVendors', response.data);
-                });
-            },
-
+        reset: {
+            type: Boolean,
+            default: false
         }
+    },
+
+    data () {
+        return {
+            selected: null,
+            showModal: false
+        };
+    },
+
+    watch: {
+        value (newVal) {
+            this.selected = newVal;
+        },
+
+        selected () {
+            this.$emit('input', this.selected);
+        },
+
+        reset () {
+            this.selected = [];
+        }
+    },
+
+    computed: mapState({
+        options: state => state.purchase.vendors
+    }),
+
+    created () {
+        this.$store.dispatch('purchase/fetchVendors');
+
+        this.$root.$on('options-query', query => {
+            if (query) {
+                this.getvendors(query);
+            }
+        });
+
+        this.$on('modal-close', () => {
+            this.showModal = false;
+            this.people = null;
+        });
+
+        this.$root.$on('peopleUpdate', () => {
+            self.showModal = false;
+        });
+    },
+
+    methods: {
+        getvendors (query) {
+            HTTP.get('/people', {
+                params: {
+                    type: 'vendor',
+                    search: query
+                }
+            }).then(response => {
+                this.$store.dispatch('purchase/fillVendors', response.data);
+            });
+        }
+
     }
+};
 </script>
 
 <style lang="less">

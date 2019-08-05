@@ -32,111 +32,112 @@
 </template>
 
 <script>
-    export default {
-        name: "AccountingMenu",
+export default {
+    name: 'AccountingMenu',
 
-        props: {},
-        data() {
-            return {
-                menuItems: erp_acct_var.erp_acct_menus,
-                dropDownClass: "erp-nav-dropdown",
-                primaryNav: "erp-nav -primary",
-                dropdownNav: "dropdown-nav",
-                module_name: __("Accounting", "erp"),
-                svgData: "M221.9,0H17.1C6.8,0,0,6.8,0,17.1V324.3c0,10.2,6.8,17.1,17.1,17.1H221.9c10.2,0,17.1-6.8,17.1-17.1V17.1C238.9,6.8,232.1,0,221.9,0ZM68.3,307.2H34.1V273.1H68.2v34.1Zm0-68.3H34.1V204.8H68.2v34.1Zm0-68.2H34.1V136.6H68.2v34.1Zm68.2,136.5H102.4V273.1h34.1Zm0-68.3H102.4V204.8h34.1Zm0-68.2H102.4V136.6h34.1Zm68.3,136.5H170.7V273.1h34.1v34.1Zm0-68.3H170.7V204.8h34.1v34.1Zm0-68.2H170.7V136.6h34.1v34.1Zm0-68.3H34.1V34.1H204.8v68.3Zm0,0",
-                current_url: erp_acct_var.erp_acct_url,
-                activeClass:[]
-            };
-        },
+    props: {},
+    data () {
+        /* global __ */
+        return {
+            menuItems: erp_acct_var.erp_acct_menus, /* global erp_acct_var */
+            dropDownClass: 'erp-nav-dropdown',
+            primaryNav: 'erp-nav -primary',
+            dropdownNav: 'dropdown-nav',
+            module_name: __('Accounting', 'erp'),
+            svgData: 'M221.9,0H17.1C6.8,0,0,6.8,0,17.1V324.3c0,10.2,6.8,17.1,17.1,17.1H221.9c10.2,0,17.1-6.8,17.1-17.1V17.1C238.9,6.8,232.1,0,221.9,0ZM68.3,307.2H34.1V273.1H68.2v34.1Zm0-68.3H34.1V204.8H68.2v34.1Zm0-68.2H34.1V136.6H68.2v34.1Zm68.2,136.5H102.4V273.1h34.1Zm0-68.3H102.4V204.8h34.1Zm0-68.2H102.4V136.6h34.1Zm68.3,136.5H170.7V273.1h34.1v34.1Zm0-68.3H170.7V204.8h34.1v34.1Zm0-68.2H170.7V136.6h34.1v34.1Zm0-68.3H34.1V34.1H204.8v68.3Zm0,0',
+            current_url: erp_acct_var.erp_acct_url,
+            activeClass:[]
+        };
+    },
 
-        created() {
-            this.init();
-        },
+    created () {
+        this.init();
+    },
 
-        methods: {
-            init() {
-                const container = document.querySelector(".erp-nav-container");
-                if (container == null) {
-                    return;
-                }
-                const primary = container.querySelector(".-primary");
+    methods: {
+        init () {
+            const container = document.querySelector('.erp-nav-container');
+            if (container == null) {
+                return;
+            }
+            const primary = container.querySelector('.-primary');
 
-                primaryItems = container.querySelectorAll(".-primary > li:not(.-more)");
-                container.classList.add("--jsfied");
+            const primaryItems = container.querySelectorAll('.-primary > li:not(.-more)');
+            container.classList.add('--jsfied');
 
-                // insert "more" button and duplicate the list
-                primary.insertAdjacentHTML(
-                    "beforeend",
-                    '<li class="-more"><button type="button" aria-haspopup="true" aria-expanded="false">More <span class="dashicons dashicons-arrow-down-alt2"></span></button><ul class="-secondary">' +
+            // insert "more" button and duplicate the list
+            primary.insertAdjacentHTML(
+                'beforeend',
+                '<li class="-more"><button type="button" aria-haspopup="true" aria-expanded="false">More <span class="dashicons dashicons-arrow-down-alt2"></span></button><ul class="-secondary">' +
                     primary.innerHTML +
-                    "</ul></li>"
+                    '</ul></li>'
+            );
+            const secondary = container.querySelector('.-secondary');
+            const secondaryItems = [].slice.call(secondary.children);
+            const allItems = container.querySelectorAll('li');
+            const moreLi = primary.querySelector('.-more');
+            const moreBtn = moreLi.querySelector('button');
+            moreBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                container.classList.toggle('--show-secondary');
+                moreBtn.setAttribute(
+                    'aria-expanded',
+                    container.classList.contains('--show-secondary')
                 );
-                const secondary = container.querySelector(".-secondary");
-                secondaryItems = [].slice.call(secondary.children);
-                allItems = container.querySelectorAll("li");
-                moreLi = primary.querySelector(".-more");
-                moreBtn = moreLi.querySelector("button");
-                moreBtn.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    container.classList.toggle("--show-secondary");
-                    moreBtn.setAttribute(
-                        "aria-expanded",
-                        container.classList.contains("--show-secondary")
-                    );
+            });
+
+            // adapt tabs
+            var doAdapt = function doAdapt () {
+                // reveal all items for the calculation
+                allItems.forEach(function (item) {
+                    item.classList.remove('--hidden');
                 });
 
-                // adapt tabs
-                var doAdapt = function doAdapt() {
-                    // reveal all items for the calculation
-                    allItems.forEach(function (item) {
-                        item.classList.remove("--hidden");
-                    });
-
-                    // hide items that won't fit in the Primary
-                    stopWidth = moreBtn.offsetWidth;
-                    hiddenItems = [];
-                    primaryWidth = primary.offsetWidth;
-                    primaryItems.forEach(function (item, i) {
-                        if (primaryWidth >= stopWidth + item.offsetWidth) {
-                            stopWidth += item.offsetWidth;
-                        } else {
-                            item.classList.add("--hidden");
-                            hiddenItems.push(i);
-                        }
-                    });
-
-                    // toggle the visibility of More button and items in Secondary
-                    if (!hiddenItems.length) {
-                        moreLi.classList.add("--hidden");
-                        container.classList.remove("--show-secondary");
-                        moreBtn.setAttribute("aria-expanded", false);
+                // hide items that won't fit in the Primary
+                var stopWidth = moreBtn.offsetWidth;
+                const hiddenItems = [];
+                const primaryWidth = primary.offsetWidth;
+                primaryItems.forEach(function (item, i) {
+                    if (primaryWidth >= stopWidth + item.offsetWidth) {
+                        stopWidth += item.offsetWidth;
                     } else {
-                        secondaryItems.forEach(function (item, i) {
-                            if (!hiddenItems.includes(i)) {
-                                item.classList.add("--hidden");
-                            }
-                        });
+                        item.classList.add('--hidden');
+                        hiddenItems.push(i);
                     }
-                };
-
-                doAdapt(); // adapt immediately on load
-                window.addEventListener("resize", doAdapt); // adapt on window resize
-
-                // hide Secondary on the outside click
-                document.addEventListener("click", function (e) {
-                    var el = e.target;
-                    while (el) {
-                        if (el === secondary || el === moreBtn) {
-                            return;
-                        }
-                        el = el.parentNode;
-                    }
-                    container.classList.remove("--show-secondary");
-                    moreBtn.setAttribute("aria-expanded", false);
                 });
-            },
+
+                // toggle the visibility of More button and items in Secondary
+                if (!hiddenItems.length) {
+                    moreLi.classList.add('--hidden');
+                    container.classList.remove('--show-secondary');
+                    moreBtn.setAttribute('aria-expanded', false);
+                } else {
+                    secondaryItems.forEach(function (item, i) {
+                        if (!hiddenItems.includes(i)) {
+                            item.classList.add('--hidden');
+                        }
+                    });
+                }
+            };
+
+            doAdapt(); // adapt immediately on load
+            window.addEventListener('resize', doAdapt); // adapt on window resize
+
+            // hide Secondary on the outside click
+            document.addEventListener('click', function (e) {
+                var el = e.target;
+                while (el) {
+                    if (el === secondary || el === moreBtn) {
+                        return;
+                    }
+                    el = el.parentNode;
+                }
+                container.classList.remove('--show-secondary');
+                moreBtn.setAttribute('aria-expanded', false);
+            });
         }
-    };
+    }
+};
 </script>
 
 <style lang="less">
