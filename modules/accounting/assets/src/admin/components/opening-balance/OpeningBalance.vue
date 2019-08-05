@@ -512,19 +512,19 @@
                 this.form_errors = [];
 
                 this.acct_rec.forEach( (element) => {
-                    if ( typeof element !== 'undefined' && element.hasOwnProperty('people') ) {
+                    if ( typeof element !== 'undefined' && !element.hasOwnProperty('people') ) {
                         this.form_errors.push('People is not selected in Accounts Receivable.');
                     }
                 });
 
                 this.acct_pay.forEach( (element) => {
-                    if ( typeof element !== 'undefined' && element.hasOwnProperty('people') ) {
+                    if ( typeof element !== 'undefined' && !element.hasOwnProperty('people') ) {
                         this.form_errors.push('People is not selected in Accounts Payable.');
                     }
                 });
 
                 this.tax_pay.forEach( (element) => {
-                    if ( typeof element !== 'undefined' && element.hasOwnProperty('agency') ) {
+                    if ( typeof element !== 'undefined' && !element.hasOwnProperty('agency') ) {
                         this.form_errors.push('Agency is not selected in Tax Payable.');
                     }
                 });
