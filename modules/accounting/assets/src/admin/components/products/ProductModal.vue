@@ -151,180 +151,181 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import Modal from 'admin/components/modal/Modal.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+import HTTP from 'admin/http';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
-    export default {
-        name: 'ProductModal',
+export default {
+    name: 'ProductModal',
 
-        components: {
-            Modal,
-            MultiSelect
-        },
+    components: {
+        MultiSelect
+    },
 
-        props: {
-            product: {
-                type   : Object,
-                default: {}
-            }
-        },
+    props: {
+        product: {
+            type   : Object,
+            default: () => []
+        }
+    },
 
-        data() {
-            return {
-                error_msg    : [],
-                ProductFields: {
-                    id        : null,
-                    name      : '',
-                    type      : 0,
-                    categories: 0,
-                    costPrice : 0,
-                    salePrice : 0,
-                    vendor    : 0,
-                    tax_cat_id: 0
-                },
-                vendors      : [],
-                categories   : [],
-                tax_cats     : [],
-                productType  : [],
-                title        : 'Product'
-            }
-        },
-
-        created() {
-            if (this.product) {
-                let product                   = this.product;
-                this.ProductFields.name       = product.name;
-                this.ProductFields.id         = product.id;
-                this.ProductFields.type       = {id: product.product_type_id, name: product.type_name};
-                this.ProductFields.categories = {id: product.category_id, name: product.cat_name};
-                this.ProductFields.tax_cat_id = {id: product.tax_cat_id, name: product.tax_cat_name};
-                this.ProductFields.vendor     = {id: product.vendor, name: product.vendor_name};
-                this.ProductFields.salePrice  = product.sale_price;
-                this.ProductFields.costPrice  = product.cost_price;
-            }
-
-            this.loaded();
-        },
-
-        methods: {
-            saveProduct() {
-                if (!this.checkForm()) {
-                    return false;
-                }
-
-                this.$store.dispatch('spinner/setSpinner', true);
-
-                if (!this.product) {
-                    var type = 'post';
-                    var url  = 'products';
-                } else {
-                    var type = 'put';
-                    var url  = 'products/' + this.ProductFields.id;
-                }
-
-                var data = {
-                    name           : this.ProductFields.name,
-                    product_type_id: this.ProductFields.type,
-                    category_id    : this.ProductFields.categories,
-                    tax_cat_id     : this.ProductFields.tax_cat_id,
-                    vendor         : this.ProductFields.vendor,
-                    cost_price     : this.ProductFields.costPrice,
-                    sale_price     : this.ProductFields.salePrice,
-                };
-
-                HTTP[type](url, data).then(response => {
-                    this.$parent.$emit('close');
-                    this.$parent.getProducts();
-                    this.resetForm();
-                    this.$store.dispatch('spinner/setSpinner', false);
-                    this.showAlert('success', 'put' === type ? 'Product Updated!' : 'Product Created!');
-                }).catch(error => {
-                    this.$store.dispatch('spinner/setSpinner', false);
-                });
+    data () {
+        return {
+            error_msg    : [],
+            ProductFields: {
+                id        : null,
+                name      : '',
+                type      : 0,
+                categories: 0,
+                costPrice : 0,
+                salePrice : 0,
+                vendor    : 0,
+                tax_cat_id: 0
             },
+            vendors      : [],
+            categories   : [],
+            tax_cats     : [],
+            productType  : [],
+            title        : 'Product'
+        };
+    },
 
-            loaded() {
-                this.getVendors();
-                this.getCategories();
-                this.getTaxCategories();
-                this.getProductTypes();
-            },
+    created () {
+        if (this.product) {
+            const product                   = this.product;
+            this.ProductFields.name       = product.name;
+            this.ProductFields.id         = product.id;
+            this.ProductFields.type       = { id: product.product_type_id, name: product.type_name };
+            this.ProductFields.categories = { id: product.category_id, name: product.cat_name };
+            this.ProductFields.tax_cat_id = { id: product.tax_cat_id, name: product.tax_cat_name };
+            this.ProductFields.vendor     = { id: product.vendor, name: product.vendor_name };
+            this.ProductFields.salePrice  = product.sale_price;
+            this.ProductFields.costPrice  = product.cost_price;
+        }
 
-            getVendors() {
-                HTTP.get('vendors').then(response => {
-                    if (response.data) {
-                        for (let i in response.data) {
-                            var vendor = response.data[i];
-                            var object = {id: vendor.id, name: vendor.first_name + ' ' + vendor.last_name};
-                            this.vendors.push(object);
-                        }
+        this.loaded();
+    },
+
+    methods: {
+        saveProduct () {
+            if (!this.checkForm()) {
+                return false;
+            }
+
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            var type, url;
+
+            if (!this.product) {
+                type = 'post';
+                url  = 'products';
+            } else {
+                type = 'put';
+                url  = 'products/' + this.ProductFields.id;
+            }
+
+            var data = {
+                name           : this.ProductFields.name,
+                product_type_id: this.ProductFields.type,
+                category_id    : this.ProductFields.categories,
+                tax_cat_id     : this.ProductFields.tax_cat_id,
+                vendor         : this.ProductFields.vendor,
+                cost_price     : this.ProductFields.costPrice,
+                sale_price     : this.ProductFields.salePrice
+            };
+
+            HTTP[type](url, data).then(response => {
+                this.$parent.$emit('close');
+                this.$parent.getProducts();
+                this.resetForm();
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', type === 'put' ? 'Product Updated!' : 'Product Created!');
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
+
+        loaded () {
+            this.getVendors();
+            this.getCategories();
+            this.getTaxCategories();
+            this.getProductTypes();
+        },
+
+        getVendors () {
+            HTTP.get('vendors').then(response => {
+                if (response.data) {
+                    for (const i in response.data) {
+                        var vendor = response.data[i];
+                        var object = { id: vendor.id, name: vendor.first_name + ' ' + vendor.last_name };
+                        this.vendors.push(object);
                     }
-                })
-            },
+                }
+            });
+        },
 
-            getCategories() {
-                HTTP.get('product-cats').then(response => {
-                    this.categories = response.data;
-                })
-            },
+        getCategories () {
+            HTTP.get('product-cats').then(response => {
+                this.categories = response.data;
+            });
+        },
 
-            getTaxCategories() {
-                HTTP.get('tax-cats').then(response => {
-                    this.tax_cats = response.data;
-                })
-            },
+        getTaxCategories () {
+            HTTP.get('tax-cats').then(response => {
+                this.tax_cats = response.data;
+            });
+        },
 
-            getProductTypes() {
-                HTTP.get('products/types').then(response => {
-                    this.productType = response.data;
+        getProductTypes () {
+            HTTP.get('products/types').then(response => {
+                this.productType = response.data;
 
-                    this.ProductFields.type = {id: parseInt(response.data[0].id), name: response.data[0].name};
-                })
-            },
+                this.ProductFields.type = { id: parseInt(response.data[0].id), name: response.data[0].name };
+            });
+        },
 
-            resetForm() {
-                this.ProductFields.id         = null;
-                this.ProductFields.name       = '';
-                this.ProductFields.type       = [];
-                this.ProductFields.categories = [];
-                this.ProductFields.vendor     = [];
-                this.ProductFields.costPrice  = '';
-                this.ProductFields.salePrice  = '';
-            },
+        resetForm () {
+            this.ProductFields.id         = null;
+            this.ProductFields.name       = '';
+            this.ProductFields.type       = [];
+            this.ProductFields.categories = [];
+            this.ProductFields.vendor     = [];
+            this.ProductFields.costPrice  = '';
+            this.ProductFields.salePrice  = '';
+        },
 
-            checkForm() {
-                this.error_msg = [];
+        checkForm () {
+            this.error_msg = [];
 
-                if (
-                    this.ProductFields.name &&
+            if (
+                this.ProductFields.name &&
                     this.ProductFields.type &&
                     this.ProductFields.vendor &&
                     this.ProductFields.salePrice
-                ) {
-                    return true;
-                }
-
-                if (!this.ProductFields.name) {
-                    this.error_msg.push('Product name is required');
-                }
-
-                if (!this.ProductFields.type) {
-                    this.error_msg.push('Product type is required');
-                }
-
-                if (this.ProductFields.salePrice <= 0) {
-                    this.error_msg.push('Product sale price should be greater than 0');
-                }
-
-                if (!this.ProductFields.vendor) {
-                    this.error_msg.push('Vendor is required');
-                }
-
-                return false;
+            ) {
+                return true;
             }
+
+            if (!this.ProductFields.name) {
+                this.error_msg.push('Product name is required');
+            }
+
+            if (!this.ProductFields.type) {
+                this.error_msg.push('Product type is required');
+            }
+
+            if (this.ProductFields.salePrice <= 0) {
+                this.error_msg.push('Product sale price should be greater than 0');
+            }
+
+            if (!this.ProductFields.vendor) {
+                this.error_msg.push('Vendor is required');
+            }
+
+            return false;
         }
     }
+};
 </script>
 
 <style lang="less">

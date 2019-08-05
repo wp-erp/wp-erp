@@ -23,35 +23,32 @@
 </template>
 
 <script>
-    import 'assets/js/plugins/chart.min'
-    import 'assets/js/status_chart'
+import 'assets/js/plugins/chart.min';
+import 'assets/js/status_chart';
 
-    import ComboBox from 'admin/components/select/ComboBox.vue'
-    import PurchasesStats from 'admin/components/transactions/purchases/PurchasesStats.vue'
-    import PurchasesList from 'admin/components/transactions/purchases/PurchasesList.vue'
-    import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue'
+import ComboBox from 'admin/components/select/ComboBox.vue';
+import PurchasesStats from 'admin/components/transactions/purchases/PurchasesStats.vue';
+import PurchasesList from 'admin/components/transactions/purchases/PurchasesList.vue';
+import TransactionsFilter from 'admin/components/transactions/TransactionsFilter.vue';
 
-    export default {
-        name: 'Purchases',
+export default {
+    name: 'Purchases',
 
-        components: {
-            PurchasesStats,
-            PurchasesList,
-            TransactionsFilter,
-            ComboBox,
-        },
+    components: {
+        PurchasesStats,
+        PurchasesList,
+        TransactionsFilter,
+        ComboBox
+    },
 
-        data() {
-            return {
-                pages: [
-                    {namedRoute: 'PurchaseOrderCreate', name: 'Create Purchase Order'},
-                    {namedRoute: 'PurchaseCreate', name: 'Create Purchase'},
-                    {namedRoute: 'PayPurchaseCreate', name: 'Pay Purchase'},
-                ],
-            };
-        }
-    };
+    data () {
+        return {
+            pages: [
+                { namedRoute: 'PurchaseOrderCreate', name: 'Create Purchase Order' },
+                { namedRoute: 'PurchaseCreate', name: 'Create Purchase' },
+                { namedRoute: 'PayPurchaseCreate', name: 'Pay Purchase' }
+            ]
+        };
+    }
+};
 </script>
-
-<style scoped>
-</style>

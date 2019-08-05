@@ -56,151 +56,155 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http.js'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+import HTTP from 'admin/http.js';
+import ListTable from 'admin/components/list-table/ListTable.vue';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
-    export default {
-        name: 'ProductCategory',
+export default {
+    name: 'ProductCategory',
 
-        components: {
-            ListTable,
-            MultiSelect
+    components: {
+        ListTable,
+        MultiSelect
+    },
+
+    data () {
+        return {
+            categories    : [],
+            categoryName  : '',
+            parentCategory: 0,
+            category      : null,
+            error         : false,
+            showModal     : false,
+            columns       : {
+                name   : {
+                    label: 'Category Name'
+                },
+                actions: {
+                    label: 'Actions'
+                }
+            },
+            actions       : [
+                { key: 'edit', label: 'Edit' },
+                { key: 'trash', label: 'Delete' }
+            ],
+            bulkActions   : [
+                {
+                    key  : 'trash',
+                    label: 'Move to Trash',
+                    img  : erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
+                }
+            ]
+        };
+    },
+
+    created () {
+        this.$store.dispatch('spinner/setSpinner', true);
+        this.getCategories();
+        this.$on('close', function () {
+            this.showModal = false;
+        });
+    },
+    methods: {
+        getCategories () {
+            HTTP.get('product-cats').then((response) => {
+                const categories = response.data;
+                for (const x in categories) {
+                    const category = categories[x];
+                    const object   = { id: category.id, name: category.name, isEdit: false };
+                    this.categories.push(object);
+                }
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch((error) => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
         },
 
-        data() {
-            return {
-                categories    : [],
-                categoryName  : '',
-                parentCategory: 0,
-                category      : null,
-                error         : false,
-                showModal     : false,
-                columns       : {
-                    'name'   : {
-                        label: 'Category Name'
-                    },
-                    'actions': {
-                        label: 'Actions'
-                    }
-                },
-                actions       : [
-                    {key: 'edit', label: 'Edit'},
-                    {key: 'trash', label: 'Delete'}
-                ],
-                bulkActions   : [
-                    {
-                        key  : 'trash',
-                        label: 'Move to Trash',
-                        img  : erp_acct_var.erp_assets + '/images/trash.png',
-                    }
-                ],
+        onActionClick (action, row, index) {
+            if (action === 'edit') {
+                row.isEdit    = true;
+                this.category = row;
+            } else if (action === 'trash') {
+                if (confirm('Are you sure want to delete ?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+                    HTTP.delete('product-cats/' + row.id).then((response) => {
+                        this.$delete(this.categories, index);
+
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        this.showAlert('success', 'Deleted!');
+                    }).catch(error => {
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        throw error;
+                    });
+                }
             }
         },
 
-        created() {
+        onBulkAction (action, items) {
+            if (action === 'trash') {
+                if (confirm('Are you sure want to delete?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+
+                    HTTP.delete('product-cats/delete/' + items).then(response => {
+                        const toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
+
+                        if (toggleCheckbox.checked) {
+                            toggleCheckbox.click();
+                        }
+                        this.categories = this.categories.filter(item => {
+                            return items.indexOf(item.id) === -1;
+                        });
+                        this.$store.dispatch('spinner/setSpinner', false);
+                    }).catch(error => {
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        throw error;
+                    });
+                }
+            }
+        },
+
+        createCategory () {
+            if (this.categoryName === '') {
+                this.error = true;
+                return;
+            }
+
             this.$store.dispatch('spinner/setSpinner', true);
-            this.getCategories();
-            this.$on('close', function () {
-                this.showModal = false;
+            var data = {
+                name  : this.categoryName,
+                parent: this.parentCategory
+            };
+            HTTP.post('/product-cats', data).then((response) => {
+                this.categories.push(response.data);
+                this.categoryName   = '';
+                this.parentCategory = 0;
+
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch((error) => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
             });
         },
-        methods: {
-            getCategories() {
-                HTTP.get('product-cats').then((response) => {
-                    let categories = response.data
-                    for (let x in categories) {
-                        let category = categories[x];
-                        let object   = {id: category.id, name: category.name, isEdit: false};
-                        this.categories.push(object);
-                    }
-                    this.$store.dispatch('spinner/setSpinner', false);
-                }).catch((error) => {
-                    this.$store.dispatch('spinner/setSpinner', false);
-                });
-            },
 
-            onActionClick(action, row, index) {
-                if ('edit' == action) {
-                    row.isEdit    = true;
-                    this.category = row;
-                } else if ('trash' == action) {
-                    if (confirm("Are you sure want to delete ?")) {
-                        this.$store.dispatch('spinner/setSpinner', true);
-                        HTTP.delete('product-cats/' + row.id).then((response) => {
-                            this.$delete(this.categories, index);
+        updateCategory (row) {
+            var categoryName = document.getElementById('cat-' + row.id).value;
+            var categoryId   = row.id;
 
-                            this.$store.dispatch('spinner/setSpinner', false);
-                            this.showAlert('success', 'Deleted!');
-                        }).catch(error => {
-                            this.$store.dispatch('spinner/setSpinner', false);
-                        });
-                    }
-                }
-            },
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.put('/product-cats/' + categoryId, { name: categoryName }).then((response) => {
+                row.name = categoryName;
 
-            onBulkAction(action, items) {
-                if ('trash' == action) {
-                    if (confirm('Are you sure want to delete?')) {
-                        this.$store.dispatch('spinner/setSpinner', true);
-
-                        HTTP.delete('product-cats/delete/' + items).then(response => {
-                            let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-                            if (toggleCheckbox.checked) {
-                                toggleCheckbox.click();
-                            }
-                            this.categories = this.categories.filter(item => {
-                                return items.indexOf(item.id) == -1;
-                            });
-                            this.$store.dispatch('spinner/setSpinner', false);
-
-                        }).catch(error => {
-                            this.$store.dispatch('spinner/setSpinner', false);
-                        });
-                    }
-                }
-            },
-
-            createCategory() {
-                if ('' === this.categoryName) {
-                    this.error = true;
-                    return;
-                }
-
-                this.$store.dispatch('spinner/setSpinner', true);
-                var data = {
-                    name  : this.categoryName,
-                    parent: this.parentCategory
-                };
-                HTTP.post('/product-cats', data).then((response) => {
-                    this.categories.push(response.data);
-                    this.categoryName   = '';
-                    this.parentCategory = 0;
-
-                    this.$store.dispatch('spinner/setSpinner', false);
-                }).catch((error) => {
-                    this.$store.dispatch('spinner/setSpinner', false);
-                });
-            },
-
-            updateCategory(row) {
-                var categoryName = document.getElementById('cat-' + row.id).value;
-                var categoryId   = row.id;
-
-                this.$store.dispatch('spinner/setSpinner', true);
-                HTTP.put('/product-cats/' + categoryId, {name: categoryName}).then((response) => {
-                    row.name = categoryName;
-
-                    this.$store.dispatch('spinner/setSpinner', false);
-                }).catch(error => {
-                    row.isEdit = false;
-                    this.$store.dispatch('spinner/setSpinner', false);
-                });
-            },
-
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                row.isEdit = false;
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
         }
+
     }
+};
 </script>
 
 <style lang="less">

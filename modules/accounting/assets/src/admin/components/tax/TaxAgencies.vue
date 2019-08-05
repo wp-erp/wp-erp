@@ -39,166 +39,167 @@
 </template>
 
 <script>
-    import HTTP          from 'admin/http'
-    import ListTable     from 'admin/components/list-table/ListTable.vue'
-    import NewTaxAgency  from 'admin/components/tax/NewTaxAgency.vue'
-    import TaxShortcuts  from 'admin/components/tax/TaxShortcuts.vue'
+import HTTP          from 'admin/http';
+import ListTable     from 'admin/components/list-table/ListTable.vue';
+import NewTaxAgency  from 'admin/components/tax/NewTaxAgency.vue';
+import TaxShortcuts  from 'admin/components/tax/TaxShortcuts.vue';
 
-    export default {
-        name: 'TaxAgencies',
+export default {
+    name: 'TaxAgencies',
 
-        components: {
-            ListTable,
-            NewTaxAgency,
-            TaxShortcuts
-        },
+    components: {
+        ListTable,
+        NewTaxAgency,
+        TaxShortcuts
+    },
 
-        data() {
-            return {
-                showModal: false,
-                modalParams: null,
-                columns: {
-                    // 'tax_agency_id': {label: 'ID'},
-                    'tax_agency_name': {label: 'Agency Name'},
-                    'actions': { label: 'Actions' }
-                },
-                rows: [],
-                paginationData: {
-                    totalItems : 0,
-                    totalPages : 0,
-                    perPage    : 10,
-                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
-                },
-                actions : [
-                    { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
-                    { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
-                ],
-                bulkActions: [
-                    {
-                        key: 'trash',
-                        label: 'Trash',
-                        iconClass: 'flaticon-trash'
-                    }
-                ],
-                tax_agencies          : [{}],
-                buttonTitle           : '',
-                pageTitle             : '',
-                url                   : '',
-                singleUrl             : '',
-                isActiveOptionDropdown: false,
-                agency_id             : null,
-                is_update             : false
-            };
-        },
+    data () {
+        return {
+            showModal: false,
+            modalParams: null,
+            columns: {
+                // 'tax_agency_id': {label: 'ID'},
+                tax_agency_name: { label: 'Agency Name' },
+                actions: { label: 'Actions' }
+            },
+            rows: [],
+            paginationData: {
+                totalItems : 0,
+                totalPages : 0,
+                perPage    : 10,
+                currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+            },
+            actions : [
+                { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
+                { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
+            ],
+            bulkActions: [
+                {
+                    key: 'trash',
+                    label: 'Trash',
+                    iconClass: 'flaticon-trash'
+                }
+            ],
+            tax_agencies          : [{}],
+            buttonTitle           : '',
+            pageTitle             : '',
+            url                   : '',
+            singleUrl             : '',
+            isActiveOptionDropdown: false,
+            agency_id             : null,
+            is_update             : false
+        };
+    },
 
-        created() {
-            this.pageTitle      =   this.$route.name;
-            this.url            =   this.$route.name.toLowerCase();
+    created () {
+        this.pageTitle      =   this.$route.name;
+        this.url            =   this.$route.name.toLowerCase();
 
-            this.$root.$on('refetch_tax_data',() => {
-                this.fetchItems();
-                this.is_update = false;
+        this.$root.$on('refetch_tax_data', () => {
+            this.fetchItems();
+            this.is_update = false;
+        });
+
+        this.$root.$on('modal_closed', () => {
+            this.is_update = false;
+        });
+
+        this.fetchItems();
+    },
+
+    computed: {
+        row_data () {
+            const items = this.rows;
+            items.map(item => {
+                item.tax_agency_id = item.id;
+                item.tax_agency_name = item.name;
             });
+            return items;
+        }
+    },
 
-            this.$root.$on('modal_closed', () => {
-                this.is_update = false;
+    methods: {
+        fetchItems () {
+            this.rows = [];
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.get('tax-agencies', {
+                params: {
+                    per_page: this.paginationData.perPage,
+                    page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+                }
+            }).then((response) => {
+                this.rows = response.data;
+                this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch((error) => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
+
+        goToPage (page) {
+            const queries = Object.assign({}, this.$route.query);
+            this.paginationData.currentPage = page;
+            this.$router.push({
+                name: 'PaginateTaxAgencies',
+                params: { page: page },
+                query: queries
             });
 
             this.fetchItems();
         },
 
-        computed: {
-            row_data() {
-                let items = this.rows;
-                items.map( item => {
-                    item.tax_agency_id = item.id;
-                    item.tax_agency_name = item.name;
-                } );
-                return items;
+        singleTaxAgency (tax_id) {
+            this.$router.push({ name: 'SingleTaxAgency', params: { id: tax_id } });
+        },
+
+        onActionClick (action, row, index) {
+            switch (action) {
+            case 'trash':
+                if (confirm('Are you sure to delete?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+                    HTTP.delete('tax-agencies' + '/' + row.id).then(response => {
+                        this.$delete(this.rows, index);
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        this.showAlert('success', 'Deleted !');
+                    });
+                }
+                break;
+
+            case 'edit':
+                this.showModal = true;
+                this.agency_id = row.id;
+                this.is_update = true;
+                this.fetchItems();
+                break;
+
+            default :
+                break;
             }
         },
 
-        methods: {
-            fetchItems() {
-                this.rows = [];
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get('tax-agencies', {
-                    params: {
-                        per_page: this.paginationData.perPage,
-                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
-                    }
-                }).then( (response) => {
-                    this.rows = response.data;
-                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch((error) => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                });
-            },
+        onBulkAction (action, items) {
+            if (action === 'trash') {
+                if (confirm('Are you sure to delete?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+                    HTTP.delete('tax-agencies/delete/' + items.join(',')).then(response => {
+                        const toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
 
-            goToPage(page) {
-                let queries = Object.assign({}, this.$route.query);
-                this.paginationData.currentPage = page;
-                this.$router.push({
-                    name: 'PaginateTaxAgencies',
-                    params: { page: page },
-                    query: queries
-                });
-
-                this.fetchItems();
-            },
-
-            singleTaxAgency(tax_id) {
-                this.$router.push({ name: 'SingleTaxAgency', params: { id: tax_id } })
-            },
-
-            onActionClick(action, row, index) {
-                switch ( action ) {
-                    case 'trash':
-                        if ( confirm('Are you sure to delete?') ) {
-                            this.$store.dispatch( 'spinner/setSpinner', true );
-                            HTTP.delete( 'tax-agencies' + '/' + row.id).then( response => {
-                                this.$delete(this.rows, index);
-                                this.$store.dispatch( 'spinner/setSpinner', false );
-                                this.showAlert( 'success', 'Deleted !' );
-                            });
+                        if (toggleCheckbox.checked) {
+                            // simulate click event to remove checked state
+                            toggleCheckbox.click();
                         }
-                        break;
 
-                    case 'edit':
-                        this.showModal = true;
-                        this.agency_id = row.id;
-                        this.is_update = true;
                         this.fetchItems();
-                        break;
-
-                    default :
-                        break;
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        this.showAlert('success', 'Deleted !');
+                    });
                 }
-            },
-
-            onBulkAction(action, items) {
-                if ( 'trash' === action ) {
-                    if ( confirm('Are you sure to delete?') ) {
-                        this.$store.dispatch( 'spinner/setSpinner', true );
-                        HTTP.delete('tax-agencies/delete/' + items.join(',')).then(response => {
-                            let toggleCheckbox = document.getElementsByClassName('column-cb')[0].childNodes[0];
-
-                            if ( toggleCheckbox.checked ) {
-                                // simulate click event to remove checked state
-                                toggleCheckbox.click();
-                            }
-
-                            this.fetchItems();
-                            this.$store.dispatch( 'spinner/setSpinner', false );
-                            this.showAlert( 'success', 'Deleted !' );
-                        });
-                    }
-                }
-            },
+            }
         }
     }
+};
 </script>
 
 <style lang="less">

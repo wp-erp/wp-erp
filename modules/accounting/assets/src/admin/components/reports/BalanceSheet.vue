@@ -140,188 +140,191 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import Datepicker  from 'admin/components/base/Datepicker.vue'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
+import HTTP from 'admin/http';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import Datepicker  from 'admin/components/base/Datepicker.vue';
+import ListTable from 'admin/components/list-table/ListTable.vue';
 
-    export default {
-        name: 'BalanceSheet',
+export default {
+    name: 'BalanceSheet',
 
-        components: {
-            MultiSelect,
-            ListTable,
-            Datepicker
-        },
+    components: {
+        MultiSelect,
+        ListTable,
+        Datepicker
+    },
 
-        data() {
-            return {
-                closingBtnVisibility: false,
-                start_date          : null,
-                end_date            : null,
-                bulkActions: [
-                    {
-                        key: 'trash',
-                        label: 'Move to Trash',
-                        img: erp_acct_var.erp_assets + '/images/trash.png'
-                    }
-                ],
-                columns1: {
-                    'name': { label: 'Assets' },
-                    'balance': { label: 'Amount' }
-                },
-                columns2: {
-                    'name': { label: 'Liability' },
-                    'balance': { label: 'Amount' }
-                },
-                columns3: {
-                    'name': { label: 'Equity' },
-                    'balance': { label: 'Amount' }
-                },
-                rows1         : [],
-                rows2         : [],
-                rows3         : [],
-                fyears        : [],
-                totalAsset    : 0,
-                totalLiability: 0,
-                totalEquity   : 0,
-                selectedYear  : null
-            }
-        },
+    data () {
+        return {
+            closingBtnVisibility: false,
+            start_date          : null,
+            end_date            : null,
+            bulkActions: [
+                {
+                    key: 'trash',
+                    label: 'Move to Trash',
+                    img: erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
+                }
+            ],
+            columns1: {
+                name: { label: 'Assets' },
+                balance: { label: 'Amount' }
+            },
+            columns2: {
+                name: { label: 'Liability' },
+                balance: { label: 'Amount' }
+            },
+            columns3: {
+                name: { label: 'Equity' },
+                balance: { label: 'Amount' }
+            },
+            rows1         : [],
+            rows2         : [],
+            rows3         : [],
+            fyears        : [],
+            totalAsset    : 0,
+            totalLiability: 0,
+            totalEquity   : 0,
+            selectedYear  : null
+        };
+    },
 
-        created() {
-            //? why is nextTick here ...? i don't know.
-            this.$nextTick(function () {
-                // with leading zero, and JS month are zero index based
-                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
+    created () {
+        // ? why is nextTick here ...? i don't know.
+        this.$nextTick(function () {
+            // with leading zero, and JS month are zero index based
+            const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
 
-                this.start_date = `2019-${month}-01`;
-                this.end_date   = erp_acct_var.current_date;
+            this.start_date = `2019-${month}-01`;
+            this.end_date   = erp_acct_var.current_date;
+
+            this.fetchItems();
+        });
+
+        this.fetchFnYears();
+    },
+
+    computed: {
+        liability_equity () {
+            return parseFloat(this.totalLiability) + parseFloat(this.totalEquity);
+        }
+    },
+
+    watch: {
+        closingBtnVisibility (visible) {
+            if (visible) {
+                this.start_date = this.selectedYear.start_date;
+                this.end_date   = this.selectedYear.end_date;
 
                 this.fetchItems();
-            });
-
-            this.fetchFnYears();
-        },
-
-        computed: {
-            liability_equity() {
-                return parseFloat( this.totalLiability ) + parseFloat( this.totalEquity );
             }
         },
 
-        watch: {
-            closingBtnVisibility(visible) {
-                if (visible) {
-                    this.start_date = this.selectedYear.start_date;
-                    this.end_date   = this.selectedYear.end_date;
+        selectedYear (newVal) {
+            // only whe `prepare close` is checked
+            if (this.closingBtnVisibility) {
+                this.start_date = newVal.start_date;
+                this.end_date   = newVal.end_date;
 
-                    this.fetchItems();
-                }
-            },
-
-            selectedYear(newVal) {
-                // only whe `prepare close` is checked
-                if ( this.closingBtnVisibility ) {
-                    this.start_date = newVal.start_date;
-                    this.end_date   = newVal.end_date;
-
-                    this.fetchItems();
-                }
-            }
-        },
-
-        methods: {
-            fetchItems() {
-                this.rows = [];
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP.get( '/reports/balance-sheet',{
-                    params: {
-                        start_date: this.start_date,
-                        end_date  : this.end_date
-                    }
-                }).then(response => {
-                    this.rows1          = response.data.rows1;
-                    this.rows2          = response.data.rows2;
-                    this.rows3          = response.data.rows3;
-                    this.totalAsset     = response.data.total_asset;
-                    this.totalLiability = response.data.total_liability;
-                    this.totalEquity    = response.data.total_equity;
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
-
-            transformBalance( val ) {
-                if ( null === val && typeof val === 'object' ) {
-                    val = 0;
-                }
-
-                if ( val < 0 ) {
-                    return `Cr. ${this.moneyFormat( Math.abs(val) )}`;
-                }
-
-                return `Dr. ${this.moneyFormat( val )}`;
-            },
-
-            fetchFnYears() {
-                HTTP.get( '/opening-balances/names').then(response => {
-                    // get only last 5
-                    this.fyears = response.data.reverse().slice(0).slice(-5);
-
-                    this.getCurrentFnYear();
-                });
-            },
-
-            getCurrentFnYear() {
-                HTTP.get( '/closing-balance/closest-fn-year').then(response => {
-                    this.selectedYear = response.data;
-                });
-            },
-
-            printPopup() {
-                window.print();
-            },
-
-            checkClosingPossibility() {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP.get( '/closing-balance/next-fn-year', {
-                    params: {
-                        date : this.end_date
-                    }
-                }).then(response => {
-                    if ( null === response.data ) {
-                        alert( `Please create a financial year which start after '${this.end_date}'` );
-                    }
-
-                    this.closeBalancesheet( response.data.id );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                });
-            },
-
-            closeBalancesheet(f_year_id) {
-                HTTP.post( '/closing-balance', {
-                    f_year_id : f_year_id,
-                    start_date: this.start_date,
-                    end_date  : this.end_date
-                }).then(response => {
-                    this.showAlert('success', 'Balance Sheet Closed!');
-                    this.closingBtnVisibility = false;
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                });
+                this.fetchItems();
             }
         }
+    },
+
+    methods: {
+        fetchItems () {
+            this.rows = [];
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.get('/reports/balance-sheet', {
+                params: {
+                    start_date: this.start_date,
+                    end_date  : this.end_date
+                }
+            }).then(response => {
+                this.rows1          = response.data.rows1;
+                this.rows2          = response.data.rows2;
+                this.rows3          = response.data.rows3;
+                this.totalAsset     = response.data.total_asset;
+                this.totalLiability = response.data.total_liability;
+                this.totalEquity    = response.data.total_equity;
+
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
+
+        transformBalance (val) {
+            if (val === null && typeof val === 'object') {
+                val = 0;
+            }
+
+            if (val < 0) {
+                return `Cr. ${this.moneyFormat(Math.abs(val))}`;
+            }
+
+            return `Dr. ${this.moneyFormat(val)}`;
+        },
+
+        fetchFnYears () {
+            HTTP.get('/opening-balances/names').then(response => {
+                // get only last 5
+                this.fyears = response.data.reverse().slice(0).slice(-5);
+
+                this.getCurrentFnYear();
+            });
+        },
+
+        getCurrentFnYear () {
+            HTTP.get('/closing-balance/closest-fn-year').then(response => {
+                this.selectedYear = response.data;
+            });
+        },
+
+        printPopup () {
+            window.print();
+        },
+
+        checkClosingPossibility () {
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.get('/closing-balance/next-fn-year', {
+                params: {
+                    date : this.end_date
+                }
+            }).then(response => {
+                if (response.data === null) {
+                    alert(`Please create a financial year which start after '${this.end_date}'`);
+                }
+
+                this.closeBalancesheet(response.data.id);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
+                this.$store.dispatch('spinner/setSpinner', false);
+            });
+        },
+
+        closeBalancesheet (f_year_id) {
+            HTTP.post('/closing-balance', {
+                f_year_id : f_year_id,
+                start_date: this.start_date,
+                end_date  : this.end_date
+            }).then(response => {
+                this.showAlert('success', 'Balance Sheet Closed!');
+                this.closingBtnVisibility = false;
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
+                this.$store.dispatch('spinner/setSpinner', false);
+            });
+        }
     }
+};
 </script>
 
 <style lang="less">

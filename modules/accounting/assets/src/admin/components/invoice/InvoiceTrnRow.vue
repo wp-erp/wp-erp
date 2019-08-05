@@ -31,110 +31,109 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex';
 
-    import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
-    export default {
-        name: 'InvoiceTrnRow',
+export default {
+    name: 'InvoiceTrnRow',
 
-        props: {
-            products: {
-                type: Array,
-                default: () => []
-            },
-
-            line: {
-                type: Object,
-                default: () => {}
-            },
-
-            taxSummary: {
-                type: Array,
-                default: () => []
-            },
+    props: {
+        products: {
+            type: Array,
+            default: () => []
         },
 
-        components: {
-            MultiSelect
+        line: {
+            type: Object,
+            default: () => {}
         },
 
-        data() {
-            return {
-                taxRate  : 0,
-                taxAmount: 0,
-                taxCatID : 0,
-                debugMode: erp_acct_var.erp_debug_mode
+        taxSummary: {
+            type: Array,
+            default: () => []
+        }
+    },
+
+    components: {
+        MultiSelect
+    },
+
+    data () {
+        return {
+            taxRate  : 0,
+            taxAmount: 0,
+            taxCatID : 0,
+            debugMode: erp_acct_var.erp_debug_mode /* global erp_acct_var */
+        };
+    },
+
+    watch: {
+        taxRateID () {
+            this.getTaxRate();
+            this.respondAtChange();
+        },
+
+        discount () {
+            this.respondAtChange();
+        },
+
+        invoiceTotalAmount () {
+            this.calculateDiscount();
+        }
+    },
+
+    computed: mapState({
+        taxRateID         : state => state.sales.taxRateID,
+        discount          : state => state.sales.discount,
+        invoiceTotalAmount: state => state.sales.invoiceTotalAmount
+    }),
+
+    created () {
+        // check if editing
+        if (this.$route.params.id) {
+            this.prepareRowEdit(this.line);
+            this.getTaxRate();
+        }
+    },
+
+    methods: {
+        prepareRowEdit (row) {
+            // format invoice data which comes from database, to mactch with line items
+            row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
+            row.taxCatID  = row.tax_cat_id;
+            row.unitPrice = parseFloat(row.cost_price);
+            row.applyTax  = true;
+            row.taxAmount = row.tax;
+            row.amount    = row.line_total;
+        },
+
+        respondAtChange () {
+            this.calculateDiscount();
+            this.calculateTax();
+            this.calculateAmount();
+        },
+
+        getAmount () {
+            // lots of reset
+            if (!this.line.qty) {
+                this.line.qty = 0;
             }
-        },
 
-        watch: {
-            taxRateID() {
-                this.getTaxRate();
-                this.respondAtChange();
-            },
+            if (!this.line.qty || !this.line.unitPrice) {
+                this.line.discount  = 0;
+                this.line.taxAmount = 0;
+                this.line.amount    = 0;
 
-            discount() {
-                this.respondAtChange();
-            },
-
-            invoiceTotalAmount() {
-                this.calculateDiscount();
+                return false;
             }
+
+            // Set Amount
+            return parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
         },
 
-        computed: mapState({
-            taxRateID         : state => state.sales.taxRateID,
-            discount          : state => state.sales.discount,
-            invoiceTotalAmount: state => state.sales.invoiceTotalAmount
-        }),
-
-        created() {
-            // check if editing
-            if ( this.$route.params.id ) {
-                this.prepareRowEdit(this.line);
-                this.getTaxRate();
-            }
-        },
-
-        methods: {
-            prepareRowEdit(row) {
-                // format invoice data which comes from database, to mactch with line items
-                row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
-                row.taxCatID  = row.tax_cat_id;
-                row.unitPrice = parseFloat(row.cost_price);
-                row.applyTax  = true;
-                row.taxAmount = row.tax;
-                row.amount    = row.line_total;
-            },
-
-            respondAtChange() {
-                this.calculateDiscount();
-                this.calculateTax();
-                this.calculateAmount();
-            },
-
-            getAmount() {
-                // lots of reset
-                if ( ! this.line.qty ) {
-                    this.line.qty = 0;
-                }
-
-                if ( ! this.line.qty || ! this.line.unitPrice ) {
-                    this.line.discount  = 0;
-                    this.line.taxAmount = 0;
-                    this.line.amount    = 0;
-
-                    return false;
-                }
-
-                // Set Amount
-                return parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
-            },
-
-            getTaxRate() {
-                /**
+        getTaxRate () {
+            /**
                  * |-------------------------------------------------------------------------
                  * * taxSummary: ( props ) The tax summary result from database
                  * * tax: Every item in taxSummary ( loop )
@@ -142,87 +141,87 @@
                  * * taxRateID: Selected value from `Tax Rate Dropdown` dropdown
                  * |-------------------------------------------------------------------------
                  */
-                let taxInfo = this.taxSummary.find(tax => {
-                    if ( tax.sales_tax_category_id == this.line.taxCatID && tax.tax_rate_id == this.taxRateID ) {
-                        return tax;
-                    }
-                });
-
-                this.taxRate = 0;
-
-                if (taxInfo) {
-                    this.taxRate = parseFloat(taxInfo.tax_rate);
+            const taxInfo = this.taxSummary.find(tax => {
+                if (tax.sales_tax_category_id === this.line.taxCatID && tax.tax_rate_id === this.taxRateID) {
+                    return tax;
                 }
+            });
 
-                this.line.taxRate = this.taxRate;
-            },
+            this.taxRate = 0;
 
-            calculateDiscount() {
-                let amount = this.getAmount();
-                if ( ! amount ) return;
-
-                let discount = (this.discount * amount) / this.invoiceTotalAmount;
-
-                this.line.discount = discount.toFixed(2);
-            },
-
-            calculateTax() {
-                let amount = this.getAmount();
-                if ( ! amount ) return;
-
-                let taxAmount = ( ( amount - this.discount ) * this.taxRate) / 100;
-
-                this.line.taxAmount = 0;
-
-                // If tax checkbox is checked
-                if (this.line.applyTax) {
-                    this.line.taxAmount = taxAmount.toFixed(2);
-                }
-            },
-
-            calculateAmount() {
-                let amount = this.getAmount();
-                if ( ! amount ) return;
-
-                this.line.amount = amount;
-
-                // Send amount to parent for total calculation
-                this.$root.$emit('total-updated', amount);
-                this.$forceUpdate(); // why? should use computed? or vue.set()?
-            },
-
-            setProductInfo() {
-                if ( ! this.line.selectedProduct ) {
-                    return;
-                }
-
-                let product_id = this.line.selectedProduct.id;
-
-                if ( ! product_id ) return;
-
-                // Get full selected product object by selected product ID
-                let product = this.products.find(element => {
-                    return element.id == product_id;
-                });
-
-                this.line.qty               = 1;
-                this.line.taxCatID          = product.tax_cat_id;
-                this.line.unitPrice         = parseFloat(product.sale_price);
-                this.line.product_type_name = product.product_type_name;
-
-                if ( product.tax_cat_id ) {
-                    this.line.applyTax = true;
-                }
-
-                this.getTaxRate();
-                this.respondAtChange();
-            },
-
-            removeRow() {
-                this.$root.$emit('remove-row', this.$vnode.key)
+            if (taxInfo) {
+                this.taxRate = parseFloat(taxInfo.tax_rate);
             }
+
+            this.line.taxRate = this.taxRate;
+        },
+
+        calculateDiscount () {
+            const amount = this.getAmount();
+            if (!amount) return;
+
+            const discount = (this.discount * amount) / this.invoiceTotalAmount;
+
+            this.line.discount = discount.toFixed(2);
+        },
+
+        calculateTax () {
+            const amount = this.getAmount();
+            if (!amount) return;
+
+            const taxAmount = ((amount - this.discount) * this.taxRate) / 100;
+
+            this.line.taxAmount = 0;
+
+            // If tax checkbox is checked
+            if (this.line.applyTax) {
+                this.line.taxAmount = taxAmount.toFixed(2);
+            }
+        },
+
+        calculateAmount () {
+            const amount = this.getAmount();
+            if (!amount) return;
+
+            this.line.amount = amount;
+
+            // Send amount to parent for total calculation
+            this.$root.$emit('total-updated', amount);
+            this.$forceUpdate(); // why? should use computed? or vue.set()?
+        },
+
+        setProductInfo () {
+            if (!this.line.selectedProduct) {
+                return;
+            }
+
+            const product_id = this.line.selectedProduct.id;
+
+            if (!product_id) return;
+
+            // Get full selected product object by selected product ID
+            const product = this.products.find(element => {
+                return element.id === product_id;
+            });
+
+            this.line.qty               = 1;
+            this.line.taxCatID          = product.tax_cat_id;
+            this.line.unitPrice         = parseFloat(product.sale_price);
+            this.line.product_type_name = product.product_type_name;
+
+            if (product.tax_cat_id) {
+                this.line.applyTax = true;
+            }
+
+            this.getTaxRate();
+            this.respondAtChange();
+        },
+
+        removeRow () {
+            this.$root.$emit('remove-row', this.$vnode.key);
         }
     }
+};
 </script>
 
 <style lang="less" scoped>

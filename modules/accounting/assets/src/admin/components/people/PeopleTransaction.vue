@@ -62,74 +62,74 @@
 </template>
 
 <script>
-    import ListTable from 'admin/components/list-table/ListTable.vue'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
+import ListTable from 'admin/components/list-table/ListTable.vue';
+import Datepicker from 'admin/components/base/Datepicker.vue';
 
-    export default {
-        name: 'PeopleTransaction',
-        components: {
-            ListTable,
-            Datepicker
-        },
-        props: [ 'rows' ],
+export default {
+    name: 'PeopleTransaction',
+    components: {
+        ListTable,
+        Datepicker
+    },
+    props: ['rows'],
 
-        data() {
-            return {
-                bulkActions: [
-                    {
-                        key: 'trash',
-                        label: 'Move to Trash',
-                        img: erp_acct_var.erp_assets + '/images/trash.png'
-                    }
-                ],
-                columns: {
-                    'trn_date'   : { label: 'Transaction Date' },
-                    'created_at' : { label: 'Created At' },
-                    'voucher_no' : { label: 'Voucher No' },
-                    'particulars': { label: 'Particulars' },
-                    'debit'      : { label: 'Debit' },
-                    'credit'     : { label: 'Credit' },
-                    'balance'    : { label: 'Balance' },
-                },
-                actions : [
-                    { key: 'edit', label: 'Edit' },
-                    { key: 'trash', label: 'Delete' }
-                ],
-                showFilters: false,
-                filters: {
-                    start_date: '',
-                    end_date: ''
+    data () {
+        return {
+            bulkActions: [
+                {
+                    key: 'trash',
+                    label: 'Move to Trash',
+                    img: erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
                 }
+            ],
+            columns: {
+                trn_date   : { label: 'Transaction Date' },
+                created_at : { label: 'Created At' },
+                voucher_no : { label: 'Voucher No' },
+                particulars: { label: 'Particulars' },
+                debit      : { label: 'Debit' },
+                credit     : { label: 'Credit' },
+                balance    : { label: 'Balance' }
+            },
+            actions : [
+                { key: 'edit', label: 'Edit' },
+                { key: 'trash', label: 'Delete' }
+            ],
+            showFilters: false,
+            filters: {
+                start_date: '',
+                end_date: ''
             }
+        };
+    },
+
+    methods: {
+        toggleFilter () {
+            this.showFilters = !this.showFilters;
         },
 
-        methods: {
-            toggleFilter() {
-                this.showFilters = !this.showFilters;
-            },
+        filterList () {
+            this.toggleFilter();
+            this.$root.$emit('people-transaction-filter', this.filters);
+        },
 
-            filterList() {
-                this.toggleFilter();
-                this.$root.$emit( 'people-transaction-filter', this.filters );
-            },
-
-            onActionClick(action, row, index) {
-                switch ( action ) {
-                    case 'trash':
-                        if ( confirm('Are you sure to delete?') ) {
-                            this.$root.$emit( 'delete-transaction', row.id );
-                        }
-                        break;
-
-                    case 'edit':
-                        this.showModal = true;
-                        this.people = row;
-                        break;
+        onActionClick (action, row, index) {
+            switch (action) {
+            case 'trash':
+                if (confirm('Are you sure to delete?')) {
+                    this.$root.$emit('delete-transaction', row.id);
                 }
-            },
-        },
+                break;
 
+            case 'edit':
+                this.showModal = true;
+                this.people = row;
+                break;
+            }
+        }
     }
+
+};
 </script>
 
 <style lang="less">

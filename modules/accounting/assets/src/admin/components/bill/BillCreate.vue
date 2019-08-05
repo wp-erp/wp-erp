@@ -132,355 +132,359 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex';
 
-    import HTTP from 'admin/http'
-    import SelectPeople from 'admin/components/people/SelectPeople.vue'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
-    import FileUpload from 'admin/components/base/FileUpload.vue'
-    import ShowErrors from 'admin/components/base/ShowErrors.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import ComboButton from 'admin/components/select/ComboButton.vue'
+import HTTP from 'admin/http';
+import SelectPeople from 'admin/components/people/SelectPeople.vue';
+import Datepicker from 'admin/components/base/Datepicker.vue';
+import FileUpload from 'admin/components/base/FileUpload.vue';
+import ShowErrors from 'admin/components/base/ShowErrors.vue';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import ComboButton from 'admin/components/select/ComboButton.vue';
 
-    export default {
-        name: 'BillCreate',
+export default {
+    name: 'BillCreate',
 
-        components: {
-            Datepicker,
-            MultiSelect,
-            FileUpload,
-            ComboButton,
-            SelectPeople,
-            ShowErrors
-        },
+    components: {
+        Datepicker,
+        MultiSelect,
+        FileUpload,
+        ComboButton,
+        SelectPeople,
+        ShowErrors
+    },
 
-        data() {
-            return {
-                basic_fields: {
-                    user           : '',
-                    trn_date       : '',
-                    due_date       : '',
-                    billing_address: ''
-                },
+    data () {
+        return {
+            basic_fields: {
+                user: '',
+                trn_date: '',
+                due_date: '',
+                billing_address: ''
+            },
 
-                form_errors: [],
+            form_errors: [],
 
-                createButtons: [
-                    {id: 'save', text: 'Save'},
-                    // {id: 'send_create', text: 'Create and Send'},
-                    {id: 'new_create', text: 'Save and New'},
-                    {id: 'draft', text: 'Save as Draft'},
-                ],
+            createButtons: [
+                { id: 'save', text: 'Save' },
+                // {id: 'send_create', text: 'Create and Send'},
+                { id: 'new_create', text: 'Save and New' },
+                { id: 'draft', text: 'Save as Draft' }
+            ],
 
-                updateButtons: [
-                    {id: 'update', text: 'Update'},
-                    // {id: 'send_update', text: 'Update and Send'},
-                    {id: 'new_update', text: 'Update and New'},
-                    {id: 'draft', text: 'Save as Draft'},
-                ],
+            updateButtons: [
+                { id: 'update', text: 'Update' },
+                // {id: 'send_update', text: 'Update and Send'},
+                { id: 'new_update', text: 'Update and New' },
+                { id: 'draft', text: 'Save as Draft' }
+            ],
 
-                editMode        : false,
-                voucherNo       : 0,
-                transactionLines: [],
-                selected        : [],
-                ledgers         : [],
-                attachments     : [],
-                totalAmounts    : 0,
-                finalTotalAmount: 0,
-                particulars     : '',
-                erp_acct_assets : erp_acct_var.acct_assets
-            }
-        },
+            editMode: false,
+            voucherNo: 0,
+            transactionLines: [],
+            selected: [],
+            ledgers: [],
+            attachments: [],
+            totalAmounts: 0,
+            finalTotalAmount: 0,
+            particulars: '',
+            erp_acct_assets: erp_acct_var.acct_assets
+        };
+    },
 
-         computed: {
-            ...mapState({ actionType: state => state.combo.btnID })
-        },
+    computed: {
+        ...mapState({ actionType: state => state.combo.btnID })
+    },
 
-        created() {
-            this.prepareDataLoad();
+    created () {
+        this.prepareDataLoad();
 
-            this.$on('remove-row', index => {
-                this.$delete(this.transactionLines, index);
-                this.updateFinalAmount();
-            });
-        },
+        this.$on('remove-row', index => {
+            this.$delete(this.transactionLines, index);
+            this.updateFinalAmount();
+        });
+    },
 
-        methods: {
-            async prepareDataLoad() {
-                /**
+    methods: {
+        async prepareDataLoad () {
+            /**
                  * ----------------------------------------------
                  * check if editing
                  * -----------------------------------------------
                  */
-                if ( this.$route.params.id ) {
-                    this.editMode = true;
-                    this.voucherNo = this.$route.params.id;
+            if (this.$route.params.id) {
+                this.editMode = true;
+                this.voucherNo = this.$route.params.id;
 
-                    /**
+                /**
                      * Duplicates of
                      *? this.getLedgers()
                      */
-                    let expense_chart_id = 5;
+                const expenseChartId = 5;
 
-                    let request1 = await HTTP.get(`/ledgers/${expense_chart_id}/accounts`);
-                    let request2 = await HTTP.get(`/bills/${this.$route.params.id}`);
+                const request1 = await HTTP.get(`/ledgers/${expenseChartId}/accounts`);
+                const request2 = await HTTP.get(`/bills/${this.$route.params.id}`);
 
-                    if ( ! request2.data.bill_details.length ) {
-                        this.showAlert('error', 'Bill does not exists!');
-                        return;
-                    }
+                if (!request2.data.bill_details.length) {
+                    this.showAlert('error', 'Bill does not exists!');
+                    return;
+                }
 
-                    let canEdit = Boolean( Number( request2.data.editable ) );
+                const canEdit = Boolean(Number(request2.data.editable));
 
-                    if ( ! canEdit ) {
-                        this.showAlert('error', 'Can\'t edit');
-                        return;
-                    }
+                if (!canEdit) {
+                    this.showAlert('error', 'Can\'t edit');
+                    return;
+                }
 
-                    this.ledgers   = request1.data;
-                    this.setDataForEdit( request2.data );
+                this.ledgers = request1.data;
+                this.setDataForEdit(request2.data);
 
-                    // initialize combo button id with `update`
-                    this.$store.dispatch('combo/setBtnID', 'update');
-
-                } else {
-                    /**
+                // initialize combo button id with `update`
+                this.$store.dispatch('combo/setBtnID', 'update');
+            } else {
+                /**
                      * ----------------------------------------------
                      * create a new bill
                      * -----------------------------------------------
                      */
-                    this.getLedgers();
+                this.getLedgers();
 
-                    this.basic_fields.trn_date = erp_acct_var.current_date;
-                    this.basic_fields.due_date = erp_acct_var.current_date;
-                    this.transactionLines.push({}, {}, {});
-
-                    // initialize combo button id with `save`
-                    this.$store.dispatch('combo/setBtnID', 'save');
-                }
-            },
-
-            setDataForEdit(bill) {
-                this.basic_fields.user            = { id: parseInt(bill.vendor_id), name: bill.vendor_name };
-                this.basic_fields.billing_address = bill.billing_address;
-                this.basic_fields.trn_date        = bill.trn_date;
-                this.basic_fields.due_date        = bill.due_date;
-                this.status                       = bill.status;
-                this.finalTotalAmount             = bill.debit;
-                this.particulars                  = bill.particulars;
-                this.attachments                  = bill.attachments;
-
-                // format transaction lines
-                bill.bill_details.forEach(detail => {
-                    this.transactionLines.push({
-                        id         : detail.id,
-                        ledger_id  : { id: detail.ledger_id, name: detail.ledger_name },
-                        description: detail.particulars,
-                        amount     : detail.amount
-                    });
-                });
-
-                this.updateFinalAmount();
-            },
-
-            getLedgers() {
-                let expense_chart_id = 5;
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get(`/ledgers/${expense_chart_id}/accounts`).then(response => {
-                    this.ledgers = response.data;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
-
-            getPeopleAddress() {
-                let people_id = this.basic_fields.user.id;
-
-                if ( ! people_id ) {
-                    this.basic_fields.billing_address = '';
-                    return;
-                }
-
-                HTTP.get(`/people/${people_id}`).then(response => {
-                    let billing = response.data;
-
-                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
-
-                    this.basic_fields.billing_address = address;
-                });
-            },
-
-            updateFinalAmount() {
-                let finalAmount = 0;
-
-                this.transactionLines.forEach(element => {
-                    if ( element.amount ) {
-                        finalAmount += parseFloat(element.amount);
-                    }
-                });
-
-                this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
-            },
-
-            addLine() {
-                this.transactionLines.push({});
-            },
-
-            updateBill(requestData) {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.put(`/bills/${this.voucherNo}`, requestData).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert('success', 'Bill Updated!');
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(() => {
-                    this.reset = true;
-
-                    if ('update' == this.actionType || 'draft' == this.actionType) {
-                        this.$router.push({name: 'Expenses'});
-                    } else if ('new_update' == this.actionType) {
-                        this.resetFields();
-                    }
-                });
-            },
-
-            createBill(requestData) {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.post('/bills', requestData).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert('success', 'Bill Created!');
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
-                    this.reset = true;
-
-                    if ('save' == this.actionType || 'draft' == this.actionType) {
-                        this.$router.push({name: 'Expenses'});
-                    } else if ('new_create' == this.actionType) {
-                        this.resetFields();
-                    }
-                });
-            },
-
-            submitBillForm() {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-                    return;
-                }
-
-                let trn_status = null;
-                if ( 'draft' === this.actionType) {
-                    trn_status = 1;
-                } else {
-                    trn_status = 2;
-                }
-
-                let requestData = {
-                    vendor_id      : this.basic_fields.user.id,
-                    ref            : this.basic_fields.trn_ref,
-                    trn_date       : this.basic_fields.trn_date,
-                    due_date       : this.basic_fields.due_date,
-                    bill_details   : this.formatTrnLines(this.transactionLines),
-                    attachments    : this.attachments,
-                    billing_address: this.basic_fields.billing_address,
-                    type           : 'bill',
-                    status         : trn_status,
-                    particulars    : this.particulars
-                };
-
-                if ( this.editMode ) {
-                    this.updateBill(requestData);
-                } else {
-                    this.createBill(requestData);
-                }
-            },
-
-            resetFields() {
-                this.transactionLines  = [];
-                this.attachments       = [];
-                this.totalAmounts      = 0;
-                this.finalTotalAmount  = 0;
-                this.particulars       = '';
-                this.form_errors       = [];
-
-                this.basic_fields = {
-                    user           : { id: null, name: null},
-                    trn_ref        : '',
-                    trn_date       : erp_acct_var.current_date,
-                    due_date       : erp_acct_var.current_date,
-                    billing_address: ''
-                };
-
+                /* global erp_acct_var */
+                this.basic_fields.trn_date = erp_acct_var.current_date;
+                this.basic_fields.due_date = erp_acct_var.current_date;
                 this.transactionLines.push({}, {}, {});
 
                 // initialize combo button id with `save`
                 this.$store.dispatch('combo/setBtnID', 'save');
-            },
-
-            validateForm() {
-                this.form_errors = [];
-
-                if (!this.basic_fields.user.hasOwnProperty('id')) {
-                    this.form_errors.push('People Name is required.');
-                }
-
-                if (!this.basic_fields.trn_date) {
-                    this.form_errors.push('Transaction Date is required.');
-                }
-
-                if (!this.basic_fields.due_date) {
-                    this.form_errors.push('Due Date is required.');
-                }
-
-                if (!parseFloat(this.finalTotalAmount)) {
-                    this.form_errors.push('Total amount can\'t be zero.');
-                }
-
-                for (let item of this.transactionLines) {
-                    if (!item.hasOwnProperty('ledger_id')) {
-                        this.form_errors.push('Please select accounts.');
-                        break;
-                    }
-                }
-            },
-
-            formatTrnLines( trn_lines ) {
-                let line_items = [];
-
-                trn_lines.forEach(element => {
-                    if ( element.hasOwnProperty('ledger_id') ) {
-                        element.ledger_id = element.ledger_id.id;
-                        line_items.push( element );
-                    }
-                });
-
-                return line_items;
-            },
-
-            removeRow(index) {
-                this.$delete(this.transactionLines, index);
-                this.updateFinalAmount();
-            },
-
-        },
-
-        watch: {
-            finalTotalAmount( newval ) {
-                this.finalTotalAmount = newval;
-            },
-
-            'basic_fields.user'() {
-                this.getPeopleAddress();
             }
         },
 
+        setDataForEdit (bill) {
+            this.basic_fields.user = { id: parseInt(bill.vendor_id), name: bill.vendor_name };
+            this.basic_fields.billing_address = bill.billing_address;
+            this.basic_fields.trn_date = bill.trn_date;
+            this.basic_fields.due_date = bill.due_date;
+            this.status = bill.status;
+            this.finalTotalAmount = bill.debit;
+            this.particulars = bill.particulars;
+            this.attachments = bill.attachments;
+
+            // format transaction lines
+            bill.bill_details.forEach(detail => {
+                this.transactionLines.push({
+                    id: detail.id,
+                    ledger_id: { id: detail.ledger_id, name: detail.ledger_name },
+                    description: detail.particulars,
+                    amount: detail.amount
+                });
+            });
+
+            this.updateFinalAmount();
+        },
+
+        getLedgers () {
+            const expenseChartId = 5;
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.get(`/ledgers/${expenseChartId}/accounts`).then(response => {
+                this.ledgers = response.data;
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
+
+        getPeopleAddress () {
+            const peopleId = this.basic_fields.user.id;
+
+            if (!peopleId) {
+                this.basic_fields.billing_address = '';
+                return;
+            }
+
+            HTTP.get(`/people/${peopleId}`).then(response => {
+                const billing = response.data;
+
+                const address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                this.basic_fields.billing_address = address;
+            });
+        },
+
+        updateFinalAmount () {
+            let finalAmount = 0;
+
+            this.transactionLines.forEach(element => {
+                if (element.amount) {
+                    finalAmount += parseFloat(element.amount);
+                }
+            });
+
+            this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+        },
+
+        addLine () {
+            this.transactionLines.push({});
+        },
+
+        updateBill (requestData) {
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.put(`/bills/${this.voucherNo}`, requestData).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Bill Updated!');
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
+                this.reset = true;
+
+                if (this.actionType === 'update' || this.actionType === 'draft') {
+                    this.$router.push({ name: 'Expenses' });
+                } else if (this.actionType === 'new_update') {
+                    this.resetFields();
+                }
+            });
+        },
+
+        createBill (requestData) {
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.post('/bills', requestData).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Bill Created!');
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
+                this.reset = true;
+
+                if (this.actionType === 'save' || this.actionType === 'draft') {
+                    this.$router.push({ name: 'Expenses' });
+                } else if (this.actionType === 'new_create') {
+                    this.resetFields();
+                }
+            });
+        },
+
+        submitBillForm () {
+            this.validateForm();
+
+            if (this.form_errors.length) {
+                window.scrollTo({
+                    top: 10,
+                    behavior: 'smooth'
+                });
+                return;
+            }
+
+            let trnStatus = null;
+
+            if (this.actionType === 'draft') {
+                trnStatus = 1;
+            } else {
+                trnStatus = 2;
+            }
+
+            const requestData = {
+                vendor_id: this.basic_fields.user.id,
+                ref: this.basic_fields.trn_ref,
+                trn_date: this.basic_fields.trn_date,
+                due_date: this.basic_fields.due_date,
+                bill_details: this.formatTrnLines(this.transactionLines),
+                attachments: this.attachments,
+                billing_address: this.basic_fields.billing_address,
+                type: 'bill',
+                status: trnStatus,
+                particulars: this.particulars
+            };
+
+            if (this.editMode) {
+                this.updateBill(requestData);
+            } else {
+                this.createBill(requestData);
+            }
+        },
+
+        resetFields () {
+            this.transactionLines = [];
+            this.attachments = [];
+            this.totalAmounts = 0;
+            this.finalTotalAmount = 0;
+            this.particulars = '';
+            this.form_errors = [];
+
+            this.basic_fields = {
+                user: { id: null, name: null },
+                trn_ref: '',
+                trn_date: erp_acct_var.current_date,
+                due_date: erp_acct_var.current_date,
+                billing_address: ''
+            };
+
+            this.transactionLines.push({}, {}, {});
+
+            // initialize combo button id with `save`
+            this.$store.dispatch('combo/setBtnID', 'save');
+        },
+
+        validateForm () {
+            this.form_errors = [];
+
+            if (!Object.prototype.hasOwnProperty.call(this.basic_fields.user, 'id')) {
+                this.form_errors.push('People Name is required.');
+            }
+
+            if (!this.basic_fields.trn_date) {
+                this.form_errors.push('Transaction Date is required.');
+            }
+
+            if (!this.basic_fields.due_date) {
+                this.form_errors.push('Due Date is required.');
+            }
+
+            if (!parseFloat(this.finalTotalAmount)) {
+                this.form_errors.push('Total amount can\'t be zero.');
+            }
+
+            for (const item of this.transactionLines) {
+                if (!Object.prototype.hasOwnProperty.call(item, 'ledger_id')) {
+                    this.form_errors.push('Please select accounts.');
+                    break;
+                }
+            }
+        },
+
+        formatTrnLines (trnLines) {
+            const lineItems = [];
+
+            trnLines.forEach(element => {
+                if (Object.prototype.hasOwnProperty.call(element, 'ledger_id')) {
+                    element.ledger_id = element.ledger_id.id;
+                    lineItems.push(element);
+                }
+            });
+
+            return lineItems;
+        },
+
+        removeRow (index) {
+            this.$delete(this.transactionLines, index);
+            this.updateFinalAmount();
+        }
+
+    },
+
+    watch: {
+        finalTotalAmount (newval) {
+            this.finalTotalAmount = newval;
+        },
+
+        'basic_fields.user' () {
+            this.getPeopleAddress();
+        }
     }
+
+};
 </script>
 
 <style lang="less">

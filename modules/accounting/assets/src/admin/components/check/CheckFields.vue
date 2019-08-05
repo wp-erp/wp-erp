@@ -16,25 +16,25 @@
 </template>
 
 <script>
-    export default {
-        name: 'CheckFields',
+export default {
+    name: 'CheckFields',
 
-        data() {
-            return {
-                check_fields: {
-                    bank_name : '',
-                    payer_name: '',
-                    check_no  : ''
-                }
+    data () {
+        return {
+            check_fields: {
+                bank_name : '',
+                payer_name: '',
+                check_no  : ''
             }
-        },
+        };
+    },
 
-        methods: {
-            updateCheckData() {
-                this.$emit( 'updateCheckFields', this.check_fields );
-            }
-        },
+    methods: {
+        updateCheckData () {
+            this.$emit('updateCheckFields', this.check_fields);
+        }
     }
+};
 </script>
 
 <style scoped>

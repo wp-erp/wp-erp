@@ -63,137 +63,133 @@
 </template>
 
 <script>
-    import HTTP        from 'admin/http'
-    import ListTable   from 'admin/components/list-table/ListTable.vue'
-    import Datepicker  from 'admin/components/base/Datepicker.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue'
+import HTTP        from 'admin/http';
+import ListTable   from 'admin/components/list-table/ListTable.vue';
+import Datepicker  from 'admin/components/base/Datepicker.vue';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
-    export default {
-        name: 'LedgerReport',
+export default {
+    name: 'LedgerReport',
 
-        components: {
-            ListTable,
-            Datepicker,
-            MultiSelect,
-            DynamicTrnLoader
-        },
+    components: {
+        ListTable,
+        Datepicker,
+        MultiSelect
+    },
 
-        data() {
-            return {
-                start_date    : null,
-                end_date      : null,
-                selectedLedger: null,
-                ledgers       : [],
-                openingBalance: 0,
-                columns       : {
-                    'trn_date'   : { label: 'Trns Date' },
-                    'created_at' : { label: 'Created At' },
-                    'trn_no'     : { label: 'Trns No' },
-                    'particulars': { label: 'Particulars' },
-                    'debit'      : { label: 'Debit' },
-                    'credit'     : { label: 'Credit' },
-                    'balance'    : { label: 'Balance' }
-                },
-                rows       : [],
-                totalDebit : 0,
-                totalCredit: 0,
-                symbol     : erp_acct_var.symbol
-            };
-        },
+    data () {
+        return {
+            start_date    : null,
+            end_date      : null,
+            selectedLedger: null,
+            ledgers       : [],
+            openingBalance: 0,
+            columns       : {
+                trn_date   : { label: 'Trns Date' },
+                created_at : { label: 'Created At' },
+                trn_no     : { label: 'Trns No' },
+                particulars: { label: 'Particulars' },
+                debit      : { label: 'Debit' },
+                credit     : { label: 'Credit' },
+                balance    : { label: 'Balance' }
+            },
+            rows       : [],
+            totalDebit : 0,
+            totalCredit: 0,
+            symbol     : erp_acct_var.symbol /* global erp_acct_var */
+        };
+    },
 
-        watch: {
-            selectedLedger(newVal) {
-                if ( ! isNaN( newVal.id ) ) {
-                    this.rows        = [];
-                    this.totalDebit  = 0;
-                    this.totalCredit = 0;
-                    this.$router.push({ params: { id: parseInt(newVal.id) } });
-                }
+    watch: {
+        selectedLedger (newVal) {
+            if (!isNaN(newVal.id)) {
+                this.rows        = [];
+                this.totalDebit  = 0;
+                this.totalCredit = 0;
+                this.$router.push({ params: { id: parseInt(newVal.id) } });
             }
-        },
+        }
+    },
 
-        created() {
-            this.getLedgers();
+    created () {
+        this.getLedgers();
 
-            //? why is nextTick here ...? i don't know.
-            this.$nextTick(function () {
-                // with leading zero, and JS month are zero index based
-                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
+        // ? why is nextTick here ...? i don't know.
+        this.$nextTick(function () {
+            // with leading zero, and JS month are zero index based
+            const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
 
-                this.start_date = `2019-${month}-01`;
-                this.end_date   = erp_acct_var.current_date;
+            this.start_date = `2019-${month}-01`;
+            this.end_date   = erp_acct_var.current_date;
 
-                if ( this.$route.params.ledgerName ) {
-                    // Directly coming from chart of acounts
-                    this.selectedLedger = {
-                        id  : parseInt( this.$route.params.ledgerID ),
-                        name: this.$route.params.ledgerName,
-                        code: this.$route.params.ledgerCode
-                    };
+            if (this.$route.params.ledgerName) {
+                // Directly coming from chart of acounts
+                this.selectedLedger = {
+                    id  : parseInt(this.$route.params.ledgerID),
+                    name: this.$route.params.ledgerName,
+                    code: this.$route.params.ledgerCode
+                };
 
-                    this.getLedgerReport();
-                }
+                this.getLedgerReport();
+            }
+        });
+    },
+
+    methods: {
+        getLedgers () {
+            HTTP.get('/ledgers').then(res => {
+                this.ledgers = res.data;
+
+                this.setDefault();
             });
         },
 
-        methods: {
-            getLedgers() {
-                HTTP.get('/ledgers').then(res => {
-                    this.ledgers = res.data;
+        setDefault () {
+            if (this.$route.params.id && !this.$route.params.ledgerName) {
+                // Normally refresh page
+                const ledger = this.ledgers.filter((ledger, index) => {
+                    return parseInt(ledger.id) === parseInt(this.$route.params.id);
+                })[0];
 
-                    this.setDefault();
-                });
-            },
+                this.selectedLedger = {
+                    id  : parseInt(ledger.id),
+                    name: ledger.name,
+                    code: ledger.code
+                };
 
-            setDefault() {
-                if ( this.$route.params.id && ! this.$route.params.ledgerName ) {
-                    // Normally refresh page
-                    let ledger = this.ledgers.filter((ledger, index) => {
-                        return parseInt( ledger.id ) === parseInt( this.$route.params.id );
-                    })[0];
-
-                    this.selectedLedger = {
-                        id  : parseInt( ledger.id ),
-                        name: ledger.name,
-                        code: ledger.code
-                    };
-
-                    this.getLedgerReport();
-                }
-            },
-
-            getLedgerReport() {
-                if ( null === this.selectedLedger ) return;
-
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                let ledger_id = this.selectedLedger.id;
-
-                this.rows = [];
-
-                HTTP.get('/reports/ledger-report', {
-                    params: {
-                        ledger_id : this.selectedLedger.id,
-                        start_date: this.start_date,
-                        end_date  : this.end_date
-                    }
-                }).then(response => {
-                    this.rows        = response.data.details;
-                    this.totalDebit  = response.data.extra.total_debit;
-                    this.totalCredit = response.data.extra.total_credit;
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch(e => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                });
-            },
-
-            printPopup() {
-                window.print();
+                this.getLedgerReport();
             }
+        },
+
+        getLedgerReport () {
+            if (this.selectedLedger === null) return;
+
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            this.rows = [];
+
+            HTTP.get('/reports/ledger-report', {
+                params: {
+                    ledger_id : this.selectedLedger.id,
+                    start_date: this.start_date,
+                    end_date  : this.end_date
+                }
+            }).then(response => {
+                this.rows        = response.data.details;
+                this.totalDebit  = response.data.extra.total_debit;
+                this.totalCredit = response.data.extra.total_credit;
+
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(e => {
+                this.$store.dispatch('spinner/setSpinner', false);
+            });
+        },
+
+        printPopup () {
+            window.print();
         }
     }
+};
 </script>
 
 <style lang="less">
@@ -318,4 +314,3 @@
         }
     }
 </style>
-

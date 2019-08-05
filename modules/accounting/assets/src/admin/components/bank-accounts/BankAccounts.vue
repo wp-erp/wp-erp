@@ -69,75 +69,77 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import Dropdown from 'admin/components/base/Dropdown.vue'
-    import ComboBox from 'admin/components/select/ComboBox.vue'
+import HTTP from 'admin/http';
+import Dropdown from 'admin/components/base/Dropdown.vue';
+import ComboBox from 'admin/components/select/ComboBox.vue';
 
-    export default {
-        name: 'BankAccounts',
+export default {
+    name: 'BankAccounts',
 
-        components: {
-            Dropdown,
-            ComboBox
+    components: {
+        Dropdown,
+        ComboBox
+    },
+
+    data () {
+        return {
+            accounts: [],
+            actions: [
+                { key: 'transfer', label: 'Transfer', iconClass: 'flaticon-sent-mail' }
+            ],
+            pages: [
+                { namedRoute: 'Transfers', name: 'Transfer Money' }
+            ]
+        };
+    },
+
+    created () {
+        this.fetchAccounts();
+    },
+
+    methods: {
+        fetchAccounts () {
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.get('/accounts/bank-accounts').then((response) => {
+                this.accounts = response.data;
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
         },
 
-        data() {
-            return {
-                accounts: [],
-                actions : [
-                    { key: 'transfer', label: 'Transfer', iconClass: 'flaticon-sent-mail' },
-                ],
-                pages: [
-                    { namedRoute: 'Transfers', name: 'Transfer Money' }
-                ],
-            }
-        },
-
-        created() {
-            this.fetchAccounts();
-        },
-
-        methods: {
-            fetchAccounts() {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get('/accounts/bank-accounts').then( (response) => {
-                    this.accounts = response.data;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
-
-            transformBalance( val ) {
-                if ( 'undefined' === val ) {
-                    val = 0;
-                }
-
-                if ( val < 0 ) {
-                    return `Cr. ${this.moneyFormat( Math.abs(val) )}`;
-                }
-
-                return `Dr. ${this.moneyFormat( val )}`;
-            },
-
-            actionClicked( action, account ) {
-                switch ( action ) {
-                    case 'transfer':
-                        this.$router.push({ name: 'NewTransfer', params: {
-                                ac_id   : account.id,
-                                ac_name : account.name
-                            }});
-                        break;
-
-                    default :
-                        break;
-
-                }
+        transformBalance (val) {
+            if (val === 'undefined') {
+                val = 0;
             }
 
+            if (val < 0) {
+                return `Cr. ${this.moneyFormat(Math.abs(val))}`;
+            }
+
+            return `Dr. ${this.moneyFormat(val)}`;
+        },
+
+        actionClicked (action, account) {
+            switch (action) {
+            case 'transfer':
+                this.$router.push({ name: 'NewTransfer',
+                    params: {
+                        ac_id: account.id,
+                        ac_name: account.name
+                    } });
+                break;
+
+            default :
+                break;
+            }
         }
 
-    };
+    }
+
+};
 </script>
 
 <style lang="less" scoped>

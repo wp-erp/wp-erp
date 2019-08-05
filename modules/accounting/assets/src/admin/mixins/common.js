@@ -1,79 +1,81 @@
-import accounting from 'accounting'
+import accounting from 'accounting';
 
 export default {
     methods: {
-        formatAmount( val, prefix = false ) {
-            if ( val < 0 ) {
-                return prefix ? `Cr. ${this.moneyFormat( Math.abs(val) )}` : `${this.moneyFormat( Math.abs(val) )}`;
+        formatAmount (val, prefix = false) {
+            if (val < 0) {
+                return prefix ? `Cr. ${this.moneyFormat(Math.abs(val))}` : `${this.moneyFormat(Math.abs(val))}`;
             }
 
             return prefix ? `Dr. ${this.moneyFormat(val)}` : `${this.moneyFormat(Math.abs(val))}`;
         },
 
-        formatDBAmount( val, prefix = false ) {
-            if ( val < 0 ) {
-                return `(-) ${this.moneyFormat( Math.abs(val) )}`;
+        formatDBAmount (val, prefix = false) {
+            if (val < 0) {
+                return `(-) ${this.moneyFormat(Math.abs(val))}`;
             }
 
             return this.moneyFormat(val);
         },
 
-        showAlert(type, message) {
+        showAlert (type, message) {
             this.$swal({
-                position         : 'center',
-                type             : type,
-                title            : message,
+                position: 'center',
+                type: type,
+                title: message,
                 showConfirmButton: false,
-                timer            : 1500
+                timer: 1500
             });
         },
 
-        getFileName(path) {
+        getFileName (path) {
+            // eslint-disable-next-line no-useless-escape
             return path.replace(/^.*[\\\/]/, '');
         },
 
-        decodeHtml(str) {
-            let regex = /^[A-Za-z0-9 ]+$/;
+        decodeHtml (str) {
+            const regex = /^[A-Za-z0-9 ]+$/;
 
-            if ( regex.test( str ) ) {
+            if (regex.test(str)) {
                 return str;
             }
 
-            let txt = document.createElement('textarea');
+            const txt = document.createElement('textarea');
             txt.innerHTML = str;
 
             return txt.value;
         },
 
-        moneyFormat( number ) {
-            let options = {
-                symbol  : erp_acct_var.symbol,
-                decimal : erp_acct_var.decimal_separator,
+        moneyFormat (number) {
+            const options = {
+                /* global erp_acct_var */
+                symbol: erp_acct_var.symbol,
+                decimal: erp_acct_var.decimal_separator,
                 thousand: erp_acct_var.thousand_separator,
-                format  : erp_acct_var.currency_format
+                format: erp_acct_var.currency_format
             };
 
-            return accounting.formatMoney( number, options );
+            return accounting.formatMoney(number, options);
         },
 
-        moneyFormatwithDrCr( value ) {
+        moneyFormatwithDrCr (value) {
             var DrCr = null;
-                let   options = {
+            const   options = {
                 symbol  : erp_acct_var.symbol,
                 decimal : erp_acct_var.decimal_separator,
                 thousand: erp_acct_var.thousand_separator,
                 format  : erp_acct_var.currency_format
             };
 
-            if ( value.indexOf('Dr') > 0 ) {
-                DrCr = 'Dr '
-            } else if ( value.indexOf('Dr') === -1 ) {
-                DrCr = 'Cr '
+            if (value.indexOf('Dr') > 0) {
+                DrCr = 'Dr ';
+            } else if (value.indexOf('Dr') === -1) {
+                DrCr = 'Cr ';
             };
 
-            let money = accounting.formatMoney( value, options );
+            const money = accounting.formatMoney(value, options);
 
             return DrCr + money;
         }
     }
-}
+};

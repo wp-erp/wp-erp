@@ -1,55 +1,55 @@
-import HTTP from 'admin/http'
+import HTTP from 'admin/http';
 
 // initial state
 const state = {
-  vendors: []
-}
+    vendors: []
+};
 
 // getters
 const getters = {
     getVendors: (state) => {
-        return state.vendors
+        return state.vendors;
     }
-}
+};
 
 // actions
 const actions = {
-    fetchVendors: async({ commit }) => {        
-        let {status, data} = await HTTP.get('/people', {
-            params: { 
+    fetchVendors: async ({ commit }) => {
+        const { status, data } = await HTTP.get('/people', {
+            params: {
                 type: 'vendor',
                 per_page: 10,
                 page: 1 // *offset issue
             }
-        })
+        });
 
-        if (200 == status) {
-            commit('setVendors', data)
+        if (status === 200) {
+            commit('setVendors', data);
         }
     },
 
-    fillVendors({ state, commit, dispatch }, data) {        
-        commit('setVendors', data)
+    fillVendors ({ state, commit, dispatch }, data) {
+        commit('setVendors', data);
 
-        if ( ! state.vendors.length ) {
-            dispatch('fetchVendors')
+        if (!state.vendors.length) {
+            dispatch('fetchVendors');
         }
     }
-}
+};
 
 // mutations
 const mutations = {
-    setVendors(state, items) {
-        state.vendors = []
+    setVendors (state, items) {
+        state.vendors = [];
 
         items.forEach(item => {
             state.vendors.push({
-                id  : item.id,
+                id: item.id,
                 name: `${item.first_name} ${item.last_name}`
-            })
-        })
-    },
-}
+            });
+        });
+    }
+};
 
 export default {
     namespaced: true,
@@ -57,4 +57,4 @@ export default {
     getters,
     actions,
     mutations
-}
+};

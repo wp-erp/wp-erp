@@ -38,89 +38,90 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
+import HTTP from 'admin/http';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import SubmitButton from 'admin/components/base/SubmitButton.vue';
 
-    export default {
-        name: 'TaxRateRow',
+export default {
+    name: 'TaxRateRow',
 
-        components: {
-            MultiSelect,
-            SubmitButton
+    components: {
+        MultiSelect,
+        SubmitButton
+    },
+
+    props: {
+        index: {
+            type: [Number, String]
+        },
+        component_line: {
+            type: Object
+        },
+        agencies: {
+            type: Array
+        },
+        categories: {
+            type: Array
+        }
+    },
+
+    created () {
+        this.setAgency();
+        this.setCategory();
+    },
+
+    data () {
+        return {
+            is_update: true
+        };
+    },
+
+    methods: {
+        setAgency () {
+            const agency_id   = parseInt(this.component_line.agency_id);
+            const agency_name = this.component_line.agency_name;
+
+            this.component_line.agency = { id: agency_id, name: agency_name };
         },
 
-        props: {
-            index: {
-                type: [Number, String]
-            },
-            component_line: {
-                type: Object
-            },
-            agencies: {
-                type: Array
-            },
-            categories: {
-                type: Array
-            },
+        setCategory () {
+            const tax_cat_id   = parseInt(this.component_line.tax_cat_id);
+            const tax_cat_name = this.component_line.tax_cat_name;
+
+            this.component_line.category = { id: tax_cat_id, name: tax_cat_name };
         },
 
-        created() {
-            this.setAgency();
-            this.setCategory();
+        UpdateTaxRate () {
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.put(`/taxes/${this.component_line.tax_id}/line-edit`, {
+                db_id: this.component_line.db_id,
+                tax_id: this.component_line.tax_id,
+                row_id: parseInt(this.index),
+                component_name: this.component_line.component_name,
+                agency_id: this.component_line.agency.id,
+                tax_cat_id: this.component_line.category.id,
+                tax_rate: this.component_line.tax_rate
+            }).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Tax Rate Updated!');
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
+                this.resetData();
+                this.isWorking = false;
+                this.$emit('line_close');
+                this.$root.$emit('refetch_tax_data');
+            });
         },
 
-        data() {
-            return {
-                is_update: true
-            }
-        },
-
-        methods: {
-            setAgency() {
-                let agency_id   = parseInt(this.component_line.agency_id);
-                let agency_name = this.component_line.agency_name;
-
-                this.component_line.agency = { id: agency_id, name: agency_name };
-            },
-
-            setCategory() {
-                let tax_cat_id   = parseInt(this.component_line.tax_cat_id);
-                let tax_cat_name = this.component_line.tax_cat_name;
-
-                this.component_line.category = { id: tax_cat_id, name: tax_cat_name };
-            },
-
-            UpdateTaxRate() {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.put(`/taxes/${this.component_line.tax_id}/line-edit`, {
-                    db_id: this.component_line.db_id,
-                    tax_id: this.component_line.tax_id,
-                    row_id: parseInt(this.index),
-                    component_name: this.component_line.component_name,
-                    agency_id: this.component_line.agency.id,
-                    tax_cat_id: this.component_line.category.id,
-                    tax_rate: this.component_line.tax_rate,
-                }).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', 'Tax Rate Updated!' );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
-                    this.resetData();
-                    this.isWorking = false;
-                    this.$emit('line_close');
-                    this.$root.$emit('refetch_tax_data');
-                });
-            },
-
-            resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
-            },
-
+        resetData () {
+            Object.assign(this.$data, this.$options.data.call(this));
         }
 
-    };
+    }
+
+};
 </script>
 
 <style scoped>
