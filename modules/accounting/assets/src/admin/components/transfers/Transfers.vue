@@ -28,53 +28,54 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
+import HTTP from 'admin/http';
+import ListTable from 'admin/components/list-table/ListTable.vue';
 
-    export default {
-        name: "Transfers",
+export default {
+    name: 'Transfers',
 
-        components: {
-            ListTable
-        },
+    components: {
+        ListTable
+    },
 
-        data() {
-            return {
-                transferFrom  : { balance : 0 },
-                transferTo    : { balance : 0 },
-                accounts      : [],
-                fa            : [],
-                ta            : [],
-                transferdate  : erp_acct_var.current_date,
-                particulars   : '',
-                amount        : '',
-                money_transfer: false,
-                transfer_list : [],
-                columns       : {
-                    'voucher': {label: 'Voucher No'},
-                    'ac_from': {label: 'Account From'},
-                    'amount' : {label: 'Amount'},
-                    'ac_to'  : {label: 'Account To'}
-                },
-            };
-        },
-
-        created() {
-            this.$store.dispatch( 'spinner/setSpinner', true );
-            this.get_transfer_list();
-        },
-
-        methods: {
-            get_transfer_list() {
-                HTTP.get( '/accounts/list' ).then( res => {
-                    this.transfer_list = res.data;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).catch( err => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
+    data () {
+        return {
+            transferFrom  : { balance : 0 },
+            transferTo    : { balance : 0 },
+            accounts      : [],
+            fa            : [],
+            ta            : [],
+            transferdate  : erp_acct_var.current_date, /* global erp_acct_var */
+            particulars   : '',
+            amount        : '',
+            money_transfer: false,
+            transfer_list : [],
+            columns       : {
+                voucher: { label: 'Voucher No' },
+                ac_from: { label: 'Account From' },
+                amount : { label: 'Amount' },
+                ac_to  : { label: 'Account To' }
             }
+        };
+    },
+
+    created () {
+        this.$store.dispatch('spinner/setSpinner', true);
+        this.get_transfer_list();
+    },
+
+    methods: {
+        get_transfer_list () {
+            HTTP.get('/accounts/list').then(res => {
+                this.transfer_list = res.data;
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
         }
     }
+};
 </script>
 
 <style lang="less">

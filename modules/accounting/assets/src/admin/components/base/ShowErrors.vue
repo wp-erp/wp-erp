@@ -10,13 +10,13 @@
 </template>
 
 <script>
-    export default {
-        name: 'ShowErrors',
+export default {
+    name: 'ShowErrors',
 
-        props: {
-            error_msgs: Array
-        }
+    props: {
+        error_msgs: Array
     }
+};
 </script>
 
 <style scoped>

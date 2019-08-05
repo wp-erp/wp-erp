@@ -26,72 +26,70 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import TaxRateRow from 'admin/components/tax/TaxRateRow.vue'
+import HTTP from 'admin/http';
+import TaxRateRow from 'admin/components/tax/TaxRateRow.vue';
 
-    export default {
-        name: 'TaxRateLineEdit',
+export default {
+    name: 'TaxRateLineEdit',
 
-        components: {
-            MultiSelect,
-            TaxRateRow
+    components: {
+        TaxRateRow
+    },
+
+    props: {
+        tax_id: {
+            type: [Number, String]
+        },
+        row_data: {
+            type: [Object]
+        }
+    },
+
+    data () {
+        return {
+            tax_rate: {},
+            agency: '',
+            category: '',
+            isWorking: false,
+            agencies: [],
+            categories: []
+        };
+    },
+
+    created () {
+        this.fetchData();
+    },
+
+    methods: {
+        closeModal: function () {
+            this.$emit('close');
         },
 
-        props: {
-            tax_id: {
-                type: [ Number, String ]
-            },
-            row_data: {
-                type: [ Object ]
-            },
-        },
+        fetchData () {
+            const taxid = this.tax_id;
 
-        data() {
-            return {
-                tax_rate: {},
-                agency: '',
-                category: '',
-                isWorking: false,
-                agencies: [],
-                categories: [],
-            };
-        },
+            HTTP.get(`/taxes/${taxid}`).then((response) => {
+                this.tax_rate = response.data;
+            }).catch(error => {
+                throw error;
+            });
 
-        created() {
-            this.fetchData();
-        },
+            HTTP.get('/tax-agencies').then((response) => {
+                this.agencies = [];
+                this.agencies = response.data;
+            }).catch(error => {
+                throw error;
+            });
 
-        methods: {
-            closeModal: function(){
-                this.$emit('close');
-            },
-
-            fetchData() {
-                let taxid = this.tax_id;
-
-                HTTP.get(`/taxes/${taxid}`).then((response) => {
-                    this.tax_rate = response.data;
-                }).catch(error => {
-                    console.log(error);
-                });
-
-                HTTP.get('/tax-agencies').then((response) => {
-                    this.agencies = [];
-                    this.agencies = response.data;
-                }).catch(error => {
-                    console.log(error);
-                });
-
-                HTTP.get('/tax-cats').then((response) => {
-                    this.categories = [];
-                    this.categories = response.data;
-                }).catch(error => {
-                    console.log(error);
-                });
-            },
-        },
+            HTTP.get('/tax-cats').then((response) => {
+                this.categories = [];
+                this.categories = response.data;
+            }).catch(error => {
+                throw error;
+            });
+        }
     }
+};
 </script>
 <style lang="less">
     .wperp-modal-dialog {

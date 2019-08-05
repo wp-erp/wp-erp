@@ -9,95 +9,95 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex';
 
-    import HTTP from 'admin/http'
-    import PeopleModal from 'admin/components/people/PeopleModal.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+import HTTP from 'admin/http';
+import PeopleModal from 'admin/components/people/PeopleModal.vue';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
-    export default {
-        name: 'SelectPeople',
+export default {
+    name: 'SelectPeople',
 
-        components: {
-            PeopleModal,
-            MultiSelect
+    components: {
+        PeopleModal,
+        MultiSelect
+    },
+
+    props: {
+        value: {
+            type: [String, Object, Array],
+            default: ''
         },
 
-        props: {
-            value: {
-                type: [String, Object, Array],
-                default: ''
-            },
-
-            reset: {
-                type: Boolean,
-                default: false
-            },
-
-            label: {
-                type: String,
-                default: 'Pay to'
-            }
+        reset: {
+            type: Boolean,
+            default: false
         },
 
-        data() {
-            return {
-                selected: null,
-                showModal: false
-            }
-        },
-
-        watch: {
-            value(newVal) {
-                this.selected = newVal;
-            },
-
-            selected() {
-                this.$emit('input', this.selected);
-            },
-
-            reset() {
-                this.selected = [];
-            }
-        },
-
-        computed: mapState({
-            options: state => state.expense.people
-        }),
-
-        created() {
-            this.$store.dispatch('expense/fetchPeople');
-
-            this.$root.$on( 'options-query', query => {
-                if ( query ) {
-                    this.getPeople(query);
-                }
-            } );
-
-            this.$on('modal-close', () => {
-                this.showModal = false;
-                this.people = null;
-            });
-
-            this.$root.$on( 'peopleUpdate', () => {
-                this.showModal = false;
-            } );
-        },
-
-        methods: {
-            getPeople(query) {
-                HTTP.get('/people', {
-                    params: {
-                        type: 'all',
-                        search: query
-                    }
-                }).then(response => {
-                    this.$store.dispatch('expense/fillPeople', response.data);
-                });
-            },
+        label: {
+            type: String,
+            default: 'Pay to'
         }
+    },
 
+    data () {
+        return {
+            selected: null,
+            showModal: false
+        };
+    },
+
+    watch: {
+        value (newVal) {
+            this.selected = newVal;
+        },
+
+        selected () {
+            this.$emit('input', this.selected);
+        },
+
+        reset () {
+            this.selected = [];
+        }
+    },
+
+    computed: mapState({
+        options: state => state.expense.people
+    }),
+
+    created () {
+        this.$store.dispatch('expense/fetchPeople');
+
+        this.$root.$on('options-query', query => {
+            if (query) {
+                this.getPeople(query);
+            }
+        });
+
+        this.$on('modal-close', () => {
+            this.showModal = false;
+            this.people = null;
+        });
+
+        this.$root.$on('peopleUpdate', () => {
+            this.showModal = false;
+        });
+    },
+
+    methods: {
+        getPeople (query) {
+            HTTP.get('/people', {
+                params: {
+                    type: 'all',
+                    search: query
+                }
+            }).then(response => {
+                this.$store.dispatch('expense/fillPeople', response.data);
+            });
+        }
     }
+
+};
 </script>
 
 <style lang="less">

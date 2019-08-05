@@ -96,56 +96,56 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
+import HTTP from 'admin/http';
 
-    export default {
-        name: 'JournalSingle',
+export default {
+    name: 'JournalSingle',
 
-        data() {
-            return {
-                company  : null,
-                journal  : {},
-                isWorking: false,
-                acct_var : erp_acct_var,
-            }
+    data () {
+        return {
+            company  : null,
+            journal  : {},
+            isWorking: false,
+            acct_var : erp_acct_var /* global erp_acct_var */
+        };
+    },
+
+    created () {
+        this.getCompanyInfo();
+        this.getJournal();
+    },
+
+    methods: {
+        getCompanyInfo () {
+            HTTP.get(`/company`).then(response => {
+                this.company = response.data;
+            }).then(e => {}).then(() => {
+                this.isWorking = false;
+            });
         },
 
-        created() {
-            this.getCompanyInfo();
-            this.getJournal();
+        getJournal () {
+            this.isWorking = true;
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.get(`/journals/${this.$route.params.id}`).then(response => {
+                this.journal = response.data;
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(e => {}).then(() => {
+                this.isWorking = false;
+            });
         },
 
-        methods: {
-            getCompanyInfo() {
-                HTTP.get(`/company`).then(response => {
-                    this.company = response.data;
-                }).then( e => {} ).then(() => {
-                    this.isWorking = false;
-                });
-            },
-
-            getJournal() {
-                this.isWorking = true;
-                this.$store.dispatch( 'spinner/setSpinner', true);
-
-                HTTP.get(`/journals/${this.$route.params.id}`).then(response => {
-                    this.journal = response.data;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then( e => {} ).then(() => {
-                    this.isWorking = false;
-                });
-            },
-
-            printPopup() {
-                window.print();
-            }
-        },
-
+        printPopup () {
+            window.print();
+        }
     }
-</script>
 
+};
+</script>
 
 <style lang="less">
     .journal-single {
@@ -169,4 +169,3 @@
         }
     }
 </style>
-

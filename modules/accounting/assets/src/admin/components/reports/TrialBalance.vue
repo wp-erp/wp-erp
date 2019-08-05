@@ -65,135 +65,134 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
-    import Datepicker  from 'admin/components/base/Datepicker.vue'
+import HTTP from 'admin/http';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import Datepicker  from 'admin/components/base/Datepicker.vue';
 
-    export default {
-        name: 'TrialBalance',
+export default {
+    name: 'TrialBalance',
 
-        components: {
-            ListTable,
-            Datepicker,
-            MultiSelect,
-        },
+    components: {
+        Datepicker,
+        MultiSelect
+    },
 
-        data() {
-            return {
-                bulkActions: [
-                    {
-                        key  : 'trash',
-                        label: 'Move to Trash',
-                        img  : erp_acct_var.erp_assets + '/images/trash.png'
-                    }
-                ],
-                columns: {
-                    'name'  : { label: 'Account Name' },
-                    'debit' : { label: 'Debit Total' },
-                    'credit': { label: 'Credit Total' }
-                },
-                rows        : [],
-                fyears      : [],
-                totalDebit  : 0,
-                totalCredit : 0,
-                chrtAcct    : null,
-                start_date  : null,
-                end_date    : null,
-                selectedYear: null
-            }
-        },
-
-        computed: {
-            debugMode() {
-                return '1' == erp_acct_var.erp_debug_mode;
-            }
-        },
-
-        created() {
-            //? why is nextTick here ...? i don't know.
-            this.$nextTick(function () {
-                // with leading zero, and JS month are zero index based
-                let month = ('0' + ((new Date).getMonth() + 1)).slice(-2);
-
-                if ( this.$route.query.start ) {
-                    this.start_date = this.$route.query.start;
-                    this.end_date   = this.$route.query.end;
-                } else {
-                    this.start_date = `2019-${month}-01`;
-                    this.end_date   = erp_acct_var.current_date;
+    data () {
+        return {
+            bulkActions: [
+                {
+                    key  : 'trash',
+                    label: 'Move to Trash',
+                    img  : erp_acct_var.erp_assets + '/images/trash.png' /* global erp_acct_var */
                 }
-            });
+            ],
+            columns: {
+                name  : { label: 'Account Name' },
+                debit : { label: 'Debit Total' },
+                credit: { label: 'Credit Total' }
+            },
+            rows        : [],
+            fyears      : [],
+            totalDebit  : 0,
+            totalCredit : 0,
+            chrtAcct    : null,
+            start_date  : null,
+            end_date    : null,
+            selectedYear: null
+        };
+    },
 
-            this.fetchFnYears();
+    computed: {
+        debugMode () {
+            return erp_acct_var.erp_debug_mode === '1';
+        }
+    },
 
-            this.getChartOfAccts();
+    created () {
+        // ? why is nextTick here ...? i don't know.
+        this.$nextTick(function () {
+            // with leading zero, and JS month are zero index based
+            const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
+
+            if (this.$route.query.start) {
+                this.start_date = this.$route.query.start;
+                this.end_date   = this.$route.query.end;
+            } else {
+                this.start_date = `2019-${month}-01`;
+                this.end_date   = erp_acct_var.current_date;
+            }
+        });
+
+        this.fetchFnYears();
+
+        this.getChartOfAccts();
+    },
+
+    methods: {
+        onYearSelected () {
+            this.start_date = this.selectedYear.start_date;
+            this.end_date   = this.selectedYear.end_date;
+
+            this.selectedYear = { id: parseInt(this.selectedYear.id), name: this.selectedYear.name };
+
+            this.getTrialBalance();
         },
 
-        methods: {
-            onYearSelected() {
-                this.start_date = this.selectedYear.start_date;
-                this.end_date   = this.selectedYear.end_date;
-
-                this.selectedYear = { id: parseInt(this.selectedYear.id), name: this.selectedYear.name };
-
-                this.getTrialBalance();
-            },
-
-            updateDate() {
-                this.$router.push({ path: this.$route.path, query: {
+        updateDate () {
+            this.$router.push({ path: this.$route.path,
+                query: {
                     start: this.start_date,
                     end  : this.end_date
                 } });
-            },
+        },
 
-            getChartOfAccts() {
-                HTTP.get( '/ledgers/accounts').then(response => {
-                    this.chrtAcct = response.data;
+        getChartOfAccts () {
+            HTTP.get('/ledgers/accounts').then(response => {
+                this.chrtAcct = response.data;
 
-                    this.setDateAndGetTb();
-                });
-            },
+                this.setDateAndGetTb();
+            });
+        },
 
-            setDateAndGetTb() {
-                this.updateDate();
-                this.getTrialBalance();
-            },
+        setDateAndGetTb () {
+            this.updateDate();
+            this.getTrialBalance();
+        },
 
-            fetchFnYears() {
-                HTTP.get( '/opening-balances/names').then(response => {
-                    // get only last 5
-                    this.fyears = response.data.reverse().slice(0).slice(-5);
-                });
-            },
+        fetchFnYears () {
+            HTTP.get('/opening-balances/names').then(response => {
+                // get only last 5
+                this.fyears = response.data.reverse().slice(0).slice(-5);
+            });
+        },
 
-            getTrialBalance() {
-                this.updateDate();
+        getTrialBalance () {
+            this.updateDate();
 
-                this.rows = [];
-                this.$store.dispatch( 'spinner/setSpinner', true );
+            this.rows = [];
+            this.$store.dispatch('spinner/setSpinner', true);
 
-                HTTP.get( '/reports/trial-balance', {
-                    params: {
-                        start_date: this.start_date,
-                        end_date  : this.end_date
-                    }
-                }).then(response => {
-                    this.rows        = response.data.rows;
-                    this.totalDebit  = response.data.total_debit;
-                    this.totalCredit = response.data.total_credit;
+            HTTP.get('/reports/trial-balance', {
+                params: {
+                    start_date: this.start_date,
+                    end_date  : this.end_date
+                }
+            }).then(response => {
+                this.rows        = response.data.rows;
+                this.totalDebit  = response.data.total_debit;
+                this.totalCredit = response.data.total_credit;
 
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch(e => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                });
-            },
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(e => {
+                this.$store.dispatch('spinner/setSpinner', false);
+            });
+        },
 
-            printPopup() {
-                window.print();
-            }
+        printPopup () {
+            window.print();
         }
     }
+};
 </script>
 
 <style lang="less">

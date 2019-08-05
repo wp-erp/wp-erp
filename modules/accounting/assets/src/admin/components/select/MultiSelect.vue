@@ -19,79 +19,79 @@
 
 <script>
 /* eslint func-names: ["error", "never"] */
-    import Multiselect from 'vue-multiselect'
-    import debounce from 'admin/components/select/debounce'
-    import 'vue-multiselect/dist/vue-multiselect.min.css'
+import Multiselect from 'vue-multiselect';
+import debounce from 'admin/components/select/debounce';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
-    export default {
-        name: 'MultiSelect',
+export default {
+    name: 'MultiSelect',
 
-        components: {
-            Multiselect,
+    components: {
+        Multiselect
+    },
+
+    props: {
+        value: {
+            type: null,
+            required: true
         },
 
-        props: {
-            value: {
-                type: null,
-                required: true,
-            },
+        options: {
+            type: Array,
+            default: () => []
+        },
 
-            options: {
-                type: Array,
-                default: () => [],
-            },
+        multiple: {
+            type: Boolean,
+            default: false
+        },
+        placeholder: {
+            type: String,
+            default: 'Please search'
+        }
+    },
 
-            multiple: {
-                type: Boolean,
-                default: false,
-            },
-            placeholder: {
-                type: String,
-                default: 'Please search'
+    data () {
+        return {
+            noResult: false,
+            isLoading: false,
+            results: []
+        };
+    },
+
+    watch: {
+        options () {
+            this.results = [];
+            this.isLoading = false;
+        }
+    },
+
+    methods: {
+        onSelect (selected) {
+            if (this.multiple) {
+                this.results.push(selected);
+                this.$emit('input', this.results);
+            } else {
+                this.$emit('input', selected);
             }
         },
 
-        data() {
-            return {
-                noResult: false,
-                isLoading: false,
-                results: [],
-            };
+        onRemove (removed) {
+            this.results = this.results.filter(element => element.id !== removed.id);
+
+            this.$emit('input', this.results);
         },
 
-        watch: {
-            options() {
-                this.results = [];
-                this.isLoading = false;
-            },
+        onDropdownOpen (id) {
+            this.$root.$emit('dropdown-open');
         },
 
-        methods: {
-            onSelect(selected) {
-                if (this.multiple) {
-                    this.results.push(selected);
-                    this.$emit('input', this.results);
-                } else {
-                    this.$emit('input', selected);
-                }
-            },
-
-            onRemove(removed) {
-                this.results = this.results.filter(element => element.id !== removed.id);
-
-                this.$emit('input', this.results);
-            },
-
-            onDropdownOpen(id) {
-                this.$root.$emit('dropdown-open');
-            },
-
-            asyncFind: debounce(function (query) {
-                // this.isLoading = true;
-                this.$root.$emit('options-query', query);
-            }, 1),
-        },
-    };
+        asyncFind: debounce(function (query) {
+            // this.isLoading = true;
+            this.$root.$emit('options-query', query);
+        }, 1)
+    }
+};
 </script>
 
 <style lang="less">

@@ -137,381 +137,379 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex';
 
-    import HTTP from 'admin/http'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
-    import FileUpload from 'admin/components/base/FileUpload.vue'
-    import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
-    import SelectAccounts from 'admin/components/select/SelectAccounts.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import CheckFields from 'admin/components/check/CheckFields.vue'
-    import ShowErrors from 'admin/components/base/ShowErrors.vue'
-    import ComboButton from 'admin/components/select/ComboButton.vue'
+import HTTP from 'admin/http';
+import Datepicker from 'admin/components/base/Datepicker.vue';
+import FileUpload from 'admin/components/base/FileUpload.vue';
+import SelectCustomers from 'admin/components/people/SelectCustomers.vue';
+import SelectAccounts from 'admin/components/select/SelectAccounts.vue';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import CheckFields from 'admin/components/check/CheckFields.vue';
+import ShowErrors from 'admin/components/base/ShowErrors.vue';
+import ComboButton from 'admin/components/select/ComboButton.vue';
 
-    export default {
-        name: 'RecPaymentCreate',
+export default {
+    name: 'RecPaymentCreate',
 
-        components: {
-            SelectAccounts,
-            Datepicker,
-            FileUpload,
-            SelectCustomers,
-            MultiSelect,
-            CheckFields,
-            ShowErrors,
-            ComboButton
-        },
+    components: {
+        SelectAccounts,
+        Datepicker,
+        FileUpload,
+        SelectCustomers,
+        MultiSelect,
+        CheckFields,
+        ShowErrors,
+        ComboButton
+    },
 
-        data() {
-            return {
-                basic_fields: {
-                    customer       : '',
-                    trn_ref        : '',
-                    payment_date   : '',
-                    deposit_to     : '',
-                    billing_address: '',
-                    trn_by         : ''
-                },
-
-                check_data: {
-                    bank_name: '',
-                    payer_name: '',
-                    check_no  : ''
-                },
-
-                createButtons: [
-                    {id: 'save', text: 'Save'},
-                    {id: 'new_create', text: 'Save and New'},
-                    {id: 'draft', text: 'Save as Draft'},
-                ],
-
-                form_errors: [],
-
-                editMode        : false,
-                voucherNo       : 0,
-                invoices        : [],
-                attachments     : [],
-                totalAmounts    : [],
-                pay_methods     : [],
-                finalTotalAmount: 0,
-                particulars     : '',
-                isWorking       : false,
-                accts_by_chart  : [],
-                erp_acct_assets : erp_acct_var.acct_assets,
-                reset           : false
-            }
-        },
-
-        watch: {
-            finalTotalAmount( newval ) {
-                this.finalTotalAmount = newval;
+    data () {
+        return {
+            basic_fields: {
+                customer       : '',
+                trn_ref        : '',
+                payment_date   : '',
+                deposit_to     : '',
+                billing_address: '',
+                trn_by         : ''
             },
 
-            'basic_fields.customer'() {
-                this.getCustomerAddress();
-                this.getDueInvoices();
+            check_data: {
+                bank_name: '',
+                payer_name: '',
+                check_no  : ''
             },
 
-            'basic_fields.trn_by'() {
-                this.changeAccounts();
-            }
+            createButtons: [
+                { id: 'save', text: 'Save' },
+                { id: 'new_create', text: 'Save and New' },
+                { id: 'draft', text: 'Save as Draft' }
+            ],
 
+            form_errors: [],
+
+            editMode        : false,
+            voucherNo       : 0,
+            invoices        : [],
+            attachments     : [],
+            totalAmounts    : [],
+            pay_methods     : [],
+            finalTotalAmount: 0,
+            particulars     : '',
+            isWorking       : false,
+            accts_by_chart  : [],
+            erp_acct_assets : erp_acct_var.acct_assets, /* global erp_acct_var */
+            reset           : false
+        };
+    },
+
+    watch: {
+        finalTotalAmount (newval) {
+            this.finalTotalAmount = newval;
         },
 
-        computed: {
-            ...mapState({ actionType: state => state.combo.btnID })
+        'basic_fields.customer' () {
+            this.getCustomerAddress();
+            this.getDueInvoices();
         },
 
-        created() {
-            this.prepareDataLoad();
+        'basic_fields.trn_by' () {
+            this.changeAccounts();
+        }
 
-            // initialize combo button id with `save`
-            this.$store.dispatch('combo/setBtnID', 'save');
-        },
+    },
 
-        mounted() {
-            // `receive payment` request from invoice list row action
-            if ( this.$route.params.customer_id ) {
-                this.basic_fields.customer  = {
-                    id  : parseInt(this.$route.params.customer_id),
-                    name: this.$route.params.customer_name
-                };
-            }
-        },
+    computed: {
+        ...mapState({ actionType: state => state.combo.btnID })
+    },
 
-        methods: {
-            async prepareDataLoad() {
-                /**
+    created () {
+        this.prepareDataLoad();
+
+        // initialize combo button id with `save`
+        this.$store.dispatch('combo/setBtnID', 'save');
+    },
+
+    mounted () {
+        // `receive payment` request from invoice list row action
+        if (this.$route.params.customer_id) {
+            this.basic_fields.customer  = {
+                id  : parseInt(this.$route.params.customer_id),
+                name: this.$route.params.customer_name
+            };
+        }
+    },
+
+    methods: {
+        async prepareDataLoad () {
+            /**
                  * ----------------------------------------------
                  * check if editing
                  * -----------------------------------------------
                  */
-                if ( this.$route.params.id ) {
-                    this.editMode = true;
-                    this.voucherNo = this.$route.params.id;
+            if (this.$route.params.id) {
+                this.editMode = true;
+                this.voucherNo = this.$route.params.id;
 
-                    /**
+                /**
                      * Duplicates of
                      *? this.getPayMethods()
                      */
-                    let request1 = await HTTP.get('/transactions/payment-methods');
-                    let request2 = await HTTP.get(`/invoices/${this.$route.params.id}`);
+                const request1 = await HTTP.get('/transactions/payment-methods');
+                const request2 = await HTTP.get(`/invoices/${this.$route.params.id}`);
 
-                    if ( ! request2.data.line_items.length ) {
-                        this.showAlert('error', 'Invoice does not exists!');
-                        return;
-                    }
+                if (!request2.data.line_items.length) {
+                    this.showAlert('error', 'Invoice does not exists!');
+                    return;
+                }
 
-                    if ( 'Pending' != request3.data.status ) {
-                        this.showAlert('error', 'Can\'t edit');
-                        return;
-                    }
-
-                    this.pay_methods = request1.data;
-                    this.setDataForEdit( request2.data );
-                } else {
-                    /**
+                this.pay_methods = request1.data;
+                this.setDataForEdit(request2.data);
+            } else {
+                /**
                      * ----------------------------------------------
                      * create a new Receive Payment
                      * -----------------------------------------------
                      */
-                    this.basic_fields.payment_date = erp_acct_var.current_date;
+                this.basic_fields.payment_date = erp_acct_var.current_date;
 
-                    this.getPayMethods();
-                }
-            },
+                this.getPayMethods();
+            }
+        },
 
-            getPayMethods() {
-                this.$store.dispatch( 'spinner/setSpinner', true );
+        getPayMethods () {
+            this.$store.dispatch('spinner/setSpinner', true);
 
-                HTTP.get('/transactions/payment-methods').then(response => {
-                    this.pay_methods = response.data;
+            HTTP.get('/transactions/payment-methods').then(response => {
+                this.pay_methods = response.data;
 
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
 
-            setCheckFields( check_data ) {
-                this.check_data = check_data;
-            },
+        setCheckFields (check_data) {
+            this.check_data = check_data;
+        },
 
-            getDueInvoices() {
-                this.invoices = [];
+        getDueInvoices () {
+            this.invoices = [];
 
-                let customerId  = this.basic_fields.customer.id,
-                    idx         = 0,
-                    finalAmount = 0;
+            const customerId  = this.basic_fields.customer.id;
+            let idx         = 0;
+            let finalAmount = 0;
 
-                if ( ! customerId ) {
-                    return;
-                }
+            if (!customerId) {
+                return;
+            }
 
-                HTTP.get(`/invoices/due/${customerId}`).then(response => {
-                    response.data.forEach(element => {
-                        this.invoices.push({
-                            id        : element.id,
-                            invoice_no: element.voucher_no,
-                            due_date  : element.due_date,
-                            amount    : parseFloat(element.amount),
-                            due       : parseFloat(element.due)
-                        });
+            HTTP.get(`/invoices/due/${customerId}`).then(response => {
+                response.data.forEach(element => {
+                    this.invoices.push({
+                        id        : element.id,
+                        invoice_no: element.voucher_no,
+                        due_date  : element.due_date,
+                        amount    : parseFloat(element.amount),
+                        due       : parseFloat(element.due)
                     });
-                }).then(() => {
-                    this.invoices.forEach(element => {
-                        this.totalAmounts[idx++] = parseFloat(element.due);
-                        finalAmount += parseFloat(element.due);
-                    });
-
-                    this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
                 });
-            },
-
-            getCustomerAddress() {
-                let customer_id = this.basic_fields.customer.id;
-
-                if ( ! customer_id ) {
-                    this.basic_fields.billing_address = '';
-                    return;
-                }
-
-                HTTP.get(`/people/${customer_id}`).then(response => {
-                    let billing = response.data;
-
-                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
-
-                    this.basic_fields.billing_address = address;
-                });
-            },
-
-            updateFinalAmount() {
-                let finalAmount = 0;
-
-                this.totalAmounts.forEach(element => {
-                    finalAmount += parseFloat(element);
+            }).then(() => {
+                this.invoices.forEach(element => {
+                    this.totalAmounts[idx++] = parseFloat(element.due);
+                    finalAmount += parseFloat(element.due);
                 });
 
                 this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
-            },
-
-            SubmitForPayment(event) {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-                    return;
-                }
-
-                this.invoices.forEach( (element,index) => {
-                    element['line_total'] = parseFloat( this.totalAmounts[index] );
-                });
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                let trn_status = null;
-                if ( 'draft' === this.actionType) {
-                    trn_status = 1;
-                } else {
-                    trn_status = 4;
-                }
-
-                let deposit_id = this.basic_fields.deposit_to.id;
-
-                if ( this.basic_fields.trn_by.id === 4 ) {
-                    deposit_id = this.basic_fields.deposit_to.people_id;
-                }
-
-                HTTP.post('/payments', {
-                    customer_id: this.basic_fields.customer.id,
-                    ref        : this.basic_fields.trn_ref,
-                    trn_date   : this.basic_fields.payment_date,
-                    line_items : this.invoices,
-                    attachments: this.attachments,
-                    type       : 'payment',
-                    status     : trn_status,
-                    particulars: this.particulars,
-                    deposit_to : deposit_id,
-                    trn_by     : this.basic_fields.trn_by.id,
-                    check_no   : parseInt(this.check_data.check_no),
-                    name       : this.check_data.payer_name,
-                    bank       : this.check_data.bank_name,
-                }).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-
-                    this.showAlert('success', 'Payment Created!');
-                    this.reset = true;
-
-                    if ('save' == this.actionType || 'draft' == this.actionType) {
-                        this.$router.push({name: 'Sales'});
-                    } else if ('new_create' == this.actionType) {
-                        this.resetFields();
-                    }
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                });
-            },
-
-            changeAccounts() {
-                this.accts_by_chart = [];
-                if ( '2' === this.basic_fields.trn_by.id || '3' === this.basic_fields.trn_by.id ) {
-                    HTTP.get('/ledgers/bank-accounts').then((response) => {
-                        this.accts_by_chart = response.data;
-                        this.accts_by_chart.forEach( element =>{
-                            if ( !element.hasOwnProperty('balance') ) {
-                                element.balance = 0;
-                            }
-                        });
-                    });
-                } else if ( '1' === this.basic_fields.trn_by.id ) {
-                    HTTP.get('/ledgers/cash-accounts').then((response) => {
-                        this.accts_by_chart = response.data;
-                        this.accts_by_chart.forEach( element =>{
-                            if ( !element.hasOwnProperty('balance') ) {
-                                element.balance = 0;
-                            }
-                        });
-                    });
-                } else if ( "undefined" !== erp_reimbursement_var.erp_reimbursement_module &&  '1' === erp_reimbursement_var.erp_reimbursement_module ) {
-                    HTTP.get('/people-transactions/balances').then((response) => {
-                        this.accts_by_chart = response.data;
-                        this.accts_by_chart.forEach( element =>{
-                            if ( !element.hasOwnProperty('balance') ) {
-                                element.balance = 0;
-                            }
-                        });
-                    });
-                }
-                this.$root.$emit('account-changed');
-            },
-
-            validateForm() {
-                this.form_errors = [];
-
-                if ( !this.basic_fields.customer.hasOwnProperty('id') ) {
-                    this.form_errors.push('Customer Name is required.');
-                }
-
-                if ( !this.basic_fields.payment_date ) {
-                    this.form_errors.push('Transaction Date is required.');
-                }
-
-                if ( !this.basic_fields.deposit_to.hasOwnProperty('id') ) {
-                    this.form_errors.push('Deposit Account is required.');
-                }
-
-                if ( !this.basic_fields.trn_by.hasOwnProperty('id') ) {
-                    this.form_errors.push('Payment Method is required.');
-                }
-
-                if ( ! parseFloat(this.finalTotalAmount) ) {
-                    this.form_errors.push('Total amount can\'t be zero.');
-                }
-            },
-
-            showPaymentModal() {
-                this.getDueInvoices();
-            },
-
-            resetData() {
-                this.basic_fields = {
-                    customer       : '',
-                    trn_ref        : '',
-                    payment_date   : erp_acct_var.current_date,
-                    deposit_to     : '',
-                    billing_address: '',
-                    trn_by         : ''
-                };
-
-                this.check_data = {
-                    bank_name: '',
-                    payer_name: '',
-                    check_no  : ''
-                };
-
-                this.form_errors      = [];
-                this.invoices         = [];
-                this.attachments      = [];
-                this.totalAmounts     = [];
-                this.finalTotalAmount = 0;
-                this.particulars      = '';
-                this.isWorking        = false,
-                this.reset            = false;
-
-                this.$store.dispatch('combo/setBtnID', 'save');
-            },
-
-            removeRow(index) {
-                this.$delete(this.invoices, index);
-                this.$delete( this.totalAmounts, index );
-                this.updateFinalAmount();
-            },
+            });
         },
 
+        getCustomerAddress () {
+            const customer_id = this.basic_fields.customer.id;
+
+            if (!customer_id) {
+                this.basic_fields.billing_address = '';
+                return;
+            }
+
+            HTTP.get(`/people/${customer_id}`).then(response => {
+                const billing = response.data;
+
+                const address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                this.basic_fields.billing_address = address;
+            });
+        },
+
+        updateFinalAmount () {
+            let finalAmount = 0;
+
+            this.totalAmounts.forEach(element => {
+                finalAmount += parseFloat(element);
+            });
+
+            this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
+        },
+
+        SubmitForPayment (event) {
+            this.validateForm();
+
+            if (this.form_errors.length) {
+                window.scrollTo({
+                    top: 10,
+                    behavior: 'smooth'
+                });
+                return;
+            }
+
+            this.invoices.forEach((element, index) => {
+                element['line_total'] = parseFloat(this.totalAmounts[index]);
+            });
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            let trn_status = null;
+            if (this.actionType === 'draft') {
+                trn_status = 1;
+            } else {
+                trn_status = 4;
+            }
+
+            let deposit_id = this.basic_fields.deposit_to.id;
+
+            if (this.basic_fields.trn_by.id === 4) {
+                deposit_id = this.basic_fields.deposit_to.people_id;
+            }
+
+            HTTP.post('/payments', {
+                customer_id: this.basic_fields.customer.id,
+                ref        : this.basic_fields.trn_ref,
+                trn_date   : this.basic_fields.payment_date,
+                line_items : this.invoices,
+                attachments: this.attachments,
+                type       : 'payment',
+                status     : trn_status,
+                particulars: this.particulars,
+                deposit_to : deposit_id,
+                trn_by     : this.basic_fields.trn_by.id,
+                check_no   : parseInt(this.check_data.check_no),
+                name       : this.check_data.payer_name,
+                bank       : this.check_data.bank_name
+            }).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+
+                this.showAlert('success', 'Payment Created!');
+                this.reset = true;
+
+                if (this.actionType === 'save' || this.actionType === 'draft') {
+                    this.$router.push({ name: 'Sales' });
+                } else if (this.actionType === 'new_create') {
+                    this.resetFields();
+                }
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
+
+        changeAccounts () {
+            this.accts_by_chart = [];
+            if (this.basic_fields.trn_by.id === '2' || this.basic_fields.trn_by.id === '3') {
+                HTTP.get('/ledgers/bank-accounts').then((response) => {
+                    this.accts_by_chart = response.data;
+                    this.accts_by_chart.forEach(element => {
+                        if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                            element.balance = 0;
+                        }
+                    });
+                });
+            } else if (this.basic_fields.trn_by.id === '1') {
+                HTTP.get('/ledgers/cash-accounts').then((response) => {
+                    this.accts_by_chart = response.data;
+                    this.accts_by_chart.forEach(element => {
+                        if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                            element.balance = 0;
+                        }
+                    });
+                });
+                /* global erp_reimbursement_var */
+            } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' &&  erp_reimbursement_var.erp_reimbursement_module === '1') {
+                HTTP.get('/people-transactions/balances').then((response) => {
+                    this.accts_by_chart = response.data;
+                    this.accts_by_chart.forEach(element => {
+                        if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                            element.balance = 0;
+                        }
+                    });
+                });
+            }
+            this.$root.$emit('account-changed');
+        },
+
+        validateForm () {
+            this.form_errors = [];
+
+            if (!Object.prototype.hasOwnProperty.call(this.basic_fields.customer, 'id')) {
+                this.form_errors.push('Customer Name is required.');
+            }
+
+            if (!this.basic_fields.payment_date) {
+                this.form_errors.push('Transaction Date is required.');
+            }
+
+            if (!Object.prototype.hasOwnProperty.call(this.basic_fields.deposit_to, 'id')) {
+                this.form_errors.push('Deposit Account is required.');
+            }
+
+            if (!Object.prototype.hasOwnProperty.call(this.basic_fields.trn_by, 'id')) {
+                this.form_errors.push('Payment Method is required.');
+            }
+
+            if (!parseFloat(this.finalTotalAmount)) {
+                this.form_errors.push('Total amount can\'t be zero.');
+            }
+        },
+
+        showPaymentModal () {
+            this.getDueInvoices();
+        },
+
+        resetData () {
+            this.basic_fields = {
+                customer       : '',
+                trn_ref        : '',
+                payment_date   : erp_acct_var.current_date,
+                deposit_to     : '',
+                billing_address: '',
+                trn_by         : ''
+            };
+
+            this.check_data = {
+                bank_name: '',
+                payer_name: '',
+                check_no  : ''
+            };
+
+            this.form_errors      = [];
+            this.invoices         = [];
+            this.attachments      = [];
+            this.totalAmounts     = [];
+            this.finalTotalAmount = 0;
+            this.particulars      = '';
+            this.isWorking        = false;
+            this.reset            = false;
+
+            this.$store.dispatch('combo/setBtnID', 'save');
+        },
+
+        removeRow (index) {
+            this.$delete(this.invoices, index);
+            this.$delete(this.totalAmounts, index);
+            this.updateFinalAmount();
+        }
     }
+
+};
 </script>
 
 <style lang="less">

@@ -151,460 +151,462 @@
 </template>
 
 <script>
-    import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex';
 
-    import HTTP from 'admin/http'
-    import Datepicker from 'admin/components/base/Datepicker.vue'
-    import FileUpload from 'admin/components/base/FileUpload.vue'
-    import ComboButton from 'admin/components/select/ComboButton.vue'
-    import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue'
-    import SelectCustomers from 'admin/components/people/SelectCustomers.vue'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import ShowErrors from 'admin/components/base/ShowErrors.vue'
+import HTTP from 'admin/http';
+import Datepicker from 'admin/components/base/Datepicker.vue';
+import FileUpload from 'admin/components/base/FileUpload.vue';
+import ComboButton from 'admin/components/select/ComboButton.vue';
+import InvoiceTrnRow from 'admin/components/invoice/InvoiceTrnRow.vue';
+import SelectCustomers from 'admin/components/people/SelectCustomers.vue';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
+import ShowErrors from 'admin/components/base/ShowErrors.vue';
 
-    export default {
-        name: 'InvoiceCreate',
+export default {
+    name: 'InvoiceCreate',
 
-        components: {
-            MultiSelect,
-            Datepicker,
-            FileUpload,
-            ComboButton,
-            InvoiceTrnRow,
-            SelectCustomers,
-            ShowErrors
-        },
+    components: {
+        MultiSelect,
+        Datepicker,
+        FileUpload,
+        ComboButton,
+        InvoiceTrnRow,
+        SelectCustomers,
+        ShowErrors
+    },
 
-        data() {
-            return {
-                basic_fields: {
-                    customer       : '',
-                    trn_date       : '',
-                    due_date       : '',
-                    billing_address: ''
-                },
-
-                createButtons: [
-                    {id: 'save', text: 'Save'},
-                    // {id: 'send_create', text: 'Create and Send'},
-                    {id: 'new_create', text: 'Save and New'},
-                    {id: 'draft', text: 'Save as Draft'},
-                ],
-
-                updateButtons: [
-                    {id: 'update', text: 'Update'},
-                    // {id: 'send_update', text: 'Update and Send'},
-                    {id: 'new_update', text: 'Update and New'},
-                    {id: 'draft', text: 'Save as Draft'},
-                ],
-
-                editMode        : false,
-                voucherNo       : 0,
-                discountType    : 'discount-percent',
-                discount        : 0,
-                status          : null,
-                taxRate         : null,
-                taxSummary      : null,
-                products        : [],
-                particulars     : '',
-                attachments     : [],
-                transactionLines: [],
-                taxRates        : [],
-                taxTotalAmount  : 0,
-                finalTotalAmount: 0,
-                inv_title       : '',
-                inv_type        : {},
-                erp_acct_assets : erp_acct_var.acct_assets,
-                form_errors     : [],
-            }
-        },
-
-        watch: {
-            'basic_fields.customer'() {
-                this.getCustomerAddress();
+    data () {
+        return {
+            basic_fields: {
+                customer       : '',
+                trn_date       : '',
+                due_date       : '',
+                billing_address: ''
             },
 
-            taxRate(newVal) {
-                this.$store.dispatch('sales/setTaxRateID', newVal.id);
-            },
+            createButtons: [
+                { id: 'save', text: 'Save' },
+                // {id: 'send_create', text: 'Create and Send'},
+                { id: 'new_create', text: 'Save and New' },
+                { id: 'draft', text: 'Save as Draft' }
+            ],
 
-            discount() {
-                this.discountChanged();
-            },
+            updateButtons: [
+                { id: 'update', text: 'Update' },
+                // {id: 'send_update', text: 'Update and Send'},
+                { id: 'new_update', text: 'Update and New' },
+                { id: 'draft', text: 'Save as Draft' }
+            ],
 
-            discountType() {
-                this.discountChanged();
-            },
+            editMode        : false,
+            voucherNo       : 0,
+            discountType    : 'discount-percent',
+            discount        : 0,
+            status          : null,
+            taxRate         : null,
+            taxSummary      : null,
+            products        : [],
+            particulars     : '',
+            attachments     : [],
+            transactionLines: [],
+            taxRates        : [],
+            taxTotalAmount  : 0,
+            finalTotalAmount: 0,
+            inv_title       : '',
+            inv_type        : {},
+            erp_acct_assets : erp_acct_var.acct_assets, /* global erp_acct_var */
+            form_errors     : []
+        };
+    },
 
-            invoiceTotalAmount() {
-                this.discountChanged();
-            }
+    watch: {
+        'basic_fields.customer' () {
+            this.getCustomerAddress();
         },
 
-        computed: {
-            ...mapState({ invoiceTotalAmount: state => state.sales.invoiceTotalAmount }),
-            ...mapState({ actionType: state => state.combo.btnID })
+        taxRate (newVal) {
+            this.$store.dispatch('sales/setTaxRateID', newVal.id);
         },
 
-        created() {
-            if ( 'EstimateCreate' === this.$route.name ) {
-                this.inv_title = 'Estimate';
-                this.inv_type  = {id: 1, name: 'Estimate'};
-            } else {
-                this.inv_title = 'Invoice';
-                this.inv_type  = {id: 0, name: 'Invoice'};
-            }
-
-            this.prepareDataLoad();
-
-            this.$root.$on('remove-row', index => {
-                this.$delete(this.transactionLines, index);
-                this.updateFinalAmount();
-            });
-
-            this.$root.$on('total-updated', amount => {
-                this.updateFinalAmount();
-            });
+        discount () {
+            this.discountChanged();
         },
 
-        methods: {
-            async prepareDataLoad() {
-                /**
+        discountType () {
+            this.discountChanged();
+        },
+
+        invoiceTotalAmount () {
+            this.discountChanged();
+        }
+    },
+
+    computed: {
+        ...mapState({ invoiceTotalAmount: state => state.sales.invoiceTotalAmount }),
+        ...mapState({ actionType: state => state.combo.btnID })
+    },
+
+    created () {
+        if (this.$route.name === 'EstimateCreate') {
+            this.inv_title = 'Estimate';
+            this.inv_type  = { id: 1, name: 'Estimate' };
+        } else {
+            this.inv_title = 'Invoice';
+            this.inv_type  = { id: 0, name: 'Invoice' };
+        }
+
+        this.prepareDataLoad();
+
+        this.$root.$on('remove-row', index => {
+            this.$delete(this.transactionLines, index);
+            this.updateFinalAmount();
+        });
+
+        this.$root.$on('total-updated', amount => {
+            this.updateFinalAmount();
+        });
+    },
+
+    methods: {
+        async prepareDataLoad () {
+            /**
                  * ----------------------------------------------
                  * check if editing
                  * -----------------------------------------------
                  */
-                if ( this.$route.params.id ) {
-                    this.editMode = true;
-                    this.voucherNo = this.$route.params.id;
+            if (this.$route.params.id) {
+                this.editMode = true;
+                this.voucherNo = this.$route.params.id;
 
-                    /**
+                /**
                      * Duplicates of
                      *? this.getProducts()
                      *? this.getTaxRates()
                      * load products and taxes, before invoice load
                      */
-                    let [request1, request2] = await Promise.all([
-                        HTTP.get('/products'),
-                        HTTP.get('/taxes/summary')
-                    ]);
-                    let request3 = await HTTP.get(`/invoices/${this.$route.params.id}`);
+                const [request1, request2] = await Promise.all([
+                    HTTP.get('/products'),
+                    HTTP.get('/taxes/summary')
+                ]);
+                const request3 = await HTTP.get(`/invoices/${this.$route.params.id}`);
 
-                    if ( ! request3.data.line_items.length ) {
-                        this.showAlert('error', 'Invoice does not exists!');
-                        return;
-                    }
+                if (!request3.data.line_items.length) {
+                    this.showAlert('error', 'Invoice does not exists!');
+                    return;
+                }
 
-                    let canEdit = Boolean( Number( request3.data.editable ) );
+                const canEdit = Boolean(Number(request3.data.editable));
 
-                    if ( ! canEdit ) {
-                        this.showAlert('error', 'Can\'t edit');
-                        return;
-                    }
+                if (!canEdit) {
+                    this.showAlert('error', 'Can\'t edit');
+                    return;
+                }
 
-                    this.products   = request1.data;
-                    this.taxSummary = request2.data;
-                    this.taxRates   = this.getUniqueTaxRates(request2.data);
-                    this.setDataForEdit( request3.data );
+                this.products   = request1.data;
+                this.taxSummary = request2.data;
+                this.taxRates   = this.getUniqueTaxRates(request2.data);
+                this.setDataForEdit(request3.data);
 
-                    // initialize combo button id with `update`
-                    this.$store.dispatch('combo/setBtnID', 'update');
-
-                } else {
-                    /**
+                // initialize combo button id with `update`
+                this.$store.dispatch('combo/setBtnID', 'update');
+            } else {
+                /**
                      * ----------------------------------------------
                      * create a new invoice
                      * -----------------------------------------------
                      */
-                    this.getProducts();
-                    this.getTaxRates();
+                this.getProducts();
+                this.getTaxRates();
 
-                    this.basic_fields.trn_date = erp_acct_var.current_date;
-                    this.basic_fields.due_date = erp_acct_var.current_date;
-                    this.transactionLines.push({}, {}, {});
-
-                    // initialize combo button id with `save`
-                    this.$store.dispatch('combo/setBtnID', 'save');
-                }
-            },
-
-            setDataForEdit(invoice) {
-                this.basic_fields.customer        = { id: parseInt(invoice.customer_id), name: invoice.customer_name };
-                this.basic_fields.billing_address = invoice.billing_address;
-                this.basic_fields.trn_date        = invoice.trn_date;
-                this.basic_fields.due_date        = invoice.due_date;
-                this.status                       = invoice.status;
-                this.transactionLines             = invoice.line_items;
-                this.taxTotalAmount               = invoice.tax;
-                this.finalTotalAmount             = invoice.debit;
-                this.particulars                  = invoice.particulars;
-                this.attachments                  = invoice.attachments;
-
-                if ( 'discount-percent' == invoice.discount_type ) {
-                    this.discount = ( parseFloat(invoice.discount) * 100 ) / parseFloat(invoice.amount);
-                } else {
-                    this.discount = invoice.discount;
-                }
-
-                this.taxRate = {
-                    id: parseInt(invoice.tax_rate_id),
-                    name: this.getTaxRateNameByID(invoice.tax_rate_id)
-                };
-
-                if ( '1' == invoice.estimate ) {
-                    this.inv_type = { id: 1, name: 'Estimate' };
-                }
-            },
-
-            getProducts() {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP.get('/products').then(response => {
-                    this.products = response.data;
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
-
-            getCustomerAddress() {
-                let customer_id = this.basic_fields.customer.id;
-
-                if ( ! customer_id ) {
-                    this.basic_fields.billing_address = '';
-                    return;
-                }
-
-                HTTP.get(`/people/${customer_id}`).then(response => {
-                    let billing = response.data;
-
-                    let address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
-
-                    this.basic_fields.billing_address = address;
-                });
-            },
-
-            discountChanged() {
-                let discount = this.discount;
-
-                if ( 'discount-percent' === this.discountType ) {
-                    discount = ( this.invoiceTotalAmount * discount ) / 100;
-                }
-
-                this.$store.dispatch('sales/setDiscount', discount);
-            },
-
-            getTaxRates() {
-                HTTP.get('/taxes/summary').then(response => {
-                    this.taxSummary = response.data;
-
-                    this.taxRates = this.getUniqueTaxRates(this.taxSummary);
-                });
-            },
-
-            getTaxRateNameByID(id) {
-                // Array.find()
-                let taxRate = this.taxRates.find( rate => {
-                    return rate.id == id;
-                } );
-
-                return taxRate.name;
-            },
-
-            getUniqueTaxRates( taxes ) {
-                return Array.from(new Set(taxes.map(tax => tax.tax_rate_id))).map(tax_rate_id => {
-                    let tax = taxes.find(tax => tax.tax_rate_id === tax_rate_id);
-
-                    if ( tax.default ) {
-                        // set default tax rate name for invoice
-                        this.taxRate = { id: tax_rate_id, name: tax.tax_rate_name };
-                        this.$store.dispatch('sales/setTaxRateID', tax_rate_id);
-                    }
-
-                    return {
-                        id: tax_rate_id,
-                        name: tax.tax_rate_name
-                    };
-                })
-            },
-
-            addLine() {
-                this.transactionLines.push({});
-            },
-
-            updateFinalAmount() {
-                let taxAmount     = 0;
-                let totalDiscount = 0;
-                let totalAmount   = 0;
-
-                this.transactionLines.forEach(element => {
-                    if ( element.qty ) {
-                        taxAmount     += parseFloat(element.taxAmount);
-                        totalDiscount += isNaN( element.discount ) ? 0.00 : parseFloat(element.discount);
-                        totalAmount   += parseFloat(element.amount);
-                    }
-                });
-
-                this.$store.dispatch('sales/setInvoiceTotalAmount', totalAmount);
-
-                let finalAmount = (totalAmount - totalDiscount) + taxAmount;
-
-                this.taxTotalAmount   = taxAmount.toFixed(2);
-                this.finalTotalAmount = finalAmount.toFixed(2);
-            },
-
-            formatLineItems() {
-                var lineItems = [];
-
-                this.transactionLines.forEach(line => {
-                    if ( line.qty ) {
-                        lineItems.push({
-                            product_id       : line.selectedProduct.id,
-                            product_type_name: line.selectedProduct.product_type_name,
-                            tax_cat_id       : line.taxCatID,
-                            qty              : line.qty,
-                            unit_price       : line.unitPrice,
-                            tax              : line.taxAmount,
-                            tax_rate         : line.taxRate,
-                            discount         : line.discount,
-                            item_total       : line.amount
-                        });
-                    }
-                });
-
-                return lineItems;
-            },
-
-            updateInvoice(requestData) {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert('success', 'Invoice Updated!');
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } ).then(() => {
-                    if ('update' == this.actionType || 'draft' == this.actionType) {
-                        this.$router.push({name: 'Sales'});
-                    } else if ('new_update' == this.actionType) {
-                        this.resetFields();
-                    }
-                });
-            },
-
-            createInvoice(requestData) {
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP.post('/invoices', requestData).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert('success', 'Invoice Created!');
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(() => {
-                    if ('save' == this.actionType || 'draft' == this.actionType) {
-                        this.$router.push({name: 'Sales'});
-                    } else if ('new_create' == this.actionType) {
-                        this.resetFields();
-                    }
-                });
-            },
-
-            submitInvoiceForm() {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-                    return;
-                }
-
-                this.isWorking = true;
-
-                if ( 'draft' == this.actionType) {
-                    this.status = 1;
-                } else {
-                    this.status = 2;
-                }
-
-                let requestData = {
-                    customer_id    : this.basic_fields.customer.id,
-                    date           : this.basic_fields.trn_date,
-                    due_date       : this.basic_fields.due_date,
-                    billing_address: this.basic_fields.billing_address,
-                    discount_type  : this.discountType,
-                    tax_rate_id    : this.taxRate !== null ? this.taxRate.id : null,
-                    line_items     : this.formatLineItems(),
-                    attachments    : this.attachments,
-                    particulars    : this.particulars,
-                    type           : 'invoice',
-                    status         : parseInt(this.status),
-                    estimate       : this.inv_type.id
-                };
-
-                if ( this.editMode ) {
-                    this.updateInvoice(requestData);
-                } else {
-                    this.createInvoice(requestData);
-                }
-            },
-
-            removeFile(index) {
-                this.$delete(this.attachments, index);
-            },
-
-            resetFields() {
-                // why can't we use `form.reset()` ?
-
-                this.basic_fields.customer        = { id: null, name: null };
-                this.basic_fields.trn_date        = erp_acct_var.current_date;
-                this.basic_fields.due_date        = erp_acct_var.current_date;
-                this.basic_fields.billing_address = '';
-                this.particulars                  = '';
-                this.attachments                  = [];
-                this.transactionLines             = [];
-                this.discountType                 = 'discount-percent';
-                this.discount                     = 0;
-                this.taxTotalAmount               = 0;
-                this.finalTotalAmount             = 0;
-                this.isWorking                    = false;
-
+                this.basic_fields.trn_date = erp_acct_var.current_date;
+                this.basic_fields.due_date = erp_acct_var.current_date;
                 this.transactionLines.push({}, {}, {});
 
+                // initialize combo button id with `save`
                 this.$store.dispatch('combo/setBtnID', 'save');
-            },
+            }
+        },
 
-            validateForm() {
-                this.form_errors = [];
+        setDataForEdit (invoice) {
+            this.basic_fields.customer        = { id: parseInt(invoice.customer_id), name: invoice.customer_name };
+            this.basic_fields.billing_address = invoice.billing_address;
+            this.basic_fields.trn_date        = invoice.trn_date;
+            this.basic_fields.due_date        = invoice.due_date;
+            this.status                       = invoice.status;
+            this.transactionLines             = invoice.line_items;
+            this.taxTotalAmount               = invoice.tax;
+            this.finalTotalAmount             = invoice.debit;
+            this.particulars                  = invoice.particulars;
+            this.attachments                  = invoice.attachments;
 
-                if (!this.basic_fields.customer.hasOwnProperty('id')) {
-                    this.form_errors.push('Customer Name is required.');
+            if (invoice.discount_type === 'discount-percent') {
+                this.discount = (parseFloat(invoice.discount) * 100) / parseFloat(invoice.amount);
+            } else {
+                this.discount = invoice.discount;
+            }
+
+            this.taxRate = {
+                id: parseInt(invoice.tax_rate_id),
+                name: this.getTaxRateNameByID(invoice.tax_rate_id)
+            };
+
+            if (invoice.estimate === '1') {
+                this.inv_type = { id: 1, name: 'Estimate' };
+            }
+        },
+
+        getProducts () {
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.get('/products').then(response => {
+                this.products = response.data;
+
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
+
+        getCustomerAddress () {
+            const customer_id = this.basic_fields.customer.id;
+
+            if (!customer_id) {
+                this.basic_fields.billing_address = '';
+                return;
+            }
+
+            HTTP.get(`/people/${customer_id}`).then(response => {
+                const billing = response.data;
+
+                const address = `Street: ${billing.street_1} ${billing.street_2} \nCity: ${billing.city} \nState: ${billing.state} \nCountry: ${billing.country}`;
+
+                this.basic_fields.billing_address = address;
+            });
+        },
+
+        discountChanged () {
+            let discount = this.discount;
+
+            if (this.discountType === 'discount-percent') {
+                discount = (this.invoiceTotalAmount * discount) / 100;
+            }
+
+            this.$store.dispatch('sales/setDiscount', discount);
+        },
+
+        getTaxRates () {
+            HTTP.get('/taxes/summary').then(response => {
+                this.taxSummary = response.data;
+
+                this.taxRates = this.getUniqueTaxRates(this.taxSummary);
+            });
+        },
+
+        getTaxRateNameByID (id) {
+            // Array.find()
+            const taxRate = this.taxRates.find(rate => {
+                return rate.id === id;
+            });
+
+            return taxRate.name;
+        },
+
+        getUniqueTaxRates (taxes) {
+            return Array.from(new Set(taxes.map(tax => tax.tax_rate_id))).map(tax_rate_id => {
+                const tax = taxes.find(tax => tax.tax_rate_id === tax_rate_id);
+
+                if (tax.default) {
+                    // set default tax rate name for invoice
+                    this.taxRate = { id: tax_rate_id, name: tax.tax_rate_name };
+                    this.$store.dispatch('sales/setTaxRateID', tax_rate_id);
                 }
 
-                if (!this.basic_fields.trn_date) {
-                    this.form_errors.push('Transaction Date is required.');
-                }
+                return {
+                    id: tax_rate_id,
+                    name: tax.tax_rate_name
+                };
+            });
+        },
 
-                if (!this.basic_fields.due_date) {
-                    this.form_errors.push('Due Date is required.');
-                }
+        addLine () {
+            this.transactionLines.push({});
+        },
 
-                if (!parseFloat(this.finalTotalAmount)) {
-                    this.form_errors.push('Total amount can\'t be zero.');
-                }
+        updateFinalAmount () {
+            let taxAmount     = 0;
+            let totalDiscount = 0;
+            let totalAmount   = 0;
 
-                for (let item of this.transactionLines) {
-                    if (!item.hasOwnProperty('selectedProduct')) {
-                        this.form_errors.push('Please select product.');
-                        break;
-                    }
+            this.transactionLines.forEach(element => {
+                if (element.qty) {
+                    taxAmount     += parseFloat(element.taxAmount);
+                    totalDiscount += isNaN(element.discount) ? 0.00 : parseFloat(element.discount);
+                    totalAmount   += parseFloat(element.amount);
+                }
+            });
+
+            this.$store.dispatch('sales/setInvoiceTotalAmount', totalAmount);
+
+            const finalAmount = (totalAmount - totalDiscount) + taxAmount;
+
+            this.taxTotalAmount   = taxAmount.toFixed(2);
+            this.finalTotalAmount = finalAmount.toFixed(2);
+        },
+
+        formatLineItems () {
+            var lineItems = [];
+
+            this.transactionLines.forEach(line => {
+                if (line.qty) {
+                    lineItems.push({
+                        product_id       : line.selectedProduct.id,
+                        product_type_name: line.selectedProduct.product_type_name,
+                        tax_cat_id       : line.taxCatID,
+                        qty              : line.qty,
+                        unit_price       : line.unitPrice,
+                        tax              : line.taxAmount,
+                        tax_rate         : line.taxRate,
+                        discount         : line.discount,
+                        item_total       : line.amount
+                    });
+                }
+            });
+
+            return lineItems;
+        },
+
+        updateInvoice (requestData) {
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Invoice Updated!');
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
+                if (this.actionType === 'update' || this.actionType === 'draft') {
+                    this.$router.push({ name: 'Sales' });
+                } else if (this.actionType === 'new_update') {
+                    this.resetFields();
+                }
+            });
+        },
+
+        createInvoice (requestData) {
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP.post('/invoices', requestData).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Invoice Created!');
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(() => {
+                if (this.actionType === 'save' || this.actionType === 'draft') {
+                    this.$router.push({ name: 'Sales' });
+                } else if (this.actionType === 'new_create') {
+                    this.resetFields();
+                }
+            });
+        },
+
+        submitInvoiceForm () {
+            this.validateForm();
+
+            if (this.form_errors.length) {
+                window.scrollTo({
+                    top: 10,
+                    behavior: 'smooth'
+                });
+                return;
+            }
+
+            this.isWorking = true;
+
+            if (this.actionType === 'draft') {
+                this.status = 1;
+            } else {
+                this.status = 2;
+            }
+
+            const requestData = {
+                customer_id    : this.basic_fields.customer.id,
+                date           : this.basic_fields.trn_date,
+                due_date       : this.basic_fields.due_date,
+                billing_address: this.basic_fields.billing_address,
+                discount_type  : this.discountType,
+                tax_rate_id    : this.taxRate !== null ? this.taxRate.id : null,
+                line_items     : this.formatLineItems(),
+                attachments    : this.attachments,
+                particulars    : this.particulars,
+                type           : 'invoice',
+                status         : parseInt(this.status),
+                estimate       : this.inv_type.id
+            };
+
+            if (this.editMode) {
+                this.updateInvoice(requestData);
+            } else {
+                this.createInvoice(requestData);
+            }
+        },
+
+        removeFile (index) {
+            this.$delete(this.attachments, index);
+        },
+
+        resetFields () {
+            // why can't we use `form.reset()` ?
+
+            this.basic_fields.customer        = { id: null, name: null };
+            this.basic_fields.trn_date        = erp_acct_var.current_date;
+            this.basic_fields.due_date        = erp_acct_var.current_date;
+            this.basic_fields.billing_address = '';
+            this.particulars                  = '';
+            this.attachments                  = [];
+            this.transactionLines             = [];
+            this.discountType                 = 'discount-percent';
+            this.discount                     = 0;
+            this.taxTotalAmount               = 0;
+            this.finalTotalAmount             = 0;
+            this.isWorking                    = false;
+
+            this.transactionLines.push({}, {}, {});
+
+            this.$store.dispatch('combo/setBtnID', 'save');
+        },
+
+        validateForm () {
+            this.form_errors = [];
+
+            if (!Object.prototype.hasOwnProperty.call(this.basic_fields.customer, 'id')) {
+                this.form_errors.push('Customer Name is required.');
+            }
+
+            if (!this.basic_fields.trn_date) {
+                this.form_errors.push('Transaction Date is required.');
+            }
+
+            if (!this.basic_fields.due_date) {
+                this.form_errors.push('Due Date is required.');
+            }
+
+            if (!parseFloat(this.finalTotalAmount)) {
+                this.form_errors.push('Total amount can\'t be zero.');
+            }
+
+            for (const item of this.transactionLines) {
+                if (!Object.prototype.hasOwnProperty.call(item, 'selectedProduct')) {
+                    this.form_errors.push('Please select product.');
+                    break;
                 }
             }
         }
-
     }
+
+};
 </script>
 
 <style lang="less">

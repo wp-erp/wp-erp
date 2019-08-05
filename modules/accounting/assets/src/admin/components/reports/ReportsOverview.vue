@@ -44,15 +44,15 @@
 </template>
 
 <script>
-    export default {
-        name: 'ReportsOverview',
+export default {
+    name: 'ReportsOverview',
 
-        data() {
-            return {
-                reportLists: window.acct.hooks.applyFilters( 'acctExtensionReportsList',[] ),
-            }
-        },
+    data () {
+        return {
+            reportLists: window.acct.hooks.applyFilters('acctExtensionReportsList', [])
+        };
     }
+};
 </script>
 
 <style lang="less" scoped>
@@ -86,4 +86,3 @@
         }
     }
 </style>
-

@@ -91,74 +91,72 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import Dropdown from 'admin/components/base/Dropdown.vue'
-    import Accounts from 'admin/components/dashboard/Accounts.vue'
-    import Chart from "admin/components/dashboard/Chart.vue"
+import HTTP from 'admin/http';
+import Accounts from 'admin/components/dashboard/Accounts.vue';
+import Chart from 'admin/components/dashboard/Chart.vue';
 
-    export default {
-        name: 'Dashboard',
+export default {
+    name: 'Dashboard',
 
-        components: {
-            Chart,
-            Accounts,
-            Dropdown,
+    components: {
+        Chart,
+        Accounts
+    },
+
+    data () {
+        return {
+            title1        : 'Income & Expenses',
+            title2        : 'Bank Accounts',
+            title3        : 'Invoices owed to you',
+            title4        : 'Bills to pay',
+            closable      : true,
+            msg           : 'Accounting',
+            to_receive    : [],
+            to_pay        : [],
+            sampleLists   : window.acct.hooks.applyFilters('acctHomeSampleList', [])
+        };
+    },
+
+    computed: {
+        total_receivable () {
+            const amounts = Object.values(this.to_receive.amount);
+            const total = amounts.reduce((amount, item) => {
+                return amount + parseFloat(item);
+            }, 0);
+
+            return this.formatAmount(total);
         },
 
-        data() {
-            return {
-                title1        : 'Income & Expenses',
-                title2        : 'Bank Accounts',
-                title3        : 'Invoices owed to you',
-                title4        : 'Bills to pay',
-                closable      : true,
-                msg           : 'Accounting',
-                to_receive    : [],
-                to_pay        : [],
-                sampleLists   : window.acct.hooks.applyFilters( 'acctHomeSampleList', [] ),
-            }
+        total_payable () {
+            const amounts = Object.values(this.to_pay.amount);
+            const total = amounts.reduce((amount, item) => {
+                return amount + parseFloat(item);
+            }, 0);
+            this.$store.dispatch('spinner/setSpinner', false);
+            return this.formatAmount(total);
+        }
+    },
+
+    created () {
+        this.$store.dispatch('spinner/setSpinner', true);
+        this.fetchReceivables();
+        this.fetchPayables();
+    },
+
+    methods: {
+        fetchReceivables () {
+            this.to_receive = [];
+            HTTP.get('invoices/overview-receivable').then((res) => {
+                this.to_receive = res.data;
+            });
         },
 
-        computed: {
-            total_receivable() {
-                let amounts = Object.values(this.to_receive.amount);
-                let total = amounts.reduce( ( amount, item ) => {
-                    return amount + parseFloat(item);
-                }, 0 );
-
-                return this.formatAmount(total);
-            },
-
-            total_payable() {
-                let amounts = Object.values(this.to_pay.amount);
-                let total = amounts.reduce( ( amount, item ) => {
-                    return amount + parseFloat(item);
-                }, 0 );
-                this.$store.dispatch( 'spinner/setSpinner', false );
-                return this.formatAmount(total);
-            },
-        },
-
-        created() {
-            this.$store.dispatch( 'spinner/setSpinner', true );
-            this.fetchReceivables();
-            this.fetchPayables();
-       },
-
-        methods: {
-            fetchReceivables() {
-                this.to_receive = [];
-                HTTP.get( 'invoices/overview-receivable' ).then( (res) => {
-                   this.to_receive = res.data;
-                } );
-            },
-
-            fetchPayables() {
-                this.to_pay = [];
-                HTTP.get( 'bills/overview-payable' ).then( (res) => {
-                    this.to_pay = res.data;
-                } );
-            }
+        fetchPayables () {
+            this.to_pay = [];
+            HTTP.get('bills/overview-payable').then((res) => {
+                this.to_pay = res.data;
+            });
         }
     }
+};
 </script>

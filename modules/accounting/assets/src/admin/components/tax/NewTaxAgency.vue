@@ -36,109 +36,110 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
-    import SubmitButton from 'admin/components/base/SubmitButton.vue'
-    import ShowErrors from 'admin/components/base/ShowErrors.vue'
+import HTTP from 'admin/http';
+import SubmitButton from 'admin/components/base/SubmitButton.vue';
+import ShowErrors from 'admin/components/base/ShowErrors.vue';
 
-    export default {
-        name: 'NewTaxAgency',
+export default {
+    name: 'NewTaxAgency',
 
-        components: {
-            MultiSelect,
-            SubmitButton,
-            ShowErrors
+    components: {
+        SubmitButton,
+        ShowErrors
+    },
+
+    props: {
+        agency_id: {
+            type: [Number, String]
+        },
+        is_update: {
+            type: Boolean
+        }
+    },
+
+    data () {
+        return {
+            agencies   : [],
+            agency     : null,
+            isWorking  : false,
+            form_errors: []
+        };
+    },
+
+    created () {
+        if (this.is_update) {
+            this.getAgency();
+        }
+    },
+
+    methods: {
+        closeModal: function () {
+            this.$emit('close');
+            this.$root.$emit('modal_closed');
         },
 
-        props: {
-            agency_id: {
-                type: [ Number, String ]
-            },
-            is_update: {
-                type: Boolean
+        getAgency () {
+            HTTP.get(`/tax-agencies/${this.agency_id}`).then((response) => {
+                this.agency = response.data.name;
+            });
+        },
+
+        taxAgencyFormSubmit () {
+            this.validateForm();
+
+            if (this.form_errors.length) {
+                window.scrollTo({
+                    top: 10,
+                    behavior: 'smooth'
+                });
+
+                return;
             }
-        },
 
-        data() {
-            return {
-                agencies   : [],
-                agency     : null,
-                isWorking  : false,
-                form_errors: [],
-            };
-        },
+            var rest, url, msg;
 
-        created() {
-            if ( this.is_update ) {
-                this.getAgency();
+            if (this.is_update) {
+                rest = 'put';
+                url = `/tax-agencies/${this.agency_id}`;
+                msg = 'Tax Agency Updated!';
+            } else {
+                rest = 'post';
+                url = `/tax-agencies`;
+                msg = 'Tax Agency Created!';
             }
-        },
 
-        methods: {
-            closeModal: function(){
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            HTTP[rest](url, {
+                agency_name: this.agency
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(res => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', msg);
+            }).then(() => {
+                this.resetData();
+                this.isWorking = false;
                 this.$emit('close');
-                this.$root.$emit('modal_closed');
-            },
-
-            getAgency() {
-                HTTP.get(`/tax-agencies/${this.agency_id}`).then((response) => {
-                    this.agency = response.data.name;
-                });
-            },
-
-            taxAgencyFormSubmit() {
-                this.validateForm();
-
-                if ( this.form_errors.length ) {
-                    window.scrollTo({
-                        top: 10,
-                        behavior: 'smooth'
-                    });
-
-                    return;
-                }
-
-                if ( this.is_update ) {
-                    var rest = 'put',
-                        url = `/tax-agencies/${this.agency_id}`,
-                        msg = 'Tax Agency Updated!';
-                } else {
-                    var rest = 'post',
-                        url = `/tax-agencies`,
-                        msg = 'Tax Agency Created!';
-                }
-
-                this.$store.dispatch( 'spinner/setSpinner', true );
-
-                HTTP[rest](url, {
-                    agency_name: this.agency,
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then(res => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert( 'success', msg );
-                }).then(() => {
-                    this.resetData();
-                    this.isWorking = false;
-                    this.$emit('close');
-                    this.$root.$emit('refetch_tax_data');
-                });
-            },
-
-            validateForm() {
-                this.form_errors = [];
-
-                if ( !this.agency ) {
-                    this.form_errors.push('Agency Name is required.');
-                }
-            },
-
-            resetData() {
-                Object.assign(this.$data, this.$options.data.call(this));
-            },
-
+                this.$root.$emit('refetch_tax_data');
+            });
         },
+
+        validateForm () {
+            this.form_errors = [];
+
+            if (!this.agency) {
+                this.form_errors.push('Agency Name is required.');
+            }
+        },
+
+        resetData () {
+            Object.assign(this.$data, this.$options.data.call(this));
+        }
+
     }
+};
 </script>
 <style lang="less">
 

@@ -51,103 +51,101 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import Treeselect from '@riophae/vue-treeselect'
+import HTTP from 'admin/http';
+import Treeselect from '@riophae/vue-treeselect';
 
-    export default {
-        name: 'CatAddModal',
+export default {
+    name: 'CatAddModal',
 
-        data() {
-            return {
-                error: false,
-                parent: null,
-                category: '',
-                isCatSaving: false,
+    data () {
+        return {
+            error: false,
+            parent: null,
+            category: '',
+            isCatSaving: false
+        };
+    },
+
+    props: {
+        categories: {
+            type: Array
+        },
+
+        catData: {
+            type: Object
+        }
+    },
+
+    components: {
+        Treeselect
+    },
+
+    created () {
+        if (this.catData.node) {
+            if (this.catData.node.ancestors.length) {
+                this.parent = this.catData.node.ancestors[0].id;
             }
+            this.category = this.catData.node.label;
+        }
+    },
+
+    methods: {
+        inside () {},
+
+        outside () {
+            this.$root.$emit('cat-modal-close');
         },
 
-        props: {
-            categories: {
-                type: Array,
-            },
+        saveCategory () {
+            this.error = false;
+            this.isCatSaving = true;
 
-            catData: {
-                type: Object
+            // Optimize later
+            if (this.catData.node) {
+                // Updating
+                this.$store.dispatch('spinner/setSpinner', true);
+                HTTP.put(`/ledgers/categories/${this.catData.node.id}`, {
+                    parent: this.parent,
+                    name: this.category
+                }).then(response => {
+                    this.parent = null;
+                    this.category = '';
+
+                    this.$root.$emit('category-created');
+                    this.$store.dispatch('spinner/setSpinner', false);
+                }).catch((err) => {
+                    this.$store.dispatch('spinner/setSpinner', false);
+
+                    this.category = '';
+                    this.isCatSaving = false;
+                    // Error message
+                    this.error = err.response.data.message;
+                }).then(() => {
+                    this.isCatSaving = false;
+                });
+            } else {
+                // Creating
+                HTTP.post('/ledgers/categories', {
+                    parent: this.parent,
+                    name: this.category
+                }).then(response => {
+                    this.parent = null;
+                    this.category = '';
+
+                    this.$root.$emit('category-created');
+                }).catch((err) => {
+                    this.category = '';
+                    this.isCatSaving = false;
+                    // Error message
+                    this.error = err.response.data.message;
+                }).then(() => {
+                    this.isCatSaving = false;
+                });
             }
-        },
-
-        components: {
-            Treeselect
-        },
-
-        created() {
-            if ( this.catData.node ) {
-                if ( this.catData.node.ancestors.length ) {
-                    this.parent = this.catData.node.ancestors[0].id;
-                }
-                this.category = this.catData.node.label;
-            }
-        },
-
-        methods: {
-            inside() {},
-
-            outside() {
-                this.$root.$emit('cat-modal-close');
-            },
-
-            saveCategory() {
-                this.error = false;
-                this.isCatSaving = true;
-
-                // Optimize later
-                if ( this.catData.node ) {
-                    // Updating
-                    this.$store.dispatch( 'spinner/setSpinner', true );
-                    HTTP.put(`/ledgers/categories/${this.catData.node.id}`, {
-                        parent: this.parent,
-                        name: this.category
-                    }).then(response => {
-                        this.parent = null;
-                        this.category = '';
-
-                        this.$root.$emit('category-created');
-                        this.$store.dispatch( 'spinner/setSpinner', false );
-                    }).catch((err) => {
-                        this.$store.dispatch( 'spinner/setSpinner', false );
-
-                        this.category = '';
-                        this.isCatSaving = false;
-                        // Error message
-                        this.error = err.response.data.message;
-
-                    }).then(() => {
-                        this.isCatSaving = false;
-                    });
-                } else {
-                    // Creating
-                    HTTP.post('/ledgers/categories', {
-                        parent: this.parent,
-                        name: this.category
-                    }).then(response => {
-                        this.parent = null;
-                        this.category = '';
-
-                        this.$root.$emit('category-created');
-                    }).catch((err) => {
-                        this.category = '';
-                        this.isCatSaving = false;
-                        // Error message
-                        this.error = err.response.data.message;
-
-                    }).then(() => {
-                        this.isCatSaving = false;
-                    });
-                }
-            }
-        },
-
+        }
     }
+
+};
 </script>
 
 <style lang="less" scoped>

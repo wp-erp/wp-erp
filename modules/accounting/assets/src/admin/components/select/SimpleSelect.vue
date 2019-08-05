@@ -8,45 +8,46 @@
 </template>
 
 <script>
-    export default {
-        name: "SimpleSelect",
-        props: {
-            selected: {
-                type: Number,
-                default: null
-            },
-            width: {
-                type: Number,
-                default: null
-            },
-            options: {
-                type: Array,
-                default: () => [],
-            },
+export default {
+    name: 'SimpleSelect',
+    props: {
+        selected: {
+            type: Number,
+            default: null
+        },
+        width: {
+            type: Number,
+            default: null
+        },
+        options: {
+            type: Array,
+            default: () => []
+        }
 
-        },
-        data() {
-            return {
-                select_val: null
-            }
-        },
-        computed: {
-            checkOptions() {
-                if (this.options) {
-                    return this.options;
-                } else {
-                    window.console.error(this.name + " couldn't render without options");
-                }
-            }
-        },
-        methods: {
-            onChange() {
-                this.$root.$emit("SimpleSelectChange", {
-                    selected: this.select_val
-                })
+    },
+    data () {
+        return {
+            select_val: null
+        };
+    },
+    computed: {
+        checkOptions () {
+            if (this.options) {
+                return this.options;
+            } else {
+                window.console.error(this.name + " couldn't render without options");
+                return false;
             }
         }
-    };
+    },
+    methods: {
+        onChange () {
+            this.$root.$emit('SimpleSelectChange', {
+                selected: this.select_val
+            });
+        }
+    }
+};
 </script>
 
 <style scoped>

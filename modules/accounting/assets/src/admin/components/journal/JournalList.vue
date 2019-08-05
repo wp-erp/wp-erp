@@ -31,90 +31,91 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
+import HTTP from 'admin/http';
+import ListTable from 'admin/components/list-table/ListTable.vue';
 
-    export default {
-        name: 'JournalList',
+export default {
+    name: 'JournalList',
 
-        components: {
-            ListTable
-        },
+    components: {
+        ListTable
+    },
 
-        data () {
-            return {
-                journalModal: false,
-                columns: {
-                    'l_id'         : {label: 'Voucher No.'},
-                    'l_date'       : {label: 'Date'},
-                    'l_particulars': {label: 'Particulars'},
-                    'amount'       : {label: 'Amount'},
-                },
-                rows: [],
-                paginationData: {
-                    totalItems : 0,
-                    totalPages : 0,
-                    perPage    : 10,
-                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
-                },
-                journal_id: 0,
-            };
-        },
-        created() {
-            this.$store.dispatch( 'spinner/setSpinner', true );
-            this.fetchItems();
-        },
-
-        computed: {
-            row_data(){
-                let items = this.rows;
-                items.map( item => {
-                    item.l_id = item.voucher_no;
-                    item.l_date = item.trn_date;
-                    item.l_particulars = item.particulars;
-                    item.amount        = item.total;
-                } );
-                return items;
-            }
-        },
-
-        methods: {
-            newJournal() {
-                this.$router.push('/journals/new');
+    data () {
+        return {
+            journalModal: false,
+            columns: {
+                l_id         : { label: 'Voucher No.' },
+                l_date       : { label: 'Date' },
+                l_particulars: { label: 'Particulars' },
+                amount       : { label: 'Amount' }
             },
-
-            fetchItems(){
-                this.rows = [];
-                HTTP.get('/journals', {
-                    params: {
-                        per_page: this.paginationData.perPage,
-                        page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
-                    }
-                }).then( (response) => {
-                    this.rows = response.data;
-                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch((error) => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                })
+            rows: [],
+            paginationData: {
+                totalItems : 0,
+                totalPages : 0,
+                perPage    : 10,
+                currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
+            journal_id: 0
+        };
+    },
+    created () {
+        this.$store.dispatch('spinner/setSpinner', true);
+        this.fetchItems();
+    },
 
-            goToPage(page) {
-                let queries = Object.assign({}, this.$route.query);
-                this.paginationData.currentPage = page;
-                this.$router.push({
-                    name: 'PaginateJournals',
-                    params: { page: page },
-                    query: queries
-                });
-
-                this.fetchItems();
-            },
+    computed: {
+        row_data () {
+            const items = this.rows;
+            items.map(item => {
+                item.l_id = item.voucher_no;
+                item.l_date = item.trn_date;
+                item.l_particulars = item.particulars;
+                item.amount        = item.total;
+            });
+            return items;
         }
+    },
 
-    };
+    methods: {
+        newJournal () {
+            this.$router.push('/journals/new');
+        },
+
+        fetchItems () {
+            this.rows = [];
+            HTTP.get('/journals', {
+                params: {
+                    per_page: this.paginationData.perPage,
+                    page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+                }
+            }).then((response) => {
+                this.rows = response.data;
+                this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
+
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch((error) => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
+
+        goToPage (page) {
+            const queries = Object.assign({}, this.$route.query);
+            this.paginationData.currentPage = page;
+            this.$router.push({
+                name: 'PaginateJournals',
+                params: { page: page },
+                query: queries
+            });
+
+            this.fetchItems();
+        }
+    }
+
+};
 </script>
 <style lang="less">
     .journals {

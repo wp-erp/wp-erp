@@ -72,185 +72,187 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import ListTable from 'admin/components/list-table/ListTable.vue'
+import HTTP from 'admin/http';
+import ListTable from 'admin/components/list-table/ListTable.vue';
 
-    export default {
-        name: 'SalesList',
+export default {
+    name: 'SalesList',
 
-        components: {
-            ListTable,
-        },
+    components: {
+        ListTable
+    },
 
-        data() {
-            return {
-                columns: {
-                    'trn_no'       : {label: 'Voucher No.'},
-                    'type'         : {label: 'Type'},
-                    'ref'          : {label: 'Ref'},
-                    'customer_name': {label: 'Customer'},
-                    'trn_date'     : {label: 'Trn Date'},
-                    'due_date'     : {label: 'Due Date'},
-                    'due'          : {label: 'Due'},
-                    'amount'       : {label: 'Total'},
-                    'status'       : {label: 'Status'},
-                    'actions'      : {label: ''},
+    data () {
+        return {
+            columns: {
+                trn_no       : { label: 'Voucher No.' },
+                type         : { label: 'Type' },
+                ref          : { label: 'Ref' },
+                customer_name: { label: 'Customer' },
+                trn_date     : { label: 'Trn Date' },
+                due_date     : { label: 'Due Date' },
+                due          : { label: 'Due' },
+                amount       : { label: 'Total' },
+                status       : { label: 'Status' },
+                actions      : { label: '' }
 
-                },
-                listLoading   : false,
-                fetchd        : false,
-                rows          : [],
-                paginationData: {
-                    totalItems : 0,
-                    totalPages : 0,
-                    perPage    : 10,
-                    currentPage: this.$route.params.page === undefined ? 1: parseInt(this.$route.params.page)
+            },
+            listLoading   : false,
+            fetchd        : false,
+            rows          : [],
+            paginationData: {
+                totalItems : 0,
+                totalPages : 0,
+                perPage    : 10,
+                currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
+            }
+        };
+    },
+
+    created () {
+        this.$store.dispatch('spinner/setSpinner', true);
+
+        this.$root.$on('transactions-filter', filters => {
+            this.$router.push({ path: '/transactions/sales', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
+            this.fetchItems(filters);
+            this.fetched = true;
+        });
+
+        const filters = {};
+        // Get start & end date from url on page load
+        if (this.$route.query.start && this.$route.query.end) {
+            filters.start_date = this.$route.query.start;
+            filters.end_date   = this.$route.query.end;
+        }
+        if (this.$route.query.status) {
+            filters.status   = this.$route.query.status;
+        }
+
+        if (!this.fetched) {
+            this.fetchItems(filters);
+        }
+    },
+
+    watch: {
+        $route: 'fetchItems'
+    },
+
+    methods: {
+        fetchItems (filters = {}) {
+            this.rows = [];
+
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.get('/transactions/sales', {
+                params: {
+                    per_page  : this.paginationData.perPage,
+                    page      : this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+                    start_date: filters.start_date,
+                    end_date  : filters.end_date,
+                    status    : filters.status
                 }
-            };
-        },
-
-        created() {
-            this.$store.dispatch( 'spinner/setSpinner', true );
-
-            this.$root.$on('transactions-filter', filters => {
-                this.$router.push({ path: '/transactions/sales', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
-                this.fetchItems(filters);
-                this.fetched = true;
-            });
-
-            let filters = {};
-            // Get start & end date from url on page load
-            if ( this.$route.query.start && this.$route.query.end ) {
-                filters.start_date = this.$route.query.start;
-                filters.end_date   = this.$route.query.end;
-            }
-            if ( this.$route.query.status ) {
-                filters.status   = this.$route.query.status;
-            }
-
-            if ( !this.fetched  ) {
-                this.fetchItems(filters);
-            }
-        },
-
-        watch: {
-            '$route': 'fetchItems'
-        },
-
-        methods: {
-            fetchItems(filters = {}) {
-                this.rows = [];
-
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get('/transactions/sales', {
-                    params: {
-                        per_page  : this.paginationData.perPage,
-                        page      : this.$route.params.page === undefined ? this.paginationData.currentPage: this.$route.params.page,
-                        start_date: filters.start_date,
-                        end_date  : filters.end_date,
-                        status    : filters.status
+            }).then(response => {
+                this.rows = response.data.map(item => {
+                    if ((item.type === 'invoice' && item.estimate === 0) && (item.status === 'Partially Paid' || item.status === 'Awaiting Payment')) {
+                        item['actions'] = [
+                            { key: 'edit', label: 'Edit' },
+                            { key: 'receive', label: 'Receive Payment' }
+                            // { key: 'trash', label: 'Delete' }
+                        ];
+                    } else if ((item.type === 'invoice' && item.status !== 'Paid' && item.estimate === 0) || item.estimate === 1) {
+                        item['actions'] = [
+                            { key: 'edit', label: 'Edit' }
+                        ];
+                    } else {
+                        item['actions'] = [
+                            { key: 'void', label: 'Void' }
+                        ];
                     }
-                }).then(response => {
-                    this.rows = response.data.map(item => {
-                        if ( ( 'invoice' === item.type && item.estimate == 0 ) && ( 'Partially Paid' == item.status || 'Awaiting Payment' == item.status ) ) {
-                            item['actions'] = [
-                                { key: 'edit', label: 'Edit' },
-                                { key: 'receive', label: 'Receive Payment' },
-                                // { key: 'trash', label: 'Delete' }
-                            ];
-                        } else if ( ( 'invoice' === item.type && 'Paid' != item.status && item.estimate == 0 ) || item.estimate == 1 ) {
-                            item['actions'] = [
-                                { key: 'edit', label: 'Edit' },
-                            ];
-                        } else {
-                            item['actions'] = [
-                                { key: 'void', label: 'Void' },
-                            ];
-                        }
 
-                        return item;
-                    });
-
-                    this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
-                    this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
-
-                    this.listLoading = false;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.listLoading = false;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                } );
-            },
-
-            onActionClick(action, row, index) {
-                switch ( action ) {
-                    case 'trash':
-                        if ( confirm('Are you sure to delete?') ) {
-                            this.$store.dispatch( 'spinner/setSpinner', true );
-                            HTTP.delete('invoices/' + row.id).then( response => {
-                                this.$delete(this.rows, index);
-
-                                this.$store.dispatch( 'spinner/setSpinner', false );
-                                this.showAlert( 'success', 'Deleted !' );
-                            }).catch( error => {
-                                this.$store.dispatch( 'spinner/setSpinner', false );
-                            } );
-                        }
-                        break;
-
-                    case 'edit':
-                        if ( 'invoice' == row.type ) {
-                            this.$router.push({ name: 'InvoiceEdit', params: { id: row.id } })
-                        }
-
-                        if ( 'payment' == row.type ) {
-                            this.$router.push({ name: 'RecPaymentEdit', params: { id: row.id } })
-                        }
-                        break;
-
-                    case 'receive':
-                        this.$router.push({ name: 'RecPaymentCreate', params: {
-                            customer_id  : row.inv_cus_id,
-                            customer_name: row.inv_cus_name,
-                        } });
-                        break;
-
-                    default :
-
-                }
-            },
-
-            goToPage(page) {
-                this.listLoading = true;
-
-                let queries = Object.assign({}, this.$route.query);
-                this.paginationData.currentPage = page;
-                this.$router.push({
-                    name: 'PaginateSales',
-                    params: { page: page },
-                    query: queries
+                    return item;
                 });
 
-                this.fetchItems();
-            },
+                this.paginationData.totalItems = parseInt(response.headers['x-wp-total']);
+                this.paginationData.totalPages = parseInt(response.headers['x-wp-totalpages']);
 
-            isPayment(row) {
-                return row.type === 'payment' ? true : false;
-            },
+                this.listLoading = false;
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.listLoading = false;
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            });
+        },
 
-            getTrnType(row) {
-                if ( row.type === 'invoice' ) {
-                    if ( 1 == row.estimate ) {
-                        return 'Estimate';
-                    }
-                    return 'Invoice';
-                } else {
-                    return 'Payment';
+        onActionClick (action, row, index) {
+            switch (action) {
+            case 'trash':
+                if (confirm('Are you sure to delete?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+                    HTTP.delete('invoices/' + row.id).then(response => {
+                        this.$delete(this.rows, index);
+
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        this.showAlert('success', 'Deleted !');
+                    }).catch(error => {
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        throw error;
+                    });
                 }
+                break;
+
+            case 'edit':
+                if (row.type === 'invoice') {
+                    this.$router.push({ name: 'InvoiceEdit', params: { id: row.id } });
+                }
+
+                if (row.type === 'payment') {
+                    this.$router.push({ name: 'RecPaymentEdit', params: { id: row.id } });
+                }
+                break;
+
+            case 'receive':
+                this.$router.push({ name: 'RecPaymentCreate',
+                    params: {
+                        customer_id  : row.inv_cus_id,
+                        customer_name: row.inv_cus_name
+                    } });
+                break;
+
+            default :
             }
         },
 
+        goToPage (page) {
+            this.listLoading = true;
+
+            const queries = Object.assign({}, this.$route.query);
+            this.paginationData.currentPage = page;
+            this.$router.push({
+                name: 'PaginateSales',
+                params: { page: page },
+                query: queries
+            });
+
+            this.fetchItems();
+        },
+
+        isPayment (row) {
+            return row.type === 'payment';
+        },
+
+        getTrnType (row) {
+            if (row.type === 'invoice') {
+                if (row.estimate === 1) {
+                    return 'Estimate';
+                }
+                return 'Invoice';
+            } else {
+                return 'Payment';
+            }
+        }
     }
+
+};
 </script>
 
 <style lang="less">
@@ -262,4 +264,3 @@
         }
     }
 </style>
-

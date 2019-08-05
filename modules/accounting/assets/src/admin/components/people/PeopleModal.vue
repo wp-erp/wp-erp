@@ -124,236 +124,238 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import MultiSelect from 'admin/components/select/MultiSelect.vue'
+import HTTP from 'admin/http';
+import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
-    export default {
-        name: "CustomerModal",
-        components: {
-            MultiSelect,
+export default {
+    name: 'CustomerModal',
+    components: {
+        MultiSelect
+    },
+    props: {
+        people: {
+            type: Object
         },
-        props: {
-            people: {
-                type: Object,
-            },
-            title: {
-                required: true
-            },
-            type: '',
+        title: {
+            required: true
         },
-        data() {
-            return {
-                peopleFields: {
-                    id         : null,
-                    first_name : '',
-                    last_name  : '',
-                    email      : '',
-                    mobile     : '',
-                    company    : '',
-                    phone      : '',
-                    website    : '',
-                    notes      : '',
-                    fax        : '',
-                    street_1   : '',
-                    street_2   : '',
-                    city       : '',
-                    country    : '',
-                    state      : '',
-                    postal_code: '',
-                },
-                states       : [],
-                emailExists  : false,
-                showMore     : false,
-                customers    : [],
-                url          : '',
-                error_message: [],
-                countries    : [],
-                get_states   : []
+        type: [String]
+    },
+    data () {
+        return {
+            peopleFields: {
+                id         : null,
+                first_name : '',
+                last_name  : '',
+                email      : '',
+                mobile     : '',
+                company    : '',
+                phone      : '',
+                website    : '',
+                notes      : '',
+                fax        : '',
+                street_1   : '',
+                street_2   : '',
+                city       : '',
+                country    : '',
+                state      : '',
+                postal_code: ''
+            },
+            states       : [],
+            emailExists  : false,
+            showMore     : false,
+            customers    : [],
+            url          : '',
+            error_message: [],
+            countries    : [],
+            get_states   : []
+        };
+    },
+    methods: {
+        saveCustomer () {
+            if (!this.checkForm()) {
+                return false;
             }
+
+            this.$store.dispatch('spinner/setSpinner', true);
+
+            var type = '';
+            var url = '';
+
+            if (!this.people) {
+                url = this.url;
+                type = 'post';
+            } else {
+                url = this.url + '/' + this.peopleFields.id;
+                type = 'put';
+            }
+
+            var message = (type === 'post') ? 'Created' : 'Updated';
+
+            HTTP[type](url, this.peopleFields).then(response => {
+                this.$root.$emit('peopleUpdate');
+                this.resetForm();
+                this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', message);
+            });
         },
-        methods: {
-            saveCustomer() {
-                if ( ! this.checkForm() ) {
-                    return false;
-                }
 
-                this.$store.dispatch( 'spinner/setSpinner', true );
+        checkForm () {
+            this.error_message = [];
 
-                if ( ! this.people ) {
-                    var url = this.url;
-                    var type = 'post';
-                } else {
-                    var url = this.url + '/' + this.peopleFields.id;
-                    var type = 'put';
-                }
-
-                var message = ( type == 'post' ) ? 'Created' : 'Updated';
-
-                HTTP[type]( url, this.peopleFields ).then( response => {
-                    this.$root.$emit('peopleUpdate');
-                    this.resetForm();
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                    this.showAlert('success', message);
-                } );
-            },
-
-            checkForm() {
-                this.error_message = [];
-
-                if ( this.emailExists ) {
-                    this.error_message.push( 'Email already exists as customer/vendor' );
-                    this.emailExists = false;
-
-                    return false;
-                }
-
-                if ( this.peopleFields.first_name && this.peopleFields.last_name && this.peopleFields.email ) {
-                    return true;
-                }
-
-                if ( ! this.peopleFields.first_name ) {
-                    this.error_message.push( 'First name is required' );
-                }
-
-                if ( ! this.peopleFields.last_name ) {
-                    this.error_message.push( 'Last name is required' );
-                }
-
-                if ( ! this.peopleFields.email ) {
-                    this.error_message.push( 'Email is required' );
-                }
+            if (this.emailExists) {
+                this.error_message.push('Email already exists as customer/vendor');
+                this.emailExists = false;
 
                 return false;
-            },
+            }
 
-            showDetails() {
-                this.showMore = !this.showMore;
-            },
+            if (this.peopleFields.first_name && this.peopleFields.last_name && this.peopleFields.email) {
+                return true;
+            }
 
-            getCountries() {
-                HTTP.get( 'customers/country' ).then( response => {
-                    let country = response.data.country;
-                    let states   = response.data.state;
-                    for ( let x in country ) {
-                        if( states[x] == undefined) {
-                            states[x] = [];
-                        }
+            if (!this.peopleFields.first_name) {
+                this.error_message.push('First name is required');
+            }
 
-                        this.countries.push( { id: x, name: this.decodeHtml(country[x]), state: states[x] });
+            if (!this.peopleFields.last_name) {
+                this.error_message.push('Last name is required');
+            }
+
+            if (!this.peopleFields.email) {
+                this.error_message.push('Email is required');
+            }
+
+            return false;
+        },
+
+        showDetails () {
+            this.showMore = !this.showMore;
+        },
+
+        getCountries () {
+            HTTP.get('customers/country').then(response => {
+                const country = response.data.country;
+                const states   = response.data.state;
+                for (const x in country) {
+                    if (states[x] === undefined) {
+                        states[x] = [];
                     }
-                    for ( let state in states ) {
-                        for ( let x in states[state] ) {
-                            this.get_states.push({ id: x, name: states[state][x] });
-                        }
-                    }
-                } );
-            },
 
-            getState( country ) {
-                let states = this.get_states;
-                this.states = [];
-                this.peopleFields.state = '';
-                for ( let state in country.state ) {
-                    this.states.push({ id: state, name: country.state[state] });
+                    this.countries.push({ id: x, name: this.decodeHtml(country[x]), state: states[x] });
                 }
-            },
-
-            checkEmailExistence() {
-                if ( this.peopleFields.email ) {
-                    if ( ! this.people ) {
-                        HTTP.get('/people/check-email', {
-                            params: {
-                                email: this.peopleFields.email
-                            }
-                        }).then((res) => {
-                            this.emailExists = res.data;
-                        });
+                for (const state in states) {
+                    for (const x in states[state]) {
+                        this.get_states.push({ id: x, name: states[state][x] });
                     }
                 }
-            },
+            });
+        },
 
-            getCustomers() {
-                HTTP.get( '/customers' ).then( response => {
-                    this.customers = response.data;
-                } );
-            },
-
-            setInputField() {
-                if ( this.people) {
-                    let people                        = this.people;
-                        this.peopleFields.id          = people.id;
-                        this.peopleFields.first_name  = people.first_name;
-                        this.peopleFields.last_name   = people.last_name;
-                        this.peopleFields.email       = people.email;
-                        this.peopleFields.mobile      = people.mobile;
-                        this.peopleFields.company     = people.company;
-                        this.peopleFields.phone       = people.phone;
-                        this.peopleFields.website     = people.website;
-                        this.peopleFields.notes       = people.notes;
-                        this.peopleFields.fax         = people.fax;
-                        this.peopleFields.street_1    = people.billing.street_1;
-                        this.peopleFields.street_2    = people.billing.street_2;
-                        this.peopleFields.city        = people.billing.city;
-                        this.peopleFields.country     = this.selectedCountry( people.billing.country );
-                        this.peopleFields.state       = this.selectedState(people.billing.state );
-                        this.peopleFields.postal_code = people.billing.postal_code;
-                }
-            },
-
-            selectedCountry( id ) {
-                return this.countries.find( country => id === country.id );
-            },
-
-            selectedState( id ) {
-                return this.get_states.find( item => item.id == id );
-            },
-
-            generateUrl() {
-                var url;
-                if ( this.type ) {
-                    if ( this.type == 'customer' ) {
-                        url = 'customers';
-                    } else {
-                        url = 'vendors';
-                    }
-                } else if ( this.$route.name.toLowerCase() == 'customerdetails' ) {
-                    url = 'customers';
-                } else if ( this.$route.name.toLowerCase() == 'vendordetails' ) {
-                    url = 'vendors';
-                } else {
-                    url = this.$route.name.toLowerCase();
-                }
-
-                return url;
-            },
-
-            resetForm() {
-                this.peopleFields.first_name = '';
-                this.peopleFields.last_name  = '';
-                this.peopleFields.email      = '';
-                this.peopleFields.mobile     = '';
-                this.peopleFields.company    = '';
-                this.peopleFields.phone      = '';
-                this.peopleFields.website    = '';
-                this.peopleFields.note       = '';
-                this.peopleFields.fax        = '';
-                this.peopleFields.street1    = '';
-                this.peopleFields.street2    = '';
-                this.peopleFields.city       = '';
-                this.peopleFields.country    = '';
-                this.peopleFields.state      = '';
-                this.peopleFields.post_code  = '';
+        getState (country) {
+            this.states = [];
+            this.peopleFields.state = '';
+            for (const state in country.state) {
+                this.states.push({ id: state, name: country.state[state] });
             }
         },
 
-        created() {
-            this.url = this.generateUrl();
-            this.selectedCountry();
-            this.setInputField();
-            this.getCustomers();
-            this.getCountries();
+        checkEmailExistence () {
+            if (this.peopleFields.email) {
+                if (!this.people) {
+                    HTTP.get('/people/check-email', {
+                        params: {
+                            email: this.peopleFields.email
+                        }
+                    }).then((res) => {
+                        this.emailExists = res.data;
+                    });
+                }
+            }
+        },
+
+        getCustomers () {
+            HTTP.get('/customers').then(response => {
+                this.customers = response.data;
+            });
+        },
+
+        setInputField () {
+            if (this.people) {
+                const people                  = this.people;
+                this.peopleFields.id          = people.id;
+                this.peopleFields.first_name  = people.first_name;
+                this.peopleFields.last_name   = people.last_name;
+                this.peopleFields.email       = people.email;
+                this.peopleFields.mobile      = people.mobile;
+                this.peopleFields.company     = people.company;
+                this.peopleFields.phone       = people.phone;
+                this.peopleFields.website     = people.website;
+                this.peopleFields.notes       = people.notes;
+                this.peopleFields.fax         = people.fax;
+                this.peopleFields.street_1    = people.billing.street_1;
+                this.peopleFields.street_2    = people.billing.street_2;
+                this.peopleFields.city        = people.billing.city;
+                this.peopleFields.country     = this.selectedCountry(people.billing.country);
+                this.peopleFields.state       = this.selectedState(people.billing.state);
+                this.peopleFields.postal_code = people.billing.postal_code;
+            }
+        },
+
+        selectedCountry (id) {
+            return this.countries.find(country => id === country.id);
+        },
+
+        selectedState (id) {
+            return this.get_states.find(item => item.id === id);
+        },
+
+        generateUrl () {
+            var url;
+            if (this.type) {
+                if (this.type === 'customer') {
+                    url = 'customers';
+                } else {
+                    url = 'vendors';
+                }
+            } else if (this.$route.name.toLowerCase() === 'customerdetails') {
+                url = 'customers';
+            } else if (this.$route.name.toLowerCase() === 'vendordetails') {
+                url = 'vendors';
+            } else {
+                url = this.$route.name.toLowerCase();
+            }
+
+            return url;
+        },
+
+        resetForm () {
+            this.peopleFields.first_name = '';
+            this.peopleFields.last_name  = '';
+            this.peopleFields.email      = '';
+            this.peopleFields.mobile     = '';
+            this.peopleFields.company    = '';
+            this.peopleFields.phone      = '';
+            this.peopleFields.website    = '';
+            this.peopleFields.note       = '';
+            this.peopleFields.fax        = '';
+            this.peopleFields.street1    = '';
+            this.peopleFields.street2    = '';
+            this.peopleFields.city       = '';
+            this.peopleFields.country    = '';
+            this.peopleFields.state      = '';
+            this.peopleFields.post_code  = '';
         }
+    },
+
+    created () {
+        this.url = this.generateUrl();
+        this.selectedCountry();
+        this.setInputField();
+        this.getCustomers();
+        this.getCountries();
     }
+};
 </script>
 
 <style lang="less">
