@@ -41,7 +41,7 @@
                 </strong>
             </template>
             <template slot="balance" slot-scope="data">
-                {{ moneyFormat(data.row.balance) }}
+                {{ moneyFormatwithDrCr(data.row.balance) }}
             </template>
             <template slot="debit" slot-scope="data">
                 {{ moneyFormat(data.row.debit) }}
