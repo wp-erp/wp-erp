@@ -35,11 +35,12 @@ class Admin_Menu {
         ) );
 
         erp_add_menu( 'hr', array(
-            'title'         =>  __( 'Employees', 'erp' ),
-            'capability'    =>  'erp_list_employee',
-            'slug'          =>  'employee',
-            'callback'      =>  [ $this, 'employee_page' ],
-            'position'      =>  5,
+            'title'       => __( 'Employees', 'erp' ),
+            'capability'  => 'erp_list_employee',
+            'slug'        => 'employee',
+            'direct_link' => admin_url( 'admin.php' ) . '?page=erp-hr&section=employee&orderby=employee_name&order=asc',
+            'callback'    => [ $this, 'employee_page' ],
+            'position'    => 5,
         ) );
 
         if ( current_user_can( 'employee' ) ) {
