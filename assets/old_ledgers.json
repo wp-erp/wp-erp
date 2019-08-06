@@ -188,7 +188,7 @@
     "id" : 24,
     "system" : 1,
     "category_id" : 11,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Costs of Goods Sold"
   },
   {
@@ -196,7 +196,7 @@
     "id" : 25,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Advertising"
   },
   {
@@ -204,7 +204,7 @@
     "id" : 26,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Bank Service Charges"
   },
   {
@@ -212,7 +212,7 @@
     "id" : 27,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Janitorial Expenses"
   },
   {
@@ -220,7 +220,7 @@
     "id" : 28,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Consulting & Accounting"
   },
   {
@@ -228,7 +228,7 @@
     "id" : 29,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Entertainment"
   },
   {
@@ -236,7 +236,7 @@
     "id" : 30,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Postage & Delivary"
   },
   {
@@ -244,7 +244,7 @@
     "id" : 31,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "General Expenses"
   },
   {
@@ -252,7 +252,7 @@
     "id" : 32,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Insurance"
   },
   {
@@ -260,7 +260,7 @@
     "id" : 33,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Legal Expenses"
   },
   {
@@ -268,7 +268,7 @@
     "id" : 34,
     "system" : 1,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Utilities"
   },
   {
@@ -276,7 +276,7 @@
     "id" : 35,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Automobile Expenses"
   },
   {
@@ -284,7 +284,7 @@
     "id" : 36,
     "system" : 1,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Office Expenses"
   },
   {
@@ -292,7 +292,7 @@
     "id" : 37,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Printing & Stationary"
   },
   {
@@ -300,7 +300,7 @@
     "id" : 38,
     "system" : 1,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Rent"
   },
   {
@@ -308,7 +308,7 @@
     "id" : 39,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Repairs & Maintenance"
   },
   {
@@ -316,7 +316,7 @@
     "id" : 40,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Wages & Salaries"
   },
   {
@@ -324,7 +324,7 @@
     "id" : 41,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Payroll Tax Expense"
   },
   {
@@ -332,7 +332,7 @@
     "id" : 42,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Dues & Subscriptions"
   },
   {
@@ -340,7 +340,7 @@
     "id" : 43,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Telephone & Internet"
   },
   {
@@ -348,7 +348,7 @@
     "id" : 44,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Travel"
   },
   {
@@ -356,7 +356,7 @@
     "id" : 45,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Bad Debts"
   },
   {
@@ -364,7 +364,7 @@
     "id" : 46,
     "system" : 1,
     "category_id" : 10,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Depreciation"
   },
   {
@@ -372,7 +372,7 @@
     "id" : 47,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Income Tax Expense"
   },
   {
@@ -380,7 +380,7 @@
     "id" : 48,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Employee Benefits Expense"
   },
   {
@@ -388,7 +388,7 @@
     "id" : 49,
     "system" : 0,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Interest Expense"
   },
   {
@@ -396,7 +396,7 @@
     "id" : 50,
     "system" : 1,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Bank Revaluations"
   },
   {
@@ -404,7 +404,7 @@
     "id" : 51,
     "system" : 1,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Unrealized Currency Gains"
   },
   {
@@ -412,7 +412,7 @@
     "id" : 52,
     "system" : 1,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Realized Currency Gains"
   },
   {
@@ -420,7 +420,7 @@
     "id" : 53,
     "system" : 1,
     "category_id" : 12,
-    "chart_id" : 3,
+    "chart_id" : 5,
     "name" : "Sales Discount"
   },
   {
@@ -460,7 +460,7 @@
     "id" : 58,
     "system" : 0,
     "category_id" : 16,
-    "chart_id" : 5,
+    "chart_id" : 3,
     "name" : "Owners Contribution"
   },
   {
@@ -468,7 +468,7 @@
     "id" : 59,
     "system" : 0,
     "category_id" : 16,
-    "chart_id" : 5,
+    "chart_id" : 3,
     "name" : "Owners Draw"
   },
   {
@@ -476,7 +476,7 @@
     "id" : 60,
     "system" : 1,
     "category_id" : 16,
-    "chart_id" : 5,
+    "chart_id" : 3,
     "name" : "Retained Earnings"
   },
   {
@@ -484,7 +484,7 @@
     "id" : 61,
     "system" : 0,
     "category_id" : 16,
-    "chart_id" : 5,
+    "chart_id" : 3,
     "name" : "Common Stock"
   },
   {
