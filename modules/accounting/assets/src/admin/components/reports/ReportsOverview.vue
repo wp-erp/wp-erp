@@ -11,7 +11,7 @@
             <h3>{{ __('Ledger Report', 'erp') }}</h3>
             <p>{{ __('Ledger report', 'erp') }}</p>
 
-            <router-link class="wperp-btn btn--primary" :to="{ name: 'LedgerSingle', params: { id: 1 } }">{{ __('View Report', 'erp') }}</router-link>
+            <router-link class="wperp-btn btn--primary" :to="{ name: 'LedgerSingle', params: { id: 7 } }">{{ __('View Report', 'erp') }}</router-link>
         </li>
 
         <li>
