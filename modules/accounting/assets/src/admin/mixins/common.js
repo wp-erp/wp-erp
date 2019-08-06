@@ -57,7 +57,6 @@ export default {
         },
 
         moneyFormatwithDrCr( value ) {
-            console.log( value );
             var DrCr = null;
                 let   options = {
                 symbol  : erp_acct_var.symbol,
@@ -71,8 +70,6 @@ export default {
             } else if ( value.indexOf('Dr') === -1 ) {
                 DrCr = 'Cr '
             };
-
-
 
             let money = accounting.formatMoney( value, options );
 

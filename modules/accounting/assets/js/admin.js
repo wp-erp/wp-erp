@@ -526,61 +526,9 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 18 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SelectAccounts_vue__ = __webpack_require__(40);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_661aff62_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SelectAccounts_vue__ = __webpack_require__(76);
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SelectAccounts_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_661aff62_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SelectAccounts_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "modules/accounting/assets/src/admin/components/select/SelectAccounts.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-661aff62", Component.options)
-  } else {
-    hotAPI.reload("data-v-661aff62", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
-
-
-/***/ }),
+/* 18 */,
 /* 19 */,
-/* 20 */,
-/* 21 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -636,7 +584,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -682,6 +630,58 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-9a572ace", Component.options)
   } else {
     hotAPI.reload("data-v-9a572ace", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SelectAccounts_vue__ = __webpack_require__(40);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_661aff62_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SelectAccounts_vue__ = __webpack_require__(76);
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SelectAccounts_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_661aff62_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SelectAccounts_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/accounting/assets/src/admin/components/select/SelectAccounts.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-661aff62", Component.options)
+  } else {
+    hotAPI.reload("data-v-661aff62", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -10173,7 +10173,7 @@ var STATUS_INITIAL = 0,
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_people_PeopleModal_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_people_PeopleModal_vue__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 //
 //
@@ -13783,7 +13783,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_list_table_ListTable_vue__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_people_PeopleModal_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_people_PeopleModal_vue__ = __webpack_require__(20);
 //
 //
 //
@@ -14666,7 +14666,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_userinfo_UserBasic_vue__ = __webpack_require__(112);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_chart_PieChart_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_chart_PieChart_vue__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_people_PeopleTransaction_vue__ = __webpack_require__(114);
 //
 //
@@ -14936,7 +14936,7 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_people_PeopleModal_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_people_PeopleModal_vue__ = __webpack_require__(20);
 //
 //
 //
@@ -16381,7 +16381,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_userinfo_UserBasic_vue__ = __webpack_require__(112);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_chart_PieChart_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_chart_PieChart_vue__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_people_PeopleTransaction_vue__ = __webpack_require__(114);
 
 //
@@ -17608,7 +17608,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_people_PeopleModal_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_people_PeopleModal_vue__ = __webpack_require__(20);
 //
 //
 //
@@ -18654,7 +18654,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_people_SelectCustomers_vue__ = __webpack_require__(128);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_SelectAccounts_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_check_CheckFields_vue__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
@@ -20021,7 +20021,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_people_SelectPeople_vue__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_SelectAccounts_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_check_CheckFields_vue__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
@@ -21390,7 +21390,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_people_PeopleModal_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_people_PeopleModal_vue__ = __webpack_require__(20);
 //
 //
 //
@@ -21691,7 +21691,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_check_CheckFields_vue__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_select_SelectAccounts_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 
 
@@ -23423,7 +23423,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_components_base_FileUpload_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_components_select_ComboButton_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_components_people_SelectPeople_vue__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_components_select_SelectAccounts_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_components_check_CheckFields_vue__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 
@@ -24652,7 +24652,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_chart_PieChart_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_chart_PieChart_vue__ = __webpack_require__(21);
 //
 //
 //
@@ -25419,7 +25419,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_chart_PieChart_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_chart_PieChart_vue__ = __webpack_require__(21);
 
 //
 //
@@ -26152,7 +26152,7 @@ setTimeout(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_chart_PieChart_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_chart_PieChart_vue__ = __webpack_require__(21);
 //
 //
 //
@@ -27303,7 +27303,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_base_Datepicker_vue__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_base_SubmitButton_vue__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_select_SelectAccounts_vue__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_select_SelectAccounts_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_components_base_ShowErrors_vue__ = __webpack_require__(6);
 //
 //
@@ -32049,7 +32049,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(20)(content, options);
+var update = __webpack_require__(19)(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -32085,7 +32085,7 @@ if(false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var escape = __webpack_require__(223);
-exports = module.exports = __webpack_require__(19)(false);
+exports = module.exports = __webpack_require__(18)(false);
 // imports
 
 
@@ -32127,7 +32127,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(20)(content, options);
+var update = __webpack_require__(19)(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -32162,7 +32162,7 @@ if(false) {
 /* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(19)(false);
+exports = module.exports = __webpack_require__(18)(false);
 // imports
 
 
@@ -45686,7 +45686,7 @@ var render = function() {
             "router-link",
             {
               staticClass: "wperp-btn btn--primary",
-              attrs: { to: { name: "LedgerSingle", params: { id: 1 } } }
+              attrs: { to: { name: "LedgerSingle", params: { id: 7 } } }
             },
             [_vm._v(_vm._s(_vm.__("View Report", "erp")))]
           )
