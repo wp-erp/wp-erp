@@ -73,7 +73,7 @@ export default {
     },
     props: ['rows'],
 
-    data () {
+    data() {
         return {
             bulkActions: [
                 {
@@ -104,16 +104,16 @@ export default {
     },
 
     methods: {
-        toggleFilter () {
+        toggleFilter() {
             this.showFilters = !this.showFilters;
         },
 
-        filterList () {
+        filterList() {
             this.toggleFilter();
             this.$root.$emit('people-transaction-filter', this.filters);
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
                 if (confirm('Are you sure to delete?')) {

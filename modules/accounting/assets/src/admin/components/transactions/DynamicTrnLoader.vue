@@ -4,14 +4,14 @@ import HTTP from 'admin/http';
 export default {
     name: 'DynamicTrnLoader',
 
-    data () {
+    data() {
         return {
             voucher_no: null,
             voucher_type: null
         };
     },
 
-    mounted () {
+    mounted() {
         this.voucher_no = this.$route.params.id;
 
         HTTP.get(`/transactions/voucher-type/${this.voucher_no}`).then((response) => {

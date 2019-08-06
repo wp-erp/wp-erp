@@ -136,7 +136,7 @@ export default {
         Dropdown
     },
 
-    data () {
+    data() {
         return {
             company  : null,
             payPurchase  : {},
@@ -148,7 +148,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.getCompanyInfo();
         this.getPurchase();
 
@@ -158,7 +158,7 @@ export default {
     },
 
     methods: {
-        getCompanyInfo () {
+        getCompanyInfo() {
             HTTP.get(`/company`).then(response => {
                 this.company = response.data;
             }).then(e => {}).then(() => {
@@ -166,7 +166,7 @@ export default {
             });
         },
 
-        getPurchase () {
+        getPurchase() {
             this.isWorking = true;
             this.$store.dispatch('spinner/setSpinner', true);
 
@@ -182,7 +182,7 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         }
     }

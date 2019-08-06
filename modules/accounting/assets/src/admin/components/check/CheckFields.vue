@@ -19,7 +19,7 @@
 export default {
     name: 'CheckFields',
 
-    data () {
+    data() {
         return {
             check_fields: {
                 bank_name : '',
@@ -30,7 +30,7 @@ export default {
     },
 
     methods: {
-        updateCheckData () {
+        updateCheckData() {
             this.$emit('updateCheckFields', this.check_fields);
         }
     }

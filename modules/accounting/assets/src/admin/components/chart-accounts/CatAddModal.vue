@@ -57,7 +57,7 @@ import Treeselect from '@riophae/vue-treeselect';
 export default {
     name: 'CatAddModal',
 
-    data () {
+    data() {
         return {
             error: false,
             parent: null,
@@ -80,7 +80,7 @@ export default {
         Treeselect
     },
 
-    created () {
+    created() {
         if (this.catData.node) {
             if (this.catData.node.ancestors.length) {
                 this.parent = this.catData.node.ancestors[0].id;
@@ -90,13 +90,13 @@ export default {
     },
 
     methods: {
-        inside () {},
+        inside() {},
 
-        outside () {
+        outside() {
             this.$root.$emit('cat-modal-close');
         },
 
-        saveCategory () {
+        saveCategory() {
             this.error = false;
             this.isCatSaving = true;
 

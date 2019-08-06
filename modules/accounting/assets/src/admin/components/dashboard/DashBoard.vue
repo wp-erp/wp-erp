@@ -103,7 +103,7 @@ export default {
         Accounts
     },
 
-    data () {
+    data() {
         return {
             title1        : 'Income & Expenses',
             title2        : 'Bank Accounts',
@@ -118,7 +118,7 @@ export default {
     },
 
     computed: {
-        total_receivable () {
+        total_receivable() {
             const amounts = Object.values(this.to_receive.amount);
             const total = amounts.reduce((amount, item) => {
                 return amount + parseFloat(item);
@@ -127,7 +127,7 @@ export default {
             return this.formatAmount(total);
         },
 
-        total_payable () {
+        total_payable() {
             const amounts = Object.values(this.to_pay.amount);
             const total = amounts.reduce((amount, item) => {
                 return amount + parseFloat(item);
@@ -137,21 +137,21 @@ export default {
         }
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.fetchReceivables();
         this.fetchPayables();
     },
 
     methods: {
-        fetchReceivables () {
+        fetchReceivables() {
             this.to_receive = [];
             HTTP.get('invoices/overview-receivable').then((res) => {
                 this.to_receive = res.data;
             });
         },
 
-        fetchPayables () {
+        fetchPayables() {
             this.to_pay = [];
             HTTP.get('bills/overview-payable').then((res) => {
                 this.to_pay = res.data;

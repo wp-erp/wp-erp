@@ -51,7 +51,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             noResult: false,
             isLoading: false,
@@ -60,14 +60,14 @@ export default {
     },
 
     watch: {
-        options () {
+        options() {
             this.results = [];
             this.isLoading = false;
         }
     },
 
     methods: {
-        onSelect (selected) {
+        onSelect(selected) {
             if (this.multiple) {
                 this.results.push(selected);
                 this.$emit('input', this.results);
@@ -76,17 +76,17 @@ export default {
             }
         },
 
-        onRemove (removed) {
+        onRemove(removed) {
             this.results = this.results.filter(element => element.id !== removed.id);
 
             this.$emit('input', this.results);
         },
 
-        onDropdownOpen (id) {
+        onDropdownOpen(id) {
             this.$root.$emit('dropdown-open');
         },
 
-        asyncFind: debounce(function (query) {
+        asyncFind: debounce(function(query) {
             // this.isLoading = true;
             this.$root.$emit('options-query', query);
         }, 1)

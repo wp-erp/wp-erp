@@ -41,7 +41,7 @@ export default {
         TransactionsFilter
     },
 
-    data () {
+    data() {
         return {
             pages: [
                 { namedRoute: 'ExpenseCreate', name: 'Create Expense' },

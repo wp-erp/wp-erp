@@ -36,7 +36,7 @@ export default {
     name: 'AccountingMenu',
 
     props: {},
-    data () {
+    data() {
         /* global __ */
         return {
             menuItems: erp_acct_var.erp_acct_menus, /* global erp_acct_var */
@@ -50,12 +50,12 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.init();
     },
 
     methods: {
-        init () {
+        init() {
             const container = document.querySelector('.erp-nav-container');
             if (container == null) {
                 return;
@@ -77,7 +77,7 @@ export default {
             const allItems = container.querySelectorAll('li');
             const moreLi = primary.querySelector('.-more');
             const moreBtn = moreLi.querySelector('button');
-            moreBtn.addEventListener('click', function (e) {
+            moreBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 container.classList.toggle('--show-secondary');
                 moreBtn.setAttribute(
@@ -87,9 +87,9 @@ export default {
             });
 
             // adapt tabs
-            var doAdapt = function doAdapt () {
+            var doAdapt = function doAdapt() {
                 // reveal all items for the calculation
-                allItems.forEach(function (item) {
+                allItems.forEach(function(item) {
                     item.classList.remove('--hidden');
                 });
 
@@ -97,7 +97,7 @@ export default {
                 var stopWidth = moreBtn.offsetWidth;
                 const hiddenItems = [];
                 const primaryWidth = primary.offsetWidth;
-                primaryItems.forEach(function (item, i) {
+                primaryItems.forEach(function(item, i) {
                     if (primaryWidth >= stopWidth + item.offsetWidth) {
                         stopWidth += item.offsetWidth;
                     } else {
@@ -112,7 +112,7 @@ export default {
                     container.classList.remove('--show-secondary');
                     moreBtn.setAttribute('aria-expanded', false);
                 } else {
-                    secondaryItems.forEach(function (item, i) {
+                    secondaryItems.forEach(function(item, i) {
                         if (!hiddenItems.includes(i)) {
                             item.classList.add('--hidden');
                         }
@@ -124,7 +124,7 @@ export default {
             window.addEventListener('resize', doAdapt); // adapt on window resize
 
             // hide Secondary on the outside click
-            document.addEventListener('click', function (e) {
+            document.addEventListener('click', function(e) {
                 var el = e.target;
                 while (el) {
                     if (el === secondary || el === moreBtn) {

@@ -75,7 +75,7 @@ export default {
         MultiSelect
     },
 
-    data () {
+    data() {
         return {
             start_date    : null,
             end_date      : null,
@@ -99,14 +99,14 @@ export default {
     },
 
     watch: {
-        selectedAgency () {
+        selectedAgency() {
             this.rows = [];
         }
     },
 
-    created () {
+    created() {
         // ? why is nextTick here ...? i don't know.
-        this.$nextTick(function () {
+        this.$nextTick(function() {
             // with leading zero, and JS month are zero index based
             const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
 
@@ -118,13 +118,13 @@ export default {
     },
 
     methods: {
-        getAgencies () {
+        getAgencies() {
             HTTP.get('/tax-agencies').then(res => {
                 this.taxAgencies = res.data;
             });
         },
 
-        getSalesTaxReport () {
+        getSalesTaxReport() {
             if (this.selectedAgency === null) return;
 
             this.$store.dispatch('spinner/setSpinner', true);
@@ -148,7 +148,7 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         }
     }

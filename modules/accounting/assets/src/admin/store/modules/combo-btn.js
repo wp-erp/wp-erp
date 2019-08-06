@@ -10,14 +10,14 @@ const getters = {
 
 // Actions
 const actions = {
-    setBtnID ({ commit }, data) {
+    setBtnID({ commit }, data) {
         commit('setBtnID', data);
     }
 };
 
 // Mutations
 const mutations = {
-    setBtnID (state, data) {
+    setBtnID(state, data) {
         state.btnID = data;
     }
 };

@@ -173,7 +173,7 @@ export default {
         ShowErrors
     },
 
-    data () {
+    data() {
         return {
             basic_fields: {
                 people         : '',
@@ -223,15 +223,15 @@ export default {
     },
 
     watch: {
-        finalTotalAmount (newval) {
+        finalTotalAmount(newval) {
             this.finalTotalAmount = newval;
         },
 
-        'basic_fields.people' () {
+        'basic_fields.people'() {
             this.getPeopleAddress();
         },
 
-        'basic_fields.trn_by' () {
+        'basic_fields.trn_by'() {
             this.changeAccounts();
         }
     },
@@ -240,7 +240,7 @@ export default {
         ...mapState({ actionType: state => state.combo.btnID })
     },
 
-    created () {
+    created() {
         this.prepareDataLoad();
 
         this.$root.$on('remove-row', index => {
@@ -254,7 +254,7 @@ export default {
     },
 
     methods: {
-        async prepareDataLoad () {
+        async prepareDataLoad() {
             /**
                  * ----------------------------------------------
                  * check if editing
@@ -302,7 +302,7 @@ export default {
             }
         },
 
-        setDataForEdit (expense) {
+        setDataForEdit(expense) {
             this.basic_fields.people          = { id: parseInt(expense.people_id), name: expense.people_name };
             this.basic_fields.deposit_to      = { id: parseInt(expense.deposit_to) };
             this.basic_fields.trn_by          = this.pay_methods.find(method => method.id === expense.trn_by);
@@ -326,7 +326,7 @@ export default {
             this.updateFinalAmount();
         },
 
-        getLedgers () {
+        getLedgers() {
             const expense_chart_id = 5;
 
             HTTP.get(`/ledgers/${expense_chart_id}/accounts`).then(response => {
@@ -334,7 +334,7 @@ export default {
             });
         },
 
-        getPayMethods () {
+        getPayMethods() {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.get('/transactions/payment-methods').then(response => {
                 this.pay_methods = response.data;
@@ -345,11 +345,11 @@ export default {
             });
         },
 
-        setCheckFields (check_data) {
+        setCheckFields(check_data) {
             this.check_data = check_data;
         },
 
-        getPeopleAddress () {
+        getPeopleAddress() {
             const user_id = this.basic_fields.people.id;
 
             if (!user_id) {
@@ -371,7 +371,7 @@ export default {
             });
         },
 
-        updateFinalAmount () {
+        updateFinalAmount() {
             let finalAmount = 0;
 
             this.transactionLines.forEach(element => {
@@ -383,11 +383,11 @@ export default {
             this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
         },
 
-        addLine () {
+        addLine() {
             this.transactionLines.push({});
         },
 
-        updateExpense (requestData) {
+        updateExpense(requestData) {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.put(`/expenses/${this.voucherNo}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -407,7 +407,7 @@ export default {
             });
         },
 
-        createExpense (requestData) {
+        createExpense(requestData) {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.post('/expenses', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -427,7 +427,7 @@ export default {
             });
         },
 
-        SubmitForExpense () {
+        SubmitForExpense() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -477,7 +477,7 @@ export default {
             }
         },
 
-        changeAccounts () {
+        changeAccounts() {
             this.accts_by_chart = [];
             if (this.basic_fields.trn_by.id === '2' || this.basic_fields.trn_by.id === '3') {
                 HTTP.get('/ledgers/bank-accounts').then((response) => {
@@ -511,7 +511,7 @@ export default {
             this.$root.$emit('account-changed');
         },
 
-        resetFields () {
+        resetFields() {
             this.basic_fields = {
                 people         : '',
                 trn_ref        : '',
@@ -540,7 +540,7 @@ export default {
             this.$store.dispatch('combo/setBtnID', 'save');
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.people, 'id')) {
@@ -575,12 +575,12 @@ export default {
             }
         },
 
-        removeRow (index) {
+        removeRow(index) {
             this.$delete(this.transactionLines, index);
             this.updateFinalAmount();
         },
 
-        formatTrnLines (trn_lines) {
+        formatTrnLines(trn_lines) {
             const line_items = [];
 
             trn_lines.forEach(element => {

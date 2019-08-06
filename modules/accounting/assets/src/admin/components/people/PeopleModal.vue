@@ -141,7 +141,7 @@ export default {
         },
         type: [String]
     },
-    data () {
+    data() {
         return {
             peopleFields: {
                 id         : null,
@@ -172,7 +172,7 @@ export default {
         };
     },
     methods: {
-        saveCustomer () {
+        saveCustomer() {
             if (!this.checkForm()) {
                 return false;
             }
@@ -200,7 +200,7 @@ export default {
             });
         },
 
-        checkForm () {
+        checkForm() {
             this.error_message = [];
 
             if (this.emailExists) {
@@ -229,11 +229,11 @@ export default {
             return false;
         },
 
-        showDetails () {
+        showDetails() {
             this.showMore = !this.showMore;
         },
 
-        getCountries () {
+        getCountries() {
             HTTP.get('customers/country').then(response => {
                 const country = response.data.country;
                 const states   = response.data.state;
@@ -252,7 +252,7 @@ export default {
             });
         },
 
-        getState (country) {
+        getState(country) {
             this.states = [];
             this.peopleFields.state = '';
             for (const state in country.state) {
@@ -260,7 +260,7 @@ export default {
             }
         },
 
-        checkEmailExistence () {
+        checkEmailExistence() {
             if (this.peopleFields.email) {
                 if (!this.people) {
                     HTTP.get('/people/check-email', {
@@ -274,13 +274,13 @@ export default {
             }
         },
 
-        getCustomers () {
+        getCustomers() {
             HTTP.get('/customers').then(response => {
                 this.customers = response.data;
             });
         },
 
-        setInputField () {
+        setInputField() {
             if (this.people) {
                 const people                  = this.people;
                 this.peopleFields.id          = people.id;
@@ -302,15 +302,15 @@ export default {
             }
         },
 
-        selectedCountry (id) {
+        selectedCountry(id) {
             return this.countries.find(country => id === country.id);
         },
 
-        selectedState (id) {
+        selectedState(id) {
             return this.get_states.find(item => item.id === id);
         },
 
-        generateUrl () {
+        generateUrl() {
             var url;
             if (this.type) {
                 if (this.type === 'customer') {
@@ -329,7 +329,7 @@ export default {
             return url;
         },
 
-        resetForm () {
+        resetForm() {
             this.peopleFields.first_name = '';
             this.peopleFields.last_name  = '';
             this.peopleFields.email      = '';
@@ -348,7 +348,7 @@ export default {
         }
     },
 
-    created () {
+    created() {
         this.url = this.generateUrl();
         this.selectedCountry();
         this.setInputField();

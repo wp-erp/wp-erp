@@ -168,7 +168,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             error_msg    : [],
             ProductFields: {
@@ -189,7 +189,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         if (this.product) {
             const product                   = this.product;
             this.ProductFields.name       = product.name;
@@ -206,7 +206,7 @@ export default {
     },
 
     methods: {
-        saveProduct () {
+        saveProduct() {
             if (!this.checkForm()) {
                 return false;
             }
@@ -245,14 +245,14 @@ export default {
             });
         },
 
-        loaded () {
+        loaded() {
             this.getVendors();
             this.getCategories();
             this.getTaxCategories();
             this.getProductTypes();
         },
 
-        getVendors () {
+        getVendors() {
             HTTP.get('vendors').then(response => {
                 if (response.data) {
                     for (const i in response.data) {
@@ -264,19 +264,19 @@ export default {
             });
         },
 
-        getCategories () {
+        getCategories() {
             HTTP.get('product-cats').then(response => {
                 this.categories = response.data;
             });
         },
 
-        getTaxCategories () {
+        getTaxCategories() {
             HTTP.get('tax-cats').then(response => {
                 this.tax_cats = response.data;
             });
         },
 
-        getProductTypes () {
+        getProductTypes() {
             HTTP.get('products/types').then(response => {
                 this.productType = response.data;
 
@@ -284,7 +284,7 @@ export default {
             });
         },
 
-        resetForm () {
+        resetForm() {
             this.ProductFields.id         = null;
             this.ProductFields.name       = '';
             this.ProductFields.type       = [];
@@ -294,7 +294,7 @@ export default {
             this.ProductFields.salePrice  = '';
         },
 
-        checkForm () {
+        checkForm() {
             this.error_msg = [];
 
             if (

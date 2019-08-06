@@ -89,7 +89,7 @@ export default {
         Datepicker
     },
 
-    data () {
+    data() {
         return {
             start_date    : null,
             end_date      : null,
@@ -118,8 +118,8 @@ export default {
         };
     },
 
-    created () {
-        this.$nextTick(function () {
+    created() {
+        this.$nextTick(function() {
             // with leading zero, and JS month are zero index based
             const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
 
@@ -138,7 +138,7 @@ export default {
     },
 
     methods: {
-        updateDate () {
+        updateDate() {
             this.$router.push({ path: this.$route.path,
                 query: {
                     start: this.start_date,
@@ -146,7 +146,7 @@ export default {
                 } });
         },
 
-        fetchItems () {
+        fetchItems() {
             this.updateDate();
 
             this.rows1 = [];
@@ -172,7 +172,7 @@ export default {
             });
         },
 
-        transformBalance (val) {
+        transformBalance(val) {
             if (val === null && typeof val === 'object') {
                 val = 0;
             }
@@ -184,7 +184,7 @@ export default {
             return `Dr. ${this.moneyFormat(val)}`;
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         }
     }

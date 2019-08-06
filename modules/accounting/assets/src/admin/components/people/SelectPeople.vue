@@ -40,7 +40,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             selected: null,
             showModal: false
@@ -48,15 +48,15 @@ export default {
     },
 
     watch: {
-        value (newVal) {
+        value(newVal) {
             this.selected = newVal;
         },
 
-        selected () {
+        selected() {
             this.$emit('input', this.selected);
         },
 
-        reset () {
+        reset() {
             this.selected = [];
         }
     },
@@ -65,7 +65,7 @@ export default {
         options: state => state.expense.people
     }),
 
-    created () {
+    created() {
         this.$store.dispatch('expense/fetchPeople');
 
         this.$root.$on('options-query', query => {
@@ -85,7 +85,7 @@ export default {
     },
 
     methods: {
-        getPeople (query) {
+        getPeople(query) {
             HTTP.get('/people', {
                 params: {
                     type: 'all',

@@ -154,7 +154,7 @@ export default {
         Datepicker
     },
 
-    data () {
+    data() {
         return {
             closingBtnVisibility: false,
             start_date          : null,
@@ -189,9 +189,9 @@ export default {
         };
     },
 
-    created () {
+    created() {
         // ? why is nextTick here ...? i don't know.
-        this.$nextTick(function () {
+        this.$nextTick(function() {
             // with leading zero, and JS month are zero index based
             const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
 
@@ -205,13 +205,13 @@ export default {
     },
 
     computed: {
-        liability_equity () {
+        liability_equity() {
             return parseFloat(this.totalLiability) + parseFloat(this.totalEquity);
         }
     },
 
     watch: {
-        closingBtnVisibility (visible) {
+        closingBtnVisibility(visible) {
             if (visible) {
                 this.start_date = this.selectedYear.start_date;
                 this.end_date   = this.selectedYear.end_date;
@@ -220,7 +220,7 @@ export default {
             }
         },
 
-        selectedYear (newVal) {
+        selectedYear(newVal) {
             // only whe `prepare close` is checked
             if (this.closingBtnVisibility) {
                 this.start_date = newVal.start_date;
@@ -232,7 +232,7 @@ export default {
     },
 
     methods: {
-        fetchItems () {
+        fetchItems() {
             this.rows = [];
             this.$store.dispatch('spinner/setSpinner', true);
 
@@ -256,7 +256,7 @@ export default {
             });
         },
 
-        transformBalance (val) {
+        transformBalance(val) {
             if (val === null && typeof val === 'object') {
                 val = 0;
             }
@@ -268,7 +268,7 @@ export default {
             return `Dr. ${this.moneyFormat(val)}`;
         },
 
-        fetchFnYears () {
+        fetchFnYears() {
             HTTP.get('/opening-balances/names').then(response => {
                 // get only last 5
                 this.fyears = response.data.reverse().slice(0).slice(-5);
@@ -277,17 +277,17 @@ export default {
             });
         },
 
-        getCurrentFnYear () {
+        getCurrentFnYear() {
             HTTP.get('/closing-balance/closest-fn-year').then(response => {
                 this.selectedYear = response.data;
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         },
 
-        checkClosingPossibility () {
+        checkClosingPossibility() {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.get('/closing-balance/next-fn-year', {
@@ -308,7 +308,7 @@ export default {
             });
         },
 
-        closeBalancesheet (f_year_id) {
+        closeBalancesheet(f_year_id) {
             HTTP.post('/closing-balance', {
                 f_year_id : f_year_id,
                 start_date: this.start_date,

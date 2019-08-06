@@ -132,7 +132,7 @@ export default {
         Dropdown
     },
 
-    data () {
+    data() {
         return {
             company     : null,
             expense_data: {},
@@ -144,7 +144,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.getCompanyInfo();
         this.getExpense();
@@ -155,7 +155,7 @@ export default {
     },
 
     methods: {
-        getCompanyInfo () {
+        getCompanyInfo() {
             HTTP.get(`/company`).then(response => {
                 this.company = response.data;
             }).then(e => {}).then(() => {
@@ -163,7 +163,7 @@ export default {
             });
         },
 
-        getExpense () {
+        getExpense() {
             this.isWorking = true;
 
             HTTP.get(`/expenses/${this.$route.params.id}`).then(response => {
@@ -178,7 +178,7 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         }
     }

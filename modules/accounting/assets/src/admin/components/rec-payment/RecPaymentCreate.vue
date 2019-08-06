@@ -163,7 +163,7 @@ export default {
         ComboButton
     },
 
-    data () {
+    data() {
         return {
             basic_fields: {
                 customer       : '',
@@ -204,16 +204,16 @@ export default {
     },
 
     watch: {
-        finalTotalAmount (newval) {
+        finalTotalAmount(newval) {
             this.finalTotalAmount = newval;
         },
 
-        'basic_fields.customer' () {
+        'basic_fields.customer'() {
             this.getCustomerAddress();
             this.getDueInvoices();
         },
 
-        'basic_fields.trn_by' () {
+        'basic_fields.trn_by'() {
             this.changeAccounts();
         }
 
@@ -223,14 +223,14 @@ export default {
         ...mapState({ actionType: state => state.combo.btnID })
     },
 
-    created () {
+    created() {
         this.prepareDataLoad();
 
         // initialize combo button id with `save`
         this.$store.dispatch('combo/setBtnID', 'save');
     },
 
-    mounted () {
+    mounted() {
         // `receive payment` request from invoice list row action
         if (this.$route.params.customer_id) {
             this.basic_fields.customer  = {
@@ -241,7 +241,7 @@ export default {
     },
 
     methods: {
-        async prepareDataLoad () {
+        async prepareDataLoad() {
             /**
                  * ----------------------------------------------
                  * check if editing
@@ -277,7 +277,7 @@ export default {
             }
         },
 
-        getPayMethods () {
+        getPayMethods() {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.get('/transactions/payment-methods').then(response => {
@@ -290,11 +290,11 @@ export default {
             });
         },
 
-        setCheckFields (check_data) {
+        setCheckFields(check_data) {
             this.check_data = check_data;
         },
 
-        getDueInvoices () {
+        getDueInvoices() {
             this.invoices = [];
 
             const customerId  = this.basic_fields.customer.id;
@@ -325,7 +325,7 @@ export default {
             });
         },
 
-        getCustomerAddress () {
+        getCustomerAddress() {
             const customer_id = this.basic_fields.customer.id;
 
             if (!customer_id) {
@@ -342,7 +342,7 @@ export default {
             });
         },
 
-        updateFinalAmount () {
+        updateFinalAmount() {
             let finalAmount = 0;
 
             this.totalAmounts.forEach(element => {
@@ -352,7 +352,7 @@ export default {
             this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
         },
 
-        SubmitForPayment (event) {
+        SubmitForPayment(event) {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -412,7 +412,7 @@ export default {
             });
         },
 
-        changeAccounts () {
+        changeAccounts() {
             this.accts_by_chart = [];
             if (this.basic_fields.trn_by.id === '2' || this.basic_fields.trn_by.id === '3') {
                 HTTP.get('/ledgers/bank-accounts').then((response) => {
@@ -446,7 +446,7 @@ export default {
             this.$root.$emit('account-changed');
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.customer, 'id')) {
@@ -470,11 +470,11 @@ export default {
             }
         },
 
-        showPaymentModal () {
+        showPaymentModal() {
             this.getDueInvoices();
         },
 
-        resetData () {
+        resetData() {
             this.basic_fields = {
                 customer       : '',
                 trn_ref        : '',
@@ -502,7 +502,7 @@ export default {
             this.$store.dispatch('combo/setBtnID', 'save');
         },
 
-        removeRow (index) {
+        removeRow(index) {
             this.$delete(this.invoices, index);
             this.$delete(this.totalAmounts, index);
             this.updateFinalAmount();

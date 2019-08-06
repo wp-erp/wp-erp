@@ -16,7 +16,7 @@ export default {
 
     directives: {
         timepicker: {
-            inserted (el, binding, vnode) {
+            inserted(el, binding, vnode) {
                 vnode.context.timepickerObj = new MtrDatepicker({
                     target: el.id,
                     disableAmPm: vnode.context.hideAmPmDisplay,
@@ -43,13 +43,13 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             timepickerObj: null
         };
     },
 
-    mounted () {
+    mounted() {
         let format = 'hh:mm A';
 
         if (this.hideAmPmDisplay) {

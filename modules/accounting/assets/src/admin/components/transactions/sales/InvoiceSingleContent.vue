@@ -115,19 +115,19 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             acct_var: erp_acct_var, /* global erp_acct_var */
             total   : null
         };
     },
 
-    created () {
+    created() {
         this.total = parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
     },
 
     methods: {
-        getInvoiceType () {
+        getInvoiceType() {
             if (this.invoice !== null && this.invoice.estimate === '1') {
                 return 'Estimate';
             } else {

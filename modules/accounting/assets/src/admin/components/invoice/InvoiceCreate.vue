@@ -175,7 +175,7 @@ export default {
         ShowErrors
     },
 
-    data () {
+    data() {
         return {
             basic_fields: {
                 customer       : '',
@@ -220,23 +220,23 @@ export default {
     },
 
     watch: {
-        'basic_fields.customer' () {
+        'basic_fields.customer'() {
             this.getCustomerAddress();
         },
 
-        taxRate (newVal) {
+        taxRate(newVal) {
             this.$store.dispatch('sales/setTaxRateID', newVal.id);
         },
 
-        discount () {
+        discount() {
             this.discountChanged();
         },
 
-        discountType () {
+        discountType() {
             this.discountChanged();
         },
 
-        invoiceTotalAmount () {
+        invoiceTotalAmount() {
             this.discountChanged();
         }
     },
@@ -246,7 +246,7 @@ export default {
         ...mapState({ actionType: state => state.combo.btnID })
     },
 
-    created () {
+    created() {
         if (this.$route.name === 'EstimateCreate') {
             this.inv_title = 'Estimate';
             this.inv_type  = { id: 1, name: 'Estimate' };
@@ -268,7 +268,7 @@ export default {
     },
 
     methods: {
-        async prepareDataLoad () {
+        async prepareDataLoad() {
             /**
                  * ----------------------------------------------
                  * check if editing
@@ -327,7 +327,7 @@ export default {
             }
         },
 
-        setDataForEdit (invoice) {
+        setDataForEdit(invoice) {
             this.basic_fields.customer        = { id: parseInt(invoice.customer_id), name: invoice.customer_name };
             this.basic_fields.billing_address = invoice.billing_address;
             this.basic_fields.trn_date        = invoice.trn_date;
@@ -355,7 +355,7 @@ export default {
             }
         },
 
-        getProducts () {
+        getProducts() {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.get('/products').then(response => {
@@ -368,7 +368,7 @@ export default {
             });
         },
 
-        getCustomerAddress () {
+        getCustomerAddress() {
             const customer_id = this.basic_fields.customer.id;
 
             if (!customer_id) {
@@ -385,7 +385,7 @@ export default {
             });
         },
 
-        discountChanged () {
+        discountChanged() {
             let discount = this.discount;
 
             if (this.discountType === 'discount-percent') {
@@ -395,7 +395,7 @@ export default {
             this.$store.dispatch('sales/setDiscount', discount);
         },
 
-        getTaxRates () {
+        getTaxRates() {
             HTTP.get('/taxes/summary').then(response => {
                 this.taxSummary = response.data;
 
@@ -403,7 +403,7 @@ export default {
             });
         },
 
-        getTaxRateNameByID (id) {
+        getTaxRateNameByID(id) {
             // Array.find()
             const taxRate = this.taxRates.find(rate => {
                 return rate.id === id;
@@ -412,7 +412,7 @@ export default {
             return taxRate.name;
         },
 
-        getUniqueTaxRates (taxes) {
+        getUniqueTaxRates(taxes) {
             return Array.from(new Set(taxes.map(tax => tax.tax_rate_id))).map(tax_rate_id => {
                 const tax = taxes.find(tax => tax.tax_rate_id === tax_rate_id);
 
@@ -429,11 +429,11 @@ export default {
             });
         },
 
-        addLine () {
+        addLine() {
             this.transactionLines.push({});
         },
 
-        updateFinalAmount () {
+        updateFinalAmount() {
             let taxAmount     = 0;
             let totalDiscount = 0;
             let totalAmount   = 0;
@@ -454,7 +454,7 @@ export default {
             this.finalTotalAmount = finalAmount.toFixed(2);
         },
 
-        formatLineItems () {
+        formatLineItems() {
             var lineItems = [];
 
             this.transactionLines.forEach(line => {
@@ -476,7 +476,7 @@ export default {
             return lineItems;
         },
 
-        updateInvoice (requestData) {
+        updateInvoice(requestData) {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
@@ -494,7 +494,7 @@ export default {
             });
         },
 
-        createInvoice (requestData) {
+        createInvoice(requestData) {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.post('/invoices', requestData).then(res => {
@@ -512,7 +512,7 @@ export default {
             });
         },
 
-        submitInvoiceForm () {
+        submitInvoiceForm() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -553,11 +553,11 @@ export default {
             }
         },
 
-        removeFile (index) {
+        removeFile(index) {
             this.$delete(this.attachments, index);
         },
 
-        resetFields () {
+        resetFields() {
             // why can't we use `form.reset()` ?
 
             this.basic_fields.customer        = { id: null, name: null };
@@ -578,7 +578,7 @@ export default {
             this.$store.dispatch('combo/setBtnID', 'save');
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.customer, 'id')) {

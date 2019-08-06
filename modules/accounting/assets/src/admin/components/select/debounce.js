@@ -1,6 +1,6 @@
-export default function (fn, delay) {
+export default function(fn, delay) {
     let timeoutID = null;
-    return function () {
+    return function() {
         clearTimeout(timeoutID);
         const args = arguments;
         const that = this;

@@ -96,7 +96,7 @@ export default {
         ShowErrors
     },
 
-    data () {
+    data() {
         return {
             agencies      : [],
             pay_methods   : [],
@@ -119,28 +119,28 @@ export default {
     },
 
     watch: {
-        agency () {
+        agency() {
             this.getDuePayAmount();
         },
 
-        trn_by () {
+        trn_by() {
             this.changeAccounts();
         }
     },
 
-    created () {
+    created() {
         this.getPayMethods();
         this.getAgencies();
     },
 
     methods: {
-        getPayMethods () {
+        getPayMethods() {
             HTTP.get('/transactions/payment-methods').then(response => {
                 this.pay_methods = response.data;
             });
         },
 
-        changeAccounts () {
+        changeAccounts() {
             this.accts_by_chart = [];
             if (this.trn_by.id === '2' || this.trn_by.id === '3') {
                 HTTP.get('/ledgers/bank-accounts').then((response) => {
@@ -174,13 +174,13 @@ export default {
             this.$root.$emit('account-changed');
         },
 
-        getAgencies () {
+        getAgencies() {
             HTTP.get('/tax-agencies').then(response => {
                 this.agencies = response.data;
             });
         },
 
-        getDuePayAmount () {
+        getDuePayAmount() {
             if (!this.agency.id) return;
 
             // ? or... we could bring due along with agencies
@@ -189,7 +189,7 @@ export default {
             });
         },
 
-        submitForTaxPay () {
+        submitForTaxPay() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -223,7 +223,7 @@ export default {
             });
         },
 
-        resetData () {
+        resetData() {
             this.trn_by       = { id: null, name: null };
             this.deposit_to   = { id: null, name: null };
             this.agency       = { id: null, name: null };
@@ -236,7 +236,7 @@ export default {
             this.voucher_type = { id: 'debit', name: 'Debit' };
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!this.trn_by.id) {

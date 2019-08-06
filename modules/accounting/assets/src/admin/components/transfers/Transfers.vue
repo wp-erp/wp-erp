@@ -38,7 +38,7 @@ export default {
         ListTable
     },
 
-    data () {
+    data() {
         return {
             transferFrom  : { balance : 0 },
             transferTo    : { balance : 0 },
@@ -59,13 +59,13 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.get_transfer_list();
     },
 
     methods: {
-        get_transfer_list () {
+        get_transfer_list() {
             HTTP.get('/accounts/list').then(res => {
                 this.transfer_list = res.data;
                 this.$store.dispatch('spinner/setSpinner', false);

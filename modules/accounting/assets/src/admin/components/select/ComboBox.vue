@@ -25,7 +25,7 @@
 export default {
     name: 'ComboBox',
 
-    data () {
+    data() {
         return {
             selectedOption: {
                 name: ''
@@ -48,7 +48,7 @@ export default {
         }
     },
 
-    mounted () {
+    mounted() {
         // this.selectedOption.id = this.selected;
         if (this.placeholder) {
             this.selectedOption.name = this.placeholder;
@@ -57,18 +57,18 @@ export default {
     },
 
     methods: {
-        outside () {
+        outside() {
             this.showMenu = false;
             this.$root.$emit('combo-box-close');
         },
 
-        updateOption (option) {
+        updateOption(option) {
             this.selectedOption = option;
             this.showMenu = false;
             this.$root.$emit('comboSelected', this.selectedOption);
         },
 
-        toggleMenu () {
+        toggleMenu() {
             this.showMenu = !this.showMenu;
         }
     }

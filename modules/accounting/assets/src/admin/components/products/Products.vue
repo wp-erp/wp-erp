@@ -41,7 +41,7 @@ export default {
         ProductModal
     },
 
-    data () {
+    data() {
         return {
             products : [],
             product  : null,
@@ -86,7 +86,7 @@ export default {
         };
     },
     methods: {
-        getProducts () {
+        getProducts() {
             this.products = [];
             HTTP.get('/products', {
                 params: {
@@ -106,7 +106,7 @@ export default {
             });
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             if (action === 'edit') {
                 this.showModal = true;
                 this.product   = row;
@@ -127,7 +127,7 @@ export default {
             }
         },
 
-        onBulkAction (action, items) {
+        onBulkAction(action, items) {
             if (action === 'trash') {
                 if (confirm('Are you sure want to delete?')) {
                     this.$store.dispatch('spinner/setSpinner', true);
@@ -149,7 +149,7 @@ export default {
             }
         },
 
-        goToPage (page) {
+        goToPage(page) {
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
@@ -162,11 +162,11 @@ export default {
         }
 
     },
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.getProducts();
 
-        this.$on('close', function () {
+        this.$on('close', function() {
             this.showModal = false;
             this.product = null;
         });

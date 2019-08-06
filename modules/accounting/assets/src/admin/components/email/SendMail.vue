@@ -70,7 +70,7 @@ export default {
         type: String
     },
 
-    data () {
+    data() {
         return {
             options: [],
             emails: [],
@@ -81,11 +81,11 @@ export default {
     },
 
     methods: {
-        closeModal () {
+        closeModal() {
             this.$root.$emit('close');
         },
 
-        addEmail (newEmail) {
+        addEmail(newEmail) {
             const email = {
                 name: newEmail,
                 code: newEmail.substring(0, 2) + Math.floor((Math.random() * 10000000))
@@ -93,7 +93,7 @@ export default {
             this.emails.push(email);
         },
 
-        sendAsMail () {
+        sendAsMail() {
             HTTP.post(`/transactions/send-pdf/${this.$route.params.id}`, {
                 trn_data: this.data,
                 type: this.type,

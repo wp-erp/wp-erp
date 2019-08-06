@@ -77,7 +77,7 @@ export default {
         MultiSelect
     },
 
-    data () {
+    data() {
         return {
             start_date    : null,
             end_date      : null,
@@ -101,7 +101,7 @@ export default {
     },
 
     watch: {
-        selectedLedger (newVal) {
+        selectedLedger(newVal) {
             if (!isNaN(newVal.id)) {
                 this.rows        = [];
                 this.totalDebit  = 0;
@@ -111,11 +111,11 @@ export default {
         }
     },
 
-    created () {
+    created() {
         this.getLedgers();
 
         // ? why is nextTick here ...? i don't know.
-        this.$nextTick(function () {
+        this.$nextTick(function() {
             // with leading zero, and JS month are zero index based
             const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
 
@@ -136,7 +136,7 @@ export default {
     },
 
     methods: {
-        getLedgers () {
+        getLedgers() {
             HTTP.get('/ledgers').then(res => {
                 this.ledgers = res.data;
 
@@ -144,7 +144,7 @@ export default {
             });
         },
 
-        setDefault () {
+        setDefault() {
             if (this.$route.params.id && !this.$route.params.ledgerName) {
                 // Normally refresh page
                 const ledger = this.ledgers.filter((ledger, index) => {
@@ -161,7 +161,7 @@ export default {
             }
         },
 
-        getLedgerReport () {
+        getLedgerReport() {
             if (this.selectedLedger === null) return;
 
             this.$store.dispatch('spinner/setSpinner', true);
@@ -185,7 +185,7 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         }
     }

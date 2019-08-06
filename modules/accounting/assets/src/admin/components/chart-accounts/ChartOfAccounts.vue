@@ -95,7 +95,7 @@ import ListTable from 'admin/components/list-table/ListTable.vue';
 export default {
     name: 'ChartAccounts',
 
-    data () {
+    data() {
         return {
             columns: {
                 code       : { label: 'Code' },
@@ -117,9 +117,9 @@ export default {
     },
 
     computed: {
-        filteredLedgers () {
+        filteredLedgers() {
             var self = this;
-            return this.temp_ledgers.filter(function (ledger) {
+            return this.temp_ledgers.filter(function(ledger) {
                 return ledger.name.toLowerCase().indexOf(self.search.toLowerCase()) >= 0;
             });
         }
@@ -129,20 +129,20 @@ export default {
         ListTable
     },
 
-    created () {
+    created() {
         this.fetchChartAccounts();
         this.fetchLedgers();
     },
 
     methods: {
-        groupBy (arr, fn) { /* https://30secondsofcode.org/ */
+        groupBy(arr, fn) { /* https://30secondsofcode.org/ */
             return arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val, i) => {
                 acc[val] = (acc[val] || []).concat(arr[i]);
                 return acc;
             }, {});
         },
 
-        fetchChartAccounts () {
+        fetchChartAccounts() {
             this.chartAccounts = [];
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.get('/ledgers/accounts').then(response => {
@@ -155,14 +155,14 @@ export default {
             });
         },
 
-        fetchLedgers () {
+        fetchLedgers() {
             this.temp_ledgers.forEach((ledger) => {
                 ledger.balance = this.transformBalance(ledger.balance);
             });
             this.ledgers = this.groupBy(this.temp_ledgers, 'chart_id');
         },
 
-        transformBalance (val) {
+        transformBalance(val) {
             if (val === null && typeof val === 'object') {
                 val = 0;
             }
@@ -174,7 +174,7 @@ export default {
             return `Dr. ${currency}${val}`;
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
                 if (confirm('Are you sure to delete?')) {

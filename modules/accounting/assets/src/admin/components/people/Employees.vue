@@ -34,7 +34,7 @@ export default {
         ListTable
     },
 
-    data () {
+    data() {
         return {
             bulkActions: [
                 {
@@ -58,9 +58,9 @@ export default {
             }
         };
     },
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
-        this.$on('modal-close', function () {
+        this.$on('modal-close', function() {
             this.showModal = false;
         });
 
@@ -68,7 +68,7 @@ export default {
     },
 
     computed: {
-        row_data () {
+        row_data() {
             const items = this.rows;
             items.map(item => {
                 item.employee = item.full_name;
@@ -79,7 +79,7 @@ export default {
     },
 
     methods: {
-        fetchItems () {
+        fetchItems() {
             this.rows = [];
             HTTP.get('/employees', {
                 params: {
@@ -99,7 +99,7 @@ export default {
             });
         },
 
-        goToPage (page) {
+        goToPage(page) {
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({

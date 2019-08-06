@@ -18,12 +18,12 @@ export default {
 
     props: ['id', 'title', 'labels', 'colors', 'data'],
 
-    data () {
+    data() {
         return {};
     },
 
     methods: {
-        makeChart () {
+        makeChart() {
             var self = this;
             var colors = this.colors;
             var labels = this.labels;
@@ -46,7 +46,7 @@ export default {
                         display: false
                     },
                     // generate custom labels
-                    legendCallback: function (chart) {
+                    legendCallback: function(chart) {
                         var text = [];
                         text.push('<ul class="chart-labels-list">');
                         if (chart.data.datasets.length) {
@@ -73,10 +73,10 @@ export default {
                     tooltips: {
                         yPadding: 10,
                         callbacks: {
-                            label: function (tooltipItem, data) {
+                            label: function(tooltipItem, data) {
                                 var total = 0;
 
-                                data.datasets[tooltipItem.datasetIndex].data.forEach(function (element) {
+                                data.datasets[tooltipItem.datasetIndex].data.forEach(function(element) {
                                     if (element !== 0) {
                                         total += element;
                                     }
@@ -91,7 +91,7 @@ export default {
                 }
             };
 
-            setTimeout(function () {
+            setTimeout(function() {
                 var chartCtx = document.getElementById(self.id + '_chart');
 
                 if (chartCtx !== null) {
@@ -106,7 +106,7 @@ export default {
         }
     },
 
-    created () {
+    created() {
         this.makeChart();
     }
 };

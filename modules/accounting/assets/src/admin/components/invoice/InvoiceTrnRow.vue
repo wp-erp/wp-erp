@@ -59,7 +59,7 @@ export default {
         MultiSelect
     },
 
-    data () {
+    data() {
         return {
             taxRate  : 0,
             taxAmount: 0,
@@ -69,16 +69,16 @@ export default {
     },
 
     watch: {
-        taxRateID () {
+        taxRateID() {
             this.getTaxRate();
             this.respondAtChange();
         },
 
-        discount () {
+        discount() {
             this.respondAtChange();
         },
 
-        invoiceTotalAmount () {
+        invoiceTotalAmount() {
             this.calculateDiscount();
         }
     },
@@ -89,7 +89,7 @@ export default {
         invoiceTotalAmount: state => state.sales.invoiceTotalAmount
     }),
 
-    created () {
+    created() {
         // check if editing
         if (this.$route.params.id) {
             this.prepareRowEdit(this.line);
@@ -98,7 +98,7 @@ export default {
     },
 
     methods: {
-        prepareRowEdit (row) {
+        prepareRowEdit(row) {
             // format invoice data which comes from database, to mactch with line items
             row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
             row.taxCatID  = row.tax_cat_id;
@@ -108,13 +108,13 @@ export default {
             row.amount    = row.line_total;
         },
 
-        respondAtChange () {
+        respondAtChange() {
             this.calculateDiscount();
             this.calculateTax();
             this.calculateAmount();
         },
 
-        getAmount () {
+        getAmount() {
             // lots of reset
             if (!this.line.qty) {
                 this.line.qty = 0;
@@ -132,7 +132,7 @@ export default {
             return parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
         },
 
-        getTaxRate () {
+        getTaxRate() {
             /**
                  * |-------------------------------------------------------------------------
                  * * taxSummary: ( props ) The tax summary result from database
@@ -156,7 +156,7 @@ export default {
             this.line.taxRate = this.taxRate;
         },
 
-        calculateDiscount () {
+        calculateDiscount() {
             const amount = this.getAmount();
             if (!amount) return;
 
@@ -165,7 +165,7 @@ export default {
             this.line.discount = discount.toFixed(2);
         },
 
-        calculateTax () {
+        calculateTax() {
             const amount = this.getAmount();
             if (!amount) return;
 
@@ -179,7 +179,7 @@ export default {
             }
         },
 
-        calculateAmount () {
+        calculateAmount() {
             const amount = this.getAmount();
             if (!amount) return;
 
@@ -190,7 +190,7 @@ export default {
             this.$forceUpdate(); // why? should use computed? or vue.set()?
         },
 
-        setProductInfo () {
+        setProductInfo() {
             if (!this.line.selectedProduct) {
                 return;
             }
@@ -217,7 +217,7 @@ export default {
             this.respondAtChange();
         },
 
-        removeRow () {
+        removeRow() {
             this.$root.$emit('remove-row', this.$vnode.key);
         }
     }

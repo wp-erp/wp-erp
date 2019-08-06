@@ -46,7 +46,7 @@ export default {
         MultiSelect
     },
 
-    created () {
+    created() {
         // check if editing
         if (this.$route.params.id) {
             this.prepareRowEdit(this.line);
@@ -54,20 +54,20 @@ export default {
     },
 
     methods: {
-        prepareRowEdit (row) {
+        prepareRowEdit(row) {
             row.unitPrice = row.cost_price;
             row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
 
             this.calculateAmount();
         },
 
-        setProductInfo () {
+        setProductInfo() {
             this.line.qty = 1;
             this.line.unitPrice = this.line.selectedProduct.unitPrice;
             this.calculateAmount();
         },
 
-        getAmount () {
+        getAmount() {
             if (!this.line.qty) {
                 this.line.qty = 0;
             }
@@ -82,7 +82,7 @@ export default {
             return parseInt(this.line.qty) * parseFloat(this.line.unitPrice);
         },
 
-        calculateAmount () {
+        calculateAmount() {
             const amount = this.getAmount();
             if (!amount) return;
 
@@ -93,7 +93,7 @@ export default {
             this.$forceUpdate(); // why? should use computed? or vue.set()?
         },
 
-        removeRow () {
+        removeRow() {
             this.$root.$emit('remove-row', this.$vnode.key);
         }
     }

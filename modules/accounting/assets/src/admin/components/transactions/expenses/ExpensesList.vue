@@ -56,7 +56,7 @@ export default {
         ListTable
     },
 
-    data () {
+    data() {
         return {
             columns: {
                 trn_no: { label: 'Voucher No.' },
@@ -82,7 +82,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.$root.$on('transactions-filter', filters => {
             this.$router.push({ path: '/transactions/expenses', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
@@ -111,7 +111,7 @@ export default {
     },
 
     methods: {
-        fetchItems (filters = {}) {
+        fetchItems(filters = {}) {
             this.rows = [];
 
             this.$store.dispatch('spinner/setSpinner', true);
@@ -134,7 +134,7 @@ export default {
             });
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
                 // if ( confirm('Are you sure to delete?') ) {
@@ -175,7 +175,7 @@ export default {
             }
         },
 
-        goToPage (page) {
+        goToPage(page) {
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
@@ -189,7 +189,7 @@ export default {
     },
 
     computed: {
-        row_items () {
+        row_items() {
             if (!this.rows.length) {
                 return this.rows;
             }

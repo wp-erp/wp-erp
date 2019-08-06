@@ -18,7 +18,7 @@ const getters = {
 
 // actions
 const actions = {
-    fetchCustomers: async ({ commit }) => {
+    fetchCustomers: async({ commit }) => {
         const { status, data } = await HTTP.get('/people', {
             params: {
                 type: 'customer',
@@ -32,7 +32,7 @@ const actions = {
         }
     },
 
-    fillCustomers ({ state, commit, dispatch }, data) {
+    fillCustomers({ state, commit, dispatch }, data) {
         commit('setCustomers', data);
 
         if (!state.customers.length) {
@@ -40,22 +40,22 @@ const actions = {
         }
     },
 
-    setTaxRateID ({ commit }, data) {
+    setTaxRateID({ commit }, data) {
         commit('setTaxRateID', data);
     },
 
-    setDiscount ({ commit }, data) {
+    setDiscount({ commit }, data) {
         commit('setDiscount', data);
     },
 
-    setInvoiceTotalAmount ({ commit }, data) {
+    setInvoiceTotalAmount({ commit }, data) {
         commit('setInvoiceTotalAmount', data);
     }
 };
 
 // mutations
 const mutations = {
-    setCustomers (state, items) {
+    setCustomers(state, items) {
         state.customers = [];
 
         items.forEach(item => {
@@ -66,15 +66,15 @@ const mutations = {
         });
     },
 
-    setTaxRateID (state, id) {
+    setTaxRateID(state, id) {
         state.taxRateID = id;
     },
 
-    setDiscount (state, amount) {
+    setDiscount(state, amount) {
         state.discount = amount;
     },
 
-    setInvoiceTotalAmount (state, amount) {
+    setInvoiceTotalAmount(state, amount) {
         state.invoiceTotalAmount = amount;
     }
 };

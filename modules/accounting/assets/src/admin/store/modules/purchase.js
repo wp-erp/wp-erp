@@ -14,7 +14,7 @@ const getters = {
 
 // actions
 const actions = {
-    fetchVendors: async ({ commit }) => {
+    fetchVendors: async({ commit }) => {
         const { status, data } = await HTTP.get('/people', {
             params: {
                 type: 'vendor',
@@ -28,7 +28,7 @@ const actions = {
         }
     },
 
-    fillVendors ({ state, commit, dispatch }, data) {
+    fillVendors({ state, commit, dispatch }, data) {
         commit('setVendors', data);
 
         if (!state.vendors.length) {
@@ -39,7 +39,7 @@ const actions = {
 
 // mutations
 const mutations = {
-    setVendors (state, items) {
+    setVendors(state, items) {
         state.vendors = [];
 
         items.forEach(item => {

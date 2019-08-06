@@ -75,7 +75,7 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 export default {
     name: 'AddChartAccounts',
 
-    data () {
+    data() {
         return {
             chartAccounts: [],
             categories: [],
@@ -106,12 +106,12 @@ export default {
     },
 
     watch: {
-        'ledgFields.chart_id' () {
+        'ledgFields.chart_id'() {
             this.fetchLedgerCategories();
         }
     },
 
-    created () {
+    created() {
         this.prepareDataLoad();
 
         // this.$root.$on('cat-modal-close', () => {
@@ -131,7 +131,7 @@ export default {
     },
 
     methods: {
-        async prepareDataLoad () {
+        async prepareDataLoad() {
             /**
                  * ----------------------------------------------
                  * check if editing
@@ -167,18 +167,18 @@ export default {
             }
         },
 
-        setDataForEdit (ledger) {
+        setDataForEdit(ledger) {
             this.ledgFields.chart_id = ledger.chart_id;
             this.ledgFields.name = ledger.name;
             this.ledgFields.category_id = ledger.category_id;
             this.ledgFields.code = ledger.code;
         },
 
-        categoryAddModal () {
+        categoryAddModal() {
             this.catAddModal = true;
         },
 
-        buildTree (elements, parentId = null) {
+        buildTree(elements, parentId = null) {
             const branch = [];
 
             elements.forEach(element => {
@@ -196,7 +196,7 @@ export default {
             return branch;
         },
 
-        fetchChartAccounts () {
+        fetchChartAccounts() {
             this.chartAccounts = [];
 
             HTTP.get('/ledgers/accounts').then(response => {
@@ -204,7 +204,7 @@ export default {
             });
         },
 
-        fetchLedgerCategories () {
+        fetchLedgerCategories() {
             if (!this.ledgFields.chart_id) return;
 
             HTTP.get(`/ledgers/categories/${this.ledgFields.chart_id}`).then(response => {
@@ -214,14 +214,14 @@ export default {
             });
         },
 
-        editCategory (node) {
+        editCategory(node) {
             this.catData.title = 'Update';
             this.catData.node = node;
 
             this.catAddModal = true;
         },
 
-        removeCategory (node) {
+        removeCategory(node) {
             if (confirm('Are you sure to remove this category?')) {
                 HTTP.delete(`/ledgers/categories/${node.id}`).then(response => {
                     this.showAlert('error', 'Category Removed!');
@@ -231,7 +231,7 @@ export default {
             }
         },
 
-        createLedger (requestData) {
+        createLedger(requestData) {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.post('/ledgers', requestData).then(res => {
@@ -245,7 +245,7 @@ export default {
             });
         },
 
-        updateteLedger (requestData) {
+        updateteLedger(requestData) {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.put(`/ledgers/${this.ledgerID}`, requestData).then(res => {
@@ -260,7 +260,7 @@ export default {
             });
         },
 
-        saveAccount () {
+        saveAccount() {
             this.$store.dispatch('spinner/setSpinner', true);
 
             this.error = false;
@@ -280,7 +280,7 @@ export default {
             }
         },
 
-        resetFields () {
+        resetFields() {
             this.ledgFields.chart_id    = null;
             this.ledgFields.category_id = null;
             this.ledgFields.name        = '';
