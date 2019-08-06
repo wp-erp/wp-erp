@@ -1484,10 +1484,13 @@ Company'
             }
         }
 
+        $old_ledgers = [];
+        $ledgers = [];
+
+        require_once WPERP_INCLUDES . '/ledgers.php';
+
         // insert ledgers
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledgers` LIMIT 0, 1" ) ) {
-            $old_ledgers_json = file_get_contents( WPERP_ASSETS . '/old_ledgers.json' );
-            $old_ledgers = json_decode( $old_ledgers_json, true );
             $old_codes = [];
 
             foreach ( $old_ledgers as $value ) {
@@ -1509,8 +1512,6 @@ Company'
                 );
             }
 
-            $ledgers_json = file_get_contents( WPERP_ASSETS . '/ledgers.json' );
-            $ledgers = json_decode( $ledgers_json, true );
 
             foreach ( array_keys( $ledgers ) as $array_key ) {
                 foreach ( $ledgers[$array_key] as $value ) {
