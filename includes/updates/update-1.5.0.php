@@ -975,14 +975,11 @@ function erp_employees_to_people_migration() {
  */
 function erp_acct_populate_charts_ledgers() {
     global $wpdb;
+    
+    $old_ledgers = [];
+    $ledgers = [];
 
-    $wpdb->query( "UPDATE {$wpdb->prefix}erp_ac_ledger SET name='Cash' WHERE name='Petty Cash'" );
-
-    $old_ledgers = $wpdb->get_results( "SELECT
-        ledger.id, chart.id as chart_id, chart_cat.id category_id, ledger.name, ledger.code, ledger.system
-        FROM {$wpdb->prefix}erp_ac_ledger as ledger
-        LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id
-        LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
+    require_once WPERP_INCLUDES . '/ledgers.php';
 
     foreach ( $old_ledgers as $old_ledger ) {
         if ( '120' == $old_ledger['code'] || '200' == $old_ledger['code'] ) {
@@ -1005,8 +1002,6 @@ function erp_acct_populate_charts_ledgers() {
     if ( get_option( 'erp_acct_new_ledgers' ) ) {
         return;
     } else {
-        $ledgers_json = file_get_contents( WPERP_ASSETS . '/ledgers.json' );
-        $ledgers      = json_decode( $ledgers_json, true );
 
         foreach ( array_keys( $ledgers ) as $array_key ) {
             foreach ( $ledgers[$array_key] as $value ) {
