@@ -154,7 +154,7 @@ export default {
         ShowErrors
     },
 
-    data () {
+    data() {
         return {
             basic_fields: {
                 user: '',
@@ -196,7 +196,7 @@ export default {
         ...mapState({ actionType: state => state.combo.btnID })
     },
 
-    created () {
+    created() {
         this.prepareDataLoad();
 
         this.$on('remove-row', index => {
@@ -206,7 +206,7 @@ export default {
     },
 
     methods: {
-        async prepareDataLoad () {
+        async prepareDataLoad() {
             /**
                  * ----------------------------------------------
                  * check if editing
@@ -260,7 +260,7 @@ export default {
             }
         },
 
-        setDataForEdit (bill) {
+        setDataForEdit(bill) {
             this.basic_fields.user = { id: parseInt(bill.vendor_id), name: bill.vendor_name };
             this.basic_fields.billing_address = bill.billing_address;
             this.basic_fields.trn_date = bill.trn_date;
@@ -283,7 +283,7 @@ export default {
             this.updateFinalAmount();
         },
 
-        getLedgers () {
+        getLedgers() {
             const expenseChartId = 5;
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.get(`/ledgers/${expenseChartId}/accounts`).then(response => {
@@ -295,7 +295,7 @@ export default {
             });
         },
 
-        getPeopleAddress () {
+        getPeopleAddress() {
             const peopleId = this.basic_fields.user.id;
 
             if (!peopleId) {
@@ -312,7 +312,7 @@ export default {
             });
         },
 
-        updateFinalAmount () {
+        updateFinalAmount() {
             let finalAmount = 0;
 
             this.transactionLines.forEach(element => {
@@ -324,11 +324,11 @@ export default {
             this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
         },
 
-        addLine () {
+        addLine() {
             this.transactionLines.push({});
         },
 
-        updateBill (requestData) {
+        updateBill(requestData) {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.put(`/bills/${this.voucherNo}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -347,7 +347,7 @@ export default {
             });
         },
 
-        createBill (requestData) {
+        createBill(requestData) {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.post('/bills', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -366,7 +366,7 @@ export default {
             });
         },
 
-        submitBillForm () {
+        submitBillForm() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -405,7 +405,7 @@ export default {
             }
         },
 
-        resetFields () {
+        resetFields() {
             this.transactionLines = [];
             this.attachments = [];
             this.totalAmounts = 0;
@@ -427,7 +427,7 @@ export default {
             this.$store.dispatch('combo/setBtnID', 'save');
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.user, 'id')) {
@@ -454,7 +454,7 @@ export default {
             }
         },
 
-        formatTrnLines (trnLines) {
+        formatTrnLines(trnLines) {
             const lineItems = [];
 
             trnLines.forEach(element => {
@@ -467,7 +467,7 @@ export default {
             return lineItems;
         },
 
-        removeRow (index) {
+        removeRow(index) {
             this.$delete(this.transactionLines, index);
             this.updateFinalAmount();
         }
@@ -475,11 +475,11 @@ export default {
     },
 
     watch: {
-        finalTotalAmount (newval) {
+        finalTotalAmount(newval) {
             this.finalTotalAmount = newval;
         },
 
-        'basic_fields.user' () {
+        'basic_fields.user'() {
             this.getPeopleAddress();
         }
     }

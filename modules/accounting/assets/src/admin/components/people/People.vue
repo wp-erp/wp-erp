@@ -46,7 +46,7 @@ export default {
         PeopleModal
     },
 
-    data () {
+    data() {
         return {
             people: null,
             bulkActions: [
@@ -84,14 +84,14 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         var self = this;
-        this.$on('modal-close', function () {
+        this.$on('modal-close', function() {
             this.showModal = false;
             this.people = null;
         });
-        this.$root.$on('peopleUpdate', function () {
+        this.$root.$on('peopleUpdate', function() {
             self.showModal = false;
             self.fetchItems();
         });
@@ -104,7 +104,7 @@ export default {
     },
 
     computed: {
-        row_data () {
+        row_data() {
             const items = this.rows;
             items.map(item => {
                 item.customer = item.first_name + ' ' + item.last_name;
@@ -115,7 +115,7 @@ export default {
     },
 
     methods: {
-        fetchItems () {
+        fetchItems() {
             this.rows = [];
             HTTP.get(this.url, {
                 params: {
@@ -135,7 +135,7 @@ export default {
                 });
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
                 if (confirm('Are you sure to delete?')) {
@@ -162,7 +162,7 @@ export default {
             }
         },
 
-        onBulkAction (action, items) {
+        onBulkAction(action, items) {
             if (action === 'trash') {
                 if (confirm('Are you sure to delete?')) {
                     this.$store.dispatch('spinner/setSpinner', true);
@@ -185,7 +185,7 @@ export default {
             }
         },
 
-        goToPage (page) {
+        goToPage(page) {
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({

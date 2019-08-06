@@ -41,7 +41,7 @@ export default {
         ComboBox
     },
 
-    data () {
+    data() {
         return {
             pages: [
                 { namedRoute: 'PurchaseOrderCreate', name: 'Create Purchase Order' },

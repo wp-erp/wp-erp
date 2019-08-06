@@ -146,7 +146,7 @@ export default {
         ShowErrors
     },
 
-    data () {
+    data() {
         return {
             basic_fields: {
                 vendor         : '',
@@ -186,7 +186,7 @@ export default {
     },
 
     watch: {
-        'basic_fields.vendor' () {
+        'basic_fields.vendor'() {
             this.getvendorAddress();
         }
     },
@@ -195,7 +195,7 @@ export default {
         ...mapState({ actionType: state => state.combo.btnID })
     },
 
-    created () {
+    created() {
         if (this.$route.name === 'PurchaseOrderCreate') {
             this.page_title = 'Purchase Order';
             this.purchase_order = 1;
@@ -224,7 +224,7 @@ export default {
 
     methods: {
 
-        async prepareDataLoad () {
+        async prepareDataLoad() {
             /**
                  * ----------------------------------------------
                  * check if editing
@@ -269,7 +269,7 @@ export default {
             }
         },
 
-        setDataForEdit (purchase) {
+        setDataForEdit(purchase) {
             this.basic_fields.vendor          = { id: parseInt(purchase.vendor_id), name: purchase.vendor_name };
             this.basic_fields.billing_address = purchase.billing_address;
             this.basic_fields.trn_date        = purchase.trn_date;
@@ -280,7 +280,7 @@ export default {
             this.attachments                  = purchase.attachments;
         },
 
-        resetData () {
+        resetData() {
             this.basic_fields = {
                 vendor         : { id: null, name: null },
                 trn_date       : erp_acct_var.current_date,
@@ -298,7 +298,7 @@ export default {
             this.$store.dispatch('combo/setBtnID', 'save');
         },
 
-        getProducts () {
+        getProducts() {
             this.products = [];
 
             this.$store.dispatch('spinner/setSpinner', true);
@@ -319,7 +319,7 @@ export default {
             });
         },
 
-        getvendorAddress () {
+        getvendorAddress() {
             const vendor_id = this.basic_fields.vendor.id;
 
             if (!vendor_id) {
@@ -336,11 +336,11 @@ export default {
             });
         },
 
-        addLine () {
+        addLine() {
             this.transactionLines.push({});
         },
 
-        updateFinalAmount () {
+        updateFinalAmount() {
             let finalAmount = 0;
 
             this.transactionLines.forEach(element => {
@@ -352,7 +352,7 @@ export default {
             this.finalTotalAmount = finalAmount.toFixed(2);
         },
 
-        formatLineItems () {
+        formatLineItems() {
             var lineItems = [];
 
             this.transactionLines.forEach(line => {
@@ -369,7 +369,7 @@ export default {
             return lineItems;
         },
 
-        updatePurchase (requestData) {
+        updatePurchase(requestData) {
             HTTP.put(`/purchases/${this.voucherNo}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 this.showAlert('success', 'Purchase Updated!');
@@ -386,7 +386,7 @@ export default {
             });
         },
 
-        createPurchase (requestData) {
+        createPurchase(requestData) {
             HTTP.post('/purchases', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 this.showAlert('success', 'Purchase Created!');
@@ -402,7 +402,7 @@ export default {
             });
         },
 
-        SubmitForApproval () {
+        SubmitForApproval() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -444,7 +444,7 @@ export default {
             }
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.vendor, 'id')) {

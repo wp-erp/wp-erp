@@ -60,7 +60,7 @@ export default {
         SubmitButton
     },
 
-    data () {
+    data() {
         return {
             component_name: '',
             agency: '',
@@ -71,16 +71,16 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.fetchData();
     },
 
     methods: {
-        closeModal: function () {
+        closeModal: function() {
             this.$emit('close');
         },
 
-        addTaxRate () {
+        addTaxRate() {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.post(`/taxes/${this.$route.params.id}/line-add`, {
@@ -103,7 +103,7 @@ export default {
             });
         },
 
-        fetchData () {
+        fetchData() {
             HTTP.get('/tax-agencies').then((response) => {
                 this.agencies = response.data;
             }).catch(error => {
@@ -117,7 +117,7 @@ export default {
             });
         },
 
-        resetData () {
+        resetData() {
             Object.assign(this.$data, this.$options.data.call(this));
         }
 

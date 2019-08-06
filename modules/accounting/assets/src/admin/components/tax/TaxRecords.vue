@@ -52,7 +52,7 @@ export default {
         ListTable
     },
 
-    data () {
+    data() {
         return {
             voucher_no: 0,
             agency_id: 0,
@@ -96,7 +96,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.pageTitle = this.$route.name;
         this.url       = this.$route.name.toLowerCase();
 
@@ -104,16 +104,16 @@ export default {
     },
 
     computed: {
-        row_data () {
+        row_data() {
             return this.rows;
         }
     },
 
     methods: {
-        close () {
+        close() {
             this.showModal = false;
         },
-        fetchItems () {
+        fetchItems() {
             this.rows = [];
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.get('taxes/tax-records', {
@@ -134,7 +134,7 @@ export default {
                 });
         },
 
-        goToPage (page) {
+        goToPage(page) {
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
@@ -146,11 +146,11 @@ export default {
             this.fetchItems();
         },
 
-        addTaxPayment () {
+        addTaxPayment() {
             this.$router.push('/pay-tax');
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
                 if (confirm('Are you sure to delete?')) {
@@ -178,7 +178,7 @@ export default {
             }
         },
 
-        onBulkAction (action, items) {
+        onBulkAction(action, items) {
             if (action === 'trash') {
                 if (confirm('Are you sure to delete?')) {
                     this.$store.dispatch('spinner/setSpinner', true);

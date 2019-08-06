@@ -25,13 +25,13 @@ export default {
         }
 
     },
-    data () {
+    data() {
         return {
             select_val: null
         };
     },
     computed: {
-        checkOptions () {
+        checkOptions() {
             if (this.options) {
                 return this.options;
             } else {
@@ -41,7 +41,7 @@ export default {
         }
     },
     methods: {
-        onChange () {
+        onChange() {
             this.$root.$emit('SimpleSelectChange', {
                 selected: this.select_val
             });

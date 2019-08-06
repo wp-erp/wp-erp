@@ -51,7 +51,7 @@ export default {
         PeopleTransaction
     },
 
-    data () {
+    data() {
         return {
             userId : '',
             resData: {},
@@ -90,7 +90,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.url = this.$route.params.route;
         this.userId = this.$route.params.id;
         if (typeof this.url === 'undefined') {
@@ -105,13 +105,13 @@ export default {
     },
 
     watch: {
-        transactions (newVal) {
+        transactions(newVal) {
             this.transactions = newVal;
         }
     },
 
     methods: {
-        fetchItem (id) {
+        fetchItem(id) {
             HTTP.get(this.url + '/' + id, {
                 params: {}
             }).then((response) => {
@@ -119,7 +119,7 @@ export default {
             });
         },
 
-        getTransactions () {
+        getTransactions() {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.get(this.url + '/' + this.userId + '/transactions').then(res => {
@@ -132,7 +132,7 @@ export default {
             });
         },
 
-        filterTransaction (filters = {}) {
+        filterTransaction(filters = {}) {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.get(this.url + '/' + this.userId + '/transactions/filter', {
                 params: {
@@ -148,7 +148,7 @@ export default {
             });
         },
 
-        formatLineItems () {
+        formatLineItems() {
             this.transactions.forEach(line => {
                 if (line.balance === null && typeof line.balance === 'object') {
                     line.balance = 0;
@@ -157,7 +157,7 @@ export default {
             });
         },
 
-        getChartData (filters = {}) {
+        getChartData(filters = {}) {
             HTTP.get(`/transactions/people-chart/trn-amount/${this.userId}`, {
                 params: {
                     start_date: filters.start_date,

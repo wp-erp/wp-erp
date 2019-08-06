@@ -39,14 +39,14 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             visible: false
         };
     },
 
     watch: {
-        visible (newValue, oldValue) {
+        visible(newValue, oldValue) {
             if (newValue !== oldValue) {
                 if (newValue) {
                     this.showMenu();
@@ -57,7 +57,7 @@ export default {
         }
     },
 
-    created () {
+    created() {
         // Create non-reactive property
         this._popper = null;
 
@@ -66,25 +66,25 @@ export default {
         });
     },
 
-    mounted () {
+    mounted() {
         window.addEventListener('click', this.closeDropdown);
     },
 
-    beforeDestroy () {
+    beforeDestroy() {
         this.visible = false;
         this.removePopper();
     },
 
-    destroyed () {
+    destroyed() {
         window.removeEventListener('click', this.closeDropdown);
     },
 
     methods: {
-        toggleDropdown () {
+        toggleDropdown() {
             this.visible = !this.visible;
         },
 
-        showMenu () {
+        showMenu() {
             if (this.disabled) {
                 return;
             }
@@ -93,19 +93,19 @@ export default {
             this.createPopper(element);
         },
 
-        hideMenu () {
+        hideMenu() {
             this.$root.$emit('hidden');
             this.removePopper();
         },
 
-        createPopper (element) {
+        createPopper(element) {
             this.removePopper();
             this._popper = new Popper(element, this.$refs.menu, {
                 placement: this.placement
             });
         },
 
-        removePopper () {
+        removePopper() {
             if (this._popper) {
                 // Ensure popper event listeners are removed cleanly
                 this._popper.destroy();
@@ -113,7 +113,7 @@ export default {
             this._popper = null;
         },
 
-        closeDropdown (e) {
+        closeDropdown(e) {
             if (!this.$el || this.elementContains(this.$el, e.target) ||
                     !this._popper || this.elementContains(this._popper, e.target)
             ) {
@@ -123,7 +123,7 @@ export default {
             this.visible = false;
         },
 
-        elementContains (elm, otherElm) {
+        elementContains(elm, otherElm) {
             if (typeof elm.contains === 'function') {
                 return elm.contains(otherElm);
             }

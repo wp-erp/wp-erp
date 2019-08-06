@@ -77,7 +77,7 @@ export default new Router({
         {
             path: '/products',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -97,7 +97,7 @@ export default new Router({
         {
             path: '/customers',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -123,7 +123,7 @@ export default new Router({
         {
             path: '/vendors',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -148,7 +148,7 @@ export default new Router({
         {
             path: '/employees',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -173,7 +173,7 @@ export default new Router({
         {
             path: '/transactions',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -186,7 +186,7 @@ export default new Router({
                 {
                     path: 'sales',
                     component: {
-                        render (c) {
+                        render(c) {
                             return c('router-view');
                         }
                     },
@@ -211,7 +211,7 @@ export default new Router({
                 {
                     path: 'expenses',
                     component: {
-                        render (c) {
+                        render(c) {
                             return c('router-view');
                         }
                     },
@@ -231,7 +231,7 @@ export default new Router({
                 {
                     path: 'purchases',
                     component: {
-                        render (c) {
+                        render(c) {
                             return c('router-view');
                         }
                     },
@@ -253,7 +253,7 @@ export default new Router({
         {
             path: '/charts',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -283,7 +283,7 @@ export default new Router({
         {
             path: '/invoices',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -303,7 +303,7 @@ export default new Router({
         {
             path: '/estimates',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -328,7 +328,7 @@ export default new Router({
         {
             path: '/payments',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -348,7 +348,7 @@ export default new Router({
         {
             path: '/bills',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -374,7 +374,7 @@ export default new Router({
         {
             path: '/pay-bills',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -395,7 +395,7 @@ export default new Router({
         {
             path: '/purchases',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -421,7 +421,7 @@ export default new Router({
         {
             path: '/purchase-orders',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -447,7 +447,7 @@ export default new Router({
         {
             path: '/pay-purchases',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -468,7 +468,7 @@ export default new Router({
         {
             path: '/reports',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -486,7 +486,7 @@ export default new Router({
                 {
                     path: 'ledgers',
                     component: {
-                        render (c) {
+                        render(c) {
                             return c('router-view');
                         }
                     },
@@ -523,7 +523,7 @@ export default new Router({
         {
             path: '/journals',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -555,7 +555,7 @@ export default new Router({
         {
             path: '/taxes',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -635,7 +635,7 @@ export default new Router({
         {
             path: '/tax-records',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -660,7 +660,7 @@ export default new Router({
         {
             path: '/transfers',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -685,7 +685,7 @@ export default new Router({
         {
             path: '/expenses',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -711,7 +711,7 @@ export default new Router({
         {
             path: '/checks',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -742,7 +742,7 @@ export default new Router({
         {
             path: '/trn-loader',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -757,7 +757,7 @@ export default new Router({
         {
             path: '/opening-balance',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },
@@ -772,7 +772,7 @@ export default new Router({
         {
             path: '/erp-ac-help',
             component: {
-                render (c) {
+                render(c) {
                     return c('router-view');
                 }
             },

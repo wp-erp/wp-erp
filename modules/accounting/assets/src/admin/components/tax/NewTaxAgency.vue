@@ -57,7 +57,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             agencies   : [],
             agency     : null,
@@ -66,25 +66,25 @@ export default {
         };
     },
 
-    created () {
+    created() {
         if (this.is_update) {
             this.getAgency();
         }
     },
 
     methods: {
-        closeModal: function () {
+        closeModal: function() {
             this.$emit('close');
             this.$root.$emit('modal_closed');
         },
 
-        getAgency () {
+        getAgency() {
             HTTP.get(`/tax-agencies/${this.agency_id}`).then((response) => {
                 this.agency = response.data.name;
             });
         },
 
-        taxAgencyFormSubmit () {
+        taxAgencyFormSubmit() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -126,7 +126,7 @@ export default {
             });
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!this.agency) {
@@ -134,7 +134,7 @@ export default {
             }
         },
 
-        resetData () {
+        resetData() {
             Object.assign(this.$data, this.$options.data.call(this));
         }
 

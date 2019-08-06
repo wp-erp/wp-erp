@@ -122,7 +122,7 @@ export default {
         ShowErrors
     },
 
-    data () {
+    data() {
         return {
             tax_name: '',
             // tax_number: '',
@@ -142,7 +142,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.fetchData();
 
         this.$root.$on('refetch_tax_data', () => {
@@ -156,7 +156,7 @@ export default {
     },
 
     methods: {
-        fetchData () {
+        fetchData() {
             HTTP.get('/tax-rate-names').then((response) => {
                 this.rate_names = [];
 
@@ -185,7 +185,7 @@ export default {
             });
         },
 
-        addNewTaxRate (event) {
+        addNewTaxRate(event) {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -217,7 +217,7 @@ export default {
             this.resetData();
         },
 
-        formatLineItems () {
+        formatLineItems() {
             var lineItems = [];
 
             for (let idx = 0; idx < this.componentLines.length; idx++) {
@@ -233,7 +233,7 @@ export default {
             return lineItems;
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.tax_name, 'id')) {
@@ -241,7 +241,7 @@ export default {
             }
         },
 
-        updateFinalAmount () {
+        updateFinalAmount() {
             let finalAmount = 0;
 
             this.componentLines.forEach(element => {
@@ -251,27 +251,27 @@ export default {
             return parseFloat(finalAmount).toFixed(2);
         },
 
-        closeModal () {
+        closeModal() {
             this.$emit('close');
         },
 
-        addLine () {
+        addLine() {
             this.componentLines.push({});
         },
 
-        resetData () {
+        resetData() {
             Object.assign(this.$data, this.$options.data.call(this));
 
             this.fetchData();
         },
 
-        removeRow (index) {
+        removeRow(index) {
             this.$delete(this.componentLines, index);
         }
     },
 
     computed: {
-        finalTotalAmount () {
+        finalTotalAmount() {
             const amount = this.updateFinalAmount();
 
             if (Number.isNaN(amount)) {

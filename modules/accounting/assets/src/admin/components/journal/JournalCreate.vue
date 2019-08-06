@@ -139,7 +139,7 @@ export default {
         ShowErrors
     },
 
-    data () {
+    data() {
         return {
             basic_fields: {
                 journal_no: '',
@@ -164,13 +164,13 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.getLedgers();
         this.getNextJournalID();
     },
 
     methods: {
-        getLedgers () {
+        getLedgers() {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.get('ledgers').then((response) => {
@@ -183,15 +183,15 @@ export default {
             });
         },
 
-        addLine () {
+        addLine() {
             this.transactionLines.push({});
         },
 
-        remove_item (index) {
+        remove_item(index) {
             this.$delete(this.transactionLines, index);
         },
 
-        SubmitForJournalCreate () {
+        SubmitForJournalCreate() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -226,7 +226,7 @@ export default {
             this.resetFields();
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (this.account_ids.length < 2) {
@@ -246,7 +246,7 @@ export default {
             }
         },
 
-        calculateAmount (key) {
+        calculateAmount(key) {
             if (this.debitLine[key] > 0) {
                 this.creditLine[key] = 0;
             } else {
@@ -262,7 +262,7 @@ export default {
             }
         },
 
-        formatLineItems () {
+        formatLineItems() {
             var lineItems = [];
 
             for (let idx = 0; idx < this.transactionLines.length; idx++) {
@@ -278,13 +278,13 @@ export default {
             return lineItems;
         },
 
-        getNextJournalID () {
+        getNextJournalID() {
             HTTP.get(`/journals/next/`).then((response) => {
                 this.journal_id = response.data.id;
             });
         },
 
-        resetFields () {
+        resetFields() {
             this.basic_fields.journal_no = { id: null, name: null };
             this.basic_fields.trn_date   = erp_acct_var.current_date; /* global erp_acct_var */
             this.attachments             = [];
@@ -300,19 +300,19 @@ export default {
             this.particulars             = [];
         },
 
-        totalDebit () {
+        totalDebit() {
             this.debit_total = this.debitLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
             return this.debit_total;
         },
 
-        totalCredit () {
+        totalCredit() {
             this.creditLine.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
             return this.credit_total;
         }
     },
 
     watch: {
-        isWorking (newval) {
+        isWorking(newval) {
             this.isWorking = newval;
         }
     }

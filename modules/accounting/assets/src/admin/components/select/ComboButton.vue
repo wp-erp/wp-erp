@@ -22,7 +22,7 @@
 export default {
     name: 'ComboButton',
 
-    data () {
+    data() {
         return {
             showMenu: false
         };
@@ -35,18 +35,18 @@ export default {
     },
 
     methods: {
-        outside () {
+        outside() {
             this.showMenu = false;
             this.$root.$emit('combo-btn-close');
         },
 
-        optionSelected (option) {
+        optionSelected(option) {
             this.showMenu = false;
 
             this.$store.dispatch('combo/setBtnID', option.id);
         },
 
-        toggleButtons () {
+        toggleButtons() {
             this.showMenu = !this.showMenu;
         }
     }

@@ -109,7 +109,7 @@ import Dropdown from 'admin/components/base/Dropdown.vue';
 export default {
     name: 'SingleTransfer',
 
-    data () {
+    data() {
         return {
             voucher: {},
             company: '',
@@ -123,20 +123,20 @@ export default {
         Dropdown
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.getCompanyInfo();
         this.getVoucher();
     },
 
     methods: {
-        getCompanyInfo () {
+        getCompanyInfo() {
             HTTP.get(`/company`).then(response => {
                 this.company = response.data;
             });
         },
 
-        getVoucher () {
+        getVoucher() {
             HTTP.get(`/accounts/transfer/${this.$route.params.id}`).then(response => {
                 this.voucher = response.data;
                 this.print_data = this.voucher;
@@ -147,7 +147,7 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         }
     }

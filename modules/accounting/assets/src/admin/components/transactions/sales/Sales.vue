@@ -38,7 +38,7 @@ export default {
         ComboBox
     },
 
-    data () {
+    data() {
         return {
             pages: [
                 { namedRoute: 'InvoiceCreate', name: 'Create Invoice' },

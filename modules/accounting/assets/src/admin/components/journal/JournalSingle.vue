@@ -101,7 +101,7 @@ import HTTP from 'admin/http';
 export default {
     name: 'JournalSingle',
 
-    data () {
+    data() {
         return {
             company  : null,
             journal  : {},
@@ -110,13 +110,13 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.getCompanyInfo();
         this.getJournal();
     },
 
     methods: {
-        getCompanyInfo () {
+        getCompanyInfo() {
             HTTP.get(`/company`).then(response => {
                 this.company = response.data;
             }).then(e => {}).then(() => {
@@ -124,7 +124,7 @@ export default {
             });
         },
 
-        getJournal () {
+        getJournal() {
             this.isWorking = true;
             this.$store.dispatch('spinner/setSpinner', true);
 
@@ -139,7 +139,7 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         }
     }

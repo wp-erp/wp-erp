@@ -36,7 +36,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             pickerAttrs: [{
                 key: 'today',
@@ -53,7 +53,7 @@ export default {
     },
 
     watch: {
-        value (newVal) {
+        value(newVal) {
             if (!newVal) {
                 this.selectedDate = this.getCurrentDate();
             } else {
@@ -64,12 +64,12 @@ export default {
         }
     },
 
-    created () {
+    created() {
         this.$emit('input', this.selectedDate);
     },
 
     methods: {
-        pickerSelect (day) {
+        pickerSelect(day) {
             // add leading zero
             const days  = day.day < 10 ? `0${day.day}` : day.day;
             const month = day.month < 10 ? `0${day.month}` : day.month;
@@ -80,7 +80,7 @@ export default {
             this.$emit('input', this.selectedDate);
         },
 
-        getCurrentDate () {
+        getCurrentDate() {
             var today = new Date();
             var dd    = today.getDate();
             var mm    = today.getMonth() + 1;

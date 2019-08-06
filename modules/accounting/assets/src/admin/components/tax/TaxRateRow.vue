@@ -65,33 +65,33 @@ export default {
         }
     },
 
-    created () {
+    created() {
         this.setAgency();
         this.setCategory();
     },
 
-    data () {
+    data() {
         return {
             is_update: true
         };
     },
 
     methods: {
-        setAgency () {
+        setAgency() {
             const agency_id   = parseInt(this.component_line.agency_id);
             const agency_name = this.component_line.agency_name;
 
             this.component_line.agency = { id: agency_id, name: agency_name };
         },
 
-        setCategory () {
+        setCategory() {
             const tax_cat_id   = parseInt(this.component_line.tax_cat_id);
             const tax_cat_name = this.component_line.tax_cat_name;
 
             this.component_line.category = { id: tax_cat_id, name: tax_cat_name };
         },
 
-        UpdateTaxRate () {
+        UpdateTaxRate() {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.put(`/taxes/${this.component_line.tax_id}/line-edit`, {
                 db_id: this.component_line.db_id,
@@ -115,7 +115,7 @@ export default {
             });
         },
 
-        resetData () {
+        resetData() {
             Object.assign(this.$data, this.$options.data.call(this));
         }
 

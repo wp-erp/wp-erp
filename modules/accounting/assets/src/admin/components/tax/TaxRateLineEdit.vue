@@ -45,7 +45,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             tax_rate: {},
             agency: '',
@@ -56,16 +56,16 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.fetchData();
     },
 
     methods: {
-        closeModal: function () {
+        closeModal: function() {
             this.$emit('close');
         },
 
-        fetchData () {
+        fetchData() {
             const taxid = this.tax_id;
 
             HTTP.get(`/taxes/${taxid}`).then((response) => {

@@ -33,7 +33,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             selectedAccount: null,
             balance        : 0,
@@ -42,7 +42,7 @@ export default {
     },
 
     watch: {
-        value (newVal) {
+        value(newVal) {
             const val = this.accounts.find(account => newVal.id === account.id);
             if (typeof newVal === 'undefined' || typeof val === 'undefined') {
                 return newVal;
@@ -51,12 +51,12 @@ export default {
             this.balance = val.balance;
         },
 
-        selectedAccount () {
+        selectedAccount() {
             this.balance = 0;
             this.$emit('input', this.selectedAccount);
         },
 
-        override_accts () {
+        override_accts() {
             this.accounts = [];
 
             for (const acct of this.override_accts) {
@@ -68,13 +68,13 @@ export default {
             }
         },
 
-        reset () {
+        reset() {
             this.selectedAccount = [];
             this.balance         = 0;
         }
     },
 
-    created () {
+    created() {
         this.$root.$on('account-changed', () => {
             this.selectedAccount = [];
         });
@@ -86,13 +86,13 @@ export default {
     },
 
     methods: {
-        fetchAccounts () {
+        fetchAccounts() {
             HTTP.get('/accounts').then(response => {
                 this.accounts = response.data;
             });
         },
 
-        transformBalance (val) {
+        transformBalance(val) {
             if (val < 0) {
                 return `Cr. ${this.moneyFormat(Math.abs(val))}`;
             }

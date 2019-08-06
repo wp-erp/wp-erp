@@ -146,7 +146,7 @@ export default {
         ShowErrors
     },
 
-    data () {
+    data() {
         return {
             basic_fields: {
                 vendor         : {},
@@ -193,14 +193,14 @@ export default {
         ...mapState({ actionType: state => state.combo.btnID })
     },
 
-    created () {
+    created() {
         this.getPayMethods();
 
         // initialize combo button id with `save`
         this.$store.dispatch('combo/setBtnID', 'save');
     },
 
-    mounted () {
+    mounted() {
         this.basic_fields.vendor  = {
             id  : parseInt(this.$route.params.vendor_id),
             name: this.$route.params.vendor_name
@@ -208,7 +208,7 @@ export default {
     },
 
     methods: {
-        getPayMethods () {
+        getPayMethods() {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.get('/transactions/payment-methods').then(response => {
@@ -221,11 +221,11 @@ export default {
             });
         },
 
-        setCheckFields (check_data) {
+        setCheckFields(check_data) {
             this.check_data = check_data;
         },
 
-        resetData () {
+        resetData() {
             this.basic_fields = {
                 vendor         : '',
                 trn_ref        : '',
@@ -243,7 +243,7 @@ export default {
             this.isWorking        = false;
         },
 
-        getDuePurchases () {
+        getDuePurchases() {
             let idx         = 0;
             let finalAmount = 0;
 
@@ -273,7 +273,7 @@ export default {
             });
         },
 
-        getCustomerAddress () {
+        getCustomerAddress() {
             const vendor_id = this.basic_fields.vendor.id;
 
             if (!vendor_id) {
@@ -290,7 +290,7 @@ export default {
             });
         },
 
-        updateFinalAmount () {
+        updateFinalAmount() {
             let finalAmount = 0;
 
             this.totalAmounts.forEach(element => {
@@ -300,7 +300,7 @@ export default {
             this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
         },
 
-        SubmitForPayment () {
+        SubmitForPayment() {
             this.pay_purchases.forEach((element, index) => {
                 element['line_total'] = parseFloat(this.totalAmounts[index]);
             });
@@ -358,7 +358,7 @@ export default {
             });
         },
 
-        changeAccounts () {
+        changeAccounts() {
             this.accts_by_chart = [];
             if (this.basic_fields.trn_by.id === '2' || this.basic_fields.trn_by.id === '3') {
                 HTTP.get('/ledgers/bank-accounts').then((response) => {
@@ -392,7 +392,7 @@ export default {
             this.$root.$emit('account-changed');
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.vendor, 'id')) {
@@ -420,11 +420,11 @@ export default {
             }
         },
 
-        showPaymentModal () {
+        showPaymentModal() {
             this.getDuePurchases();
         },
 
-        resetFields () {
+        resetFields() {
             this.basic_fields = {
                 vendor         : { id: null, name: null },
                 trn_by         : { id: null, name: null },
@@ -457,7 +457,7 @@ export default {
             this.$store.dispatch('combo/setBtnID', 'save');
         },
 
-        remove_item (index) {
+        remove_item(index) {
             this.$delete(this.pay_purchases, index);
             this.$delete(this.totalAmounts, index);
             this.updateFinalAmount();
@@ -465,15 +465,15 @@ export default {
     },
 
     watch: {
-        finalTotalAmount (newval) {
+        finalTotalAmount(newval) {
             this.finalTotalAmount = newval;
         },
 
-        'basic_fields.vendor' () {
+        'basic_fields.vendor'() {
             this.getCustomerAddress();
         },
 
-        'basic_fields.trn_by' () {
+        'basic_fields.trn_by'() {
             this.changeAccounts();
         }
     }

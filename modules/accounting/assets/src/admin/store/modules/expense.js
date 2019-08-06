@@ -12,7 +12,7 @@ const getters = {
 
 // actions
 const actions = {
-    fetchPeople: async ({ commit }) => {
+    fetchPeople: async({ commit }) => {
         const { status, data } = await HTTP.get('/people', {
             params: {
                 type: 'all',
@@ -26,7 +26,7 @@ const actions = {
         }
     },
 
-    fillPeople ({ state, commit, dispatch }, data) {
+    fillPeople({ state, commit, dispatch }, data) {
         commit('setPeople', data);
 
         if (!state.people.length) {
@@ -37,7 +37,7 @@ const actions = {
 
 // mutations
 const mutations = {
-    setPeople (state, items) {
+    setPeople(state, items) {
         state.people = [];
 
         items.forEach(item => {

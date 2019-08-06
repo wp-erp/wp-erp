@@ -44,7 +44,7 @@ import HTTP from 'admin/http';
 export default {
     name: 'Accounts',
 
-    data () {
+    data() {
         return {
             isEditSettingsEnabled: false,
             accounts             : [],
@@ -53,7 +53,7 @@ export default {
     },
 
     computed: {
-        totalAmount () {
+        totalAmount() {
             if ((typeof this.accounts === 'object' && this.accounts === null)) {
                 return;
             }
@@ -76,12 +76,12 @@ export default {
         }
     },
 
-    created () {
+    created() {
         this.fetchAccounts();
     },
 
     methods: {
-        fetchAccounts () {
+        fetchAccounts() {
             HTTP.get('/accounts/cash-at-bank').then(response => {
                 this.accounts = response.data;
             });

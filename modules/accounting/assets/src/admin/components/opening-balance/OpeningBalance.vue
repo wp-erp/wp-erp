@@ -305,7 +305,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             open1: true,
             open2: true,
@@ -338,18 +338,18 @@ export default {
     },
 
     watch: {
-        isWorking (newval) {
+        isWorking(newval) {
             this.isWorking = newval;
         },
 
-        fin_year (newVal) {
+        fin_year(newVal) {
             this.getSelectedOB(newVal);
             this.getOpbAccountDetailsPayableReceivable(newVal.start_date);
         }
     },
 
     computed: {
-        finalTotalDebit () {
+        finalTotalDebit() {
             let invoice_acc_details = 0;
 
             if (this.accPayRec !== null && this.accPayRec.invoice_acc !== '0') {
@@ -359,7 +359,7 @@ export default {
             return this.totalDebit + invoice_acc_details;
         },
 
-        finalTotalCredit () {
+        finalTotalCredit() {
             let bill_purchase_acc_details = 0;
 
             if (this.accPayRec !== null && this.accPayRec.bill_purchase_acc !== '0') {
@@ -370,19 +370,19 @@ export default {
         }
     },
 
-    created () {
+    created() {
         this.fetchData();
     },
 
     methods: {
-        groupBy (arr, fn) { /* https://30secondsofcode.org/ */
+        groupBy(arr, fn) { /* https://30secondsofcode.org/ */
             return arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val, i) => {
                 acc[val] = (acc[val] || []).concat(arr[i]);
                 return acc;
             }, {});
         },
 
-        getOpbAccountDetailsPayableReceivable (startDate) {
+        getOpbAccountDetailsPayableReceivable(startDate) {
             HTTP.get('/opening-balances/acc-payable-receivable', {
                 params: {
                     start_date: startDate
@@ -392,7 +392,7 @@ export default {
             });
         },
 
-        fetchData () {
+        fetchData() {
             this.chartAccounts = [];
             this.$store.dispatch('spinner/setSpinner', true);
             this.getYears();
@@ -412,7 +412,7 @@ export default {
             });
         },
 
-        fetchLedgers () {
+        fetchLedgers() {
             HTTP.get('/ledgers').then(response => {
                 response.data.forEach((ledger) => {
                     ledger.ledger_id = ledger.id;
@@ -423,7 +423,7 @@ export default {
             });
         },
 
-        fetchAgencies () {
+        fetchAgencies() {
             HTTP.get('/tax-agencies').then((response) => {
                 this.agencies = response.data;
             }).catch(error => {
@@ -431,7 +431,7 @@ export default {
             });
         },
 
-        fetchBanks () {
+        fetchBanks() {
             HTTP.get('/ledgers/7/accounts').then((response) => {
                 this.banks = response.data;
             }).catch(error => {
@@ -439,7 +439,7 @@ export default {
             });
         },
 
-        transformBalance (val) {
+        transformBalance(val) {
             if (val === null && typeof val === 'object') {
                 val = 0;
             }
@@ -451,7 +451,7 @@ export default {
             return `Dr. ${currency}${val}`;
         },
 
-        calculateAmount () {
+        calculateAmount() {
             this.debit_total = 0; this.credit_total = 0;
 
             for (const key in this.ledgers) {
@@ -502,7 +502,7 @@ export default {
             }
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             this.acct_rec.forEach((element) => {
@@ -532,7 +532,7 @@ export default {
             }
         },
 
-        submitOBForm () {
+        submitOBForm() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -566,14 +566,14 @@ export default {
             });
         },
 
-        getYears () {
+        getYears() {
             HTTP.get('/opening-balances/names').then(response => {
                 this.years = response.data;
                 this.fin_year = this.years.length ? this.years[0] : null;
             });
         },
 
-        getPeople () {
+        getPeople() {
             HTTP.get('/people', {
                 params: {
                     type: 'all'
@@ -583,7 +583,7 @@ export default {
             });
         },
 
-        getSelectedOB (year) {
+        getSelectedOB(year) {
             this.acct_pay = []; this.acct_rec = []; this.tax_pay = [];
 
             let count = 0;
@@ -618,7 +618,7 @@ export default {
             });
         },
 
-        fetchVirtualAccts (year) {
+        fetchVirtualAccts(year) {
             HTTP.get(`/opening-balances/virtual-accts/${year.id}`).then(response => {
                 this.acct_pay = response.data.acct_payable;
                 this.acct_rec = response.data.acct_receivable;
@@ -637,26 +637,26 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         },
 
-        removeAcctRecRow (index) {
+        removeAcctRecRow(index) {
             this.$delete(this.acct_rec, index);
             this.calculateAmount();
         },
 
-        removeAcctPayRow (index) {
+        removeAcctPayRow(index) {
             this.$delete(this.acct_pay, index);
             this.calculateAmount();
         },
 
-        removeTaxPayRow (index) {
+        removeTaxPayRow(index) {
             this.$delete(this.tax_pay, index);
             this.calculateAmount();
         },
 
-        removeBankRow (index) {
+        removeBankRow(index) {
             this.$delete(this.banks, index);
             this.calculateAmount();
         }

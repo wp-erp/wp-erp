@@ -81,7 +81,7 @@ export default {
         ComboBox
     },
 
-    data () {
+    data() {
         return {
             accounts: [],
             actions: [
@@ -93,12 +93,12 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.fetchAccounts();
     },
 
     methods: {
-        fetchAccounts () {
+        fetchAccounts() {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.get('/accounts/bank-accounts').then((response) => {
@@ -110,7 +110,7 @@ export default {
             });
         },
 
-        transformBalance (val) {
+        transformBalance(val) {
             if (val === 'undefined') {
                 val = 0;
             }
@@ -122,7 +122,7 @@ export default {
             return `Dr. ${this.moneyFormat(val)}`;
         },
 
-        actionClicked (action, account) {
+        actionClicked(action, account) {
             switch (action) {
             case 'transfer':
                 this.$router.push({ name: 'NewTransfer',

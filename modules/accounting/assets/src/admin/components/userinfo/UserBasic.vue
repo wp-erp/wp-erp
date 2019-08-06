@@ -76,7 +76,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             showModal: false,
             title: '',
@@ -84,26 +84,26 @@ export default {
         };
     },
     computed: {
-        user () {
+        user() {
             return this.userData;
         }
     },
 
     methods: {
-        camelCase (str) {
-            return str.toLowerCase().replace(/(?:(^.)|(\s+.))/g, function (match) {
+        camelCase(str) {
+            return str.toLowerCase().replace(/(?:(^.)|(\s+.))/g, function(match) {
                 return match.charAt(match.length - 1).toUpperCase();
             });
         }
     },
 
-    created () {
+    created() {
         this.title = (this.$route.name.toLowerCase() === 'customers') ? 'customer' : 'vendor';
-        this.$on('modal-close', function () {
+        this.$on('modal-close', function() {
             this.showModal = false;
         });
         var self = this;
-        this.$root.$on('peopleUpdate', function () {
+        this.$root.$on('peopleUpdate', function() {
             self.showModal = false;
             self.$parent.fetchItem(self.$route.params.id);
         });

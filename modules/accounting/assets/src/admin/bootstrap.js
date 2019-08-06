@@ -52,7 +52,7 @@ window.acct.libs['PieChart']         = PieChart;
 window.acct.libs['VueClipboards']    = VueClipboards;
 
 // get lib reference from window
-window.acct_get_lib = function (lib) {
+window.acct_get_lib = function(lib) {
     return window.acct.libs[lib];
 };
 

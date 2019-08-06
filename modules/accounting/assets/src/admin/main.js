@@ -27,7 +27,7 @@ Vue.mixin(i18nMixin);
 
 // vue click outside directive
 Vue.directive('click-outside', {
-    bind (el, binding, vnode) {
+    bind(el, binding, vnode) {
         const bubble = binding.modifiers.bubble;
         const handler = e => {
             if (bubble || (!el.contains(e.target) && el !== e.target)) {
@@ -39,7 +39,7 @@ Vue.directive('click-outside', {
         document.addEventListener('click', handler);
     },
 
-    unbind (el, binding) {
+    unbind(el, binding) {
         document.removeEventListener('click', el.__vueClickOutside__);
         el.__vueClickOutside__ = null;
     }

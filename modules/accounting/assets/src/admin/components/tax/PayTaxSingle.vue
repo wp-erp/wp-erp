@@ -124,7 +124,7 @@ export default {
         Dropdown
     },
 
-    data () {
+    data() {
         return {
             company : null,
             tax_pay_data : {},
@@ -136,7 +136,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.getCompanyInfo();
         this.getExpense();
@@ -147,7 +147,7 @@ export default {
     },
 
     methods: {
-        getCompanyInfo () {
+        getCompanyInfo() {
             HTTP.get(`/company`).then(response => {
                 this.company = response.data;
             }).then(e => {}).then(() => {
@@ -155,7 +155,7 @@ export default {
             });
         },
 
-        getExpense () {
+        getExpense() {
             this.isWorking = true;
 
             HTTP.get(`/taxes/tax-records/${this.$route.params.id}`).then(response => {
@@ -170,7 +170,7 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         }
     }

@@ -10,14 +10,14 @@ const getters = {
 
 // Actions
 const actions = {
-    setSpinner ({ commit }, data) {
+    setSpinner({ commit }, data) {
         commit('setSpinner', data);
     }
 };
 
 // Mutations
 const mutations = {
-    setSpinner (state, data) {
+    setSpinner(state, data) {
         state.loader = data;
     }
 };

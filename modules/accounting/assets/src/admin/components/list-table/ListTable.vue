@@ -297,7 +297,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             bulkLocal: '-1',
             checkedItems: [],
@@ -307,19 +307,19 @@ export default {
 
     computed: {
 
-        hasActions () {
+        hasActions() {
             return this.actions.length > 0;
         },
 
-        itemsTotal () {
+        itemsTotal() {
             return this.totalItems || this.rows.length;
         },
 
-        hasPagination () {
+        hasPagination() {
             return this.itemsTotal > this.perPage;
         },
 
-        disableFirst () {
+        disableFirst() {
             if (this.currentPage === 1 || this.currentPage === 2) {
                 return true;
             }
@@ -327,7 +327,7 @@ export default {
             return false;
         },
 
-        disablePrev () {
+        disablePrev() {
             if (this.currentPage === 1) {
                 return true;
             }
@@ -335,7 +335,7 @@ export default {
             return false;
         },
 
-        disableNext () {
+        disableNext() {
             if (this.currentPage === this.totalPages) {
                 return true;
             }
@@ -343,7 +343,7 @@ export default {
             return false;
         },
 
-        disableLast () {
+        disableLast() {
             if (this.currentPage === this.totalPages || this.currentPage === (this.totalPages - 1)) {
                 return true;
             }
@@ -351,11 +351,11 @@ export default {
             return false;
         },
 
-        columnsCount () {
+        columnsCount() {
             return Object.keys(this.columns).length;
         },
 
-        colspan () {
+        colspan() {
             let columns = Object.keys(this.columns).length;
 
             if (this.showCb) {
@@ -367,7 +367,7 @@ export default {
 
         selectAll: {
 
-            get () {
+            get() {
                 if (!this.rows.length) {
                     return false;
                 }
@@ -375,7 +375,7 @@ export default {
                 return this.rows ? this.checkedItems.length === this.rows.length : false;
             },
 
-            set (value) {
+            set(value) {
                 const selected = [];
                 const self = this;
 
@@ -395,7 +395,7 @@ export default {
 
     },
 
-    created () {
+    created() {
         this.$on('bulk-checkbox', e => {
             if (!e) {
                 this.checkedItems = [];
@@ -410,7 +410,7 @@ export default {
 
     methods: {
 
-        collapsRow (obj) {
+        collapsRow(obj) {
             if (this.isRowExpanded.findIndex(x => x === obj.id) === -1) {
                 return '';
             } else {
@@ -418,7 +418,7 @@ export default {
             }
         },
 
-        toggleRow (obj) {
+        toggleRow(obj) {
             const i = this.isRowExpanded.findIndex(x => x === obj.id);
             if (i === -1) {
                 this.isRowExpanded.push(obj.id);
@@ -428,23 +428,23 @@ export default {
         },
 
         // Capitalize First Letter
-        ucFirst (string) {
+        ucFirst(string) {
             return string.replace(/^./, string[0].toUpperCase());
         },
 
-        hideActionSeparator (action) {
+        hideActionSeparator(action) {
             return action === this.actions[this.actions.length - 1].key;
         },
 
-        actionClicked (action, row, index) {
+        actionClicked(action, row, index) {
             this.$emit('action:click', action, row, index);
         },
 
-        goToPage (page) {
+        goToPage(page) {
             this.$emit('pagination', page);
         },
 
-        goToCustomPage (event) {
+        goToCustomPage(event) {
             const page = parseInt(event.target.value, 10);
 
             if (!isNaN(page) && (page > 0 && page <= this.totalPages)) {
@@ -452,7 +452,7 @@ export default {
             }
         },
 
-        handleBulkAction () {
+        handleBulkAction() {
             if (this.bulkLocal === '-1') {
                 return;
             }
@@ -460,7 +460,7 @@ export default {
             this.$emit('bulk:click', this.bulkLocal, this.checkedItems);
         },
 
-        isSortable (column) {
+        isSortable(column) {
             if (Object.prototype.hasOwnProperty.call(column, 'sortable') && column.sortable === true) {
                 return true;
             }
@@ -468,11 +468,11 @@ export default {
             return false;
         },
 
-        isSorted (column) {
+        isSorted(column) {
             return column === this.sortBy;
         },
 
-        handleSortBy (column) {
+        handleSortBy(column) {
             const order = this.sortOrder === 'asc' ? 'desc' : 'asc';
 
             this.$emit('sort', column, order);

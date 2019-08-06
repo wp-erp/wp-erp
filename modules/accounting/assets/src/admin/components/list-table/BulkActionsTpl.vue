@@ -54,27 +54,27 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             bulkSelectAll: this.selectAll
         };
     },
 
     computed: {
-        hasBulkActions () {
+        hasBulkActions() {
             return this.bulkActions.length > 0;
         }
     },
 
     methods: {
-        removeBulkActions () {
+        removeBulkActions() {
             this.$refs.removeBulkAction.click();
         },
-        changeBulkCheckbox () {
+        changeBulkCheckbox() {
             this.$parent.$emit('bulk-checkbox', this.bulkSelectAll);
         },
 
-        bulkActionSelect (key) {
+        bulkActionSelect(key) {
             this.$parent.$emit('bulk-action-click', key);
         }
     }

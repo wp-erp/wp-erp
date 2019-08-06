@@ -68,7 +68,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             tax_number: '',
             is_default: false,
@@ -78,19 +78,19 @@ export default {
         };
     },
 
-    created () {
+    created() {
         if (this.is_update) {
             this.getRateName();
         }
     },
 
     methods: {
-        closeModal () {
+        closeModal() {
             this.$emit('close');
             this.$root.$emit('modal_closed');
         },
 
-        getRateName () {
+        getRateName() {
             HTTP.get(`/tax-rate-names/${this.rate_name_id}`).then((response) => {
                 this.rate_name  = response.data.tax_rate_name;
                 this.is_default = (response.data.default === '1');
@@ -98,7 +98,7 @@ export default {
             });
         },
 
-        taxZoneFormSubmit () {
+        taxZoneFormSubmit() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -142,7 +142,7 @@ export default {
             });
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!this.rate_name) {
@@ -150,7 +150,7 @@ export default {
             }
         },
 
-        resetData () {
+        resetData() {
             Object.assign(this.$data, this.$options.data.call(this));
         }
 

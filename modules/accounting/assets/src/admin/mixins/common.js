@@ -2,7 +2,7 @@ import accounting from 'accounting';
 
 export default {
     methods: {
-        formatAmount (val, prefix = false) {
+        formatAmount(val, prefix = false) {
             if (val < 0) {
                 return prefix ? `Cr. ${this.moneyFormat(Math.abs(val))}` : `${this.moneyFormat(Math.abs(val))}`;
             }
@@ -10,7 +10,7 @@ export default {
             return prefix ? `Dr. ${this.moneyFormat(val)}` : `${this.moneyFormat(Math.abs(val))}`;
         },
 
-        formatDBAmount (val, prefix = false) {
+        formatDBAmount(val, prefix = false) {
             if (val < 0) {
                 return `(-) ${this.moneyFormat(Math.abs(val))}`;
             }
@@ -18,7 +18,7 @@ export default {
             return this.moneyFormat(val);
         },
 
-        showAlert (type, message) {
+        showAlert(type, message) {
             this.$swal({
                 position: 'center',
                 type: type,
@@ -28,12 +28,12 @@ export default {
             });
         },
 
-        getFileName (path) {
+        getFileName(path) {
             // eslint-disable-next-line no-useless-escape
             return path.replace(/^.*[\\\/]/, '');
         },
 
-        decodeHtml (str) {
+        decodeHtml(str) {
             const regex = /^[A-Za-z0-9 ]+$/;
 
             if (regex.test(str)) {
@@ -46,7 +46,7 @@ export default {
             return txt.value;
         },
 
-        moneyFormat (number) {
+        moneyFormat(number) {
             const options = {
                 /* global erp_acct_var */
                 symbol: erp_acct_var.symbol,
@@ -58,7 +58,7 @@ export default {
             return accounting.formatMoney(number, options);
         },
 
-        moneyFormatwithDrCr (value) {
+        moneyFormatwithDrCr(value) {
             var DrCr = null;
             const   options = {
                 symbol  : erp_acct_var.symbol,

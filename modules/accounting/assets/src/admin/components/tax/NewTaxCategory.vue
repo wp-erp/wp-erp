@@ -62,7 +62,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             categories: [],
             category: null,
@@ -72,26 +72,26 @@ export default {
         };
     },
 
-    created () {
+    created() {
         if (this.is_update) {
             this.getCategory();
         }
     },
 
     methods: {
-        closeModal: function () {
+        closeModal: function() {
             this.$emit('close');
             this.$root.$emit('modal_closed');
         },
 
-        getCategory () {
+        getCategory() {
             HTTP.get(`/tax-cats/${this.cat_id}`).then((response) => {
                 this.category = response.data.name;
                 this.desc = response.data.description;
             });
         },
 
-        taxCatFormSubmit () {
+        taxCatFormSubmit() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -134,7 +134,7 @@ export default {
             });
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!this.category) {
@@ -142,7 +142,7 @@ export default {
             }
         },
 
-        resetData () {
+        resetData() {
             Object.assign(this.$data, this.$options.data.call(this));
         }
 

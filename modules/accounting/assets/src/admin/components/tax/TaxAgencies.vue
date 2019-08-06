@@ -53,7 +53,7 @@ export default {
         TaxShortcuts
     },
 
-    data () {
+    data() {
         return {
             showModal: false,
             modalParams: null,
@@ -91,7 +91,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.pageTitle      =   this.$route.name;
         this.url            =   this.$route.name.toLowerCase();
 
@@ -108,7 +108,7 @@ export default {
     },
 
     computed: {
-        row_data () {
+        row_data() {
             const items = this.rows;
             items.map(item => {
                 item.tax_agency_id = item.id;
@@ -119,7 +119,7 @@ export default {
     },
 
     methods: {
-        fetchItems () {
+        fetchItems() {
             this.rows = [];
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.get('tax-agencies', {
@@ -138,7 +138,7 @@ export default {
             });
         },
 
-        goToPage (page) {
+        goToPage(page) {
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
@@ -150,11 +150,11 @@ export default {
             this.fetchItems();
         },
 
-        singleTaxAgency (tax_id) {
+        singleTaxAgency(tax_id) {
             this.$router.push({ name: 'SingleTaxAgency', params: { id: tax_id } });
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
                 if (confirm('Are you sure to delete?')) {
@@ -179,7 +179,7 @@ export default {
             }
         },
 
-        onBulkAction (action, items) {
+        onBulkAction(action, items) {
             if (action === 'trash') {
                 if (confirm('Are you sure to delete?')) {
                     this.$store.dispatch('spinner/setSpinner', true);

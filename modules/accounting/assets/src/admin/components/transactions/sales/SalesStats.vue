@@ -42,7 +42,7 @@ export default {
         PieChart
     },
 
-    data () {
+    data() {
         return {
             chartStatus: {
                 colors: ['#208DF8', '#E9485E', '#FF9900', '#2DCB67', '#9c27b0'],
@@ -58,7 +58,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.$root.$on('transactions-filter', filters => {
             this.getSalesChartData(filters);
         });
@@ -78,7 +78,7 @@ export default {
     },
 
     methods: {
-        getSalesChartData (filters = {}) {
+        getSalesChartData(filters = {}) {
             HTTP.get('/transactions/sales/chart-payment', {
                 params: {
                     start_date: filters.start_date,

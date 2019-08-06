@@ -82,7 +82,7 @@ export default {
         ListTable
     },
 
-    data () {
+    data() {
         return {
             columns: {
                 trn_no       : { label: 'Voucher No.' },
@@ -109,7 +109,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
 
         this.$root.$on('transactions-filter', filters => {
@@ -138,7 +138,7 @@ export default {
     },
 
     methods: {
-        fetchItems (filters = {}) {
+        fetchItems(filters = {}) {
             this.rows = [];
 
             this.$store.dispatch('spinner/setSpinner', true);
@@ -183,7 +183,7 @@ export default {
             });
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
                 if (confirm('Are you sure to delete?')) {
@@ -222,7 +222,7 @@ export default {
             }
         },
 
-        goToPage (page) {
+        goToPage(page) {
             this.listLoading = true;
 
             const queries = Object.assign({}, this.$route.query);
@@ -236,11 +236,11 @@ export default {
             this.fetchItems();
         },
 
-        isPayment (row) {
+        isPayment(row) {
             return row.type === 'payment';
         },
 
-        getTrnType (row) {
+        getTrnType(row) {
             if (row.type === 'invoice') {
                 if (row.estimate === 1) {
                     return 'Estimate';

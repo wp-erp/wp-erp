@@ -85,7 +85,7 @@ export default {
         ListTable
     },
 
-    data () {
+    data() {
         return {
             columns: {
                 trn_no:        { label: 'Voucher No.' },
@@ -113,7 +113,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.$root.$on('transactions-filter', filters => {
             this.$router.push({ path: '/transactions/purchases', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
@@ -142,7 +142,7 @@ export default {
     },
 
     methods: {
-        fetchItems (filters = {}) {
+        fetchItems(filters = {}) {
             this.rows = [];
 
             this.$store.dispatch('spinner/setSpinner', true);
@@ -156,13 +156,13 @@ export default {
                 }
             }).then((response) => {
                 const mappedData = response.data.map(item => {
-                    if ((item.type === 'purchase' && item.purchase_order === 0) && (item.status === 'Partially Paid' || item.status === 'Awaiting Payment')) {
+                    if ((item.type === 'purchase' && item.purchase_order === '0') && (item.status === 'Partially Paid' || item.status === 'Awaiting Payment')) {
                         item['actions'] = [
                             { key: 'edit', label: 'Edit' },
                             { key: 'payment', label: 'Make Payment' }
                             // { key: 'trash', label: 'Delete' }
                         ];
-                    } else if ((item.type === 'purchase' && item.status !== 'Paid' && item.purchase_order === 0) || item.purchase_order === 1) {
+                    } else if ((item.type === 'purchase' && item.status !== 'Paid' && item.purchase_order === '0') || item.purchase_order === '1') {
                         item['actions'] = [
                             { key: 'edit', label: 'Edit' }
                         ];
@@ -189,7 +189,7 @@ export default {
             });
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
                 if (confirm('Are you sure to delete?')) {
@@ -222,7 +222,7 @@ export default {
             }
         },
 
-        goToPage (page) {
+        goToPage(page) {
             this.listLoading = true;
 
             const queries = Object.assign({}, this.$route.query);
@@ -236,11 +236,11 @@ export default {
             this.fetchItems();
         },
 
-        isPayment (row) {
+        isPayment(row) {
             return row.type === 'pay_purchase';
         },
 
-        getTrnType (row) {
+        getTrnType(row) {
             if (row.type === 'purchase') {
                 if (row.purchase_order === 1) {
                     return 'Purchase Order';

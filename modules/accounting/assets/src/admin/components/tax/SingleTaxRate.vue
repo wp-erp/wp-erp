@@ -54,7 +54,7 @@ export default {
         TaxRateLineEdit
     },
 
-    data () {
+    data() {
         return {
             tax_id                : null,
             row_id                : null,
@@ -91,7 +91,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.fetchItems();
 
         if (this.$route.name === 'EditSingleTaxRate') {
@@ -101,7 +101,7 @@ export default {
 
     methods: {
 
-        fetchItems () {
+        fetchItems() {
             this.rows = [];
 
             this.tax_id = this.$route.params.id;
@@ -124,7 +124,7 @@ export default {
             });
         },
 
-        goToPage (page) {
+        goToPage(page) {
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
@@ -136,7 +136,7 @@ export default {
             this.fetchItems();
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
                 if (confirm('Are you sure to delete?')) {

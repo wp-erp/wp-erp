@@ -134,7 +134,7 @@ export default {
         Dropdown
     },
 
-    data () {
+    data() {
         return {
             company  : null,
             payBill  : {},
@@ -146,7 +146,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.getCompanyInfo();
         this.getBill();
 
@@ -156,7 +156,7 @@ export default {
     },
 
     methods: {
-        getCompanyInfo () {
+        getCompanyInfo() {
             HTTP.get(`/company`).then(response => {
                 this.company = response.data;
             }).then(e => {}).then(() => {
@@ -164,7 +164,7 @@ export default {
             });
         },
 
-        getBill () {
+        getBill() {
             this.isWorking = true;
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.get(`/pay-bills/${this.$route.params.id}`).then(response => {
@@ -179,7 +179,7 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         }
     }

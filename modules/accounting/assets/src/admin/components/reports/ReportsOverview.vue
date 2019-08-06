@@ -47,7 +47,7 @@
 export default {
     name: 'ReportsOverview',
 
-    data () {
+    data() {
         return {
             reportLists: window.acct.hooks.applyFilters('acctExtensionReportsList', [])
         };

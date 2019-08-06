@@ -146,7 +146,7 @@ export default {
         ComboButton
     },
 
-    data () {
+    data() {
         return {
             basic_fields: {
                 people         : {},
@@ -187,7 +187,7 @@ export default {
         ...mapState({ actionType: state => state.combo.btnID })
     },
 
-    created () {
+    created() {
         this.getPayMethods();
 
         this.$root.$on('remove-row', index => {
@@ -199,7 +199,7 @@ export default {
         this.$store.dispatch('combo/setBtnID', 'save');
     },
 
-    mounted () {
+    mounted() {
         this.basic_fields.people  = {
             id  : parseInt(this.$route.params.vendor_id),
             name: this.$route.params.vendor_name
@@ -207,7 +207,7 @@ export default {
     },
 
     methods: {
-        getPayMethods () {
+        getPayMethods() {
             this.$store.dispatch('spinner/setSpinner', true);
 
             HTTP.get('/transactions/payment-methods').then(response => {
@@ -220,11 +220,11 @@ export default {
             });
         },
 
-        setCheckFields (check_data) {
+        setCheckFields(check_data) {
             this.check_data = check_data;
         },
 
-        getDueBills () {
+        getDueBills() {
             this.pay_bills = [];
 
             const peopleId = this.basic_fields.people.id;
@@ -257,7 +257,7 @@ export default {
             });
         },
 
-        getPeopleAddress () {
+        getPeopleAddress() {
             const people_id = this.basic_fields.people.id;
 
             if (isNaN(people_id)) {
@@ -273,7 +273,7 @@ export default {
             });
         },
 
-        updateFinalAmount () {
+        updateFinalAmount() {
             let finalAmount = 0;
 
             for (let idx = 0; idx < this.totalAmounts.length; idx++) {
@@ -283,7 +283,7 @@ export default {
             this.finalTotalAmount = parseFloat(finalAmount).toFixed(2);
         },
 
-        SubmitForPayment () {
+        SubmitForPayment() {
             this.validateForm();
 
             if (this.form_errors.length) {
@@ -346,7 +346,7 @@ export default {
             });
         },
 
-        changeAccounts () {
+        changeAccounts() {
             this.accts_by_chart = [];
             if (this.basic_fields.trn_by.id === '2' || this.basic_fields.trn_by.id === '3') {
                 HTTP.get('/ledgers/bank-accounts').then((response) => {
@@ -380,7 +380,7 @@ export default {
             this.$root.$emit('account-changed');
         },
 
-        validateForm () {
+        validateForm() {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.people, 'id')) {
@@ -408,11 +408,11 @@ export default {
             }
         },
 
-        showPaymentModal () {
+        showPaymentModal() {
             this.getDueBills();
         },
 
-        resetFields () {
+        resetFields() {
             this.basic_fields = {
                 people         : { id: null, name: null },
                 trn_ref        : '',
@@ -440,7 +440,7 @@ export default {
             this.$store.dispatch('combo/setBtnID', 'save');
         },
 
-        removeRow (index) {
+        removeRow(index) {
             this.$delete(this.pay_bills, index);
             this.$delete(this.totalAmounts, index);
             this.updateFinalAmount();
@@ -448,15 +448,15 @@ export default {
     },
 
     watch: {
-        finalTotalAmount (newval) {
+        finalTotalAmount(newval) {
             this.finalTotalAmount = newval;
         },
 
-        'basic_fields.people' () {
+        'basic_fields.people'() {
             this.getPeopleAddress();
         },
 
-        'basic_fields.trn_by' () {
+        'basic_fields.trn_by'() {
             this.changeAccounts();
         }
     }

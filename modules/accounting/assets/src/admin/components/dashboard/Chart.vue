@@ -30,7 +30,7 @@ import 'admin/components/chart/chart.min';
 export default {
     name: 'Chart',
 
-    data () {
+    data() {
         return {
             items       : [],
             chart       : '',
@@ -40,12 +40,12 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.fetchData();
     },
 
     computed: {
-        thisMonth () {
+        thisMonth() {
             return {
                 labels : this.respData.thisMonth.labels,
                 datasets : [
@@ -63,7 +63,7 @@ export default {
             };
         },
 
-        lastMonth () {
+        lastMonth() {
             return {
                 labels : this.respData.lastMonth.labels,
                 datasets : [
@@ -81,7 +81,7 @@ export default {
             };
         },
 
-        thisYear () {
+        thisYear() {
             return {
                 labels : this.respData.thisYear.labels,
                 datasets : [
@@ -99,7 +99,7 @@ export default {
             };
         },
 
-        lastYear () {
+        lastYear() {
             return {
                 labels : this.respData.lastYear.labels,
                 datasets : [
@@ -117,7 +117,7 @@ export default {
             };
         },
 
-        thisQuarter () {
+        thisQuarter() {
             const quarter = this.getQuarterRange();
             const labels = this.thisYear.labels.slice(quarter.start, quarter.end + 1);
             const newIncome = this.thisYear.datasets[0].data.slice(quarter.start, quarter.end + 1);
@@ -140,7 +140,7 @@ export default {
             };
         },
 
-        lastQuarter () {
+        lastQuarter() {
             const quarter = this.getQuarterRange('previous');
 
             let yearData = this.thisYear;
@@ -175,7 +175,7 @@ export default {
     },
 
     methods: {
-        createChart () {
+        createChart() {
             const dataChart = {
                 labels: this.thisYear.labels,
                 datasets: this.thisYear.datasets
@@ -193,7 +193,7 @@ export default {
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                                callback: function (value, index, values) {
+                                callback: function(value, index, values) {
                                     return '$' + value;
                                 }
                             }
@@ -201,7 +201,7 @@ export default {
                     },
                     tooltips: {
                         callbacks: {
-                            label: function (tooltipItems, data) {
+                            label: function(tooltipItems, data) {
                                 return '$' + tooltipItems.yLabel.toString();
                             }
                         }
@@ -213,7 +213,7 @@ export default {
             this.chart = new Chart(bar_chart_ctx, config); /* global Chart */
         },
 
-        fetchData () {
+        fetchData() {
             HTTP.get('/transactions/income-expense-overview').then(response => {
                 this.respData = response.data;
                 this.createChart();
@@ -221,7 +221,7 @@ export default {
             });
         },
 
-        updateRange () {
+        updateRange() {
             let newlabels, newset;
             switch (this.chartRange) {
             case 'this_month':
@@ -260,7 +260,7 @@ export default {
             this.chart.update();
         },
 
-        getQuarterRange (val = 'current') {
+        getQuarterRange(val = 'current') {
             const today = new Date();
             const quarter = Math.floor((today.getMonth() / 3));
             const startDate = new Date(today.getFullYear(), quarter * 3, 1);
@@ -277,7 +277,7 @@ export default {
     },
 
     watch: {
-        chartRange () {
+        chartRange() {
             this.updateRange();
         }
     }

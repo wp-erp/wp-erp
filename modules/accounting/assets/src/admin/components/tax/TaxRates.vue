@@ -65,7 +65,7 @@ export default {
         TaxShortcuts
     },
 
-    data () {
+    data() {
         return {
             modalParams: null,
             columns: {
@@ -109,7 +109,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.fetchItems();
 
@@ -131,7 +131,7 @@ export default {
     },
 
     computed: {
-        row_data () {
+        row_data() {
             const items = this.rows;
 
             if (items.length) {
@@ -153,7 +153,7 @@ export default {
 
     methods: {
 
-        fetchItems () {
+        fetchItems() {
             this.rows = [];
 
             HTTP.get('/taxes', {
@@ -171,7 +171,7 @@ export default {
                 throw error;
             });
         },
-        goToPage (page) {
+        goToPage(page) {
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
@@ -183,15 +183,15 @@ export default {
             this.fetchItems();
         },
 
-        newTaxRate () {
+        newTaxRate() {
             this.$router.push({ name: 'NewTaxRate' });
         },
 
-        singleTaxRate (tax_id, tax_rate_name) {
+        singleTaxRate(tax_id, tax_rate_name) {
             this.$router.push({ name: 'SingleTaxRate', params: { id: tax_id, name: tax_rate_name } });
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             switch (action) {
             case 'trash':
                 if (confirm('Are you sure to delete?')) {
@@ -216,7 +216,7 @@ export default {
             }
         },
 
-        onBulkAction (action, items) {
+        onBulkAction(action, items) {
             if (action === 'trash') {
                 if (confirm('Are you sure to delete?')) {
                     this.$store.dispatch('spinner/setSpinner', true);

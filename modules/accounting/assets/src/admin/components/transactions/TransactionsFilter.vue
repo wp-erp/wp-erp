@@ -67,7 +67,7 @@ export default {
         SimpleSelect
     },
 
-    data () {
+    data() {
         return {
             showFilters: false,
             filters: {
@@ -79,7 +79,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         HTTP.get('/transactions/statuses').then(response => {
             this.statuses = response.data;
         }).catch(error => {
@@ -93,11 +93,11 @@ export default {
     },
 
     methods: {
-        toggleFilter () {
+        toggleFilter() {
             this.showFilters = !this.showFilters;
         },
 
-        filterList () {
+        filterList() {
             this.toggleFilter();
 
             this.$root.$emit('transactions-filter', this.filters);

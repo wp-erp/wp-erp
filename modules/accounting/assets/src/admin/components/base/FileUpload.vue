@@ -23,7 +23,7 @@ const STATUS_FAILED  = 3;
 export default {
     name: 'FileUpload',
 
-    data () {
+    data() {
         return {
             fileCount: 0,
             isUploaded: false,
@@ -46,7 +46,7 @@ export default {
     },
 
     watch: {
-        value (newVal) {
+        value(newVal) {
             this.uploadedFiles = this.value;
 
             if (!newVal.length) {
@@ -57,30 +57,30 @@ export default {
     },
 
     computed: {
-        isInitial () {
+        isInitial() {
             return this.currentStatus === STATUS_INITIAL;
         },
 
-        isSaving () {
+        isSaving() {
             return this.currentStatus === STATUS_SAVING;
         },
 
-        isSuccess () {
+        isSuccess() {
             return this.currentStatus === STATUS_SUCCESS;
         },
 
-        isFailed () {
+        isFailed() {
             return this.currentStatus === STATUS_FAILED;
         }
     },
     methods: {
-        reset () {
+        reset() {
             this.currentStatus = STATUS_INITIAL;
             this.uploadedFiles = [];
             this.uploadError = null;
         },
 
-        filesChange (event) {
+        filesChange(event) {
             const formData = new FormData();
 
             const fieldName = event.target.name;
@@ -100,7 +100,7 @@ export default {
             this.upload(formData);
         },
 
-        upload (formData) {
+        upload(formData) {
             /* global erp_acct_var */
             const BASE_URL = erp_acct_var.site_url;
 
@@ -119,7 +119,7 @@ export default {
         }
     },
 
-    mounted () {
+    mounted() {
         this.reset();
     }
 

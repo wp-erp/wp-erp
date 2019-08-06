@@ -68,7 +68,7 @@ export default {
         MultiSelect
     },
 
-    data () {
+    data() {
         return {
             categories    : [],
             categoryName  : '',
@@ -98,15 +98,15 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.getCategories();
-        this.$on('close', function () {
+        this.$on('close', function() {
             this.showModal = false;
         });
     },
     methods: {
-        getCategories () {
+        getCategories() {
             HTTP.get('product-cats').then((response) => {
                 const categories = response.data;
                 for (const x in categories) {
@@ -121,7 +121,7 @@ export default {
             });
         },
 
-        onActionClick (action, row, index) {
+        onActionClick(action, row, index) {
             if (action === 'edit') {
                 row.isEdit    = true;
                 this.category = row;
@@ -141,7 +141,7 @@ export default {
             }
         },
 
-        onBulkAction (action, items) {
+        onBulkAction(action, items) {
             if (action === 'trash') {
                 if (confirm('Are you sure want to delete?')) {
                     this.$store.dispatch('spinner/setSpinner', true);
@@ -164,7 +164,7 @@ export default {
             }
         },
 
-        createCategory () {
+        createCategory() {
             if (this.categoryName === '') {
                 this.error = true;
                 return;
@@ -187,7 +187,7 @@ export default {
             });
         },
 
-        updateCategory (row) {
+        updateCategory(row) {
             var categoryName = document.getElementById('cat-' + row.id).value;
             var categoryId   = row.id;
 

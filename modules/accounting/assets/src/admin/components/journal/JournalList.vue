@@ -41,7 +41,7 @@ export default {
         ListTable
     },
 
-    data () {
+    data() {
         return {
             journalModal: false,
             columns: {
@@ -60,13 +60,13 @@ export default {
             journal_id: 0
         };
     },
-    created () {
+    created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.fetchItems();
     },
 
     computed: {
-        row_data () {
+        row_data() {
             const items = this.rows;
             items.map(item => {
                 item.l_id = item.voucher_no;
@@ -79,11 +79,11 @@ export default {
     },
 
     methods: {
-        newJournal () {
+        newJournal() {
             this.$router.push('/journals/new');
         },
 
-        fetchItems () {
+        fetchItems() {
             this.rows = [];
             HTTP.get('/journals', {
                 params: {
@@ -102,7 +102,7 @@ export default {
             });
         },
 
-        goToPage (page) {
+        goToPage(page) {
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({

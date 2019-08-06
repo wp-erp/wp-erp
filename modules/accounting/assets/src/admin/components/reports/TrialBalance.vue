@@ -77,7 +77,7 @@ export default {
         MultiSelect
     },
 
-    data () {
+    data() {
         return {
             bulkActions: [
                 {
@@ -103,14 +103,14 @@ export default {
     },
 
     computed: {
-        debugMode () {
+        debugMode() {
             return erp_acct_var.erp_debug_mode === '1';
         }
     },
 
-    created () {
+    created() {
         // ? why is nextTick here ...? i don't know.
-        this.$nextTick(function () {
+        this.$nextTick(function() {
             // with leading zero, and JS month are zero index based
             const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
 
@@ -129,7 +129,7 @@ export default {
     },
 
     methods: {
-        onYearSelected () {
+        onYearSelected() {
             this.start_date = this.selectedYear.start_date;
             this.end_date   = this.selectedYear.end_date;
 
@@ -138,7 +138,7 @@ export default {
             this.getTrialBalance();
         },
 
-        updateDate () {
+        updateDate() {
             this.$router.push({ path: this.$route.path,
                 query: {
                     start: this.start_date,
@@ -146,7 +146,7 @@ export default {
                 } });
         },
 
-        getChartOfAccts () {
+        getChartOfAccts() {
             HTTP.get('/ledgers/accounts').then(response => {
                 this.chrtAcct = response.data;
 
@@ -154,19 +154,19 @@ export default {
             });
         },
 
-        setDateAndGetTb () {
+        setDateAndGetTb() {
             this.updateDate();
             this.getTrialBalance();
         },
 
-        fetchFnYears () {
+        fetchFnYears() {
             HTTP.get('/opening-balances/names').then(response => {
                 // get only last 5
                 this.fyears = response.data.reverse().slice(0).slice(-5);
             });
         },
 
-        getTrialBalance () {
+        getTrialBalance() {
             this.updateDate();
 
             this.rows = [];
@@ -188,7 +188,7 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         }
     }

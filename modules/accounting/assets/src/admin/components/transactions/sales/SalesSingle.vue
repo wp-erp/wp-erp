@@ -57,7 +57,7 @@ import Dropdown from 'admin/components/base/Dropdown.vue';
 export default {
     name: 'SalesSingle',
 
-    data () {
+    data() {
         return {
             isWorking : false,
             invoice   : null,
@@ -78,7 +78,7 @@ export default {
         Dropdown
     },
 
-    created () {
+    created() {
         /* If this page load directly,
             then we don't have the type or type is `undefined`
             thats why we need to load the type from database */
@@ -98,7 +98,7 @@ export default {
     },
 
     methods: {
-        getCompanyInfo () {
+        getCompanyInfo() {
             HTTP.get(`/company`).then(response => {
                 this.company = response.data;
             }).then(e => {}).then(() => {
@@ -106,7 +106,7 @@ export default {
             });
         },
 
-        getSalesType (id) {
+        getSalesType(id) {
             HTTP.get(`/transactions/type/${id}`).then(response => {
                 this.loadData(response.data);
             }).then((e) => {}).then(() => {
@@ -114,7 +114,7 @@ export default {
             });
         },
 
-        loadData (type) {
+        loadData(type) {
             this.type = type;
 
             if (type === 'invoice') {
@@ -124,7 +124,7 @@ export default {
             }
         },
 
-        getInvoiceType () {
+        getInvoiceType() {
             if (this.invoice !== null && this.invoice.estimate === '1') {
                 return 'Estimate';
             } else {
@@ -132,7 +132,7 @@ export default {
             }
         },
 
-        getInvoice () {
+        getInvoice() {
             this.isWorking = true;
 
             HTTP.get(`/invoices/${this.$route.params.id}`).then(response => {
@@ -144,7 +144,7 @@ export default {
             });
         },
 
-        getPayment () {
+        getPayment() {
             this.isWorking = true;
 
             HTTP.get(`/payments/${this.$route.params.id}`).then(response => {
@@ -155,15 +155,15 @@ export default {
             });
         },
 
-        printPopup () {
+        printPopup() {
             window.print();
         },
 
-        handleSuccess (e) {
+        handleSuccess(e) {
             alert('Link has been copied.');
         },
 
-        handleError (e) {
+        handleError(e) {
             alert('Failed to copy link.');
         }
     }

@@ -103,7 +103,7 @@ export default {
         }
     },
 
-    data () {
+    data() {
         return {
             acct_var: erp_acct_var /* global erp_acct_var */
         };

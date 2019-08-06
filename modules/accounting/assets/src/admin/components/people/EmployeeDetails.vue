@@ -93,7 +93,7 @@ export default {
         PeopleTransaction
     },
 
-    data () {
+    data() {
         return {
             userId : '',
             user: {},
@@ -130,7 +130,7 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.url = this.$route.params.route;
         this.userId = this.$route.params.id;
         if (typeof this.url === 'undefined') {
@@ -149,7 +149,7 @@ export default {
     },
 
     methods: {
-        fetchItem (id) {
+        fetchItem(id) {
             HTTP.get(this.url + '/' + id, {
                 params: { include: 'department,designation,reporting_to,avatar' }
             }).then((response) => {
@@ -157,13 +157,13 @@ export default {
             });
         },
 
-        getTransactions () {
+        getTransactions() {
             HTTP.get('/employees/' + this.userId + '/transactions').then(res => {
                 this.transactions = res.data;
             });
         },
 
-        filterTransaction (filters = {}) {
+        filterTransaction(filters = {}) {
             HTTP.get('/employees/' + this.userId + '/transactions/filter', {
                 params: {
                     start_date: filters.start_date,
@@ -174,7 +174,7 @@ export default {
             });
         },
 
-        getChartData (filters = {}) {
+        getChartData(filters = {}) {
             HTTP.get(`/transactions/people-chart/trn-amount/${this.userId}`, {
                 params: {
                     start_date: filters.start_date,

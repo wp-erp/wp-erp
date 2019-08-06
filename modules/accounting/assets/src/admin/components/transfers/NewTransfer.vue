@@ -67,7 +67,7 @@ export default {
         Datepicker
     },
 
-    data () {
+    data() {
         return {
             transferFrom: { balance : 0 },
             transferTo  : { balance : 0 },
@@ -80,11 +80,11 @@ export default {
         };
     },
 
-    created () {
+    created() {
         this.fetchAccounts();
     },
 
-    mounted () {
+    mounted() {
         // `transfer` request from account list row action
         if (this.$route.params.ac_id) {
             this.transferFrom  = {
@@ -95,7 +95,7 @@ export default {
     },
 
     methods: {
-        fetchAccounts () {
+        fetchAccounts() {
             HTTP.get('accounts').then((response) => {
                 this.accounts = response.data;
                 this.fa = response.data;
@@ -103,14 +103,14 @@ export default {
             });
         },
 
-        transformBalance (val) {
+        transformBalance(val) {
             if (val < 0) {
                 return `Cr. ${this.moneyFormat(Math.abs(val))}`;
             }
             return `Dr. ${this.moneyFormat(val)}`;
         },
 
-        submitTransfer () {
+        submitTransfer() {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.post('/accounts/transfer', {
                 date           : this.transferdate,
@@ -131,7 +131,7 @@ export default {
             });
         },
 
-        resetData () {
+        resetData() {
             this.transferFrom = { balance : 0 };
             this.transferTo   = { balance : 0 };
             this.accounts     = [];
@@ -142,16 +142,16 @@ export default {
     },
     watch: {
         /* global jQuery */
-        'transferFrom' () {
+        'transferFrom'() {
             const id = this.transferFrom.id;
-            this.ta = jQuery.grep(this.accounts, function (e) {
+            this.ta = jQuery.grep(this.accounts, function(e) {
                 return e.id !== id;
             });
         },
 
-        'transferTo' () {
+        'transferTo'() {
             const id = this.transferTo.id;
-            this.fa = jQuery.grep(this.accounts, function (e) {
+            this.fa = jQuery.grep(this.accounts, function(e) {
                 return e.id !== id;
             });
         }
