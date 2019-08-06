@@ -140,7 +140,7 @@ function erp_acct_insert_journal( $data ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_journal_details', array(
                 'trn_no'      => $voucher_no,
                 'ledger_id'   => $item['ledger_id'],
-                'particulars' => empty( $item['particulars'] ) ? '' : $item['particulars'],
+                'particulars' => empty( $item['particulars'] ) ? $journal_data['particulars'] : $item['particulars'],
                 'debit'       => $item['debit'],
                 'credit'      => $item['credit'],
                 'created_at'  => $journal_data['created_at'],
@@ -152,7 +152,7 @@ function erp_acct_insert_journal( $data ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_ledger_details', [
                 'ledger_id'   => $item['ledger_id'],
                 'trn_no'      => $voucher_no,
-                'particulars' => empty( $item['particulars'] ) ? '' : $item['particulars'],
+                'particulars' => empty( $item['particulars'] ) ? $journal_data['particulars'] : $item['particulars'],
                 'debit'       => $item['debit'],
                 'credit'      => $item['credit'],
                 'trn_date'    => $journal_data['trn_date'],
@@ -211,7 +211,7 @@ function erp_acct_update_journal( $data, $journal_no ) {
         foreach ( $items as $key => $item ) {
             $wpdb->update( $wpdb->prefix . 'erp_acct_journal_details', array(
                 'ledger_id'   => $item['ledger_id'],
-                'particulars' => $item['particulars'],
+                'particulars' => empty( $item['particulars'] ) ? $journal_data['particulars'] : $item['particulars'],
                 'debit'       => $item['debit'],
                 'credit'      => $item['credit'],
                 'created_at'  => $journal_data['created_at'],
@@ -219,6 +219,20 @@ function erp_acct_update_journal( $data, $journal_no ) {
                 'updated_at'  => $journal_data['updated_at'],
                 'updated_by'  => $journal_data['updated_by'],
             ), array(
+                'trn_no' => $journal_no,
+            ) );
+
+            $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', [
+                'ledger_id'   => $item['ledger_id'],
+                'particulars' => empty( $item['particulars'] ) ? $journal_data['particulars'] : $item['particulars'],
+                'debit'       => $item['debit'],
+                'credit'      => $item['credit'],
+                'trn_date'    => $journal_data['trn_date'],
+                'created_at'  => $journal_data['created_at'],
+                'created_by'  => $journal_data['created_by'],
+                'updated_at'  => $journal_data['updated_at'],
+                'updated_by'  => $journal_data['updated_by']
+            ] , array(
                 'trn_no' => $journal_no,
             ) );
         }
@@ -248,7 +262,7 @@ function erp_acct_get_formatted_journal_data( $data, $voucher_no ) {
     $journal_data['trn_date']       = isset( $data['date'] ) ? $data['date'] : date( "Y-m-d" );
     $journal_data['voucher_amount'] = isset( $data['voucher_amount'] ) ? $data['voucher_amount'] : 0;
     $journal_data['line_items']     = isset( $data['line_items'] ) ? $data['line_items'] : array();
-    $journal_data['particulars']    = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $journal_data['particulars']    = !empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Journal created with voucher no %s', 'erp' ), $voucher_no );
     $journal_data['ref']            = isset( $data['ref'] ) ? $data['ref'] : '';
     $journal_data['attachments']    = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $journal_data['created_at']     = isset( $data['created_at'] ) ? $data['created_at'] : '';

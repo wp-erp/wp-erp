@@ -393,7 +393,7 @@ function erp_acct_pay_tax( $data ) {
     $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_pay', array(
         'voucher_no'   => $voucher_no,
         'trn_date'     => $tax_data['trn_date'],
-        'particulars'  => $tax_data['particulars'],
+        'particulars'  => !empty( $tax_data['particulars'] ) ? $tax_data['particulars'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no ),
         'amount'       => $tax_data['amount'],
         'voucher_type' => $tax_data['voucher_type'],
         'trn_by'       => $tax_data['trn_by'],
@@ -418,7 +418,7 @@ function erp_acct_pay_tax( $data ) {
         'agency_id'   => $tax_data['agency_id'],
         'trn_no'      => $voucher_no,
         'trn_date'    => $tax_data['trn_date'],
-        'particulars' => $tax_data['particulars'],
+        'particulars' => !empty( $tax_data['particulars'] ) ? $tax_data['particulars'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no ),
         'debit'       => $debit,
         'credit'      => $credit,
         'created_at'  => $tax_data['created_at'],

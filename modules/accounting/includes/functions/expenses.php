@@ -447,7 +447,7 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
     $expense_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $expense_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
     $expense_data['check_no']         = isset( $data['check_no'] ) ? $data['check_no'] : null;
-    $expense_data['particulars']      = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $expense_data['particulars']      = !empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Expense created with voucher no %s', 'erp' ), $voucher_no );
     $expense_data['bill_details']     = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $expense_data['status']           = isset( $data['status'] ) ? $data['status'] : 1;
     $expense_data['trn_by_ledger_id'] = isset( $data['trn_by_ledger_id'] ) ? $data['trn_by_ledger_id'] : null;

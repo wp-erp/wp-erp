@@ -451,7 +451,7 @@ function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
     $purchase_data['status']         = isset( $data['status'] ) ? intval( $data['status'] ) : '';
     $purchase_data['purchase_order'] = isset( $data['purchase_order'] ) ? intval( $data['purchase_order'] ) : '';
     $purchase_data['ref']            = isset( $data['ref'] ) ? $data['ref'] : '';
-    $purchase_data['particulars']    = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $purchase_data['particulars']    = !empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Purchase created with voucher no %s', 'erp' ), $voucher_no );
     $purchase_data['created_at']     = date( "Y-m-d" );
     $purchase_data['created_by']     = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $purchase_data['updated_at']     = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
