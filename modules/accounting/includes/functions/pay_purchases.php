@@ -342,7 +342,7 @@ function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
     $pay_purchase_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
     $pay_purchase_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $pay_purchase_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
-    $pay_purchase_data['particulars']      = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $pay_purchase_data['particulars']      = !empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Purchase payment created with voucher no %s', 'erp' ), $voucher_no );
     $pay_purchase_data['status']           = isset( $data['status'] ) ? $data['status'] : '';
     $pay_purchase_data['trn_by_ledger_id'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
     $pay_purchase_data['check_no']         = isset( $data['check_no'] ) ? $data['check_no'] : 0;

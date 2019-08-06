@@ -414,7 +414,7 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
     $bill_data['due']              = isset( $data['due'] ) ? $data['due'] : 0;
     $bill_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
-    $bill_data['particulars']      = isset( $data['particulars'] ) ? $data['particulars'] : '';
+    $bill_data['particulars']      = !empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Bill created with voucher no %s', 'erp' ), $voucher_no );
     $bill_data['bill_details']     = isset( $data['bill_details'] ) ? $data['bill_details'] : '';
     $bill_data['status']           = isset( $data['status'] ) ? $data['status'] : 1;
     $bill_data['trn_by_ledger_id'] = isset( $data['trn_by'] ) ? $data['trn_by'] : null;
