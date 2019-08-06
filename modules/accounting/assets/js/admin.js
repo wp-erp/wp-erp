@@ -33767,7 +33767,7 @@ var render = function() {
                         ? _c(
                             "button",
                             { staticClass: "wperp-btn btn--primary" },
-                            [_vm._v(_vm._s(_vm.__("Publish", "erp")))]
+                            [_vm._v(_vm._s(_vm.__("Save", "erp")))]
                           )
                         : _c(
                             "button",
