@@ -30151,7 +30151,9 @@ exports.push([module.i, "/*!\n * vue-treeselect v0.0.38 | (c) 2017-2019 Riophae 
 
 var DEFAULT_LOCALE_DATA = {
   '': {
-    plural_forms: 'plural=(n!=1)'
+    plural_forms: function plural_forms(n) {
+      return n === 1 ? 0 : 1;
+    }
   }
 };
 /**

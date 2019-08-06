@@ -138,7 +138,7 @@
                                     <button class="wperp-btn btn--default" @click.prevent="$parent.$emit('close')">
                                         {{ __('Cancel', 'erp') }}
                                     </button>
-                                    <button v-if="!product" class="wperp-btn btn--primary">{{ __('Publish', 'erp') }}</button>
+                                    <button v-if="!product" class="wperp-btn btn--primary">{{ __('Save', 'erp') }}</button>
                                     <button v-else class="wperp-btn btn--primary">{{ __('Update', 'erp') }}</button>
                                 </div>
                             </form>
