@@ -982,10 +982,6 @@ function erp_acct_populate_charts_ledgers() {
     require_once WPERP_INCLUDES . '/ledgers.php';
 
     foreach ( $old_ledgers as $old_ledger ) {
-        if ( '120' == $old_ledger['code'] || '200' == $old_ledger['code'] ) {
-            $value['unused'] = true;
-        }
-
         $wpdb->insert(
             "{$wpdb->prefix}erp_acct_ledgers",
             [

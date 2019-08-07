@@ -7,7 +7,8 @@ $old_ledgers = [
         "system"      => 1,
         "category_id" => 1,
         "chart_id"    => 1,
-        "name"        => "Accounts Receivable"
+        "name"        => "Accounts Receivable",
+        "unused"      => 1
     ],
     [
         "code"        => "140",
@@ -63,7 +64,8 @@ $old_ledgers = [
         "system"      => 1,
         "category_id" => 7,
         "chart_id"    => 2,
-        "name"        => "Accounts Payable"
+        "name"        => "Accounts Payable",
+        "unused"      => 1
     ],
     [
         "code"        => "205",

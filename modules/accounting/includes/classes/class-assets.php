@@ -84,6 +84,7 @@ class Assets {
         $erp_acct_ths_separator = erp_get_option( 'erp_ac_th_separator' );
 
         $fy_ranges = erp_acct_get_date_boundary();
+        $ledgers   = erp_acct_get_ledgers();
 
         wp_localize_script( 'accounting-bootstrap', 'erp_acct_var', array(
             'user_id'            => $u_id,
@@ -101,7 +102,8 @@ class Assets {
             'erp_debug_mode'     => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
             'current_date'       => date( 'Y-m-d' ),
             'fy_lower_range'     => $fy_ranges['lower'],
-            'fy_upper_range'     => $fy_ranges['upper']
+            'fy_upper_range'     => $fy_ranges['upper'],
+            'ledgers'            => $ledgers
         ) );
     }
 
