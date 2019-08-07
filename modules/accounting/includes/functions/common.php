@@ -505,3 +505,16 @@ function erp_acct_trn_status_by_id( $slug ) {
     return $wpdb->get_var( $sql );
 }
 
+/**
+ * Get all transaction statuses
+ *
+ * @return array
+ */
+function erp_acct_get_all_trn_statuses() {
+    global $wpdb;
+
+    $sql = "SELECT id,type_name as name, slug FROM {$wpdb->prefix}erp_acct_trn_status_types";
+
+    return $wpdb->get_results( $sql, ARRAY_A );
+}
+

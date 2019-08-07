@@ -45,11 +45,11 @@
 
                 for ( let i = 2; i < val.length; ) {
                     if ( ( Date.parse(val[i]) >= Date.parse(val[i-2]) ) && ( Date.parse(val[i]) <= Date.parse(val[i-1]) ) ) {
-                        alert('Financial year values must not be overlapped!');
+                        alert(erp_acct_helper.fin_overlap_msg);
                         $(this).val('');
                     }
                     if ( Date.parse(val[i+1]) < Date.parse(val[i])  ) {
-                        alert('Second value must be greater than first!');
+                        alert(erp_acct_helper.fin_val_comp_msg);
                         $(this).val('');
                     }
                     i += 2;

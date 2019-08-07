@@ -163,11 +163,11 @@ export default {
         },
 
         handleSuccess(e) {
-            alert('Link has been copied.');
+            alert(erp_acct_var.link_copy_success);
         },
 
         handleError(e) {
-            alert('Failed to copy link.');
+            alert(erp_acct_var.link_copy_error);
         }
     }
 
