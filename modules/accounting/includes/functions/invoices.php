@@ -93,7 +93,8 @@ function erp_acct_get_invoice( $invoice_no ) {
 
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
-    $row['line_items'] = erp_acct_format_invoice_line_items( $invoice_no );
+    $row['line_items']  = erp_acct_format_invoice_line_items( $invoice_no );
+    $row['tax_rate_id'] = erp_acct_get_default_tax_rate_name_id();
 
     // calculate every line total
     foreach ( $row['line_items'] as $key => $value ) {
@@ -267,6 +268,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         } else {
             // calculate tax for every related agency
             $tax_rate_agency = get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
+            error_log(print_r($tax_rate_agency, true));
         }
 
         foreach ( $tax_rate_agency as $rate_agency ) {

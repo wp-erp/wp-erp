@@ -152,13 +152,13 @@ export default {
                 }
             }).then(response => {
                 this.rows = response.data.map(item => {
-                    if ((item.type === 'invoice' && item.estimate === 0) && (item.status === 'Partially Paid' || item.status === 'Awaiting Payment')) {
+                    if ((item.type === 'invoice' && item.estimate === '0') && (item.status === 'Partially Paid' || item.status === 'Awaiting Payment')) {
                         item['actions'] = [
                             { key: 'edit', label: 'Edit' },
                             { key: 'receive', label: 'Receive Payment' }
                             // { key: 'trash', label: 'Delete' }
                         ];
-                    } else if ((item.type === 'invoice' && item.status !== 'Paid' && item.estimate === 0) || item.estimate === 1) {
+                    } else if ((item.type === 'invoice' && item.status !== 'Paid' && item.estimate === '0') || item.estimate === '1') {
                         item['actions'] = [
                             { key: 'edit', label: 'Edit' }
                         ];

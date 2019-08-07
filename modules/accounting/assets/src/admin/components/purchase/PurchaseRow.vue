@@ -63,7 +63,8 @@ export default {
 
         setProductInfo() {
             this.line.qty = 1;
-            this.line.unitPrice = this.line.selectedProduct.unitPrice;
+            this.line.unitPrice = this.line.selectedProduct.cost_price;
+
             this.calculateAmount();
         },
 

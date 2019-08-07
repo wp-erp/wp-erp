@@ -569,3 +569,12 @@ function erp_acct_tax_summary() {
 
     return $wpdb->get_results( $sql, ARRAY_A );
 }
+
+/**
+ * Get default tax rate name id
+ */
+function erp_acct_get_default_tax_rate_name_id() {
+    global $wpdb;
+
+    return $wpdb->get_var( "SELECT id FROM {$wpdb->prefix}erp_acct_taxes WHERE `default` = 1" );
+}

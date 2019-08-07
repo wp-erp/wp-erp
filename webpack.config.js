@@ -1,20 +1,20 @@
-const webpack = require('webpack')
-const path = require('path')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const webpack = require('webpack');
+const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 
 // Naming and path settings
-var appName = 'wp-erp'
+var appName = 'wp-erp';
 
-var exportPath = path.resolve(__dirname, './assets/js')
+var exportPath = path.resolve(__dirname, './assets/js');
 
-var entryPoints = {}
+var entryPoints = {};
 
 var rootEntryPoints = {
     // 'vue-pro-admin': './src/admin/main.js',
     // style: './less/style.less',
-}
+};
 
 var moduleEntryPoints = {
     hr: {},
@@ -28,42 +28,42 @@ var moduleEntryPoints = {
         style: 'assets/less/style.less'
         // 'master': 'assets/less/master.less'
     }
-}
+};
 
-Object.keys(rootEntryPoints).forEach(function (output) {
-    entryPoints[output] = rootEntryPoints[output]
-})
+Object.keys(rootEntryPoints).forEach(function(output) {
+    entryPoints[output] = rootEntryPoints[output];
+});
 
-Object.keys(moduleEntryPoints).forEach(function (erpModule) {
-    var modulePath = `modules/${erpModule}`
+Object.keys(moduleEntryPoints).forEach(function(erpModule) {
+    var modulePath = `modules/${erpModule}`;
 
-    Object.keys(moduleEntryPoints[erpModule]).forEach(function (moduleOutput) {
-        entryPoints[`../../${modulePath}/assets/js/${moduleOutput}`] = `./${modulePath}/${moduleEntryPoints[erpModule][moduleOutput]}`
-    })
-})
+    Object.keys(moduleEntryPoints[erpModule]).forEach(function(moduleOutput) {
+        entryPoints[`../../${modulePath}/assets/js/${moduleOutput}`] = `./${modulePath}/${moduleEntryPoints[erpModule][moduleOutput]}`;
+    });
+});
 
 // Enviroment flag
-var plugins = []
-var env = process.env.WEBPACK_ENV
+var plugins = [];
+var env = process.env.WEBPACK_ENV;
 
-function isProduction () {
-    return process.env.WEBPACK_ENV === 'production'
+function isProduction() {
+    return process.env.WEBPACK_ENV === 'production';
 }
 
 // extract css into its own file
 const extractCss = new ExtractTextPlugin({
-    filename (getPath) {
-        return getPath('../css/[name].css').replace('assets/js', 'assets/css')
+    filename(getPath) {
+        return getPath('../css/[name].css').replace('assets/js', 'assets/css');
     }
-})
+});
 
-plugins.push(extractCss)
+plugins.push(extractCss);
 
 // Extract all 3rd party modules into a separate 'vendor' chunk
 plugins.push(new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
     minChunks: ({ resource }) => /node_modules/.test(resource)
-}))
+}));
 
 // Compress extracted CSS. We are using this plugin so that possible
 // duplicated CSS from different components can be deduped.
@@ -74,26 +74,26 @@ plugins.push(new OptimizeCSSPlugin({
             inline: false
         }
     }
-}))
+}));
 
 // Differ settings based on production flag
 if (isProduction()) {
     plugins.push(new UglifyJsPlugin({
         sourceMap: true
-    }))
+    }));
 
     plugins.push(new webpack.DefinePlugin({
         'process.env': env
-    }))
+    }));
 
-    appName = '[name].min.js'
+    appName = '[name].min.js';
 } else {
-    appName = '[name].js'
+    appName = '[name].js';
 }
 
 plugins.push(new webpack.ProvidePlugin({
     $: 'jquery'
-}))
+}));
 
 module.exports = {
     entry: entryPoints,
@@ -164,4 +164,4 @@ module.exports = {
             }
         ]
     }
-}
+};

@@ -406,7 +406,7 @@ export default {
         getTaxRateNameByID(id) {
             // Array.find()
             const taxRate = this.taxRates.find(rate => {
-                return rate.id === id;
+                return rate.id === parseInt(id);
             });
 
             return taxRate.name;
