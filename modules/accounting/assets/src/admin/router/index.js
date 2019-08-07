@@ -59,8 +59,9 @@ import TaxHelpContent from 'admin/components/help/TaxHelpContent.vue';
 
 Vue.use(Router);
 
+/* global acct */
 export default new Router({
-    /* global acct */
+    linkActiveClass: 'router-link-active',
     routes: acct.hooks.applyFilters('erp_acct_admin_routes', [
         {
             path: '/',

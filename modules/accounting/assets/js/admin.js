@@ -13569,6 +13569,7 @@ if (false) {(function () {
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'AccountingMenu',
   props: {},
@@ -31943,31 +31944,46 @@ var render = function() {
         _vm._l(_vm.menuItems, function(menu, index) {
           return [
             menu.hasOwnProperty("submenu")
-              ? _c("li", { key: index, class: _vm.dropdownNav }, [
-                  _c("a", { attrs: { href: _vm.current_url + menu.slug } }, [
-                    _vm._v(_vm._s(menu.title))
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "ul",
-                    { class: _vm.dropDownClass },
-                    _vm._l(menu.submenu, function(item, index) {
-                      return _c("li", { key: index }, [
-                        _c(
-                          "a",
-                          { attrs: { href: _vm.current_url + item.slug } },
-                          [_vm._v(_vm._s(item.title))]
+              ? _c(
+                  "li",
+                  { key: index, class: _vm.dropdownNav },
+                  [
+                    _c("router-link", { attrs: { to: "/" + menu.slug } }, [
+                      _vm._v(_vm._s(menu.title))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      { class: _vm.dropDownClass },
+                      _vm._l(menu.submenu, function(item, index) {
+                        return _c(
+                          "li",
+                          { key: index },
+                          [
+                            _c(
+                              "router-link",
+                              { attrs: { to: "/" + item.slug } },
+                              [_vm._v(_vm._s(item.title))]
+                            )
+                          ],
+                          1
                         )
-                      ])
-                    }),
-                    0
-                  )
-                ])
-              : _c("li", { key: index }, [
-                  _c("a", { attrs: { href: _vm.current_url + menu.slug } }, [
-                    _vm._v(_vm._s(menu.title))
-                  ])
-                ])
+                      }),
+                      0
+                    )
+                  ],
+                  1
+                )
+              : _c(
+                  "li",
+                  { key: index },
+                  [
+                    _c("router-link", { attrs: { to: "/" + menu.slug } }, [
+                      _vm._v(_vm._s(menu.title))
+                    ])
+                  ],
+                  1
+                )
           ]
         })
       ],
@@ -32306,8 +32322,10 @@ if (false) {
 
 
 __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
+/* global acct */
+
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
-  /* global acct */
+  linkActiveClass: 'router-link-active',
   routes: acct.hooks.applyFilters('erp_acct_admin_routes', [{
     path: '/',
     component: __WEBPACK_IMPORTED_MODULE_6_admin_components_dashboard_DashBoard_vue__["a" /* default */],
