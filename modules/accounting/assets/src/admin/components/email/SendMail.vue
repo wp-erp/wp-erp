@@ -15,7 +15,7 @@
             </div>
             <div class="wperp-form-group wperp-row">
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
-                    <label>{{ __('Subject', 'erp') }} <span class="wperp-required-sign">*</span></label>
+                    <label>{{ __('Subject', 'erp') }}</label>
                 </div>
                 <div class="wperp-col-sm-9 wperp-col-xs-12">
                     <input type="text" v-model="subject" class="wperp-form-field" :placeholder="__('Enter Subject Here', 'erp')" />
@@ -23,7 +23,7 @@
             </div>
             <div class="wperp-form-group wperp-row">
                 <div class="wperp-col-sm-3 wperp-col-xs-12">
-                    <label>{{ __('Message', 'erp') }} <span class="wperp-required-sign">*</span></label>
+                    <label>{{ __('Message', 'erp') }}</label>
                 </div>
                 <div class="wperp-col-sm-9 wperp-col-xs-12">
                     <textarea v-model="message" class="wperp-form-field" :placeholder="__('Enter Your Message Here', 'erp')" rows="4"></textarea>

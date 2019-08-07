@@ -13256,10 +13256,7 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "wperp-form-group wperp-row" }, [
           _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-            _c("label", [
-              _vm._v(_vm._s(_vm.__("Subject", "erp")) + " "),
-              _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-            ])
+            _c("label", [_vm._v(_vm._s(_vm.__("Subject", "erp")))])
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "wperp-col-sm-9 wperp-col-xs-12" }, [
@@ -13292,10 +13289,7 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "wperp-form-group wperp-row" }, [
           _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-            _c("label", [
-              _vm._v(_vm._s(_vm.__("Message", "erp")) + " "),
-              _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-            ])
+            _c("label", [_vm._v(_vm._s(_vm.__("Message", "erp")))])
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "wperp-col-sm-9 wperp-col-xs-12" }, [
