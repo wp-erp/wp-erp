@@ -122,6 +122,8 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
         inv_detail.tax,
         inv_detail.item_total,
 
+        SUM(inv_detail_tax.tax_rate) as tax_rate,
+
         product.name,
         product.product_type_id,
         product.category_id,
@@ -132,8 +134,9 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
 
         FROM {$wpdb->prefix}erp_acct_invoices as invoice
         LEFT JOIN {$wpdb->prefix}erp_acct_invoice_details as inv_detail ON invoice.voucher_no = inv_detail.trn_no
+        LEFT JOIN {$wpdb->prefix}erp_acct_invoice_details_tax as inv_detail_tax ON inv_detail.id = inv_detail_tax.invoice_details_id
         LEFT JOIN {$wpdb->prefix}erp_acct_products as product ON inv_detail.product_id = product.id
-        WHERE invoice.voucher_no = %d", $voucher_no );
+        WHERE invoice.voucher_no = %d GROUP BY inv_detail.id", $voucher_no );
 
     return $wpdb->get_results( $sql, ARRAY_A );
 }
@@ -268,7 +271,6 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         } else {
             // calculate tax for every related agency
             $tax_rate_agency = get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
-            error_log(print_r($tax_rate_agency, true));
         }
 
         foreach ( $tax_rate_agency as $rate_agency ) {

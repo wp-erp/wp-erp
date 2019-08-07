@@ -270,20 +270,20 @@ export default {
     methods: {
         async prepareDataLoad() {
             /**
-                 * ----------------------------------------------
-                 * check if editing
-                 * -----------------------------------------------
-                 */
+             * ----------------------------------------------
+             * check if editing
+             * -----------------------------------------------
+             */
             if (this.$route.params.id) {
                 this.editMode = true;
                 this.voucherNo = this.$route.params.id;
 
                 /**
-                     * Duplicates of
-                     *? this.getProducts()
-                     *? this.getTaxRates()
-                     * load products and taxes, before invoice load
-                     */
+                 * Duplicates of
+                 *? this.getProducts()
+                 *? this.getTaxRates()
+                 * load products and taxes, before invoice load
+                 */
                 const [request1, request2] = await Promise.all([
                     HTTP.get('/products'),
                     HTTP.get('/taxes/summary')
@@ -311,10 +311,10 @@ export default {
                 this.$store.dispatch('combo/setBtnID', 'update');
             } else {
                 /**
-                     * ----------------------------------------------
-                     * create a new invoice
-                     * -----------------------------------------------
-                     */
+                 * ----------------------------------------------
+                 * create a new invoice
+                 * -----------------------------------------------
+                 */
                 this.getProducts();
                 this.getTaxRates();
 
@@ -338,6 +338,7 @@ export default {
             this.finalTotalAmount             = invoice.debit;
             this.particulars                  = invoice.particulars;
             this.attachments                  = invoice.attachments;
+            this.discountType                 = invoice.discount_type;
 
             if (invoice.discount_type === 'discount-percent') {
                 this.discount = (parseFloat(invoice.discount) * 100) / parseFloat(invoice.amount);
