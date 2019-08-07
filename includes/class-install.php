@@ -1494,9 +1494,6 @@ Company'
             $old_codes = [];
 
             foreach ( $old_ledgers as $value ) {
-                if ( '120' == $value['code'] || '200' == $value['code'] ) {
-                    $value['unused'] = true;
-                }
                 $old_codes[] = $value['code'];
 
                 $wpdb->insert(

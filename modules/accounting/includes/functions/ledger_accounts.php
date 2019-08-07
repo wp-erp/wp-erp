@@ -363,3 +363,17 @@ function erp_acct_get_chart_id_by_slug( $key ) {
 
     return $id;
 }
+
+/**
+ * Get ledgers
+ *
+ * @param $chart_id
+ * @return array|object|null
+ */
+function erp_acct_get_ledgers() {
+    global $wpdb;
+
+    $ledgers = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE unused IS NULL", ARRAY_A );
+
+    return $ledgers;
+}
