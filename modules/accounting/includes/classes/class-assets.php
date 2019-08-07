@@ -26,6 +26,11 @@ class Assets {
             $screen = get_current_screen();
             if ( $screen->base == 'wp-erp_page_erp-settings' ) {
                 wp_enqueue_script( 'accounting-helper', ERP_ACCOUNTING_ASSETS . '/js/accounting-helper.js', array( 'jquery', 'erp-tiptip' ), false, true );
+
+                wp_localize_script( 'accounting-helper', 'erp_acct_helper', array(
+                    'fin_overlap_msg'    => __( 'Financial year values must not be overlapped!', 'erp' ),
+                    'fin_val_comp_msg'   => __( 'Second value must be greater than the first value!', 'erp' ),
+                ) );
                 return;
             } elseif ( $screen->base != 'wp-erp_page_erp-accounting' ) {
                 return;
@@ -85,6 +90,7 @@ class Assets {
 
         $fy_ranges = erp_acct_get_date_boundary();
         $ledgers   = erp_acct_get_ledgers_with_balances();
+        $trn_statuses = erp_acct_get_all_trn_statuses();
 
         wp_localize_script( 'accounting-bootstrap', 'erp_acct_var', array(
             'user_id'            => $u_id,
@@ -103,7 +109,10 @@ class Assets {
             'current_date'       => date( 'Y-m-d' ),
             'fy_lower_range'     => $fy_ranges['lower'],
             'fy_upper_range'     => $fy_ranges['upper'],
-            'ledgers'            => $ledgers
+            'ledgers'            => $ledgers,
+            'trn_statuses'       => $trn_statuses,
+            'link_copy_success'  => __( 'Link has been successfully copied.', 'erp' ),
+            'link_copy_error'    => __( 'Failed to copy the link.', 'erp' ),
         ) );
     }
 

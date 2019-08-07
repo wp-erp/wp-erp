@@ -24174,10 +24174,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       window.print();
     },
     handleSuccess: function handleSuccess(e) {
-      alert('Link has been copied.');
+      alert(erp_acct_var.link_copy_success);
     },
     handleError: function handleError(e) {
-      alert('Failed to copy link.');
+      alert(erp_acct_var.link_copy_error);
     }
   }
 });
