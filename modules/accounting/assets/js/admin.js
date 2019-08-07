@@ -16776,11 +16776,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                 this.editMode = true;
                 this.voucherNo = this.$route.params.id;
                 /**
-                     * Duplicates of
-                     *? this.getProducts()
-                     *? this.getTaxRates()
-                     * load products and taxes, before invoice load
-                     */
+                 * Duplicates of
+                 *? this.getProducts()
+                 *? this.getTaxRates()
+                 * load products and taxes, before invoice load
+                 */
 
                 _context.next = 5;
                 return Promise.all([__WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/products'), __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/taxes/summary')]);
@@ -16827,10 +16827,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
               case 26:
                 /**
-                     * ----------------------------------------------
-                     * create a new invoice
-                     * -----------------------------------------------
-                     */
+                 * ----------------------------------------------
+                 * create a new invoice
+                 * -----------------------------------------------
+                 */
                 this.getProducts();
                 this.getTaxRates();
                 this.basic_fields.trn_date = erp_acct_var.current_date;
@@ -16867,6 +16867,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.finalTotalAmount = invoice.debit;
       this.particulars = invoice.particulars;
       this.attachments = invoice.attachments;
+      this.discountType = invoice.discount_type;
 
       if (invoice.discount_type === 'discount-percent') {
         this.discount = parseFloat(invoice.discount) * 100 / parseFloat(invoice.amount);
@@ -17325,10 +17326,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         name: row.name
       };
       row.taxCatID = row.tax_cat_id;
-      row.unitPrice = parseFloat(row.cost_price);
+      row.unitPrice = parseFloat(row.sale_price);
       row.applyTax = true;
       row.taxAmount = row.tax;
-      row.amount = row.line_total;
+      row.amount = parseInt(row.qty) * parseFloat(row.sale_price);
     },
     respondAtChange: function respondAtChange() {
       this.calculateDiscount();

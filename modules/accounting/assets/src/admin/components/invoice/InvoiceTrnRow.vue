@@ -102,10 +102,10 @@ export default {
             // format invoice data which comes from database, to mactch with line items
             row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
             row.taxCatID  = row.tax_cat_id;
-            row.unitPrice = parseFloat(row.cost_price);
+            row.unitPrice = parseFloat(row.sale_price);
             row.applyTax  = true;
             row.taxAmount = row.tax;
-            row.amount    = row.line_total;
+            row.amount    = parseInt(row.qty) * parseFloat(row.sale_price);
         },
 
         respondAtChange() {
