@@ -64,7 +64,6 @@
                 columns: {
                     'code'       : {label: 'Code'},
                     'ledger_name': {label: 'Name'},
-                    'type'       : {label: 'Type'},
                     'balance'    : {label: 'Balance'},
                     'trn_count'  : {label: 'Count'},
                     'actions'    : {label: 'Actions'},

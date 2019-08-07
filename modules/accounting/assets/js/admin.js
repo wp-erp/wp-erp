@@ -17773,9 +17773,6 @@ if (false) {(function () {
         'ledger_name': {
           label: 'Name'
         },
-        'type': {
-          label: 'Type'
-        },
         'balance': {
           label: 'Balance'
         },
