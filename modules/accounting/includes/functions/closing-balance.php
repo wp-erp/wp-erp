@@ -36,12 +36,11 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
 
     global $wpdb;
 
-    /* ================================================================================*/
-    //  TEST ..... start
+    // remove next financial year data if exists
     $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_acct_opening_balances
     WHERE financial_year_id = %d", $next_f_year_id ) );
-    //  TEST ..... end
-    /* ================================================================================*/
+
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
     // ledgers
     $sql     = "SELECT id, chart_id, name, slug FROM {$wpdb->prefix}erp_acct_ledgers";
@@ -87,7 +86,7 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
         } // liability loop
 
         // equity
-        $owners_equity_id = 29;
+        $owners_equity_id = $ledger_map->get_ledger_id_by_slug( 'owner_s_equity' );
 
         foreach ( $equity as $eqt ) {
             if ( ! empty( $eqt['id'] ) && $owners_equity_id != $eqt['id'] ) {
@@ -324,19 +323,6 @@ function erp_acct_clsbl_vendor_ap_calc_with_opening_balance( $bs_start_date ) {
 
     // $merged = array_merge( $bill_data, $purchase_data, $opening_balance );
     return erp_acct_clsbl_get_formatted_people_balance( $opening_balance );
-
-    // should we go further calculation, check the diff
-    // if ( ! erp_acct_has_date_diff( $bs_start_date, $closest_fy_date['start_date'] ) ) {
-    //     return $result;
-    // } else {
-    //     $prev_date_of_bs_start = date( 'Y-m-d', strtotime( '-1 day', strtotime( $bs_start_date ) ) );
-    // }
-
-    // $query1 = $wpdb->get_results( $wpdb->prepare( $bill_sql, $closest_fy_date['start_date'], $prev_date_of_bs_start ), ARRAY_A );
-    // $query2 = $wpdb->get_results( $wpdb->prepare( $purchase_sql, $closest_fy_date['start_date'], $prev_date_of_bs_start ), ARRAY_A );
-    // $merged = array_merge( $result, $query1, $query2 );
-
-    // return erp_acct_clsbl_get_formatted_people_balance( $merged );
 }
 
 /**
