@@ -404,6 +404,8 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'type'            => ! empty( $item->type ) ? $item->type : 'pay_bill',
             'status'          => $item->status,
             'particulars'     => $item->particulars,
+            'trn_by'          => erp_acct_get_payment_method_by_id( $item->trn_by )->name,
+            'created_at'      => $item->created_at,
             'attachments'     => maybe_unserialize( $item->attachments )
         ];
 

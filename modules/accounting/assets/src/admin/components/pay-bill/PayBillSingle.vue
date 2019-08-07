@@ -55,16 +55,20 @@
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>{{ __('Pay Bill No', 'erp') }}</th>
+                                        <th>{{ __('Voucher No', 'erp') }}:</th>
                                         <td>#{{ payBill.voucher_no }}</td>
                                     </tr>
                                     <tr>
-                                        <th>{{ __('Pay Bill Date', 'erp') }}:</th>
+                                        <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ payBill.trn_date }}</td>
                                     </tr>
                                     <tr>
-                                        <th>{{ __('Deposit to', 'erp') }}</th>
-                                        <td>{{ __('Bank', 'erp') }}</td>
+                                        <th>{{ __('Created At', 'erp') }}:</th>
+                                        <td>{{ payBill.created_at }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Transaction From', 'erp') }}:</th>
+                                        <td>{{ payBill.trn_by }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -75,7 +79,7 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>{{ __('ID', 'erp') }}</th>
+                                <th>{{ __('Sl.', 'erp') }}</th>
                                 <th>{{ __('Bill No', 'erp') }}</th>
                                 <th>{{ __('Amount', 'erp') }}</th>
                             </tr>

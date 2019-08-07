@@ -1396,7 +1396,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_expense_checks` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `trn_no` int(11) DEFAULT NULL,
-                `check_no` int(11) DEFAULT NULL,
+                `check_no` varchar(255) DEFAULT NULL,
                 `voucher_type` varchar(255) DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,
                 `bank` varchar(255) DEFAULT NULL,

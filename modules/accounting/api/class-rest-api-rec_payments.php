@@ -384,6 +384,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'attachments'   => maybe_unserialize( $item->attachments ),
             'status'        => erp_acct_get_trn_status_by_id( $item->status ),
             'type'          => ! empty( $item->type ) ? $item->type : 'payment',
+            'created_at'    => $item->created_at,
         ];
 
         $data = array_merge( $data, $additional_fields );

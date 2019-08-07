@@ -791,6 +791,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
             'trn_by'       => $item->trn_by,
             'ledger_id'    => erp_acct_get_ledger_name_by_id( $item->ledger_id ),
             'voucher_type' => $item->voucher_type,
+            'created_at'   => $item->created_at,
         ];
 
         $data = array_merge( $data, $additional_fields );

@@ -353,7 +353,8 @@ function erp_acct_get_tax_pay_record( $voucher_no ) {
     tax.voucher_type,
     tax.trn_by,
     tax.agency_id,
-    tax.ledger_id
+    tax.ledger_id,
+    tax.created_at
 
     FROM {$wpdb->prefix}erp_acct_tax_pay AS tax
     WHERE tax.voucher_no = {$voucher_no} LIMIT 1";

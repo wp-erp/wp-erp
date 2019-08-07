@@ -63,6 +63,7 @@ function erp_acct_get_expense( $expense_no ) {
     expense.trn_date,
     expense.amount,
     expense.ref,
+    expense.check_no,
     expense.particulars,
     expense.status,
     expense.trn_by_ledger_id,
@@ -104,6 +105,7 @@ function erp_acct_get_check( $expense_no ) {
     expense.status,
     expense.trn_by_ledger_id,
     expense.trn_by,
+    cheque.check_no,
     expense.attachments,
     expense.created_at,
     expense.created_by,
@@ -112,7 +114,6 @@ function erp_acct_get_check( $expense_no ) {
 
     cheque.bank,
     cheque.name,
-    cheque.check_no,
     cheque.pay_to,
     cheque.amount,
 
