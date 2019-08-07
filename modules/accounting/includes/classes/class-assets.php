@@ -84,7 +84,7 @@ class Assets {
         $erp_acct_ths_separator = erp_get_option( 'erp_ac_th_separator' );
 
         $fy_ranges = erp_acct_get_date_boundary();
-        $ledgers   = erp_acct_get_ledgers();
+        $ledgers   = erp_acct_get_ledgers_with_balances();
 
         wp_localize_script( 'accounting-bootstrap', 'erp_acct_var', array(
             'user_id'            => $u_id,
