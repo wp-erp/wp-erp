@@ -53,66 +53,82 @@
 </template>
 
 <script>
-import HTTP from 'admin/http';
-import Modal from 'admin/components/modal/Modal.vue';
-import InputTag from 'vue-input-tag';
+    import HTTP from 'admin/http'
+    import Dropdown from 'admin/components/base/Dropdown.vue'
+    import Modal from 'admin/components/modal/Modal.vue'
+    import InputTag from 'vue-input-tag'
 
-export default {
-    name: 'SendMail',
+    export default {
+        name: "SendMail",
 
-    components: {
-        Modal,
-        InputTag
-    },
-
-    props: {
-        data: Object,
-        type: String
-    },
-
-    data() {
-        return {
-            options: [],
-            emails: [],
-            subject: '',
-            message: '',
-            attachment: ''
-        };
-    },
-
-    methods: {
-        closeModal() {
-            this.$root.$emit('close');
+        components: {
+            Dropdown,
+            Modal,
+            InputTag
         },
 
-        addEmail(newEmail) {
-            const email = {
-                name: newEmail,
-                code: newEmail.substring(0, 2) + Math.floor((Math.random() * 10000000))
-            };
-            this.emails.push(email);
+        props: {
+            data: Object,
+            type: String,
+            userid: [Number,String]
         },
 
-        sendAsMail() {
-            HTTP.post(`/transactions/send-pdf/${this.$route.params.id}`, {
-                trn_data: this.data,
-                type: this.type,
-                receiver: this.emails,
-                subject: this.subject,
-                message: this.message,
-                attachment: this.attachment
-            }).then(() => {
-                this.showAlert('success', 'Mail Sent!');
-                this.$store.dispatch('spinner/setSpinner', false);
-            }).catch(error => {
-                this.$store.dispatch('spinner/setSpinner', false);
-                throw error;
+        data() {
+            return {
+                options: [],
+                emails: [],
+                subject: '',
+                message: '',
+                attachment: ''
+            }
+        },
+
+        created() {
+            HTTP.get(`people/${this.userid}`).then(response => {
+                this.emails.push(response.data.email);
             });
+        },
+
+        methods: {
+            closeModal() {
+                this.$root.$emit('close');
+            },
+
+            addEmail(newEmail) {
+                const email = {
+                    name: newEmail,
+                    code: newEmail.substring(0, 2) + Math.floor((Math.random() * 10000000))
+                };
+                this.emails.push(email)
+            },
+
+            sendAsMail() {
+                HTTP.post(`/transactions/send-pdf/${this.$route.params.id}`, {
+                    trn_data: this.data,
+                    type: this.type,
+                    receiver: this.emails,
+                    subject: this.subject,
+                    message: this.message,
+                    attachment: this.attachment
+                }).then(() => {
+                    this.showAlert( 'success', 'Mail Sent!' );
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                });
+            }
         }
     }
-};
 </script>
 
-<style scoped>
-
+<style>
+    .vue-input-tag-wrapper .input-tag {
+        border-radius: 2px;
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 400;
+        margin-bottom: 4px;
+        margin-right: 4px;
+        text-align: left;
+    }
 </style>

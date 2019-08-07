@@ -687,14 +687,14 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
 }
 
 /**
- * Generate and send pdf
+ * Generate pdf
  *
  * @param $request
  * @param string $output_method
  *
  * @return boolean
  */
-function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' ) {
+function erp_acct_generate_pdf( $request, $output_method = 'D' ) {
     $company     = new \WeDevs\ERP\Company();
     $theme_color = '#9e9e9e';
     $transaction = (object) $request['trn_data'];
@@ -893,6 +893,17 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->total );
     }
 
+    if ( 'transfer_voucher' == $type ) {
+        $type = __( 'Transfer Voucher', 'erp' );
+        // Set Column Headers
+        $trn_pdf->set_table_headers( [ __( 'VOUCHER NO', 'erp' ), __( 'ACCOUNT FROM', 'erp' ), __( 'AMOUNT', 'erp' ), __( 'ACCOUNT TO', 'erp' ) ] );
+
+        $trn_pdf->add_item( [ $transaction->voucher_no, $transaction->ac_from, $transaction->amount, $transaction->ac_to ] );
+
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->balance );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->balance );
+    }
+
     if ( 'people_trn' == $type ) {
         $type = __( 'People Transaction', 'erp' );
         // Set Column Headers
@@ -907,10 +918,39 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
     $file_name = sprintf( '%s_%s.pdf', $trn_id, date( 'd-m-Y' ) );
     $trn_pdf->render( $file_name, 'F' );
-    $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
     $file_name = $attach_pdf ? $file_name : '';
 
-    $result = $trn_email->trigger( $receiver, $subject, $body, $file_name );
+    return $file_name;
+}
+
+/**
+ * Generate and send pdf
+ *
+ * @param $request
+ * @param string $output_method
+ *
+ * @return boolean
+ */
+function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' ) {
+    $transaction = (object) $request['trn_data'];
+    $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
+    $user_id = null;
+    $trn_id  = null;
+    $result = [];
+
+    $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
+    $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : [];
+    $subject    = isset( $request['subject'] ) ? $request['subject'] : '';
+    $body       = isset( $request['message'] ) ? $request['message'] : '';
+    $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
+
+    $file_name  = erp_acct_generate_pdf( $request, $output_method );
+
+    if ( !empty( $file_name ) ) {
+        $result = $trn_email->trigger( $receiver, $subject, $body, $file_name );
+    } else {
+        wp_die( __( 'PDF not generated!', 'erp' ) );
+    }
 
     unlink( $file_name );
 
