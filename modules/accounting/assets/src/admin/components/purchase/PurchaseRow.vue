@@ -63,7 +63,12 @@ export default {
 
         setProductInfo() {
             this.line.qty = 1;
-            this.line.unitPrice = this.line.selectedProduct.cost_price;
+
+            if (this.$route.params.id) {
+                this.line.unitPrice = this.line.selectedProduct.cost_price;
+            } else {
+                this.line.unitPrice = this.line.selectedProduct.unitPrice;
+            }
 
             this.calculateAmount();
         },
