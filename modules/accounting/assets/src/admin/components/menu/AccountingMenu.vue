@@ -16,15 +16,16 @@
         <ul :class="primaryNav">
             <template v-for="(menu, index) in menuItems">
                 <li :key="index" v-if="menu.hasOwnProperty('submenu')" :class="dropdownNav">
-                    <a :href="current_url + menu.slug">{{menu.title}}</a>
+                    <router-link :to="'/' + menu.slug">{{ menu.title }}</router-link>
+
                     <ul :class="dropDownClass">
                         <li :key="index" v-for="(item, index) in menu.submenu">
-                            <a :href="current_url + item.slug">{{item.title}}</a>
+                            <router-link :to="'/' + item.slug">{{ item.title }}</router-link>
                         </li>
                     </ul>
                 </li>
                 <li :key="index" v-else>
-                    <a :href="current_url + menu.slug">{{menu.title}}</a>
+                    <router-link :to="'/' + menu.slug">{{ menu.title }}</router-link>
                 </li>
             </template>
         </ul>

@@ -62,4 +62,8 @@ export default {
     .wperp-table th {
         font-weight: 300;
     }
+
+    .router-link-active {
+        color: #1a9ed4 !important;
+    }
 </style>
