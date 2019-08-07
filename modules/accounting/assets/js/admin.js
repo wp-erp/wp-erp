@@ -362,11 +362,11 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SendMail_vue__ = __webpack_require__(38);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0a01d4c8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SendMail_vue__ = __webpack_require__(629);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0a01d4c8_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SendMail_vue__ = __webpack_require__(77);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(628)
+  __webpack_require__(73)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12984,7 +12984,12 @@ if (false) {
 }
 
 /***/ }),
-/* 73 */,
+/* 73 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
 /* 74 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -13118,7 +13123,222 @@ if (false) {
 }
 
 /***/ }),
-/* 77 */,
+/* 77 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "modal",
+    {
+      attrs: { title: "Send Mail", footer: true, hasForm: true, header: true },
+      on: { close: _vm.closeModal }
+    },
+    [
+      _c("template", { slot: "body" }, [
+        _c(
+          "div",
+          { staticClass: "wperp-form-group wperp-row" },
+          [
+            _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
+              _c("label", [
+                _vm._v(_vm._s(_vm.__("To", "erp")) + " "),
+                _c("span", { staticClass: "wperp-required-sign" }, [
+                  _vm._v("*")
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("input-tag", {
+              attrs: {
+                placeholder: _vm.__("Add Emails", "erp"),
+                validate: "email"
+              },
+              model: {
+                value: _vm.emails,
+                callback: function($$v) {
+                  _vm.emails = $$v
+                },
+                expression: "emails"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "wperp-form-group wperp-row" }, [
+          _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
+            _c("label", [_vm._v(_vm._s(_vm.__("Subject", "erp")))])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "wperp-col-sm-9 wperp-col-xs-12" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.subject,
+                  expression: "subject"
+                }
+              ],
+              staticClass: "wperp-form-field",
+              attrs: {
+                type: "text",
+                placeholder: _vm.__("Enter Subject Here", "erp")
+              },
+              domProps: { value: _vm.subject },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.subject = $event.target.value
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "wperp-form-group wperp-row" }, [
+          _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
+            _c("label", [_vm._v(_vm._s(_vm.__("Message", "erp")))])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "wperp-col-sm-9 wperp-col-xs-12" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.message,
+                  expression: "message"
+                }
+              ],
+              staticClass: "wperp-form-field",
+              attrs: {
+                placeholder: _vm.__("Enter Your Message Here", "erp"),
+                rows: "4"
+              },
+              domProps: { value: _vm.message },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.message = $event.target.value
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "wperp-row" }, [
+          _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
+            _c("label", [
+              _vm._v(_vm._s(_vm.__("Attachment", "erp")) + " "),
+              _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "wperp-col-sm-9 wperp-col-xs-12" }, [
+            _c("div", { staticClass: "form-check" }, [
+              _c("label", { staticClass: "form-check-label mb-0" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.attachment,
+                      expression: "attachment"
+                    }
+                  ],
+                  staticClass: "form-check-input",
+                  attrs: { type: "checkbox" },
+                  domProps: {
+                    checked: Array.isArray(_vm.attachment)
+                      ? _vm._i(_vm.attachment, null) > -1
+                      : _vm.attachment
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.attachment,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 && (_vm.attachment = $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            (_vm.attachment = $$a
+                              .slice(0, $$i)
+                              .concat($$a.slice($$i + 1)))
+                        }
+                      } else {
+                        _vm.attachment = $$c
+                      }
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("span", { staticClass: "form-check-sign" }),
+                _vm._v(" "),
+                _c("span", { staticClass: "field-label" }, [
+                  _vm._v(_vm._s(_vm.__("Attach as PDF", "erp")))
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("template", { slot: "footer" }, [
+        _c("div", { staticClass: "buttons-wrapper text-right" }, [
+          _c(
+            "button",
+            {
+              staticClass: "wperp-btn btn--default",
+              on: { click: _vm.closeModal }
+            },
+            [_vm._v(_vm._s(_vm.__("Cancel", "erp")))]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { type: "submit" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.sendAsMail($event)
+                }
+              }
+            },
+            [_vm._v(_vm._s(_vm.__("Send", "erp")))]
+          )
+        ])
+      ])
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0a01d4c8", esExports)
+  }
+}
+
+/***/ }),
 /* 78 */
 /***/ (function(module, exports) {
 
@@ -17896,6 +18116,19 @@ if (false) {(function () {
         });
       });
     },
+    isDuplicateLedger: function isDuplicateLedger(requestData) {
+      var current_ledgers = erp_acct_var.ledgers;
+      var duplicate = false;
+
+      for (var idx = 0; idx < current_ledgers.length; idx++) {
+        if (requestData.code == current_ledgers[idx].code || requestData.name == current_ledgers[idx].name) {
+          duplicate = true;
+          break;
+        }
+      }
+
+      return duplicate;
+    },
     saveAccount: function saveAccount() {
       this.$store.dispatch('spinner/setSpinner', true);
       this.error = false;
@@ -17906,6 +18139,12 @@ if (false) {(function () {
         name: this.ledgFields.name,
         code: this.ledgFields.code
       };
+
+      if (this.isDuplicateLedger(requestData)) {
+        this.showAlert('error', 'Duplicate Category!');
+        this.$store.dispatch('spinner/setSpinner', false);
+        return;
+      }
 
       if (this.editMode) {
         this.updateteLedger(requestData);
@@ -63844,358 +64083,6 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
-
-/***/ }),
-/* 498 */,
-/* 499 */,
-/* 500 */,
-/* 501 */,
-/* 502 */,
-/* 503 */,
-/* 504 */,
-/* 505 */,
-/* 506 */,
-/* 507 */,
-/* 508 */,
-/* 509 */,
-/* 510 */,
-/* 511 */,
-/* 512 */,
-/* 513 */,
-/* 514 */,
-/* 515 */,
-/* 516 */,
-/* 517 */,
-/* 518 */,
-/* 519 */,
-/* 520 */,
-/* 521 */,
-/* 522 */,
-/* 523 */,
-/* 524 */,
-/* 525 */,
-/* 526 */,
-/* 527 */,
-/* 528 */,
-/* 529 */,
-/* 530 */,
-/* 531 */,
-/* 532 */,
-/* 533 */,
-/* 534 */,
-/* 535 */,
-/* 536 */,
-/* 537 */,
-/* 538 */,
-/* 539 */,
-/* 540 */,
-/* 541 */,
-/* 542 */,
-/* 543 */,
-/* 544 */,
-/* 545 */,
-/* 546 */,
-/* 547 */,
-/* 548 */,
-/* 549 */,
-/* 550 */,
-/* 551 */,
-/* 552 */,
-/* 553 */,
-/* 554 */,
-/* 555 */,
-/* 556 */,
-/* 557 */,
-/* 558 */,
-/* 559 */,
-/* 560 */,
-/* 561 */,
-/* 562 */,
-/* 563 */,
-/* 564 */,
-/* 565 */,
-/* 566 */,
-/* 567 */,
-/* 568 */,
-/* 569 */,
-/* 570 */,
-/* 571 */,
-/* 572 */,
-/* 573 */,
-/* 574 */,
-/* 575 */,
-/* 576 */,
-/* 577 */,
-/* 578 */,
-/* 579 */,
-/* 580 */,
-/* 581 */,
-/* 582 */,
-/* 583 */,
-/* 584 */,
-/* 585 */,
-/* 586 */,
-/* 587 */,
-/* 588 */,
-/* 589 */,
-/* 590 */,
-/* 591 */,
-/* 592 */,
-/* 593 */,
-/* 594 */,
-/* 595 */,
-/* 596 */,
-/* 597 */,
-/* 598 */,
-/* 599 */,
-/* 600 */,
-/* 601 */,
-/* 602 */,
-/* 603 */,
-/* 604 */,
-/* 605 */,
-/* 606 */,
-/* 607 */,
-/* 608 */,
-/* 609 */,
-/* 610 */,
-/* 611 */,
-/* 612 */,
-/* 613 */,
-/* 614 */,
-/* 615 */,
-/* 616 */,
-/* 617 */,
-/* 618 */,
-/* 619 */,
-/* 620 */,
-/* 621 */,
-/* 622 */,
-/* 623 */,
-/* 624 */,
-/* 625 */,
-/* 626 */,
-/* 627 */,
-/* 628 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 629 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "modal",
-    {
-      attrs: { title: "Send Mail", footer: true, hasForm: true, header: true },
-      on: { close: _vm.closeModal }
-    },
-    [
-      _c("template", { slot: "body" }, [
-        _c(
-          "div",
-          { staticClass: "wperp-form-group wperp-row" },
-          [
-            _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-              _c("label", [
-                _vm._v(_vm._s(_vm.__("To", "erp")) + " "),
-                _c("span", { staticClass: "wperp-required-sign" }, [
-                  _vm._v("*")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("input-tag", {
-              attrs: {
-                placeholder: _vm.__("Add Emails", "erp"),
-                validate: "email"
-              },
-              model: {
-                value: _vm.emails,
-                callback: function($$v) {
-                  _vm.emails = $$v
-                },
-                expression: "emails"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "wperp-form-group wperp-row" }, [
-          _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-            _c("label", [_vm._v(_vm._s(_vm.__("Subject", "erp")))])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "wperp-col-sm-9 wperp-col-xs-12" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.subject,
-                  expression: "subject"
-                }
-              ],
-              staticClass: "wperp-form-field",
-              attrs: {
-                type: "text",
-                placeholder: _vm.__("Enter Subject Here", "erp")
-              },
-              domProps: { value: _vm.subject },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.subject = $event.target.value
-                }
-              }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "wperp-form-group wperp-row" }, [
-          _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-            _c("label", [_vm._v(_vm._s(_vm.__("Message", "erp")))])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "wperp-col-sm-9 wperp-col-xs-12" }, [
-            _c("textarea", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.message,
-                  expression: "message"
-                }
-              ],
-              staticClass: "wperp-form-field",
-              attrs: {
-                placeholder: _vm.__("Enter Your Message Here", "erp"),
-                rows: "4"
-              },
-              domProps: { value: _vm.message },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.message = $event.target.value
-                }
-              }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "wperp-row" }, [
-          _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-            _c("label", [
-              _vm._v(_vm._s(_vm.__("Attachment", "erp")) + " "),
-              _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "wperp-col-sm-9 wperp-col-xs-12" }, [
-            _c("div", { staticClass: "form-check" }, [
-              _c("label", { staticClass: "form-check-label mb-0" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.attachment,
-                      expression: "attachment"
-                    }
-                  ],
-                  staticClass: "form-check-input",
-                  attrs: { type: "checkbox" },
-                  domProps: {
-                    checked: Array.isArray(_vm.attachment)
-                      ? _vm._i(_vm.attachment, null) > -1
-                      : _vm.attachment
-                  },
-                  on: {
-                    change: function($event) {
-                      var $$a = _vm.attachment,
-                        $$el = $event.target,
-                        $$c = $$el.checked ? true : false
-                      if (Array.isArray($$a)) {
-                        var $$v = null,
-                          $$i = _vm._i($$a, $$v)
-                        if ($$el.checked) {
-                          $$i < 0 && (_vm.attachment = $$a.concat([$$v]))
-                        } else {
-                          $$i > -1 &&
-                            (_vm.attachment = $$a
-                              .slice(0, $$i)
-                              .concat($$a.slice($$i + 1)))
-                        }
-                      } else {
-                        _vm.attachment = $$c
-                      }
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "form-check-sign" }),
-                _vm._v(" "),
-                _c("span", { staticClass: "field-label" }, [
-                  _vm._v(_vm._s(_vm.__("Attach as PDF", "erp")))
-                ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("template", { slot: "footer" }, [
-        _c("div", { staticClass: "buttons-wrapper text-right" }, [
-          _c(
-            "button",
-            {
-              staticClass: "wperp-btn btn--default",
-              on: { click: _vm.closeModal }
-            },
-            [_vm._v(_vm._s(_vm.__("Cancel", "erp")))]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "wperp-btn btn--primary",
-              attrs: { type: "submit" },
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.sendAsMail($event)
-                }
-              }
-            },
-            [_vm._v(_vm._s(_vm.__("Send", "erp")))]
-          )
-        ])
-      ])
-    ],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0a01d4c8", esExports)
-  }
-}
 
 /***/ })
 ],[205]);
