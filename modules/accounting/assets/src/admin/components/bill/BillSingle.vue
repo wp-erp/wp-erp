@@ -128,72 +128,72 @@
 </template>
 
 <script>
-    import HTTP from 'admin/http'
-    import SendMail from 'admin/components/email/SendMail.vue'
-    import Dropdown from 'admin/components/base/Dropdown.vue'
+import HTTP from 'admin/http';
+import SendMail from 'admin/components/email/SendMail.vue';
+import Dropdown from 'admin/components/base/Dropdown.vue';
 
-    export default {
-        name: 'BillSingle',
+export default {
+    name: 'BillSingle',
 
-        components: {
-            SendMail,
-            Dropdown
+    components: {
+        SendMail,
+        Dropdown
+    },
+
+    data() {
+        return {
+            company    : null,
+            bill       : {},
+            isWorking  : false,
+            acct_var   : erp_acct_var, /* global erp_acct_var */
+            print_data : null,
+            type       : 'bill',
+            showModal  : false,
+            people_id  : null
+        };
+    },
+
+    created() {
+        this.getCompanyInfo();
+        this.getBill();
+
+        this.$root.$on('close', () => {
+            this.showModal = false;
+        });
+    },
+
+    methods: {
+        getCompanyInfo() {
+            HTTP.get(`/company`).then(response => {
+                this.company = response.data;
+            }).then(e => {}).then(() => {
+                this.isWorking = false;
+            });
         },
 
-        data() {
-            return {
-                company    : null,
-                bill       : {},
-                isWorking  : false,
-                acct_var   : erp_acct_var,
-                print_data : null,
-                type       : 'bill',
-                showModal  : false,
-                people_id  : null
-            }
+        getBill() {
+            this.isWorking = true;
+            this.$store.dispatch('spinner/setSpinner', true);
+            HTTP.get(`/bills/${this.$route.params.id}`).then(response => {
+                this.bill = response.data;
+                this.people_id = this.bill.vendor_id;
+                this.$store.dispatch('spinner/setSpinner', false);
+            }).catch(error => {
+                this.$store.dispatch('spinner/setSpinner', false);
+                throw error;
+            }).then(e => {}).then(() => {
+                this.print_data = this.bill;
+                this.isWorking = false;
+            });
         },
 
-        created() {
-            this.getCompanyInfo();
-            this.getBill();
-
-            this.$root.$on( 'close', () => {
-                this.showModal = false;
-            })
-        },
-
-        methods: {
-            getCompanyInfo() {
-                HTTP.get(`/company`).then(response => {
-                    this.company = response.data;
-                }).then( e => {} ).then(() => {
-                    this.isWorking = false;
-                });
-            },
-
-            getBill() {
-                this.isWorking = true;
-                this.$store.dispatch( 'spinner/setSpinner', true );
-                HTTP.get(`/bills/${this.$route.params.id}`).then(response => {
-                    this.bill = response.data;
-                    this.people_id = this.bill.vendor_id;
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).catch( error => {
-                    this.$store.dispatch( 'spinner/setSpinner', false );
-                }).then( e => {} ).then(() => {
-                    this.print_data = this.bill;
-                    this.isWorking = false;
-                });
-            },
-
-            printPopup() {
-                window.print();
-            },
-        },
-
+        printPopup() {
+            window.print();
+        }
     }
-</script>
 
+};
+</script>
 
 <style lang="less">
     .bill-single {
@@ -217,4 +217,3 @@
         }
     }
 </style>
-
