@@ -260,6 +260,19 @@ export default {
             });
         },
 
+        isDuplicateLedger(requestData) {
+            let current_ledgers = erp_acct_var.ledgers;
+            let duplicate = false;
+
+            for ( let idx = 0; idx < current_ledgers.length; idx++ ) {
+                if (requestData.code == current_ledgers[idx].code || requestData.name == current_ledgers[idx].name ) {
+                    duplicate = true;
+                    break;
+                }
+            }
+            return duplicate;
+        },
+
         saveAccount() {
             this.$store.dispatch('spinner/setSpinner', true);
 
@@ -272,6 +285,12 @@ export default {
                 name: this.ledgFields.name,
                 code: this.ledgFields.code
             };
+
+            if ( this.isDuplicateLedger(requestData) ) {
+                this.showAlert('error', 'Duplicate Category!');
+                this.$store.dispatch('spinner/setSpinner', false);
+                return;
+            }
 
             if (this.editMode) {
                 this.updateteLedger(requestData);

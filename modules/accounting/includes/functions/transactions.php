@@ -1076,7 +1076,7 @@ function erp_acct_get_transaction( $transaction_id ) {
  * @param int $transaction
  * @param string $transaction_type
  * @param string $hash_to_verify
- *  * @param string $algo
+ * @param string $algo
  *
  * @return bool
  */
@@ -1103,7 +1103,6 @@ function erp_acct_verify_invoice_link_hash( $transaction_id, $transaction_type, 
  * @param string $algo
  *
  * @return string
- * @since 1.1.2
  */
 function erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $algo = 'sha256' ) {
     $hash_string = '';
