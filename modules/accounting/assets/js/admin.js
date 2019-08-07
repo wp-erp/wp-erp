@@ -17760,6 +17760,42 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -17789,14 +17825,25 @@ if (false) {(function () {
 
       }],
       chartAccounts: [],
-      ledgers: []
+      ledgers: [],
+      temp_ledgers: erp_acct_var.ledgers,
+      search: ''
     };
+  },
+  computed: {
+    filteredLedgers: function filteredLedgers() {
+      var self = this;
+      return this.temp_ledgers.filter(function (ledger) {
+        return ledger.name.toLowerCase().indexOf(self.search.toLowerCase()) >= 0;
+      });
+    }
   },
   components: {
     ListTable: __WEBPACK_IMPORTED_MODULE_2_admin_components_list_table_ListTable_vue__["a" /* default */]
   },
   created: function created() {
     this.fetchChartAccounts();
+    this.fetchLedgers();
   },
   methods: {
     groupBy: function groupBy(arr, fn) {
@@ -17816,8 +17863,6 @@ if (false) {(function () {
       __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers/accounts').then(function (response) {
         _this.chartAccounts = response.data;
 
-        _this.fetchLedgers();
-
         _this.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (error) {
         _this.$store.dispatch('spinner/setSpinner', false);
@@ -17826,12 +17871,10 @@ if (false) {(function () {
     fetchLedgers: function fetchLedgers() {
       var _this2 = this;
 
-      __WEBPACK_IMPORTED_MODULE_1_admin_http__["a" /* default */].get('/ledgers').then(function (response) {
-        response.data.forEach(function (ledger) {
-          ledger.balance = _this2.transformBalance(ledger.balance);
-        });
-        _this2.ledgers = _this2.groupBy(response.data, 'chart_id');
+      this.temp_ledgers.forEach(function (ledger) {
+        ledger.balance = _this2.transformBalance(ledger.balance);
       });
+      this.ledgers = this.groupBy(this.temp_ledgers, 'chart_id');
     },
     transformBalance: function transformBalance(val) {
       if (null === val && __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default()(val) === 'object') {
@@ -44921,7 +44964,7 @@ var render = function() {
   return _c("div", { staticClass: "wperp-container chart-accounts" }, [
     _c("div", { staticClass: "content-header-section separator" }, [
       _c("div", { staticClass: "wperp-row wperp-between-xs" }, [
-        _c("div", { staticClass: "wperp-col" }, [
+        _c("div", { staticClass: "wperp-col-6" }, [
           _c(
             "h2",
             { staticClass: "content-header__title" },
@@ -44948,19 +44991,40 @@ var render = function() {
             ],
             1
           )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "wperp-col-6" }, [
+          _c("h4", [_vm._v(_vm._s(_vm.__("Search Ledger", "erp")))]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.search,
+                expression: "search"
+              }
+            ],
+            staticClass: "wperp-form-field",
+            attrs: { type: "text" },
+            domProps: { value: _vm.search },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.search = $event.target.value
+              }
+            }
+          })
         ])
       ])
     ]),
     _vm._v(" "),
-    _c(
-      "ul",
-      _vm._l(_vm.chartAccounts, function(chart, index) {
-        return _c(
-          "li",
-          { key: index },
+    _vm.search
+      ? _c(
+          "ul",
           [
-            _c("h3", [_vm._v(_vm._s(chart.label))]),
-            _vm._v(" "),
             _c("list-table", {
               attrs: {
                 tableClass:
@@ -44969,7 +45033,7 @@ var render = function() {
                 columns: _vm.columns,
                 actions: _vm.actions,
                 showCb: false,
-                rows: _vm.ledgers[parseInt(chart.id)]
+                rows: _vm.filteredLedgers
               },
               on: { "action:click": _vm.onActionClick },
               scopedSlots: _vm._u(
@@ -44993,11 +45057,7 @@ var render = function() {
                               }
                             }
                           },
-                          [
-                            _vm._v(
-                              _vm._s(data.row.name) + "\n                    "
-                            )
-                          ]
+                          [_vm._v(_vm._s(data.row.name) + "\n                ")]
                         )
                       ]
                     }
@@ -45023,8 +45083,7 @@ var render = function() {
                           },
                           [
                             _vm._v(
-                              _vm._s(data.row.trn_count) +
-                                "\n                    "
+                              _vm._s(data.row.trn_count) + "\n                "
                             )
                           ]
                         )
@@ -45051,9 +45110,109 @@ var render = function() {
           ],
           1
         )
-      }),
-      0
-    )
+      : _c(
+          "ul",
+          _vm._l(_vm.chartAccounts, function(chart, index) {
+            return _c(
+              "li",
+              { key: index },
+              [
+                _c("h3", [_vm._v(_vm._s(chart.label))]),
+                _vm._v(" "),
+                _c("list-table", {
+                  attrs: {
+                    tableClass:
+                      "wperp-table table-striped table-dark widefat table2 chart-list",
+                    "action-column": "actions",
+                    columns: _vm.columns,
+                    actions: _vm.actions,
+                    showCb: false,
+                    rows: _vm.ledgers[parseInt(chart.id)]
+                  },
+                  on: { "action:click": _vm.onActionClick },
+                  scopedSlots: _vm._u(
+                    [
+                      {
+                        key: "ledger_name",
+                        fn: function(data) {
+                          return [
+                            _c(
+                              "router-link",
+                              {
+                                attrs: {
+                                  to: {
+                                    name: "LedgerSingle",
+                                    params: {
+                                      id: data.row.id,
+                                      ledgerID: data.row.id,
+                                      ledgerName: data.row.name,
+                                      ledgerCode: data.row.code
+                                    }
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  _vm._s(data.row.name) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "trn_count",
+                        fn: function(data) {
+                          return [
+                            _c(
+                              "router-link",
+                              {
+                                attrs: {
+                                  to: {
+                                    name: "LedgerReport",
+                                    params: {
+                                      id: data.row.id,
+                                      ledgerID: data.row.id,
+                                      ledgerName: data.row.name,
+                                      ledgerCode: data.row.code
+                                    }
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  _vm._s(data.row.trn_count) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "row-actions",
+                        fn: function(data) {
+                          return data.row.system != null
+                            ? [
+                                _c("strong", { staticClass: "sys-acc" }, [
+                                  _vm._v(_vm._s(_vm.__("System", "erp")))
+                                ])
+                              ]
+                            : undefined
+                        }
+                      }
+                    ],
+                    null,
+                    true
+                  )
+                })
+              ],
+              1
+            )
+          }),
+          0
+        )
   ])
 }
 var staticRenderFns = []
