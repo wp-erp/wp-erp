@@ -2,7 +2,7 @@
     <div class="wperp-container chart-accounts">
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
-                <div class="wperp-col">
+                <div class="wperp-col-6">
                     <h2 class="content-header__title">
                         {{ __('Chart of Accounts', 'erp') }}
                         <router-link class="wperp-btn btn--primary" :to="{ name: 'AddChartAccounts'}">
@@ -10,10 +10,46 @@
                         </router-link>
                     </h2>
                 </div>
+                <div class="wperp-col-6">
+                    <h4>{{ __( 'Search Ledger', 'erp' ) }}</h4>
+                    <input type="text" class="wperp-form-field" v-model="search"/>
+                </div>
             </div>
         </div>
 
-        <ul>
+        <ul v-if="search">
+            <list-table
+                tableClass="wperp-table table-striped table-dark widefat table2 chart-list"
+                action-column="actions"
+                :columns="columns"
+                :actions="actions"
+                :showCb="false"
+                :rows="filteredLedgers"
+                @action:click="onActionClick">
+                <template slot="ledger_name" slot-scope="data">
+                    <router-link :to="{ name: 'LedgerSingle', params: {
+                            id        : data.row.id,
+                            ledgerID  : data.row.id,
+                            ledgerName: data.row.name,
+                            ledgerCode: data.row.code
+                            }}">{{ data.row.name }}
+                    </router-link>
+                </template>
+                <template slot="trn_count" slot-scope="data">
+                    <router-link :to="{ name: 'LedgerReport', params: {
+                            id        : data.row.id,
+                            ledgerID  : data.row.id,
+                            ledgerName: data.row.name,
+                            ledgerCode: data.row.code
+                            }}">{{ data.row.trn_count }}
+                    </router-link>
+                </template>
+                <template slot="row-actions" slot-scope="data" v-if="data.row.system != null">
+                    <strong class="sys-acc">{{ __('System', 'erp') }}</strong>
+                </template>
+            </list-table>
+        </ul>
+        <ul v-else>
             <li :key="index" v-for="(chart, index) in chartAccounts">
                 <h3>{{ chart.label }}</h3>
 
@@ -75,6 +111,17 @@
 
                 chartAccounts: [],
                 ledgers: [],
+                temp_ledgers: erp_acct_var.ledgers,
+                search : ''
+            }
+        },
+
+        computed: {
+            filteredLedgers() {
+                var self = this;
+                return this.temp_ledgers.filter(function (ledger) {
+                    return ledger.name.toLowerCase().indexOf(self.search.toLowerCase()) >= 0;
+                });
             }
         },
 
@@ -84,6 +131,7 @@
 
         created() {
             this.fetchChartAccounts();
+            this.fetchLedgers();
         },
 
         methods: {
@@ -100,7 +148,6 @@
                 HTTP.get('/ledgers/accounts').then( response => {
                     this.chartAccounts = response.data;
 
-                    this.fetchLedgers();
                     this.$store.dispatch( 'spinner/setSpinner', false );
                 }).catch( error => {
                     this.$store.dispatch( 'spinner/setSpinner', false );
@@ -108,12 +155,10 @@
             },
 
             fetchLedgers() {
-                HTTP.get('/ledgers').then( response => {
-                    response.data.forEach( (ledger) => {
-                        ledger.balance = this.transformBalance( ledger.balance );
-                    });
-                    this.ledgers = this.groupBy(response.data, 'chart_id');
+                this.temp_ledgers.forEach( (ledger) => {
+                    ledger.balance = this.transformBalance( ledger.balance );
                 });
+                this.ledgers = this.groupBy(this.temp_ledgers, 'chart_id');
             },
 
             transformBalance( val ) {
