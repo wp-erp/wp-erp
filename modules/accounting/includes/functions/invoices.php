@@ -262,6 +262,8 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
             'created_by' => $invoice_data['created_by']
         ) );
 
+        $details_id = $wpdb->insert_id;
+
         if ( $estimate_type == $invoice_data['estimate'] || $draft == $invoice_data['status'] ) {
             continue;
         }
@@ -285,7 +287,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
 
             /*==== insert into invoice details tax ====*/
             $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
-                'invoice_details_id' => $wpdb->insert_id,
+                'invoice_details_id' => $details_id,
                 'agency_id'          => $rate_agency['agency_id'],
                 'tax_rate'           => $rate_agency['tax_rate'],
                 'tax_amount'         => $tax_amount,
