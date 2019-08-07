@@ -2931,7 +2931,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
         return $a['position'] > $b['position'];
     } );
 
-    $html = '<ul class="erp-nav -primary">';
+    $html = '<ul class="erp-nav -primary erp-hide-print">';
 
     if ( $dropdown ) {
         $html = '<ul class="erp-nav-dropdown">';
