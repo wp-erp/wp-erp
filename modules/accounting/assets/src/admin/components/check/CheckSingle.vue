@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <send-mail v-if="showModal" :data="print_data" :type="type"/>
+            <send-mail v-if="showModal" :userid="people_id" :data="print_data" :type="type"/>
 
             <div class="wperp-modal-body">
                 <div class="wperp-invoice-panel">
@@ -118,65 +118,72 @@
 </template>
 
 <script>
-import HTTP from 'admin/http';
-import SendMail from 'admin/components/email/SendMail.vue';
-import Dropdown from 'admin/components/base/Dropdown.vue';
+    import HTTP from 'admin/http'
+    import SendMail from 'admin/components/email/SendMail.vue'
+    import Dropdown from 'admin/components/base/Dropdown.vue'
 
-export default {
-    name: 'CheckSingle',
+    export default {
+        name: 'CheckSingle',
 
-    components: {
-        SendMail,
-        Dropdown
-    },
-
-    data() {
-        return {
-            company : null,
-            expense_data : {},
-            isWorking: false,
-            acct_var : erp_acct_var, /* global erp_acct_var */
-            print_data : null,
-            type       : 'check',
-            showModal  : false
-        };
-    },
-
-    created() {
-        this.getCompanyInfo();
-        this.getCheck();
-    },
-
-    methods: {
-        getCompanyInfo() {
-            HTTP.get(`/company`).then(response => {
-                this.company = response.data;
-            }).then(e => {}).then(() => {
-                this.isWorking = false;
-            });
+        components: {
+            SendMail,
+            Dropdown
         },
 
-        getCheck() {
-            this.isWorking = true;
-            this.$store.dispatch('spinner/setSpinner', true);
-            HTTP.get(`/expenses/checks/${this.$route.params.id}`).then(response => {
-                this.expense_data = response.data;
-                this.$store.dispatch('spinner/setSpinner', false);
-            }).catch(error => {
-                this.$store.dispatch('spinner/setSpinner', false);
-                throw error;
-            }).then(e => {}).then(() => {
-                this.print_data = this.expense_data;
-                this.isWorking = false;
-            });
+        data() {
+            return {
+                company : null,
+                expense_data : {},
+                isWorking: false,
+                acct_var : erp_acct_var,
+                print_data : null,
+                type       : 'check',
+                showModal  : false,
+                people_id  : null
+            }
         },
 
-        printPopup() {
-            window.print();
-        }
+        created() {
+            this.$store.dispatch( 'spinner/setSpinner', true );
+
+            this.$root.$on( 'close', () => {
+                this.showModal = false;
+            });
+
+            this.getCompanyInfo();
+            this.getCheck();
+        },
+
+        methods: {
+            getCompanyInfo() {
+                HTTP.get(`/company`).then(response => {
+                    this.company = response.data;
+                }).then( e => {} ).then(() => {
+                    this.isWorking = false;
+                });
+            },
+
+            getCheck() {
+                this.isWorking = true;
+                this.$store.dispatch( 'spinner/setSpinner', true );
+                HTTP.get(`/expenses/checks/${this.$route.params.id}`).then(response => {
+                    this.expense_data = response.data;
+                    this.people_id = this.expense_data.people_id;
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).catch( error => {
+                    this.$store.dispatch( 'spinner/setSpinner', false );
+                }).then( e => {} ).then(() => {
+                    this.print_data = this.expense_data;
+                    this.isWorking = false;
+                });
+            },
+
+            printPopup() {
+                window.print();
+            }
+        },
+
     }
-
-};
 </script>
 
 <style lang="less">
@@ -201,3 +208,4 @@ export default {
         }
     }
 </style>
+

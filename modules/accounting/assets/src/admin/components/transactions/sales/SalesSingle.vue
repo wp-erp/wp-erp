@@ -41,134 +41,137 @@
                 :payment="payment"
                 :company="company" />
 
-            <send-mail v-if="showModal" :data="print_data" :type="type"/>
+            <send-mail v-if="showModal" :userid="user_id" :data="print_data" :type="type"/>
 
         </div>
     </div>
 </template>
 
 <script>
-import HTTP from 'admin/http';
-import InvoiceSingleContent from 'admin/components/transactions/sales/InvoiceSingleContent.vue';
-import PaymentSingleContent from 'admin/components/transactions/sales/PaymentSingleContent.vue';
-import SendMail from 'admin/components/email/SendMail.vue';
-import Dropdown from 'admin/components/base/Dropdown.vue';
+    import HTTP from 'admin/http'
+    import InvoiceSingleContent from 'admin/components/transactions/sales/InvoiceSingleContent.vue'
+    import PaymentSingleContent from 'admin/components/transactions/sales/PaymentSingleContent.vue'
+    import SendMail from 'admin/components/email/SendMail.vue'
+    import Dropdown from 'admin/components/base/Dropdown.vue'
 
-export default {
-    name: 'SalesSingle',
+    export default {
+        name: 'SalesSingle',
 
-    data() {
-        return {
-            isWorking : false,
-            invoice   : null,
-            payment   : null,
-            type      : null,
-            company   : null,
-            acct_var  : erp_acct_var, /* global erp_acct_var */
-            showModal : false,
-            print_data: null,
-            copyLink  : '#'
-        };
-    },
+        data() {
+            return {
+                isWorking : false,
+                invoice   : null,
+                payment   : null,
+                type      : null,
+                company   : null,
+                acct_var  : erp_acct_var,
+                showModal : false,
+                print_data: null,
+                copyLink  : '#',
+                user_id   : null
+            }
+        },
 
-    components: {
-        InvoiceSingleContent,
-        PaymentSingleContent,
-        SendMail,
-        Dropdown
-    },
+        components: {
+            InvoiceSingleContent,
+            PaymentSingleContent,
+            SendMail,
+            Dropdown
+        },
 
-    created() {
-        /* If this page load directly,
+        created() {
+            /* If this page load directly,
             then we don't have the type or type is `undefined`
             thats why we need to load the type from database */
-        const params = this.$route.params;
+            let params = this.$route.params;
 
-        if (typeof params.type === 'undefined') {
-            this.getSalesType(params.id);
-        } else {
-            this.loadData(params.type);
-        }
-
-        this.getCompanyInfo();
-
-        this.$root.$on('close', () => {
-            this.showModal = false;
-        });
-    },
-
-    methods: {
-        getCompanyInfo() {
-            HTTP.get(`/company`).then(response => {
-                this.company = response.data;
-            }).then(e => {}).then(() => {
-                this.isWorking = false;
-            });
-        },
-
-        getSalesType(id) {
-            HTTP.get(`/transactions/type/${id}`).then(response => {
-                this.loadData(response.data);
-            }).then((e) => {}).then(() => {
-                this.isWorking = false;
-            });
-        },
-
-        loadData(type) {
-            this.type = type;
-
-            if (type === 'invoice') {
-                this.getInvoice();
-            } else if (type === 'payment') {
-                this.getPayment();
-            }
-        },
-
-        getInvoiceType() {
-            if (this.invoice !== null && this.invoice.estimate === '1') {
-                return 'Estimate';
+            if ( typeof params.type === 'undefined' ) {
+                this.getSalesType(params.id);
             } else {
-                return 'Invoice';
+                this.loadData(params.type);
+            }
+
+            this.getCompanyInfo();
+
+            this.$root.$on( 'close', () => {
+                this.showModal = false;
+            })
+        },
+
+        methods: {
+            getCompanyInfo() {
+                HTTP.get(`/company`).then(response => {
+                    this.company = response.data;
+                }).then( e => {} ).then(() => {
+                    this.isWorking = false;
+                });
+            },
+
+            getSalesType(id) {
+                HTTP.get(`/transactions/type/${id}`).then(response => {
+                    this.loadData(response.data);
+                }).then( (e) => {} ).then(() => {
+                    this.isWorking = false;
+                });
+            },
+
+            loadData(type) {
+                this.type = type;
+
+                if ( 'invoice' === type ) {
+                    this.getInvoice();
+                } else if ( 'payment' === type ) {
+                    this.getPayment();
+                }
+            },
+
+            getInvoiceType() {
+                if ( this.invoice !== null && '1' === this.invoice.estimate ) {
+                    return "Estimate";
+                } else {
+                    return "Invoice";
+                }
+            },
+
+            getInvoice() {
+                this.isWorking = true;
+
+                HTTP.get(`/invoices/${this.$route.params.id}`).then(response => {
+                    this.invoice = response.data;
+                }).then( e => {} ).then(() => {
+                    this.print_data = this.invoice;
+                    this.copyLink   = this.invoice.readonly_url;
+                    this.isWorking  = false;
+                    this.user_id    = this.print_data.customer_id;
+                });
+            },
+
+            getPayment() {
+                this.isWorking = true;
+
+                HTTP.get(`/payments/${this.$route.params.id}`).then(response => {
+                    this.payment = response.data;
+                }).then( e => {} ).then(() => {
+                    this.print_data = this.payment;
+                    this.user_id    = this.print_data.customer_id;
+                    this.isWorking  = false;
+                });
+            },
+
+            printPopup() {
+                window.print();
+            },
+
+            handleSuccess (e) {
+                alert('Link has been copied.')
+            },
+
+            handleError (e) {
+                alert('Failed to copy link.')
             }
         },
 
-        getInvoice() {
-            this.isWorking = true;
-
-            HTTP.get(`/invoices/${this.$route.params.id}`).then(response => {
-                this.invoice = response.data;
-            }).then(e => {}).then(() => {
-                this.print_data = this.invoice;
-                this.copyLink   = this.invoice.readonly_url;
-                this.isWorking  = false;
-            });
-        },
-
-        getPayment() {
-            this.isWorking = true;
-
-            HTTP.get(`/payments/${this.$route.params.id}`).then(response => {
-                this.payment = response.data;
-            }).then(e => {}).then(() => {
-                this.print_data = this.payment;
-                this.isWorking = false;
-            });
-        },
-
-        printPopup() {
-            window.print();
-        },
-
-        handleSuccess(e) {
-            alert('Link has been copied.');
-        },
-
-        handleError(e) {
-            alert('Failed to copy link.');
-        }
     }
-
-};
 </script>
 
 <style lang="less">
@@ -201,6 +204,7 @@ export default {
         }
     }
 
+
     .sales-single {
         max-width: 960px;
         margin: 0 auto;
@@ -222,3 +226,4 @@ export default {
         }
     }
 </style>
+
