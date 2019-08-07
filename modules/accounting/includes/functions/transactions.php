@@ -703,9 +703,9 @@ function erp_acct_generate_pdf( $request, $output_method = 'D' ) {
     $trn_id  = null;
 
     $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
-    $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : [];
-    $subject    = isset( $request['subject'] ) ? $request['subject'] : '';
-    $body       = isset( $request['message'] ) ? $request['message'] : '';
+    $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : $transaction->email;
+    $subject    = isset( $request['subject'] ) ? $request['subject'] : $transaction->subject;
+    $body       = isset( $request['message'] ) ? $request['message'] : $transaction->message;
     $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
 
 
@@ -773,6 +773,9 @@ function erp_acct_generate_pdf( $request, $output_method = 'D' ) {
 
     // Set to Address
     $to_address = array_values( erp_acct_get_people_address( $user_id ) );
+    if ( empty( $to_address ) ) {
+        $to_address = erp_get_people( $user_id )->email;
+    }
     array_unshift( $to_address, $user->get_full_name() );
 
     $trn_pdf->set_to_title( __( 'TO', 'erp' ) );
@@ -940,14 +943,63 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
 
     $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
     $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : [];
-    $subject    = isset( $request['subject'] ) ? $request['subject'] : '';
-    $body       = isset( $request['message'] ) ? $request['message'] : '';
+    $subject    = isset( $request['subject'] ) ? $request['subject'] : sprintf( __( 'Transaction alert for %s', 'erp' ), $request['type'] );
+    $body       = isset( $request['message'] ) ? $request['message'] : __( 'Thank you for the transaction', 'erp' );;
     $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
 
-    $file_name  = erp_acct_generate_pdf( $request, $output_method );
+    $file_name  = erp_acct_generate_pdf( $request, 'F' );
 
     if ( !empty( $file_name ) ) {
         $result = $trn_email->trigger( $receiver, $subject, $body, $file_name );
+    } else {
+        wp_die( __( 'PDF not generated!', 'erp' ) );
+    }
+
+    unlink( $file_name );
+
+    return $result;
+}
+
+
+/**
+ * Send pdf on transaction
+ */
+add_action( 'erp_acct_new_transaction_sales', 'erp_acct_send_email_on_transaction', 10, 2 );
+add_action( 'erp_acct_new_transaction_payment', 'erp_acct_send_email_on_transaction', 10, 2 );
+add_action( 'erp_acct_new_transaction_bill', 'erp_acct_send_email_on_transaction', 10, 2 );
+add_action( 'erp_acct_new_transaction_pay_bill', 'erp_acct_send_email_on_transaction', 10, 2 );
+add_action( 'erp_acct_new_transaction_purchase', 'erp_acct_send_email_on_transaction', 10, 2 );
+add_action( 'erp_acct_new_transaction_pay_purchase', 'erp_acct_send_email_on_transaction', 10, 2 );
+add_action( 'erp_acct_new_transaction_expense', 'erp_acct_send_email_on_transaction', 10, 2 );
+
+/**
+ * Send pdf on transaction
+ *
+ * @param $request
+ * @param string $output_method
+ *
+ * @return boolean
+ */
+function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
+
+    $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
+    $user_id   = null;
+    $trn_id    = null;
+    $request   = [];
+    $result    = [];
+
+    $request['type']       = !empty( $transaction['type'] ) ? $transaction['type'] : erp_acct_get_trn_type_by_voucher_no( $voucher_no );
+    $request['receiver'][] = !empty( $transaction['email'] ) ? $transaction['email'] : [];
+    $request['subject']    = sprintf( __( 'Transaction alert for %s', 'erp' ), $request['type'] );
+    $request['body']       = __( 'Thank you for the transaction', 'erp' );
+    $request['trn_data']   = $transaction;
+    $request['attachment'] = true;
+    $attach_pdf            = true;
+
+    $file_name  = erp_acct_generate_pdf( $request, 'F' );
+
+    if ( !empty( $file_name ) ) {
+        $result = $trn_email->trigger( $request['receiver'], $request['subject'], $request['body'], $request['attachment'] );
     } else {
         wp_die( __( 'PDF not generated!', 'erp' ) );
     }
@@ -1001,6 +1053,7 @@ function erp_acct_get_transaction( $transaction_id ) {
             $transaction = erp_acct_get_pay_purchase( $transaction_id );
             break;
         case 'expense':
+        case 'check':
             $transaction = erp_acct_get_expense( $transaction_id );
             break;
         case 'transfer_voucher':

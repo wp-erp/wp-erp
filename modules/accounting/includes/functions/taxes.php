@@ -367,7 +367,7 @@ function erp_acct_get_tax_pay_record( $voucher_no ) {
  * Make a tax payment
  *
  * @param $data
- * @return int
+ * @return array
  */
 function erp_acct_pay_tax( $data ) {
     global $wpdb;
@@ -429,7 +429,9 @@ function erp_acct_pay_tax( $data ) {
 
     erp_acct_insert_tax_pay_data_into_ledger( $tax_data );
 
-    return $voucher_no;
+    $tax_pay = erp_acct_get_tax_pay_record( $voucher_no );
+
+    return $tax_pay;
 
 }
 

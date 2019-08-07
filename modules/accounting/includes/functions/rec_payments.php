@@ -167,7 +167,13 @@ function erp_acct_insert_payment( $data ) {
         erp_acct_change_invoice_status( $item['invoice_no'] );
     }
 
-    return erp_acct_get_payment( $voucher_no );
+    $payment = erp_acct_get_payment( $voucher_no );
+
+    $payment['email'] = erp_get_people_email( $data['customer_id'] );
+
+    do_action( 'erp_acct_new_transaction_payment', $voucher_no, $payment );
+
+    return $payment;
 }
 
 /**

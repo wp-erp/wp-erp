@@ -198,7 +198,13 @@ function erp_acct_insert_pay_bill( $data ) {
         erp_acct_change_bill_status( $item['voucher_no'] );
     }
 
-    return erp_acct_get_pay_bill( $voucher_no );
+    $pay_bill = erp_acct_get_pay_bill( $voucher_no );
+
+    $pay_bill['email'] = erp_get_people_email( $data['vendor_id'] );
+
+    do_action( 'erp_acct_new_transaction_pay_bill', $voucher_no, $pay_bill );
+
+    return $pay_bill;
 
 }
 

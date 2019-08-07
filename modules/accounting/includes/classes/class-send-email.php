@@ -11,11 +11,16 @@ class Send_Email extends Email {
         parent::__construct();
     }
 
-    public function trigger( $receiver_emails = [], $subject = 'sub', $body = 'body', $attachement = '' ) {
+    public function trigger( $receiver_emails, $subject = 'Default subject', $body = 'Default body', $attachment = '' ) {
 
         $results = [];
-        foreach ( $receiver_emails as $email ) {
-            $results[] = $this->send( $email, $subject, $body, '', $attachement );
+
+        if ( is_array( $receiver_emails ) ) {
+            foreach ( $receiver_emails as $email ) {
+                $results[] = $this->send( $email, $subject, $body, '', $attachment );
+            }
+        } else {
+            $results[] = $this->send( $receiver_emails, $subject, $body, '', $attachment );
         }
 
         if ( in_array( false, $results ) ) {

@@ -192,7 +192,14 @@ function erp_acct_insert_pay_purchase( $data ) {
     foreach ( $items as $item ) {
         erp_acct_change_purchase_status( $item['voucher_no'] );
     }
-    return erp_acct_get_pay_purchase( $voucher_no );
+
+    $pay_purchase = erp_acct_get_pay_purchase( $voucher_no );
+
+    $pay_purchase['email'] = erp_get_people_email( $data['vendor_id'] );
+
+    do_action( 'erp_acct_new_transaction_pay_purchase', $voucher_no, $pay_purchase );
+
+    return $pay_purchase;
 
 }
 
