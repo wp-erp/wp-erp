@@ -49,19 +49,23 @@
                         <div class="wperp-row" v-if="null != expense_data">
                             <div class="wperp-col-sm-6">
                                 <div class="persons-info">
-                                    <strong>{{ expense_data.vendor_name }}</strong><br>
-                                    {{ expense_data.billing_address }}
+                                    <strong>{{ expense_data.people_name }}</strong><br>
+                                    {{ expense_data.address }}
                                 </div>
                             </div>
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>{{ __('Expense No', 'erp') }}</th>
+                                        <th>{{ __('Voucher No', 'erp') }}:</th>
                                         <td>#{{ expense_data.voucher_no }}</td>
                                     </tr>
                                     <tr>
-                                        <th>{{ __('Expense Date', 'erp') }}:</th>
+                                        <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ expense_data.date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Created At', 'erp') }}:</th>
+                                        <td>{{ expense_data.created_at }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -72,16 +76,16 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
+                                <th>{{ __('Sl', 'erp') }}</th>
                                 <th>{{ __('Account', 'erp') }}</th>
-                                <th>{{ __('Voucher No', 'erp') }}</th>
                                 <th>{{ __('Particulars', 'erp') }}</th>
                                 <th>{{ __('Amount', 'erp') }}</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr :key="index" v-for="(line, index) in expense_data.bill_details">
+                                <td>{{ index+1 }}</td>
                                 <td>{{ line.ledger_name}}</td>
-                                <td>{{ line.trn_no }}</td>
                                 <td>{{ line.particulars }}</td>
                                 <td>{{ moneyFormat(line.amount) }}</td>
                             </tr>

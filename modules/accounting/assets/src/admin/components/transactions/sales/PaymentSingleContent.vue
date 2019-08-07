@@ -29,12 +29,16 @@
                     <div class="wperp-col-sm-6">
                         <table class="invoice-info">
                             <tr>
-                                <th>{{ __('Payment No', 'erp') }}.</th>
+                                <th>{{ __('Voucher No', 'erp') }}:</th>
                                 <td>#{{ payment.voucher_no }}</td>
                             </tr>
                             <tr>
-                                <th>{{ __('Payment Date', 'erp') }}:</th>
+                                <th>{{ __('Transaction Date', 'erp') }}:</th>
                                 <td>{{ payment.trn_date }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ __('Created At', 'erp') }}:</th>
+                                <td>{{ payment.created_at }}</td>
                             </tr>
                             <tr>
                                 <th>{{ __('Deposit To', 'erp') }}:</th>
@@ -49,12 +53,14 @@
                 <table class="wperp-table wperp-form-table invoice-table">
                     <thead>
                         <tr>
+                            <th>{{ __('Sl.', 'erp') }}</th>
                             <th>{{ __('Invoice ID', 'erp') }}</th>
                             <th>{{ __('Amount', 'erp') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr :key="index" v-for="(detail, index) in payment.line_items">
+                            <th>#{{ detail.index }}</th>
                             <th>#{{ detail.invoice_no }}</th>
                             <td>{{ moneyFormat( detail.amount ) }}</td>
                         </tr>

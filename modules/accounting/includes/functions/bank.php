@@ -409,7 +409,7 @@ function erp_acct_get_single_voucher( $id ) {
     }
 
     $table = $wpdb->prefix . 'erp_acct_transfer_voucher';
-    $query = "Select * From $table WHERE id = {$id}";
+    $query = "SELECT * FROM $table WHERE id = {$id}";
 
     $result = $wpdb->get_row( $query );
 

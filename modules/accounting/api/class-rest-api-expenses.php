@@ -436,11 +436,12 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'bill_details' => $item->bill_details,
             'total'        => (int) $item->amount,
             'ref'          => ! empty( $item->ref ) ? $item->ref : '',
-            'check_no'     => ! empty( $item->check_no ) ? $item->check_no : null,
+            'check_no'     => $item->check_no,
             'particulars'  => $item->particulars,
             'status'       => $item->status,
             'attachments'  => maybe_unserialize( $item->attachments ),
             'trn_by'       => $item->trn_by,
+            'created_at'   => $item->created_at,
             'deposit_to'   => $item->trn_by_ledger_id
         ];
 
@@ -581,6 +582,14 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                 ],
                 'trn_by'          => [
+                    'description' => __( 'Payment method for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'check_no'          => [
                     'description' => __( 'Payment method for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],

@@ -65,6 +65,7 @@ function erp_acct_get_bill( $bill_no ) {
     bill.amount,
     bill.particulars,
     bill.status,
+    bill.created_at,
     bill.attachments
 
     FROM {$wpdb->prefix}erp_acct_bills AS bill

@@ -29,16 +29,20 @@
                     <div class="wperp-col-sm-6">
                         <table class="invoice-info">
                             <tr>
-                                <th>{{ __('Invoice No', 'erp') }}.</th>
+                                <th>{{ __('Voucher No', 'erp') }}:</th>
                                 <td>#{{ invoice.voucher_no }}</td>
                             </tr>
                             <tr>
-                                <th>{{ __('Invoice Date', 'erp') }}:</th>
+                                <th>{{ __('Transaction Date', 'erp') }}:</th>
                                 <td>{{ invoice.trn_date }}</td>
                             </tr>
                             <tr>
                                 <th>{{ __('Due Date', 'erp') }}:</th>
                                 <td>{{ invoice.due_date }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ __('Created At', 'erp') }}:</th>
+                                <td>{{ invoice.created_at }}</td>
                             </tr>
                             <tr>
                                 <th>{{ __('Amount Due', 'erp') }}:</th>

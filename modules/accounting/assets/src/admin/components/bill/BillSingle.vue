@@ -56,16 +56,20 @@
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>{{ __('Bill No', 'erp') }}</th>
+                                        <th>{{ __('Voucher No', 'erp') }}:</th>
                                         <td>#{{ bill.voucher_no }}</td>
                                     </tr>
                                     <tr>
-                                        <th>{{ __('Bill Date', 'erp') }}:</th>
+                                        <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ bill.trn_date }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Due Date', 'erp') }}:</th>
                                         <td>{{ bill.due_date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Created At', 'erp') }}:</th>
+                                        <td>{{ bill.created_at }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Amount Due', 'erp') }}:</th>
@@ -80,7 +84,7 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>{{ __('Voucher No', 'erp') }}</th>
+                                <th>{{ __('Sl', 'erp') }}</th>
                                 <th>{{ __('Account', 'erp') }}</th>
                                 <th>{{ __('Particulars', 'erp') }}</th>
                                 <th>{{ __('Amount', 'erp') }}</th>
@@ -88,7 +92,7 @@
                             </thead>
                             <tbody>
                             <tr :key="index" v-for="(line, index) in bill.bill_details">
-                                <td>{{ line.trn_no}}</td>
+                                <td>{{ index+1 }}</td>
                                 <td>{{ line.ledger_name }}</td>
                                 <td>{{ line.particulars }}</td>
                                 <td>{{ moneyFormat(line.amount) }}</td>

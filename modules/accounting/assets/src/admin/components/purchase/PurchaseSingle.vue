@@ -56,21 +56,21 @@
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>{{ __('Purchase No', 'erp') }}</th>
+                                        <th>{{ __('Voucher No', 'erp') }}:</th>
                                         <td>#{{ purchase.voucher_no }}</td>
                                     </tr>
                                     <tr>
-                                        <th>{{ __('Purchase Date', 'erp') }}:</th>
+                                        <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ purchase.date }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Due Date', 'erp') }}:</th>
                                         <td>{{ purchase.due_date }}</td>
                                     </tr>
-<!--                                    <tr>-->
-<!--                                        <th>Amount Due:</th>-->
-<!--                                        <td>{{ purchase.due_total }}</td>-->
-<!--                                    </tr>-->
+                                    <tr>
+                                        <th>{{ __('Created At', 'erp') }}:</th>
+                                        <td>{{ purchase.created_at }}</td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -80,6 +80,7 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                                 <tr>
+                                    <th>{{ __('Sl.', 'erp') }}</th>
                                     <th>{{ __('Item name', 'erp') }}</th>
                                     <th>{{ __('Qty', 'erp') }}</th>
                                     <th>{{ __('Unit Price', 'erp') }}</th>
@@ -88,6 +89,7 @@
                             </thead>
                             <tbody>
                                 <tr :key="index" v-for="(line, index) in purchase.line_items">
+                                    <td>{{ index+1 }}</td>
                                     <td>{{ line.name }}</td>
                                     <td>{{ line.qty }}</td>
                                     <td>{{ moneyFormat(line.cost_price) }}</td>

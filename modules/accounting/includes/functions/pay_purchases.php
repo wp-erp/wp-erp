@@ -60,8 +60,10 @@ function erp_acct_get_pay_purchase( $purchase_no ) {
         pay_purchase.trn_by,
         pay_purchase.status,
         pay_purchase.particulars,
+        pay_purchase.created_at,
         pay_purchase.attachments,
         pay_purchase.trn_by_ledger_id
+        
         FROM {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase
         WHERE pay_purchase.voucher_no = %d", $purchase_no );
 

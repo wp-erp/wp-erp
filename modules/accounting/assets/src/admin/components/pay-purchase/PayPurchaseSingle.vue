@@ -56,16 +56,20 @@
                             <div class="wperp-col-sm-6">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>{{ __('Pay Purchase No', 'erp') }}</th>
+                                        <th>{{ __('Voucher No', 'erp') }}:</th>
                                         <td>#{{ payPurchase.voucher_no }}</td>
                                     </tr>
                                     <tr>
-                                        <th>{{ __('Pay Purchase Date', 'erp') }}:</th>
+                                        <th>{{ __('Transaction Date', 'erp') }}:</th>
                                         <td>{{ payPurchase.trn_date }}</td>
                                     </tr>
                                     <tr>
-                                        <th>{{ __('Deposit to', 'erp') }}</th>
-                                        <td>{{ __('Bank', 'erp') }}</td>
+                                        <th>{{ __('Created At', 'erp') }}:</th>
+                                        <td>{{ payPurchase.created_at }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Transaction From', 'erp') }}:</th>
+                                        <td>{{ payPurchase.trn_by }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -76,7 +80,7 @@
                         <table class="wperp-table wperp-form-table invoice-table">
                             <thead>
                             <tr>
-                                <th>{{ __('Voucher No', 'erp') }}</th>
+                                <th>{{ __('Sl.', 'erp') }}</th>
                                 <th>{{ __('Purchase No', 'erp') }}</th>
                                 <th>{{ __('Vendor', 'erp') }}</th>
                                 <th>{{ __('Amount', 'erp') }}</th>
@@ -84,7 +88,7 @@
                             </thead>
                             <tbody>
                                 <tr :key="index" v-for="(line, index) in payPurchase.purchase_details">
-                                    <td>{{ line.voucher_no }}</td>
+                                    <td>{{ line.id }}</td>
                                     <td>{{ line.purchase_no }}</td>
                                     <td>{{ line.vendor_name }}</td>
                                     <td>{{ moneyFormat(line.amount) }}</td>

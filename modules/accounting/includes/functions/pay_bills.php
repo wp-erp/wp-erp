@@ -60,6 +60,7 @@ function erp_acct_get_pay_bill( $bill_no ) {
         pay_bill.amount,
         pay_bill.trn_by,
         pay_bill.particulars,
+        pay_bill.created_at,
         pay_bill.attachments,
         pay_bill.status
 

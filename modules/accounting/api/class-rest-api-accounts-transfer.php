@@ -487,6 +487,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
             'trn_date'    => $item->trn_date,
             'particulars' => $item->particulars,
             'amount'      => $item->amount,
+            'created_at'  => $item->created_at,
             'created_by'  => $this->get_user( 1 )
         ];
 

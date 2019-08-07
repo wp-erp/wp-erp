@@ -65,6 +65,7 @@ function erp_acct_get_purchase( $purchase_no ) {
     purchase.purchase_order,
     purchase.attachments,
     purchase.particulars,
+    purchase.created_at,
 
     purchase_acc_detail.purchase_no,
     purchase_acc_detail.particulars,

@@ -273,6 +273,7 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
             'line_items'  => ! empty( $item->line_items ) ? $item->line_items : [],
             'attachments' => maybe_unserialize( $item->attachments ),
             'total'       => (float) $item->voucher_amount,
+            'created_at'  => $item->created_at,
         ];
 
         if ( isset( $request['include'] ) ) {

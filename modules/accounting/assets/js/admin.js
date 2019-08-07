@@ -19775,6 +19775,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -20341,6 +20345,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+//
+//
+//
+//
 //
 //
 //
@@ -21475,6 +21483,8 @@ if (false) {(function () {
 //
 //
 //
+//
+//
 
 
 
@@ -22057,6 +22067,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+//
+//
+//
+//
 //
 //
 //
@@ -24277,6 +24291,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'InvoiceSingleContent',
   props: {
@@ -24314,6 +24332,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -25762,6 +25786,10 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+//
+//
+//
+//
 //
 //
 //
@@ -29687,6 +29715,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -47523,14 +47557,18 @@ var render = function() {
                     _c("div", { staticClass: "wperp-col-sm-6" }, [
                       _c("table", { staticClass: "invoice-info" }, [
                         _c("tr", [
-                          _c("th", [_vm._v(_vm._s(_vm.__("Bill No", "erp")))]),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
+                          ]),
                           _vm._v(" "),
                           _c("td", [_vm._v("#" + _vm._s(_vm.bill.voucher_no))])
                         ]),
                         _vm._v(" "),
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Bill Date", "erp")) + ":")
+                            _vm._v(
+                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
+                            )
                           ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(_vm.bill.trn_date))])
@@ -47542,6 +47580,14 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(_vm.bill.due_date))])
+                        ]),
+                        _vm._v(" "),
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(_vm.bill.created_at))])
                         ]),
                         _vm._v(" "),
                         _c("tr", [
@@ -47569,9 +47615,7 @@ var render = function() {
                     [
                       _c("thead", [
                         _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")))
-                          ]),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Sl", "erp")))]),
                           _vm._v(" "),
                           _c("th", [_vm._v(_vm._s(_vm.__("Account", "erp")))]),
                           _vm._v(" "),
@@ -47587,7 +47631,7 @@ var render = function() {
                         "tbody",
                         _vm._l(_vm.bill.bill_details, function(line, index) {
                           return _c("tr", { key: index }, [
-                            _c("td", [_vm._v(_vm._s(line.trn_no))]),
+                            _c("td", [_vm._v(_vm._s(index + 1))]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(line.ledger_name))]),
                             _vm._v(" "),
@@ -48483,7 +48527,7 @@ var render = function() {
                       _c("table", { staticClass: "invoice-info" }, [
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Pay Bill No", "erp")))
+                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
                           ]),
                           _vm._v(" "),
                           _c("td", [
@@ -48493,7 +48537,9 @@ var render = function() {
                         _vm._v(" "),
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Pay Bill Date", "erp")) + ":")
+                            _vm._v(
+                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
+                            )
                           ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(_vm.payBill.trn_date))])
@@ -48501,10 +48547,20 @@ var render = function() {
                         _vm._v(" "),
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Deposit to", "erp")))
+                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
                           ]),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.__("Bank", "erp")))])
+                          _c("td", [_vm._v(_vm._s(_vm.payBill.created_at))])
+                        ]),
+                        _vm._v(" "),
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(
+                              _vm._s(_vm.__("Transaction From", "erp")) + ":"
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(_vm.payBill.trn_by))])
                         ])
                       ])
                     ])
@@ -48522,7 +48578,7 @@ var render = function() {
                     [
                       _c("thead", [
                         _c("tr", [
-                          _c("th", [_vm._v(_vm._s(_vm.__("ID", "erp")))]),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
                           _vm._v(" "),
                           _c("th", [_vm._v(_vm._s(_vm.__("Bill No", "erp")))]),
                           _vm._v(" "),
@@ -49503,9 +49559,9 @@ var render = function() {
                 [
                   _c("i", { staticClass: "flaticon-printer-1" }),
                   _vm._v(
-                    "\n                          " +
+                    "\n                      " +
                       _vm._s(_vm.__("Print", "erp")) +
-                      "\n                    "
+                      "\n                "
                   )
                 ]
               ),
@@ -49523,9 +49579,9 @@ var render = function() {
                       [
                         _c("i", { staticClass: "flaticon-settings-work-tool" }),
                         _vm._v(
-                          "\n                                  " +
+                          "\n                              " +
                             _vm._s(_vm.__("More Action", "erp")) +
-                            "\n                            "
+                            "\n                        "
                         )
                       ]
                     )
@@ -49588,24 +49644,24 @@ var render = function() {
                       _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
                       _c("br"),
                       _vm._v(
-                        "\n                                " +
+                        "\n                            " +
                           _vm._s(_vm.company.address.address_1)
                       ),
                       _c("br"),
                       _vm._v(
-                        "\n                                " +
+                        "\n                            " +
                           _vm._s(_vm.company.address.address_2)
                       ),
                       _c("br"),
                       _vm._v(
-                        "\n                                " +
+                        "\n                            " +
                           _vm._s(_vm.company.address.city)
                       ),
                       _c("br"),
                       _vm._v(
-                        "\n                                " +
+                        "\n                            " +
                           _vm._s(_vm.company.address.country) +
-                          "\n                            "
+                          "\n                        "
                       )
                     ])
                   ])
@@ -49624,9 +49680,9 @@ var render = function() {
                         ]),
                         _c("br"),
                         _vm._v(
-                          "\n                                    " +
+                          "\n                                " +
                             _vm._s(_vm.purchase.billing_address) +
-                            "\n                                "
+                            "\n                            "
                         )
                       ])
                     ]),
@@ -49635,7 +49691,7 @@ var render = function() {
                       _c("table", { staticClass: "invoice-info" }, [
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Purchase No", "erp")))
+                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
                           ]),
                           _vm._v(" "),
                           _c("td", [
@@ -49645,7 +49701,9 @@ var render = function() {
                         _vm._v(" "),
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Purchase Date", "erp")) + ":")
+                            _vm._v(
+                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
+                            )
                           ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(_vm.purchase.date))])
@@ -49657,6 +49715,14 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(_vm.purchase.due_date))])
+                        ]),
+                        _vm._v(" "),
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(_vm.purchase.created_at))])
                         ])
                       ])
                     ])
@@ -49674,6 +49740,8 @@ var render = function() {
                     [
                       _c("thead", [
                         _c("tr", [
+                          _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
+                          _vm._v(" "),
                           _c("th", [
                             _vm._v(_vm._s(_vm.__("Item name", "erp")))
                           ]),
@@ -49692,6 +49760,8 @@ var render = function() {
                         "tbody",
                         _vm._l(_vm.purchase.line_items, function(line, index) {
                           return _c("tr", { key: index }, [
+                            _c("td", [_vm._v(_vm._s(index + 1))]),
+                            _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(line.name))]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(line.qty))]),
@@ -50611,7 +50681,7 @@ var render = function() {
                       _c("table", { staticClass: "invoice-info" }, [
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Pay Purchase No", "erp")))
+                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
                           ]),
                           _vm._v(" "),
                           _c("td", [
@@ -50622,7 +50692,7 @@ var render = function() {
                         _c("tr", [
                           _c("th", [
                             _vm._v(
-                              _vm._s(_vm.__("Pay Purchase Date", "erp")) + ":"
+                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
                             )
                           ]),
                           _vm._v(" "),
@@ -50631,10 +50701,20 @@ var render = function() {
                         _vm._v(" "),
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Deposit to", "erp")))
+                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
                           ]),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.__("Bank", "erp")))])
+                          _c("td", [_vm._v(_vm._s(_vm.payPurchase.created_at))])
+                        ]),
+                        _vm._v(" "),
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(
+                              _vm._s(_vm.__("Transaction From", "erp")) + ":"
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(_vm.payPurchase.trn_by))])
                         ])
                       ])
                     ])
@@ -50652,9 +50732,7 @@ var render = function() {
                     [
                       _c("thead", [
                         _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")))
-                          ]),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
                           _vm._v(" "),
                           _c("th", [
                             _vm._v(_vm._s(_vm.__("Purchase No", "erp")))
@@ -50673,7 +50751,7 @@ var render = function() {
                           index
                         ) {
                           return _c("tr", { key: index }, [
-                            _c("td", [_vm._v(_vm._s(line.voucher_no))]),
+                            _c("td", [_vm._v(_vm._s(line.id))]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(line.purchase_no))]),
                             _vm._v(" "),
@@ -53483,13 +53561,15 @@ var render = function() {
           _c("div", { staticClass: "wperp-col-sm-6" }, [
             _c("table", { staticClass: "invoice-info" }, [
               _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Invoice No", "erp")) + ".")]),
+                _c("th", [_vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")]),
                 _vm._v(" "),
                 _c("td", [_vm._v("#" + _vm._s(_vm.invoice.voucher_no))])
               ]),
               _vm._v(" "),
               _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Invoice Date", "erp")) + ":")]),
+                _c("th", [
+                  _vm._v(_vm._s(_vm.__("Transaction Date", "erp")) + ":")
+                ]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(_vm.invoice.trn_date))])
               ]),
@@ -53498,6 +53578,12 @@ var render = function() {
                 _c("th", [_vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(_vm.invoice.due_date))])
+              ]),
+              _vm._v(" "),
+              _c("tr", [
+                _c("th", [_vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(_vm.invoice.created_at))])
               ]),
               _vm._v(" "),
               _c("tr", [
@@ -53769,15 +53855,23 @@ var render = function() {
           _c("div", { staticClass: "wperp-col-sm-6" }, [
             _c("table", { staticClass: "invoice-info" }, [
               _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Payment No", "erp")) + ".")]),
+                _c("th", [_vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")]),
                 _vm._v(" "),
                 _c("td", [_vm._v("#" + _vm._s(_vm.payment.voucher_no))])
               ]),
               _vm._v(" "),
               _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Payment Date", "erp")) + ":")]),
+                _c("th", [
+                  _vm._v(_vm._s(_vm.__("Transaction Date", "erp")) + ":")
+                ]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(_vm.payment.trn_date))])
+              ]),
+              _vm._v(" "),
+              _c("tr", [
+                _c("th", [_vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(_vm.payment.created_at))])
               ]),
               _vm._v(" "),
               _c("tr", [
@@ -53797,6 +53891,8 @@ var render = function() {
           [
             _c("thead", [
               _c("tr", [
+                _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
+                _vm._v(" "),
                 _c("th", [_vm._v(_vm._s(_vm.__("Invoice ID", "erp")))]),
                 _vm._v(" "),
                 _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
@@ -53807,6 +53903,8 @@ var render = function() {
               "tbody",
               _vm._l(_vm.payment.line_items, function(detail, index) {
                 return _c("tr", { key: index }, [
+                  _c("th", [_vm._v("#" + _vm._s(detail.index))]),
+                  _vm._v(" "),
                   _c("th", [_vm._v("#" + _vm._s(detail.invoice_no))]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(_vm.moneyFormat(detail.amount)))])
@@ -55747,12 +55845,12 @@ var render = function() {
                     _c("div", { staticClass: "wperp-col-sm-6" }, [
                       _c("div", { staticClass: "persons-info" }, [
                         _c("strong", [
-                          _vm._v(_vm._s(_vm.expense_data.vendor_name))
+                          _vm._v(_vm._s(_vm.expense_data.people_name))
                         ]),
                         _c("br"),
                         _vm._v(
                           "\n                                " +
-                            _vm._s(_vm.expense_data.billing_address) +
+                            _vm._s(_vm.expense_data.address) +
                             "\n                            "
                         )
                       ])
@@ -55762,7 +55860,7 @@ var render = function() {
                       _c("table", { staticClass: "invoice-info" }, [
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Expense No", "erp")))
+                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
                           ]),
                           _vm._v(" "),
                           _c("td", [
@@ -55772,10 +55870,22 @@ var render = function() {
                         _vm._v(" "),
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Expense Date", "erp")) + ":")
+                            _vm._v(
+                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
+                            )
                           ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(_vm.expense_data.date))])
+                        ]),
+                        _vm._v(" "),
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(_vm.expense_data.created_at))
+                          ])
                         ])
                       ])
                     ])
@@ -55793,11 +55903,9 @@ var render = function() {
                     [
                       _c("thead", [
                         _c("tr", [
-                          _c("th", [_vm._v(_vm._s(_vm.__("Account", "erp")))]),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Sl", "erp")))]),
                           _vm._v(" "),
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")))
-                          ]),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Account", "erp")))]),
                           _vm._v(" "),
                           _c("th", [
                             _vm._v(_vm._s(_vm.__("Particulars", "erp")))
@@ -55814,9 +55922,9 @@ var render = function() {
                           index
                         ) {
                           return _c("tr", { key: index }, [
-                            _c("td", [_vm._v(_vm._s(line.ledger_name))]),
+                            _c("td", [_vm._v(_vm._s(index + 1))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(line.trn_no))]),
+                            _c("td", [_vm._v(_vm._s(line.ledger_name))]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(line.particulars))]),
                             _vm._v(" "),
@@ -60369,12 +60477,12 @@ var render = function() {
                     _c("div", { staticClass: "wperp-col-sm-6" }, [
                       _c("div", { staticClass: "persons-info" }, [
                         _c("strong", [
-                          _vm._v(_vm._s(_vm.expense_data.vendor_name))
+                          _vm._v(_vm._s(_vm.expense_data.people_name))
                         ]),
                         _c("br"),
                         _vm._v(
                           "\n                                " +
-                            _vm._s(_vm.expense_data.billing_address) +
+                            _vm._s(_vm.expense_data.address) +
                             "\n                            "
                         )
                       ])
@@ -60392,10 +60500,22 @@ var render = function() {
                         _vm._v(" "),
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Check Date", "erp")) + ":")
+                            _vm._v(
+                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
+                            )
                           ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(_vm.expense_data.date))])
+                        ]),
+                        _vm._v(" "),
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(_vm._s(_vm.expense_data.created_at))
+                          ])
                         ])
                       ])
                     ])
@@ -60413,9 +60533,9 @@ var render = function() {
                     [
                       _c("thead", [
                         _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")))
-                          ]),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Sl", "erp")))]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Account", "erp")))]),
                           _vm._v(" "),
                           _c("th", [
                             _vm._v(_vm._s(_vm.__("Particulars", "erp")))
@@ -60432,7 +60552,9 @@ var render = function() {
                           index
                         ) {
                           return _c("tr", { key: index }, [
-                            _c("td", [_vm._v(_vm._s(line.voucher_no))]),
+                            _c("td", [_vm._v(_vm._s(index + 1))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(line.ledger_name))]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(line.particulars))]),
                             _vm._v(" "),

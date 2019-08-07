@@ -501,6 +501,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             'ref'             => ! empty( $item->ref ) ? $item->ref : '',
             'particulars'     => $item->particulars,
             'status'          => $item->status,
+            'created_at'      => $item->created_at,
             'attachments'     => maybe_unserialize( $item->attachments )
         ];
 

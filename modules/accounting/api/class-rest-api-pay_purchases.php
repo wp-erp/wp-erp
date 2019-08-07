@@ -367,12 +367,13 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'voucher_no'       => (int) $item->voucher_no,
             'vendor_id'        => (int) $item->vendor_id,
             'trn_date'         => $item->trn_date,
-            'trn_by'           => $item->trn_by,
             'purchase_details' => $item->purchase_details,
             'amount'           => (int) $item->amount,
             'particulars'      => $item->particulars,
             'attachments'      => maybe_unserialize( $item->attachments ),
             'status'           => $item->status,
+            'created_at'       => $item->created_at,
+            'trn_by'          => erp_acct_get_payment_method_by_id( $item->trn_by )->name,
         ];
 
         $data = array_merge( $data, $additional_fields );
