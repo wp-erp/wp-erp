@@ -63071,7 +63071,7 @@ var render = function() {
                                   _c("i", {
                                     staticClass: "flaticon-add-plus-button"
                                   }),
-                                  _vm._v(_vm._s(_vm.__("Add People", "erp")))
+                                  _vm._v(_vm._s(_vm.__("Add Agency", "erp")))
                                 ]
                               )
                             ]

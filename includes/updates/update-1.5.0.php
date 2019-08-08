@@ -688,7 +688,7 @@ function erp_acct_create_accounting_tables() {
 
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_financial_years` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
-            `name` VARCHAR(11) DEFAULT NULL,
+            `name` VARCHAR(255) DEFAULT NULL,
             `start_date` date DEFAULT NULL,
             `end_date` date DEFAULT NULL,
             `description` varchar(255) DEFAULT NULL,
@@ -1339,6 +1339,10 @@ function erp_acct_migrate_balance_sheet() {
     $current_fy   = erp_acct_get_current_financial_year();
     $next_fy_id   = '';
 
+    $next_fy_name  = date( "Y" ) . '_1';
+    $next_fy_start = date( 'Y-m-d', strtotime( ' +1 day' ) );
+    $next_fy_end   = date( 'Y-m-d', strtotime( 'Dec 31' ) );
+
     $wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}erp_acct_financial_years" );
 
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_financial_years` WHERE name='{$next_fy_name}' LIMIT 0, 1" ) ) {
@@ -1361,9 +1365,9 @@ function erp_acct_migrate_balance_sheet() {
 
         //Next FY
         $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
-            'name'       => date( "Y" ) . '_1',
-            'start_date' => date( 'Y-m-d', strtotime( ' +1 day' ) ),
-            'end_date'   => date( 'Y-m-d', strtotime( 'Dec 31' ) ),
+            'name'       => $next_fy_name,
+            'start_date' => $next_fy_start,
+            'end_date'   => $next_fy_end,
             'created_at' => date( "Y-m-d" ),
             'created_by' => get_current_user_id()
         ) );

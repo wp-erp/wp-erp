@@ -1016,7 +1016,7 @@ Company'
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_financial_years` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                `name` VARCHAR(11) DEFAULT NULL,
+                `name` VARCHAR(255) DEFAULT NULL,
                 `start_date` date DEFAULT NULL,
                 `end_date` date DEFAULT NULL,
                 `description` varchar(255) DEFAULT NULL,
