@@ -63,6 +63,7 @@ function erp_acct_get_bill( $bill_no ) {
     bill.trn_date,
     bill.due_date,
     bill.amount,
+    bill.ref,
     bill.particulars,
     bill.status,
     bill.created_at,
@@ -148,6 +149,7 @@ function erp_acct_insert_bill( $data ) {
             'trn_date'    => $bill_data['trn_date'],
             'due_date'    => $bill_data['due_date'],
             'amount'      => $bill_data['amount'],
+            'ref'         => $bill_data['ref'],
             'particulars' => $bill_data['particulars'],
             'status'      => $bill_data['status'],
             'attachments' => $bill_data['attachments'],
@@ -321,6 +323,7 @@ function erp_acct_update_draft_bill( $data, $bill_id ) {
         'trn_date'    => $bill_data['trn_date'],
         'due_date'    => $bill_data['due_date'],
         'amount'      => $bill_data['amount'],
+        'ref'         => $bill_data['ref'],
         'particulars' => $bill_data['particulars'],
         'attachments' => $bill_data['attachments'],
         'updated_at'  => $bill_data['updated_at'],
@@ -413,6 +416,7 @@ function erp_acct_get_formatted_bill_data( $data, $voucher_no ) {
     $bill_data['due_date']         = isset( $data['due_date'] ) ? $data['due_date'] : date( "Y-m-d" );
     $bill_data['created_at']       = date( "Y-m-d" );
     $bill_data['amount']           = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $bill_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
     $bill_data['due']              = isset( $data['due'] ) ? $data['due'] : 0;
     $bill_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $bill_data['particulars']      = !empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Bill created with voucher no %s', 'erp' ), $voucher_no );

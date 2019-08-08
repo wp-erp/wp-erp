@@ -36,7 +36,11 @@
                                     <datepicker v-model="basic_fields.due_date"></datepicker>
                                 </div>
                             </div>
-                            <div class="wperp-col-xs-12">
+                            <div class="wperp-col-sm-6">
+                                <label>{{ __('Reference No', 'erp') }}</label>
+                                <input type="text" v-model="basic_fields.ref" rows="4" class="wperp-form-field"></input>
+                            </div>
+                            <div class="wperp-col-sm-6">
                                 <label>{{ __('Billing Address', 'erp') }}</label>
                                 <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
                             </div>
@@ -160,6 +164,7 @@ export default {
                 user: '',
                 trn_date: '',
                 due_date: '',
+                ref: '',
                 billing_address: ''
             },
 
@@ -264,6 +269,7 @@ export default {
             this.basic_fields.user = { id: parseInt(bill.vendor_id), name: bill.vendor_name };
             this.basic_fields.billing_address = bill.billing_address;
             this.basic_fields.trn_date = bill.trn_date;
+            this.basic_fields.ref      = bill.ref;
             this.basic_fields.due_date = bill.due_date;
             this.status = bill.status;
             this.finalTotalAmount = bill.debit;
@@ -387,7 +393,7 @@ export default {
 
             const requestData = {
                 vendor_id: this.basic_fields.user.id,
-                ref: this.basic_fields.trn_ref,
+                ref: this.basic_fields.ref,
                 trn_date: this.basic_fields.trn_date,
                 due_date: this.basic_fields.due_date,
                 bill_details: this.formatTrnLines(this.transactionLines),
@@ -415,7 +421,7 @@ export default {
 
             this.basic_fields = {
                 user: { id: null, name: null },
-                trn_ref: '',
+                ref: '',
                 trn_date: erp_acct_var.current_date,
                 due_date: erp_acct_var.current_date,
                 billing_address: ''
