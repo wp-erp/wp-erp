@@ -134,7 +134,7 @@
                     </tr>
                     <tr class="add-new-line">
                         <td colspan="9" style="text-align: left;">
-                            <button @click.prevent="tax_pay.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add People', 'erp') }}</button>
+                            <button @click.prevent="tax_pay.push({})" class="wperp-btn btn--primary add-line-trigger"><i class="flaticon-add-plus-button"></i>{{ __('Add Agency', 'erp') }}</button>
                         </td>
                     </tr>
                     </tbody>
