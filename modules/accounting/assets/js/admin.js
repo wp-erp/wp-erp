@@ -19403,6 +19403,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       };
       this.basic_fields.billing_address = bill.billing_address;
       this.basic_fields.trn_date = bill.trn_date;
+      this.basic_fields.ref = bill.ref;
       this.basic_fields.due_date = bill.due_date;
       this.status = bill.status;
       this.finalTotalAmount = bill.debit;
@@ -19534,7 +19535,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
       var requestData = {
         vendor_id: this.basic_fields.user.id,
-        ref: this.basic_fields.trn_ref,
+        ref: this.basic_fields.ref,
         trn_date: this.basic_fields.trn_date,
         due_date: this.basic_fields.due_date,
         bill_details: this.formatTrnLines(this.transactionLines),
@@ -19563,7 +19564,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           id: null,
           name: null
         },
-        trn_ref: '',
+        ref: '',
         trn_date: erp_acct_var.current_date,
         due_date: erp_acct_var.current_date,
         billing_address: ''
@@ -46937,7 +46938,7 @@ var render = function() {
                           _vm._v(_vm._s(_vm.__("Reference No", "erp")))
                         ]),
                         _vm._v(" "),
-                        _c("textarea", {
+                        _c("input", {
                           directives: [
                             {
                               name: "model",
@@ -46947,10 +46948,7 @@ var render = function() {
                             }
                           ],
                           staticClass: "wperp-form-field",
-                          attrs: {
-                            rows: "4",
-                            placeholder: _vm.__("Type here", "erp")
-                          },
+                          attrs: { type: "text", rows: "4" },
                           domProps: { value: _vm.basic_fields.ref },
                           on: {
                             input: function($event) {

@@ -470,6 +470,9 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
         }
+        if ( isset( $request['ref'] ) ) {
+            $prepared_item['ref'] = $request['ref'];
+        }
 
         return $prepared_item;
     }

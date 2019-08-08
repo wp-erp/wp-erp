@@ -820,7 +820,7 @@ function erp_acct_generate_pdf( $request, $output_method = 'D' ) {
         }
 
         $trn_pdf->add_badge( __( 'PENDING', 'erp' ) );
-        $trn_pdf->add_total( __( 'DUE', 'erp' ), $transaction->due );
+        $trn_pdf->add_total( __( 'DUE', 'erp' ), erp_acct_get_bill_due( $transaction->voucher_no ) );
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
     }
