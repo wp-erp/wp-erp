@@ -935,6 +935,10 @@ function erp_acct_generate_pdf( $request, $output_method = 'D' ) {
  * @return boolean
  */
 function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' ) {
+    if ( !is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
+        return;
+    }
+
     $transaction = (object) $request['trn_data'];
     $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
     $user_id = null;
@@ -981,6 +985,9 @@ add_action( 'erp_acct_new_transaction_expense', 'erp_acct_send_email_on_transact
  * @return boolean
  */
 function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
+    if ( !is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
+        return;
+    }
 
     $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
     $user_id   = null;

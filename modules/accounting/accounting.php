@@ -55,6 +55,67 @@ final class Accounting {
 
         // trigger after accounting module loaded
         do_action( 'erp_accounting_loaded' );
+
+        // pdf plugin is not installed notice
+        if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) || empty( get_option( 'pdf-notice-dismissed' ) ) ) {
+            add_action( 'admin_notices', array( $this, 'admin_pdf_notice' ) );
+        }
+
+        add_action( 'wp_ajax_dismiss_pdf_notice', array( $this, 'dismiss_pdf_notice' ) );
+    }
+
+    /**
+     * Show notice if PDF plugin is not installed
+     *
+     * @return void
+     */
+    public function admin_pdf_notice() {
+        if ( current_user_can( 'install_plugins' ) ) {
+
+            $action      = empty( $_GET['erp-pdf'] ) ? '' : \sanitize_text_field( $_GET['erp-pdf'] );
+            $plugin      = 'erp-pdf-invoice/wp-erp-pdf.php';
+            $pdf_install = new \WeDevs\ERP\Accounting\Includes\Classes\PDF_Install();
+
+            if ( $action === 'install' ) {
+                $pdf_install->install_plugin( 'https://downloads.wordpress.org/plugin/erp-pdf-invoice.1.1.0.zip' );
+            } elseif ( $action === 'active' ) {
+                $pdf_install->activate_pdf_plugin( $plugin );
+            }
+
+            if ( \file_exists( WP_PLUGIN_DIR . '/' . $plugin ) ) {
+                if ( ! \is_plugin_active( $plugin ) ) {
+                    $this->pdf_notice_message( 'active' );
+                }
+            } else {
+                $this->pdf_notice_message( 'install' );
+            }
+
+        }
+    }
+
+    /**
+     * PDF notice message
+     *
+     * @param String $type
+     *
+     * @return void
+     */
+    public function pdf_notice_message( $type ) {
+        $actual_link = esc_url( ( isset( $_SERVER['HTTPS'] ) ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
+        $sign        = empty( $_GET ) ? '?' : '&';
+
+        echo '<div class="updated notice is-dismissible notice-pdf"><p>';
+        echo __( 'Please ' . $type . ' <a href="' . $actual_link . $sign . 'erp-pdf=' . $type . '">WP ERP PDF</a> extension to get PDF export feature.', 'erp' );
+        echo '</p></div>';
+    }
+
+    /**
+     * Dismiss PDF notice message
+     *
+     * @return void
+     */
+    public function dismiss_pdf_notice() {
+        update_option( 'pdf-notice-dismissed', 1 );
     }
 
     /**
@@ -157,6 +218,7 @@ final class Accounting {
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-ledger-map.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-send-email.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-user-profile.php';
+        require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-pdf-install.php';
 
         if ( $this->is_request( 'admin' ) ) {
             require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-admin.php';
@@ -205,8 +267,8 @@ final class Accounting {
             $this->container['admin'] = new \WeDevs\ERP\Accounting\Includes\Classes\Admin();
         }
 
-        $this->container['rest']   = new \WeDevs\ERP\Accounting\API\REST_API();
-        $this->container['assets'] = new \WeDevs\ERP\Accounting\Includes\Classes\Assets();
+        $this->container['rest']    = new \WeDevs\ERP\Accounting\API\REST_API();
+        $this->container['assets']  = new \WeDevs\ERP\Accounting\Includes\Classes\Assets();
         $this->container['profile'] = new \WeDevs\ERP\Accounting\Includes\Classes\User_Profile();
     }
 
