@@ -975,9 +975,9 @@ function erp_employees_to_people_migration() {
  */
 function erp_acct_populate_charts_ledgers() {
     global $wpdb;
-    
+
     $old_ledgers = [];
-    $ledgers = [];
+    $ledgers     = [];
 
     require_once WPERP_INCLUDES . '/ledgers.php';
 
@@ -1335,19 +1335,35 @@ function erp_acct_migrate_balance_sheet() {
     $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
 
     $start_date = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
-    $end_date = $wpdb->get_var( "SELECT MAX(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
 
-    $current_fy = erp_acct_get_current_financial_year();
-    $next_fy_name = (int)$current_fy->name + 1;
-    $next_fy_start =  date( 'Y-m-d', strtotime( '+1 year', strtotime( $current_fy->start_date ) ) );
-    $next_fy_end = date( 'Y-m-d', strtotime( '+1 year', strtotime( $current_fy->end_date ) ) );;
-    $next_fy_id = '';
+    $current_fy   = erp_acct_get_current_financial_year();
+    $next_fy_id   = '';
+
+    $wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}erp_acct_financial_years" );
 
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_financial_years` WHERE name='{$next_fy_name}' LIMIT 0, 1" ) ) {
+        //Insert current FY
+
+        $general         = get_option( 'erp_settings_general', array() );
+        $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
+
+        $start_date = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
+
+        $end_date = date( 'Y-m-d' );
+
         $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
-            'name'       => $next_fy_name,
-            'start_date' => $next_fy_start,
-            'end_date'   => $next_fy_end,
+            'name'       => date( "Y" ),
+            'start_date' => $start_date,
+            'end_date'   => $end_date,
+            'created_at' => date( "Y-m-d" ),
+            'created_by' => get_current_user_id()
+        ) );
+
+        //Next FY
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
+            'name'       => date( "Y" ) . '_1',
+            'start_date' => date( 'Y-m-d', strtotime( ' +1 day' ) ),
+            'end_date'   => date( 'Y-m-d', strtotime( 'Dec 31' ) ),
             'created_at' => date( "Y-m-d" ),
             'created_by' => get_current_user_id()
         ) );
