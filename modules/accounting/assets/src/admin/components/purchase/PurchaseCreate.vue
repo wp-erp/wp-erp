@@ -34,7 +34,11 @@
                                     <datepicker v-model="basic_fields.due_date"></datepicker>
                                 </div>
                             </div>
-                            <div class="wperp-col-xs-12">
+                            <div class="wperp-col-sm-6">
+                                <label>{{ __('Reference No', 'erp') }}</label>
+                                <input type="text" v-model="basic_fields.ref" rows="4" class="wperp-form-field"></input>
+                            </div>
+                            <div class="wperp-col-sm-6">
                                 <label>{{ __('Billing Address', 'erp') }}</label>
                                 <textarea v-model="basic_fields.billing_address" rows="4" class="wperp-form-field" :placeholder="__('Type here', 'erp')"></textarea>
                             </div>
@@ -152,6 +156,7 @@ export default {
                 vendor         : '',
                 trn_date       : '',
                 due_date       : '',
+                ref            : '',
                 billing_address: ''
             },
 
@@ -273,6 +278,7 @@ export default {
             this.basic_fields.vendor          = { id: parseInt(purchase.vendor_id), name: purchase.vendor_name };
             this.basic_fields.billing_address = purchase.billing_address;
             this.basic_fields.trn_date        = purchase.trn_date;
+            this.basic_fields.ref             = purchase.ref;
             this.basic_fields.due_date        = purchase.due_date;
             this.status                       = purchase.status;
             this.transactionLines             = purchase.line_items;
@@ -285,6 +291,7 @@ export default {
                 vendor         : { id: null, name: null },
                 trn_date       : erp_acct_var.current_date,
                 due_date       : erp_acct_var.current_date,
+                ref            : '',
                 billing_address: ''
             };
 
@@ -428,6 +435,7 @@ export default {
                 vendor_name    : this.basic_fields.vendor.name,
                 trn_date       : this.basic_fields.trn_date,
                 due_date       : this.basic_fields.due_date,
+                ref            : this.basic_fields.ref,
                 billing_address: this.basic_fields.billing_address,
                 line_items     : this.formatLineItems(),
                 particulars    : this.particulars,

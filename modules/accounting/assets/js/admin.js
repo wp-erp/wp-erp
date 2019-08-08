@@ -19223,6 +19223,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -19247,6 +19251,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         user: '',
         trn_date: '',
         due_date: '',
+        ref: '',
         billing_address: ''
       },
       form_errors: [],
@@ -20691,6 +20696,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -20715,6 +20724,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         vendor: '',
         trn_date: '',
         due_date: '',
+        ref: '',
         billing_address: ''
       },
       createButtons: [{
@@ -20871,6 +20881,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       };
       this.basic_fields.billing_address = purchase.billing_address;
       this.basic_fields.trn_date = purchase.trn_date;
+      this.basic_fields.ref = purchase.ref;
       this.basic_fields.due_date = purchase.due_date;
       this.status = purchase.status;
       this.transactionLines = purchase.line_items;
@@ -20885,6 +20896,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         },
         trn_date: erp_acct_var.current_date,
         due_date: erp_acct_var.current_date,
+        ref: '',
         billing_address: ''
       };
       this.form_errors = [];
@@ -21027,6 +21039,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         vendor_name: this.basic_fields.vendor.name,
         trn_date: this.basic_fields.trn_date,
         due_date: this.basic_fields.due_date,
+        ref: this.basic_fields.ref,
         billing_address: this.basic_fields.billing_address,
         line_items: this.formatLineItems(),
         particulars: this.particulars,
@@ -46919,7 +46932,42 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "wperp-col-xs-12" }, [
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("label", [
+                          _vm._v(_vm._s(_vm.__("Reference No", "erp")))
+                        ]),
+                        _vm._v(" "),
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.basic_fields.ref,
+                              expression: "basic_fields.ref"
+                            }
+                          ],
+                          staticClass: "wperp-form-field",
+                          attrs: {
+                            rows: "4",
+                            placeholder: _vm.__("Type here", "erp")
+                          },
+                          domProps: { value: _vm.basic_fields.ref },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.basic_fields,
+                                "ref",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
                         _c("label", [
                           _vm._v(_vm._s(_vm.__("Billing Address", "erp")))
                         ]),
@@ -49176,7 +49224,35 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "wperp-col-xs-12" }, [
+                  _c("div", { staticClass: "wperp-col-sm-6" }, [
+                    _c("label", [
+                      _vm._v(_vm._s(_vm.__("Reference No", "erp")))
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.basic_fields.ref,
+                          expression: "basic_fields.ref"
+                        }
+                      ],
+                      staticClass: "wperp-form-field",
+                      attrs: { type: "text", rows: "4" },
+                      domProps: { value: _vm.basic_fields.ref },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.basic_fields, "ref", $event.target.value)
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wperp-col-sm-6" }, [
                     _c("label", [
                       _vm._v(_vm._s(_vm.__("Billing Address", "erp")))
                     ]),
