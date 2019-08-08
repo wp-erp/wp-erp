@@ -35,7 +35,7 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
 
         $sql1 = $wpdb->prepare( "SELECT SUM(debit - credit) AS balance
             FROM {$wpdb->prefix}erp_acct_ledger_details
-            WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s'",
+            WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s' ORDER BY trn_date ASC",
             $ledger_id, $closest_fy_date['start_date'], $prev_date_of_start
         );
 
@@ -49,7 +49,7 @@ function erp_acct_get_ledger_report( $ledger_id, $start_date, $end_date ) {
     $sql2 = $wpdb->prepare( "SELECT
         trn_no, particulars, debit, credit, trn_date, created_at
         FROM {$wpdb->prefix}erp_acct_ledger_details
-        WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s'",
+        WHERE ledger_id = %d AND trn_date BETWEEN '%s' AND '%s' ORDER BY trn_date ASC",
         $ledger_id, $start_date, $end_date
     );
 
