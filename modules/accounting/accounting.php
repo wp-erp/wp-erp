@@ -156,6 +156,7 @@ final class Accounting {
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-assets.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-ledger-map.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-send-email.php';
+        require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-user-profile.php';
 
         if ( $this->is_request( 'admin' ) ) {
             require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-admin.php';
@@ -206,6 +207,7 @@ final class Accounting {
 
         $this->container['rest']   = new \WeDevs\ERP\Accounting\API\REST_API();
         $this->container['assets'] = new \WeDevs\ERP\Accounting\Includes\Classes\Assets();
+        $this->container['profile'] = new \WeDevs\ERP\Accounting\Includes\Classes\User_Profile();
     }
 
 
