@@ -705,7 +705,7 @@ function erp_acct_generate_pdf( $request, $output_method = 'D' ) {
     $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
     $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : $transaction->email;
     $subject    = isset( $request['subject'] ) ? $request['subject'] : $transaction->subject;
-    $body       = isset( $request['message'] ) ? $request['message'] : $transaction->message;
+    $body       = isset( $request['message'] ) ? $request['message'] : $request['body'];
     $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
 
 
