@@ -215,8 +215,9 @@ function erp_acct_insert_bill( $data ) {
 function erp_acct_update_bill( $data, $bill_id ) {
     global $wpdb;
 
-    $user_id = get_current_user_id();
-    $draft   = 1;
+    $user_id    = get_current_user_id();
+    $draft      = 1;
+    $voucher_no = null;
 
     $data['created_at'] = date( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
@@ -302,7 +303,7 @@ function erp_acct_update_bill( $data, $bill_id ) {
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_bill( $bill_id );
+    return erp_acct_get_bill( $voucher_no );
 }
 
 /**

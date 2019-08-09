@@ -251,6 +251,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 
     $user_id             = get_current_user_id();
     $purchase_type_order = $draft = 1;
+    $voucher_no          = null;
 
     $data['created_at'] = date( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
@@ -390,7 +391,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
         return new WP_error( 'purchase-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_purchase( $purchase_id );
+    return erp_acct_get_purchase( $voucher_no );
 
 }
 
