@@ -1292,7 +1292,7 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
         LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = en.policy_id
         LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
-        LEFT JOIN wp_erp_hr_employees AS emp ON en.user_id = emp.user_id 
+        LEFT JOIN {$wpdb->prefix}erp_hr_employees AS emp ON en.user_id = emp.user_id 
         $where
         ORDER BY {$args['orderby']} {$args['order']}
         LIMIT %d,%d;";
