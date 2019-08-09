@@ -373,7 +373,8 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
 function erp_acct_update_invoice( $data, $invoice_no ) {
     global $wpdb;
 
-    $user_id = get_current_user_id();
+    $user_id    = get_current_user_id();
+    $voucher_no = null;
 
     $data['created_at'] = date( 'Y-m-d H:i:s' );
     $data['created_by'] = $user_id;
@@ -445,7 +446,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
         return new WP_error( 'invoice-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_invoice( $invoice_no );
+    return erp_acct_get_invoice( $voucher_no );
 }
 
 /**
