@@ -549,7 +549,7 @@ window.wperp = window.wperp || {};
         removeCompanyLocation: function(e) {
             e.preventDefault();
 
-            if ( confirm( wpErpHr.confirm ) ) {
+            if ( confirm( wpErp.confirmMsg ) ) {
                 wp.ajax.send( 'erp-delete-comp-location', {
                     data: {
                         id: $(this).data('id'),
