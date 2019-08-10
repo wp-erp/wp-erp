@@ -332,7 +332,7 @@ window.wperp = window.wperp || {};
             wp.ajax.send( 'erp_audit_log_view', {
                 data: {
                     id : self.data( 'id' ),
-                    _wpnonce: wpErpHr.nonce
+                    _wpnonce: wpErp.nonce
                 },
                 success: function(res) {
                     $.erpPopup({
