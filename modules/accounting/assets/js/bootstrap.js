@@ -10260,6 +10260,14 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting__ = __webpack_require__(515);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_accounting___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_accounting__);
 
+/* global erp_acct_var */
+
+var currencyOptions = {
+  symbol: erp_acct_var.symbol,
+  decimal: erp_acct_var.decimal_separator,
+  thousand: erp_acct_var.thousand_separator,
+  format: erp_acct_var.currency_format
+};
 /* harmony default export */ __webpack_exports__["a"] = ({
   methods: {
     formatAmount: function formatAmount(val) {
@@ -10305,23 +10313,10 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
       return txt.value;
     },
     moneyFormat: function moneyFormat(number) {
-      var options = {
-        /* global erp_acct_var */
-        symbol: erp_acct_var.symbol,
-        decimal: erp_acct_var.decimal_separator,
-        thousand: erp_acct_var.thousand_separator,
-        format: erp_acct_var.currency_format
-      };
-      return __WEBPACK_IMPORTED_MODULE_0_accounting___default.a.formatMoney(number, options);
+      return __WEBPACK_IMPORTED_MODULE_0_accounting___default.a.formatMoney(number, currencyOptions);
     },
     moneyFormatwithDrCr: function moneyFormatwithDrCr(value) {
       var DrCr = null;
-      var options = {
-        symbol: erp_acct_var.symbol,
-        decimal: erp_acct_var.decimal_separator,
-        thousand: erp_acct_var.thousand_separator,
-        format: erp_acct_var.currency_format
-      };
 
       if (value.indexOf('Dr') > 0) {
         DrCr = 'Dr ';
@@ -10329,9 +10324,42 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
         DrCr = 'Cr ';
       }
 
-      ;
-      var money = __WEBPACK_IMPORTED_MODULE_0_accounting___default.a.formatMoney(value, options);
+      var money = __WEBPACK_IMPORTED_MODULE_0_accounting___default.a.formatMoney(value, currencyOptions);
       return DrCr + money;
+    },
+    noFulfillLines: function noFulfillLines(lines, selected) {
+      var nofillLines = false;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = lines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var item = _step.value;
+
+          if (!Object.prototype.hasOwnProperty.call(item, selected)) {
+            nofillLines = true;
+          } else {
+            nofillLines = false;
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return nofillLines;
     }
   }
 });

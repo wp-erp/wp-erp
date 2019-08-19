@@ -81,7 +81,7 @@
                                 <textarea v-model="line.particulars" rows="1" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
                             </td>
                             <td class="col--amount" data-colname="Amount">
-                                <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field" required>
+                                <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field" :required="line.ledger_id ? true : false">
                             </td>
                             <td class="col--total" data-colname="Total">
                                 <input type="text" :value="moneyFormat(line.amount)" class="text-right wperp-form-field" readonly disabled>
@@ -567,11 +567,8 @@ export default {
                 this.form_errors.push('Total amount can\'t be zero.');
             }
 
-            for (const item of this.transactionLines) {
-                if (!Object.prototype.hasOwnProperty.call(item, 'ledger_id')) {
-                    this.form_errors.push('Please select accounts.');
-                    break;
-                }
+            if (this.noFulfillLines(this.transactionLines, 'ledger_id')) {
+                this.form_errors.push('Please select an account.');
             }
         },
 

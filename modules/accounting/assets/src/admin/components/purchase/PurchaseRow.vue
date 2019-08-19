@@ -8,12 +8,12 @@
                    v-model="line.qty"
                    @keyup="calculateAmount"
                    name="qty"
-                   class="wperp-form-field" required>
+                   class="wperp-form-field" :required="line.selectedProduct ? true : false">
         </td>
         <td class="col--uni_price" data-colname="Unit Price">
             <input min="0" type="number" v-model="line.unitPrice"
                 @keyup="calculateAmount"
-                class="wperp-form-field text-right" required>
+                class="wperp-form-field text-right" :required="line.selectedProduct ? true : false">
         </td>
         <td class="col--amount" data-colname="Amount">
             <input type="number" min="0" step="0.01" v-model="line.amount" class="wperp-form-field text-right" readonly>

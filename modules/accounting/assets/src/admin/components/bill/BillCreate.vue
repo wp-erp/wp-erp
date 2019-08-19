@@ -38,7 +38,7 @@
                             </div>
                             <div class="wperp-col-sm-6">
                                 <label>{{ __('Reference No', 'erp') }}</label>
-                                <input type="text" v-model="basic_fields.ref" rows="4" class="wperp-form-field"></input>
+                                <input type="text" v-model="basic_fields.ref" rows="4" class="wperp-form-field" />
                             </div>
                             <div class="wperp-col-sm-6">
                                 <label>{{ __('Billing Address', 'erp') }}</label>
@@ -70,7 +70,7 @@
                             <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
                             <td class="col--particulars"><textarea v-model="line.description" rows="1" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea></td>
                             <td class="col--amount" data-colname="Amount">
-                                <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="wperp-form-field text-right"/>
+                                <input type="text" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="wperp-form-field text-right" :required="line.ledger_id ? true : false"/>
                             </td>
                             <td class="col--total" style="text-align: center" data-colname="Total">
                                 <input type="text" class="wperp-form-field text-right" :value="moneyFormat(line.amount)" readonly disabled/>
@@ -266,15 +266,15 @@ export default {
         },
 
         setDataForEdit(bill) {
-            this.basic_fields.user = { id: parseInt(bill.vendor_id), name: bill.vendor_name };
+            this.basic_fields.user            = { id: parseInt(bill.vendor_id), name: bill.vendor_name };
             this.basic_fields.billing_address = bill.billing_address;
-            this.basic_fields.trn_date = bill.trn_date;
-            this.basic_fields.ref      = bill.ref;
-            this.basic_fields.due_date = bill.due_date;
-            this.status = bill.status;
-            this.finalTotalAmount = bill.debit;
-            this.particulars = bill.particulars;
-            this.attachments = bill.attachments;
+            this.basic_fields.trn_date        = bill.trn_date;
+            this.basic_fields.ref             = bill.ref;
+            this.basic_fields.due_date        = bill.due_date;
+            this.status                       = bill.status;
+            this.finalTotalAmount             = bill.debit;
+            this.particulars                  = bill.particulars;
+            this.attachments                  = bill.attachments;
 
             // format transaction lines
             bill.bill_details.forEach(detail => {
@@ -392,16 +392,16 @@ export default {
             }
 
             const requestData = {
-                vendor_id: this.basic_fields.user.id,
-                ref: this.basic_fields.ref,
-                trn_date: this.basic_fields.trn_date,
-                due_date: this.basic_fields.due_date,
-                bill_details: this.formatTrnLines(this.transactionLines),
-                attachments: this.attachments,
+                vendor_id      : this.basic_fields.user.id,
+                ref            : this.basic_fields.ref,
+                trn_date       : this.basic_fields.trn_date,
+                due_date       : this.basic_fields.due_date,
+                bill_details   : this.formatTrnLines(this.transactionLines),
+                attachments    : this.attachments,
                 billing_address: this.basic_fields.billing_address,
-                type: 'bill',
-                status: trnStatus,
-                particulars: this.particulars
+                type           : 'bill',
+                status         : trnStatus,
+                particulars    : this.particulars
             };
 
             if (this.editMode) {
@@ -452,11 +452,8 @@ export default {
                 this.form_errors.push('Total amount can\'t be zero.');
             }
 
-            for (const item of this.transactionLines) {
-                if (!Object.prototype.hasOwnProperty.call(item, 'ledger_id')) {
-                    this.form_errors.push('Please select accounts.');
-                    break;
-                }
+            if (this.noFulfillLines(this.transactionLines, 'ledger_id')) {
+                this.form_errors.push('Please select an account.');
             }
         },
 
