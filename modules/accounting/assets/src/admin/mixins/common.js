@@ -1,5 +1,13 @@
 import accounting from 'accounting';
 
+/* global erp_acct_var */
+const currencyOptions = {
+    symbol  : erp_acct_var.symbol,
+    decimal : erp_acct_var.decimal_separator,
+    thousand: erp_acct_var.thousand_separator,
+    format  : erp_acct_var.currency_format
+};
+
 export default {
     methods: {
         formatAmount(val, prefix = false) {
@@ -47,35 +55,36 @@ export default {
         },
 
         moneyFormat(number) {
-            const options = {
-                /* global erp_acct_var */
-                symbol: erp_acct_var.symbol,
-                decimal: erp_acct_var.decimal_separator,
-                thousand: erp_acct_var.thousand_separator,
-                format: erp_acct_var.currency_format
-            };
-
-            return accounting.formatMoney(number, options);
+            return accounting.formatMoney(number, currencyOptions);
         },
 
         moneyFormatwithDrCr(value) {
             var DrCr = null;
-            const   options = {
-                symbol  : erp_acct_var.symbol,
-                decimal : erp_acct_var.decimal_separator,
-                thousand: erp_acct_var.thousand_separator,
-                format  : erp_acct_var.currency_format
-            };
 
             if (value.indexOf('Dr') > 0) {
                 DrCr = 'Dr ';
             } else if (value.indexOf('Dr') === -1) {
                 DrCr = 'Cr ';
-            };
+            }
 
-            const money = accounting.formatMoney(value, options);
+            const money = accounting.formatMoney(value, currencyOptions);
 
             return DrCr + money;
+        },
+
+        noFulfillLines(lines, selected) {
+            let nofillLines = false;
+
+            for (const item of lines) {
+                if (!Object.prototype.hasOwnProperty.call(item, selected)) {
+                    nofillLines = true;
+                } else {
+                    nofillLines = false;
+                    break;
+                }
+            }
+
+            return nofillLines;
         }
     }
 };

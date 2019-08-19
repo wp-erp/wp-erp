@@ -14296,32 +14296,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         this.form_errors.push('Total amount can\'t be zero.');
       }
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this.transactionLines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var item = _step.value;
-
-          if (!Object.prototype.hasOwnProperty.call(item, 'selectedProduct')) {
-            this.form_errors.push('Please select product.');
-            break;
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+      if (this.noFulfillLines(this.transactionLines, 'selectedProduct')) {
+        this.form_errors.push('Please select a product.');
       }
     }
   }
@@ -14386,6 +14362,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_select_MultiSelect_vue__ = __webpack_require__(2);
+//
+//
 //
 //
 //
@@ -16729,32 +16707,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         this.form_errors.push('Total amount can\'t be zero.');
       }
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this.transactionLines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var item = _step.value;
-
-          if (!Object.prototype.hasOwnProperty.call(item, 'ledger_id')) {
-            this.form_errors.push('Please select accounts.');
-            break;
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+      if (this.noFulfillLines(this.transactionLines, 'ledger_id')) {
+        this.form_errors.push('Please select an account.');
       }
     },
     formatTrnLines: function formatTrnLines(trnLines) {
@@ -18212,32 +18166,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         this.form_errors.push('Total amount can\'t be zero.');
       }
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this.transactionLines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var item = _step.value;
-
-          if (!Object.prototype.hasOwnProperty.call(item, 'selectedProduct')) {
-            this.form_errors.push('Please select product.');
-            break;
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+      if (this.noFulfillLines(this.transactionLines, 'selectedProduct')) {
+        this.form_errors.push('Please select a product.');
       }
     }
   }
@@ -21091,32 +21021,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         this.form_errors.push('Total amount can\'t be zero.');
       }
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this.transactionLines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var item = _step.value;
-
-          if (!Object.prototype.hasOwnProperty.call(item, 'ledger_id')) {
-            this.form_errors.push('Please select accounts.');
-            break;
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+      if (this.noFulfillLines(this.transactionLines, 'ledger_id')) {
+        this.form_errors.push('Please select an account.');
       }
     },
     removeRow: function removeRow(index) {
@@ -26381,6 +26287,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
 
 
 
@@ -26463,6 +26372,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   created: function created() {
     var _this = this;
 
+    this.getBanks();
     this.prepareDataLoad();
     this.$root.$on('remove-row', function (index) {
       _this.$delete(_this.transactionLines, index);
@@ -26488,9 +26398,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                 this.editMode = true;
                 this.voucherNo = this.$route.params.id;
                 /**
-                     * Duplicates of
-                     *? this.getLedgers()
-                     */
+                 * Duplicates of
+                 *? this.getLedgers()
+                */
 
                 _context.next = 5;
                 return __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/ledgers');
@@ -26521,10 +26431,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
               case 17:
                 /**
-                     * ----------------------------------------------
-                     * create a new check
-                     * -----------------------------------------------
-                     */
+                 * ----------------------------------------------
+                 * create a new check
+                 * -----------------------------------------------
+                 */
                 this.getLedgers();
                 this.basic_fields.trn_date = erp_acct_var.current_date;
                 this.basic_fields.due_date = erp_acct_var.current_date;
@@ -26734,7 +26644,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.form_errors = [];
 
       if (!Object.prototype.hasOwnProperty.call(this.basic_fields.people, 'id')) {
-        this.form_errors.push('People Name is required.');
+        this.form_errors.push('Pay to is required.');
       }
 
       if (!this.basic_fields.check_no) {
@@ -26757,32 +26667,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         this.form_errors.push('Total amount can\'t be zero.');
       }
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this.transactionLines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var item = _step.value;
-
-          if (!Object.prototype.hasOwnProperty.call(item, 'ledger_id')) {
-            this.form_errors.push('Please select accounts.');
-            break;
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+      if (this.noFulfillLines(this.transactionLines, 'ledger_id')) {
+        this.form_errors.push('Please select an account.');
       }
     },
     resetFields: function resetFields() {
@@ -37875,9 +37761,9 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_LedgerReport_vue__ = __webpack_require__(116);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5bf2ad80_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_LedgerReport_vue__ = __webpack_require__(635);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5bf2ad80_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_LedgerReport_vue__ = __webpack_require__(270);
 function injectStyle (ssrContext) {
-  __webpack_require__(634)
+  __webpack_require__(269)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -37906,8 +37792,22 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 269 */,
-/* 270 */,
+/* 269 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 270 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"ledger-report"},[_c('h2',[_vm._v(_vm._s(_vm.__('Ledger Report', 'erp')))]),_vm._v(" "),_c('form',{staticClass:"query-options no-print",attrs:{"action":"","method":""},on:{"submit":function($event){$event.preventDefault();return _vm.getLedgerReport($event)}}},[_c('div',{staticClass:"with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.ledgers},model:{value:(_vm.selectedLedger),callback:function ($$v) {_vm.selectedLedger=$$v},expression:"selectedLedger"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-date-group"},[_c('datepicker',{model:{value:(_vm.start_date),callback:function ($$v) {_vm.start_date=$$v},expression:"start_date"}}),_vm._v(" "),_c('datepicker',{model:{value:(_vm.end_date),callback:function ($$v) {_vm.end_date=$$v},expression:"end_date"}}),_vm._v(" "),_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",attrs:{"type":"submit"}},[_vm._v(_vm._s(_vm.__('Filter', 'erp')))]),_vm._v(" "),_c('a',{staticClass:"wperp-btn btn--default print-btn",attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.printPopup($event)}}},[_c('i',{staticClass:"flaticon-printer-1"}),_vm._v("\n                  "+_vm._s(_vm.__('Print', 'erp'))+"\n            ")])],1)]),_vm._v(" "),(null !== _vm.selectedLedger)?_c('ul',{staticClass:"report-header"},[_c('li',[_c('strong',[_vm._v(_vm._s(_vm.__('Account No', 'erp'))+":")]),_vm._v(" "),_c('em',[_vm._v(_vm._s(_vm.selectedLedger.code))])]),_vm._v(" "),_c('li',[_c('strong',[_vm._v(_vm._s(_vm.__('Account Name', 'erp'))+":")]),_vm._v(" "),_c('em',[_vm._v(_vm._s(_vm.selectedLedger.name))])]),_vm._v(" "),_c('li',[_c('strong',[_vm._v(_vm._s(_vm.__('Currency', 'erp'))+":")]),_vm._v(" "),_c('em',[_vm._v(_vm._s(_vm.symbol))])]),_vm._v(" "),_c('li',[_c('strong',[_vm._v(_vm._s(_vm.__('For the period of ( Transaction date )', 'erp'))+":")]),_vm._v(" "),_c('em',[_vm._v(_vm._s(_vm.start_date))]),_vm._v(" to "),_c('em',[_vm._v(_vm._s(_vm.end_date))])])]):_vm._e(),_vm._v(" "),_c('list-table',{attrs:{"tableClass":"wperp-table table-striped table-dark widefat ledger-table","columns":_vm.columns,"rows":_vm.rows,"showCb":false},scopedSlots:_vm._u([{key:"trn_no",fn:function(data){return [_c('strong',[_c('router-link',{attrs:{"to":{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}}},[(data.row.trn_no)?_c('span',[_vm._v("#"+_vm._s(data.row.trn_no))]):_vm._e()])],1)]}},{key:"balance",fn:function(data){return [_vm._v("\n            "+_vm._s(_vm.moneyFormatwithDrCr(data.row.balance))+"\n        ")]}},{key:"debit",fn:function(data){return [_vm._v("\n            "+_vm._s(_vm.moneyFormat(data.row.debit))+"\n        ")]}},{key:"credit",fn:function(data){return [_vm._v("\n            "+_vm._s(_vm.moneyFormat(data.row.credit))+"\n        ")]}}])},[_vm._v(" "),_vm._v(" "),_vm._v(" "),_vm._v(" "),_c('template',{slot:"tfoot"},[_c('tr',{staticClass:"tfoot"},[_c('td',{attrs:{"colspan":"3"}}),_vm._v(" "),_c('td',[_vm._v(_vm._s(_vm.__('Total', 'erp'))+" =")]),_vm._v(" "),_c('td',[_vm._v(_vm._s(_vm.moneyFormat(_vm.totalDebit)))]),_vm._v(" "),_c('td',[_vm._v(_vm._s(_vm.moneyFormat(_vm.totalCredit)))]),_vm._v(" "),_c('td')])])],2)],1)}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
 /* 271 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -38064,9 +37964,9 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_InvoiceCreate_vue__ = __webpack_require__(120);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1204db02_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceCreate_vue__ = __webpack_require__(291);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1aa62642_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceCreate_vue__ = __webpack_require__(731);
 function injectStyle (ssrContext) {
-  __webpack_require__(280)
+  __webpack_require__(730)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -38084,7 +37984,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_InvoiceCreate_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1204db02_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceCreate_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1aa62642_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceCreate_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -38095,12 +37995,7 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 280 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 280 */,
 /* 281 */,
 /* 282 */,
 /* 283 */,
@@ -38126,9 +38021,9 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_InvoiceTrnRow_vue__ = __webpack_require__(122);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1e836295_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceTrnRow_vue__ = __webpack_require__(288);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6614b4dc_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceTrnRow_vue__ = __webpack_require__(686);
 function injectStyle (ssrContext) {
-  __webpack_require__(287)
+  __webpack_require__(685)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -38141,12 +38036,12 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-1e836295"
+var __vue_scopeId__ = "data-v-6614b4dc"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_InvoiceTrnRow_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1e836295_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceTrnRow_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6614b4dc_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceTrnRow_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -38157,22 +38052,8 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 287 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 288 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('tr',[_c('th',{staticClass:"col--products with-multiselect product-select",attrs:{"scope":"row"}},[_c('multi-select',{attrs:{"options":_vm.products},on:{"input":_vm.setProductInfo},model:{value:(_vm.line.selectedProduct),callback:function ($$v) {_vm.$set(_vm.line, "selectedProduct", $$v)},expression:"line.selectedProduct"}})],1),_vm._v(" "),_c('td',{staticClass:"col--qty column-primary"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.qty),expression:"line.qty"}],staticClass:"wperp-form-field",attrs:{"type":"number","name":"qty","required":""},domProps:{"value":(_vm.line.qty)},on:{"keyup":_vm.respondAtChange,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "qty", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--uni_price",attrs:{"data-colname":"Unit Price"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.unitPrice),expression:"line.unitPrice"}],staticClass:"wperp-form-field",attrs:{"type":"number","min":"0","step":"0.01"},domProps:{"value":(_vm.line.unitPrice)},on:{"keyup":_vm.respondAtChange,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "unitPrice", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--amount",attrs:{"data-colname":"Amount"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.amount),expression:"line.amount"}],staticClass:"wperp-form-field",attrs:{"type":"number","min":"0","step":"0.01","readonly":""},domProps:{"value":(_vm.line.amount)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "amount", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--tax",attrs:{"data-colname":"Tax"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.applyTax),expression:"line.applyTax"}],staticClass:"wperp-form-field",attrs:{"type":"checkbox"},domProps:{"checked":Array.isArray(_vm.line.applyTax)?_vm._i(_vm.line.applyTax,null)>-1:(_vm.line.applyTax)},on:{"change":[function($event){var $$a=_vm.line.applyTax,$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.$set(_vm.line, "applyTax", $$a.concat([$$v])))}else{$$i>-1&&(_vm.$set(_vm.line, "applyTax", $$a.slice(0,$$i).concat($$a.slice($$i+1))))}}else{_vm.$set(_vm.line, "applyTax", $$c)}},_vm.respondAtChange]}}),_vm._v(" "),('1' == _vm.debugMode)?[_c('span',{staticStyle:{"color":"blueviolet"},domProps:{"textContent":_vm._s(_vm.line.taxAmount)}}),_vm._v(" "),_c('span',{staticStyle:{"color":"#f44336"},domProps:{"textContent":_vm._s(_vm.line.discount)}})]:_vm._e()],2),_vm._v(" "),_c('td',{staticClass:"col--actions delete-row",attrs:{"data-colname":"Action"}},[_c('span',{staticClass:"wperp-btn",on:{"click":_vm.removeRow}},[_c('i',{staticClass:"flaticon-trash"})])])])}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-
-/***/ }),
+/* 287 */,
+/* 288 */,
 /* 289 */
 /***/ (function(module, exports) {
 
@@ -38189,16 +38070,7 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 291 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"wperp-container invoice-create"},[_c('div',{staticClass:"content-header-section separator"},[_c('div',{staticClass:"wperp-row wperp-between-xs"},[_c('div',{staticClass:"wperp-col"},[_c('h2',{staticClass:"content-header__title"},[_vm._v(_vm._s(_vm.editMode ? _vm.__('Edit', 'erp') : _vm.__('New', 'erp'))+" "+_vm._s(_vm.inv_title))])])])]),_vm._v(" "),_c('form',{attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.submitInvoiceForm($event)}}},[_c('div',{staticClass:"wperp-panel wperp-panel-default",staticStyle:{"padding-bottom":"0"}},[_c('show-errors',{attrs:{"error_msgs":_vm.form_errors}}),_vm._v(" "),_c('div',{staticClass:"wperp-panel-body"},[_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-col-sm-4"},[_c('select-customers',{model:{value:(_vm.basic_fields.customer),callback:function ($$v) {_vm.$set(_vm.basic_fields, "customer", $$v)},expression:"basic_fields.customer"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Transaction Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.trn_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "trn_date", $$v)},expression:"basic_fields.trn_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Due Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.due_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "due_date", $$v)},expression:"basic_fields.due_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-6"},[_c('label',[_vm._v(_vm._s(_vm.__('Billing Address', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.basic_fields.billing_address),expression:"basic_fields.billing_address"}],staticClass:"wperp-form-field",attrs:{"rows":"4","placeholder":_vm.__('Type here', 'erp')},domProps:{"value":(_vm.basic_fields.billing_address)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "billing_address", $event.target.value)}}})])])])],1),_vm._v(" "),_c('div',{staticClass:"wperp-table-responsive"},[_c('div',{staticClass:"table-container"},[_c('table',{staticClass:"wperp-table wperp-form-table"},[_c('thead',[_c('tr',[_c('th',{staticClass:"col--products",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Product/Service', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--qty",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Qty', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--unit-price",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Unit Price', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--amount",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Amount', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--tax",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Tax', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--actions",attrs:{"scope":"col"}})])]),_vm._v(" "),(null != _vm.taxSummary)?_c('tbody',[_vm._l((_vm.transactionLines),function(line,index){return _c('invoice-trn-row',{key:index,attrs:{"line":line,"products":_vm.products,"taxSummary":_vm.taxSummary}})}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.addLine($event)}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add Line', 'erp')))])])]),_vm._v(" "),_c('tr',{staticClass:"discount-rate-row"},[_c('td',{staticClass:"text-right with-multiselect",attrs:{"colspan":"4"}},[_c('select',{directives:[{name:"model",rawName:"v-model",value:(_vm.discountType),expression:"discountType"}],on:{"change":function($event){var $$selectedVal = Array.prototype.filter.call($event.target.options,function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val}); _vm.discountType=$event.target.multiple ? $$selectedVal : $$selectedVal[0]}}},[_c('option',{attrs:{"value":"discount-percent"}},[_vm._v(_vm._s(_vm.__('Discount percent', 'erp')))]),_vm._v(" "),_c('option',{attrs:{"value":"discount-value"}},[_vm._v(_vm._s(_vm.__('Discount value', 'erp')))])])]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.discount),expression:"discount"}],staticClass:"wperp-form-field",attrs:{"type":"text","placeholder":_vm.discountType},domProps:{"value":(_vm.discount)},on:{"input":function($event){if($event.target.composing){ return; }_vm.discount=$event.target.value}}}),_vm._v(" "),_c('em',{directives:[{name:"show",rawName:"v-show",value:('discount-percent' === _vm.discountType),expression:"'discount-percent' === discountType"}]},[_vm._v("%")])]),_vm._v(" "),_c('td')]),_vm._v(" "),_c('tr',{staticClass:"tax-rate-row"},[_c('td',{staticClass:"text-right with-multiselect",attrs:{"colspan":"4"}},[_c('multi-select',{staticClass:"tax-rates",attrs:{"options":_vm.taxRates,"placeholder":_vm.__('Select sales tax', 'erp')},model:{value:(_vm.taxRate),callback:function ($$v) {_vm.taxRate=$$v},expression:"taxRate"}})],1),_vm._v(" "),_c('td',[_c('input',{staticClass:"wperp-form-field",attrs:{"type":"text","readonly":""},domProps:{"value":_vm.moneyFormat(_vm.taxTotalAmount)}})]),_vm._v(" "),_c('td')]),_vm._v(" "),_c('tr',{staticClass:"total-amount-row"},[_c('td',{staticClass:"text-right",attrs:{"colspan":"4"}},[_c('span',[_vm._v(_vm._s(_vm.__('Total Amount', 'erp'))+" =")])]),_vm._v(" "),_c('td',[_c('input',{staticClass:"wperp-form-field",attrs:{"type":"text","readonly":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalAmount)}})]),_vm._v(" "),_c('td')]),_vm._v(" "),_c('tr',{staticClass:"wperp-form-group"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('label',[_vm._v(_vm._s(_vm.__('Particulars', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.particulars),expression:"particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"4","placeholder":_vm.__('Particulars', 'erp')},domProps:{"value":(_vm.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.particulars=$event.target.value}}})])]),_vm._v(" "),_c('tr',[_c('td',_vm._l((_vm.attachments),function(file,index){return _c('div',{key:index,staticClass:"attachment-item"},[_c('img',{attrs:{"src":_vm.erp_acct_assets + '/images/file-thumb.png'}}),_vm._v(" "),_c('span',{staticClass:"remove-file",on:{"click":function($event){return _vm.removeFile(index)}}},[_vm._v("✗")]),_vm._v(" "),_c('div',{staticClass:"attachment-meta"},[_c('h3',[_vm._v(_vm._s(_vm.getFileName(file)))])])])}),0)]),_vm._v(" "),_c('tr',{staticClass:"add-attachment-row"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('div',{staticClass:"attachment-container"},[_c('label',{staticClass:"col--attachement"},[_vm._v(_vm._s(_vm.__('Attachment', 'erp')))]),_vm._v(" "),_c('file-upload',{attrs:{"url":"/invoices/attachments"},model:{value:(_vm.attachments),callback:function ($$v) {_vm.attachments=$$v},expression:"attachments"}})],1)])])],2):_vm._e(),_vm._v(" "),_c('tfoot',[_c('tr',[_c('td',{staticStyle:{"text-align":"right"},attrs:{"colspan":"9"}},[(_vm.editMode)?_c('combo-button',{attrs:{"options":_vm.updateButtons}}):_c('combo-button',{attrs:{"options":_vm.createButtons}})],1)])])])])])])])}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-
-/***/ }),
+/* 291 */,
 /* 292 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -38534,9 +38406,9 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BillCreate_vue__ = __webpack_require__(135);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3fd2773a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BillCreate_vue__ = __webpack_require__(638);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6f1b16d2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BillCreate_vue__ = __webpack_require__(752);
 function injectStyle (ssrContext) {
-  __webpack_require__(637)
+  __webpack_require__(751)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -38554,7 +38426,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_BillCreate_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3fd2773a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BillCreate_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6f1b16d2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_BillCreate_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -38732,9 +38604,9 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PurchaseCreate_vue__ = __webpack_require__(140);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_12b513f2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PurchaseCreate_vue__ = __webpack_require__(640);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f664230e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PurchaseCreate_vue__ = __webpack_require__(737);
 function injectStyle (ssrContext) {
-  __webpack_require__(639)
+  __webpack_require__(736)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -38752,7 +38624,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PurchaseCreate_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_12b513f2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PurchaseCreate_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f664230e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PurchaseCreate_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -38770,9 +38642,9 @@ var Component = normalizeComponent(
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PurchaseRow_vue__ = __webpack_require__(141);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7dcb8e03_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PurchaseRow_vue__ = __webpack_require__(353);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_383ac391_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PurchaseRow_vue__ = __webpack_require__(650);
 function injectStyle (ssrContext) {
-  __webpack_require__(352)
+  __webpack_require__(649)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -38785,12 +38657,12 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-7dcb8e03"
+var __vue_scopeId__ = "data-v-383ac391"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PurchaseRow_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7dcb8e03_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PurchaseRow_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_383ac391_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PurchaseRow_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -38801,22 +38673,8 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 352 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 353 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('tr',[_c('th',{staticClass:"col--check with-multiselect column-primary product-select",attrs:{"scope":"row"}},[_c('multi-select',{attrs:{"options":_vm.products},on:{"input":_vm.setProductInfo},model:{value:(_vm.line.selectedProduct),callback:function ($$v) {_vm.$set(_vm.line, "selectedProduct", $$v)},expression:"line.selectedProduct"}})],1),_vm._v(" "),_c('td',{staticClass:"col--qty"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.qty),expression:"line.qty"}],staticClass:"wperp-form-field",attrs:{"min":"0","type":"number","name":"qty","required":""},domProps:{"value":(_vm.line.qty)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "qty", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--uni_price",attrs:{"data-colname":"Unit Price"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.unitPrice),expression:"line.unitPrice"}],staticClass:"wperp-form-field text-right",attrs:{"min":"0","type":"number","required":""},domProps:{"value":(_vm.line.unitPrice)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "unitPrice", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--amount",attrs:{"data-colname":"Amount"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.amount),expression:"line.amount"}],staticClass:"wperp-form-field text-right",attrs:{"type":"number","min":"0","step":"0.01","readonly":""},domProps:{"value":(_vm.line.amount)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "amount", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--actions delete-row",attrs:{"data-colname":"Action"}},[_c('span',{staticClass:"wperp-btn",on:{"click":_vm.removeRow}},[_c('i',{staticClass:"flaticon-trash"})])])])}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-
-/***/ }),
+/* 352 */,
+/* 353 */,
 /* 354 */
 /***/ (function(module, exports) {
 
@@ -39317,9 +39175,9 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ExpenseCreate_vue__ = __webpack_require__(153);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c2c3222a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ExpenseCreate_vue__ = __webpack_require__(386);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_48611834_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ExpenseCreate_vue__ = __webpack_require__(734);
 function injectStyle (ssrContext) {
-  __webpack_require__(385)
+  __webpack_require__(733)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -39337,7 +39195,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ExpenseCreate_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c2c3222a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ExpenseCreate_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_48611834_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ExpenseCreate_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -39348,22 +39206,8 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 385 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 386 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"wperp-container expense-create"},[_c('div',{staticClass:"content-header-section separator"},[_c('div',{staticClass:"wperp-row wperp-between-xs"},[_c('div',{staticClass:"wperp-col"},[_c('h2',{staticClass:"content-header__title"},[_vm._v(_vm._s(_vm.__('New Expense', 'erp')))])])])]),_vm._v(" "),_c('form',{attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.SubmitForExpense($event)}}},[_c('div',{staticClass:"wperp-panel wperp-panel-default",staticStyle:{"padding-bottom":"0"}},[_c('div',{staticClass:"wperp-panel-body"},[_c('show-errors',{attrs:{"error_msgs":_vm.form_errors}}),_vm._v(" "),_c('form',{staticClass:"wperp-form",attrs:{"action":"","method":"post"}},[_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('select-people',{model:{value:(_vm.basic_fields.people),callback:function ($$v) {_vm.$set(_vm.basic_fields, "people", $$v)},expression:"basic_fields.people"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Reference', 'erp')))]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.basic_fields.trn_ref),expression:"basic_fields.trn_ref"}],staticClass:"wperp-form-field",attrs:{"type":"text"},domProps:{"value":(_vm.basic_fields.trn_ref)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "trn_ref", $event.target.value)}}})])]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Expense Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.trn_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "trn_date", $$v)},expression:"basic_fields.trn_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4 with-multiselect"},[_c('label',[_vm._v(_vm._s(_vm.__('Payment Method', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('multi-select',{attrs:{"options":_vm.pay_methods},model:{value:(_vm.basic_fields.trn_by),callback:function ($$v) {_vm.$set(_vm.basic_fields, "trn_by", $$v)},expression:"basic_fields.trn_by"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4 with-multiselect"},[_c('label',[_vm._v(_vm._s(_vm.__('Transaction From', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('select-accounts',{attrs:{"override_accts":_vm.accts_by_chart},model:{value:(_vm.basic_fields.deposit_to),callback:function ($$v) {_vm.$set(_vm.basic_fields, "deposit_to", $$v)},expression:"basic_fields.deposit_to"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('label',[_vm._v(_vm._s(_vm.__('Billing Address', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model.trim",value:(_vm.basic_fields.billing_address),expression:"basic_fields.billing_address",modifiers:{"trim":true}}],staticClass:"wperp-form-field",attrs:{"rows":"3","placeholder":_vm.__('Type here', 'erp')},domProps:{"value":(_vm.basic_fields.billing_address)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "billing_address", $event.target.value.trim())},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),(_vm.basic_fields.trn_by.id === '3')?_c('check-fields',{on:{"updateCheckFields":_vm.setCheckFields}}):_vm._e()],1)])],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-table-responsive"},[_c('div',{staticClass:"table-container"},[_c('table',{staticClass:"wperp-table wperp-form-table"},[_c('thead',[_c('tr',[_c('th',{staticClass:"col--id column-primary",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('SL No.', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Description', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Amount', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Total', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--actions",attrs:{"scope":"col"}})])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.transactionLines),function(line,key){return _c('tr',{key:key},[_c('td',{staticClass:"col--id column-primary",attrs:{"scope":"row"}},[_vm._v(_vm._s(key+1))]),_vm._v(" "),_c('td',{staticClass:"col--account with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.ledgers},model:{value:(line.ledger_id),callback:function ($$v) {_vm.$set(line, "ledger_id", $$v)},expression:"line.ledger_id"}})],1),_vm._v(" "),_c('td',{staticClass:"col--particulars"},[_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(line.particulars),expression:"line.particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"1","placeholder":_vm.__('Particulars', 'erp')},domProps:{"value":(line.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "particulars", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--amount",attrs:{"data-colname":"Amount"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(line.amount),expression:"line.amount"}],staticClass:"text-right wperp-form-field",attrs:{"type":"text","name":"amount","required":""},domProps:{"value":(line.amount)},on:{"keyup":_vm.updateFinalAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "amount", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--total",attrs:{"data-colname":"Total"}},[_c('input',{staticClass:"text-right wperp-form-field",attrs:{"type":"text","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(line.amount)}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove Above Selection"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeRow(key)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.addLine($event)}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add Line', 'erp')))])])]),_vm._v(" "),_c('tr',{staticClass:"total-amount-row"},[_c('td',{staticClass:"text-right pr-0 hide-sm",attrs:{"colspan":"4"}},[_vm._v(_vm._s(_vm.__('Total Amount', 'erp')))]),_vm._v(" "),_c('td',{staticClass:"text-right",attrs:{"data-colname":"Total Amount"}},[_c('input',{staticClass:"text-right wperp-form-field",attrs:{"type":"text","name":"finalamount","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalAmount)}})]),_vm._v(" "),_c('td',{staticClass:"text-right"})]),_vm._v(" "),_c('tr',{staticClass:"wperp-form-group"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('label',[_vm._v(_vm._s(_vm.__('Particulars', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.particulars),expression:"particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"4","placeholder":_vm.__('Internal Information', 'erp')},domProps:{"value":(_vm.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.particulars=$event.target.value}}})])]),_vm._v(" "),_c('tr',[_c('td',_vm._l((_vm.attachments),function(file,index){return _c('div',{key:index,staticClass:"attachment-item"},[_c('img',{attrs:{"src":_vm.erp_acct_assets + '/images/file-thumb.png'}}),_vm._v(" "),_c('span',{staticClass:"remove-file",on:{"click":function($event){return _vm.removeFile(index)}}},[_vm._v("✗")]),_vm._v(" "),_c('div',{staticClass:"attachment-meta"},[_c('h3',[_vm._v(_vm._s(_vm.getFileName(file)))])])])}),0)]),_vm._v(" "),_c('tr',{staticClass:"add-attachment-row"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('div',{staticClass:"attachment-container"},[_c('label',{staticClass:"col--attachement"},[_vm._v(_vm._s(_vm.__('Attachment', 'erp')))]),_vm._v(" "),_c('file-upload',{attrs:{"url":"/invoices/attachments"},model:{value:(_vm.attachments),callback:function ($$v) {_vm.attachments=$$v},expression:"attachments"}})],1)])])],2),_vm._v(" "),_c('tfoot',[_c('tr',[_c('td',{staticStyle:{"text-align":"right"},attrs:{"colspan":"9"}},[(_vm.editMode)?_c('combo-button',{attrs:{"options":_vm.updateButtons}}):_c('combo-button',{attrs:{"options":_vm.createButtons}})],1)])])])])])])])}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-
-/***/ }),
+/* 385 */,
+/* 386 */,
 /* 387 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -40625,9 +40469,9 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CheckCreate_vue__ = __webpack_require__(184);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1bff1f9c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CheckCreate_vue__ = __webpack_require__(462);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7e3f4a4e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CheckCreate_vue__ = __webpack_require__(740);
 function injectStyle (ssrContext) {
-  __webpack_require__(461)
+  __webpack_require__(739)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -40645,7 +40489,7 @@ var __vue_scopeId__ = null
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_CheckCreate_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1bff1f9c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CheckCreate_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7e3f4a4e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_CheckCreate_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -40656,22 +40500,8 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 461 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 462 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"wperp-container check-create"},[_c('div',{staticClass:"content-header-section separator"},[_c('div',{staticClass:"wperp-row wperp-between-xs"},[_c('div',{staticClass:"wperp-col"},[_c('h2',{staticClass:"content-header__title"},[_vm._v(_vm._s(_vm.__('New Check', 'erp')))])])])]),_vm._v(" "),_c('form',{attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.submitCheckForm($event)}}},[_c('div',{staticClass:"wperp-panel wperp-panel-default",staticStyle:{"padding-bottom":"0"}},[_c('div',{staticClass:"wperp-panel-body"},[_c('show-errors',{attrs:{"error_msgs":_vm.form_errors}}),_vm._v(" "),_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('select-people',{model:{value:(_vm.basic_fields.people),callback:function ($$v) {_vm.$set(_vm.basic_fields, "people", $$v)},expression:"basic_fields.people"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Check No', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.basic_fields.check_no),expression:"basic_fields.check_no"}],staticClass:"wperp-form-field",attrs:{"type":"text","required":""},domProps:{"value":(_vm.basic_fields.check_no)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "check_no", $event.target.value)}}})])]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Payment Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.trn_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "trn_date", $$v)},expression:"basic_fields.trn_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4 with-multiselect"},[_c('label',[_vm._v(_vm._s(_vm.__('From Account', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('multi-select',{attrs:{"options":_vm.bank_accts},model:{value:(_vm.basic_fields.deposit_to),callback:function ($$v) {_vm.$set(_vm.basic_fields, "deposit_to", $$v)},expression:"basic_fields.deposit_to"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('label',[_vm._v(_vm._s(_vm.__('Billing Address', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model.trim",value:(_vm.basic_fields.billing_address),expression:"basic_fields.billing_address",modifiers:{"trim":true}}],staticClass:"wperp-form-field",attrs:{"rows":"3","placeholder":_vm.__('Type here', 'erp')},domProps:{"value":(_vm.basic_fields.billing_address)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "billing_address", $event.target.value.trim())},"blur":function($event){return _vm.$forceUpdate()}}})])])],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-table-responsive"},[_c('div',{staticClass:"table-container"},[_c('table',{staticClass:"wperp-table wperp-form-table"},[_c('thead',[_c('tr',[_c('th',{staticClass:"col--id column-primary",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('SL No.', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Description', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Amount', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Total', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--actions",attrs:{"scope":"col"}})])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.transactionLines),function(line,key){return _c('tr',{key:key},[_c('td',{staticClass:"col--id column-primary",attrs:{"scope":"row"}},[_vm._v(_vm._s(key+1))]),_vm._v(" "),_c('td',{staticClass:"col--account with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.ledgers},model:{value:(line.ledger_id),callback:function ($$v) {_vm.$set(line, "ledger_id", $$v)},expression:"line.ledger_id"}})],1),_vm._v(" "),_c('td',{staticClass:"col--particulars"},[_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(line.particulars),expression:"line.particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"1","placeholder":_vm.__('Particulars', 'erp')},domProps:{"value":(line.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "particulars", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--amount",attrs:{"data-colname":"Amount"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(line.amount),expression:"line.amount"}],staticClass:"text-right wperp-form-field",attrs:{"type":"number","min":"0","step":"0.01","name":"amount"},domProps:{"value":(line.amount)},on:{"keyup":_vm.updateFinalAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "amount", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--total",attrs:{"data-colname":"Total"}},[_c('input',{staticClass:"text-right wperp-form-field",attrs:{"type":"text","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(line.amount)}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove Above Selection"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeRow(key)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.addLine($event)}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v("Add Line")])])]),_vm._v(" "),_c('tr',{staticClass:"total-amount-row"},[_c('td',{staticClass:"text-right pr-0 hide-sm",attrs:{"colspan":"4"}},[_vm._v(_vm._s(_vm.__('Total Amount', 'erp')))]),_vm._v(" "),_c('td',{staticClass:"text-right",attrs:{"data-colname":"Total Amount"}},[_c('input',{staticClass:"text-right wperp-form-field",attrs:{"type":"text","name":"finalamount","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalAmount)}})]),_vm._v(" "),_c('td',{staticClass:"text-right"})]),_vm._v(" "),_c('tr',{staticClass:"wperp-form-group"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('label',[_vm._v(_vm._s(_vm.__('Particulars', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.particulars),expression:"particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"4","placeholder":_vm.__('Internal Information', 'erp')},domProps:{"value":(_vm.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.particulars=$event.target.value}}})])]),_vm._v(" "),_c('tr',[_c('td',_vm._l((_vm.attachments),function(file,index){return _c('div',{key:index,staticClass:"attachment-item"},[_c('img',{attrs:{"src":_vm.erp_acct_assets + '/images/file-thumb.png'}}),_vm._v(" "),_c('span',{staticClass:"remove-file",on:{"click":function($event){return _vm.removeFile(index)}}},[_vm._v("✗")]),_vm._v(" "),_c('div',{staticClass:"attachment-meta"},[_c('h3',[_vm._v(_vm._s(_vm.getFileName(file)))])])])}),0)]),_vm._v(" "),_c('tr',{staticClass:"add-attachment-row"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('div',{staticClass:"attachment-container"},[_c('label',{staticClass:"col--attachement"},[_vm._v(_vm._s(_vm.__('Attachment', 'erp')))]),_vm._v(" "),_c('file-upload',{attrs:{"url":"/invoices/attachments"},model:{value:(_vm.attachments),callback:function ($$v) {_vm.attachments=$$v},expression:"attachments"}})],1)])])],2),_vm._v(" "),_c('tfoot',[_c('tr',[_c('td',{staticStyle:{"text-align":"right"},attrs:{"colspan":"9"}},[(_vm.editMode)?_c('combo-button',{attrs:{"options":_vm.updateButtons}}):_c('combo-button',{attrs:{"options":_vm.createButtons}})],1)])])])])])])])}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-
-/***/ }),
+/* 461 */,
+/* 462 */,
 /* 463 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -41049,10 +40879,10 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_OpeningBalance_vue__ = __webpack_require__(192);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_78307b47_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_OpeningBalance_vue__ = __webpack_require__(643);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_78307b47_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_OpeningBalance_vue__ = __webpack_require__(487);
 function injectStyle (ssrContext) {
-  __webpack_require__(641)
-  __webpack_require__(642)
+  __webpack_require__(485)
+  __webpack_require__(486)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -41081,9 +40911,28 @@ var Component = normalizeComponent(
 
 
 /***/ }),
-/* 485 */,
-/* 486 */,
-/* 487 */,
+/* 485 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 486 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 487 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"wperp-container accordion-container"},[_c('div',{staticClass:"content-header-section separator"},[_c('div',{staticClass:"wperp-row wperp-between-xs"},[_c('div',{staticClass:"wperp-col"},[_c('h2',{staticClass:"content-header__title"},[_vm._v(_vm._s(_vm.__('Opening Balances', 'erp')))])])])]),_vm._v(" "),_c('show-errors',{attrs:{"error_msgs":_vm.form_errors}}),_vm._v(" "),_c('form',{attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.submitOBForm($event)}}},[_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-col-sm-6 with-multiselect opening-fyear-select"},[_c('label',[_vm._v(_vm._s(_vm.__('Financial Year', 'erp')))]),_vm._v(" "),_c('multi-select',{attrs:{"options":_vm.years},model:{value:(_vm.fin_year),callback:function ($$v) {_vm.fin_year=$$v},expression:"fin_year"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-6"},[_c('a',{staticClass:"wperp-col-sm-4 wperp-btn btn--default print-btn",attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.printPopup($event)}}},[_c('i',{staticClass:"flaticon-printer-1"}),_vm._v("\n                      "+_vm._s(_vm.__('Print', 'erp'))+"\n                ")])])]),_vm._v(" "),_c('div',{staticClass:"wperp-row"},[(null !== _vm.fin_year)?_c('ul',{staticClass:"report-header"},[_c('li',[_c('strong',[_vm._v(_vm._s(_vm.__('For the period of ( Opening Balance date )', 'erp'))+":")]),_vm._v(" "),_c('em',[_vm._v(_vm._s(_vm.fin_year.start_date))]),_vm._v(" to "),_c('em',[_vm._v(_vm._s(_vm.fin_year.end_date))])])]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open5?'active':'before-border',on:{"click":function($event){_vm.open5=!_vm.open5}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.__('Accounts Receivable', 'erp')))])]),_vm._v(" "),_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open5),expression:"open5"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('People', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp'))+"\n                        "),(_vm.accPayRec && '0' != _vm.accPayRec.invoice_acc)?_c('span',[_vm._v("("+_vm._s(_vm.accPayRec.invoice_acc)+")")]):_vm._e()]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))]),_vm._v(" "),_c('th')])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.acct_rec),function(acct,idx){return _c('tr',{key:idx},[_c('td',[_c('div',{staticClass:"wperp-form-group ob-people with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.options},model:{value:(acct.people),callback:function ($$v) {_vm.$set(acct, "people", $$v)},expression:"acct.people"}})],1)]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.debit),expression:"acct.debit"}],attrs:{"type":"number"},domProps:{"value":(acct.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.credit),expression:"acct.credit"}],attrs:{"type":"number","disabled":""},domProps:{"value":(acct.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "credit", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeAcctRecRow(idx)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.acct_rec.push({})}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add People', 'erp')))])])])],2)])]),_vm._v(" "),(_vm.acct_pay)?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open6?'active':'before-border',on:{"click":function($event){_vm.open6=!_vm.open6}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.__('Accounts Payable', 'erp')))])]),_vm._v(" "),_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open6),expression:"open6"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('People', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp'))+"\n                        "),(_vm.accPayRec && '0' != _vm.accPayRec.bill_purchase_acc)?_c('span',[_vm._v("("+_vm._s(_vm.accPayRec.bill_purchase_acc)+")")]):_vm._e()]),_vm._v(" "),_c('th')])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.acct_pay),function(acct,idx){return _c('tr',{key:idx},[_c('td',[_c('div',{staticClass:"wperp-form-group ob-people with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.options},model:{value:(acct.people),callback:function ($$v) {_vm.$set(acct, "people", $$v)},expression:"acct.people"}})],1)]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.debit),expression:"acct.debit"}],attrs:{"type":"number","disabled":""},domProps:{"value":(acct.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.credit),expression:"acct.credit"}],attrs:{"type":"number"},domProps:{"value":(acct.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "credit", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeAcctPayRow(idx)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.acct_pay.push({})}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add People', 'erp')))])])])],2)])]):_vm._e(),_vm._v(" "),(_vm.tax_pay)?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open7?'active':'before-border',on:{"click":function($event){_vm.open7=!_vm.open7}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.__('Tax Payable', 'erp')))])]),_vm._v(" "),_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open7),expression:"open7"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Agency', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))]),_vm._v(" "),_c('th')])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.tax_pay),function(acct,idx){return _c('tr',{key:idx},[_c('td',[_c('div',{staticClass:"with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.agencies},model:{value:(acct.agency),callback:function ($$v) {_vm.$set(acct, "agency", $$v)},expression:"acct.agency"}})],1)]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.debit),expression:"acct.debit"}],attrs:{"type":"number","disabled":""},domProps:{"value":(acct.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.credit),expression:"acct.credit"}],attrs:{"type":"number"},domProps:{"value":(acct.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "credit", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeTaxPayRow(idx)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.tax_pay.push({})}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add Agency', 'erp')))])])])],2)])]):_vm._e(),_vm._v(" "),(_vm.chartAccounts[0])?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open1?'active':'before-border',on:{"click":function($event){_vm.open1=!_vm.open1}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.chartAccounts[0].label))])]),_vm._v(" "),(_vm.ledgers[1])?_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open1),expression:"open1"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.ledgers[1]),function(ledger,idx){return _c('tr',{key:idx},[_c('td',[_vm._v(_vm._s(ledger.name))]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.debit),expression:"ledger.debit"}],attrs:{"type":"number"},domProps:{"value":(ledger.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.credit),expression:"ledger.credit"}],attrs:{"type":"number"},domProps:{"value":(ledger.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "credit", $event.target.value)}}})])])}),0)]):_vm._e()]):_vm._e(),_vm._v(" "),(_vm.chartAccounts[1])?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open2?'active':'before-border',on:{"click":function($event){_vm.open2=!_vm.open2}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.chartAccounts[1].label))])]),_vm._v(" "),(_vm.ledgers[2])?_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open2),expression:"open2"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.ledgers[2]),function(ledger,idx){return _c('tr',{key:idx},[_c('td',[_vm._v(_vm._s(ledger.name))]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.debit),expression:"ledger.debit"}],attrs:{"type":"number"},domProps:{"value":(ledger.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.credit),expression:"ledger.credit"}],attrs:{"type":"number"},domProps:{"value":(ledger.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "credit", $event.target.value)}}})])])}),0)]):_vm._e()]):_vm._e(),_vm._v(" "),(_vm.chartAccounts[2])?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open3?'active':'before-border',on:{"click":function($event){_vm.open3=!_vm.open3}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.chartAccounts[2].label))])]),_vm._v(" "),(_vm.ledgers[3])?_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open3),expression:"open3"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.ledgers[3]),function(ledger,idx){return _c('tr',{key:idx},[_c('td',[_vm._v(_vm._s(ledger.name))]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.debit),expression:"ledger.debit"}],attrs:{"type":"number"},domProps:{"value":(ledger.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.credit),expression:"ledger.credit"}],attrs:{"type":"number"},domProps:{"value":(ledger.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "credit", $event.target.value)}}})])])}),0)]):_vm._e()]):_vm._e(),_vm._v(" "),(_vm.chartAccounts[6])?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open4?'active':'before-border',on:{"click":function($event){_vm.open4=!_vm.open4}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.chartAccounts[6].label))])]),_vm._v(" "),_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open4),expression:"open4"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))]),_vm._v(" "),_c('th')])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.ledgers[7]),function(acct,idx){return _c('tr',{key:idx},[_c('td',[_c('div',{staticClass:"wperp-form-group ob-people with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.banks},model:{value:(acct.bank),callback:function ($$v) {_vm.$set(acct, "bank", $$v)},expression:"acct.bank"}})],1)]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.debit),expression:"acct.debit"}],attrs:{"type":"number"},domProps:{"value":(acct.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.credit),expression:"acct.credit"}],attrs:{"type":"number"},domProps:{"value":(acct.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "credit", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeBankRow(idx)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.ledgers[7].push({})}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add Bank', 'erp')))])])])],2)])]):_vm._e(),_vm._v(" "),_c('table',{staticClass:"wperp-table wperp-form-table"},[_c('tbody',[_c('tr',{staticClass:"total-amount-row"},[_c('td',{staticClass:"pl-10 text-right col--total-amount",staticStyle:{"width":"60%"}},[_c('span',[_vm._v(_vm._s(_vm.__('Total Amount', 'erp')))])]),_vm._v(" "),_c('td',{attrs:{"data-colname":"Total Debit"}},[_c('input',{staticClass:"text-right",attrs:{"type":"text","readonly":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalDebit)}})]),_vm._v(" "),_c('td',{attrs:{"data-colname":"Total Credit"}},[_c('input',{staticClass:"text-right",attrs:{"type":"text","readonly":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalCredit)}})])]),_vm._v(" "),_c('tr',{staticClass:"wperp-form-group"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('label',[_vm._v(_vm._s(_vm.__('Description', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.description),expression:"description"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"4","placeholder":_vm.__('Internal Information', 'erp')},domProps:{"value":(_vm.description)},on:{"input":function($event){if($event.target.composing){ return; }_vm.description=$event.target.value}}})])])])]),_vm._v(" "),_c('submit-button',{attrs:{"text":_vm.__( 'Save', 'erp' )}})],1)],1)}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
 /* 488 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -41738,46 +41587,171 @@ var mutations = {
 /* 631 */,
 /* 632 */,
 /* 633 */,
-/* 634 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 635 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"ledger-report"},[_c('h2',[_vm._v(_vm._s(_vm.__('Ledger Report', 'erp')))]),_vm._v(" "),_c('form',{staticClass:"query-options no-print",attrs:{"action":"","method":""},on:{"submit":function($event){$event.preventDefault();return _vm.getLedgerReport($event)}}},[_c('div',{staticClass:"with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.ledgers},model:{value:(_vm.selectedLedger),callback:function ($$v) {_vm.selectedLedger=$$v},expression:"selectedLedger"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-date-group"},[_c('datepicker',{model:{value:(_vm.start_date),callback:function ($$v) {_vm.start_date=$$v},expression:"start_date"}}),_vm._v(" "),_c('datepicker',{model:{value:(_vm.end_date),callback:function ($$v) {_vm.end_date=$$v},expression:"end_date"}}),_vm._v(" "),_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",attrs:{"type":"submit"}},[_vm._v(_vm._s(_vm.__('Filter', 'erp')))]),_vm._v(" "),_c('a',{staticClass:"wperp-btn btn--default print-btn",attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.printPopup($event)}}},[_c('i',{staticClass:"flaticon-printer-1"}),_vm._v("\n                  "+_vm._s(_vm.__('Print', 'erp'))+"\n            ")])],1)]),_vm._v(" "),(null !== _vm.selectedLedger)?_c('ul',{staticClass:"report-header"},[_c('li',[_c('strong',[_vm._v(_vm._s(_vm.__('Account No', 'erp'))+":")]),_vm._v(" "),_c('em',[_vm._v(_vm._s(_vm.selectedLedger.code))])]),_vm._v(" "),_c('li',[_c('strong',[_vm._v(_vm._s(_vm.__('Account Name', 'erp'))+":")]),_vm._v(" "),_c('em',[_vm._v(_vm._s(_vm.selectedLedger.name))])]),_vm._v(" "),_c('li',[_c('strong',[_vm._v(_vm._s(_vm.__('Currency', 'erp'))+":")]),_vm._v(" "),_c('em',[_vm._v(_vm._s(_vm.symbol))])]),_vm._v(" "),_c('li',[_c('strong',[_vm._v(_vm._s(_vm.__('For the period of ( Transaction date )', 'erp'))+":")]),_vm._v(" "),_c('em',[_vm._v(_vm._s(_vm.start_date))]),_vm._v(" to "),_c('em',[_vm._v(_vm._s(_vm.end_date))])])]):_vm._e(),_vm._v(" "),_c('list-table',{attrs:{"tableClass":"wperp-table table-striped table-dark widefat ledger-table","columns":_vm.columns,"rows":_vm.rows,"showCb":false},scopedSlots:_vm._u([{key:"trn_no",fn:function(data){return [_c('strong',[_c('router-link',{attrs:{"to":{ name: 'DynamicTrnLoader', params: { id: data.row.trn_no }}}},[(data.row.trn_no)?_c('span',[_vm._v("#"+_vm._s(data.row.trn_no))]):_vm._e()])],1)]}},{key:"balance",fn:function(data){return [_vm._v("\n            "+_vm._s(_vm.moneyFormatwithDrCr(data.row.balance))+"\n        ")]}},{key:"debit",fn:function(data){return [_vm._v("\n            "+_vm._s(_vm.moneyFormat(data.row.debit))+"\n        ")]}},{key:"credit",fn:function(data){return [_vm._v("\n            "+_vm._s(_vm.moneyFormat(data.row.credit))+"\n        ")]}}])},[_vm._v(" "),_vm._v(" "),_vm._v(" "),_vm._v(" "),_c('template',{slot:"tfoot"},[_c('tr',{staticClass:"tfoot"},[_c('td',{attrs:{"colspan":"3"}}),_vm._v(" "),_c('td',[_vm._v(_vm._s(_vm.__('Total', 'erp'))+" =")]),_vm._v(" "),_c('td',[_vm._v(_vm._s(_vm.moneyFormat(_vm.totalDebit)))]),_vm._v(" "),_c('td',[_vm._v(_vm._s(_vm.moneyFormat(_vm.totalCredit)))]),_vm._v(" "),_c('td')])])],2)],1)}
-var staticRenderFns = []
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-
-/***/ }),
+/* 634 */,
+/* 635 */,
 /* 636 */,
-/* 637 */
+/* 637 */,
+/* 638 */,
+/* 639 */,
+/* 640 */,
+/* 641 */,
+/* 642 */,
+/* 643 */,
+/* 644 */,
+/* 645 */,
+/* 646 */,
+/* 647 */,
+/* 648 */,
+/* 649 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 638 */
+/* 650 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"wperp-container bill-create"},[_c('div',{staticClass:"content-header-section separator"},[_c('div',{staticClass:"wperp-row wperp-between-xs"},[_c('div',{staticClass:"wperp-col"},[_c('h2',{staticClass:"content-header__title"},[_vm._v(_vm._s(_vm.editMode ? 'Edit' : 'New')+" "+_vm._s(_vm.__('Bill', 'erp')))])])])]),_vm._v(" "),_c('form',{attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.submitBillForm($event)}}},[_c('div',{staticClass:"wperp-panel wperp-panel-default",staticStyle:{"padding-bottom":"0"}},[_c('div',{staticClass:"wperp-panel-body"},[_c('show-errors',{attrs:{"error_msgs":_vm.form_errors}}),_vm._v(" "),_c('form',{staticClass:"wperp-form",attrs:{"action":"","method":"post"}},[_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('select-people',{model:{value:(_vm.basic_fields.user),callback:function ($$v) {_vm.$set(_vm.basic_fields, "user", $$v)},expression:"basic_fields.user"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Bill Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.trn_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "trn_date", $$v)},expression:"basic_fields.trn_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Due Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.due_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "due_date", $$v)},expression:"basic_fields.due_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-6"},[_c('label',[_vm._v(_vm._s(_vm.__('Reference No', 'erp')))]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.basic_fields.ref),expression:"basic_fields.ref"}],staticClass:"wperp-form-field",attrs:{"type":"text","rows":"4"},domProps:{"value":(_vm.basic_fields.ref)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "ref", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-6"},[_c('label',[_vm._v(_vm._s(_vm.__('Billing Address', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.basic_fields.billing_address),expression:"basic_fields.billing_address"}],staticClass:"wperp-form-field",attrs:{"rows":"4","placeholder":_vm.__('Type here', 'erp')},domProps:{"value":(_vm.basic_fields.billing_address)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "billing_address", $event.target.value)}}})])])])],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-table-responsive"},[_c('div',{staticClass:"table-container"},[_c('table',{staticClass:"wperp-table wperp-form-table"},[_c('thead',[_c('tr',[_c('th',{staticClass:"col--id column-primary",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('SL No', 'erp'))+".")]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Description', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Amount', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Total', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--actions",attrs:{"scope":"col"}})])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.transactionLines),function(line,key){return _c('tr',{key:key},[_c('td',{staticClass:"col--id column-primary",attrs:{"scope":"row"}},[_vm._v(_vm._s(key+1))]),_vm._v(" "),_c('td',{staticClass:"col--account with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.ledgers},model:{value:(line.ledger_id),callback:function ($$v) {_vm.$set(line, "ledger_id", $$v)},expression:"line.ledger_id"}})],1),_vm._v(" "),_c('td',{staticClass:"col--particulars"},[_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(line.description),expression:"line.description"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"1","placeholder":_vm.__('Particulars', 'erp')},domProps:{"value":(line.description)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "description", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--amount",attrs:{"data-colname":"Amount"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(line.amount),expression:"line.amount"}],staticClass:"wperp-form-field text-right",attrs:{"type":"text","name":"amount"},domProps:{"value":(line.amount)},on:{"keyup":_vm.updateFinalAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "amount", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--total",staticStyle:{"text-align":"center"},attrs:{"data-colname":"Total"}},[_c('input',{staticClass:"wperp-form-field text-right",attrs:{"type":"text","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(line.amount)}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove Above Selection"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeRow(key)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.addLine($event)}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add Line', 'erp')))])])]),_vm._v(" "),_c('tr',{staticClass:"total-amount-row"},[_c('td',{staticClass:"text-right pr-0 hide-sm",attrs:{"colspan":"4"}},[_vm._v(_vm._s(_vm.__('Total Amount', 'erp')))]),_vm._v(" "),_c('td',{staticClass:"text-right",attrs:{"data-colname":"Total Amount"}},[_c('input',{staticClass:"wperp-form-field text-right",attrs:{"type":"text","name":"finalamount","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalAmount)}})]),_vm._v(" "),_c('td',{staticClass:"text-right"})]),_vm._v(" "),_c('tr',{staticClass:"wperp-form-group"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('label',[_vm._v(_vm._s(_vm.__('Particulars', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.particulars),expression:"particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"4","placeholder":_vm.__('Internal Information', 'erp')},domProps:{"value":(_vm.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.particulars=$event.target.value}}})])]),_vm._v(" "),_c('tr',[_c('td',_vm._l((_vm.attachments),function(file,index){return _c('div',{key:index,staticClass:"attachment-item"},[_c('img',{attrs:{"src":_vm.erp_acct_assets + '/images/file-thumb.png'}}),_vm._v(" "),_c('span',{staticClass:"remove-file",on:{"click":function($event){return _vm.removeFile(index)}}},[_vm._v("✗")]),_vm._v(" "),_c('div',{staticClass:"attachment-meta"},[_c('h3',[_vm._v(_vm._s(_vm.getFileName(file)))])])])}),0)]),_vm._v(" "),_c('tr',{staticClass:"add-attachment-row"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('div',{staticClass:"attachment-container"},[_c('label',{staticClass:"col--attachement"},[_vm._v(_vm._s(_vm.__('Attachment', 'erp')))]),_vm._v(" "),_c('file-upload',{attrs:{"url":"/bills/attachments"},model:{value:(_vm.attachments),callback:function ($$v) {_vm.attachments=$$v},expression:"attachments"}})],1)])])],2),_vm._v(" "),_c('tfoot',[_c('tr',[_c('td',{staticStyle:{"text-align":"right"},attrs:{"colspan":"9"}},[(_vm.editMode)?_c('combo-button',{attrs:{"options":_vm.updateButtons}}):_c('combo-button',{attrs:{"options":_vm.createButtons}})],1)])])])])])])])}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('tr',[_c('th',{staticClass:"col--check with-multiselect column-primary product-select",attrs:{"scope":"row"}},[_c('multi-select',{attrs:{"options":_vm.products},on:{"input":_vm.setProductInfo},model:{value:(_vm.line.selectedProduct),callback:function ($$v) {_vm.$set(_vm.line, "selectedProduct", $$v)},expression:"line.selectedProduct"}})],1),_vm._v(" "),_c('td',{staticClass:"col--qty"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.qty),expression:"line.qty"}],staticClass:"wperp-form-field",attrs:{"min":"0","type":"number","name":"qty","required":_vm.line.selectedProduct ? true : false},domProps:{"value":(_vm.line.qty)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "qty", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--uni_price",attrs:{"data-colname":"Unit Price"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.unitPrice),expression:"line.unitPrice"}],staticClass:"wperp-form-field text-right",attrs:{"min":"0","type":"number","required":_vm.line.selectedProduct ? true : false},domProps:{"value":(_vm.line.unitPrice)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "unitPrice", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--amount",attrs:{"data-colname":"Amount"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.amount),expression:"line.amount"}],staticClass:"wperp-form-field text-right",attrs:{"type":"number","min":"0","step":"0.01","readonly":""},domProps:{"value":(_vm.line.amount)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "amount", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--actions delete-row",attrs:{"data-colname":"Action"}},[_c('span',{staticClass:"wperp-btn",on:{"click":_vm.removeRow}},[_c('i',{staticClass:"flaticon-trash"})])])])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 639 */
+/* 651 */,
+/* 652 */,
+/* 653 */,
+/* 654 */,
+/* 655 */,
+/* 656 */,
+/* 657 */,
+/* 658 */,
+/* 659 */,
+/* 660 */,
+/* 661 */,
+/* 662 */,
+/* 663 */,
+/* 664 */,
+/* 665 */,
+/* 666 */,
+/* 667 */,
+/* 668 */,
+/* 669 */,
+/* 670 */,
+/* 671 */,
+/* 672 */,
+/* 673 */,
+/* 674 */,
+/* 675 */,
+/* 676 */,
+/* 677 */,
+/* 678 */,
+/* 679 */,
+/* 680 */,
+/* 681 */,
+/* 682 */,
+/* 683 */,
+/* 684 */,
+/* 685 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 640 */
+/* 686 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('tr',[_c('th',{staticClass:"col--products with-multiselect product-select",attrs:{"scope":"row"}},[_c('multi-select',{attrs:{"options":_vm.products},on:{"input":_vm.setProductInfo},model:{value:(_vm.line.selectedProduct),callback:function ($$v) {_vm.$set(_vm.line, "selectedProduct", $$v)},expression:"line.selectedProduct"}})],1),_vm._v(" "),_c('td',{staticClass:"col--qty column-primary"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.qty),expression:"line.qty"}],staticClass:"wperp-form-field",attrs:{"type":"number","name":"qty","required":_vm.line.selectedProduct ? true : false},domProps:{"value":(_vm.line.qty)},on:{"keyup":_vm.respondAtChange,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "qty", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--uni_price",attrs:{"data-colname":"Unit Price"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.unitPrice),expression:"line.unitPrice"}],staticClass:"wperp-form-field",attrs:{"type":"number","min":"0","step":"0.01","required":_vm.line.selectedProduct ? true : false},domProps:{"value":(_vm.line.unitPrice)},on:{"keyup":_vm.respondAtChange,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "unitPrice", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--amount",attrs:{"data-colname":"Amount"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.amount),expression:"line.amount"}],staticClass:"wperp-form-field",attrs:{"type":"number","min":"0","step":"0.01","readonly":""},domProps:{"value":(_vm.line.amount)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.line, "amount", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--tax",attrs:{"data-colname":"Tax"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.line.applyTax),expression:"line.applyTax"}],staticClass:"wperp-form-field",attrs:{"type":"checkbox"},domProps:{"checked":Array.isArray(_vm.line.applyTax)?_vm._i(_vm.line.applyTax,null)>-1:(_vm.line.applyTax)},on:{"change":[function($event){var $$a=_vm.line.applyTax,$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.$set(_vm.line, "applyTax", $$a.concat([$$v])))}else{$$i>-1&&(_vm.$set(_vm.line, "applyTax", $$a.slice(0,$$i).concat($$a.slice($$i+1))))}}else{_vm.$set(_vm.line, "applyTax", $$c)}},_vm.respondAtChange]}}),_vm._v(" "),('1' == _vm.debugMode)?[_c('span',{staticStyle:{"color":"blueviolet"},domProps:{"textContent":_vm._s(_vm.line.taxAmount)}}),_vm._v(" "),_c('span',{staticStyle:{"color":"#f44336"},domProps:{"textContent":_vm._s(_vm.line.discount)}})]:_vm._e()],2),_vm._v(" "),_c('td',{staticClass:"col--actions delete-row",attrs:{"data-colname":"Action"}},[_c('span',{staticClass:"wperp-btn",on:{"click":_vm.removeRow}},[_c('i',{staticClass:"flaticon-trash"})])])])}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+/* 687 */,
+/* 688 */,
+/* 689 */,
+/* 690 */,
+/* 691 */,
+/* 692 */,
+/* 693 */,
+/* 694 */,
+/* 695 */,
+/* 696 */,
+/* 697 */,
+/* 698 */,
+/* 699 */,
+/* 700 */,
+/* 701 */,
+/* 702 */,
+/* 703 */,
+/* 704 */,
+/* 705 */,
+/* 706 */,
+/* 707 */,
+/* 708 */,
+/* 709 */,
+/* 710 */,
+/* 711 */,
+/* 712 */,
+/* 713 */,
+/* 714 */,
+/* 715 */,
+/* 716 */,
+/* 717 */,
+/* 718 */,
+/* 719 */,
+/* 720 */,
+/* 721 */,
+/* 722 */,
+/* 723 */,
+/* 724 */,
+/* 725 */,
+/* 726 */,
+/* 727 */,
+/* 728 */,
+/* 729 */,
+/* 730 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 731 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"wperp-container invoice-create"},[_c('div',{staticClass:"content-header-section separator"},[_c('div',{staticClass:"wperp-row wperp-between-xs"},[_c('div',{staticClass:"wperp-col"},[_c('h2',{staticClass:"content-header__title"},[_vm._v(_vm._s(_vm.editMode ? _vm.__('Edit', 'erp') : _vm.__('New', 'erp'))+" "+_vm._s(_vm.inv_title))])])])]),_vm._v(" "),_c('form',{attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.submitInvoiceForm($event)}}},[_c('div',{staticClass:"wperp-panel wperp-panel-default",staticStyle:{"padding-bottom":"0"}},[_c('show-errors',{attrs:{"error_msgs":_vm.form_errors}}),_vm._v(" "),_c('div',{staticClass:"wperp-panel-body"},[_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-col-sm-4"},[_c('select-customers',{model:{value:(_vm.basic_fields.customer),callback:function ($$v) {_vm.$set(_vm.basic_fields, "customer", $$v)},expression:"basic_fields.customer"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Transaction Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.trn_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "trn_date", $$v)},expression:"basic_fields.trn_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Due Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.due_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "due_date", $$v)},expression:"basic_fields.due_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-6"},[_c('label',[_vm._v(_vm._s(_vm.__('Billing Address', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.basic_fields.billing_address),expression:"basic_fields.billing_address"}],staticClass:"wperp-form-field",attrs:{"rows":"4","placeholder":_vm.__('Type here', 'erp')},domProps:{"value":(_vm.basic_fields.billing_address)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "billing_address", $event.target.value)}}})])])])],1),_vm._v(" "),_c('div',{staticClass:"wperp-table-responsive"},[_c('div',{staticClass:"table-container"},[_c('table',{staticClass:"wperp-table wperp-form-table"},[_c('thead',[_c('tr',[_c('th',{staticClass:"col--products",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Product/Service', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--qty",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Qty', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--unit-price",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Unit Price', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--amount",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Amount', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--tax",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Tax', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--actions",attrs:{"scope":"col"}})])]),_vm._v(" "),(null != _vm.taxSummary)?_c('tbody',[_vm._l((_vm.transactionLines),function(line,index){return _c('invoice-trn-row',{key:index,attrs:{"line":line,"products":_vm.products,"taxSummary":_vm.taxSummary}})}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.addLine($event)}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add Line', 'erp')))])])]),_vm._v(" "),_c('tr',{staticClass:"discount-rate-row"},[_c('td',{staticClass:"text-right with-multiselect",attrs:{"colspan":"4"}},[_c('select',{directives:[{name:"model",rawName:"v-model",value:(_vm.discountType),expression:"discountType"}],on:{"change":function($event){var $$selectedVal = Array.prototype.filter.call($event.target.options,function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val}); _vm.discountType=$event.target.multiple ? $$selectedVal : $$selectedVal[0]}}},[_c('option',{attrs:{"value":"discount-percent"}},[_vm._v(_vm._s(_vm.__('Discount percent', 'erp')))]),_vm._v(" "),_c('option',{attrs:{"value":"discount-value"}},[_vm._v(_vm._s(_vm.__('Discount value', 'erp')))])])]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.discount),expression:"discount"}],staticClass:"wperp-form-field",attrs:{"type":"text","placeholder":_vm.discountType},domProps:{"value":(_vm.discount)},on:{"input":function($event){if($event.target.composing){ return; }_vm.discount=$event.target.value}}}),_vm._v(" "),_c('em',{directives:[{name:"show",rawName:"v-show",value:('discount-percent' === _vm.discountType),expression:"'discount-percent' === discountType"}]},[_vm._v("%")])]),_vm._v(" "),_c('td')]),_vm._v(" "),_c('tr',{staticClass:"tax-rate-row"},[_c('td',{staticClass:"text-right with-multiselect",attrs:{"colspan":"4"}},[_c('multi-select',{staticClass:"tax-rates",attrs:{"options":_vm.taxRates,"placeholder":_vm.__('Select sales tax', 'erp')},model:{value:(_vm.taxRate),callback:function ($$v) {_vm.taxRate=$$v},expression:"taxRate"}})],1),_vm._v(" "),_c('td',[_c('input',{staticClass:"wperp-form-field",attrs:{"type":"text","readonly":""},domProps:{"value":_vm.moneyFormat(_vm.taxTotalAmount)}})]),_vm._v(" "),_c('td')]),_vm._v(" "),_c('tr',{staticClass:"total-amount-row"},[_c('td',{staticClass:"text-right",attrs:{"colspan":"4"}},[_c('span',[_vm._v(_vm._s(_vm.__('Total Amount', 'erp'))+" =")])]),_vm._v(" "),_c('td',[_c('input',{staticClass:"wperp-form-field",attrs:{"type":"text","readonly":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalAmount)}})]),_vm._v(" "),_c('td')]),_vm._v(" "),_c('tr',{staticClass:"wperp-form-group"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('label',[_vm._v(_vm._s(_vm.__('Particulars', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.particulars),expression:"particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"4","placeholder":_vm.__('Particulars', 'erp')},domProps:{"value":(_vm.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.particulars=$event.target.value}}})])]),_vm._v(" "),_c('tr',[_c('td',_vm._l((_vm.attachments),function(file,index){return _c('div',{key:index,staticClass:"attachment-item"},[_c('img',{attrs:{"src":_vm.erp_acct_assets + '/images/file-thumb.png'}}),_vm._v(" "),_c('span',{staticClass:"remove-file",on:{"click":function($event){return _vm.removeFile(index)}}},[_vm._v("✗")]),_vm._v(" "),_c('div',{staticClass:"attachment-meta"},[_c('h3',[_vm._v(_vm._s(_vm.getFileName(file)))])])])}),0)]),_vm._v(" "),_c('tr',{staticClass:"add-attachment-row"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('div',{staticClass:"attachment-container"},[_c('label',{staticClass:"col--attachement"},[_vm._v(_vm._s(_vm.__('Attachment', 'erp')))]),_vm._v(" "),_c('file-upload',{attrs:{"url":"/invoices/attachments"},model:{value:(_vm.attachments),callback:function ($$v) {_vm.attachments=$$v},expression:"attachments"}})],1)])])],2):_vm._e(),_vm._v(" "),_c('tfoot',[_c('tr',[_c('td',{staticStyle:{"text-align":"right"},attrs:{"colspan":"9"}},[(_vm.editMode)?_c('combo-button',{attrs:{"options":_vm.updateButtons}}):_c('combo-button',{attrs:{"options":_vm.createButtons}})],1)])])])])])])])}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+/* 732 */,
+/* 733 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 734 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"wperp-container expense-create"},[_c('div',{staticClass:"content-header-section separator"},[_c('div',{staticClass:"wperp-row wperp-between-xs"},[_c('div',{staticClass:"wperp-col"},[_c('h2',{staticClass:"content-header__title"},[_vm._v(_vm._s(_vm.__('New Expense', 'erp')))])])])]),_vm._v(" "),_c('form',{attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.SubmitForExpense($event)}}},[_c('div',{staticClass:"wperp-panel wperp-panel-default",staticStyle:{"padding-bottom":"0"}},[_c('div',{staticClass:"wperp-panel-body"},[_c('show-errors',{attrs:{"error_msgs":_vm.form_errors}}),_vm._v(" "),_c('form',{staticClass:"wperp-form",attrs:{"action":"","method":"post"}},[_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('select-people',{model:{value:(_vm.basic_fields.people),callback:function ($$v) {_vm.$set(_vm.basic_fields, "people", $$v)},expression:"basic_fields.people"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Reference', 'erp')))]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.basic_fields.trn_ref),expression:"basic_fields.trn_ref"}],staticClass:"wperp-form-field",attrs:{"type":"text"},domProps:{"value":(_vm.basic_fields.trn_ref)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "trn_ref", $event.target.value)}}})])]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Expense Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.trn_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "trn_date", $$v)},expression:"basic_fields.trn_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4 with-multiselect"},[_c('label',[_vm._v(_vm._s(_vm.__('Payment Method', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('multi-select',{attrs:{"options":_vm.pay_methods},model:{value:(_vm.basic_fields.trn_by),callback:function ($$v) {_vm.$set(_vm.basic_fields, "trn_by", $$v)},expression:"basic_fields.trn_by"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4 with-multiselect"},[_c('label',[_vm._v(_vm._s(_vm.__('Transaction From', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('select-accounts',{attrs:{"override_accts":_vm.accts_by_chart},model:{value:(_vm.basic_fields.deposit_to),callback:function ($$v) {_vm.$set(_vm.basic_fields, "deposit_to", $$v)},expression:"basic_fields.deposit_to"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('label',[_vm._v(_vm._s(_vm.__('Billing Address', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model.trim",value:(_vm.basic_fields.billing_address),expression:"basic_fields.billing_address",modifiers:{"trim":true}}],staticClass:"wperp-form-field",attrs:{"rows":"3","placeholder":_vm.__('Type here', 'erp')},domProps:{"value":(_vm.basic_fields.billing_address)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "billing_address", $event.target.value.trim())},"blur":function($event){return _vm.$forceUpdate()}}})]),_vm._v(" "),(_vm.basic_fields.trn_by.id === '3')?_c('check-fields',{on:{"updateCheckFields":_vm.setCheckFields}}):_vm._e()],1)])],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-table-responsive"},[_c('div',{staticClass:"table-container"},[_c('table',{staticClass:"wperp-table wperp-form-table"},[_c('thead',[_c('tr',[_c('th',{staticClass:"col--id column-primary",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('SL No.', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Description', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Amount', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Total', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--actions",attrs:{"scope":"col"}})])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.transactionLines),function(line,key){return _c('tr',{key:key},[_c('td',{staticClass:"col--id column-primary",attrs:{"scope":"row"}},[_vm._v(_vm._s(key+1))]),_vm._v(" "),_c('td',{staticClass:"col--account with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.ledgers},model:{value:(line.ledger_id),callback:function ($$v) {_vm.$set(line, "ledger_id", $$v)},expression:"line.ledger_id"}})],1),_vm._v(" "),_c('td',{staticClass:"col--particulars"},[_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(line.particulars),expression:"line.particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"1","placeholder":_vm.__('Particulars', 'erp')},domProps:{"value":(line.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "particulars", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--amount",attrs:{"data-colname":"Amount"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(line.amount),expression:"line.amount"}],staticClass:"text-right wperp-form-field",attrs:{"type":"text","name":"amount","required":line.ledger_id ? true : false},domProps:{"value":(line.amount)},on:{"keyup":_vm.updateFinalAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "amount", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--total",attrs:{"data-colname":"Total"}},[_c('input',{staticClass:"text-right wperp-form-field",attrs:{"type":"text","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(line.amount)}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove Above Selection"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeRow(key)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.addLine($event)}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add Line', 'erp')))])])]),_vm._v(" "),_c('tr',{staticClass:"total-amount-row"},[_c('td',{staticClass:"text-right pr-0 hide-sm",attrs:{"colspan":"4"}},[_vm._v(_vm._s(_vm.__('Total Amount', 'erp')))]),_vm._v(" "),_c('td',{staticClass:"text-right",attrs:{"data-colname":"Total Amount"}},[_c('input',{staticClass:"text-right wperp-form-field",attrs:{"type":"text","name":"finalamount","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalAmount)}})]),_vm._v(" "),_c('td',{staticClass:"text-right"})]),_vm._v(" "),_c('tr',{staticClass:"wperp-form-group"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('label',[_vm._v(_vm._s(_vm.__('Particulars', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.particulars),expression:"particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"4","placeholder":_vm.__('Internal Information', 'erp')},domProps:{"value":(_vm.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.particulars=$event.target.value}}})])]),_vm._v(" "),_c('tr',[_c('td',_vm._l((_vm.attachments),function(file,index){return _c('div',{key:index,staticClass:"attachment-item"},[_c('img',{attrs:{"src":_vm.erp_acct_assets + '/images/file-thumb.png'}}),_vm._v(" "),_c('span',{staticClass:"remove-file",on:{"click":function($event){return _vm.removeFile(index)}}},[_vm._v("✗")]),_vm._v(" "),_c('div',{staticClass:"attachment-meta"},[_c('h3',[_vm._v(_vm._s(_vm.getFileName(file)))])])])}),0)]),_vm._v(" "),_c('tr',{staticClass:"add-attachment-row"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('div',{staticClass:"attachment-container"},[_c('label',{staticClass:"col--attachement"},[_vm._v(_vm._s(_vm.__('Attachment', 'erp')))]),_vm._v(" "),_c('file-upload',{attrs:{"url":"/invoices/attachments"},model:{value:(_vm.attachments),callback:function ($$v) {_vm.attachments=$$v},expression:"attachments"}})],1)])])],2),_vm._v(" "),_c('tfoot',[_c('tr',[_c('td',{staticStyle:{"text-align":"right"},attrs:{"colspan":"9"}},[(_vm.editMode)?_c('combo-button',{attrs:{"options":_vm.updateButtons}}):_c('combo-button',{attrs:{"options":_vm.createButtons}})],1)])])])])])])])}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+/* 735 */,
+/* 736 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 737 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -41787,23 +41761,44 @@ var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
 /***/ }),
-/* 641 */
+/* 738 */,
+/* 739 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 642 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 643 */
+/* 740 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"wperp-container accordion-container"},[_c('div',{staticClass:"content-header-section separator"},[_c('div',{staticClass:"wperp-row wperp-between-xs"},[_c('div',{staticClass:"wperp-col"},[_c('h2',{staticClass:"content-header__title"},[_vm._v(_vm._s(_vm.__('Opening Balances', 'erp')))])])])]),_vm._v(" "),_c('show-errors',{attrs:{"error_msgs":_vm.form_errors}}),_vm._v(" "),_c('form',{attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.submitOBForm($event)}}},[_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-col-sm-6 with-multiselect opening-fyear-select"},[_c('label',[_vm._v(_vm._s(_vm.__('Financial Year', 'erp')))]),_vm._v(" "),_c('multi-select',{attrs:{"options":_vm.years},model:{value:(_vm.fin_year),callback:function ($$v) {_vm.fin_year=$$v},expression:"fin_year"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-6"},[_c('a',{staticClass:"wperp-col-sm-4 wperp-btn btn--default print-btn",attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.printPopup($event)}}},[_c('i',{staticClass:"flaticon-printer-1"}),_vm._v("\n                      "+_vm._s(_vm.__('Print', 'erp'))+"\n                ")])])]),_vm._v(" "),_c('div',{staticClass:"wperp-row"},[(null !== _vm.fin_year)?_c('ul',{staticClass:"report-header"},[_c('li',[_c('strong',[_vm._v(_vm._s(_vm.__('For the period of ( Opening Balance date )', 'erp'))+":")]),_vm._v(" "),_c('em',[_vm._v(_vm._s(_vm.fin_year.start_date))]),_vm._v(" to "),_c('em',[_vm._v(_vm._s(_vm.fin_year.end_date))])])]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open5?'active':'before-border',on:{"click":function($event){_vm.open5=!_vm.open5}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.__('Accounts Receivable', 'erp')))])]),_vm._v(" "),_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open5),expression:"open5"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('People', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp'))+"\n                        "),(_vm.accPayRec && '0' != _vm.accPayRec.invoice_acc)?_c('span',[_vm._v("("+_vm._s(_vm.accPayRec.invoice_acc)+")")]):_vm._e()]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))]),_vm._v(" "),_c('th')])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.acct_rec),function(acct,idx){return _c('tr',{key:idx},[_c('td',[_c('div',{staticClass:"wperp-form-group ob-people with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.options},model:{value:(acct.people),callback:function ($$v) {_vm.$set(acct, "people", $$v)},expression:"acct.people"}})],1)]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.debit),expression:"acct.debit"}],attrs:{"type":"number"},domProps:{"value":(acct.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.credit),expression:"acct.credit"}],attrs:{"type":"number","disabled":""},domProps:{"value":(acct.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "credit", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeAcctRecRow(idx)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.acct_rec.push({})}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add People', 'erp')))])])])],2)])]),_vm._v(" "),(_vm.acct_pay)?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open6?'active':'before-border',on:{"click":function($event){_vm.open6=!_vm.open6}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.__('Accounts Payable', 'erp')))])]),_vm._v(" "),_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open6),expression:"open6"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('People', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp'))+"\n                        "),(_vm.accPayRec && '0' != _vm.accPayRec.bill_purchase_acc)?_c('span',[_vm._v("("+_vm._s(_vm.accPayRec.bill_purchase_acc)+")")]):_vm._e()]),_vm._v(" "),_c('th')])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.acct_pay),function(acct,idx){return _c('tr',{key:idx},[_c('td',[_c('div',{staticClass:"wperp-form-group ob-people with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.options},model:{value:(acct.people),callback:function ($$v) {_vm.$set(acct, "people", $$v)},expression:"acct.people"}})],1)]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.debit),expression:"acct.debit"}],attrs:{"type":"number","disabled":""},domProps:{"value":(acct.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.credit),expression:"acct.credit"}],attrs:{"type":"number"},domProps:{"value":(acct.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "credit", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeAcctPayRow(idx)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.acct_pay.push({})}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add People', 'erp')))])])])],2)])]):_vm._e(),_vm._v(" "),(_vm.tax_pay)?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open7?'active':'before-border',on:{"click":function($event){_vm.open7=!_vm.open7}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.__('Tax Payable', 'erp')))])]),_vm._v(" "),_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open7),expression:"open7"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Agency', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))]),_vm._v(" "),_c('th')])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.tax_pay),function(acct,idx){return _c('tr',{key:idx},[_c('td',[_c('div',{staticClass:"with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.agencies},model:{value:(acct.agency),callback:function ($$v) {_vm.$set(acct, "agency", $$v)},expression:"acct.agency"}})],1)]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.debit),expression:"acct.debit"}],attrs:{"type":"number","disabled":""},domProps:{"value":(acct.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.credit),expression:"acct.credit"}],attrs:{"type":"number"},domProps:{"value":(acct.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "credit", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeTaxPayRow(idx)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.tax_pay.push({})}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add Agency', 'erp')))])])])],2)])]):_vm._e(),_vm._v(" "),(_vm.chartAccounts[0])?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open1?'active':'before-border',on:{"click":function($event){_vm.open1=!_vm.open1}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.chartAccounts[0].label))])]),_vm._v(" "),(_vm.ledgers[1])?_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open1),expression:"open1"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.ledgers[1]),function(ledger,idx){return _c('tr',{key:idx},[_c('td',[_vm._v(_vm._s(ledger.name))]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.debit),expression:"ledger.debit"}],attrs:{"type":"number"},domProps:{"value":(ledger.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.credit),expression:"ledger.credit"}],attrs:{"type":"number"},domProps:{"value":(ledger.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "credit", $event.target.value)}}})])])}),0)]):_vm._e()]):_vm._e(),_vm._v(" "),(_vm.chartAccounts[1])?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open2?'active':'before-border',on:{"click":function($event){_vm.open2=!_vm.open2}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.chartAccounts[1].label))])]),_vm._v(" "),(_vm.ledgers[2])?_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open2),expression:"open2"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.ledgers[2]),function(ledger,idx){return _c('tr',{key:idx},[_c('td',[_vm._v(_vm._s(ledger.name))]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.debit),expression:"ledger.debit"}],attrs:{"type":"number"},domProps:{"value":(ledger.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.credit),expression:"ledger.credit"}],attrs:{"type":"number"},domProps:{"value":(ledger.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "credit", $event.target.value)}}})])])}),0)]):_vm._e()]):_vm._e(),_vm._v(" "),(_vm.chartAccounts[2])?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open3?'active':'before-border',on:{"click":function($event){_vm.open3=!_vm.open3}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.chartAccounts[2].label))])]),_vm._v(" "),(_vm.ledgers[3])?_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open3),expression:"open3"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.ledgers[3]),function(ledger,idx){return _c('tr',{key:idx},[_c('td',[_vm._v(_vm._s(ledger.name))]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.debit),expression:"ledger.debit"}],attrs:{"type":"number"},domProps:{"value":(ledger.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(ledger.credit),expression:"ledger.credit"}],attrs:{"type":"number"},domProps:{"value":(ledger.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(ledger, "credit", $event.target.value)}}})])])}),0)]):_vm._e()]):_vm._e(),_vm._v(" "),(_vm.chartAccounts[6])?_c('div',{staticClass:"erp-accordion"},[_c('div',{staticClass:"erp-accordion-expand",class:_vm.open4?'active':'before-border',on:{"click":function($event){_vm.open4=!_vm.open4}}},[_c('span',{staticClass:"wp-erp-ob-title"},[_vm._v(_vm._s(_vm.chartAccounts[6].label))])]),_vm._v(" "),_c('table',{directives:[{name:"show",rawName:"v-show",value:(_vm.open4),expression:"open4"}],staticClass:"wperp-table wperp-form-table erp-accordion-expand-body"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Debit', 'erp')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm.__('Credit', 'erp')))]),_vm._v(" "),_c('th')])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.ledgers[7]),function(acct,idx){return _c('tr',{key:idx},[_c('td',[_c('div',{staticClass:"wperp-form-group ob-people with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.banks},model:{value:(acct.bank),callback:function ($$v) {_vm.$set(acct, "bank", $$v)},expression:"acct.bank"}})],1)]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.debit),expression:"acct.debit"}],attrs:{"type":"number"},domProps:{"value":(acct.debit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "debit", $event.target.value)}}})]),_vm._v(" "),_c('td',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(acct.credit),expression:"acct.credit"}],attrs:{"type":"number"},domProps:{"value":(acct.credit)},on:{"keyup":_vm.calculateAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(acct, "credit", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeBankRow(idx)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.ledgers[7].push({})}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add Bank', 'erp')))])])])],2)])]):_vm._e(),_vm._v(" "),_c('table',{staticClass:"wperp-table wperp-form-table"},[_c('tbody',[_c('tr',{staticClass:"total-amount-row"},[_c('td',{staticClass:"pl-10 text-right col--total-amount",staticStyle:{"width":"60%"}},[_c('span',[_vm._v(_vm._s(_vm.__('Total Amount', 'erp')))])]),_vm._v(" "),_c('td',{attrs:{"data-colname":"Total Debit"}},[_c('input',{staticClass:"text-right",attrs:{"type":"text","readonly":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalDebit)}})]),_vm._v(" "),_c('td',{attrs:{"data-colname":"Total Credit"}},[_c('input',{staticClass:"text-right",attrs:{"type":"text","readonly":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalCredit)}})])]),_vm._v(" "),_c('tr',{staticClass:"wperp-form-group"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('label',[_vm._v(_vm._s(_vm.__('Description', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.description),expression:"description"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"4","placeholder":_vm.__('Internal Information', 'erp')},domProps:{"value":(_vm.description)},on:{"input":function($event){if($event.target.composing){ return; }_vm.description=$event.target.value}}})])])])]),_vm._v(" "),_c('submit-button',{attrs:{"text":_vm.__( 'Save', 'erp' )}})],1)],1)}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"wperp-container check-create"},[_c('div',{staticClass:"content-header-section separator"},[_c('div',{staticClass:"wperp-row wperp-between-xs"},[_c('div',{staticClass:"wperp-col"},[_c('h2',{staticClass:"content-header__title"},[_vm._v(_vm._s(_vm.__('New Check', 'erp')))])])])]),_vm._v(" "),_c('form',{attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.submitCheckForm($event)}}},[_c('div',{staticClass:"wperp-panel wperp-panel-default",staticStyle:{"padding-bottom":"0"}},[_c('div',{staticClass:"wperp-panel-body"},[_c('show-errors',{attrs:{"error_msgs":_vm.form_errors}}),_vm._v(" "),_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('select-people',{model:{value:(_vm.basic_fields.people),callback:function ($$v) {_vm.$set(_vm.basic_fields, "people", $$v)},expression:"basic_fields.people"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Check No', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.basic_fields.check_no),expression:"basic_fields.check_no"}],staticClass:"wperp-form-field",attrs:{"type":"text","required":""},domProps:{"value":(_vm.basic_fields.check_no)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "check_no", $event.target.value)}}})])]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Payment Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.trn_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "trn_date", $$v)},expression:"basic_fields.trn_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4 with-multiselect"},[_c('label',[_vm._v(_vm._s(_vm.__('From Account', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('multi-select',{attrs:{"options":_vm.bank_accts},model:{value:(_vm.basic_fields.deposit_to),callback:function ($$v) {_vm.$set(_vm.basic_fields, "deposit_to", $$v)},expression:"basic_fields.deposit_to"}})],1),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('label',[_vm._v(_vm._s(_vm.__('Billing Address', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model.trim",value:(_vm.basic_fields.billing_address),expression:"basic_fields.billing_address",modifiers:{"trim":true}}],staticClass:"wperp-form-field",attrs:{"rows":"3","placeholder":_vm.__('Type here', 'erp')},domProps:{"value":(_vm.basic_fields.billing_address)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "billing_address", $event.target.value.trim())},"blur":function($event){return _vm.$forceUpdate()}}})])])],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-table-responsive"},[_c('div',{staticClass:"table-container"},[_c('table',{staticClass:"wperp-table wperp-form-table"},[_c('thead',[_c('tr',[_c('th',{staticClass:"col--id column-primary",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('SL No.', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Description', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Amount', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Total', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--actions",attrs:{"scope":"col"}})])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.transactionLines),function(line,key){return _c('tr',{key:key},[_c('td',{staticClass:"col--id column-primary",attrs:{"scope":"row"}},[_vm._v(_vm._s(key+1))]),_vm._v(" "),_c('td',{staticClass:"col--account with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.ledgers},model:{value:(line.ledger_id),callback:function ($$v) {_vm.$set(line, "ledger_id", $$v)},expression:"line.ledger_id"}})],1),_vm._v(" "),_c('td',{staticClass:"col--particulars"},[_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(line.particulars),expression:"line.particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"1","placeholder":_vm.__('Particulars', 'erp')},domProps:{"value":(line.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "particulars", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--amount",attrs:{"data-colname":"Amount"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(line.amount),expression:"line.amount"}],staticClass:"text-right wperp-form-field",attrs:{"type":"number","min":"0","step":"0.01","name":"amount","required":line.ledger_id ? true : false},domProps:{"value":(line.amount)},on:{"keyup":_vm.updateFinalAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "amount", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--total",attrs:{"data-colname":"Total"}},[_c('input',{staticClass:"text-right wperp-form-field",attrs:{"type":"text","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(line.amount)}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove Above Selection"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeRow(key)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.addLine($event)}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v("Add Line")])])]),_vm._v(" "),_c('tr',{staticClass:"total-amount-row"},[_c('td',{staticClass:"text-right pr-0 hide-sm",attrs:{"colspan":"4"}},[_vm._v(_vm._s(_vm.__('Total Amount', 'erp')))]),_vm._v(" "),_c('td',{staticClass:"text-right",attrs:{"data-colname":"Total Amount"}},[_c('input',{staticClass:"text-right wperp-form-field",attrs:{"type":"text","name":"finalamount","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalAmount)}})]),_vm._v(" "),_c('td',{staticClass:"text-right"})]),_vm._v(" "),_c('tr',{staticClass:"wperp-form-group"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('label',[_vm._v(_vm._s(_vm.__('Particulars', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.particulars),expression:"particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"4","placeholder":_vm.__('Internal Information', 'erp')},domProps:{"value":(_vm.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.particulars=$event.target.value}}})])]),_vm._v(" "),_c('tr',[_c('td',_vm._l((_vm.attachments),function(file,index){return _c('div',{key:index,staticClass:"attachment-item"},[_c('img',{attrs:{"src":_vm.erp_acct_assets + '/images/file-thumb.png'}}),_vm._v(" "),_c('span',{staticClass:"remove-file",on:{"click":function($event){return _vm.removeFile(index)}}},[_vm._v("✗")]),_vm._v(" "),_c('div',{staticClass:"attachment-meta"},[_c('h3',[_vm._v(_vm._s(_vm.getFileName(file)))])])])}),0)]),_vm._v(" "),_c('tr',{staticClass:"add-attachment-row"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('div',{staticClass:"attachment-container"},[_c('label',{staticClass:"col--attachement"},[_vm._v(_vm._s(_vm.__('Attachment', 'erp')))]),_vm._v(" "),_c('file-upload',{attrs:{"url":"/invoices/attachments"},model:{value:(_vm.attachments),callback:function ($$v) {_vm.attachments=$$v},expression:"attachments"}})],1)])])],2),_vm._v(" "),_c('tfoot',[_c('tr',[_c('td',{staticStyle:{"text-align":"right"},attrs:{"colspan":"9"}},[(_vm.editMode)?_c('combo-button',{attrs:{"options":_vm.updateButtons}}):_c('combo-button',{attrs:{"options":_vm.createButtons}})],1)])])])])])])])}
+var staticRenderFns = []
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+
+/***/ }),
+/* 741 */,
+/* 742 */,
+/* 743 */,
+/* 744 */,
+/* 745 */,
+/* 746 */,
+/* 747 */,
+/* 748 */,
+/* 749 */,
+/* 750 */,
+/* 751 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 752 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"wperp-container bill-create"},[_c('div',{staticClass:"content-header-section separator"},[_c('div',{staticClass:"wperp-row wperp-between-xs"},[_c('div',{staticClass:"wperp-col"},[_c('h2',{staticClass:"content-header__title"},[_vm._v(_vm._s(_vm.editMode ? 'Edit' : 'New')+" "+_vm._s(_vm.__('Bill', 'erp')))])])])]),_vm._v(" "),_c('form',{attrs:{"action":"","method":"post"},on:{"submit":function($event){$event.preventDefault();return _vm.submitBillForm($event)}}},[_c('div',{staticClass:"wperp-panel wperp-panel-default",staticStyle:{"padding-bottom":"0"}},[_c('div',{staticClass:"wperp-panel-body"},[_c('show-errors',{attrs:{"error_msgs":_vm.form_errors}}),_vm._v(" "),_c('form',{staticClass:"wperp-form",attrs:{"action":"","method":"post"}},[_c('div',{staticClass:"wperp-row"},[_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('select-people',{model:{value:(_vm.basic_fields.user),callback:function ($$v) {_vm.$set(_vm.basic_fields, "user", $$v)},expression:"basic_fields.user"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Bill Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.trn_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "trn_date", $$v)},expression:"basic_fields.trn_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-4"},[_c('div',{staticClass:"wperp-form-group"},[_c('label',[_vm._v(_vm._s(_vm.__('Due Date', 'erp'))),_c('span',{staticClass:"wperp-required-sign"},[_vm._v("*")])]),_vm._v(" "),_c('datepicker',{model:{value:(_vm.basic_fields.due_date),callback:function ($$v) {_vm.$set(_vm.basic_fields, "due_date", $$v)},expression:"basic_fields.due_date"}})],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-6"},[_c('label',[_vm._v(_vm._s(_vm.__('Reference No', 'erp')))]),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.basic_fields.ref),expression:"basic_fields.ref"}],staticClass:"wperp-form-field",attrs:{"type":"text","rows":"4"},domProps:{"value":(_vm.basic_fields.ref)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "ref", $event.target.value)}}})]),_vm._v(" "),_c('div',{staticClass:"wperp-col-sm-6"},[_c('label',[_vm._v(_vm._s(_vm.__('Billing Address', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.basic_fields.billing_address),expression:"basic_fields.billing_address"}],staticClass:"wperp-form-field",attrs:{"rows":"4","placeholder":_vm.__('Type here', 'erp')},domProps:{"value":(_vm.basic_fields.billing_address)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.basic_fields, "billing_address", $event.target.value)}}})])])])],1)]),_vm._v(" "),_c('div',{staticClass:"wperp-table-responsive"},[_c('div',{staticClass:"table-container"},[_c('table',{staticClass:"wperp-table wperp-form-table"},[_c('thead',[_c('tr',[_c('th',{staticClass:"col--id column-primary",attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('SL No', 'erp'))+".")]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Account', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Description', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Amount', 'erp')))]),_vm._v(" "),_c('th',{attrs:{"scope":"col"}},[_vm._v(_vm._s(_vm.__('Total', 'erp')))]),_vm._v(" "),_c('th',{staticClass:"col--actions",attrs:{"scope":"col"}})])]),_vm._v(" "),_c('tbody',[_vm._l((_vm.transactionLines),function(line,key){return _c('tr',{key:key},[_c('td',{staticClass:"col--id column-primary",attrs:{"scope":"row"}},[_vm._v(_vm._s(key+1))]),_vm._v(" "),_c('td',{staticClass:"col--account with-multiselect"},[_c('multi-select',{attrs:{"options":_vm.ledgers},model:{value:(line.ledger_id),callback:function ($$v) {_vm.$set(line, "ledger_id", $$v)},expression:"line.ledger_id"}})],1),_vm._v(" "),_c('td',{staticClass:"col--particulars"},[_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(line.description),expression:"line.description"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"1","placeholder":_vm.__('Particulars', 'erp')},domProps:{"value":(line.description)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "description", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--amount",attrs:{"data-colname":"Amount"}},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(line.amount),expression:"line.amount"}],staticClass:"wperp-form-field text-right",attrs:{"type":"text","name":"amount","required":line.ledger_id ? true : false},domProps:{"value":(line.amount)},on:{"keyup":_vm.updateFinalAmount,"input":function($event){if($event.target.composing){ return; }_vm.$set(line, "amount", $event.target.value)}}})]),_vm._v(" "),_c('td',{staticClass:"col--total",staticStyle:{"text-align":"center"},attrs:{"data-colname":"Total"}},[_c('input',{staticClass:"wperp-form-field text-right",attrs:{"type":"text","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(line.amount)}})]),_vm._v(" "),_c('td',{staticClass:"delete-row",attrs:{"data-colname":"Remove Above Selection"}},[_c('a',{attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.removeRow(key)}}},[_c('i',{staticClass:"flaticon-trash"})])])])}),_vm._v(" "),_c('tr',{staticClass:"add-new-line"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('button',{staticClass:"wperp-btn btn--primary add-line-trigger",on:{"click":function($event){$event.preventDefault();return _vm.addLine($event)}}},[_c('i',{staticClass:"flaticon-add-plus-button"}),_vm._v(_vm._s(_vm.__('Add Line', 'erp')))])])]),_vm._v(" "),_c('tr',{staticClass:"total-amount-row"},[_c('td',{staticClass:"text-right pr-0 hide-sm",attrs:{"colspan":"4"}},[_vm._v(_vm._s(_vm.__('Total Amount', 'erp')))]),_vm._v(" "),_c('td',{staticClass:"text-right",attrs:{"data-colname":"Total Amount"}},[_c('input',{staticClass:"wperp-form-field text-right",attrs:{"type":"text","name":"finalamount","readonly":"","disabled":""},domProps:{"value":_vm.moneyFormat(_vm.finalTotalAmount)}})]),_vm._v(" "),_c('td',{staticClass:"text-right"})]),_vm._v(" "),_c('tr',{staticClass:"wperp-form-group"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('label',[_vm._v(_vm._s(_vm.__('Particulars', 'erp')))]),_vm._v(" "),_c('textarea',{directives:[{name:"model",rawName:"v-model",value:(_vm.particulars),expression:"particulars"}],staticClass:"wperp-form-field display-flex",attrs:{"rows":"4","placeholder":_vm.__('Internal Information', 'erp')},domProps:{"value":(_vm.particulars)},on:{"input":function($event){if($event.target.composing){ return; }_vm.particulars=$event.target.value}}})])]),_vm._v(" "),_c('tr',[_c('td',_vm._l((_vm.attachments),function(file,index){return _c('div',{key:index,staticClass:"attachment-item"},[_c('img',{attrs:{"src":_vm.erp_acct_assets + '/images/file-thumb.png'}}),_vm._v(" "),_c('span',{staticClass:"remove-file",on:{"click":function($event){return _vm.removeFile(index)}}},[_vm._v("✗")]),_vm._v(" "),_c('div',{staticClass:"attachment-meta"},[_c('h3',[_vm._v(_vm._s(_vm.getFileName(file)))])])])}),0)]),_vm._v(" "),_c('tr',{staticClass:"add-attachment-row"},[_c('td',{staticStyle:{"text-align":"left"},attrs:{"colspan":"9"}},[_c('div',{staticClass:"attachment-container"},[_c('label',{staticClass:"col--attachement"},[_vm._v(_vm._s(_vm.__('Attachment', 'erp')))]),_vm._v(" "),_c('file-upload',{attrs:{"url":"/bills/attachments"},model:{value:(_vm.attachments),callback:function ($$v) {_vm.attachments=$$v},expression:"attachments"}})],1)])])],2),_vm._v(" "),_c('tfoot',[_c('tr',[_c('td',{staticStyle:{"text-align":"right"},attrs:{"colspan":"9"}},[(_vm.editMode)?_c('combo-button',{attrs:{"options":_vm.updateButtons}}):_c('combo-button',{attrs:{"options":_vm.createButtons}})],1)])])])])])])])}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);

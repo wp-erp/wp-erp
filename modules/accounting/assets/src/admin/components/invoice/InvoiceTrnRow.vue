@@ -8,10 +8,12 @@
                 v-model="line.qty"
                 @keyup="respondAtChange"
                 name="qty"
-                class="wperp-form-field" required>
+                class="wperp-form-field" :required="line.selectedProduct ? true : false">
         </td>
         <td class="col--uni_price" data-colname="Unit Price">
-            <input type="number" min="0" step="0.01" v-model="line.unitPrice" @keyup="respondAtChange" class="wperp-form-field">
+            <input type="number" min="0" step="0.01"
+                v-model="line.unitPrice"
+                @keyup="respondAtChange" class="wperp-form-field" :required="line.selectedProduct ? true : false">
         </td>
         <td class="col--amount" data-colname="Amount">
             <input type="number" min="0" step="0.01" v-model="line.amount" class="wperp-form-field" readonly>

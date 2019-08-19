@@ -68,9 +68,12 @@
                     <tr :key="key" v-for="(line,key) in transactionLines">
                         <td scope="row" class="col--id column-primary">{{key+1}}</td>
                         <td class="col--account with-multiselect"><multi-select v-model="line.ledger_id" :options="ledgers" /></td>
-                        <td class="col--particulars"><textarea v-model="line.particulars" rows="1" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea></td>
+                        <td class="col--particulars">
+                            <textarea v-model="line.particulars" rows="1" class="wperp-form-field display-flex" :placeholder="__('Particulars', 'erp')"></textarea>
+                        </td>
                         <td class="col--amount" data-colname="Amount">
-                            <input type="number" min="0" step="0.01" name="amount" v-model="line.amount" @keyup="updateFinalAmount" class="text-right wperp-form-field">
+                            <input type="number" min="0" step="0.01" name="amount" v-model="line.amount"
+                                @keyup="updateFinalAmount" class="text-right wperp-form-field" :required="line.ledger_id ? true : false">
                         </td>
                         <td class="col--total" data-colname="Total">
                             <input type="text" :value="moneyFormat(line.amount)" class="text-right wperp-form-field" readonly disabled/>
@@ -192,20 +195,20 @@ export default {
                 { id: 'draft', text: 'Save as Draft' }
             ],
 
-            editMode: false,
-            voucherNo: 0,
+            editMode        : false,
+            voucherNo       : 0,
             transactionLines: [],
-            selected: [],
-            ledgers: [],
-            pay_methods: [],
-            attachments: [],
-            totalAmounts: [],
+            selected        : [],
+            ledgers         : [],
+            pay_methods     : [],
+            attachments     : [],
+            totalAmounts    : [],
             finalTotalAmount: 0,
-            billModal: false,
-            particulars: '',
-            isWorking: false,
-            accts_by_chart: [],
-            erp_acct_assets: erp_acct_var.acct_assets /* global erp_acct_var */
+            billModal       : false,
+            particulars     : '',
+            isWorking       : false,
+            accts_by_chart  : [],
+            erp_acct_assets : erp_acct_var.acct_assets  /* global erp_acct_var */
         };
     },
 
@@ -214,6 +217,7 @@ export default {
     },
 
     created() {
+        this.getBanks();
         this.prepareDataLoad();
 
         this.$root.$on('remove-row', index => {
@@ -225,18 +229,18 @@ export default {
     methods: {
         async prepareDataLoad() {
             /**
-                 * ----------------------------------------------
-                 * check if editing
-                 * -----------------------------------------------
-                 */
+             * ----------------------------------------------
+             * check if editing
+             * -----------------------------------------------
+             */
             if (this.$route.params.id) {
                 this.editMode = true;
                 this.voucherNo = this.$route.params.id;
 
                 /**
-                     * Duplicates of
-                     *? this.getLedgers()
-                     */
+                 * Duplicates of
+                 *? this.getLedgers()
+                */
                 const request1 = await HTTP.get('/ledgers');
                 const request2 = await HTTP.get(`/expenses/checks/${this.$route.params.id}`);
 
@@ -252,10 +256,10 @@ export default {
                 this.$store.dispatch('combo/setBtnID', 'update');
             } else {
                 /**
-                     * ----------------------------------------------
-                     * create a new check
-                     * -----------------------------------------------
-                     */
+                 * ----------------------------------------------
+                 * create a new check
+                 * -----------------------------------------------
+                 */
                 this.getLedgers();
 
                 this.basic_fields.trn_date = erp_acct_var.current_date;
@@ -272,19 +276,19 @@ export default {
             this.basic_fields.deposit_to      = { id: parseInt(check.deposit_to) };
             this.basic_fields.trn_by          = this.pay_methods.find(method => method.id === check.trn_by);
             this.basic_fields.billing_address = check.address;
-            this.basic_fields.trn_date = check.trn_date;
-            this.basic_fields.check_no = check.ref;
-            this.status = check.status;
-            this.particulars = check.particulars;
-            this.attachments = check.attachments;
+            this.basic_fields.trn_date        = check.trn_date;
+            this.basic_fields.check_no        = check.ref;
+            this.status                       = check.status;
+            this.particulars                  = check.particulars;
+            this.attachments                  = check.attachments;
 
             // format transaction lines
             check.bill_details.forEach(detail => {
                 this.transactionLines.push({
-                    id: detail.id,
-                    ledger_id: { id: detail.ledger_id, name: detail.ledger_name },
+                    id         : detail.id,
+                    ledger_id  : { id: detail.ledger_id, name: detail.ledger_name },
                     particulars: detail.particulars,
-                    amount: detail.amount
+                    amount     : detail.amount
                 });
             });
 
@@ -413,18 +417,18 @@ export default {
             }
 
             const requestData = {
-                people_id: this.basic_fields.people.id,
-                check_no: this.basic_fields.check_no,
-                trn_date: this.basic_fields.trn_date,
-                trn_by: '3',
-                bill_details: this.formatTrnLines(this.transactionLines),
-                deposit_to: this.basic_fields.deposit_to.id,
+                people_id      : this.basic_fields.people.id,
+                check_no       : this.basic_fields.check_no,
+                trn_date       : this.basic_fields.trn_date,
+                trn_by         : '3',
+                bill_details   : this.formatTrnLines(this.transactionLines),
+                deposit_to     : this.basic_fields.deposit_to.id,
                 billing_address: this.basic_fields.billing_address,
-                attachments: this.attachments,
-                type: 'check',
-                status: trn_status,
-                particulars: this.particulars,
-                name: this.check_data.payer_name
+                attachments    : this.attachments,
+                type           : 'check',
+                status         : trn_status,
+                particulars    : this.particulars,
+                name           : this.check_data.payer_name
             };
 
             if (this.editMode) {
@@ -438,7 +442,7 @@ export default {
             this.form_errors = [];
 
             if (!Object.prototype.hasOwnProperty.call(this.basic_fields.people, 'id')) {
-                this.form_errors.push('People Name is required.');
+                this.form_errors.push('Pay to is required.');
             }
 
             if (!this.basic_fields.check_no) {
@@ -461,11 +465,8 @@ export default {
                 this.form_errors.push('Total amount can\'t be zero.');
             }
 
-            for (const item of this.transactionLines) {
-                if (!Object.prototype.hasOwnProperty.call(item, 'ledger_id')) {
-                    this.form_errors.push('Please select accounts.');
-                    break;
-                }
+            if (this.noFulfillLines(this.transactionLines, 'ledger_id')) {
+                this.form_errors.push('Please select an account.');
             }
         },
 

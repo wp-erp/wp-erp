@@ -598,11 +598,8 @@ export default {
                 this.form_errors.push('Total amount can\'t be zero.');
             }
 
-            for (const item of this.transactionLines) {
-                if (!Object.prototype.hasOwnProperty.call(item, 'selectedProduct')) {
-                    this.form_errors.push('Please select product.');
-                    break;
-                }
+            if (this.noFulfillLines(this.transactionLines, 'selectedProduct')) {
+                this.form_errors.push('Please select a product.');
             }
         }
     }
