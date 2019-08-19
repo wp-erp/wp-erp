@@ -40,7 +40,7 @@ function erp_acct_cash_at_bank( $args, $type ) {
 
         $data = $wpdb->get_var( $wpdb->prepare( $sql2, $args['start_date'], $args['end_date'] ) );
 
-        $balance = erp_acct_bank_cash_calc_with_opening_balance( $args['start_date'], $data, $sql2 );
+        $balance = erp_acct_bank_cash_calc_with_opening_balance( $args['start_date'], $data, $sql2, $type );
     }
 
     return $balance;
@@ -73,7 +73,7 @@ function erp_acct_bank_balance( $args, $type ) {
 
     $data = $wpdb->get_results( $wpdb->prepare( $sql, $chart_bank, $args['start_date'], $args['end_date'] ), ARRAY_A );
 
-    $balance = erp_acct_bank_balance_calc_with_opening_balance( $args['start_date'], $data, $sql );
+    $balance = erp_acct_bank_balance_calc_with_opening_balance( $args['start_date'], $data, $sql, $type );
 
     return $balance;
 }
@@ -354,14 +354,14 @@ function erp_acct_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
  *
  * @return float
  */
-function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
+function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
 
     // get closest financial year id and start date
     $closest_fy_date = erp_acct_get_closest_fn_year_date( $tb_start_date );
 
     // get opening balance data within that(^) financial year
-    $opening_balance = erp_acct_bank_cash_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
+    $opening_balance = erp_acct_bank_cash_opening_balance_by_fn_year_id( $closest_fy_date['id'], $type );
 
     $balance = (float) $data;
 
@@ -399,7 +399,7 @@ function erp_acct_bank_cash_calc_with_opening_balance( $tb_start_date, $data, $s
  *
  * @return array
  */
-function erp_acct_bank_balance_calc_with_opening_balance( $tb_start_date, $data, $sql ) {
+function erp_acct_bank_balance_calc_with_opening_balance( $tb_start_date, $data, $sql, $type ) {
     global $wpdb;
 
     $chart_bank = 7;
@@ -408,7 +408,7 @@ function erp_acct_bank_balance_calc_with_opening_balance( $tb_start_date, $data,
     $closest_fy_date = erp_acct_get_closest_fn_year_date( $tb_start_date );
 
     // get opening balance data within that(^) financial year
-    $opening_balance = erp_acct_bank_balance_opening_balance_by_fn_year_id( $closest_fy_date['id'] );
+    $opening_balance = erp_acct_bank_balance_opening_balance_by_fn_year_id( $closest_fy_date['id'], $type );
 
     $ledgers = $wpdb->get_results( "SELECT ledger.id, ledger.chart_id, ledger.name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger WHERE ledger.chart_id = 7", ARRAY_A );
 
@@ -632,12 +632,18 @@ function erp_acct_opening_balance_by_fn_year_id( $id, $chart_id = null ) {
  *
  * @return array
  */
-function erp_acct_bank_cash_opening_balance_by_fn_year_id( $id ) {
+function erp_acct_bank_cash_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
+
+    if ( 'loan' === $type ) {
+        $having = 'HAVING balance < 0';
+    } elseif ( 'balance' === $type ) {
+        $having = 'HAVING balance >= 0';
+    }
 
     $sql = "SELECT SUM(opb.balance) AS balance FROM (SELECT SUM( debit - credit ) AS balance
             FROM {$wpdb->prefix}erp_acct_opening_balances WHERE financial_year_id = %d AND chart_id = 7
-            GROUP BY ledger_id) AS opb";
+            GROUP BY ledger_id {$having}) AS opb";
 
     return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 }
@@ -674,13 +680,19 @@ function erp_acct_sales_tax_opening_balance_by_fn_year_id( $id, $type ) {
  *
  * @return array
  */
-function erp_acct_bank_balance_opening_balance_by_fn_year_id( $id ) {
+function erp_acct_bank_balance_opening_balance_by_fn_year_id( $id, $type ) {
     global $wpdb;
+
+    if ( 'loan' === $type ) {
+        $having = 'HAVING balance < 0';
+    } elseif ( 'balance' === $type ) {
+        $having = 'HAVING balance >= 0';
+    }
 
     $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
         FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
         LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
-        WHERE opb.financial_year_id = %d AND ledger.chart_id = 7 GROUP BY opb.ledger_id";
+        WHERE opb.financial_year_id = %d AND ledger.chart_id = 7 GROUP BY opb.ledger_id {$having}";
 
     return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 }

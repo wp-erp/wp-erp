@@ -506,19 +506,19 @@ export default {
             this.form_errors = [];
 
             this.acct_rec.forEach((element) => {
-                if (typeof element !== 'undefined' && Object.prototype.hasOwnProperty.call(element, 'people')) {
+                if (typeof element !== 'undefined' && !Object.prototype.hasOwnProperty.call(element, 'people')) {
                     this.form_errors.push('People is not selected in Accounts Receivable.');
                 }
             });
 
             this.acct_pay.forEach((element) => {
-                if (typeof element !== 'undefined' && Object.prototype.hasOwnProperty.call(element, 'people')) {
+                if (typeof element !== 'undefined' && !Object.prototype.hasOwnProperty.call(element, 'people')) {
                     this.form_errors.push('People is not selected in Accounts Payable.');
                 }
             });
 
             this.tax_pay.forEach((element) => {
-                if (typeof element !== 'undefined' && Object.prototype.hasOwnProperty.call(element, 'agency')) {
+                if (typeof element !== 'undefined' && !Object.prototype.hasOwnProperty.call(element, 'agency')) {
                     this.form_errors.push('Agency is not selected in Tax Payable.');
                 }
             });

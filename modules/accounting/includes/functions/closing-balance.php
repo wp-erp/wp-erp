@@ -167,7 +167,6 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
         );
     }
 
-    $ledger_map           = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
     $owners_equity_ledger = $ledger_map->get_ledger_id_by_slug( 'owner_s_equity' );
     $chart_equity_id      = 3;
 
@@ -181,7 +180,7 @@ function erp_acct_clsbl_close_balance_sheet_now( $args ) {
         );
     } else {
         erp_acct_clsbl_insert_into_opening_balance(
-            $next_f_year_id, $chart_equity_id, $owners_equity_ledger, 'ledger', $balance_sheet['owners_equity'], 0.00
+            $next_f_year_id, $chart_equity_id, $owners_equity_ledger, 'ledger', abs($balance_sheet['owners_equity']), 0.00
         );
     }
 }

@@ -121,6 +121,7 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
         inv_detail.discount,
         inv_detail.tax,
         inv_detail.item_total,
+        inv_detail.ecommerce_type,
 
         SUM(inv_detail_tax.tax_rate) as tax_rate,
 
@@ -138,7 +139,18 @@ function erp_acct_format_invoice_line_items( $voucher_no ) {
         LEFT JOIN {$wpdb->prefix}erp_acct_products as product ON inv_detail.product_id = product.id
         WHERE invoice.voucher_no = %d GROUP BY inv_detail.id", $voucher_no );
 
-    return $wpdb->get_results( $sql, ARRAY_A );
+    $results = $wpdb->get_results( $sql, ARRAY_A );
+
+    if ( ! empty( reset( $results )['ecommerce_type'] ) ) {
+        // product name should not fetch form `erp_acct_products`
+        $results = array_map( function($result) {
+            $result['name'] = get_the_title( $result['product_id'] );
+
+            return $result;
+        }, $results );
+    }
+
+    return $results;
 }
 
 /**
@@ -251,15 +263,16 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
 
         // insert into invoice details
         $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details', array(
-            'trn_no'     => $voucher_no,
-            'product_id' => $item['product_id'],
-            'qty'        => $item['qty'],
-            'unit_price' => $item['unit_price'],
-            'discount'   => $item['discount'],
-            'tax'        => $item['tax'],
-            'item_total' => $sub_total,
-            'created_at' => $invoice_data['created_at'],
-            'created_by' => $invoice_data['created_by']
+            'trn_no'         => $voucher_no,
+            'product_id'     => $item['product_id'],
+            'qty'            => $item['qty'],
+            'unit_price'     => $item['unit_price'],
+            'discount'       => $item['discount'],
+            'tax'            => $item['tax'],
+            'item_total'     => $sub_total,
+            'ecommerce_type' => $item['ecommerce_type'],
+            'created_at'     => $invoice_data['created_at'],
+            'created_by'     => $invoice_data['created_by']
         ) );
 
         $details_id = $wpdb->insert_id;

@@ -813,6 +813,7 @@ Company'
                 `discount` decimal(10,2) DEFAULT 0,
                 `tax` decimal(10,2) DEFAULT 0,
                 `item_total` decimal(10,2) DEFAULT 0,
+                `ecommerce_type` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
@@ -1278,6 +1279,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agencies` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
+                `ecommerce_type` varchar(255) DEFAULT NULL,
                 `created_at` date DEFAULT NULL,
                 `created_by` varchar(50) DEFAULT NULL,
                 `updated_at` date DEFAULT NULL,
