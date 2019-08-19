@@ -533,8 +533,11 @@ function erp_acct_get_balance_sheet( $args ) {
     $capital  = erp_acct_get_owners_equity( $args, 'capital' );
     $drawings = erp_acct_get_owners_equity( $args, 'drawings' );
 
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+    $owner_s_equity_id  = $ledger_map->get_ledger_id_by_slug( 'owner_s_equity' );
+
     $results['rows3'][] = [
-        'id'      => 29,
+        'id'      => $owner_s_equity_id,
         'name'    => 'Owner\'s Equity',
         'balance' => $capital - $drawings
     ];
@@ -603,7 +606,7 @@ function erp_acct_get_balance_sheet( $args ) {
         $loss = $profit_loss['loss'];
     }
 
-    $results['owners_equity'] = $capital - $drawings + $profit - $loss;
+    $results['owners_equity'] = abs($capital) - abs($drawings) + abs($profit) - abs($loss);
 
     return $results;
 }

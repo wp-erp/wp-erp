@@ -235,8 +235,14 @@ export default {
             }
         }
 
-        .ledger-table tbody tr td:last-child {
-            text-align: left !important;
+        .ledger-table tbody {
+            tr td:last-child {
+                text-align: left !important;
+            }
+
+            tr:last-child td:last-child {
+                font-weight: bold;
+            }
         }
     }
 
@@ -295,12 +301,18 @@ export default {
                     }
                 }
 
-                tbody tr td {
-                    &:nth-child(5),
-                    &:nth-child(6),
-                    &:nth-child(7) {
-                        min-width: 100px;
-                        text-align: right !important;
+                tbody {
+                    tr td {
+                        &:nth-child(5),
+                        &:nth-child(6),
+                        &:nth-child(7) {
+                            min-width: 100px;
+                            text-align: right !important;
+                        }
+                    }
+
+                    tr:last-child td:last-child {
+                        font-weight: bold;
                     }
                 }
 
