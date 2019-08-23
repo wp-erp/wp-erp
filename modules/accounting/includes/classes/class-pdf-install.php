@@ -6,7 +6,12 @@ require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
 require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
 
 class PDF_Install {
-
+    /**
+     * Install Plugin
+     *
+     * @param $url
+     * @return int
+     */
     public function install_plugin( $url ) {
         if ( strstr( $url, '.zip' ) != false ) {
             $download_link = $url;
@@ -33,6 +38,11 @@ class PDF_Install {
         return 1;
     }
 
+    /**
+     * Activate plugin
+     *
+     * @param $plugin_to_activate
+     */
     public function activate_pdf_plugin( $plugin_to_activate ) {
         $activate = activate_plugin( $plugin_to_activate );
         wp_cache_flush();
@@ -40,6 +50,11 @@ class PDF_Install {
         $this->show_activation_notice();
     }
 
+    /**
+     * Show plugin activation notice
+     *
+     * @param $plugin_to_activate
+     */
     public function show_activation_notice() {
         echo '<div class="updated notice is-dismissible"><p>';
         echo __( 'Plugin <strong>activated.</strong>', 'erp' );
