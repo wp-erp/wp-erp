@@ -218,7 +218,6 @@ final class Accounting {
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-ledger-map.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-send-email.php';
         require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-user-profile.php';
-        require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-pdf-install.php';
 
         if ( $this->is_request( 'admin' ) ) {
             require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-admin.php';
