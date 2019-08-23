@@ -98,7 +98,6 @@ export default {
 
             },
             listLoading   : false,
-            fetchd        : false,
             rows          : [],
             paginationData: {
                 totalItems : 0,

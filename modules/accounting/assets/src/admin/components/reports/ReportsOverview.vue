@@ -1,5 +1,5 @@
 <template>
-    <ul>
+    <ul class="reports-overview">
         <li>
             <h3>{{ __('Trial Balance', 'erp') }}</h3>
             <p>{{ __('Trial balance is the bookkeeping or accounting report that lists the balances in each of general ledger accounts', 'erp') }}.</p>
@@ -55,34 +55,34 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-    ul {
+<style lang="less">
+    .reports-overview {
         margin: 0;
         padding: 10px;
         display: flex;
         flex-wrap: wrap;
-    }
 
-    li {
-        font-size: 20px;
-        background: #fff;
-        margin-bottom: 1px;
-        padding: 15px;
-        width: 48%;
-        box-shadow: 0 1px 1px rgba(0,0,0,.04);
-        margin: 10px;
-        border-radius: 3px;
+        li {
+            font-size: 20px;
+            background: #fff;
+            margin-bottom: 1px;
+            padding: 15px;
+            width: 48%;
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
+            margin: 10px;
+            border-radius: 3px;
 
-        h3 {
-            border-bottom: 1px solid rgba(0,0,0, .08);
-            padding-bottom: 10px;
-            font-weight: normal;
-            color: #263238;
-        }
+            h3 {
+                border-bottom: 1px solid rgba(0,0,0, .08);
+                padding-bottom: 10px;
+                font-weight: normal;
+                color: #263238;
+            }
 
-        p {
-            font-size: 15px;
-            color: #525252;
+            p {
+                font-size: 15px;
+                color: #525252;
+            }
         }
     }
 </style>

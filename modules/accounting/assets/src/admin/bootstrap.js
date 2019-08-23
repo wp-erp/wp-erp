@@ -43,7 +43,6 @@ window.acct.libs['ShowErrors']       = ShowErrors;
 window.acct.libs['SubmitButton']     = SubmitButton;
 window.acct.libs['MultiSelect']      = MultiSelect;
 window.acct.libs['SelectAccounts']   = SelectAccounts;
-window.acct.libs['ListTable']        = ListTable;
 window.acct.libs['TimePicker']       = TimePicker;
 window.acct.libs['SelectPeople']     = SelectPeople;
 window.acct.libs['DynamicTrnLoader'] = DynamicTrnLoader;

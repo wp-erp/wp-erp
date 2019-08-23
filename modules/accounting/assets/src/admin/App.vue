@@ -55,6 +55,10 @@ export default {
         padding: 20px 3px !important;
     }
 
+    .attachment-container form {
+        margin-bottom: 0;
+    }
+
     .wperp-table tfoot tr td:first-child {
         padding-left: 20px;
     }

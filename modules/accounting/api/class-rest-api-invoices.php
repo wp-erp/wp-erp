@@ -498,6 +498,8 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['transaction_by'] = $request['transaction_by'];
         }
 
+        $prepared_item['request'] = $request;
+
         return $prepared_item;
     }
 

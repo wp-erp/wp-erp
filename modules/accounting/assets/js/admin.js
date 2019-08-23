@@ -16641,6 +16641,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -16649,6 +16653,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 
 
+
+/* global erp_acct_var */
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'InvoiceCreate',
@@ -16691,6 +16697,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         id: 'draft',
         text: 'Save as Draft'
       }],
+      extraFields: window.acct.hooks.applyFilters('acctInvoiceExtraFields', []),
       editMode: false,
       voucherNo: 0,
       discountType: 'discount-percent',
@@ -16708,8 +16715,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       inv_title: '',
       inv_type: {},
       erp_acct_assets: erp_acct_var.acct_assets,
-
-      /* global erp_acct_var */
       form_errors: []
     };
   },
@@ -17077,7 +17082,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         this.status = 2;
       }
 
-      var requestData = {
+      var requestData = window.acct.hooks.applyFilters('invoiceRequestData', {
         customer_id: this.basic_fields.customer.id,
         date: this.basic_fields.trn_date,
         due_date: this.basic_fields.due_date,
@@ -17090,7 +17095,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         type: 'invoice',
         status: parseInt(this.status),
         estimate: this.inv_type.id
-      };
+      });
 
       if (this.editMode) {
         this.updateInvoice(requestData);
@@ -24738,7 +24743,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         }
       },
       listLoading: false,
-      fetchd: false,
       rows: [],
       paginationData: {
         totalItems: 0,
@@ -44766,7 +44770,14 @@ var render = function() {
                             )
                           ]
                         )
-                      ])
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.extraFields, function(component, compKey) {
+                        return _c(component, {
+                          key: "key-" + compKey,
+                          tag: "component"
+                        })
+                      })
                     ],
                     2
                   )
@@ -45402,11 +45413,11 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReportsOverview_vue__ = __webpack_require__(131);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_642affa2_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReportsOverview_vue__ = __webpack_require__(328);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_642affa2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReportsOverview_vue__ = __webpack_require__(629);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(327)
+  __webpack_require__(628)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -45419,12 +45430,12 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-642affa2"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReportsOverview_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_642affa2_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReportsOverview_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_642affa2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReportsOverview_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -45452,173 +45463,8 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 327 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 328 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "ul",
-    [
-      _c(
-        "li",
-        [
-          _c("h3", [_vm._v(_vm._s(_vm.__("Trial Balance", "erp")))]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              _vm._s(
-                _vm.__(
-                  "Trial balance is the bookkeeping or accounting report that lists the balances in each of general ledger accounts",
-                  "erp"
-                )
-              ) + "."
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "wperp-btn btn--primary",
-              attrs: { to: { name: "TrialBalance" } }
-            },
-            [_vm._v(_vm._s(_vm.__("View Report", "erp")))]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "li",
-        [
-          _c("h3", [_vm._v(_vm._s(_vm.__("Ledger Report", "erp")))]),
-          _vm._v(" "),
-          _c("p", [_vm._v(_vm._s(_vm.__("Ledger report", "erp")))]),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "wperp-btn btn--primary",
-              attrs: { to: { name: "LedgerSingle", params: { id: 7 } } }
-            },
-            [_vm._v(_vm._s(_vm.__("View Report", "erp")))]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "li",
-        [
-          _c("h3", [_vm._v(_vm._s(_vm.__("Income Statement", "erp")))]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              _vm._s(
-                _vm.__(
-                  "A summary of a management's performance as reflecte the profitability of an organization during the time interval",
-                  "erp"
-                )
-              ) + "."
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "wperp-btn btn--primary",
-              attrs: { to: { name: "IncomeStatement" } }
-            },
-            [_vm._v("View Report")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "li",
-        [
-          _c("h3", [_vm._v(_vm._s(_vm.__("Sales Tax", "erp")))]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              _vm._s(
-                _vm.__(
-                  "It generates report based on the sales tax charged or paid for the current financial cycle/year",
-                  "erp"
-                )
-              ) + "."
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "wperp-btn btn--primary",
-              attrs: { to: { name: "SalesTax" } }
-            },
-            [_vm._v(_vm._s(_vm.__("View Report", "erp")))]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "li",
-        [
-          _c("h3", [_vm._v(_vm._s(_vm.__("Balance Sheet", "erp")))]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              _vm._s(
-                _vm.__(
-                  'This report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year',
-                  "erp"
-                )
-              ) + "."
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "wperp-btn btn--primary",
-              attrs: { to: { name: "BalanceSheet" } }
-            },
-            [_vm._v(_vm._s(_vm.__("View Report", "erp")))]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm._l(_vm.reportLists, function(component, index) {
-        return _c(component, { key: index, tag: "component" })
-      })
-    ],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-642affa2", esExports)
-  }
-}
-
-/***/ }),
+/* 327 */,
+/* 328 */,
 /* 329 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -64206,6 +64052,304 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
+
+/***/ }),
+/* 498 */,
+/* 499 */,
+/* 500 */,
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */,
+/* 510 */,
+/* 511 */,
+/* 512 */,
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */,
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */,
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */,
+/* 602 */,
+/* 603 */,
+/* 604 */,
+/* 605 */,
+/* 606 */,
+/* 607 */,
+/* 608 */,
+/* 609 */,
+/* 610 */,
+/* 611 */,
+/* 612 */,
+/* 613 */,
+/* 614 */,
+/* 615 */,
+/* 616 */,
+/* 617 */,
+/* 618 */,
+/* 619 */,
+/* 620 */,
+/* 621 */,
+/* 622 */,
+/* 623 */,
+/* 624 */,
+/* 625 */,
+/* 626 */,
+/* 627 */,
+/* 628 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 629 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "ul",
+    { staticClass: "reports-overview" },
+    [
+      _c(
+        "li",
+        [
+          _c("h3", [_vm._v(_vm._s(_vm.__("Trial Balance", "erp")))]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              _vm._s(
+                _vm.__(
+                  "Trial balance is the bookkeeping or accounting report that lists the balances in each of general ledger accounts",
+                  "erp"
+                )
+              ) + "."
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { to: { name: "TrialBalance" } }
+            },
+            [_vm._v(_vm._s(_vm.__("View Report", "erp")))]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        [
+          _c("h3", [_vm._v(_vm._s(_vm.__("Ledger Report", "erp")))]),
+          _vm._v(" "),
+          _c("p", [_vm._v(_vm._s(_vm.__("Ledger report", "erp")))]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { to: { name: "LedgerSingle", params: { id: 7 } } }
+            },
+            [_vm._v(_vm._s(_vm.__("View Report", "erp")))]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        [
+          _c("h3", [_vm._v(_vm._s(_vm.__("Income Statement", "erp")))]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              _vm._s(
+                _vm.__(
+                  "A summary of a management's performance as reflecte the profitability of an organization during the time interval",
+                  "erp"
+                )
+              ) + "."
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { to: { name: "IncomeStatement" } }
+            },
+            [_vm._v("View Report")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        [
+          _c("h3", [_vm._v(_vm._s(_vm.__("Sales Tax", "erp")))]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              _vm._s(
+                _vm.__(
+                  "It generates report based on the sales tax charged or paid for the current financial cycle/year",
+                  "erp"
+                )
+              ) + "."
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { to: { name: "SalesTax" } }
+            },
+            [_vm._v(_vm._s(_vm.__("View Report", "erp")))]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "li",
+        [
+          _c("h3", [_vm._v(_vm._s(_vm.__("Balance Sheet", "erp")))]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              _vm._s(
+                _vm.__(
+                  'This report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year',
+                  "erp"
+                )
+              ) + "."
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            {
+              staticClass: "wperp-btn btn--primary",
+              attrs: { to: { name: "BalanceSheet" } }
+            },
+            [_vm._v(_vm._s(_vm.__("View Report", "erp")))]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _vm._l(_vm.reportLists, function(component, index) {
+        return _c(component, { key: index, tag: "component" })
+      })
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-642affa2", esExports)
+  }
+}
 
 /***/ })
 ],[205]);

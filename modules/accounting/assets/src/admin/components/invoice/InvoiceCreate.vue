@@ -131,6 +131,10 @@
                                     </div>
                                 </td>
                             </tr>
+                            <component
+                                v-for="(component, compKey) in extraFields"
+                                :key="'key-' + compKey"
+                                :is="component" />
                         </tbody>
                         <tfoot>
                             <tr>
@@ -162,6 +166,7 @@ import SelectCustomers from 'admin/components/people/SelectCustomers.vue';
 import MultiSelect from 'admin/components/select/MultiSelect.vue';
 import ShowErrors from 'admin/components/base/ShowErrors.vue';
 
+/* global erp_acct_var */
 export default {
     name: 'InvoiceCreate',
 
@@ -198,6 +203,7 @@ export default {
                 { id: 'draft', text: 'Save as Draft' }
             ],
 
+            extraFields     : window.acct.hooks.applyFilters('acctInvoiceExtraFields', []),
             editMode        : false,
             voucherNo       : 0,
             discountType    : 'discount-percent',
@@ -214,7 +220,7 @@ export default {
             finalTotalAmount: 0,
             inv_title       : '',
             inv_type        : {},
-            erp_acct_assets : erp_acct_var.acct_assets, /* global erp_acct_var */
+            erp_acct_assets : erp_acct_var.acct_assets,
             form_errors     : []
         };
     },
@@ -532,7 +538,7 @@ export default {
                 this.status = 2;
             }
 
-            const requestData = {
+            const requestData = window.acct.hooks.applyFilters('invoiceRequestData', {
                 customer_id    : this.basic_fields.customer.id,
                 date           : this.basic_fields.trn_date,
                 due_date       : this.basic_fields.due_date,
@@ -545,7 +551,7 @@ export default {
                 type           : 'invoice',
                 status         : parseInt(this.status),
                 estimate       : this.inv_type.id
-            };
+            });
 
             if (this.editMode) {
                 this.updateInvoice(requestData);

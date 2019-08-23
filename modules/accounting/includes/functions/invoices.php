@@ -270,7 +270,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
             'discount'       => $item['discount'],
             'tax'            => $item['tax'],
             'item_total'     => $sub_total,
-            'ecommerce_type' => $item['ecommerce_type'],
+            'ecommerce_type' => ! empty( $item['ecommerce_type'] ) ? $item['ecommerce_type'] : null,
             'created_at'     => $invoice_data['created_at'],
             'created_by'     => $invoice_data['created_by']
         ) );
