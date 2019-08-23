@@ -10359,7 +10359,6 @@ window.acct.libs['ShowErrors'] = __WEBPACK_IMPORTED_MODULE_12_admin_components_b
 window.acct.libs['SubmitButton'] = __WEBPACK_IMPORTED_MODULE_13_admin_components_base_SubmitButton_vue__["a" /* default */];
 window.acct.libs['MultiSelect'] = __WEBPACK_IMPORTED_MODULE_14_admin_components_select_MultiSelect_vue__["a" /* default */];
 window.acct.libs['SelectAccounts'] = __WEBPACK_IMPORTED_MODULE_15_admin_components_select_SelectAccounts_vue__["a" /* default */];
-window.acct.libs['ListTable'] = __WEBPACK_IMPORTED_MODULE_3_admin_components_list_table_ListTable_vue__["a" /* default */];
 window.acct.libs['TimePicker'] = __WEBPACK_IMPORTED_MODULE_16_admin_components_timepicker_TimePicker_vue__["a" /* default */];
 window.acct.libs['SelectPeople'] = __WEBPACK_IMPORTED_MODULE_17_admin_components_people_SelectPeople_vue__["a" /* default */];
 window.acct.libs['DynamicTrnLoader'] = __WEBPACK_IMPORTED_MODULE_20_admin_components_transactions_DynamicTrnLoader_vue__["a" /* default */];
