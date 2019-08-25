@@ -10,7 +10,7 @@ $tabs        = apply_filters( 'erp_admin_status_tabs', $tabs );
 	<nav class="nav-tab-wrapper">
 		<?php
 			foreach ( $tabs as $name => $label ) {
-				echo '<a href="' . admin_url( 'admin.php?page=erp-status&tab=' . $name ) . '" class="nav-tab ';
+				echo '<a href="' . admin_url( 'admin.php?page=erp-tools&tab=' . $name ) . '" class="nav-tab ';
 				if ( $current_tab == $name ) {
 					echo 'nav-tab-active';
 				}
