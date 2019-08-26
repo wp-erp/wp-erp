@@ -679,7 +679,12 @@ $ledgers = [
              "name" => "Gain on Disposal of Plant Assets",
              "code" => 1404,
              "system" => 1
-         ]
+         ],
+         [
+             "name" => "Asset Sales",
+             "code" => 1405,
+             "system" => 1
+         ],
      ],
      "expense" => [
          [
@@ -711,6 +716,11 @@ $ledgers = [
              "name" => "Purchase",
              "code" => 1506,
              "system" => 1
-         ]
+         ],
+         [
+             "name" => "Asset Purchase",
+             "code" => 1506,
+             "system" => 1
+         ],
      ]
  ];
