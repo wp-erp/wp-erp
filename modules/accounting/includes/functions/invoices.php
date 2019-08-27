@@ -536,7 +536,7 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['line_items']      = isset( $data['line_items'] ) ? $data['line_items'] : array();
     $invoice_data['trn_by']          = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
     $invoice_data['tax']             = isset( $data['tax'] ) ? $data['tax'] : 0;
-    $invoice_data['attachments']     = isset( $data['attachments'] ) ? $data['attachments'] : '';
+    $invoice_data['attachments']     = !empty( $data['attachments'] ) ? $data['attachments'] : '';
     $invoice_data['status']          = isset( $data['status'] ) ? $data['status'] : 1;
     $invoice_data['particulars']     = !empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Invoice created with voucher no %s', 'erp' ), $voucher_no );
     $invoice_data['estimate']        = isset( $data['estimate'] ) ? $data['estimate'] : 1;
