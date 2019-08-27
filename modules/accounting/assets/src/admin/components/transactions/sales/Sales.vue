@@ -42,8 +42,8 @@ export default {
         return {
             pages: [
                 { namedRoute: 'InvoiceCreate', name: 'Create Invoice' },
-                { namedRoute: 'EstimateCreate', name: 'Create Estimate' },
-                { namedRoute: 'RecPaymentCreate', name: 'Receive Payment' }
+                { namedRoute: 'RecPaymentCreate', name: 'Receive Payment' },
+                { namedRoute: 'EstimateCreate', name: 'Create Estimate' }
             ]
         };
     }
