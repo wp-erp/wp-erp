@@ -24531,11 +24531,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         namedRoute: 'InvoiceCreate',
         name: 'Create Invoice'
       }, {
-        namedRoute: 'EstimateCreate',
-        name: 'Create Estimate'
-      }, {
         namedRoute: 'RecPaymentCreate',
         name: 'Receive Payment'
+      }, {
+        namedRoute: 'EstimateCreate',
+        name: 'Create Estimate'
       }]
     };
   }
@@ -26061,14 +26061,14 @@ setTimeout(function () {
   data: function data() {
     return {
       pages: [{
-        namedRoute: 'PurchaseOrderCreate',
-        name: 'Create Purchase Order'
-      }, {
         namedRoute: 'PurchaseCreate',
         name: 'Create Purchase'
       }, {
         namedRoute: 'PayPurchaseCreate',
         name: 'Pay Purchase'
+      }, {
+        namedRoute: 'PurchaseOrderCreate',
+        name: 'Create Purchase Order'
       }]
     };
   }
