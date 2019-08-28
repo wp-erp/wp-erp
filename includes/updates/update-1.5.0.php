@@ -978,10 +978,31 @@ function erp_acct_populate_charts_ledgers() {
 
     $old_ledgers = [];
     $ledgers     = [];
+    $bank_ids    = [];
 
     require_once WPERP_INCLUDES . '/ledgers.php';
 
+    $o_ledgers = $wpdb->get_results( "SELECT	
+        ledger.code, ledger.id, ledger.system, chart_cat.id category_id, chart.id as chart_id, ledger.name	
+        FROM {$wpdb->prefix}erp_ac_ledger as ledger	
+        LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id	
+        LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
+
+    if ( ! empty( $o_ledgers ) ) {
+        $old_ledgers = $o_ledgers;
+    }
+
+    $old_banks = $wpdb->get_results( "SELECT	* 
+        FROM {$wpdb->prefix}erp_ac_banks;", ARRAY_A );
+
+    foreach ( $old_banks as $old_bank ) {
+        $bank_ids[] = $old_bank['ledger_id'];
+    }
+
     foreach ( $old_ledgers as $old_ledger ) {
+        if ( in_array( $old_ledger['id'], $bank_ids ) ) {
+            $old_ledger['chart_id'] = 7;
+        }
         $wpdb->insert(
             "{$wpdb->prefix}erp_acct_ledgers",
             [
@@ -1336,8 +1357,8 @@ function erp_acct_migrate_balance_sheet() {
 
     $start_date = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
 
-    $current_fy   = erp_acct_get_current_financial_year();
-    $next_fy_id   = '';
+    $current_fy = erp_acct_get_current_financial_year();
+    $next_fy_id = '';
 
     $next_fy_name  = date( "Y" ) . '_1';
     $next_fy_start = date( 'Y-m-d', strtotime( ' +1 day' ) );
