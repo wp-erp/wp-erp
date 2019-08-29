@@ -38,8 +38,19 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         ARRAY_A );
 
         $has_inventory = ! empty( $product_ids ) ? true : false;
-        $status        = erp_acct_trn_status_by_id('closed');
 
+        switch ( $trn['status'] ) {
+            case 'awaiting_approval':
+                $status = 'awaiting_payment';
+                break;
+            case 'partial':
+                $status = 'partially_paid';
+                break;
+            default:
+                $status = $trn['status'];
+        }
+
+        $status = erp_acct_trn_status_by_id($status);
         $people = erp_get_people( $trn['user_id'] );
 
         // Start from here
@@ -79,7 +90,9 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
-            $this->_helper_invoice_details_migration( $trn_id );
+            $this->_helper_invoice_account_details_migration($trn, $trn_id);
+            $this->_helper_invoice_ledger_details_migration($trn, $trn_id);
+            $this->_helper_invoice_details_migration($trn_id);
         } // invoice
 
         elseif ( 'payment' === $trn['form_type'] ) {
@@ -288,10 +301,87 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
-            $sql = "UPDATE {$wpdb->prefix}erp_acct_invoices SET discount = discount + {$discount}, tax = tax + {$tax} WHERE voucher_no = %d";
+            $sqls = [
+                "UPDATE {$wpdb->prefix}erp_acct_invoices SET discount = discount + {$discount}, tax = tax + {$tax} WHERE voucher_no = %d",
+                "UPDATE {$wpdb->prefix}erp_acct_invoice_account_details SET debit = debit + {$item_total} + {$tax} WHERE trn_no = %d",
+                "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET debit = debit + {$discount} WHERE credit = 0.00 AND trn_no = %d"
+            ];
 
-            $wpdb->query( $wpdb->prepare( $sql, $id) );
+            foreach ( $sqls as $sql ) {
+                $wpdb->query( $wpdb->prepare( $sql, $id) );
+            }
         }
+    }
+
+    /**
+     * Helper of invoice account details migration
+     *
+     * @param array $trn
+     * @param int $trn_no
+     *
+     * @return void
+     */
+    protected function _helper_invoice_account_details_migration( $trn, $trn_no ) {
+        global $wpdb;
+
+        $wpdb->insert(
+            // `erp_acct_invoice_account_details`
+            "{$wpdb->prefix}erp_acct_invoice_account_details", [
+                'invoice_no'  => $trn_no,
+                'trn_no'      => $trn_no,
+                'trn_date'    => $trn['issue_date'],
+                'particulars' => $trn['summary'],
+                'debit'       => 0,
+                'credit'      => 0,
+                'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                'created_by'  => $trn['created_by']
+            ]
+        );
+    }
+
+    /**
+     * Helper of invoice ledger details migration
+     *
+     * @param array $trn
+     * @param int $trn_no
+     *
+     * @return void
+     */
+    protected function _helper_invoice_ledger_details_migration( $trn, $trn_no ) {
+        global $wpdb;
+
+        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+
+        $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug('sales_revenue');
+        $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discount');
+
+        $wpdb->insert(
+            // `erp_acct_ledger_details`
+            "{$wpdb->prefix}erp_acct_ledger_details", [
+                'ledger_id'   => $sales_ledger_id,
+                'trn_no'      => $trn_no,
+                'trn_date'    => $trn['issue_date'],
+                'particulars' => $trn['summary'],
+                'debit'       => 0,
+                'credit'      => $trn['sub_total'],
+                'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                'created_by'  => $trn['created_by']
+            ]
+        );
+
+        $wpdb->insert(
+            // `erp_acct_ledger_details`
+            "{$wpdb->prefix}erp_acct_ledger_details", [
+                'ledger_id'   => $sales_discount_ledger_id,
+                'trn_no'      => $trn_no,
+                'trn_date'    => $trn['issue_date'],
+                'particulars' => $trn['summary'],
+                'debit'       => 0,
+                'credit'      => 0,
+                'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                'created_by'  => $trn['created_by']
+            ]
+        );
     }
 
     /**
