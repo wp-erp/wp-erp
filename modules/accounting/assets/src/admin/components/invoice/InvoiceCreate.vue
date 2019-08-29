@@ -692,6 +692,7 @@ export default {
         }
 
         .col--tax {
+            text-align: center;
             width: 100px;
         }
 

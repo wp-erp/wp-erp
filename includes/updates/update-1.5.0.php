@@ -64,8 +64,8 @@ function erp_acct_create_accounting_tables() {
             `address` varchar(255) DEFAULT NULL,
             `trn_date` date DEFAULT NULL,
             `due_date` date DEFAULT NULL,
-            `amount` decimal(10,2) DEFAULT 0,
             `ref` varchar(255) DEFAULT NULL,
+            `amount` decimal(10,2) DEFAULT 0,
             `particulars` varchar(255) DEFAULT NULL,
             `status` int(11) DEFAULT NULL,
             `attachments` varchar(255) DEFAULT NULL,
@@ -116,12 +116,13 @@ function erp_acct_create_accounting_tables() {
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_details` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `trn_no` int(11) DEFAULT NULL,
-            `product_id` varchar(255) DEFAULT NULL,
+            `product_id` int(11) DEFAULT NULL,
             `qty` int(11) DEFAULT NULL,
             `unit_price` decimal(10,2) DEFAULT 0,
             `discount` decimal(10,2) DEFAULT 0,
             `tax` decimal(10,2) DEFAULT 0,
             `item_total` decimal(10,2) DEFAULT 0,
+            `ecommerce_type` varchar(255) DEFAULT NULL,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
@@ -200,6 +201,7 @@ function erp_acct_create_accounting_tables() {
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_journals` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `trn_date` date DEFAULT NULL,
+            `ref` varchar(255) DEFAULT NULL,
             `voucher_no` int(11) DEFAULT NULL,
             `voucher_amount` decimal(10,2) DEFAULT 0,
             `particulars` varchar(255) DEFAULT NULL,
@@ -270,6 +272,8 @@ function erp_acct_create_accounting_tables() {
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_cash_at_banks` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `ledger_id` int(11) DEFAULT NULL,
+            `name` varchar(255) DEFAULT NULL,
+            `balance` decimal(10,2) DEFAULT 0,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
@@ -281,9 +285,10 @@ function erp_acct_create_accounting_tables() {
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `voucher_no` int(11) DEFAULT NULL,
             `trn_date` date DEFAULT NULL,
-            `amount` int(11) DEFAULT NULL,
+            `amount` decimal(10,2) DEFAULT NULL,
             `ac_from` int(11) DEFAULT NULL,
             `ac_to` int(11) DEFAULT NULL,
+            `particulars` varchar(255) DEFAULT NULL,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
@@ -291,12 +296,27 @@ function erp_acct_create_accounting_tables() {
             PRIMARY KEY (`id`)
         ) $collate;",
 
-        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_opening_balance` (
+        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_opening_balances` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
-            `balance_date` date DEFAULT NULL,
+            `financial_year_id` int(11) DEFAULT NULL,
+            `chart_id` int(11) DEFAULT NULL,
             `ledger_id` int(11) DEFAULT NULL,
+            `type` varchar(50) DEFAULT NULL,
             `debit` decimal(10,2) DEFAULT 0,
             `credit` decimal(10,2) DEFAULT 0,
+            `created_at` date DEFAULT NULL,
+            `created_by` varchar(50) DEFAULT NULL,
+            `updated_at` date DEFAULT NULL,
+            `updated_by` varchar(50) DEFAULT NULL,
+            PRIMARY KEY (`id`)
+        ) $collate;",
+
+        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_financial_years` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `name` VARCHAR(255) DEFAULT NULL,
+            `start_date` date DEFAULT NULL,
+            `end_date` date DEFAULT NULL,
+            `description` varchar(255) DEFAULT NULL,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
@@ -366,15 +386,32 @@ function erp_acct_create_accounting_tables() {
             PRIMARY KEY (`id`)
         ) $collate;",
 
-        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_details` (
+        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_account_details` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `people_id` varchar(255) DEFAULT NULL,
             `trn_no` int(11) DEFAULT NULL,
+            `trn_date` date DEFAULT NULL,
+            `trn_by` varchar(255) DEFAULT NULL,
+            `voucher_type` varchar(255) DEFAULT NULL,
             `particulars` varchar(255) DEFAULT NULL,
             `debit` decimal(10,2) DEFAULT 0,
             `credit` decimal(10,2) DEFAULT 0,
-            `voucher_type` varchar(255) DEFAULT NULL,
+            `created_at` date DEFAULT NULL,
+            `created_by` varchar(50) DEFAULT NULL,
+            `updated_at` date DEFAULT NULL,
+            `updated_by` varchar(50) DEFAULT NULL,
+            PRIMARY KEY (`id`)
+        ) $collate;",
+
+        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_trn` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `people_id` varchar(255) DEFAULT NULL,
+            `voucher_no` int(11) DEFAULT NULL,
+            `amount` decimal(10,2) DEFAULT 0,
             `trn_date` date DEFAULT NULL,
+            `trn_by` varchar(255) DEFAULT NULL,
+            `particulars` varchar(255) DEFAULT NULL,
+            `voucher_type` varchar(255) DEFAULT NULL,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
@@ -396,6 +433,7 @@ function erp_acct_create_accounting_tables() {
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_types` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `name` varchar(255) DEFAULT NULL,
+            `slug` varchar(255) DEFAULT NULL,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
@@ -494,7 +532,7 @@ function erp_acct_create_accounting_tables() {
 
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_taxes` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
-            `tax_rate_id` int(11) DEFAULT NULL,
+            `tax_rate_name` varchar(255) DEFAULT NULL,
             `tax_number` varchar(100) DEFAULT NULL,
             `default` boolean DEFAULT NULL,
             `created_at` date DEFAULT NULL,
@@ -518,19 +556,10 @@ function erp_acct_create_accounting_tables() {
             PRIMARY KEY (`id`)
         ) $collate;",
 
-        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_rate_names` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `name` varchar(255) DEFAULT NULL,
-            `created_at` date DEFAULT NULL,
-            `created_by` varchar(50) DEFAULT NULL,
-            `updated_at` date DEFAULT NULL,
-            `updated_by` varchar(50) DEFAULT NULL,
-            PRIMARY KEY (`id`)
-        ) $collate;",
-
         "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agencies` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `name` varchar(255) DEFAULT NULL,
+            `ecommerce_type` varchar(255) DEFAULT NULL,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
@@ -645,53 +674,9 @@ function erp_acct_create_accounting_tables() {
             `check_no` varchar(255) DEFAULT NULL,
             `voucher_type` varchar(255) DEFAULT NULL,
             `amount` decimal(10,2) DEFAULT 0,
+            `bank` varchar(255) DEFAULT NULL,
             `name` varchar(255) DEFAULT NULL,
             `pay_to` varchar(255) DEFAULT NULL,
-            `created_at` date DEFAULT NULL,
-            `created_by` varchar(50) DEFAULT NULL,
-            `updated_at` date DEFAULT NULL,
-            `updated_by` varchar(50) DEFAULT NULL,
-            PRIMARY KEY (`id`)
-        ) $collate;",
-
-        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_account_details` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `people_id` varchar(255) DEFAULT NULL,
-            `trn_no` int(11) DEFAULT NULL,
-            `trn_date` date DEFAULT NULL,
-            `trn_by` varchar(255) DEFAULT NULL,
-            `voucher_type` varchar(255) DEFAULT NULL,
-            `particulars` varchar(255) DEFAULT NULL,
-            `debit` decimal(10,2) DEFAULT 0,
-            `credit` decimal(10,2) DEFAULT 0,
-            `created_at` date DEFAULT NULL,
-            `created_by` varchar(50) DEFAULT NULL,
-            `updated_at` date DEFAULT NULL,
-            `updated_by` varchar(50) DEFAULT NULL,
-            PRIMARY KEY (`id`)
-        ) $collate;",
-
-        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_opening_balances` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `financial_year_id` int(11) DEFAULT NULL,
-            `chart_id` int(11) DEFAULT NULL,
-            `ledger_id` int(11) DEFAULT NULL,
-            `type` varchar(50) DEFAULT NULL,
-            `debit` decimal(10,2) DEFAULT 0,
-            `credit` decimal(10,2) DEFAULT 0,
-            `created_at` date DEFAULT NULL,
-            `created_by` varchar(50) DEFAULT NULL,
-            `updated_at` date DEFAULT NULL,
-            `updated_by` varchar(50) DEFAULT NULL,
-            PRIMARY KEY (`id`)
-        ) $collate;",
-
-        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_financial_years` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `name` VARCHAR(255) DEFAULT NULL,
-            `start_date` date DEFAULT NULL,
-            `end_date` date DEFAULT NULL,
-            `description` varchar(255) DEFAULT NULL,
             `created_at` date DEFAULT NULL,
             `created_by` varchar(50) DEFAULT NULL,
             `updated_at` date DEFAULT NULL,
@@ -984,17 +969,17 @@ function erp_acct_populate_charts_ledgers() {
 
     require_once WPERP_INCLUDES . '/ledgers.php';
 
-    $o_ledgers = $wpdb->get_results( "SELECT	
-        ledger.code, ledger.id, ledger.system, chart_cat.id category_id, chart.id as chart_id, ledger.name	
-        FROM {$wpdb->prefix}erp_ac_ledger as ledger	
-        LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id	
+    $o_ledgers = $wpdb->get_results( "SELECT
+        ledger.code, ledger.id, ledger.system, chart_cat.id category_id, chart.id as chart_id, ledger.name
+        FROM {$wpdb->prefix}erp_ac_ledger as ledger
+        LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id
         LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
 
     if ( ! empty( $o_ledgers ) ) {
         $old_ledgers = $o_ledgers;
     }
 
-    $old_banks = $wpdb->get_results( "SELECT	* 
+    $old_banks = $wpdb->get_results( "SELECT	*
         FROM {$wpdb->prefix}erp_ac_banks;", ARRAY_A );
 
     foreach ( $old_banks as $old_bank ) {
