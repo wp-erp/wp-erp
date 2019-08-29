@@ -117,9 +117,13 @@ function erp_acct_delete_ledger_category( $id ) {
 function erp_acct_get_ledgers_by_chart_id( $chart_id ) {
     global $wpdb;
 
-    $charts = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE chart_id = {$chart_id} AND unused IS NULL", ARRAY_A );
+    $ledgers = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE chart_id = {$chart_id} AND unused IS NULL", ARRAY_A );
 
-    return $charts;
+    for ( $i = 0; $i < count( $ledgers ); $i++ ) {
+        $ledgers[$i]['balance'] = erp_acct_get_ledger_balance( $ledgers[$i]['id'] );
+    }
+
+    return $ledgers;
 }
 
 /**
