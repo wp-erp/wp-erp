@@ -51,7 +51,8 @@
                     {{ isPayment(data.row) ? '-' : formatAmount(data.row.due) }}
                 </template>
                 <template slot="amount" slot-scope="data">
-                    {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount) }}
+                    {{ isPayment(data.row) ? formatAmount(data.row.payment_amount) : formatAmount(data.row.sales_amount)
+                    }}
                 </template>
                 <template slot="status" slot-scope="data">
                     {{ data.row.status }}
@@ -84,17 +85,17 @@ export default {
 
     data() {
         return {
-            columns: {
-                trn_no       : { label: 'Voucher No.' },
-                type         : { label: 'Type' },
-                ref          : { label: 'Ref' },
-                customer_name: { label: 'Customer' },
-                trn_date     : { label: 'Trn Date' },
-                due_date     : { label: 'Due Date' },
-                due          : { label: 'Due' },
-                amount       : { label: 'Total' },
-                status       : { label: 'Status' },
-                actions      : { label: '' }
+            columns       : {
+                trn_no       : {label: 'Voucher No.'},
+                type         : {label: 'Type'},
+                ref          : {label: 'Ref'},
+                customer_name: {label: 'Customer'},
+                trn_date     : {label: 'Trn Date'},
+                due_date     : {label: 'Due Date'},
+                due          : {label: 'Due'},
+                amount       : {label: 'Total'},
+                status       : {label: 'Status'},
+                actions      : {label: ''}
 
             },
             listLoading   : false,
@@ -112,7 +113,10 @@ export default {
         this.$store.dispatch('spinner/setSpinner', true);
 
         this.$root.$on('transactions-filter', filters => {
-            this.$router.push({ path: '/transactions/sales', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
+            this.$router.push({
+                path : '/transactions/sales',
+                query: {start: filters.start_date, end: filters.end_date, status: filters.status}
+            });
             this.fetchItems(filters);
             this.fetched = true;
         });
@@ -124,7 +128,7 @@ export default {
             filters.end_date   = this.$route.query.end;
         }
         if (this.$route.query.status) {
-            filters.status   = this.$route.query.status;
+            filters.status = this.$route.query.status;
         }
 
         if (!this.fetched) {
@@ -151,19 +155,26 @@ export default {
                 }
             }).then(response => {
                 this.rows = response.data.map(item => {
-                    if ((item.type === 'invoice' && item.estimate === '0') && (item.status === 'Partially Paid' || item.status === 'Awaiting Payment')) {
+                    if (item.estimate === '1' || item.status_code === '1') {
                         item['actions'] = [
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'receive', label: 'Receive Payment' }
-                            // { key: 'trash', label: 'Delete' }
+                            {key: 'edit', label: 'Edit'}
                         ];
-                    } else if ((item.type === 'invoice' && item.status !== 'Paid' && item.estimate === '0') || item.estimate === '1') {
-                        item['actions'] = [
-                            { key: 'edit', label: 'Edit' }
-                        ];
+                    } else if (item.type === 'invoice') {
+                        if (item.status_code === '7') {
+                            delete item['actions'];
+                        } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
+                            item['actions'] = [
+                                {key: 'edit', label: __('Edit', 'erp')},
+                                {key: 'receive', label: __('Receive Payment', 'erp')}
+                            ];
+                        } else {
+                            item['actions'] = [
+                                {key: '#', label: __('No actions found', 'erp')}
+                            ];
+                        }
                     } else {
                         item['actions'] = [
-                            { key: 'void', label: 'Void' }
+                            {key: '#', label: __('No actions found', 'erp')}
                         ];
                     }
 
@@ -184,52 +195,54 @@ export default {
 
         onActionClick(action, row, index) {
             switch (action) {
-            case 'trash':
-                if (confirm('Are you sure to delete?')) {
-                    this.$store.dispatch('spinner/setSpinner', true);
-                    HTTP.delete('invoices/' + row.id).then(response => {
-                        this.$delete(this.rows, index);
+                case 'trash':
+                    if (confirm('Are you sure to delete?')) {
+                        this.$store.dispatch('spinner/setSpinner', true);
+                        HTTP.delete('invoices/' + row.id).then(response => {
+                            this.$delete(this.rows, index);
 
-                        this.$store.dispatch('spinner/setSpinner', false);
-                        this.showAlert('success', 'Deleted !');
-                    }).catch(error => {
-                        this.$store.dispatch('spinner/setSpinner', false);
-                        throw error;
+                            this.$store.dispatch('spinner/setSpinner', false);
+                            this.showAlert('success', 'Deleted !');
+                        }).catch(error => {
+                            this.$store.dispatch('spinner/setSpinner', false);
+                            throw error;
+                        });
+                    }
+                    break;
+
+                case 'edit':
+                    if (row.type === 'invoice') {
+                        this.$router.push({name: 'InvoiceEdit', params: {id: row.id}});
+                    }
+
+                    if (row.type === 'payment') {
+                        this.$router.push({name: 'RecPaymentEdit', params: {id: row.id}});
+                    }
+                    break;
+
+                case 'receive':
+                    this.$router.push({
+                        name  : 'RecPaymentCreate',
+                        params: {
+                            customer_id  : row.inv_cus_id,
+                            customer_name: row.inv_cus_name
+                        }
                     });
-                }
-                break;
+                    break;
 
-            case 'edit':
-                if (row.type === 'invoice') {
-                    this.$router.push({ name: 'InvoiceEdit', params: { id: row.id } });
-                }
-
-                if (row.type === 'payment') {
-                    this.$router.push({ name: 'RecPaymentEdit', params: { id: row.id } });
-                }
-                break;
-
-            case 'receive':
-                this.$router.push({ name: 'RecPaymentCreate',
-                    params: {
-                        customer_id  : row.inv_cus_id,
-                        customer_name: row.inv_cus_name
-                    } });
-                break;
-
-            default :
+                default :
             }
         },
 
         goToPage(page) {
             this.listLoading = true;
 
-            const queries = Object.assign({}, this.$route.query);
+            const queries                   = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
-                name: 'PaginateSales',
-                params: { page: page },
-                query: queries
+                name  : 'PaginateSales',
+                params: {page: page},
+                query : queries
             });
 
             this.fetchItems();

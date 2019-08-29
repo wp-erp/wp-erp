@@ -570,6 +570,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $status = null;
 
         if ( ! empty( $item['inv_status'] ) ) {
             $status = $item['inv_status'];
@@ -599,7 +600,8 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             }
         }
 
-        $item['status'] = erp_acct_get_trn_status_by_id( $status );
+        $item['status']      = erp_acct_get_trn_status_by_id( $status );
+        $item['status_code'] = $status;
 
         $data = array_merge( $item, $additional_fields );
 
