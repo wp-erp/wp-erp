@@ -175,7 +175,6 @@ export default {
                     break;
 
                 default :
-                    break;
             }
         },
 
@@ -197,22 +196,104 @@ export default {
             if (!this.rows.length) {
                 return this.rows;
             }
-            if (item.status_code === '1') {
-                item['actions'] = [
-                    {key: 'edit', label: 'Edit'}
-                ];
-            } else if (item.status_code === '7') {
-                delete item['actions'];
-            } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
-                item['actions'] = [
-                    {key: 'edit', label: __('Edit', 'erp')},
-                    {key: 'payment', label: __('Make Payment', 'erp')}
-                ];
-            } else {
-                item['actions'] = [
-                    {key: '#', label: __('No actions found', 'erp')}
-                ];
-            }
+            let temp;
+            const items = this.rows.map(item => {
+                switch (item.type) {
+                    case 'pay_bill':
+                        temp = {
+                            id         : item.id,
+                            trn_no     : item.id,
+                            type       : 'Pay Bill',
+                            ref        : item.ref ? item.ref : '-',
+                            vendor_name: item.pay_bill_vendor_name,
+                            trn_date   : item.pay_bill_trn_date,
+                            due_date   : '-',
+                            due        : '-',
+                            amount     : this.formatAmount(item.pay_bill_amount),
+                            status     : item.status,
+                            singleView : {name: 'PayBillSingle', params: {id: item.id}},
+                            actions    : [
+                                {key: 'void', label: 'Void'}
+                            ]
+                        };
+                        break;
+
+                    case 'bill':
+                        temp = {
+                            id         : item.id,
+                            trn_no     : item.id,
+                            type       : 'Bill',
+                            ref        : item.ref ? item.ref : '-',
+                            vendor_id  : item.vendor_id,
+                            vendor_name: item.vendor_name,
+                            trn_date   : item.bill_trn_date,
+                            due_date   : item.due_date,
+                            due        : this.formatAmount(item.due),
+                            amount     : this.formatAmount(item.amount),
+                            status     : item.status,
+                            singleView : {name: 'BillSingle', params: {id: item.id}},
+                            actions    : [
+                                {key: 'edit', label: 'Edit'},
+                                {key: 'payment', label: 'Make Payment'}
+                            ]
+                        };
+                        break;
+
+                    case 'expense':
+                        temp = {
+                            id         : item.id,
+                            trn_no     : item.id,
+                            type       : 'Expense',
+                            ref        : item.ref ? item.ref : '-',
+                            vendor_name: item.expense_people_name,
+                            trn_date   : item.expense_trn_date,
+                            due_date   : '-',
+                            due        : '-',
+                            amount     : this.formatAmount(item.expense_amount),
+                            status     : item.status,
+                            singleView : {name: 'ExpenseSingle', params: {id: item.id}},
+                            actions    : [
+                                {key: 'void', label: 'Void'}
+                            ]
+                        };
+                        break;
+
+                    case 'check':
+                        temp = {
+                            id         : item.id,
+                            trn_no     : item.id,
+                            type       : 'Check',
+                            ref        : item.ref ? item.ref : '-',
+                            vendor_name: item.expense_people_name,
+                            trn_date   : item.expense_people_name,
+                            due_date   : '-',
+                            due        : '-',
+                            amount     : this.formatAmount(item.expense_amount),
+                            status     : item.status,
+                            singleView : {name: 'CheckSingle', params: {id: item.id}},
+                            actions    : [
+                                {key: 'void', label: 'Void'}
+                            ]
+                        };
+                        break;
+
+                    default :
+                        break;
+                }
+
+                if (temp.status_code === '2' || temp.status_code === '3' || temp.status_code === '5') {
+                    temp['actions'] = [
+                        {key: 'edit', label: __('Edit', 'erp')},
+                        {key: 'payment', label: __('Make Payment', 'erp')}
+                    ];
+                } else {
+                    temp['actions'] = [
+                        {key: '#', label: __('No actions found', 'erp')}
+                    ];
+                }
+
+                return temp;
+            });
 
             return items;
         }
