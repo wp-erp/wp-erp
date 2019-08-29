@@ -120,14 +120,16 @@ export default {
 
     created() {
         this.$nextTick(function() {
+            const dateObj = new Date();
+
             // with leading zero, and JS month are zero index based
-            const month = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
+            const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
 
             if (this.$route.query.start) {
                 this.start_date = this.$route.query.start;
                 this.end_date   = this.$route.query.end;
             } else {
-                this.start_date = `2019-${month}-01`;
+                this.start_date = `${dateObj.getFullYear()}-${month}-01`;
                 this.end_date   = erp_acct_var.current_date;
             };
 

@@ -337,6 +337,8 @@ export default {
                 }
             }
             .-more {
+                margin: 13px 0;
+
                 > button span {
                     display: inline-block;
                     transition: transform 0.2s;
@@ -357,7 +359,7 @@ export default {
             display: none;
             position: absolute;
             top: 100%;
-            left: 0;
+            left: -70px;
             z-index: 99;
             animation: nav-secondary 0.2s;
             background: #ffffff;
