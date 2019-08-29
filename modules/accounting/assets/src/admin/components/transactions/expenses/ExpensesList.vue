@@ -58,34 +58,37 @@ export default {
 
     data() {
         return {
-            columns: {
-                trn_no: { label: 'Voucher No.' },
-                type: { label: 'Type' },
-                ref: { label: 'Ref' },
-                vendor_name: { label: 'Vendor' },
-                trn_date: { label: 'Trn Date' },
-                due_date: { label: 'Due Date' },
-                due: { label: 'Due' },
-                amount: { label: 'Total' },
-                status: { label: 'Status' },
-                actions: { label: '' }
+            columns       : {
+                trn_no     : {label: 'Voucher No.'},
+                type       : {label: 'Type'},
+                ref        : {label: 'Ref'},
+                vendor_name: {label: 'Vendor'},
+                trn_date   : {label: 'Trn Date'},
+                due_date   : {label: 'Due Date'},
+                due        : {label: 'Due'},
+                amount     : {label: 'Total'},
+                status     : {label: 'Status'},
+                actions    : {label: ''}
             },
-            rows: [],
+            rows          : [],
             paginationData: {
-                totalItems: 0,
-                totalPages: 0,
-                perPage: 10,
+                totalItems : 0,
+                totalPages : 0,
+                perPage    : 10,
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
-            actions: [],
-            fetched: false
+            actions       : [],
+            fetched       : false
         };
     },
 
     created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.$root.$on('transactions-filter', filters => {
-            this.$router.push({ path: '/transactions/expenses', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
+            this.$router.push({
+                path : '/transactions/expenses',
+                query: {start: filters.start_date, end: filters.end_date, status: filters.status}
+            });
             this.fetchItems(filters);
             this.fetched = true;
         });
@@ -95,7 +98,7 @@ export default {
         // Get start & end date from url on page load
         if (this.$route.query.start && this.$route.query.end) {
             filters.start_date = this.$route.query.start;
-            filters.end_date = this.$route.query.end;
+            filters.end_date   = this.$route.query.end;
         }
         if (this.$route.query.status) {
             filters.status = this.$route.query.status;
@@ -117,11 +120,11 @@ export default {
             this.$store.dispatch('spinner/setSpinner', true);
             HTTP.get('/transactions/expenses', {
                 params: {
-                    per_page: this.paginationData.perPage,
-                    page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+                    per_page  : this.paginationData.perPage,
+                    page      : this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
                     start_date: filters.start_date,
-                    end_date: filters.end_date,
-                    status: filters.status
+                    end_date  : filters.end_date,
+                    status    : filters.status
                 }
             }).then((response) => {
                 this.rows = response.data;
@@ -136,52 +139,53 @@ export default {
 
         onActionClick(action, row, index) {
             switch (action) {
-            case 'trash':
-                // if ( confirm('Are you sure to delete?') ) {
-                //     HTTP.delete('invoices/' + row.id).then( response => {
-                //         this.$delete(this.rows, index);
-                //     });
-                // }
-                break;
+                case 'trash':
+                    // if ( confirm('Are you sure to delete?') ) {
+                    //     HTTP.delete('invoices/' + row.id).then( response => {
+                    //         this.$delete(this.rows, index);
+                    //     });
+                    // }
+                    break;
 
-            case 'edit':
-                if (row.type === 'Expense') {
-                    this.$router.push({ name: 'ExpenseEdit', params: { id: row.id } });
-                }
+                case 'edit':
+                    if (row.type === 'Expense') {
+                        this.$router.push({name: 'ExpenseEdit', params: {id: row.id}});
+                    }
 
-                if (row.type === 'Bill') {
-                    this.$router.push({ name: 'BillEdit', params: { id: row.id } });
-                }
+                    if (row.type === 'Bill') {
+                        this.$router.push({name: 'BillEdit', params: {id: row.id}});
+                    }
 
-                if (row.type === 'Check') {
-                    this.$router.push({ name: 'CheckEdit', params: { id: row.id } });
-                }
+                    if (row.type === 'Check') {
+                        this.$router.push({name: 'CheckEdit', params: {id: row.id}});
+                    }
 
-                break;
+                    break;
 
-            case 'payment':
-                if (row.type === 'Bill') {
-                    this.$router.push({
-                        name: 'PayBillCreate',
-                        params: {
-                            vendor_id: row.vendor_id,
-                            vendor_name: row.vendor_name
-                        }
-                    });
-                }
-                break;
+                case 'payment':
+                    if (row.type === 'Bill') {
+                        this.$router.push({
+                            name  : 'PayBillCreate',
+                            params: {
+                                vendor_id  : row.vendor_id,
+                                vendor_name: row.vendor_name
+                            }
+                        });
+                    }
+                    break;
 
-            default :
+                default :
+                    break;
             }
         },
 
         goToPage(page) {
-            const queries = Object.assign({}, this.$route.query);
+            const queries                   = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
-                name: 'PaginateExpenses',
-                params: { page: page },
-                query: queries
+                name  : 'PaginateExpenses',
+                params: {page: page},
+                query : queries
             });
 
             this.fetchItems();
@@ -193,93 +197,22 @@ export default {
             if (!this.rows.length) {
                 return this.rows;
             }
-            let temp;
-            const items = this.rows.map(item => {
-                switch (item.type) {
-                case 'pay_bill':
-                    temp = {
-                        id: item.id,
-                        trn_no: item.id,
-                        type: 'Pay Bill',
-                        ref: item.ref ? item.ref : '-',
-                        vendor_name: item.pay_bill_vendor_name,
-                        trn_date: item.pay_bill_trn_date,
-                        due_date: '-',
-                        due: '-',
-                        amount: this.formatAmount(item.pay_bill_amount),
-                        status: item.status,
-                        singleView: { name: 'PayBillSingle', params: { id: item.id } },
-                        actions: [
-                            { key: 'void', label: 'Void' }
-                        ]
-                    };
-                    break;
-
-                case 'bill':
-                    temp = {
-                        id: item.id,
-                        trn_no: item.id,
-                        type: 'Bill',
-                        ref: item.ref ? item.ref : '-',
-                        vendor_id: item.vendor_id,
-                        vendor_name: item.vendor_name,
-                        trn_date: item.bill_trn_date,
-                        due_date: item.due_date,
-                        due: this.formatAmount(item.due),
-                        amount: this.formatAmount(item.amount),
-                        status: item.status,
-                        singleView: { name: 'BillSingle', params: { id: item.id } },
-                        actions: [
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'payment', label: 'Make Payment' }
-                        ]
-                    };
-                    break;
-
-                case 'expense':
-                    temp = {
-                        id: item.id,
-                        trn_no: item.id,
-                        type: 'Expense',
-                        ref: item.ref ? item.ref : '-',
-                        vendor_name: item.expense_people_name,
-                        trn_date: item.expense_trn_date,
-                        due_date: '-',
-                        due: '-',
-                        amount: this.formatAmount(item.expense_amount),
-                        status: item.status,
-                        singleView: { name: 'ExpenseSingle', params: { id: item.id } },
-                        actions: [
-                            { key: 'void', label: 'Void' }
-                        ]
-                    };
-                    break;
-
-                case 'check':
-                    temp = {
-                        id: item.id,
-                        trn_no: item.id,
-                        type: 'Check',
-                        ref: item.ref ? item.ref : '-',
-                        vendor_name: item.expense_people_name,
-                        trn_date: item.expense_people_name,
-                        due_date: '-',
-                        due: '-',
-                        amount: this.formatAmount(item.expense_amount),
-                        status: item.status,
-                        singleView: { name: 'CheckSingle', params: { id: item.id } },
-                        actions: [
-                            { key: 'void', label: 'Void' }
-                        ]
-                    };
-                    break;
-
-                default :
-                    break;
-                }
-
-                return temp;
-            });
+            if (item.status_code === '1') {
+                item['actions'] = [
+                    {key: 'edit', label: 'Edit'}
+                ];
+            } else if (item.status_code === '7') {
+                delete item['actions'];
+            } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
+                item['actions'] = [
+                    {key: 'edit', label: __('Edit', 'erp')},
+                    {key: 'payment', label: __('Make Payment', 'erp')}
+                ];
+            } else {
+                item['actions'] = [
+                    {key: '#', label: __('No actions found', 'erp')}
+                ];
+            }
 
             return items;
         }

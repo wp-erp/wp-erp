@@ -87,17 +87,17 @@ export default {
 
     data() {
         return {
-            columns: {
-                trn_no:        { label: 'Voucher No.' },
-                type:          { label: 'Type' },
-                ref:           { label: 'Ref' },
-                customer_name: { label: 'Customer' },
-                trn_date:      { label: 'Trn Date' },
-                due_date:      { label: 'Due Date' },
-                due:           { label: 'Due' },
-                amount:        { label: 'Total' },
-                status:        { label: 'Status' },
-                actions:       { label: '' }
+            columns       : {
+                trn_no       : {label: 'Voucher No.'},
+                type         : {label: 'Type'},
+                ref          : {label: 'Ref'},
+                customer_name: {label: 'Customer'},
+                trn_date     : {label: 'Trn Date'},
+                due_date     : {label: 'Due Date'},
+                due          : {label: 'Due'},
+                amount       : {label: 'Total'},
+                status       : {label: 'Status'},
+                actions      : {label: ''}
 
             },
             listLoading   : false,
@@ -108,15 +108,18 @@ export default {
                 perPage    : 10,
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
-            actions : [],
-            fetched : false
+            actions       : [],
+            fetched       : false
         };
     },
 
     created() {
         this.$store.dispatch('spinner/setSpinner', true);
         this.$root.$on('transactions-filter', filters => {
-            this.$router.push({ path: '/transactions/purchases', query: { start: filters.start_date, end: filters.end_date, status: filters.status } });
+            this.$router.push({
+                path : '/transactions/purchases',
+                query: {start: filters.start_date, end: filters.end_date, status: filters.status}
+            });
             this.fetchItems(filters);
             this.fetched = true;
         });
@@ -129,7 +132,7 @@ export default {
             filters.end_date   = this.$route.query.end;
         }
         if (this.$route.query.status) {
-            filters.status   = this.$route.query.status;
+            filters.status = this.$route.query.status;
         }
 
         if (!this.fetched) {
@@ -156,19 +159,26 @@ export default {
                 }
             }).then((response) => {
                 const mappedData = response.data.map(item => {
-                    if ((item.type === 'purchase' && item.purchase_order === '0') && (item.status === 'Partially Paid' || item.status === 'Awaiting Payment')) {
+                    if (item.purchase_order === '1' || item.status_code === '1') {
                         item['actions'] = [
-                            { key: 'edit', label: 'Edit' },
-                            { key: 'payment', label: 'Make Payment' }
-                            // { key: 'trash', label: 'Delete' }
+                            {key: 'edit', label: 'Edit'}
                         ];
-                    } else if ((item.type === 'purchase' && item.status !== 'Paid' && item.purchase_order === '0') || item.purchase_order === '1') {
-                        item['actions'] = [
-                            { key: 'edit', label: 'Edit' }
-                        ];
+                    } else if (item.type === 'purchase') {
+                        if (item.status_code === '7') {
+                            delete item['actions'];
+                        } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
+                            item['actions'] = [
+                                {key: 'edit', label: __('Edit', 'erp')},
+                                {key: 'payment', label: __('Make Payment', 'erp')}
+                            ];
+                        } else {
+                            item['actions'] = [
+                                {key: '#', label: __('No actions found', 'erp')}
+                            ];
+                        }
                     } else {
                         item['actions'] = [
-                            { key: 'void', label: 'Void' }
+                            {key: '#', label: __('No actions found', 'erp')}
                         ];
                     }
 
@@ -191,45 +201,45 @@ export default {
 
         onActionClick(action, row, index) {
             switch (action) {
-            case 'trash':
-                if (confirm('Are you sure to delete?')) {
-                    HTTP.delete('purchases/' + row.id).then(response => {
-                        this.$delete(this.rows, index);
-                    });
-                }
-                break;
+                case 'trash':
+                    if (confirm('Are you sure to delete?')) {
+                        HTTP.delete('purchases/' + row.id).then(response => {
+                            this.$delete(this.rows, index);
+                        });
+                    }
+                    break;
 
-            case 'edit':
-                if (row.type === 'purchase') {
-                    this.$router.push({ name: 'PurchaseEdit', params: { id: row.id } });
-                }
+                case 'edit':
+                    if (row.type === 'purchase') {
+                        this.$router.push({name: 'PurchaseEdit', params: {id: row.id}});
+                    }
 
-                break;
+                    break;
 
-            case 'payment':
-                if (row.type === 'purchase') {
-                    this.$router.push({
-                        name: 'PayPurchaseCreate',
-                        params: {
-                            vendor_id: row.vendor_id,
-                            vendor_name: row.vendor_name
-                        }
-                    });
-                }
-                break;
+                case 'payment':
+                    if (row.type === 'purchase') {
+                        this.$router.push({
+                            name  : 'PayPurchaseCreate',
+                            params: {
+                                vendor_id  : row.vendor_id,
+                                vendor_name: row.vendor_name
+                            }
+                        });
+                    }
+                    break;
 
-            default :
+                default :
             }
         },
 
         goToPage(page) {
             this.listLoading = true;
 
-            const queries = Object.assign({}, this.$route.query);
+            const queries                   = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
                 name  : 'PaginatePurchases',
-                params: { page: page },
+                params: {page: page},
                 query : queries
             });
 
