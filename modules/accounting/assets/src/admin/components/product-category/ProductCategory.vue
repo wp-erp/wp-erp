@@ -181,6 +181,7 @@ export default {
                 this.parentCategory = 0;
 
                 this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Product category added!');
             }).catch((error) => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -196,6 +197,7 @@ export default {
                 row.name = categoryName;
 
                 this.$store.dispatch('spinner/setSpinner', false);
+                this.showAlert('success', 'Product category updated!');
             }).catch(error => {
                 row.isEdit = false;
                 this.$store.dispatch('spinner/setSpinner', false);

@@ -18525,6 +18525,8 @@ if (false) {(function () {
         _this4.parentCategory = 0;
 
         _this4.$store.dispatch('spinner/setSpinner', false);
+
+        _this4.showAlert('success', 'Product category added!');
       }).catch(function (error) {
         _this4.$store.dispatch('spinner/setSpinner', false);
 
@@ -18543,6 +18545,8 @@ if (false) {(function () {
         row.name = categoryName;
 
         _this5.$store.dispatch('spinner/setSpinner', false);
+
+        _this5.showAlert('success', 'Product category updated!');
       }).catch(function (error) {
         row.isEdit = false;
 
