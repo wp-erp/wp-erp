@@ -32957,11 +32957,11 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_People_vue__ = __webpack_require__(94);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a54e2e2e_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_People_vue__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a54e2e2e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_People_vue__ = __webpack_require__(629);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(226)
+  __webpack_require__(628)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -32974,12 +32974,12 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-a54e2e2e"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_People_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a54e2e2e_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_People_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a54e2e2e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_People_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -33007,12 +33007,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 226 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 226 */,
 /* 227 */,
 /* 228 */,
 /* 229 */,
@@ -33030,134 +33025,7 @@ if (false) {(function () {
 /* 241 */,
 /* 242 */,
 /* 243 */,
-/* 244 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "app-customers" },
-    [
-      _c("h2", { staticClass: "add-new-people" }, [
-        _c("span", [_vm._v(_vm._s(_vm.pageTitle))]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            attrs: { href: "", id: "erp-customer-new" },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                _vm.showModal = true
-              }
-            }
-          },
-          [
-            _vm._v(
-              _vm._s(_vm.__("Add New", "erp")) + " " + _vm._s(_vm.buttonTitle)
-            )
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _vm.showModal
-        ? _c("people-modal", {
-            attrs: { people: _vm.people, title: _vm.buttonTitle },
-            on: {
-              "update:people": function($event) {
-                _vm.people = $event
-              },
-              close: function($event) {
-                _vm.showModal = false
-              }
-            }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _c("list-table", {
-        attrs: {
-          tableClass: "wperp-table people-table table-striped table-dark",
-          "action-column": "actions",
-          columns: _vm.columns,
-          rows: _vm.row_data,
-          "bulk-actions": _vm.bulkActions,
-          "total-items": _vm.paginationData.totalItems,
-          "total-pages": _vm.paginationData.totalPages,
-          "per-page": _vm.paginationData.perPage,
-          "current-page": _vm.paginationData.currentPage,
-          actions: _vm.actions
-        },
-        on: {
-          pagination: _vm.goToPage,
-          "action:click": _vm.onActionClick,
-          "bulk:click": _vm.onBulkAction
-        },
-        scopedSlots: _vm._u([
-          {
-            key: "title",
-            fn: function(data) {
-              return [
-                _c("strong", [
-                  _c("a", { attrs: { href: "#" } }, [
-                    _vm._v(_vm._s(data.row.title))
-                  ])
-                ])
-              ]
-            }
-          },
-          {
-            key: "customer",
-            fn: function(data) {
-              return [
-                _c(
-                  "strong",
-                  [
-                    _c(
-                      "router-link",
-                      {
-                        attrs: {
-                          to: {
-                            name: _vm.singleUrl,
-                            params: { id: data.row.id, route: _vm.url }
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(data.row.customer) +
-                            "\n                "
-                        )
-                      ]
-                    )
-                  ],
-                  1
-                )
-              ]
-            }
-          }
-        ])
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-a54e2e2e", esExports)
-  }
-}
-
-/***/ }),
+/* 244 */,
 /* 245 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -64256,6 +64124,270 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
+
+/***/ }),
+/* 498 */,
+/* 499 */,
+/* 500 */,
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */,
+/* 510 */,
+/* 511 */,
+/* 512 */,
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */,
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */,
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */,
+/* 602 */,
+/* 603 */,
+/* 604 */,
+/* 605 */,
+/* 606 */,
+/* 607 */,
+/* 608 */,
+/* 609 */,
+/* 610 */,
+/* 611 */,
+/* 612 */,
+/* 613 */,
+/* 614 */,
+/* 615 */,
+/* 616 */,
+/* 617 */,
+/* 618 */,
+/* 619 */,
+/* 620 */,
+/* 621 */,
+/* 622 */,
+/* 623 */,
+/* 624 */,
+/* 625 */,
+/* 626 */,
+/* 627 */,
+/* 628 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 629 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "app-customers" },
+    [
+      _c("h2", { staticClass: "add-new-people" }, [
+        _c("span", [_vm._v(_vm._s(_vm.pageTitle))]),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            attrs: { href: "", id: "erp-customer-new" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                _vm.showModal = true
+              }
+            }
+          },
+          [
+            _vm._v(
+              _vm._s(_vm.__("Add New", "erp")) + " " + _vm._s(_vm.buttonTitle)
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _vm.showModal
+        ? _c("people-modal", {
+            attrs: { people: _vm.people, title: _vm.buttonTitle },
+            on: {
+              "update:people": function($event) {
+                _vm.people = $event
+              },
+              close: function($event) {
+                _vm.showModal = false
+              }
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _c("list-table", {
+        attrs: {
+          tableClass: "wperp-table people-table table-striped table-dark",
+          "action-column": "actions",
+          columns: _vm.columns,
+          rows: _vm.row_data,
+          "bulk-actions": _vm.bulkActions,
+          "total-items": _vm.paginationData.totalItems,
+          "total-pages": _vm.paginationData.totalPages,
+          "per-page": _vm.paginationData.perPage,
+          "current-page": _vm.paginationData.currentPage,
+          actions: _vm.actions
+        },
+        on: {
+          pagination: _vm.goToPage,
+          "action:click": _vm.onActionClick,
+          "bulk:click": _vm.onBulkAction
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function(data) {
+              return [
+                _c("strong", [
+                  _c("a", { attrs: { href: "#" } }, [
+                    _vm._v(_vm._s(data.row.title))
+                  ])
+                ])
+              ]
+            }
+          },
+          {
+            key: "customer",
+            fn: function(data) {
+              return [
+                _c(
+                  "strong",
+                  [
+                    _c(
+                      "router-link",
+                      {
+                        attrs: {
+                          to: {
+                            name: _vm.singleUrl,
+                            params: { id: data.row.id, route: _vm.url }
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(data.row.customer) +
+                            "\n                "
+                        )
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ]
+            }
+          }
+        ])
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-a54e2e2e", esExports)
+  }
+}
 
 /***/ })
 ],[207]);

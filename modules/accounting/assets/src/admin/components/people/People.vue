@@ -200,7 +200,7 @@ export default {
 
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
     .app-customers {
         .add-new-people {
             padding-top: 10px;
@@ -249,9 +249,6 @@ export default {
                     }
                 }
             }
-            .row-actions {
-                padding-left: 20px;
-            }
         }
         .widefat {
             tfoot td,
@@ -265,6 +262,9 @@ export default {
         .people-table {
             .col--actions {
                 float: left !important;
+            }
+            .row-actions {
+                padding-left: 20px !important;
             }
         }
         .check-column {
