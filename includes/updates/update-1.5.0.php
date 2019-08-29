@@ -935,7 +935,7 @@ function erp_acct_populate_tax_data() {
  */
 function erp_acct_populate_transactions() {
     global $wpdb;
-    // global $currencies;
+    global $bg_process;
 
     //=======================================
     // get transaction status types (new)
@@ -947,7 +947,9 @@ function erp_acct_populate_transactions() {
     //=============================
     $transactions = $wpdb->get_results( "SELECT id FROM {$wpdb->prefix}erp_ac_transactions", ARRAY_A );
 
-    global $bg_process;
+    if ( !class_exists( '\WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process' ) || empty( $bg_process ) ) {
+        $bg_process = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
+    }
 
     // loop through transactions
     for ( $i = 0; $i < count( $transactions ); $i++ ) {
