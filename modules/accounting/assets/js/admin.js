@@ -45209,7 +45209,7 @@ var render = function() {
           [
             _c("label", { attrs: { for: "" } }, [
               _vm._v(_vm._s(_vm.__("Select chart of accounts", "erp")) + " "),
-              _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+              _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
             ]),
             _vm._v(" "),
             _c("treeselect", {
@@ -45234,7 +45234,7 @@ var render = function() {
         _c("div", { staticClass: "form-row" }, [
           _c("label", { attrs: { for: "" } }, [
             _vm._v(_vm._s(_vm.__("Account Name", "erp")) + " "),
-            _c("span", { staticClass: "required-sign" }, [_vm._v("*")])
+            _c("span", { staticClass: "wperp-required-sign" }, [_vm._v("*")])
           ]),
           _vm._v(" "),
           _c("input", {

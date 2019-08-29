@@ -16,7 +16,7 @@
             </div>
 
             <div class="form-row">
-                <label for="">{{ __('Select chart of accounts', 'erp') }} <span class="required-sign">*</span></label>
+                <label for="">{{ __('Select chart of accounts', 'erp') }} <span class="wperp-required-sign">*</span></label>
                  <treeselect v-model="ledgFields.chart_id"
                     :options="chartAccounts"
                     :disable-branch-nodes="true"
@@ -46,7 +46,7 @@
             <!-- </div> -->
 
             <div class="form-row">
-                <label for="">{{ __('Account Name', 'erp') }} <span class="required-sign">*</span></label>
+                <label for="">{{ __('Account Name', 'erp') }} <span class="wperp-required-sign">*</span></label>
 
                 <input type="text" class="wperp-form-field" v-model="ledgFields.name" required>
             </div>
