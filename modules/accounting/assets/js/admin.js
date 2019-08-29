@@ -15834,16 +15834,17 @@ if (false) {(function () {
     }
   },
   created: function created() {
-    // ? why is nextTick here ...? i don't know.
+    // ? why is nextTick here ...? I don't know.
     this.$nextTick(function () {
       // with leading zero, and JS month are zero index based
-      var month = ('0' + (new Date().getMonth() + 1)).slice(-2);
+      var dateObj = new Date();
+      var month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
 
       if (this.$route.query.start) {
         this.start_date = this.$route.query.start;
         this.end_date = this.$route.query.end;
       } else {
-        this.start_date = "2019-".concat(month, "-01");
+        this.start_date = "".concat(dateObj.getFullYear(), "-").concat(month, "-01");
         this.end_date = erp_acct_var.current_date;
       }
     });
@@ -16057,9 +16058,10 @@ if (false) {(function () {
     this.getLedgers(); // ? why is nextTick here ...? i don't know.
 
     this.$nextTick(function () {
-      // with leading zero, and JS month are zero index based
-      var month = ('0' + (new Date().getMonth() + 1)).slice(-2);
-      this.start_date = "2019-".concat(month, "-01");
+      var dateObj = new Date(); // with leading zero, and JS month are zero index based
+
+      var month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+      this.start_date = "".concat(dateObj.getFullYear(), "-").concat(month, "-01");
       this.end_date = erp_acct_var.current_date;
 
       if (this.$route.params.ledgerName) {
@@ -16253,9 +16255,10 @@ if (false) {(function () {
   created: function created() {
     // ? why is nextTick here ...? i don't know.
     this.$nextTick(function () {
-      // with leading zero, and JS month are zero index based
-      var month = ('0' + (new Date().getMonth() + 1)).slice(-2);
-      this.start_date = "2019-".concat(month, "-01");
+      var dateObj = new Date(); // with leading zero, and JS month are zero index based
+
+      var month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+      this.start_date = "".concat(dateObj.getFullYear(), "-").concat(month, "-01");
       this.end_date = erp_acct_var.current_date;
       /* global erp_acct_var */
     });
@@ -30591,14 +30594,15 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   },
   created: function created() {
     this.$nextTick(function () {
-      // with leading zero, and JS month are zero index based
-      var month = ('0' + (new Date().getMonth() + 1)).slice(-2);
+      var dateObj = new Date(); // with leading zero, and JS month are zero index based
+
+      var month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
 
       if (this.$route.query.start) {
         this.start_date = this.$route.query.start;
         this.end_date = this.$route.query.end;
       } else {
-        this.start_date = "2019-".concat(month, "-01");
+        this.start_date = "".concat(dateObj.getFullYear(), "-").concat(month, "-01");
         this.end_date = erp_acct_var.current_date;
       }
 
@@ -30874,9 +30878,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   created: function created() {
     // ? why is nextTick here ...? i don't know.
     this.$nextTick(function () {
-      // with leading zero, and JS month are zero index based
-      var month = ('0' + (new Date().getMonth() + 1)).slice(-2);
-      this.start_date = "2019-".concat(month, "-01");
+      var dateObj = new Date(); // with leading zero, and JS month are zero index based
+
+      var month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+      this.start_date = "".concat(dateObj.getFullYear(), "-").concat(month, "-01");
       this.end_date = erp_acct_var.current_date;
       this.fetchItems();
     });
