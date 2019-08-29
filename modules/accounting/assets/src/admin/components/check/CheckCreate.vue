@@ -208,6 +208,7 @@ export default {
             particulars     : '',
             isWorking       : false,
             accts_by_chart  : [],
+            bank_accts      : [],
             erp_acct_assets : erp_acct_var.acct_assets  /* global erp_acct_var */
         };
     },

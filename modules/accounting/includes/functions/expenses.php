@@ -208,7 +208,6 @@ function erp_acct_insert_expense( $data ) {
     $voucher_no         = null;
     $currency           = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
 
-
     try {
         $wpdb->query( 'START TRANSACTION' );
 
@@ -278,6 +277,7 @@ function erp_acct_insert_expense( $data ) {
 
         if ( $type == 'check' ) {
             erp_acct_insert_check_data( $expense_data );
+            erp_acct_insert_source_expense_data_into_ledger( $expense_data );
         } elseif ( isset( $expense_data['trn_by'] ) && $expense_data['trn_by'] === 4 ) {
             do_action( 'erp_acct_expense_people_transaction', $expense_data, $voucher_no );
         } else {
