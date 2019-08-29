@@ -117,7 +117,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'amount'           => $trn['total'],
                     'particulars'      => $trn['summary'],
                     'attachments'      => $trn['files'],
-                    'status'           => $status,
+                    'status'           => erp_acct_trn_status_by_id('closed'),
                     'trn_by'           => 1,
                     'trn_by_ledger_id' => 1,
                     'created_at'       => $this->get_created_at( $trn['created_at'] ),
@@ -125,6 +125,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
+            $this->_helper_invoice_receipts_ledger_details_migration($trn, $trn_id);
             $this->_helper_invoice_receipts_details_migration( $trn_id );
         } // payment
 
@@ -150,7 +151,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'amount'           => $trn['trans_total'],
                     'particulars'      => $trn['summary'],
                     'attachments'      => $trn['files'],
-                    'status'           => $status,
+                    'status'           => erp_acct_trn_status_by_id('closed'),
                     'trn_by'           => 1,
                     'trn_by_ledger_id' => 1,
                     'created_at'       => $this->get_created_at( $trn['created_at'] ),
@@ -158,6 +159,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
+            $this->_helper_payment_voucher_pay_purchase_ledger_details_migration($trn, $trn_id);
             $this->_helper_payment_voucher_pay_purchase_details_migration( $trn_id );
         } // payment_voucher
 
@@ -192,6 +194,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
+            $this->_helper_vendor_credit_purchase_account_details_migration($trn, $trn_id);
+            $this->_helper_vendor_credit_purchase_ledger_details_migration($trn, $trn_id);
             $this->_helper_vendor_credit_purchase_details_migration( $trn_id );
         } // vendor_credit
 
@@ -420,6 +424,36 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
     }
 
     /**
+     * Helper of invoice receipts ledger details migration
+     *
+     * @param array $trn
+     * @param int $trn_no
+     *
+     * @return void
+     */
+    protected function _helper_invoice_receipts_ledger_details_migration( $trn, $trn_no ) {
+        global $wpdb;
+
+        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+
+        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
+
+        $wpdb->insert(
+            // `erp_acct_ledger_details`
+            "{$wpdb->prefix}erp_acct_ledger_details", [
+                'ledger_id'   => $cash_ledger_id,
+                'trn_no'      => $trn_no,
+                'trn_date'    => $trn['issue_date'],
+                'particulars' => $trn['summary'],
+                'debit'       => $trn['total'],
+                'credit'      => 0,
+                'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                'created_by'  => $trn['created_by']
+            ]
+        );
+    }
+
+    /**
      * Helper of payment voucher details migration
      *
      * @param array $pay_purchases
@@ -453,6 +487,36 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
         }
+    }
+
+    /**
+     * Helper of payment voucher ledger details migration
+     *
+     * @param array $trn
+     * @param int $trn_no
+     *
+     * @return void
+     */
+    protected function _helper_payment_voucher_pay_purchase_ledger_details_migration( $trn, $trn_no ) {
+        global $wpdb;
+
+        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+
+        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
+
+        $wpdb->insert(
+            // `erp_acct_ledger_details`
+            "{$wpdb->prefix}erp_acct_ledger_details", [
+                'ledger_id'   => $cash_ledger_id,
+                'trn_no'      => $trn_no,
+                'trn_date'    => $trn['issue_date'],
+                'particulars' => $trn['summary'],
+                'debit'       => 0,
+                'credit'      => $trn['total'],
+                'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                'created_by'  => $trn['created_by']
+            ]
+        );
     }
 
     /**
@@ -491,6 +555,38 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
         }
+    }
+
+    // _helper_vendor_credit_purchase_account_details_migration
+
+    /**
+     * Helper of vendor credit ledger details migration
+     *
+     * @param array $trn
+     * @param int $trn_no
+     *
+     * @return void
+     */
+    protected function _helper_vendor_credit_purchase_ledger_details_migration( $trn, $trn_no ) {
+        global $wpdb;
+
+        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+
+        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
+
+        $wpdb->insert(
+            // `erp_acct_ledger_details`
+            "{$wpdb->prefix}erp_acct_ledger_details", [
+                'ledger_id'   => $cash_ledger_id,
+                'trn_no'      => $trn_no,
+                'trn_date'    => $trn['issue_date'],
+                'particulars' => $trn['summary'],
+                'debit'       => $trn['total'],
+                'credit'      => 0,
+                'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                'created_by'  => $trn['created_by']
+            ]
+        );
     }
 
     /**

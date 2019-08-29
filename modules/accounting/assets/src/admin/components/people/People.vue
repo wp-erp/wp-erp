@@ -270,5 +270,9 @@ export default {
         .check-column {
             padding: 20px !important;
         }
+
+        .column.actions {
+            text-align: right;
+        }
     }
 </style>
