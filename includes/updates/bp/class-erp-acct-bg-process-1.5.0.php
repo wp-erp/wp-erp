@@ -125,6 +125,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
+            $this->_helper_invoice_receipts_account_details_migration($trn, $trn_id);
             $this->_helper_invoice_receipts_ledger_details_migration($trn, $trn_id);
             $this->_helper_invoice_receipts_details_migration( $trn_id );
         } // payment
@@ -401,7 +402,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.created_at, tran.created_by, tran.invoice_number, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+        $sql = "SELECT tran.issue_date, tran.created_at, tran.created_by, tran.invoice_number, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
                 LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
                 WHERE tran.id = %d";
 
@@ -420,6 +421,17 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'created_by' => $trn_item['created_by']
                 ]
             );
+
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
+                'invoice_no'  => $trn_item['invoice_number'],
+                'trn_no'      => $id,
+                'trn_date'    => $trn_item['issue_date'],
+                'particulars' => '',
+                'debit'       => 0,
+                'credit'      => $trn_item['line_total'],
+                'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
+                'created_by'  => $trn_item['created_by']
+            ) );
         }
     }
 
@@ -557,7 +569,29 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         }
     }
 
-    // _helper_vendor_credit_purchase_account_details_migration
+    /**
+     * Helper of purchase account ledger details migration
+     *
+     * @param array $trn
+     * @param int $trn_no
+     *
+     * @return void
+     */
+    protected function _helper_vendor_credit_purchase_account_details_migration( $trn, $trn_no ) {
+        $wpdb->insert(
+            // `erp_acct_purchase_account_details`
+            "{$wpdb->prefix}erp_acct_purchase_account_details", [
+                'purchase_no'  => $trn_no,
+                'trn_no'      => $trn_no,
+                'trn_date'    => $trn['issue_date'],
+                'particulars' => $trn['summary'],
+                'debit'       => 0,
+                'credit'      => $trn['total'],
+                'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                'created_by'  => $trn['created_by']
+            ]
+        );
+    }
 
     /**
      * Helper of vendor credit ledger details migration
