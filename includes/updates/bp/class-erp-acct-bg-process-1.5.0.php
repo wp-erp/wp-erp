@@ -125,9 +125,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
-            $this->_helper_invoice_receipts_account_details_migration($trn, $trn_id);
             $this->_helper_invoice_receipts_ledger_details_migration($trn, $trn_id);
-            $this->_helper_invoice_receipts_details_migration( $trn_id );
+            $this->_helper_invoice_receipts_details_migration( $trn_id, $trn['status'] );
         } // payment
 
         elseif ( 'payment_voucher' === $trn['form_type'] ) {
@@ -327,6 +326,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_invoice_account_details_migration( $trn, $trn_no ) {
+        if ( 'draft' === $trn['status'] ) return;
+
         global $wpdb;
 
         $wpdb->insert(
@@ -353,6 +354,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_invoice_ledger_details_migration( $trn, $trn_no ) {
+        if ( 'draft' === $trn['status'] ) return;
+
         global $wpdb;
 
         $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
@@ -396,7 +399,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      *
      * @return void
      */
-    protected function _helper_invoice_receipts_details_migration( $id ) {
+    protected function _helper_invoice_receipts_details_migration( $id, $status ) {
         global $wpdb;
 
         //=============================
@@ -422,6 +425,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
+            if ( 'draft' === $status ) return;
+
             $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
                 'invoice_no'  => $trn_item['invoice_number'],
                 'trn_no'      => $id,
@@ -444,6 +449,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_invoice_receipts_ledger_details_migration( $trn, $trn_no ) {
+        if ( 'draft' === $trn['status'] ) return;
+
         global $wpdb;
 
         $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
@@ -510,6 +517,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_payment_voucher_pay_purchase_ledger_details_migration( $trn, $trn_no ) {
+        if ( 'draft' === $trn['status'] ) return;
+
         global $wpdb;
 
         $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
@@ -578,6 +587,10 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_vendor_credit_purchase_account_details_migration( $trn, $trn_no ) {
+        if ( 'draft' === $trn['status'] ) return;
+
+        global $wpdb;
+
         $wpdb->insert(
             // `erp_acct_purchase_account_details`
             "{$wpdb->prefix}erp_acct_purchase_account_details", [
@@ -602,6 +615,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_vendor_credit_purchase_ledger_details_migration( $trn, $trn_no ) {
+        if ( 'draft' === $trn['status'] ) return;
+
         global $wpdb;
 
         $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
