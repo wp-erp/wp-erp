@@ -160,7 +160,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             );
 
             $this->_helper_payment_voucher_pay_purchase_ledger_details_migration($trn, $trn_id);
-            $this->_helper_payment_voucher_pay_purchase_details_migration( $trn_id );
+            $this->_helper_payment_voucher_pay_purchase_details_migration( $trn_id, $trn['status'] );
         } // payment_voucher
 
         elseif ( 'vendor_credit' === $trn['form_type'] ) {
@@ -480,7 +480,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      *
      * @return void
      */
-    protected function _helper_payment_voucher_pay_purchase_details_migration( $id ) {
+    protected function _helper_payment_voucher_pay_purchase_details_migration( $id, $status ) {
         global $wpdb;
 
         //=============================
@@ -502,6 +502,22 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'voucher_no'  => $id,
                     'purchase_no' => $trn_item['child'],
                     'amount'      => $trn_item['line_total'],
+                    'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
+                    'created_by'  => $trn_item['created_by']
+                ]
+            );
+
+            if ( 'draft' === $status ) return;
+
+            $wpdb->insert(
+                // `erp_acct_purchase_account_details`
+                "{$wpdb->prefix}erp_acct_purchase_account_details", [
+                    'purchase_no' => $trn_item['child'],
+                    'trn_no'      => $trn_no,
+                    'trn_date'    => $trn_item['issue_date'],
+                    'particulars' => $trn_item['summary'],
+                    'debit'       => 0,
+                    'credit'      => $trn_item['total'],
                     'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
                     'created_by'  => $trn_item['created_by']
                 ]
@@ -594,7 +610,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         $wpdb->insert(
             // `erp_acct_purchase_account_details`
             "{$wpdb->prefix}erp_acct_purchase_account_details", [
-                'purchase_no'  => $trn_no,
+                'purchase_no' => $trn_no,
                 'trn_no'      => $trn_no,
                 'trn_date'    => $trn['issue_date'],
                 'particulars' => $trn['summary'],
