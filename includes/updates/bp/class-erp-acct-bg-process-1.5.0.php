@@ -333,7 +333,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         $wpdb->insert(
             // `erp_acct_invoice_account_details`
             "{$wpdb->prefix}erp_acct_invoice_account_details", [
-                'invoice_no'  => $trn['invoice_number'],
+                'invoice_no'  => $trn_no,
                 'trn_no'      => $trn_no,
                 'trn_date'    => $trn['issue_date'],
                 'particulars' => $trn['summary'],
@@ -405,8 +405,9 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.issue_date, tran.created_at, tran.created_by, tran.invoice_number, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+        $sql = "SELECT tran.issue_date, tran.created_at, tran.created_by, payment.child, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
                 LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
+                LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id
                 WHERE tran.id = %d";
 
         $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
@@ -418,7 +419,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 // `erp_acct_invoice_receipts_details`
                 "{$wpdb->prefix}erp_acct_invoice_receipts_details", [
                     'voucher_no' => $id,
-                    'invoice_no' => $trn_item['invoice_number'],
+                    'invoice_no' => $trn_item['child'],
                     'amount'     => $trn_item['line_total'],
                     'created_at' => $this->get_created_at( $trn_item['created_at'] ),
                     'created_by' => $trn_item['created_by']
@@ -428,7 +429,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
             if ( 'draft' === $status ) return;
 
             $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-                'invoice_no'  => $trn_item['invoice_number'],
+                'invoice_no'  => $trn_item['child'],
                 'trn_no'      => $id,
                 'trn_date'    => $trn_item['issue_date'],
                 'particulars' => '',
@@ -485,9 +486,9 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.created_at, tran.created_by, tran.invoice_number, journal.ledger_id, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+        $sql = "SELECT tran.created_at, tran.created_by, payment.child, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
                 LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
-                LEFT JOIN {$wpdb->prefix}erp_ac_journals AS journal ON journal.id = tran_item.journal_id
+                LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id
                 WHERE tran.id = %d";
 
         $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
@@ -499,7 +500,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 // `erp_acct_pay_purchase_details`
                 "{$wpdb->prefix}erp_acct_pay_purchase_details", [
                     'voucher_no'  => $id,
-                    'purchase_no' => $trn_item['invoice_number'],
+                    'purchase_no' => $trn_item['child'],
                     'amount'      => $trn_item['line_total'],
                     'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
                     'created_by'  => $trn_item['created_by']
@@ -553,9 +554,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.created_at, tran.created_by, tran.invoice_number, journal.ledger_id, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+        $sql = "SELECT tran.created_at, tran.created_by, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
                 LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
-                LEFT JOIN {$wpdb->prefix}erp_ac_journals AS journal ON journal.id = tran_item.journal_id
                 WHERE tran.id = %d";
 
         $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
