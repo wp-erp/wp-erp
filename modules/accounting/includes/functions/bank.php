@@ -30,13 +30,13 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
     $where       = '';
     if ( $with_cash && ! $no_bank ) {
         $where       = " WHERE chart_id = {$chart_id}";
-        $cash_ledger = " OR slug = 'cash' ";
+        $cash_ledger = " OR slug = 'petty_cash' ";
         $show_all    = true;
     }
 
     if ( $with_cash && $no_bank ) {
         $where       = " WHERE";
-        $cash_ledger = " slug = 'cash' ";
+        $cash_ledger = " slug = 'petty_cash' ";
         $cash_only   = true;
     }
 
@@ -66,7 +66,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
     $uniq_accts = [];
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'cash' );
+    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'petty_cash' );
 
     $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
     $balance   = isset( $c_balance->balance ) ? $c_balance->balance : 0;
@@ -119,7 +119,7 @@ function erp_acct_get_dashboard_banks() {
     $results = [];
 
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'cash' );
+    $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'petty_cash' );
 
     $c_balance = get_ledger_balance_with_opening_balance( $ledger_id, $args['start_date'], $args['end_date'] );
 
