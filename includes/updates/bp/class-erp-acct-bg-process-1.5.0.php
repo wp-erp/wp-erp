@@ -243,8 +243,6 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
     protected function get_currecny_id( $name ) {
         global $wpdb;
 
-        $first = 0;
-
         if ( empty( $this->currencies ) ) {
             //=============================
             // get currencies info (new)
@@ -257,10 +255,10 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         });
 
         if ( empty( $currency ) ) {
-            return $first;
+            return false;;
         }
 
-        return (int) $currency[$first]['id'];
+        return (int) reset($currency)['id'];
     }
 
     /**
@@ -486,10 +484,8 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.created_at, tran.created_by, payment.child, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
-                LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
-                LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id
-                WHERE tran.id = %d";
+        $sql = "SELECT tran.issue_date, tran.created_at, tran.created_by, tran.summary, tran.total, payment.child, tran_item.* FROM
+            {$wpdb->prefix}erp_ac_transactions AS tran LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id WHERE tran.id = %d";
 
         $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
 
@@ -513,11 +509,11 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 // `erp_acct_purchase_account_details`
                 "{$wpdb->prefix}erp_acct_purchase_account_details", [
                     'purchase_no' => $trn_item['child'],
-                    'trn_no'      => $trn_no,
+                    'trn_no'      => $id,
                     'trn_date'    => $trn_item['issue_date'],
                     'particulars' => $trn_item['summary'],
-                    'debit'       => 0,
-                    'credit'      => $trn_item['total'],
+                    'debit'       => $trn_item['total'],
+                    'credit'      => 0,
                     'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
                     'created_by'  => $trn_item['created_by']
                 ]
