@@ -1156,6 +1156,13 @@ function erp_acct_populate_charts_ledgers() {
         if ( in_array( $old_ledger['id'], $bank_ids ) ) {
             $old_ledger['chart_id'] = 7;
         }
+        if ( '120' == $old_ledger['code'] || '200' == $old_ledger['code'] ) {
+            $old_ledger['unused'] = true;
+        }
+        if ( '090' == $old_ledger['code'] ) {
+            $old_ledger['name'] = 'Cash';
+            $old_ledger['slug'] = 'cash';
+        }
         $wpdb->insert(
             "{$wpdb->prefix}erp_acct_ledgers",
             [
