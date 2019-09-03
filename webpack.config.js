@@ -86,7 +86,7 @@ if (isProduction()) {
         'process.env': env
     }));
 
-    appName = '[name].min.js';
+    appName = '[name].js';
 } else {
     appName = '[name].js';
 }
