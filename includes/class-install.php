@@ -1490,54 +1490,41 @@ Company'
 
         // insert ledgers
         $old_ledgers = [];
-        $ledgers     = [];
-        $bank_ids    = [];
+        $ledgers = [];
 
         require_once WPERP_INCLUDES . '/ledgers.php';
 
-        $o_ledgers = $wpdb->get_results( "SELECT
-            ledger.code, ledger.id, ledger.system, chart_cat.id category_id, chart.id as chart_id, ledger.name
-            FROM {$wpdb->prefix}erp_ac_ledger as ledger
-            LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id
-            LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
+        // insert ledgers
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledgers` LIMIT 0, 1" ) ) {
+            $old_codes = [];
 
-        if ( ! empty( $o_ledgers ) ) {
-            $old_ledgers = $o_ledgers;
-        }
+            foreach ( $old_ledgers as $value ) {
+                $old_codes[] = $value['code'];
 
-        $old_banks = $wpdb->get_results( "SELECT	*
-            FROM {$wpdb->prefix}erp_ac_banks;", ARRAY_A );
-
-        foreach ( $old_banks as $old_bank ) {
-            $bank_ids[] = $old_bank['ledger_id'];
-        }
-
-        foreach ( $old_ledgers as $old_ledger ) {
-            if ( in_array( $old_ledger['id'], $bank_ids ) ) {
-                $old_ledger['chart_id'] = 7;
+                $wpdb->insert(
+                    "{$wpdb->prefix}erp_acct_ledgers",
+                    [
+                        'chart_id' => $value['chart_id'],
+                        'name'     => $value['name'],
+                        'slug'     => slugify( $value['name'] ),
+                        'code'     => $value['code'],
+                        'unused'   => isset( $value['unused'] ) ? $value['unused'] : null,
+                        'system'   => $value['system']
+                    ]
+                );
             }
-            $wpdb->insert(
-                "{$wpdb->prefix}erp_acct_ledgers",
-                [
-                    'chart_id' => $old_ledger['chart_id'],
-                    'name'     => $old_ledger['name'],
-                    'slug'     => slugify( $old_ledger['name'] ),
-                    'code'     => $old_ledger['code'],
-                    'unused'   => isset( $old_ledger['unused'] ) ? $old_ledger['unused'] : null,
-                    'system'   => $old_ledger['system']
-                ]
-            );
-        }
 
-        if ( get_option( 'erp_acct_new_ledgers' ) ) {
-            return;
-        } else {
+
             foreach ( array_keys( $ledgers ) as $array_key ) {
                 foreach ( $ledgers[$array_key] as $value ) {
+                    if ( in_array( $value['code'], $old_codes ) ) {
+                        $value['code'] = $value['code'] . '0';
+                    }
+
                     $wpdb->insert(
                         "{$wpdb->prefix}erp_acct_ledgers",
                         [
-                            'chart_id' => erp_acct_get_chart_id_by_slug( $array_key ),
+                            'chart_id' => erp_acct_get_chart_id_by_slug($array_key),
                             'name'     => $value['name'],
                             'slug'     => slugify( $value['name'] ),
                             'code'     => $value['code'],
@@ -1546,9 +1533,8 @@ Company'
                     );
                 }
             }
+            update_option( 'erp_acct_new_ledgers', true );
         }
-
-        update_option( 'erp_acct_new_ledgers', true );
 
         // insert ledger categories
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_acct_ledger_categories` LIMIT 0, 1" ) ) {
