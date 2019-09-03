@@ -456,7 +456,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
-        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('petty_cash');
+        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
 
         $wpdb->insert(
             // `erp_acct_ledger_details`
@@ -540,7 +540,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
-        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('petty_cash');
+        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
 
         $wpdb->insert(
             // `erp_acct_ledger_details`
@@ -637,7 +637,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
-        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('petty_cash');
+        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
 
         $wpdb->insert(
             // `erp_acct_ledger_details`
