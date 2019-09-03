@@ -333,7 +333,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         $wpdb->insert(
             // `erp_acct_invoice_account_details`
             "{$wpdb->prefix}erp_acct_invoice_account_details", [
-                'invoice_no'  => $trn_no,
+                'invoice_no'  => $trn['invoice_number'],
                 'trn_no'      => $trn_no,
                 'trn_date'    => $trn['issue_date'],
                 'particulars' => $trn['summary'],
