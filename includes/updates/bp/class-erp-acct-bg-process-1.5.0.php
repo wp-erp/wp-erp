@@ -403,7 +403,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.issue_date, tran.created_at, tran.created_by, payment.child, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+        $sql = "SELECT tran.issue_date, tran.user_id, tran.summary, tran.created_at, tran.created_by, payment.child, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
                 LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
                 LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id
                 WHERE tran.id = %d";
@@ -424,18 +424,35 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
-            if ( 'draft' === $status ) return;
+            if ( 'draft' === $status ) continue;
 
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-                'invoice_no'  => $trn_item['child'],
-                'trn_no'      => $id,
-                'trn_date'    => $trn_item['issue_date'],
-                'particulars' => '',
-                'debit'       => 0,
-                'credit'      => $trn_item['line_total'],
-                'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
-                'created_by'  => $trn_item['created_by']
-            ) );
+            if ( ! empty( $trn_item['child'] ) ) {
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
+                    'invoice_no'  => $trn_item['child'],
+                    'trn_no'      => $id,
+                    'trn_date'    => $trn_item['issue_date'],
+                    'particulars' => $trn_item['summary'],
+                    'debit'       => 0,
+                    'credit'      => $trn_item['line_total'],
+                    'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
+                    'created_by'  => $trn_item['created_by']
+                ) );
+            }
+
+            if ( empty( $trn_item['child'] ) ) {
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
+                    'people_id'    => $trn_item['user_id'],
+                    'trn_no'       => $id,
+                    'trn_date'     => $trn_item['issue_date'],
+                    'trn_by'       => 1,
+                    'particulars'  => $trn_item['summary'],
+                    'voucher_type' => 'credit',
+                    'debit'        => 0,
+                    'credit'       => $trn_item['line_total'],
+                    'created_at'   => $this->get_created_at( $trn_item['created_at'] ),
+                    'created_by'   => $trn_item['created_by']
+                ) );
+            }
         }
     }
 
@@ -484,7 +501,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.issue_date, tran.created_at, tran.created_by, tran.summary, tran.total, payment.child, tran_item.* FROM
+        $sql = "SELECT tran.issue_date, tran.user_id, tran.created_at, tran.created_by, tran.summary, tran.total, payment.child, tran_item.* FROM
             {$wpdb->prefix}erp_ac_transactions AS tran LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id WHERE tran.id = %d";
 
         $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
@@ -503,21 +520,39 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
-            if ( 'draft' === $status ) return;
+            if ( 'draft' === $status ) continue;
 
-            $wpdb->insert(
-                // `erp_acct_purchase_account_details`
-                "{$wpdb->prefix}erp_acct_purchase_account_details", [
-                    'purchase_no' => $trn_item['child'],
-                    'trn_no'      => $id,
-                    'trn_date'    => $trn_item['issue_date'],
-                    'particulars' => $trn_item['summary'],
-                    'debit'       => $trn_item['total'],
-                    'credit'      => 0,
-                    'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by'  => $trn_item['created_by']
-                ]
-            );
+            if ( ! empty( $trn_item['child'] ) ) {
+                $wpdb->insert(
+                    // `erp_acct_purchase_account_details`
+                    "{$wpdb->prefix}erp_acct_purchase_account_details", [
+                        'purchase_no' => $trn_item['child'],
+                        'trn_no'      => $id,
+                        'trn_date'    => $trn_item['issue_date'],
+                        'particulars' => $trn_item['summary'],
+                        'debit'       => $trn_item['total'],
+                        'credit'      => 0,
+                        'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
+                        'created_by'  => $trn_item['created_by']
+                    ]
+                );
+            }
+
+            if ( empty( $trn_item['child'] ) ) {
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
+                    'people_id'    => $trn_item['user_id'],
+                    'trn_no'       => $id,
+                    'trn_date'     => $trn_item['issue_date'],
+                    'trn_by'       => 1,
+                    'particulars'  => $trn_item['summary'],
+                    'voucher_type' => 'debit',
+                    'debit'        => $trn_item['line_total'],
+                    'credit'       => 0,
+                    'created_at'   => $this->get_created_at( $trn_item['created_at'] ),
+                    'created_by'   => $trn_item['created_by']
+                ) );
+            }
+
         }
     }
 
