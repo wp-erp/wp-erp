@@ -1139,7 +1139,7 @@ function erp_acct_populate_charts_ledgers() {
         ledger.code, ledger.id, ledger.system, chart_cat.id category_id, chart.id as chart_id, ledger.name
         FROM {$wpdb->prefix}erp_ac_ledger as ledger
         LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS chart_cat ON ledger.type_id = chart_cat.id
-        LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id;", ARRAY_A );
+        LEFT JOIN {$wpdb->prefix}erp_ac_chart_classes AS chart ON chart_cat.class_id = chart.id ORDER BY chart_id", ARRAY_A );
 
     if ( ! empty( $o_ledgers ) ) {
         $old_ledgers = $o_ledgers;
@@ -1154,7 +1154,7 @@ function erp_acct_populate_charts_ledgers() {
 
     foreach ( $old_ledgers as $old_ledger ) {
         if ( in_array( $old_ledger['id'], $bank_ids ) ) {
-            $old_ledger['chart_id'] = 7;
+            $old_ledger['chart_id'] = 7; // not for cash
         }
 
         if ( '120' == $old_ledger['code'] || '200' == $old_ledger['code'] ) {
@@ -1162,7 +1162,8 @@ function erp_acct_populate_charts_ledgers() {
         }
 
         if ( 'Petty Cash' === $old_ledger['name'] ) {
-            $old_ledger['name'] = 'Cash';
+            $old_ledger['chart_id'] = 1;
+            $old_ledger['name']     = 'Cash';
         }
 
         $wpdb->insert(
