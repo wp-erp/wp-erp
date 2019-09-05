@@ -1234,7 +1234,7 @@ function _erp_ac_get_opening_income_expense( $financial_end = false ) {
         LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
         WHERE class.id IN ( 3, 4 )
         AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
-        AND ( trans.issue_date <= '%s' )
+        AND ( trans.issue_date <= '%s' ) AND trans.type = 'journal'
         GROUP BY ledger.id", $financial_end
     );
 
@@ -1460,6 +1460,8 @@ function _erp_ac_get_sales_tax_total( $charts ) {
 function _erp_ac_get_good_sold_total_amount( $financial_end = false ) {
     global $wpdb;
 
+    $costs_of_goods_sold = 24;
+
     $start_date    = $wpdb->get_var( "SELECT MIN(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
     $financial_end = $wpdb->get_var( "SELECT MAX(issue_date) FROM {$wpdb->prefix}erp_ac_transactions LIMIT 1" );
 
@@ -1472,7 +1474,7 @@ function _erp_ac_get_good_sold_total_amount( $financial_end = false ) {
                 LEFT JOIN $tbl_journals as jour ON jour.transaction_id = trans.id
                 WHERE jour.ledger_id = '%d'
                 AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
-                AND ( trans.issue_date < '%s' )", 24, $financial_end
+                AND ( trans.issue_date < '%s' ) AND trans.type = 'journal'", $costs_of_goods_sold, $financial_end
     );
 
     $results   = $wpdb->get_results( $sql );
