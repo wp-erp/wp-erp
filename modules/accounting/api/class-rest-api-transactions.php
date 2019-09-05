@@ -632,7 +632,9 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             'message' => 'There was an error sending mail!'
         );
 
-        if ( erp_acct_send_email_with_pdf_attached( $request, 'F' ) ) {
+        $file_name = erp_acct_get_pdf_filename( $request['trn_data']['voucher_no'] );
+
+        if ( erp_acct_send_email_with_pdf_attached( $request, $file_name,'F' ) ) {
             $response['status']  = 200;
             $response['message'] = 'mail Sent successfully.';
         }
