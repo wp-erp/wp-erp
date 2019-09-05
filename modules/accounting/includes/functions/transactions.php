@@ -694,7 +694,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
  *
  * @return boolean
  */
-function erp_acct_generate_pdf( $request, $output_method = 'D' ) {
+function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' ) {
     $company     = new \WeDevs\ERP\Company();
     $theme_color = '#9e9e9e';
     $transaction = (object) $request['trn_data'];
@@ -759,10 +759,8 @@ function erp_acct_generate_pdf( $request, $output_method = 'D' ) {
     }
 
     // Set Issue Date
-    if ( $transaction->trn_date ) {
-        $trn_pdf->set_reference( erp_format_date( $transaction->trn_date ), __( 'Transaction Date', 'erp' ) );
-    }
-
+    $date = !empty( $transaction->trn_date ) ? $transaction->trn_date : $transaction->date;
+    $trn_pdf->set_reference( erp_format_date( $date ), __( 'Transaction Date', 'erp' ) );
 
     // Set from Address
     $from_address = explode( '<br/>', $company->get_formatted_address() );
@@ -918,8 +916,6 @@ function erp_acct_generate_pdf( $request, $output_method = 'D' ) {
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->balance );
     }
 
-
-    $file_name = sprintf( '%s_%s.pdf', $trn_id, date( 'd-m-Y' ) );
     $trn_pdf->render( $file_name, 'F' );
     $file_name = $attach_pdf ? $file_name : '';
 
@@ -934,7 +930,7 @@ function erp_acct_generate_pdf( $request, $output_method = 'D' ) {
  *
  * @return boolean
  */
-function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' ) {
+function erp_acct_send_email_with_pdf_attached( $request, $file_name, $output_method = 'D' ) {
     if ( !is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
         return;
     }
@@ -951,15 +947,13 @@ function erp_acct_send_email_with_pdf_attached( $request, $output_method = 'D' )
     $body       = isset( $request['message'] ) ? $request['message'] : __( 'Thank you for the transaction', 'erp' );;
     $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
 
-    $file_name  = erp_acct_generate_pdf( $request, 'F' );
+    $pdf_file  = erp_acct_generate_pdf( $request, $file_name, 'F' );
 
-    if ( !empty( $file_name ) ) {
-        $result = $trn_email->trigger( $receiver, $subject, $body, $file_name );
+    if ( $pdf_file ) {
+        $result = $trn_email->trigger( $receiver, $subject, $body, $pdf_file );
     } else {
         wp_die( __( 'PDF not generated!', 'erp' ) );
     }
-
-    unlink( $file_name );
 
     return $result;
 }
@@ -1003,15 +997,14 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
     $request['attachment'] = true;
     $attach_pdf            = true;
 
-    $file_name  = erp_acct_generate_pdf( $request, 'F' );
+    $file_name = erp_acct_get_pdf_filename( $voucher_no );
+    $pdf_file  = erp_acct_generate_pdf( $request, $file_name, 'F' );
 
-    if ( !empty( $file_name ) ) {
+    if ( $pdf_file ) {
         $result = $trn_email->trigger( $request['receiver'], $request['subject'], $request['body'], $request['attachment'] );
     } else {
         wp_die( __( 'PDF not generated!', 'erp' ) );
     }
-
-    unlink( $file_name );
 
     return $result;
 }
@@ -1120,4 +1113,22 @@ function erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $al
     }
 
     return $hash_string;
+}
+
+/**
+ * Get pdf file name
+ *
+ * @param $voucher_no
+ * @return string
+ */
+function erp_acct_get_pdf_filename( $voucher_no ) {
+    $inv_dir = WP_CONTENT_DIR .'/uploads/erp-pdfs/';
+
+    if (!file_exists( $inv_dir ) ) {
+        mkdir( $inv_dir , 0777, true );
+    }
+
+    $pdf_file = $inv_dir . "voucher_{$voucher_no}.pdf";
+
+    return $pdf_file;
 }
