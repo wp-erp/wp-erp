@@ -1286,7 +1286,7 @@ function _erp_ac_get_asset_liability_equity_balance( $financial_end = false ) {
         LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
         WHERE class.id IN ( 1, 2, 5 )
         AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
-        AND ( trans.issue_date <= '%s' )
+        AND ( trans.issue_date <= '%s' ) AND trans.type = 'journal'
         GROUP BY ledger.id", $financial_end
     );
 
@@ -1319,7 +1319,7 @@ function _erp_ac_get_closing_income_expense( $financial_end = false ) {
         LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
         WHERE class.id IN ( 3, 4 )
         AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
-        AND ( trans.issue_date < '%s' )", $financial_end
+        AND ( trans.issue_date < '%s' ) AND trans.type = 'journal'", $financial_end
     );
 
     $balance = $wpdb->get_results( $sql );
@@ -1412,8 +1412,10 @@ function _erp_ac_get_tax_payable_ledger() {
     $payables = $wpdb->get_results( "SELECT * FROM erp_acct_temp_tax_ledger as ledger LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS type ON ledger.type_id = type.id WHERE type.class_id = 2", ARRAY_A );
 
     foreach ( $payables as $key => $payable ) {
-        if ( ! count( $payable['charts'] ) ) {
-            unset( $payables[$key] );
+        if ( ! empty( $payable['charts'] ) ) {
+            if ( ! count( $payable['charts'] ) ) {
+                unset( $payables[$key] );
+            }
         }
     }
 
@@ -1510,11 +1512,11 @@ function erp_acct_migrate_balance_sheet() {
     $ob_data = [];
     $data    = [];
 
-    $acct_rec_sql     = "SELECT `id`,`user_id`,`due` as debit FROM `{$wpdb->prefix}erp_ac_transactions` WHERE `form_type`='invoice' HAVING due>0";
-    $data['acct_rec'] = $wpdb->get_results( $acct_rec_sql, ARRAY_A );
+    // $acct_rec_sql     = "SELECT `id`,`user_id`,`due` as debit FROM `{$wpdb->prefix}erp_ac_transactions` WHERE `form_type`='invoice' HAVING due>0";
+    // $data['acct_rec'] = $wpdb->get_results( $acct_rec_sql, ARRAY_A );
 
-    $acct_pay_sql     = "SELECT `id`,`user_id`,`due` as credit FROM `{$wpdb->prefix}erp_ac_transactions` WHERE `form_type`='vendor_credit' HAVING due>0";
-    $data['acct_pay'] = $wpdb->get_results( $acct_pay_sql, ARRAY_A );
+    // $acct_pay_sql     = "SELECT `id`,`user_id`,`due` as credit FROM `{$wpdb->prefix}erp_ac_transactions` WHERE `form_type`='vendor_credit' HAVING due>0";
+    // $data['acct_pay'] = $wpdb->get_results( $acct_pay_sql, ARRAY_A );
 
     $general         = get_option( 'erp_settings_general', array() );
     $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
@@ -1559,33 +1561,33 @@ function erp_acct_migrate_balance_sheet() {
         $next_fy_id = $wpdb->insert_id;
     }
 
-    if ( ! empty( $data['acct_rec'] ) ) {
-        foreach ( $data['acct_rec'] as $acct_rec ) {
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
-                'financial_year_id' => $current_fy->id,
-                'ledger_id'         => $acct_rec['user_id'],
-                'type'              => 'people',
-                'debit'             => $acct_rec['debit'],
-                'credit'            => 0,
-                'created_at'        => date( "Y-m-d" ),
-                'created_by'        => get_current_user_id()
-            ] );
-        }
-    }
+    // if ( ! empty( $data['acct_rec'] ) ) {
+    //     foreach ( $data['acct_rec'] as $acct_rec ) {
+    //         $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
+    //             'financial_year_id' => $current_fy->id,
+    //             'ledger_id'         => $acct_rec['user_id'],
+    //             'type'              => 'people',
+    //             'debit'             => $acct_rec['debit'],
+    //             'credit'            => 0,
+    //             'created_at'        => date( "Y-m-d" ),
+    //             'created_by'        => get_current_user_id()
+    //         ] );
+    //     }
+    // }
 
-    if ( ! empty( $data['acct_pay'] ) ) {
-        foreach ( $data['acct_pay'] as $acct_pay ) {
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
-                'financial_year_id' => $current_fy->id,
-                'ledger_id'         => $acct_pay['user_id'],
-                'type'              => 'people',
-                'debit'             => 0,
-                'credit'            => $acct_pay['credit'],
-                'created_at'        => date( "Y-m-d" ),
-                'created_by'        => get_current_user_id()
-            ] );
-        }
-    }
+    // if ( ! empty( $data['acct_pay'] ) ) {
+    //     foreach ( $data['acct_pay'] as $acct_pay ) {
+    //         $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
+    //             'financial_year_id' => $current_fy->id,
+    //             'ledger_id'         => $acct_pay['user_id'],
+    //             'type'              => 'people',
+    //             'debit'             => 0,
+    //             'credit'            => $acct_pay['credit'],
+    //             'created_at'        => date( "Y-m-d" ),
+    //             'created_by'        => get_current_user_id()
+    //         ] );
+    //     }
+    // }
 
     $ledgers              = _erp_ac_reporting_query( $end_date );
     $clos_inc_exp_balance = _erp_ac_get_closing_income_expense( $end_date );
@@ -1667,13 +1669,22 @@ function erp_acct_migrate_balance_sheet() {
     $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
     $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'owner_s_equity' );
 
+    $profit = 0;
+    $loss   = 0;
+
+    if ( $net_income < 0 ) {
+        $loss = abs( $net_income );
+    } else {
+        $profit = abs( $net_income );
+    }
+
     $wpdb->insert( $wpdb->prefix . 'erp_acct_opening_balances', [
         'financial_year_id' => $current_fy->id,
         'ledger_id'         => $ledger_id,
         'chart_id'          => 3,
         'type'              => 'ledger',
-        'debit'             => 0,
-        'credit'            => $net_income,
+        'debit'             => $loss,
+        'credit'            => $profit,
         'created_at'        => date( "Y-m-d" ),
         'created_by'        => get_current_user_id()
     ] );
@@ -1699,7 +1710,7 @@ function wperp_update_accounting_module_1_5_0() {
     erp_acct_populate_data();
 
     erp_acct_populate_tax_agencies();
-    erp_acct_populate_tax_data();
+    // erp_acct_populate_tax_data();
 
     erp_acct_populate_transactions();
 

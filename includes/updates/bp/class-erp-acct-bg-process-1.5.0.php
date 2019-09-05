@@ -77,7 +77,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'trn_date'        => $trn['issue_date'],
                     'due_date'        => $trn['due_date'],
                     'billing_address' => $trn['billing_address'],
-                    'amount'          => $trn['total'],
+                    'amount'          => $trn['sub_total'],
                     'discount'        => 0,
                     'discount_type'   => 'discount-value',
                     'tax'             => 0,
@@ -125,8 +125,9 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
+            $this->_helper_invoice_receipts_account_details_migration($trn, $trn_id);
             $this->_helper_invoice_receipts_ledger_details_migration($trn, $trn_id);
-            $this->_helper_invoice_receipts_details_migration( $trn_id, $trn['status'] );
+            $this->_helper_invoice_receipts_details_migration( $trn_id );
         } // payment
 
         elseif ( 'payment_voucher' === $trn['form_type'] ) {
@@ -148,7 +149,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'vendor_id'        => $trn['user_id'],
                     'vendor_name'      => $people->first_name . ' ' . $people->last_name,
                     'trn_date'         => $trn['issue_date'],
-                    'amount'           => $trn['trans_total'],
+                    'amount'           => $trn['total'],
                     'particulars'      => $trn['summary'],
                     'attachments'      => $trn['files'],
                     'status'           => erp_acct_trn_status_by_id('closed'),
@@ -159,8 +160,9 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 ]
             );
 
+            $this->_helper_payment_voucher_pay_purchase_account_details_migration($trn, $trn_id);
             $this->_helper_payment_voucher_pay_purchase_ledger_details_migration($trn, $trn_id);
-            $this->_helper_payment_voucher_pay_purchase_details_migration( $trn_id, $trn['status'] );
+            $this->_helper_payment_voucher_pay_purchase_details_migration( $trn_id );
         } // payment_voucher
 
         elseif ( 'vendor_credit' === $trn['form_type'] ) {
@@ -261,59 +263,15 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         return (int) reset($currency)['id'];
     }
 
-    /**
-     * Helper of invoice details migration
-     *
-     * @param array $invoices
-     *
-     * @return void
-     */
-    protected function _helper_invoice_details_migration( $id ) {
-        global $wpdb;
 
-        //=============================
-        // get transaction items (old)
-        //=============================
-        $sql = "SELECT tran.created_at, tran.created_by, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
-                LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
-                WHERE tran.id = %d";
 
-        $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A);
 
-        for ( $i = 0; $i < count($transaction_items); $i++ ) {
-            $trn_item = $transaction_items[$i];
 
-            $amount     = (float) $trn_item['unit_price'] * (int) $trn_item['qty'];
-            $discount   = ( $amount * (int) $trn_item['discount'] ) / 100;
-            $item_total = $amount - $discount;
-            $tax        = ( $item_total * (float) $trn_item['tax_rate'] ) / 100;
-
-            $wpdb->insert(
-                // `erp_acct_invoice_details`
-                "{$wpdb->prefix}erp_acct_invoice_details", [
-                    'trn_no'      => $id,
-                    'product_id'  => $trn_item['product_id'],
-                    'qty'         => (int) $trn_item['qty'],
-                    'unit_price'  => $trn_item['unit_price'],
-                    'discount'    => $discount,
-                    'tax'         => $tax,
-                    'item_total'  => $item_total,
-                    'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by'  => $trn_item['created_by']
-                ]
-            );
-
-            $sqls = [
-                "UPDATE {$wpdb->prefix}erp_acct_invoices SET discount = discount + {$discount}, tax = tax + {$tax} WHERE voucher_no = %d",
-                "UPDATE {$wpdb->prefix}erp_acct_invoice_account_details SET debit = debit + {$item_total} + {$tax} WHERE trn_no = %d",
-                "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET debit = debit + {$discount} WHERE credit = 0.00 AND trn_no = %d"
-            ];
-
-            foreach ( $sqls as $sql ) {
-                $wpdb->query( $wpdb->prepare( $sql, $id) );
-            }
-        }
-    }
+    /*===---------=====---======----***************************----===========
+    *
+    * INVOICE ( START )
+    *
+    *===///=====================================================================*/
 
     /**
      * Helper of invoice account details migration
@@ -369,7 +327,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'trn_date'    => $trn['issue_date'],
                 'particulars' => $trn['summary'],
                 'debit'       => 0,
-                'credit'      => $trn['sub_total'],
+                'credit'      => $trn['total'],
                 'created_at'  => $this->get_created_at( $trn['created_at'] ),
                 'created_by'  => $trn['created_by']
             ]
@@ -391,66 +349,128 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
     }
 
     /**
-     * Helper of invoice receipts details migration
+     * Helper of invoice details migration
      *
      * @param array $invoices
      *
      * @return void
      */
-    protected function _helper_invoice_receipts_details_migration( $id, $status ) {
+    protected function _helper_invoice_details_migration( $id ) {
         global $wpdb;
 
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.issue_date, tran.user_id, tran.summary, tran.created_at, tran.created_by, payment.child, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+        $sql = "SELECT tran.created_at, tran.created_by, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
                 LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
-                LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id
                 WHERE tran.id = %d";
 
-        $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+        $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A);
 
         for ( $i = 0; $i < count($transaction_items); $i++ ) {
             $trn_item = $transaction_items[$i];
 
+            $amount     = (float) $trn_item['unit_price'] * (int) $trn_item['qty'];
+            $discount   = ( $amount * (int) $trn_item['discount'] ) / 100;
+            $item_total = $amount - $discount;
+            $tax        = ( $item_total * (float) $trn_item['tax_rate'] ) / 100;
+
             $wpdb->insert(
-                // `erp_acct_invoice_receipts_details`
-                "{$wpdb->prefix}erp_acct_invoice_receipts_details", [
-                    'voucher_no' => $id,
-                    'invoice_no' => $trn_item['child'],
-                    'amount'     => $trn_item['line_total'],
-                    'created_at' => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by' => $trn_item['created_by']
+                // `erp_acct_invoice_details`
+                "{$wpdb->prefix}erp_acct_invoice_details", [
+                    'trn_no'      => $id,
+                    'product_id'  => $trn_item['product_id'],
+                    'qty'         => (int) $trn_item['qty'],
+                    'unit_price'  => $trn_item['unit_price'],
+                    'discount'    => $discount,
+                    'tax'         => $tax,
+                    'item_total'  => $item_total,
+                    'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
+                    'created_by'  => $trn_item['created_by']
                 ]
             );
 
-            if ( 'draft' === $status ) continue;
+            $sqls = [
+                "UPDATE {$wpdb->prefix}erp_acct_invoices SET discount = discount + {$discount}, tax = tax + {$tax} WHERE voucher_no = %d",
+                "UPDATE {$wpdb->prefix}erp_acct_invoice_account_details SET debit = debit + {$item_total} + {$tax} - {$discount} WHERE trn_no = %d",
+                "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET debit = debit + {$discount} WHERE credit = 0.00 AND trn_no = %d"
+            ];
 
-            if ( ! empty( $trn_item['child'] ) ) {
-                $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
-                    'invoice_no'  => $trn_item['child'],
-                    'trn_no'      => $id,
-                    'trn_date'    => $trn_item['issue_date'],
-                    'particulars' => $trn_item['summary'],
-                    'debit'       => 0,
-                    'credit'      => $trn_item['line_total'],
-                    'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by'  => $trn_item['created_by']
-                ) );
+            foreach ( $sqls as $sql ) {
+                $wpdb->query( $wpdb->prepare( $sql, $id) );
             }
+        }
+    }
 
-            if ( empty( $trn_item['child'] ) ) {
-                $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
-                    'people_id'    => $trn_item['user_id'],
-                    'trn_no'       => $id,
-                    'trn_date'     => $trn_item['issue_date'],
-                    'trn_by'       => 1,
-                    'particulars'  => $trn_item['summary'],
-                    'voucher_type' => 'credit',
-                    'debit'        => 0,
-                    'credit'       => $trn_item['line_total'],
-                    'created_at'   => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by'   => $trn_item['created_by']
+    /*===---------=====---======----***************************----===========
+    *
+    * INVOICE ( END )
+    *
+    *===///=====================================================================*/
+
+
+
+
+
+    /*===---------=====---======----***************************----===========
+    *
+    * INVOICE PAYMENT ( START )
+    *
+    *===///=====================================================================*/
+
+    /**
+     * Helper of invoice receipts account details migration
+     *
+     * @param array $trn
+     * @param int $trn_no
+     *
+     * @return void
+     */
+    protected function _helper_invoice_receipts_account_details_migration( $trn, $trn_no ) {
+        if ( 'draft' === $trn['status'] ) return;
+
+        global $wpdb;
+
+        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+
+        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
+
+        $sql1 = $wpdb->prepare( "SELECT child FROM {$wpdb->prefix}erp_ac_payments
+            WHERE transaction_id = %d", $trn_no );
+        $res1 = $wpdb->get_results( $sql1, ARRAY_A );
+
+        $sql2 = $wpdb->prepare( "SELECT credit FROM {$wpdb->prefix}erp_ac_journals
+            WHERE `type` = 'line_item' AND transaction_id = %d", $trn_no );
+        $res2 = $wpdb->get_results( $sql2, ARRAY_A );
+
+        $temp = [];
+
+        if ( empty( $res1 ) ) { // it's direct payment transaction
+            // erp_acct_people_account_details
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
+                'people_id'    => $trn['user_id'],
+                'trn_no'       => $trn_no,
+                'trn_date'     => $trn['issue_date'],
+                'trn_by'       => 1,
+                'particulars'  => $trn['summary'],
+                'voucher_type' => 'credit',
+                'debit'        => 0,
+                'credit'       => $trn['total'],
+                'created_at'   => $this->get_created_at( $trn['created_at'] ),
+                'created_by'   => $trn['created_by']
+            ) );
+        } else {
+            for ( $i = 0; $i < count( $res1 ); $i++ ) {
+                // erp_acct_invoice_account_details
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_account_details', array(
+                    'invoice_no'  => $res1[$i]['child'],
+                    'trn_no'      => $trn_no,
+                    'trn_date'    => $trn['issue_date'],
+                    'particulars' => $trn['summary'],
+                    'debit'       => 0,
+                    'credit'      => $res2[$i]['credit'],
+                    'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                    'created_by'  => $trn['created_by']
                 ) );
             }
         }
@@ -489,19 +509,72 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
     }
 
     /**
+     * Helper of invoice receipts details migration
+     *
+     * @param array $invoices
+     *
+     * @return void
+     */
+    protected function _helper_invoice_receipts_details_migration( $id ) {
+        global $wpdb;
+
+        //=============================
+        // get transaction items (old)
+        //=============================
+        $sql = "SELECT tran.created_at, tran.created_by, payment.child, tran_item.* FROM {$wpdb->prefix}erp_ac_transactions AS tran
+                LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id
+                LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id
+                WHERE tran.id = %d";
+
+        $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+
+        for ( $i = 0; $i < count($transaction_items); $i++ ) {
+            $trn_item = $transaction_items[$i];
+
+            $wpdb->insert(
+                // `erp_acct_invoice_receipts_details`
+                "{$wpdb->prefix}erp_acct_invoice_receipts_details", [
+                    'voucher_no' => $id,
+                    'invoice_no' => ! empty( $trn_item['child'] ) ? $trn_item['child'] : null,
+                    'amount'     => $trn_item['line_total'],
+                    'created_at' => $this->get_created_at( $trn_item['created_at'] ),
+                    'created_by' => $trn_item['created_by']
+                ]
+            );
+        }
+    }
+
+    /*===---------=====---======----***************************----===========
+    *
+    * INVOICE PAYMENT ( END )
+    *
+    *===///=====================================================================*/
+
+
+
+
+
+    /*===---------=====---======----***************************----===========
+    *
+    * PAY PURCHASE ( START )
+    *
+    *===///=====================================================================*/
+
+
+    /**
      * Helper of payment voucher details migration
      *
      * @param array $pay_purchases
      *
      * @return void
      */
-    protected function _helper_payment_voucher_pay_purchase_details_migration( $id, $status ) {
+    protected function _helper_payment_voucher_pay_purchase_details_migration( $id ) {
         global $wpdb;
 
         //=============================
         // get transaction items (old)
         //=============================
-        $sql = "SELECT tran.issue_date, tran.user_id, tran.created_at, tran.created_by, tran.summary, tran.total, payment.child, tran_item.* FROM
+        $sql = "SELECT tran.created_at, tran.created_by, tran.summary, tran.total, payment.child, tran_item.* FROM
             {$wpdb->prefix}erp_ac_transactions AS tran LEFT JOIN {$wpdb->prefix}erp_ac_transaction_items AS tran_item ON tran.id = tran_item.transaction_id LEFT JOIN {$wpdb->prefix}erp_ac_payments AS payment ON tran.id = payment.transaction_id WHERE tran.id = %d";
 
         $transaction_items = $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
@@ -513,46 +586,70 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 // `erp_acct_pay_purchase_details`
                 "{$wpdb->prefix}erp_acct_pay_purchase_details", [
                     'voucher_no'  => $id,
-                    'purchase_no' => $trn_item['child'],
+                    'purchase_no' => ! empty( $trn_item['child'] ) ? $trn_item['child'] : null,
                     'amount'      => $trn_item['line_total'],
                     'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
                     'created_by'  => $trn_item['created_by']
                 ]
             );
+        }
+    }
 
-            if ( 'draft' === $status ) continue;
+    /**
+     * Helper of payment voucher account details migration
+     *
+     * @param array $trn
+     * @param int $trn_no
+     *
+     * @return void
+     */
+    protected function _helper_payment_voucher_pay_purchase_account_details_migration( $trn, $trn_no ) {
+        if ( 'draft' === $trn['status'] ) return;
 
-            if ( ! empty( $trn_item['child'] ) ) {
-                $wpdb->insert(
-                    // `erp_acct_purchase_account_details`
-                    "{$wpdb->prefix}erp_acct_purchase_account_details", [
-                        'purchase_no' => $trn_item['child'],
-                        'trn_no'      => $id,
-                        'trn_date'    => $trn_item['issue_date'],
-                        'particulars' => $trn_item['summary'],
-                        'debit'       => $trn_item['total'],
-                        'credit'      => 0,
-                        'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
-                        'created_by'  => $trn_item['created_by']
-                    ]
-                );
-            }
+        global $wpdb;
 
-            if ( empty( $trn_item['child'] ) ) {
-                $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
-                    'people_id'    => $trn_item['user_id'],
-                    'trn_no'       => $id,
-                    'trn_date'     => $trn_item['issue_date'],
-                    'trn_by'       => 1,
-                    'particulars'  => $trn_item['summary'],
-                    'voucher_type' => 'debit',
-                    'debit'        => $trn_item['line_total'],
-                    'credit'       => 0,
-                    'created_at'   => $this->get_created_at( $trn_item['created_at'] ),
-                    'created_by'   => $trn_item['created_by']
+        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+
+        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
+
+        $sql1 = $wpdb->prepare( "SELECT child FROM {$wpdb->prefix}erp_ac_payments
+            WHERE transaction_id = %d", $trn_no );
+        $res1 = $wpdb->get_results( $sql1, ARRAY_A );
+
+        $sql2 = $wpdb->prepare( "SELECT debit FROM {$wpdb->prefix}erp_ac_journals
+            WHERE `type` = 'line_item' AND transaction_id = %d", $trn_no );
+        $res2 = $wpdb->get_results( $sql2, ARRAY_A );
+
+        $temp = [];
+
+        if ( empty( $res1 ) ) { // it's direct payment transaction
+            // erp_acct_people_account_details
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_people_account_details', array(
+                'people_id'    => $trn['user_id'],
+                'trn_no'       => $trn_no,
+                'trn_date'     => $trn['issue_date'],
+                'trn_by'       => 1,
+                'particulars'  => $trn['summary'],
+                'voucher_type' => 'debit',
+                'debit'        => $trn['total'],
+                'credit'       => 0,
+                'created_at'   => $this->get_created_at( $trn['created_at'] ),
+                'created_by'   => $trn['created_by']
+            ) );
+        } else {
+            for ( $i = 0; $i < count( $res1 ); $i++ ) {
+                // erp_acct_purchase_account_details
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
+                    'purchase_no'  => $res1[$i]['child'],
+                    'trn_no'      => $trn_no,
+                    'trn_date'    => $trn['issue_date'],
+                    'particulars' => $trn['summary'],
+                    'debit'       => $res2[$i]['debit'],
+                    'credit'      => 0,
+                    'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                    'created_by'  => $trn['created_by']
                 ) );
             }
-
         }
     }
 
@@ -582,6 +679,53 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                 'particulars' => $trn['summary'],
                 'debit'       => 0,
                 'credit'      => $trn['total'],
+                'created_at'  => $this->get_created_at( $trn['created_at'] ),
+                'created_by'  => $trn['created_by']
+            ]
+        );
+    }
+
+    /*===---------=====---======----***************************----===========
+    *
+    * PAY PURCHASE ( END )
+    *
+    *===///=====================================================================*/
+
+
+
+
+    /*===---------=====---======----***************************----===========
+    *
+    * PURCHASE ( START )
+    *
+    *===///=====================================================================*/
+
+    /**
+     * Helper of vendor credit purchase ledger details migration
+     *
+     * @param array $trn
+     * @param int $trn_no
+     *
+     * @return void
+     */
+    protected function _helper_vendor_credit_purchase_ledger_details_migration( $trn, $trn_no ) {
+        if ( 'draft' === $trn['status'] ) return;
+
+        global $wpdb;
+
+        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+
+        $purchase_ledger_id = $ledger_map->get_ledger_id_by_slug('purchase');
+
+        $wpdb->insert(
+            // `erp_acct_ledger_details`
+            "{$wpdb->prefix}erp_acct_ledger_details", [
+                'ledger_id'   => $purchase_ledger_id,
+                'trn_no'      => $trn_no,
+                'trn_date'    => $trn['issue_date'],
+                'particulars' => $trn['summary'],
+                'debit'       => $trn['total'],
+                'credit'      => 0,
                 'created_at'  => $this->get_created_at( $trn['created_at'] ),
                 'created_by'  => $trn['created_by']
             ]
@@ -653,37 +797,21 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         );
     }
 
-    /**
-     * Helper of vendor credit ledger details migration
-     *
-     * @param array $trn
-     * @param int $trn_no
-     *
-     * @return void
-     */
-    protected function _helper_vendor_credit_purchase_ledger_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] ) return;
 
-        global $wpdb;
+    /*===---------=====---======----***************************----===========
+    *
+    * PURCHASE ( END )
+    *
+    *===///=====================================================================*/
 
-        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
 
-        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
 
-        $wpdb->insert(
-            // `erp_acct_ledger_details`
-            "{$wpdb->prefix}erp_acct_ledger_details", [
-                'ledger_id'   => $cash_ledger_id,
-                'trn_no'      => $trn_no,
-                'trn_date'    => $trn['issue_date'],
-                'particulars' => $trn['summary'],
-                'debit'       => $trn['total'],
-                'credit'      => 0,
-                'created_at'  => $this->get_created_at( $trn['created_at'] ),
-                'created_by'  => $trn['created_by']
-            ]
-        );
-    }
+
+    /*===---------=====---======----***************************----===========
+    *
+    * BANK TRANSFER ( START )
+    *
+    *===///=====================================================================*/
 
     /**
      * Helper of bank ledger details migration

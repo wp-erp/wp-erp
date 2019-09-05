@@ -85,6 +85,17 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/closest-fn-year', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_closest_fn_year' ],
+                'args'                => [],
+                'permission_callback' => function( $request ) {
+                    return current_user_can( 'erp_ac_view_sales_summary' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -227,6 +238,23 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
         ];
 
         $data = erp_acct_get_balance_sheet( $args );
+
+        $response = rest_ensure_response( $data );
+
+        $response->set_status( 200 );
+
+        return $response;
+    }
+
+    /**
+     * Get closest financial year
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return WP_REST_Response $response Response data.
+     */
+    public function get_closest_fn_year( $request ) {
+        $data = erp_acct_get_closest_fn_year_date( date('Y-m-d') );
 
         $response = rest_ensure_response( $data );
 

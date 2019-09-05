@@ -112,16 +112,15 @@ export default {
         // ? why is nextTick here ...? I don't know.
         this.$nextTick(function() {
             // with leading zero, and JS month are zero index based
-            const dateObj = new Date();
+            // const dateObj = new Date();
 
-            const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+            // const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
 
             if (this.$route.query.start) {
                 this.start_date = this.$route.query.start;
                 this.end_date   = this.$route.query.end;
             } else {
-                this.start_date = `${dateObj.getFullYear()}-${month}-01`;
-                this.end_date   = erp_acct_var.current_date;
+                this.closestFnYear();
             }
         });
 
@@ -131,6 +130,15 @@ export default {
     },
 
     methods: {
+        closestFnYear() {
+            HTTP.get('/reports/closest-fn-year').then(response => {
+                this.start_date = response.data.start_date;
+                this.end_date   = response.data.end_date;
+
+                this.getTrialBalance();
+            });
+        },
+
         onYearSelected() {
             this.start_date = this.selectedYear.start_date;
             this.end_date   = this.selectedYear.end_date;
