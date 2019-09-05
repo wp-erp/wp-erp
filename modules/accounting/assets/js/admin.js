@@ -15837,21 +15837,29 @@ if (false) {(function () {
     // ? why is nextTick here ...? I don't know.
     this.$nextTick(function () {
       // with leading zero, and JS month are zero index based
-      var dateObj = new Date();
-      var month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
-
+      // const dateObj = new Date();
+      // const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
       if (this.$route.query.start) {
         this.start_date = this.$route.query.start;
         this.end_date = this.$route.query.end;
       } else {
-        this.start_date = "".concat(dateObj.getFullYear(), "-").concat(month, "-01");
-        this.end_date = erp_acct_var.current_date;
+        this.closestFnYear();
       }
     });
     this.fetchFnYears();
     this.getChartOfAccts();
   },
   methods: {
+    closestFnYear: function closestFnYear() {
+      var _this = this;
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/reports/closest-fn-year').then(function (response) {
+        _this.start_date = response.data.start_date;
+        _this.end_date = response.data.end_date;
+
+        _this.getTrialBalance();
+      });
+    },
     onYearSelected: function onYearSelected() {
       this.start_date = this.selectedYear.start_date;
       this.end_date = this.selectedYear.end_date;
@@ -15871,12 +15879,12 @@ if (false) {(function () {
       });
     },
     getChartOfAccts: function getChartOfAccts() {
-      var _this = this;
+      var _this2 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/ledgers/accounts').then(function (response) {
-        _this.chrtAcct = response.data;
+        _this2.chrtAcct = response.data;
 
-        _this.setDateAndGetTb();
+        _this2.setDateAndGetTb();
       });
     },
     setDateAndGetTb: function setDateAndGetTb() {
@@ -15884,15 +15892,15 @@ if (false) {(function () {
       this.getTrialBalance();
     },
     fetchFnYears: function fetchFnYears() {
-      var _this2 = this;
+      var _this3 = this;
 
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/opening-balances/names').then(function (response) {
         // get only last 5
-        _this2.fyears = response.data.reverse().slice(0).slice(-5);
+        _this3.fyears = response.data.reverse().slice(0).slice(-5);
       });
     },
     getTrialBalance: function getTrialBalance() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.updateDate();
       this.rows = [];
@@ -15903,13 +15911,13 @@ if (false) {(function () {
           end_date: this.end_date
         }
       }).then(function (response) {
-        _this3.rows = response.data.rows;
-        _this3.totalDebit = response.data.total_debit;
-        _this3.totalCredit = response.data.total_credit;
+        _this4.rows = response.data.rows;
+        _this4.totalDebit = response.data.total_debit;
+        _this4.totalCredit = response.data.total_credit;
 
-        _this3.$store.dispatch('spinner/setSpinner', false);
+        _this4.$store.dispatch('spinner/setSpinner', false);
       }).catch(function (e) {
-        _this3.$store.dispatch('spinner/setSpinner', false);
+        _this4.$store.dispatch('spinner/setSpinner', false);
       });
     },
     printPopup: function printPopup() {

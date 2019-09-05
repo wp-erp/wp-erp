@@ -451,7 +451,6 @@ function erp_acct_get_date_boundary() {
     $result = $wpdb->get_row( $sql, ARRAY_A );
 
     return $result;
-
 }
 
 /**
@@ -469,5 +468,4 @@ function erp_acct_get_current_financial_year( $date = '' ) {
     $result = $wpdb->get_row( $sql );
 
     return $result;
-
 }
