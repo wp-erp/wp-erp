@@ -282,7 +282,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_invoice_account_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
 
         global $wpdb;
 
@@ -310,7 +310,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_invoice_ledger_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
 
         global $wpdb;
 
@@ -427,7 +427,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_invoice_receipts_account_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
 
         global $wpdb;
 
@@ -485,7 +485,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_invoice_receipts_ledger_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
 
         global $wpdb;
 
@@ -604,7 +604,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_payment_voucher_pay_purchase_account_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
 
         global $wpdb;
 
@@ -662,7 +662,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_payment_voucher_pay_purchase_ledger_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
 
         global $wpdb;
 
@@ -709,7 +709,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_vendor_credit_purchase_ledger_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
 
         global $wpdb;
 
@@ -778,7 +778,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
      * @return void
      */
     protected function _helper_vendor_credit_purchase_account_details_migration( $trn, $trn_no ) {
-        if ( 'draft' === $trn['status'] ) return;
+        if ( 'draft' === $trn['status'] || 'void' === $trn['status'] ) return;
 
         global $wpdb;
 
