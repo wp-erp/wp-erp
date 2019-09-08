@@ -486,7 +486,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         global $wpdb;
 
         $ledger_id = $wpdb->get_var( $wpdb->prepare( "SELECT ledger_id FROM {$wpdb->prefix}erp_ac_journals
-            WHERE transaction_id = %d AND `type` = 'main", $trn_no ) );
+            WHERE transaction_id = %d AND `type` = 'main'", $trn_no ) );
 
         $wpdb->insert(
             // `erp_acct_ledger_details`
@@ -658,7 +658,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
         global $wpdb;
 
         $ledger_id = $wpdb->get_var( $wpdb->prepare( "SELECT ledger_id FROM {$wpdb->prefix}erp_ac_journals
-            WHERE transaction_id = %d AND `type` = 'main", $trn_no ) );
+            WHERE transaction_id = %d AND `type` = 'main'", $trn_no ) );
 
         $wpdb->insert(
             // `erp_acct_ledger_details`

@@ -282,55 +282,59 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
         }
 
         if ( empty( $invoice_data['tax_rate_id'] ) && empty( $item['tax_cat_id'] ) ) {
-            $tax_rate_agency = $item['tax_rate_agency'];
+            $tax_rate_agency = ! empty( $item['tax_rate_agency'] ) ? $item['tax_rate_agency'] : null;
         } else {
             // calculate tax for every related agency
             $tax_rate_agency = get_tax_rate_with_agency( $invoice_data['tax_rate_id'], $item['tax_cat_id'] );
         }
 
-        foreach ( $tax_rate_agency as $rate_agency ) {
-            /*==== calculate tax amount ====*/
-            $tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
+        if ( ! empty( $tax_rate_agency ) ) {
+            foreach ( $tax_rate_agency as $rate_agency ) {
+                /*==== calculate tax amount ====*/
+                $tax_amount = ( (float) $item['tax'] * (float) $rate_agency['tax_rate'] ) / (float) $item['tax_rate'];
 
-            if ( array_key_exists( $rate_agency['agency_id'], $tax_agency_details ) ) {
-                $tax_agency_details[$rate_agency['agency_id']] += $tax_amount;
-            } else {
-                $tax_agency_details[$rate_agency['agency_id']] = $tax_amount;
+                if ( array_key_exists( $rate_agency['agency_id'], $tax_agency_details ) ) {
+                    $tax_agency_details[$rate_agency['agency_id']] += $tax_amount;
+                } else {
+                    $tax_agency_details[$rate_agency['agency_id']] = $tax_amount;
+                }
+
+                /*==== insert into invoice details tax ====*/
+                $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
+                    'invoice_details_id' => $details_id,
+                    'agency_id'          => $rate_agency['agency_id'],
+                    'tax_rate'           => $rate_agency['tax_rate'],
+                    'tax_amount'         => $tax_amount,
+                    'created_at'         => $invoice_data['created_at'],
+                    'created_by'         => $invoice_data['created_by']
+                ] );
             }
-
-            /*==== insert into invoice details tax ====*/
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_invoice_details_tax', [
-                'invoice_details_id' => $details_id,
-                'agency_id'          => $rate_agency['agency_id'],
-                'tax_rate'           => $rate_agency['tax_rate'],
-                'tax_amount'         => $tax_amount,
-                'created_at'         => $invoice_data['created_at'],
-                'created_by'         => $invoice_data['created_by']
-            ] );
         }
     }
 
-    // insert data into {$wpdb->prefix}erp_acct_tax_agency_details
-    foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
+    if ( ! empty( $tax_agency_details ) ) {
+        // insert data into {$wpdb->prefix}erp_acct_tax_agency_details
+        foreach ( $tax_agency_details as $agency_id => $tax_agency_detail ) {
 
-        if ( $contra ) {
-            $debit  = $tax_agency_detail;
-            $credit = 0;
-        } else {
-            $debit  = 0;
-            $credit = $tax_agency_detail;
+            if ( $contra ) {
+                $debit  = $tax_agency_detail;
+                $credit = 0;
+            } else {
+                $debit  = 0;
+                $credit = $tax_agency_detail;
+            }
+
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_agency_details', [
+                'agency_id'   => $agency_id,
+                'trn_no'      => $voucher_no,
+                'trn_date'    => $invoice_data['trn_date'],
+                'particulars' => 'sales',
+                'debit'       => $debit,
+                'credit'      => $credit,
+                'created_at'  => $invoice_data['created_at'],
+                'created_by'  => $invoice_data['created_by']
+            ] );
         }
-
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_tax_agency_details', [
-            'agency_id'   => $agency_id,
-            'trn_no'      => $voucher_no,
-            'trn_date'    => $invoice_data['trn_date'],
-            'particulars' => 'sales',
-            'debit'       => $debit,
-            'credit'      => $credit,
-            'created_at'  => $invoice_data['created_at'],
-            'created_by'  => $invoice_data['created_by']
-        ] );
     }
 
 }
