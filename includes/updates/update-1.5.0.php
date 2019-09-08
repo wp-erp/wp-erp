@@ -1042,11 +1042,11 @@ function erp_acct_populate_tax_data() {
         $wpdb->insert(
         // `erp_acct_taxes`
             "{$wpdb->prefix}erp_acct_taxes", [
-                'tax_rate_id' => $i + 1,
-                'tax_number'  => $taxes[$i]['tax_number'],
-                'default'     => 0 === $i ? 1 : 0, // if first record
-                'created_at'  => date( 'Y-m-d' ),
-                'created_by'  => $taxes[$i]['created_by']
+                'tax_rate_name' => $taxes[$i]['name'],
+                'tax_number'    => $taxes[$i]['tax_number'],
+                'default'       => 0 === $i ? 1 : 0,           // if first record
+                'created_at'    => date( 'Y-m-d' ),
+                'created_by'    => $taxes[$i]['created_by']
             ]
         );
 
@@ -1067,16 +1067,6 @@ function erp_acct_populate_tax_data() {
             } // if
         } // foreach
     } // for
-
-    foreach ( $taxes as $tax ) {
-        $wpdb->insert(
-        // `erp_acct_tax_rate_names`
-            "{$wpdb->prefix}erp_acct_tax_rate_names", [
-                'name'       => $tax['name'],
-                'created_at' => date( 'Y-m-d' ),
-            ]
-        );
-    } // foreach
 }
 
 /**
@@ -1712,7 +1702,7 @@ function wperp_update_accounting_module_1_5_0() {
     erp_acct_populate_data();
 
     erp_acct_populate_tax_agencies();
-    // erp_acct_populate_tax_data();
+    erp_acct_populate_tax_data();
 
     erp_acct_populate_transactions();
 

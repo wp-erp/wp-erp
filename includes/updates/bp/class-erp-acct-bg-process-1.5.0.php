@@ -431,10 +431,6 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         global $wpdb;
 
-        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-
-        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
-
         $sql1 = $wpdb->prepare( "SELECT child FROM {$wpdb->prefix}erp_ac_payments
             WHERE transaction_id = %d", $trn_no );
         $res1 = $wpdb->get_results( $sql1, ARRAY_A );
