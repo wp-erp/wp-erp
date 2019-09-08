@@ -485,14 +485,13 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         global $wpdb;
 
-        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-
-        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
+        $ledger_id = $wpdb->get_var( $wpdb->prepare( "SELECT ledger_id FROM {$wpdb->prefix}erp_ac_journals
+            WHERE transaction_id = %d AND `type` = 'main", $trn_no ) );
 
         $wpdb->insert(
             // `erp_acct_ledger_details`
             "{$wpdb->prefix}erp_acct_ledger_details", [
-                'ledger_id'   => $cash_ledger_id,
+                'ledger_id'   => $ledger_id,
                 'trn_no'      => $trn_no,
                 'trn_date'    => $trn['issue_date'],
                 'particulars' => $trn['summary'],
@@ -604,10 +603,6 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         global $wpdb;
 
-        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-
-        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
-
         $sql1 = $wpdb->prepare( "SELECT child FROM {$wpdb->prefix}erp_ac_payments
             WHERE transaction_id = %d", $trn_no );
         $res1 = $wpdb->get_results( $sql1, ARRAY_A );
@@ -662,14 +657,13 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         global $wpdb;
 
-        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
-
-        $cash_ledger_id = $ledger_map->get_ledger_id_by_slug('cash');
+        $ledger_id = $wpdb->get_var( $wpdb->prepare( "SELECT ledger_id FROM {$wpdb->prefix}erp_ac_journals
+            WHERE transaction_id = %d AND `type` = 'main", $trn_no ) );
 
         $wpdb->insert(
             // `erp_acct_ledger_details`
             "{$wpdb->prefix}erp_acct_ledger_details", [
-                'ledger_id'   => $cash_ledger_id,
+                'ledger_id'   => $ledger_id,
                 'trn_no'      => $trn_no,
                 'trn_date'    => $trn['issue_date'],
                 'particulars' => $trn['summary'],
