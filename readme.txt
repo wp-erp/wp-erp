@@ -248,9 +248,9 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 = v1.5.0 -> September 09, 2019 =
 [new] Rewrite accounting module from the ground-up.
-[new] Add philippines provinces. Closes #836
-[twaek] Add a filter for `custom attr` length. Closes #837
-[fix] Fix prining issue in menu. Closes #839
+[new] Add Philippines provinces. Closes #836
+[tweak] Add a filter for `custom attr` length. Closes #837
+[fix] Fix printing issue in menu. Closes #839
 [fix] Company location delete not working. Closes #843
 [fix] Fix a broken link under status page. Closes #844
 
