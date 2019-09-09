@@ -55,7 +55,6 @@ import BalanceSheet from 'admin/components/reports/BalanceSheet.vue';
 import DynamicTrnLoader from 'admin/components/transactions/DynamicTrnLoader.vue';
 import OpeningBalance from 'admin/components/opening-balance/OpeningBalance.vue';
 import HelpContent from 'admin/components/help/HelpContent.vue';
-import TaxHelpContent from 'admin/components/help/TaxHelpContent.vue';
 
 Vue.use(Router);
 
@@ -782,11 +781,6 @@ export default new Router({
                     path: '',
                     name: 'HelpContent',
                     component: HelpContent
-                },
-                {
-                    path: 'tax',
-                    name: 'TaxHelpContent',
-                    component: TaxHelpContent
                 }
             ]
         }
