@@ -63,8 +63,8 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 'id'      => 'erp_currency',
                 'type'    => 'select',
                 'class'   => 'erp-select2',
-                'options' => erp_get_currency_list_with_symbol(),
-                'default' => 'USD'
+                'options' => erp_get_currencies_for_dropdown(),
+                'default' => '1'
             ),
 
             array(

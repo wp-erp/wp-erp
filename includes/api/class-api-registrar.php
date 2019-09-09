@@ -36,19 +36,6 @@ class API_Registrar {
             ] );
         }
 
-        if ( erp_is_module_active( 'accounting' ) ) {
-            $controllers = array_merge( $controllers, [
-                '\WeDevs\ERP\API\Customers_Controller',
-                '\WeDevs\ERP\API\Vendors_Controller',
-                '\WeDevs\ERP\API\Sales_Controller',
-                '\WeDevs\ERP\API\Expenses_Controller',
-                '\WeDevs\ERP\API\Chart_Of_Accounts_Controller',
-                '\WeDevs\ERP\API\Bank_Accounts_Controller',
-                '\WeDevs\ERP\API\Journals_Controller',
-                '\WeDevs\ERP\API\Accounting_Reports_Controller',
-            ] );
-        }
-
         $controllers = apply_filters( 'erp_rest_api_controllers', $controllers );
 
         foreach ( $controllers as $controller ) {

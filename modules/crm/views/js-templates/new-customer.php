@@ -39,6 +39,8 @@
                 <# } else { #>
                     <span class="required">* <?php _e( 'First name or email or phone is required', 'erp' ); ?></span>
 
+                    <?php $custom_attr_length = apply_filters( 'erp_crm_custom_attr_length', 30 ); ?>
+
                     <?php do_action( 'erp_crm_contact_form_top' ); ?>
                 <# } #>
 
@@ -53,7 +55,7 @@
                                         'name'        => 'contact[main][first_name]',
                                         'id'          => 'first_name',
                                         'value'       => '{{ data.first_name }}',
-                                        'custom_attr' => array( 'maxlength' => 30 )
+                                        'custom_attr' => array( 'maxlength' => $custom_attr_length )
                                     ) ); ?>
                                 </div>
                                 <div class="col-3">
@@ -62,7 +64,7 @@
                                         'name'        => 'contact[main][last_name]',
                                         'id'          => 'last_name',
                                         'value'       => '{{ data.last_name }}',
-                                        'custom_attr' => array( 'maxlength' => 30 )
+                                        'custom_attr' => array( 'maxlength' => $custom_attr_length )
                                     ) ); ?>
                                 </div>
                             <# } else if ( _.contains( data.types, 'company' ) ) { #>
@@ -72,7 +74,7 @@
                                         'name'        => 'contact[main][company]',
                                         'id'          => 'company',
                                         'value'       => '{{ data.company }}',
-                                        'custom_attr' => array( 'maxlength' => 30 )
+                                        'custom_attr' => array( 'maxlength' => $custom_attr_length )
                                     ) ); ?>
                                 </div>
                             <# } #>
@@ -316,7 +318,7 @@
                                 <?php do_action( 'erp_crm_contact_form_additional' ); ?>
                             <# } #>
 
-                        </ol>
+                        </div>
                         </fieldset>
 
                         <fieldset class="social-info">

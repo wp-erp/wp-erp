@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.4.6
+ * Version: 1.5.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,8 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.4.6';
+
+    public $version = '1.5.0';
 
     /**
      * Minimum PHP version required
@@ -222,12 +223,18 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-people.php';
         require_once WPERP_INCLUDES . '/lib/class-wedevs-insights.php';
         require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
+        require_once WPERP_INCLUDES . '/class-i18n.php';
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';
             require_once WPERP_INCLUDES . '/admin/class-menu.php';
             require_once WPERP_INCLUDES . '/admin/class-admin.php';
 
+            // Includes background process libs
+            require_once WPERP_INCLUDES . '/lib/bgprocess/wp-async-request.php';
+            require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
+
+            require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.0.php';
         }
 
         // cli command
@@ -253,6 +260,7 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\Tracker();
         new \WeDevs\ERP\API\API_Registrar();
         new \WeDevs\ERP\Promotion();
+        new \WeDevs\ERP\ERP_i18n();
 
         $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer']     = \WeDevs\ERP\Emailer::init();

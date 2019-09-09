@@ -15,8 +15,8 @@
     </h2>
 
     <?php if( isset( $_GET['msg'] ) && $_GET['msg'] == 'success'):  ?>
-    <div class="error">
-        <p> <?php _e('Data Successfully saved','erp'); ?> </p>
+    <div class="notice notice-success is-dismissible">
+        <p> <?php _e('Data Successfully saved.','erp'); ?> </p>
     </div>
     <?php endif;  ?>
     <div class="erp-single-container erp-hr-employees-wrap" id="erp-single-container-wrap">

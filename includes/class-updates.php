@@ -42,6 +42,7 @@ class Updates {
         '1.3.2'  => 'updates/update-1.3.2.php',
         '1.3.3'  => 'updates/update-1.3.3.php',
         '1.3.4'  => 'updates/update-1.3.4.php',
+        '1.5.0'  => 'updates/update-1.5.0.php',
     ];
 
     /**
@@ -63,6 +64,8 @@ class Updates {
     function __construct() {
         $this->action( 'admin_notices', 'show_update_notice' );
         $this->action( 'admin_init', 'do_updates' );
+
+        $this->action( 'erp_update_1_5_0_process_memory_exceeded', 'memory_exceeded' );
     }
 
     /**
@@ -129,6 +132,9 @@ class Updates {
      * @return void
      */
     public function do_updates() {
+        global $bg_process;
+        $bg_process = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
+
         if ( isset( $_GET['wperp_do_update'] ) && $_GET['wperp_do_update'] ) {
             $this->perform_updates();
         }
@@ -200,5 +206,24 @@ class Updates {
         update_option( 'erp_modules', $this->active_modules );
 
         wperp()->load_module();
+    }
+
+    /**
+     * Memory limit for background process
+     *
+     * @since 1.5.0
+     *
+     * @return bool
+     */
+    private function memory_exceeded() {
+        $memory_limit   = $this->get_memory_limit() * 0.5; // 90% of max memory
+        $current_memory = memory_get_usage( true );
+        $return         = false;
+
+        if ( $current_memory >= $memory_limit ) {
+            $return = true;
+        }
+
+        return $return;
     }
 }

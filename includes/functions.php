@@ -785,7 +785,7 @@ function erp_performance_rating( $selected = '' ) {
 /**
  * Get erp option from settings framework
  *
- * @param  sting  $option_name name of the option
+ * @param  string $option_name name of the option
  * @param  string $section name of the section. if it's a separate option, don't provide any
  * @param  string $default default option
  *
@@ -2931,7 +2931,7 @@ function erp_build_menu( $items, $active, $component, $dropdown = false ) {
         return $a['position'] > $b['position'];
     } );
 
-    $html = '<ul class="erp-nav -primary">';
+    $html = '<ul class="erp-nav -primary erp-hide-print">';
 
     if ( $dropdown ) {
         $html = '<ul class="erp-nav-dropdown">';
@@ -3137,4 +3137,42 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
     $html .= '</ul>';
 
     return $html;
+}
+
+/**
+ * Get currencies dropdown
+ *
+ * @return array
+ */
+function erp_get_currencies_for_dropdown() {
+    global $wpdb;
+
+    $currencies = $wpdb->get_results( "SELECT id, name, sign FROM {$wpdb->prefix}erp_acct_currency_info", ARRAY_A );
+
+    $currencies_dropdown = [];
+
+    foreach ( $currencies as $currency ) {
+        $currencies_dropdown[$currency['id']] = $currency['name'] . ' (' . $currency['sign'] . ')';
+    }
+
+    return $currencies_dropdown;
+}
+
+/**
+ * Old functions
+ * should be updated ASAP
+ *
+================================*/
+
+/**
+ * Return the thousand separator for prices.
+ *
+ * @since  2.3
+ *
+ * @return string
+ */
+function erp_ac_get_price_thousand_separator() {
+    $separator = stripslashes( erp_get_option( 'erp_ac_th_separator', false, ',' ) );
+
+    return $separator;
 }

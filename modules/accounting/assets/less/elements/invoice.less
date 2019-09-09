@@ -1,0 +1,121 @@
+/*
+ * Component: Invoice
+ */
+
+.@{theme-prefix}-invoice-modal {
+	.@{theme-prefix}-modal-body {
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+}
+.add-new-people {
+	cursor: pointer;
+	display: inline-block;
+	margin-top: 10px;
+	i {
+		margin-right: 5px;
+		&:before {
+			font-size: 7px;
+			color: inherit;
+		}
+	}
+}
+.@{theme-prefix}-invoice-panel {
+	padding-top: 20px;
+	background: #fff;
+	color: #72777C;
+	font-weight: 300;
+	h3, h4, h5, h6, th, strong {
+		color: #23282D;
+		font-weight: 400;
+	}
+	table, ul {
+		margin-bottom: 0;
+	}
+	.invoice-header {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		align-items: center;
+		padding: 0 30px;
+		border-bottom: 1px solid #ECF0F1;
+	}
+	.invoice-body {
+		padding: 20px 30px;
+
+		h4 {
+			// text-align: center;
+			font-size: 18px;
+		}
+		.invoice-info {
+			float: right;
+		}
+	}
+	.invoice-address {
+		text-align: right;
+	}
+	.invoice-table {
+		border: 0;
+		tbody tr {
+			th, td {
+				border-bottom: 1px solid #F1F1F1;
+			}
+		}
+		tfoot {
+			ul li {
+				padding: 4px 10px;
+				span {
+					color: #72777C;
+					padding-right: 10px;
+				}
+			}
+		}
+	}
+	tfoot ul {
+		list-style: none;
+		float: right;
+		text-align: right;
+	}
+}
+
+/* invoice attachment styles */
+.invoice-attachments {
+	margin: 20px 0;
+	h4 {
+		font-size: 15px;
+		margin-bottom: 10px;
+		font-weight: 600;
+	}
+	.attachment-item {
+		padding: 10px 15px;
+		border: 1px solid @border-color;
+		border-radius: 3px;
+		display: inline-flex;
+		align-items: center;
+		margin-bottom: 15px;
+		margin-right: 15px;
+		color: inherit;
+		&:hover {
+			background: #fff;
+		}
+	}
+	.attachment-meta {
+		margin-left: 10px;
+	}
+}
+
+/* print options*/
+@media print{
+	.d-print-none {
+		display: none;
+	}
+	.invoice-body {
+		.wperp-row {
+			display: flex;
+			justify-content: space-between;
+		}
+	}
+	.wperp-modal-content {
+		max-height: initial !important;
+	}
+}

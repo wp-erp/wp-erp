@@ -1,7 +1,7 @@
 {
     "name": "wp-erp/wp-erp",
     "description": "An ERP Solution for WordPress",
-    "keywords": ["wordpress", "plugin", "erp", "hrm", "crm"],
+    "keywords": ["wordpress", "plugin", "erp", "hrm", "crm", "accounting"],
     "homepage": "https://wperp.com",
     "type": "wordpress-plugin",
     "license": "GPL-3.0",
@@ -12,13 +12,26 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.6.0",
         "illuminate/database": "~5.0",
         "tareq1988/wp-eloquent": "dev-master",
         "johngrogg/ics-parser": "~1.0",
         "symfony/var-dumper": "^2.8",
         "google/apiclient": "^2.0",
         "google/apiclient-services": "^0.64"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "3.3.2",
+        "wp-coding-standards/wpcs": "dev-master",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
+    },
+    "scripts": {
+        "phpcs": [
+            "phpcs -p -s"
+        ],
+        "phpcbf": [
+            "phpcbf -p"
+        ]
     },
     "autoload" : {
         "psr-4" : {
