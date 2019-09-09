@@ -1,16 +1,18 @@
 <?php
+
 namespace WeDevs\ERP\Accounting;
 
-use WeDevs\ERP\Framework\Traits\Hooker;
+// don't call the file directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
- * WeDevs_ERP_Accounting class
+ * Accounting class
  *
- * @class WeDevs_ERP_Accounting The class that holds the entire WeDevs_ERP_Accounting plugin
+ * @class Accounting The class that holds the entire Accounting module
  */
-class Accounting {
-
-    use Hooker;
+final class Accounting {
 
     /**
      * The main plugin instance
@@ -20,23 +22,14 @@ class Accounting {
     private $plugin;
 
     /**
-     * Initializes the WeDevs_ERP_Accounting() class
+     * Holds various class instances
      *
-     * Checks for an existing WeDevs_ERP_Accounting() instance
-     * and if it doesn't find one, creates it.
+     * @var array
      */
-    public static function init() {
-        static $instance = false;
-
-        if ( ! $instance ) {
-            $instance = new self();
-        }
-
-        return $instance;
-    }
+    private $container = array();
 
     /**
-     * Constructor for the WeDevs_ERP_Accounting class
+     * Constructor for the ERP_Accounting class
      *
      * Sets up all the appropriate hooks and actions
      * within our plugin.
@@ -51,7 +44,7 @@ class Accounting {
 
         $this->deactive_addon();
 
-         // Define constants
+        // Define constants
         $this->define_constants();
 
         // Include required files
@@ -61,14 +54,265 @@ class Accounting {
         add_action( 'erp_loaded', array( $this, 'plugin_init' ) );
 
         // trigger after accounting module loaded
-        do_action('erp_accounting_loaded');
+        do_action( 'erp_accounting_loaded' );
 
         // pdf plugin is not installed notice
-        if ( empty( get_option( 'pdf-notice-dismissed' ) ) ) {
-            add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+        if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) || empty( get_option( 'pdf-notice-dismissed' ) ) ) {
+            add_action( 'admin_notices', array( $this, 'admin_pdf_notice' ) );
         }
 
         add_action( 'wp_ajax_dismiss_pdf_notice', array( $this, 'dismiss_pdf_notice' ) );
+    }
+
+    /**
+     * Show notice if PDF plugin is not installed
+     *
+     * @return void
+     */
+    public function admin_pdf_notice() {
+        if ( current_user_can( 'install_plugins' ) ) {
+
+            $action      = empty( $_GET['erp-pdf'] ) ? '' : \sanitize_text_field( $_GET['erp-pdf'] );
+            $plugin      = 'erp-pdf-invoice/wp-erp-pdf.php';
+            $pdf_install = new \WeDevs\ERP\Accounting\Includes\Classes\PDF_Install();
+
+            if ( $action === 'install' ) {
+                $pdf_install->install_plugin( 'https://downloads.wordpress.org/plugin/erp-pdf-invoice.1.1.0.zip' );
+            } elseif ( $action === 'active' ) {
+                $pdf_install->activate_pdf_plugin( $plugin );
+            }
+
+            if ( \file_exists( WP_PLUGIN_DIR . '/' . $plugin ) ) {
+                if ( ! \is_plugin_active( $plugin ) ) {
+                    $this->pdf_notice_message( 'active' );
+                }
+            } else {
+                $this->pdf_notice_message( 'install' );
+            }
+
+        }
+    }
+
+    /**
+     * PDF notice message
+     *
+     * @param String $type
+     *
+     * @return void
+     */
+    public function pdf_notice_message( $type ) {
+        $actual_link = esc_url( ( isset( $_SERVER['HTTPS'] ) ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
+        $sign        = empty( $_GET ) ? '?' : '&';
+
+        echo '<div class="updated notice is-dismissible notice-pdf"><p>';
+        echo __( 'Please ' . $type . ' <a href="' . $actual_link . $sign . 'erp-pdf=' . $type . '">WP ERP PDF</a> extension to get PDF export feature.', 'erp' );
+        echo '</p></div>';
+    }
+
+    /**
+     * Dismiss PDF notice message
+     *
+     * @return void
+     */
+    public function dismiss_pdf_notice() {
+        update_option( 'pdf-notice-dismissed', 1 );
+    }
+
+    /**
+     * Initializes the ERP_Accounting() class
+     *
+     * Checks for an existing ERP_Accounting() instance
+     * and if it doesn't find one, creates it.
+     */
+    public static function init() {
+        static $instance = false;
+
+        if ( ! $instance ) {
+            $instance = new self();
+        }
+
+        return $instance;
+    }
+
+    /**
+     * Magic getter to bypass referencing plugin.
+     *
+     * @param $prop
+     *
+     * @return mixed
+     */
+    public function __get( $prop ) {
+        if ( array_key_exists( $prop, $this->container ) ) {
+            return $this->container[$prop];
+        }
+
+        return $this->{$prop};
+    }
+
+    /**
+     * Magic isset to bypass referencing plugin.
+     *
+     * @param $prop
+     *
+     * @return mixed
+     */
+    public function __isset( $prop ) {
+        return isset( $this->{$prop} ) || isset( $this->container[$prop] );
+    }
+
+    /**
+     * Define the constants
+     *
+     * @return void
+     */
+    public function define_constants() {
+        define( 'ERP_ACCOUNTING_FILE', __FILE__ );
+        define( 'ERP_ACCOUNTING_PATH', dirname( ERP_ACCOUNTING_FILE ) );
+        define( 'ERP_ACCOUNTING_INCLUDES', ERP_ACCOUNTING_PATH . '/includes' );
+        define( 'ERP_ACCOUNTING_API', ERP_ACCOUNTING_PATH . '/api' );
+        define( 'ERP_ACCOUNTING_URL', plugins_url( '', ERP_ACCOUNTING_FILE ) );
+        define( 'ERP_ACCOUNTING_ASSETS', ERP_ACCOUNTING_URL . '/assets' );
+        define( 'ERP_ACCOUNTING_VIEWS', ERP_ACCOUNTING_PATH . '/includes/views' );
+    }
+
+    /**
+     * Load the plugin after all plugins are loaded
+     *
+     * @return void
+     */
+    public function plugin_init() {
+        $this->includes();
+        $this->init_actions();
+        $this->init_filters();
+    }
+
+    /**
+     * Include the required files
+     *
+     * @return void
+     */
+    public function includes() {
+        $this->include_functions();
+        $this->include_classes();
+    }
+
+    /**
+     *
+     * Includes Rest API helper Functions
+     *
+     */
+    public function include_functions() {
+        foreach ( glob( ERP_ACCOUNTING_INCLUDES . '/functions/*.php' ) as $filename ) {
+            include_once $filename;
+        }
+    }
+
+    /**
+     *
+     * Includes Classes
+     *
+     */
+    public function include_classes() {
+        require_once ERP_ACCOUNTING_API . '/class-controller-rest-api.php';
+        require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-assets.php';
+        require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-ledger-map.php';
+        require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-send-email.php';
+        require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-user-profile.php';
+
+        if ( $this->is_request( 'admin' ) ) {
+            require_once ERP_ACCOUNTING_INCLUDES . '/classes/class-admin.php';
+        }
+    }
+
+    /**
+     * Init the plugin actions
+     *
+     * @return void
+     */
+    public function init_actions() {
+        add_action( 'init', [ $this, 'init_classes' ] );
+        add_action( 'template_redirect', [ $this, 'readonly_invoice_template' ] );
+    }
+
+    /**
+     * Init the plugin filters
+     *
+     * @return void
+     */
+    public function init_filters() {
+        add_filter( 'erp_settings_pages', [ $this, 'add_settings_page' ] );
+    }
+
+    /**
+     * Add settings page
+     *
+     * @param array $settings
+     *
+     * @return array
+     */
+    public function add_settings_page( $settings = array() ) {
+        $settings[] = include __DIR__ . '/includes/classes/class-settings.php';
+        return $settings;
+    }
+
+    /**
+     * Instantiate the required classes
+     *
+     * @return void
+     */
+    public function init_classes() {
+
+        if ( $this->is_request( 'admin' ) ) {
+            $this->container['admin'] = new \WeDevs\ERP\Accounting\Includes\Classes\Admin();
+        }
+
+        $this->container['rest']    = new \WeDevs\ERP\Accounting\API\REST_API();
+        $this->container['assets']  = new \WeDevs\ERP\Accounting\Includes\Classes\Assets();
+        $this->container['profile'] = new \WeDevs\ERP\Accounting\Includes\Classes\User_Profile();
+    }
+
+
+    /**
+     * What type of request is this?
+     *
+     * @param string $type admin, ajax, cron or frontend.
+     *
+     * @return bool
+     */
+    private function is_request( $type ) {
+        switch ( $type ) {
+            case 'admin' :
+                return is_admin();
+
+            case 'ajax' :
+                return defined( 'DOING_AJAX' );
+
+            case 'cron' :
+                return defined( 'DOING_CRON' );
+
+            case 'frontend' :
+                return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
+        }
+    }
+
+    /**
+     * Returns true if the request is a non-legacy REST API request.
+     *
+     * Legacy REST requests should still run some extra code for backwards compatibility.
+     *
+     * @todo: replace this function once core WP function is available: https://core.trac.wordpress.org/ticket/42061.
+     *
+     * @return bool
+     */
+    public function is_rest_api_request() {
+        if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+            return false;
+        }
+
+        $rest_prefix         = trailingslashit( rest_get_url_prefix() );
+        $is_rest_api_request = ( false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix ) );
+
+        return apply_filters( 'wperp_acct_is_rest_api_request', $is_rest_api_request );
     }
 
     /**
@@ -91,209 +335,36 @@ class Accounting {
         }
     }
 
-
     /**
-     * Init the accounting module
+     * Callback to template_redirect hook
+     * Shows template when invoice readonly link is called
      *
-     * @return void
+     * @return mixed
      */
-    public function plugin_init() {
-        $this->init_classes();
-        $this->init_actions();
-        $this->init_filters();
-    }
+    function readonly_invoice_template() {
 
-    /**
-     * Define the plugin constants
-     *
-     * @return void
-     */
-    private function define_constants() {
-        $this->define( 'WPERP_ACCOUNTING_PATH', dirname( __FILE__ ) );
-        $this->define( 'WPERP_ACCOUNTING_URL', plugins_url( '', __FILE__ ) );
-        $this->define( 'WPERP_ACCOUNTING_ASSETS', WPERP_ACCOUNTING_URL . '/assets' );
-        $this->define( 'WPERP_ACCOUNTING_JS_TMPL', WPERP_ACCOUNTING_PATH . '/includes/views/js-templates' );
-        $this->define( 'WPERP_ACCOUNTING_VIEWS', WPERP_ACCOUNTING_PATH . '/includes/views' );
-    }
+        $query          = isset( $_REQUEST['query'] ) ? esc_attr( $_REQUEST['query'] ) : '';
+        $transaction_id = isset( $_REQUEST['trans_id'] ) ? intval( $_REQUEST['trans_id'] ) : '';
+        $auth_id        = isset( $_REQUEST['auth'] ) ? esc_attr( $_REQUEST['auth'] ) : '';
+        $verified       = false;
 
-    /**
-     * Define constant if not already set
-     *
-     * @param  string $name
-     * @param  string|bool $value
-     * @return type
-     */
-    private function define( $name, $value ) {
-        if ( ! defined( $name ) ) {
-            define( $name, $value );
-        }
-    }
-
-    /**
-     * Include the required files
-     *
-     * @return void
-     */
-    private function includes() {
-        if ( function_exists( 'erp_ac_get_manager_role' ) ) {
+        if ( ! $query || ! $transaction_id || ! $auth_id ) {
             return;
         }
 
-        require_once WPERP_ACCOUNTING_PATH . '/includes/function-capabilities.php';
-        require_once WPERP_ACCOUNTING_PATH . '/includes/actions-filters.php';
-        require_once WPERP_ACCOUNTING_PATH . '/includes/functions-transaction.php';
-        require_once WPERP_ACCOUNTING_PATH . '/includes/functions-chart.php';
-        require_once WPERP_ACCOUNTING_PATH . '/includes/functions.php';
-        require_once WPERP_ACCOUNTING_PATH . '/includes/functions-dashboard.php';
-        require_once WPERP_ACCOUNTING_PATH . '/includes/functions-reporting.php';
-        require_once WPERP_ACCOUNTING_PATH . '/includes/functions-bulk-action.php';
-        require_once WPERP_ACCOUNTING_PATH . '/includes/functions-url.php';
-        require_once WPERP_ACCOUNTING_PATH . '/includes/functions-tax.php';
-        require_once WPERP_ACCOUNTING_PATH . '/includes/functions-html.php';
+        $transaction = erp_acct_get_transaction( $transaction_id );
 
-        // cli command
-        if ( defined('WP_CLI') && WP_CLI ) {
-            include WPERP_ACCOUNTING_PATH . '/includes/cli/commands.php';
-        }
-    }
-
-    /**
-     * Initialize the classes
-     *
-     * @return void
-     */
-    public function init_classes() {
-        new Logger();
-        new Admin_Menu();
-        new Form_Handler();
-        new User_Profile();
-
-        if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-            new Ajax_Handler();
-        }
-    }
-
-    /**
-     * Init the plugin actions
-     *
-     * @return void
-     */
-    public function init_actions() {
-        add_action( 'admin_footer', array( $this, 'admin_js_templates' ), 10 );
-    }
-
-    /**
-     * Init the plugin filters
-     *
-     * @return void
-     */
-    public function init_filters() {
-        add_filter( 'erp_settings_pages', array( $this, 'add_settings_page' ) );
-    }
-
-    public function add_settings_page( $settings = array() ) {
-        $settings[] = include __DIR__ . '/includes/class-settings.php';
-        return $settings;
-    }
-
-    /**
-     * Print JS templates in footer
-     *
-     * @return void
-     */
-    public function admin_js_templates() {
-        global $current_screen;
-
-        $hook = str_replace( sanitize_title( __( 'Accounting', 'erp' ) ) , 'accounting', $current_screen->base );
-
-        if ( 'wp-erp_page_erp-settings' == $current_screen->base && isset( $_GET['tab'] ) && $_GET['tab'] == 'accounting' ) {
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/new-tax-form.php', 'erp-ac-new-tax-form-popup' );
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/tax-items.php', 'erp-ac-items-details-popup' );
+        if ( $transaction ) {
+            $verified = erp_acct_verify_invoice_link_hash( $transaction_id, $transaction['type'], $auth_id );
         }
 
-        if ( 'wp-erp_page_erp-accounting' == $current_screen->base ) {
-            $hook_suffix = isset( $_GET['section'] ) ? $_GET['section'] : 'dashboard';
-            $hook .= '-' . $hook_suffix;
+        if ( $verified ) {
+            include ERP_ACCOUNTING_VIEWS . '/transactions/invoice-readonly.php';
+            exit();
         }
 
-        if ( $hook == 'wp-erp_page_erp-accounting-expense' ) {
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/vendor.php', 'erp-ac-new-vendor-content-pop' );
-        }
-
-        if ( 'wp-erp_page_erp-accounting' == $current_screen->id && isset( $_GET['section'] ) && $_GET['section'] == 'bank' ) {
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/bank.php', 'erp-ac-transfer-money-pop' );
-        }
-
-        if ( $hook == 'wp-erp_page_erp-accounting-sales' ) {
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/customer.php', 'erp-ac-new-customer-content-pop' );
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/send-invoice.php', 'erp-ac-send-email-invoice-pop' );
-        }
-
-        if ( $hook == 'wp-erp_page_erp-accounting-sales' || $hook == 'wp-erp_page_erp-accounting-expense' ) {
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/trash.php', 'erp-ac-trash-form-popup' );
-        }
+        return;
     }
 
-    /**
-     * Show notice if PDF plugin is not installed
-     *
-     * @since 1.3.6
-     *
-     * @return void
-     */
-    public function admin_notice() {
-        if ( current_user_can( 'install_plugins' ) ) {
+} // ERP_Accounting
 
-            $action      = empty($_GET['erp-pdf']) ? '' : \sanitize_text_field($_GET['erp-pdf']);
-            $plugin      = 'erp-pdf-invoice/wp-erp-pdf.php';
-            $pdf_install = new \WeDevs\ERP\Accounting\PDF_Install();
-
-            if ($action === 'install') {
-                $pdf_install->install_plugin('https://downloads.wordpress.org/plugin/erp-pdf-invoice.1.0.0.zip');
-            } elseif ($action === 'active') {
-                $pdf_install->activate_pdf_plugin($plugin);
-            }
-
-            if (\file_exists(WP_PLUGIN_DIR . '/' . $plugin)) {
-                if (! \is_plugin_active($plugin)) {
-                    $this->pdf_notice_message('active');
-                }
-            } else {
-                $this->pdf_notice_message('install');
-            }
-
-        }
-    }
-
-    /**
-     * PDF notice message
-     *
-     * @since 1.3.6
-     *
-     * @param String $type
-     *
-     * @return void
-     */
-    public function pdf_notice_message( $type ) {
-        $actual_link = esc_url( (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
-        $sign = empty( $_GET ) ? '?' : '&';
-
-        echo '<div class="updated notice is-dismissible notice-pdf"><p>';
-        echo __( 'Please ' . $type . ' <a href="' . $actual_link . $sign . 'erp-pdf=' . $type . '">WP ERP PDF</a> extension to get PDF export feature.', 'erp' );
-        echo '</p></div>';
-    }
-
-    /**
-     * Dismiss PDF notice message
-     *
-     * @since 1.3.6
-     *
-     * @return void
-     */
-    public function dismiss_pdf_notice() {
-        update_option( 'pdf-notice-dismissed', 1 );
-    }
-
-}

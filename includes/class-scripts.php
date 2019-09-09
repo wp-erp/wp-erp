@@ -107,7 +107,7 @@ class Scripts {
      */
     public function register_styles() {
         $vendor = WPERP_ASSETS . '/vendor';
-        $css     = WPERP_ASSETS . '/css';
+        $css    = WPERP_ASSETS . '/css';
 
         wp_register_style( 'erp-fontawesome', $vendor . '/fontawesome/font-awesome.min.css', false, $this->version );
         wp_register_style( 'erp-select2', $vendor . '/select2/select2.min.css', false, $this->version );

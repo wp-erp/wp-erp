@@ -133,7 +133,7 @@ class Modules {
      *
      * @since 0.1
      *
-     * @return boolen
+     * @return boolean
      */
     public function is_module_active( $module_key ) {
         $modules = $this->get_active_modules();

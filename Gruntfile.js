@@ -18,8 +18,7 @@ module.exports = function(grunt) {
             admin: {
                 files: {
                     '<%= dirs.css %>/admin.css': '<%= dirs.less %>/admin/admin.less',
-                    '<%= dirs.css %>/setup.css': '<%= dirs.less %>/admin/setup.less',
-                    '<%= dirs.css %>/accounting.css': '<%= dirs.less %>/admin/accounting.less'
+                    '<%= dirs.css %>/setup.css': '<%= dirs.less %>/admin/setup.less'
                 }
             },
 
@@ -43,10 +42,10 @@ module.exports = function(grunt) {
                         '<%= dirs.js %>/erp.min.js',
                         '<%= dirs.js %>/jquery-popup.min.js',
                         '<%= dirs.js %>/settings.min.js',
-                        '<%= dirs.js %>/upload.min.js',
+                        '<%= dirs.js %>/upload.min.js'
                     ],
                     '<%= dirs.hrmJS %>/hrm.min.js': ['<%= dirs.hrmJS %>/hrm.js'],
-                    '<%= dirs.hrmJS %>/leave.min.js': ['<%= dirs.hrmJS %>/leave.js'],
+                    '<%= dirs.hrmJS %>/leave.min.js': ['<%= dirs.hrmJS %>/leave.js']
                 }
             }
         },
@@ -58,24 +57,8 @@ module.exports = function(grunt) {
             all: [
                 'Gruntfile.js',
                 '<%= dirs.js %>/*.js',
-                '!<%= dirs.js %>/*.min.js',
+                '!<%= dirs.js %>/*.min.js'
             ]
-        },
-
-        // Generate POT files.
-        makepot: {
-            target: {
-                options: {
-                    exclude: ['build/.*', 'node_modules/*', 'assets/*'],
-                    domainPath: '/i18n/languages/', // Where to save the POT file.
-                    potFilename: 'wp-erp.pot', // Name of the POT file.
-                    type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).
-                    potHeaders: {
-                        'report-msgid-bugs-to': 'http://wperp.com/support/',
-                        'language-team': 'LANGUAGE <EMAIL@ADDRESS>'
-                    }
-                }
-            }
         },
 
         watch: {
@@ -93,7 +76,7 @@ module.exports = function(grunt) {
             js: {
                 files: [
                     '<%= dirs.js %>/*',
-                    '<%= dirs.hrmJS %>/*',
+                    '<%= dirs.hrmJS %>/*'
                 ],
                 tasks: ['uglify']
             }
@@ -139,10 +122,10 @@ module.exports = function(grunt) {
                     'vendor/google/apiclient-services/src/Google/Service/Gmail/**'
                 ],
                 dest: 'build/'
-            },
+            }
         },
 
-        //Compress build directory into <name>.zip and <name>-<version>.zip
+        // Compress build directory into <name>.zip and <name>-<version>.zip
         compress: {
             main: {
                 options: {
@@ -162,7 +145,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks( 'grunt-contrib-less' );
     grunt.loadNpmTasks( 'grunt-contrib-concat' );
     grunt.loadNpmTasks( 'grunt-contrib-jshint' );
-    grunt.loadNpmTasks( 'grunt-wp-i18n' );
+    // grunt.loadNpmTasks( 'grunt-wp-i18n' );
     grunt.loadNpmTasks( 'grunt-contrib-uglify' );
     grunt.loadNpmTasks( 'grunt-contrib-watch' );
     grunt.loadNpmTasks( 'grunt-contrib-clean' );
@@ -174,12 +157,11 @@ module.exports = function(grunt) {
         'less', 'uglify'
     ]);
 
-    grunt.registerTask( 'release', [
-        'makepot',
-        'uglify',
+    grunt.registerTask('release', [
+        'uglify'
     ]);
 
-    grunt.registerTask( 'zip', [
+    grunt.registerTask('zip', [
         'clean', 'copy', 'compress'
     ]);
 };

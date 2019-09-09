@@ -103,10 +103,6 @@ function erp_get_peoples( $args = [] ) {
             $sql['where'][] = "AND people.contact_owner='$current_user_id'";
         }
 
-        if(!empty($tags)){
-
-        }
-
         // Check if the row want to search
         if ( ! empty( $s ) ) {
             $search_like = '%' . $wpdb->esc_like( $s ) . '%';
@@ -261,6 +257,8 @@ function erp_delete_people( $data = [] ) {
         }
 
         do_action( 'erp_after_delete_people', $people_id, $data );
+        // e.g.: erp_acct_delete_customer, erp_acct_delete_vendor
+        do_action( "erp_acct_delete_{$data['type']}", $data );
     }
 }
 
@@ -435,7 +433,7 @@ function erp_get_people_by( $field, $value ) {
  * @since 1.2.7  Assign first name as company name for accounting customer search
  * @since 1.3.13 Pass $people_type in create and update people hooks
  *
- * @param array $argserp_insert_people
+ * @param array $args erp_insert_people
  *
  * @return mixed integer on success, false otherwise
  */
@@ -647,6 +645,8 @@ function erp_insert_people( $args = array(), $return_object = false ) {
 
     if ( ! $existing_people->id ) {
         do_action( 'erp_create_new_people', $people->id, $args, $people_type );
+        // e.g.: erp_acct_after_new_customer, erp_acct_after_new_vendor
+        do_action( "erp_acct_after_new_{$people_type}", $people->id, $args );
     } else {
         do_action( 'erp_update_people', $people->id, $args, $people_type );
     }
@@ -834,4 +834,23 @@ function erp_convert_to_people( $args = [] ) {
     }
 
     return $people_id;
+}
+
+/**
+ * Get people email
+ *
+ * Get people email by id
+ *
+ * @since 1.4.7
+ *
+ * @param array $id
+ *
+ * @return string
+ */
+function erp_get_people_email( $id ) {
+    global $wpdb;
+
+    $sql = $wpdb->prepare( "SELECT email FROM {$wpdb->prefix}erp_peoples WHERE id = %d", absint($id) );
+
+    return $wpdb->get_var( $sql );
 }

@@ -1,0 +1,52 @@
+/*
+ * Element: Customer
+ */
+
+.@{theme-prefix}-customer-panel {
+	position: relative;
+	.edit-badge {
+		position: absolute;
+		right: 30px;
+	}
+	.customer-identity {
+		display: flex;
+		align-items: center;
+		img {
+			margin-right: 20px;
+		}
+		h3 {
+			color: #23282D;
+			font-weight: 400;
+		}
+	}
+	.customer-meta {
+		list-style: none;
+		padding-left: 0;
+		margin-bottom: 0;
+		column-count: 3;
+		@media (max-width: 1024px){
+			column-count: 2;
+		}
+		@media (max-width: 520px){
+			column-count: 1;
+		}
+		margin-top: 10px;
+		li {
+			display: flex;
+			line-height: 19px;
+			margin-bottom: 10px;
+			strong {
+				display: inline-flex;
+				min-width: 65px;
+				color: #000;
+				font-weight: 500;
+			}
+			span {
+				color: #525252;
+			}
+		}
+	}
+}
+@media (max-width: 1024){
+	
+}

@@ -109,21 +109,6 @@ $security         = $system_status->get_security_info();
 			<td class="help"><?php echo erp_help_tip( __( 'Total vendors count.', 'erp' ) ); ?></td>
 			<td><?php echo \WeDevs\ERP\Framework\Models\People::type( 'vendor' )->count(); ?></td>
 		</tr>
-		<tr>
-			<td data-export-label="Sales Transactions"><?php _e( 'Sales Transactions', 'erp' ); ?>:</td>
-			<td class="help"><?php echo erp_help_tip( __( 'Total sales transactions count.', 'erp' ) ); ?></td>
-			<td><?php echo \WeDevs\ERP\Accounting\Model\Transaction::type( 'sales' )->count(); ?></td>
-		</tr>
-		<tr>
-			<td data-export-label="Expenses Transactions"><?php _e( 'Expenses Transactions', 'erp' ); ?>:</td>
-			<td class="help"><?php echo erp_help_tip( __( 'Total expenses transactions count.', 'erp' ) ); ?></td>
-			<td><?php echo \WeDevs\ERP\Accounting\Model\Transaction::type( 'expense' )->count(); ?></td>
-		</tr>
-		<tr>
-			<td data-export-label="Journal Entries"><?php _e( 'Journal Entries', 'erp' ); ?>:</td>
-			<td class="help"><?php echo erp_help_tip( __( 'Total journal transactions count.', 'erp' ) ); ?></td>
-			<td><?php echo \WeDevs\ERP\Accounting\Model\Transaction::type( 'journal' )->count(); ?></td>
-		</tr>
 	</tbody>
 </table>
 
@@ -195,12 +180,12 @@ $security         = $system_status->get_security_info();
 		<tr>
 			<td data-export-label="Decimal Separator"><?php _e( 'Decimal Separator', 'erp' ); ?>:</td>
 			<td class="help"></td>
-			<td><?php echo erp_ac_get_price_decimal_separator(); ?></td>
+			<td><?php echo erp_get_option( 'erp_ac_de_separator', false, '.' ); ?></td>
 		</tr>
 		<tr>
 			<td data-export-label="Number of Decimals"><?php _e( 'Number of Decimals', 'erp' ); ?>:</td>
 			<td class="help"></td>
-			<td><?php echo erp_ac_get_price_decimals(); ?></td>
+			<td><?php echo absint( erp_get_option( 'erp_ac_nm_decimal', false, 2 ) ); ?></td>
 		</tr>
 		<?php endif; ?>
 

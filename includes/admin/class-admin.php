@@ -216,7 +216,7 @@ class Admin_Page {
             </script>
         <?php
     }
-    
+
     /**
      * Accounting survey notice
      *
@@ -238,13 +238,9 @@ class Admin_Page {
         } ?>
 
         <div class="notice notice-info is-dismissible" id="erp-accounting-survey-notice">
-            <p>We are revamping the Accounting module with some necessary breaking changes. Please answer some simple <a href="https://wperp.com/wp-erp-accounting-survey/" target="_blank">questions</a> so that we can help you with smooth transition to this superlative Accounting system.</p>
-            
-            <p>Enjoy 15% DISCOUNT on any WP ERP Accounting packages & extensions after successfully answering the questions.</p>
-
-            <p><a href="https://wperp.com/45641/new-improved-powerful-wp-erp-accounting-module/" target="_blank">Read more ...</a></p>
+            <p>We have completely revamped the Accounting module. Why not check the <a href="<?php echo admin_url('/admin.php?page=erp-accounting#/erp-ac-help') ?>" target="_blank">help</a> page for detailed instructions.</p>
         </div><!-- #erp-accounting-survey-notice -->
-        
+
         <style>
             #erp-accounting-survey-notice p {
                 font-size: 15px;

@@ -332,7 +332,7 @@ window.wperp = window.wperp || {};
             wp.ajax.send( 'erp_audit_log_view', {
                 data: {
                     id : self.data( 'id' ),
-                    _wpnonce: wpErpHr.nonce
+                    _wpnonce: wpErp.nonce
                 },
                 success: function(res) {
                     $.erpPopup({
@@ -549,7 +549,7 @@ window.wperp = window.wperp || {};
         removeCompanyLocation: function(e) {
             e.preventDefault();
 
-            if ( confirm( wpErpHr.confirm ) ) {
+            if ( confirm( wpErp.confirmMsg ) ) {
                 wp.ajax.send( 'erp-delete-comp-location', {
                     data: {
                         id: $(this).data('id'),

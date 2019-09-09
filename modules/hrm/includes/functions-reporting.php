@@ -234,6 +234,8 @@ function erp_hr_get_gender_ratio_data() {
     $gender_count = erp_hr_get_gender_count();
     $gender_total = $gender_count['male'] + $gender_count['female'] + $gender_count['other'];
 
+    if ( empty( $gender_total ) ) return;
+
     $gender_ratio_data = [
         'male' => [
             'gender'     => 'Male',

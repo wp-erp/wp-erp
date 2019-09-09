@@ -1,0 +1,537 @@
+//
+// Theme Specific
+//
+
+@theme-prefix: wperp;
+
+@theme-color: #1A9ED4;
+@headings-color: #23282D;
+@content-color: #72777C;
+@icon-color: #D7DEE2;
+
+@spacer: 1rem;
+
+@image_path: '../../../../../img';
+
+//.cover-image {
+//    background-image: url('@{image_path}/background.jpg');
+//}
+
+
+//
+// Color
+//
+@white:                      #ffffff;
+@black:                      #000000;
+@default-color:              #888888;
+@default-states-color:       lighten(@default-color, 6%);
+@default-color-opacity:      rgba(182, 182, 182, .6);
+
+@primary-color:              #f96332;
+@primary-states-color:       lighten(@primary-color, 6%);
+@primary-color-opacity:      rgba(249, 99, 50, .3);
+@primary-color-alert:        rgba(249, 99, 50, .8);
+
+@success-color:              #18ce0f;
+@success-states-color:       lighten(@success-color, 6%);
+@success-color-opacity:      rgba(24, 206, 15, .3);
+@success-color-alert:        rgba(24, 206, 15, .8);
+
+@info-color:                 #2CA8FF;
+@info-states-color:          lighten(@info-color, 6%);
+@info-color-opacity:         rgba(44, 168, 255, .3);
+@info-color-alert:           rgba(44, 168, 255, .8);
+
+@warning-color:              #FFB236;
+@warning-states-color:       lighten(@warning-color, 6%);
+@warning-color-opacity:      rgba(255, 178, 54, .3);
+@warning-color-alert:        rgba(255, 178, 54, .8);
+
+@danger-color:               #FF3636;
+@danger-states-color:        lighten(@danger-color, 6%);
+@danger-color-opacity:       rgba(255, 54, 54, .3);
+@danger-color-alert:         rgba(255, 54, 54, .8);
+
+/*     brand Colors              */
+@brand-primary:              @primary-color;
+@brand-info:                 @info-color;
+@brand-success:              @success-color;
+@brand-warning:              @warning-color;
+@brand-danger:               @danger-color;
+@brand-inverse:              @black-color;
+
+@link-disabled-color:        #666666;
+
+/*      light colors         */
+@light-blue:                 fade(@primary-color, .2);
+@light-azure:                fade(@info-color, .2);
+@light-green:                fade(@success-color, .2);
+@light-orange:               fade(@warning-color, .2);
+@light-red:                  fade(@danger-color, .2);
+
+// Links
+//
+// Style anchor elements.
+
+@link-color:                @theme-color;
+@link-decoration:           none;
+@link-hover-color:          darken(@link-color, 15%);
+@link-hover-decoration:     none;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+@line-height-lg:              1.5;
+@line-height-sm:              1.5;
+
+@border-width:                1px;
+@border-color:                #E2E2E2;
+
+@border-radius:               3px;
+@border-radius-lg:            .3rem;
+@border-radius-sm:            .2rem;
+
+@box-shadow-sm:               0 .125rem .25rem fade(@black, .075);
+@box-shadow:                  0 .5rem 1rem fade(@black, .15);
+@box-shadow-lg:               0 1rem 3rem fade(@black, .175);
+
+@component-active-color:      @white;
+@component-active-bg:         @theme-color;
+
+@caret-width:                 .3em;
+
+@transition-base:             all .2s ease-in-out;
+@transition-fade:             opacity .15s linear;
+@transition-collapse:         height .35s ease;
+
+
+//
+// Font
+//
+@font-family:                 'Montserrat', 'Helvetica Neue',  Arial, sans-serif;
+
+@font-family-sans-serif:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+@font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+@font-family-base:            @font-family-sans-serif;
+
+@font-paragraph:               1.2em       ;
+@font-size-navbar:             1em         ;
+@font-size-mini:               0.7142em    ;
+@font-size-sm:                 0.8571em    ;
+@font-size-base:               13px        ;
+@font-size-lg:                 1em         ;
+@font-size-large-navbar:       20px        ;
+@font-size-blockquote:         1.1em       ; // ~ 15px
+
+@font-weight-light:             300;
+@font-weight-normal:            400;
+@font-weight-semi:              600;
+@font-weight-bold:              700;
+
+@line-height-general:        1.5;
+@line-height-nav-link:       1.625rem;
+@btn-icon-line-height:       2.4em;
+@line-height:                1.35em;
+@line-height-lg:             54px;
+
+@font-weight-base:            @font-weight-normal;
+@line-height-base:            1.5;
+
+@font-size-h1:                 @font-size-base * 1.77;    ; // ~ 23px
+@font-size-h2:                 @font-size-base * 1.385;   ; // ~ 18px
+@font-size-h3:                 @font-size-base * 1.231;   ; // ~ 16px
+@font-size-h4:                 @font-size-base * 1.077;   ; // ~ 14px
+@font-size-h5:                 @font-size-base;           ; // ~ 13px
+@font-size-h6:                 @font-size-base * 0.923;   ; // ~ 12px
+
+@headings-margin-bottom:      (@spacer / 2);
+@headings-font-family:        inherit;
+@headings-font-weight:        @font-weight-semi;
+@headings-line-height:        1.2;
+
+// Body
+//
+// Settings for the `<body>` element.
+
+@body-bg:          #F1F1F1;
+@body-color:       @content-color;
+@body-font:        13px;
+
+// Paragraphs
+//
+// Style p element.
+
+@paragraph-margin-bottom:   1rem;
+
+
+// Buttons + Forms
+//
+// Shared variables that are reassigned to `@input-` and `@btn-` specific variables.
+
+@input-btn-padding-y:         .313rem;
+@input-btn-padding-x:         .7rem;
+@input-btn-line-height:       @line-height-base;
+
+@input-btn-focus-width:       .2rem;
+@input-btn-focus-color:       fade(@theme-color, .25);
+@input-btn-focus-box-shadow:  0 0 0 @input-btn-focus-width @input-btn-focus-color;
+
+@input-btn-padding-y-sm:      .25rem;
+@input-btn-padding-x-sm:      .5rem;
+@input-btn-line-height-sm:    @line-height-sm;
+
+@input-btn-padding-y-lg:      .5rem;
+@input-btn-padding-x-lg:      1rem;
+@input-btn-line-height-lg:    @line-height-lg;
+
+@input-btn-border-width:      @border-width;
+
+
+//
+// Buttons
+//
+
+@none:                       0  ;
+@border-thin:                1px;
+@border-thick:               2px;
+
+@white-color:                #FFFFFF;
+@white-bg:                   #FFFFFF;
+@orange-bg:                  #e95e38;
+
+@smoke-bg:                   #F5F5F5;
+@light-black:                #444   ;
+
+@black-bg:                   rgba(30,30,30,.97);
+
+@black-color:                #2c2c2c;
+@black-hr:                   #444444;
+
+@light-gray:                 #E3E3E3;
+@medium-gray:                #DDDDDD;
+@dark-gray:                  #9A9A9A;
+
+@opacity-gray-3:             rgba(222,222,222, .3);
+@opacity-gray-5:             rgba(222,222,222, .5);
+@opacity-gray-8:             rgba(222,222,222, .8);
+
+
+@opacity-5:                  rgba(255,255,255, .5);
+@opacity-8:                  rgba(255,255,255, .8);
+
+@datepicker-color-days:             rgba(255,255,255, .8) ;
+@datepicker-color-old-new-days:     rgba(255,255,255, .4) ;
+
+
+@opacity-1:                  rgba(255,255,255, .1);
+@opacity-2:                  rgba(255,255,255, .2);
+
+@transparent-bg:             transparent;
+@dark-background:            #555555;
+
+
+@btn-padding-y:               @input-btn-padding-y;
+@btn-padding-x:               @input-btn-padding-x;
+@btn-line-height:             @input-btn-line-height;
+
+@btn-padding-y-sm:            @input-btn-padding-y-sm;
+@btn-padding-x-sm:            @input-btn-padding-x-sm;
+@btn-line-height-sm:          @input-btn-line-height-sm;
+
+@btn-padding-y-lg:            @input-btn-padding-y-lg;
+@btn-padding-x-lg:            @input-btn-padding-x-lg;
+@btn-line-height-lg:          @input-btn-line-height-lg;
+
+@btn-border-width:            @input-btn-border-width;
+
+@btn-font-weight:             @font-weight-normal;
+@btn-box-shadow:              inset 0 1px 0 fade(@white, .15), 0 1px 1px fade(@black, .075);
+@btn-focus-width:             @input-btn-focus-width;
+@btn-focus-box-shadow:        @input-btn-focus-box-shadow;
+@btn-disabled-opacity:        .65;
+@btn-active-box-shadow:       inset 0 3px 5px fade(@black, .125);
+
+@btn-link-disabled-color:     #cccccc;
+
+@btn-block-spacing-y:         .5rem;
+
+// Allows for customizing button radius independently from global border radius
+@btn-border-radius:           @border-radius;
+@btn-border-radius-lg:        @border-radius-lg;
+@btn-border-radius-sm:        @border-radius-sm;
+
+@btn-transition:              color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+
+
+//== Components
+//
+
+@padding-input-vertical:        11px;
+@padding-input-horizontal:      19px;
+
+@padding-btn-vertical:         11px;
+@padding-btn-horizontal:       22px;
+
+@padding-base-vertical:        .5rem;
+@padding-base-horizontal:      .7rem;
+
+@padding-round-horizontal:     23px;
+
+@padding-simple-vertical:      10px;
+@padding-simple-horizontal:    17px;
+
+@padding-large-vertical:       15px;
+@padding-large-horizontal:     48px;
+
+@padding-small-vertical:        5px;
+@padding-small-horizontal:     15px;
+
+// @padding-xs-vertical:           1px;
+// @padding-xs-horizontal:         5px;
+
+@padding-label-vertical:        2px;
+@padding-label-horizontal:     12px;
+
+@margin-large-vertical:        30px;
+@margin-base-vertical:         15px;
+
+@margin-base-horizontal:       15px;
+
+@margin-bottom:                 10px       ;
+@border:                        1px solid  ;
+@border-radius-extra-small:     0.125rem   ;
+@border-radius-small:           0.1875rem  ;
+@border-radius-large:           0.25rem    ;
+@border-radius-extreme:         0.875rem   ;
+
+@border-radius-large-top:      @border-radius-large @border-radius-large 0 0;
+@border-radius-large-bottom:   0 0 @border-radius-large @border-radius-large;
+
+@btn-round-radius:             30px        ;
+
+@height-base:                  55px        ;
+
+@btn-icon-size:                 3.5rem      ;
+@btn-icon-size-regular:         2.375rem     ;
+@btn-icon-font-size-regular:    0.9375rem    ;
+@btn-icon-font-size-small:      0.6875rem     ;
+@btn-icon-size-small:           1.875rem    ;
+@btn-icon-font-size-lg:         1.325rem    ;
+@btn-icon-size-lg:              3.6rem        ;
+
+
+@border-radius-top:        10px 10px 0 0    ;
+@border-radius-bottom:     0 0 10px 10px    ;
+
+@dropdown-shadow:          1px 2px 3px rgba(0, 0, 0, 0.125);
+@box-shadow-raised:        0px 10px 25px 0px rgba(0, 0, 0, 0.3);
+
+@general-transition-time:  300ms            ;
+
+@slow-transition-time:           370ms      ;
+@dropdown-coordinates:      29px -50px      ;
+
+@fast-transition-time:           150ms      ;
+@select-coordinates:         50% -40px      ;
+
+@transition-linear:         linear          ;
+@transition-bezier:         cubic-bezier(0.34, 1.61, 0.7, 1);
+@transition-ease:           ease 0s;
+
+
+//@navbar-padding-a:               9px 13px;
+@navbar-margin-a:                15px 0px;
+
+@padding-social-a:               10px 5px;
+
+@navbar-margin-a-btn:            15px 0px;
+@navbar-margin-a-btn-round:      16px 0px;
+
+@navbar-padding-a-icons:         6px 15px;
+@navbar-margin-a-icons:          6px  3px;
+
+@navbar-padding-base:            0.625rem;
+//@navbar-margin-brand:             5px  0px;
+
+@navbar-margin-brand-icons:      12px auto;
+@navbar-margin-btn:              15px  3px;
+
+@height-icon-sm:				 32px;
+@width-icon-sm:					 32px;
+@padding-icon-sm:			     4px;
+@border-radius-icon-sm:			 7px;
+
+@height-icon-message:			 40px;
+@width-icon-message:			 40px;
+
+@height-icon-message-sm: 		 20px;
+@width-icon-message-sm:			 20px;
+
+@white-navbar:                  fade(#FFFFFF, .96);
+@primary-navbar:                fade(#34ACDC, .98);
+@info-navbar:                   fade(#5BCAFF, .98);
+@success-navbar:                fade(#4CD964, .98);
+@warning-navbar:                fade(#FF9500, .98);
+@danger-navbar:                 fade(#FF4C40, .98);
+
+@topbar-x:             topbar-x;
+@topbar-back:          topbar-back;
+@bottombar-x:          bottombar-x;
+@bottombar-back:       bottombar-back;
+
+//Nucleo Icons
+
+@nc-font-path:        '../fonts';
+@nc-font-size-base:   14px;
+@nc-css-prefix:       now-ui;
+@nc-background-color:     #eee;
+@nc-li-width:         (30em / 14);
+@nc-padding-width:    (1em/3);
+
+// Social icons color
+@social-twitter:                   #55acee;
+@social-twitter-state-color:       lighten(#55acee, 6%);
+
+@social-facebook: 			       #3b5998;
+@social-facebook-state-color:      lighten(#3b5998, 6%);
+
+@social-google: 			       #dd4b39;
+@social-google-state-color:        lighten(#dd4b39, 6%);
+
+@social-linkedin: 			       #0077B5;
+@social-linkedin-state-color:      lighten(#0077B5, 6%);
+
+@social-pinterest: 			       #cc2127;
+@social-pinterest-state-color:     lighten(#cc2127, 6%);
+
+@social-dribbble: 		           #ea4c89;
+@social-dribbble-state-color:      lighten(#ea4c89, 6%);
+
+@social-github: 		      	   #333333;
+@social-github-state-color:        lighten(#333333, 6%);
+
+@social-youtube: 		    	   #e52d27;
+@social-youtube-state-color:       lighten(#e52d27, 6%);
+
+@social-instagram: 		           #125688;
+@social-instagram-state-color:     lighten(#125688, 6%);
+
+@social-reddit: 		  	       #ff4500;
+@social-reddit-state-color:        lighten(#ff4500, 6%);
+
+@social-tumblr: 			       #35465c;
+@social-tumblr-state-color:        lighten(#35465c, 6%);
+
+@social-behance: 			       #1769ff;
+@social-behance-state-color:       lighten(#1769ff, 6%);
+
+
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+@table-cell-padding:          18px 10px;
+@table-cell-padding-sm:       .3rem;
+
+@table-bg:                    @white;
+@table-accent-bg:             #F9F9F9;                   //fade(@black, .05)
+@table-hover-bg:              fade(@black, .075);
+@table-active-bg:             @table-hover-bg;
+
+@table-content-color:         #525252;
+@table-border-width:          2px;
+@table-border-color:          #f6f6f6;
+
+@table-head-bg:               @border-color;
+@table-head-color:            @border-color;
+
+@table-dark-bg:               @border-color;
+@table-dark-accent-bg:        fade(@white, .05);
+@table-dark-hover-bg:         fade(@white, .075);
+@table-dark-border-color:     lighten(@border-color, 7.5%);
+@table-dark-color:            @border-color;
+
+@table-striped-order:         odd;
+
+@table-caption-color:         #cccccc;
+
+
+// Forms
+
+@label-margin-bottom:                   .5rem;
+
+
+// Forms
+
+@label-margin-bottom:                   .5rem;
+
+@input-padding-y:                       @input-btn-padding-y;
+@input-padding-x:                       @input-btn-padding-x;
+@input-line-height:                     @input-btn-line-height;
+
+@input-padding-y-sm:                    @input-btn-padding-y-sm;
+@input-padding-x-sm:                    @input-btn-padding-x-sm;
+@input-line-height-sm:                  @input-btn-line-height-sm;
+
+@input-padding-y-lg:                    @input-btn-padding-y-lg;
+@input-padding-x-lg:                    @input-btn-padding-x-lg;
+@input-line-height-lg:                  @input-btn-line-height-lg;
+
+@input-bg:                              @white;
+@input-disabled-bg:                     #cccccc;
+
+@input-color:                           #cccccc;
+@input-border-color:                    @border-color;
+@input-border-width:                    @input-btn-border-width;
+@input-box-shadow:                      inset 0 1px 1px fade(@black, .075);
+
+@input-border-radius:                   @border-radius;
+@input-border-radius-lg:                @border-radius-lg;
+@input-border-radius-sm:                @border-radius-sm;
+
+@input-focus-bg:                        @input-bg;
+@input-focus-border-color:              lighten(@component-active-bg, 25%);
+@input-focus-color:                     @input-color;
+@input-focus-width:                     @input-btn-focus-width;
+@input-focus-box-shadow:                @input-btn-focus-box-shadow;
+
+@input-placeholder-color:               #A5ACB1;
+@input-plaintext-color:                 @content-color;
+
+@input-height-border:                   @input-border-width * 2;
+
+@input-height-inner:                    (@font-size-base * @input-btn-line-height) + (@input-btn-padding-y * 2);
+@input-height:                          33px;
+
+@input-height-inner-sm:                 (@font-size-sm * @input-btn-line-height-sm) + (@input-btn-padding-y-sm * 2);
+@input-height-sm:                       ~"calc(@{input-height-inner-sm} + @{input-height-border})";
+
+@input-height-inner-lg:                 (@font-size-lg * @input-btn-line-height-lg) + (@input-btn-padding-y-lg * 2);
+@input-height-lg:                       ~"calc(@{input-height-inner-lg} + @{input-height-border})";
+
+@input-transition:                      border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+@form-text-margin-top:                  .25rem;
+
+@form-check-input-gutter:               1.25rem;
+@form-check-input-margin-y:             .3rem;
+@form-check-input-margin-x:             .25rem;
+
+@form-check-inline-margin-x:            .75rem;
+@form-check-inline-input-margin-x:      .3125rem;
+
+@form-group-margin-bottom:              1rem;
+
+@input-group-addon-color:               @input-color;
+@input-group-addon-bg:                  #cccccc;
+@input-group-addon-border-color:        @input-border-color;
+
+
+
+// Form validation
+@form-feedback-margin-top:          @form-text-margin-top;
+@form-feedback-font-size:           @font-size-sm;
+@form-feedback-valid-color:         theme-color("success");
+@form-feedback-invalid-color:       theme-color("danger");

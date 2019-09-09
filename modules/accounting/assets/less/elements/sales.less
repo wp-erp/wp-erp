@@ -1,0 +1,100 @@
+/*
+ * Element: Sales
+ */
+
+.content-header-section {
+	.wperp-import-wrapper {
+		margin-left: 10px;
+	}
+	.dropdown-menu {
+		margin-top: 0;
+	}
+	.dropdown-opened .dropdown-menu {
+		margin-top: 10px;
+	}
+	.filter-button {
+		[class*='flaticon'] {
+			vertical-align: middle;
+			margin: 0 5px;
+		}
+	}
+}
+
+.wperp-filter-container {
+	padding: 0;
+	border: 0;
+	h3 {
+		font-size: 13px;
+		margin-top: 0;
+	}
+	.wperp-panel {
+		padding: 15px;
+		width: 320px;
+		margin-bottom: 0;
+		.wperp-panel-body {
+			padding: 15px;
+			border: 1px solid #DDDDDD;
+			border-radius: 3px;
+			margin-bottom: 15px;
+			* {
+				font-size: 12px;
+				color: #525252;
+			}
+			.form-fields {
+				display: flex;
+				align-items: center;
+				.label-to {
+					margin: 0 10px;
+				}
+				.has-addons {
+					position: relative;
+					[class*="flaticon"] {
+						position: absolute;
+						right: 7px;
+						top: 50%;
+						transform: translateY(-50%);
+						pointer-events: none;
+						z-index: 0;
+					}
+				}
+			}
+			.form-field {
+				width: 100%;
+				max-width: 110px;
+				border-radius: 3px;
+				border: 1px solid #DDDDDD;
+				padding: 5px;
+			}
+		}
+		.wperp-panel-footer {
+			text-align: right;
+			.wperp-btn {
+				margin-left: 10px;
+			}
+		}
+	}
+}
+#status_legend ul li {
+	padding: 0 2px;
+}
+
+@media (max-width: 767px){
+	.wperp-filter-container {
+		right: inherit !important;
+		left: 0 !important;
+		.wperp-panel {
+			width: 290px !important;
+			padding: 15px 10px;
+			.wperp-panel-body {
+				padding: 15px 10px;
+				.form-fields .label-to {
+					margin: 0 5px;
+				}
+			}
+		}
+		&:after, &:before {
+			right: inherit !important;
+			left: 10px;
+		}
+	}
+}

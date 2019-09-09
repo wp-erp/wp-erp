@@ -1,6 +1,7 @@
 config.codekit
 .idea
 .codekit-cache
+# Composer
 /vendor/
 node_modules
 build
