@@ -169,6 +169,9 @@ export default {
     }
 
     .single-tax-rate {
+        th.column.actions {
+            float: left !important;
+        }
         .col--actions {
             float: left !important;
         }
