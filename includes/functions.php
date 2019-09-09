@@ -3139,6 +3139,24 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
     return $html;
 }
 
+/**
+ * Get currencies dropdown
+ *
+ * @return array
+ */
+function erp_get_currencies_for_dropdown() {
+    global $wpdb;
+
+    $currencies = $wpdb->get_results( "SELECT id, name, sign FROM {$wpdb->prefix}erp_acct_currency_info", ARRAY_A );
+
+    $currencies_dropdown = [];
+
+    foreach ( $currencies as $currency ) {
+        $currencies_dropdown[$currency['id']] = $currency['name'] . ' (' . $currency['sign'] . ')';
+    }
+
+    return $currencies_dropdown;
+}
 
 /**
  * Old functions

@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs, ediamin, sabbir1991, asaquzzama
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.2.2
+Tested up to: 5.2.3
 Requires PHP: 5.6
-Stable tag: 1.4.6
+Stable tag: 1.5.0
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -245,6 +245,14 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.0 -> September 09, 2019 =
+[new] Rewrite accounting module from the ground-up.
+[new] Add philippines provinces. Closes #836
+[twaek] Add a filter for `custom attr` length. Closes #837
+[fix] Fix prining issue in menu. Closes #839
+[fix] Company location delete not working. Closes #843
+[fix] Fix a broken link under status page. Closes #844
 
 = v1.4.6 -> July 24, 2019 =
 [new] Added 'switch to' button at the employee list if 'User Switching' plugin activated.
