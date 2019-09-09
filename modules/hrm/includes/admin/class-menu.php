@@ -70,7 +70,7 @@ class Admin_Menu {
         ) );
 
         erp_add_menu( 'hr', array(
-            'title'         =>  __( 'Announcement', 'erp' ),
+            'title'         =>  __( 'Announcements', 'erp' ),
             'capability'    =>  'erp_manage_announcement',
             'slug'          =>  'announcement',
             'direct_link'   => admin_url( 'edit.php?post_type=erp_hr_announcement' ),

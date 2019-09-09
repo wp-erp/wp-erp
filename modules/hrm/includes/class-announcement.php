@@ -151,7 +151,7 @@ class Announcement {
                 'delete_post'        => $capability,
             ),
             'labels'          => array(
-                'name'               => __( 'Announcement', 'erp' ),
+                'name'               => __( 'Announcements', 'erp' ),
                 'singular_name'      => __( 'Announcement', 'erp' ),
                 'menu_name'          => __( 'HR Announcement', 'erp' ),
                 'add_new'            => __( 'Add Announcement', 'erp' ),
