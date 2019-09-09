@@ -56,6 +56,10 @@
             </thead>
             <tbody>
             <?php
+                if ( empty( $gender_ratio ) ) {
+                    $gender_ratio = [];
+                }
+
                 foreach ( $gender_ratio as $gender ) {
                     echo '<tr>';
                     echo '<td>' . esc_attr( $gender->gender ) . '</td>';

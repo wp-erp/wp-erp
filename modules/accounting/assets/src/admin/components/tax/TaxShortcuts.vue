@@ -5,7 +5,7 @@
             <li><router-link :to="{ name: 'TaxZones' }">{{ __('View Tax Zones', 'erp') }}</router-link></li>
             <li><router-link :to="{ name: 'TaxCategories' }">{{ __('View Tax Categories', 'erp') }}</router-link></li>
             <li><router-link :to="{ name: 'TaxAgencies' }">{{ __('View Tax Agencies', 'erp') }}</router-link></li>
-            <li><router-link :to="{ name: 'TaxHelpContent' }">{{ __('Tax Help', 'erp') }}</router-link></li>
+            <li><a href="https://wperp.com/docs/accounting/tax/" target="_blank">{{ __('Tax Help', 'erp') }}</a></li>
         </ul>
     </div>
 </template>
