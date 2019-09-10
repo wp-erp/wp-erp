@@ -800,7 +800,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
 
         // Add Table Items
         foreach ( $transaction->line_items as $line ) {
-            $trn_pdf->add_item( [ $line['invoice_no'], $line['due_date'], $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['invoice_no'], $transaction->due_date, $line['amount'] ] );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -829,7 +829,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
 
         // Add Table Items
         foreach ( $transaction->bill_details as $line ) {
-            $trn_pdf->add_item( [ $line['bill_no'], $line['due_date'], $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['bill_no'], $transaction->due_date, $line['amount'] ] );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -857,7 +857,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
 
         // Add Table Items
         foreach ( $transaction->purchase_details as $line ) {
-            $trn_pdf->add_item( [ $line['purchase_no'], $line['due_date'], $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['purchase_no'], $transaction->due_date, $line['amount'] ] );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -872,7 +872,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
 
         // Add Table Items
         foreach ( $transaction->line_items as $line ) {
-            $trn_pdf->add_item( [ $line['trn_no'], $line['_date'], $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['trn_no'], $transaction->trn_date, $line['amount'] ] );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -886,7 +886,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
 
         // Add Table Items
         foreach ( $transaction->bill_details as $line ) {
-            $trn_pdf->add_item( [ $line['check_no'], $line['trn_date'], $line['pay_to'], $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['check_no'], $transaction->trn_date, $transaction->pay_to, $line['amount'] ] );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
