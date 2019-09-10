@@ -1157,7 +1157,7 @@ function erp_acct_insert_data_into_people_trn_details( $voucher_no, $transaction
 
     if ( ! empty( $transaction['customer_id'] ) ) {
         $people_id = $transaction['customer_id'];
-    } else if ( ! empty( $transaction['customer_id'] ) ) {
+    } else if ( ! empty( $transaction['vendor_id'] ) ) {
         $people_id = $transaction['vendor_id'];
     } else {
         $people_id = $transaction['people_id'];
@@ -1169,7 +1169,7 @@ function erp_acct_insert_data_into_people_trn_details( $voucher_no, $transaction
         'people_id'   => $people_id,
         'voucher_no'  => $voucher_no,
         'debit'       => $dr_cr['debit'],
-        'credit'      => $dr_cr['debit'],
+        'credit'      => $dr_cr['credit'],
         'trn_date'    => $dr_cr['trn_date'],
         'particulars' => $dr_cr['particulars'],
         'created_at'  => $dr_cr['created_at'],
