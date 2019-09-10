@@ -381,3 +381,16 @@ function erp_acct_is_employee_people( $user_id ) {
     return false;
 
 }
+
+/**
+ * Get $user_id by $people_id
+ * @param $people_id
+ * @return mixed
+ */
+function erp_acct_get_user_id_by_people_id( $people_id ) {
+    global $wpdb;
+
+    $row = $wpdb->get_row( "SELECT user_id FROM {$wpdb->prefix}erp_peoples WHERE id = {$people_id} LIMIT 1" );
+
+    return $row->user_id;
+}
