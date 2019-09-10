@@ -1155,10 +1155,12 @@ function erp_acct_insert_data_into_people_trn_details( $voucher_no, $transaction
 
     $data = [];
 
-    $people_id = ! empty( $transaction['customer_id'] ) ? $transaction['customer_id'] : $transaction['vendor_id'];
-
-    if ( empty( $people_id ) ) {
-        $people_id = [ 'people_id' ];
+    if ( ! empty( $transaction['customer_id'] ) ) {
+        $people_id = $transaction['customer_id'];
+    } else if ( ! empty( $transaction['customer_id'] ) ) {
+        $people_id = $transaction['vendor_id'];
+    } else {
+        $people_id = $transaction['people_id'];
     }
 
     $dr_cr = erp_acct_get_dr_cr_of_voucher( $voucher_no );
