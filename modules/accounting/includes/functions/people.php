@@ -237,9 +237,9 @@ function erp_acct_get_people_transactions( $args = [] ) {
         $cr_total += (float) $results[$idx]['credit'];
         $balance  = (float) $results[$idx - 1]['balance'] + (float) $results[$idx]['debit'] - (float) $results[$idx]['credit'];
         if ( $balance >= 0 ) {
-            $results[$idx]['balance'] = (float) $balance . ' Dr';
+            $results[$idx]['balance'] = erp_get_currency() . abs( (float)$balance ) . ' Dr';
         } else {
-            $results[$idx]['balance'] = (float) $balance . ' Cr';
+            $results[$idx]['balance'] = erp_get_currency() . abs( (float)$balance ) . ' Cr';
         }
         $total = $balance;
     }
