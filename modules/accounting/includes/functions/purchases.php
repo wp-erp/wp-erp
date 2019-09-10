@@ -222,6 +222,10 @@ function erp_acct_insert_purchase( $data ) {
 
         erp_acct_insert_purchase_data_into_ledger( $purchase_data );
 
+        $data['dr'] = 0;
+        $data['cr'] = $purchase_data['amount'];
+        erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
+
         $wpdb->query( 'COMMIT' );
 
     } catch ( Exception $e ) {

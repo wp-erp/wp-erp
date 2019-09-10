@@ -285,6 +285,10 @@ function erp_acct_insert_expense( $data ) {
             erp_acct_insert_source_expense_data_into_ledger( $expense_data );
         }
 
+        $data['dr'] = 0;
+        $data['cr'] = $expense_data['amount'];
+        erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
+
         do_action( 'erp_acct_after_expense_create', $expense_data, $voucher_no );
 
         $wpdb->query( 'COMMIT' );

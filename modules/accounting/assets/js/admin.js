@@ -15081,6 +15081,13 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -34385,7 +34392,40 @@ var render = function() {
               actions: _vm.actions,
               showCb: false
             },
-            on: { "action:click": _vm.onActionClick }
+            on: { "action:click": _vm.onActionClick },
+            scopedSlots: _vm._u([
+              {
+                key: "voucher_no",
+                fn: function(data) {
+                  return [
+                    _c(
+                      "strong",
+                      [
+                        _c(
+                          "router-link",
+                          {
+                            attrs: {
+                              to: {
+                                name: "DynamicTrnLoader",
+                                params: { id: data.row.voucher_no }
+                              }
+                            }
+                          },
+                          [
+                            data.row.voucher_no
+                              ? _c("span", [
+                                  _vm._v("#" + _vm._s(data.row.voucher_no))
+                                ])
+                              : _vm._e()
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  ]
+                }
+              }
+            ])
           })
         ],
         1

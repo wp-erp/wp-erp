@@ -186,6 +186,10 @@ function erp_acct_insert_pay_bill( $data ) {
             erp_acct_insert_check_data( $pay_bill_data );
         }
 
+        $data['dr'] = $pay_bill_data['amount'];
+        $data['cr'] = 0;
+        erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
+
         do_action( 'erp_acct_after_pay_bill_create', $pay_bill_data, $voucher_no );
 
         $wpdb->query( 'COMMIT' );

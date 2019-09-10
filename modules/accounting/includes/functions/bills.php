@@ -174,7 +174,7 @@ function erp_acct_insert_bill( $data ) {
 
         if ( $draft == $bill_data['status'] ) {
             $wpdb->query( 'COMMIT' );
-            return erp_acct_get_invoice( $voucher_no );
+            return erp_acct_get_bill( $voucher_no );
         }
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_bill_account_details', array(
@@ -187,6 +187,10 @@ function erp_acct_insert_bill( $data ) {
             'created_at'  => $bill_data['created_at'],
             'created_by'  => $bill_data['created_by']
         ) );
+
+        $data['dr'] = 0;
+        $data['cr'] = $bill_data['amount'];
+        erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
 
         $wpdb->query( 'COMMIT' );
 

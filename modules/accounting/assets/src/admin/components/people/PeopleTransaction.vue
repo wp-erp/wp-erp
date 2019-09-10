@@ -55,6 +55,13 @@
                     :showCb="false"
                     @action:click="onActionClick"
                     >
+                    <template slot="voucher_no" slot-scope="data">
+                        <strong>
+                            <router-link :to="{ name: 'DynamicTrnLoader', params: { id: data.row.voucher_no }}">
+                                <span v-if="data.row.voucher_no">#{{ data.row.voucher_no }}</span>
+                            </router-link>
+                        </strong>
+                    </template>
                 </list-table>
             </div>
         </div>
