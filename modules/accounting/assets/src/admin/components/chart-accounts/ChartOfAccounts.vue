@@ -166,12 +166,8 @@ export default {
             if (val === null && typeof val === 'object') {
                 val = 0;
             }
-            const currency = '$';
-            if (val < 0) {
-                return `Cr. ${currency}${Math.abs(val)}`;
-            }
 
-            return `Dr. ${currency}${val}`;
+            return this.moneyFormat(val);
         },
 
         onActionClick(action, row, index) {
