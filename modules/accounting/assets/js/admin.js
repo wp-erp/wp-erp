@@ -17836,7 +17836,7 @@ if (false) {(function () {
 
       /* global erp_acct_var */
       search: '',
-      curSymbol: erp_acct_var.symbol
+      curSymbol: erp_acct_var.symbol || '$'
     };
   },
   computed: {

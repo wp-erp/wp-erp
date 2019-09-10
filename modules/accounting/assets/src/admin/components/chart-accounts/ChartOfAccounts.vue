@@ -113,7 +113,7 @@ export default {
             ledgers: [],
             temp_ledgers: erp_acct_var.ledgers, /* global erp_acct_var */
             search : '',
-            curSymbol: erp_acct_var.symbol
+            curSymbol: erp_acct_var.symbol || '$'
         };
     },
 
