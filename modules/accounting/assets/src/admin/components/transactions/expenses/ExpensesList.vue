@@ -281,7 +281,7 @@ export default {
                         break;
                 }
 
-                if (temp.status_code === '2' || temp.status_code === '3' || temp.status_code === '5') {
+                if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
                     temp['actions'] = [
                         {key: 'edit', label: __('Edit', 'erp')},
                         {key: 'payment', label: __('Make Payment', 'erp')}

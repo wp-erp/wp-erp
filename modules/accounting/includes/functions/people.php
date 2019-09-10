@@ -188,7 +188,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
         $sql .= "
             voucher.id as voucher_no,
             people.people_id,
-            people.trn_no,
+            people.voucher_no,
             people.trn_date,
             people.debit,
             people.credit,
@@ -197,7 +197,7 @@ function erp_acct_get_people_transactions( $args = [] ) {
     }
 
     $sql .= " FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
-        INNER JOIN {$wpdb->prefix}erp_acct_people_account_details AS people ON voucher.id = people.trn_no
+        INNER JOIN {$wpdb->prefix}erp_acct_people_trn_details AS people ON voucher.id = people.voucher_no
         {$where} ORDER BY people.trn_date {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
@@ -293,7 +293,7 @@ function erp_acct_get_people_opening_balance( $args = [] ) {
         $where              .= " AND trn_date < '{$args['start_date']}'";
     }
 
-    $sql = "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_people_account_details {$where}";
+    $sql = "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_people_trn_details {$where}";
 
     $result = $wpdb->get_row( $sql, ARRAY_A );
 
