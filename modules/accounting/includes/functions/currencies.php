@@ -44,7 +44,7 @@ function erp_acct_get_currencies_for_dropdown() {
 function erp_acct_get_currency_symbol() {
     global $wpdb;
 
-    $active_currency_id = erp_get_option( 'erp_currency', 'erp_settings_general' );
+    $active_currency_id = erp_get_currency();
 
     $sql = $wpdb->prepare(
         "SELECT sign FROM {$wpdb->prefix}erp_acct_currency_info WHERE id = %d",
