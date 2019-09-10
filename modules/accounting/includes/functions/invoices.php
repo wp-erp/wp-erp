@@ -219,6 +219,10 @@ function erp_acct_insert_invoice( $data ) {
 
         do_action( 'erp_acct_after_sales_create', $data, $voucher_no );
 
+        $data['dr'] = $invoice_data['amount'];
+        $data['cr'] = 0;
+        erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
+
         $wpdb->query( 'COMMIT' );
 
     } catch ( Exception $e ) {

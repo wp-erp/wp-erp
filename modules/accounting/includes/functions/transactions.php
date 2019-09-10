@@ -1133,16 +1133,6 @@ function erp_acct_get_pdf_filename( $voucher_no ) {
     return $pdf_file;
 }
 
-/**
- * Insert data into `people_trn_details` table on transaction
- */
-add_action( 'erp_acct_new_transaction_sales', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
-add_action( 'erp_acct_new_transaction_payment', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
-add_action( 'erp_acct_new_transaction_bill', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
-add_action( 'erp_acct_new_transaction_pay_bill', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
-add_action( 'erp_acct_new_transaction_purchase', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
-add_action( 'erp_acct_new_transaction_pay_purchase', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
-add_action( 'erp_acct_new_transaction_expense', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
 
 /**
  * Insert data into `erp_acct_people_trn_details` table
@@ -1150,7 +1140,7 @@ add_action( 'erp_acct_new_transaction_expense', 'erp_acct_insert_data_into_peopl
  * @param $voucher_no
  * @param $transaction
  */
-function erp_acct_insert_data_into_people_trn_details( $voucher_no, $transaction ) {
+function erp_acct_insert_data_into_people_trn_details( $transaction, $voucher_no ) {
     global $wpdb;
 
     $data = [];
@@ -1163,34 +1153,18 @@ function erp_acct_insert_data_into_people_trn_details( $voucher_no, $transaction
         $people_id = $transaction['people_id'];
     }
 
-    $dr_cr = erp_acct_get_dr_cr_of_voucher( $voucher_no );
+    $date = ! empty( $transaction['trn_date'] ) ? $transaction['trn_date'] : $transaction['date'];
 
     $wpdb->insert( $wpdb->prefix . 'erp_acct_people_trn_details', array(
         'people_id'   => $people_id,
         'voucher_no'  => $voucher_no,
-        'debit'       => $dr_cr['debit'],
-        'credit'      => $dr_cr['credit'],
-        'trn_date'    => $dr_cr['trn_date'],
-        'particulars' => $dr_cr['particulars'],
-        'created_at'  => $dr_cr['created_at'],
-        'created_by'  => $dr_cr['created_by'],
-        'updated_at'  => $dr_cr['updated_at'],
-        'updated_by'  => $dr_cr['updated_by']
+        'debit'       => $transaction['dr'],
+        'credit'      => $transaction['cr'],
+        'trn_date'    => $date,
+        'particulars' => $transaction['particulars'],
+        'created_at'  => $transaction['created_at'],
+        'created_by'  => $transaction['created_by'],
+        'updated_at'  => $transaction['updated_at'],
+        'updated_by'  => $transaction['updated_by']
     ) );
-}
-
-/**
- * Get debit, credit of a voucher
- *
- * @param $voucher_no
- * @return array|object|null
- */
-function erp_acct_get_dr_cr_of_voucher( $voucher_no ) {
-    global $wpdb;
-
-    $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_ledger_details WHERE trn_no={$voucher_no} GROUP BY trn_no";
-
-    $results = $wpdb->get_row( $sql, ARRAY_A );
-
-    return $results;
 }

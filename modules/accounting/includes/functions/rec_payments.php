@@ -154,6 +154,10 @@ function erp_acct_insert_payment( $data ) {
             erp_acct_insert_check_data( $payment_data );
         }
 
+        $data['dr'] = 0;
+        $data['cr'] = $payment_data['amount'];
+        erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
+
         do_action( 'erp_acct_after_payment_create', $payment_data, $voucher_no );
 
         $wpdb->query( 'COMMIT' );
