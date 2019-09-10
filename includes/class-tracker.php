@@ -22,10 +22,10 @@ class Tracker extends \WeDevs_Insights {
         $data = array(
             'active_modules' => get_option( 'erp_modules', [] ),
             'contacts'       => $this->get_people_count( 'contact' ),
-            'customer'       => $this->get_people_count( 'customer' ),
-            'vendor'         => $this->get_people_count( 'vendor' ),
-            'sales'          => $this->transaction_type_count( 'sales' ),
-            'expense'        => $this->transaction_type_count( 'expense' ),
+            // 'customer'       => $this->get_people_count( 'customer' ),
+            // 'vendor'         => $this->get_people_count( 'vendor' ),
+            // 'sales'          => $this->transaction_type_count( 'sales' ),
+            // 'expense'        => $this->transaction_type_count( 'expense' ),
         );
 
         return $data;

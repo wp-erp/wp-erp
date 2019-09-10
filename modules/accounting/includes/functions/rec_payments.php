@@ -102,7 +102,7 @@ function erp_acct_insert_payment( $data ) {
     $data['created_at'] = date( "Y-m-d H:i:s" );
     $data['created_by'] = $created_by;
     $voucher_no         = null;
-    $currency           = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
+    $currency           = erp_get_currency();
 
     try {
         $wpdb->query( 'START TRANSACTION' );

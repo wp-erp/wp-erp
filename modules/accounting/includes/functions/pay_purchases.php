@@ -63,7 +63,7 @@ function erp_acct_get_pay_purchase( $purchase_no ) {
         pay_purchase.created_at,
         pay_purchase.attachments,
         pay_purchase.trn_by_ledger_id
-        
+
         FROM {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase
         WHERE pay_purchase.voucher_no = %d", $purchase_no );
 
@@ -106,7 +106,7 @@ function erp_acct_insert_pay_purchase( $data ) {
     $data['updated_at'] = date( "Y-m-d H:i:s" );
     $data['updated_by'] = $created_by;
     $voucher_no         = null;
-    $currency           = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
+    $currency           = erp_get_currency();
 
     try {
         $wpdb->query( 'START TRANSACTION' );

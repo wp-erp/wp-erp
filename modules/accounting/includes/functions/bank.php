@@ -267,7 +267,7 @@ function erp_acct_perform_transfer( $item ) {
     $created_at = date( "Y-m-d" );
     $updated_at = date( "Y-m-d" );
     $updated_by = $created_by;
-    $currency   = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
+    $currency   = erp_get_currency();
 
     try {
         $wpdb->query( 'START TRANSACTION' );

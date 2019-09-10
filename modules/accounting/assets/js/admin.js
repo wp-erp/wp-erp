@@ -17822,7 +17822,8 @@ if (false) {(function () {
       temp_ledgers: erp_acct_var.ledgers,
 
       /* global erp_acct_var */
-      search: ''
+      search: '',
+      curSymbol: erp_acct_var.symbol
     };
   },
   computed: {
@@ -17878,7 +17879,15 @@ if (false) {(function () {
         val = 0;
       }
 
-      return this.moneyFormat(val);
+      if (typeof val === 'string') {
+        val = val.split(this.curSymbol)[1];
+      }
+
+      if (val < 0) {
+        return "Cr. ".concat(this.moneyFormat(Math.abs(val)));
+      }
+
+      return "Dr. ".concat(this.moneyFormat(val));
     },
     onActionClick: function onActionClick(action, row, index) {
       var _this3 = this;

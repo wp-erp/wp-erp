@@ -103,7 +103,7 @@ function erp_acct_insert_journal( $data ) {
     $data['created_by'] = $created_by;
 
     $voucher_no         = null;
-    $currency           = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
+    $currency           = erp_get_currency();
 
     try {
         $wpdb->query( 'START TRANSACTION' );

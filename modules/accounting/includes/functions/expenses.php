@@ -206,7 +206,7 @@ function erp_acct_insert_expense( $data ) {
     $data['updated_by'] = $created_by;
 
     $voucher_no         = null;
-    $currency           = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
+    $currency           = erp_get_currency();
 
     try {
         $wpdb->query( 'START TRANSACTION' );
