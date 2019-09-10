@@ -1129,6 +1129,21 @@ Company'
                 PRIMARY KEY (`id`)
             ) $collate;",
 
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_trn_details` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `people_id` varchar(255) DEFAULT NULL,
+                `voucher_no` int(11) DEFAULT NULL,
+                `trn_date` date DEFAULT NULL,
+                `particulars` varchar(255) DEFAULT NULL,
+                `debit` decimal(10,2) DEFAULT 0,
+                `credit` decimal(10,2) DEFAULT 0,
+                `created_at` date DEFAULT NULL,
+                `created_by` varchar(50) DEFAULT NULL,
+                `updated_at` date DEFAULT NULL,
+                `updated_by` varchar(50) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $collate;",
+
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_categories` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,

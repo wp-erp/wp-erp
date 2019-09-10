@@ -1132,3 +1132,59 @@ function erp_acct_get_pdf_filename( $voucher_no ) {
 
     return $pdf_file;
 }
+
+/**
+ * Insert data into `people_trn_details` table on transaction
+ */
+add_action( 'erp_acct_new_transaction_sales', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_payment', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_bill', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_pay_bill', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_purchase', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_pay_purchase', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_expense', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+
+/**
+ * Insert data into `erp_acct_people_trn_details` table
+ *
+ * @param $voucher_no
+ * @param $transaction
+ */
+function erp_acct_insert_data_into_people_trn_details( $voucher_no, $transaction ) {
+    global $wpdb;
+
+    $data = [];
+
+    $people_id = !empty( $transaction['customer_id'] ) ? $transaction['customer_id'] : $transaction['vendor_id'];
+
+    $dr_cr = erp_acct_get_dr_cr_of_voucher( $voucher_no );
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_trn_details', array(
+        'people_id'    => $people_id,
+        'voucher_no'       => $voucher_no,
+        'debit'        => $dr_cr['dr'],
+        'credit'       => $dr_cr['cr'],
+        'trn_date'     => $dr_cr['trn_date'],
+        'particulars'  => $dr_cr['particulars'],
+        'created_at'   => $dr_cr['created_at'],
+        'created_by'   => $dr_cr['created_by'],
+        'updated_at'   => $dr_cr['updated_at'],
+        'updated_by'   => $dr_cr['updated_by']
+    ) );
+}
+
+/**
+ * Get debit, credit of a voucher
+ *
+ * @param $voucher_no
+ * @return array|object|null
+ */
+function erp_acct_get_dr_cr_of_voucher( $voucher_no ) {
+    global $wpdb;
+
+    $sql = "SELECT *, SUM(debit) as dr, SUM(credit) as cr FROM {$wpdb->prefix}erp_acct_ledger_details WHERE trn_no={$voucher_no} LIMIT 1";
+
+    $results = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $results;
+}
