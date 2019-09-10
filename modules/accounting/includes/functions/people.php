@@ -293,7 +293,7 @@ function erp_acct_get_people_opening_balance( $args = [] ) {
         $where              .= " AND trn_date < '{$args['start_date']}'";
     }
 
-    $sql = "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_people_account_details {$where}";
+    $sql = "SELECT SUM(debit - credit) AS opening_balance FROM {$wpdb->prefix}erp_acct_people_trn_details {$where}";
 
     $result = $wpdb->get_row( $sql, ARRAY_A );
 
