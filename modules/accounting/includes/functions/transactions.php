@@ -759,7 +759,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
     }
 
     // Set Issue Date
-    $date = !empty( $transaction->trn_date ) ? $transaction->trn_date : $transaction->date;
+    $date = ! empty( $transaction->trn_date ) ? $transaction->trn_date : $transaction->date;
     $trn_pdf->set_reference( erp_format_date( $date ), __( 'Transaction Date', 'erp' ) );
 
     // Set from Address
@@ -800,7 +800,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
 
         // Add Table Items
         foreach ( $transaction->line_items as $line ) {
-            $trn_pdf->add_item( [ $line['invoice_no'], $line['due_date'], $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['invoice_no'], $transaction->due_date, $line['amount'] ] );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -829,7 +829,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
 
         // Add Table Items
         foreach ( $transaction->bill_details as $line ) {
-            $trn_pdf->add_item( [ $line['bill_no'], $line['due_date'], $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['bill_no'], $transaction->due_date, $line['amount'] ] );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -857,7 +857,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
 
         // Add Table Items
         foreach ( $transaction->purchase_details as $line ) {
-            $trn_pdf->add_item( [ $line['purchase_no'], $line['due_date'], $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['purchase_no'], $transaction->due_date, $line['amount'] ] );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -871,8 +871,8 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
         $trn_pdf->set_table_headers( [ __( 'EXPENSE NO', 'erp' ), __( 'EXPENSE DATE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
 
         // Add Table Items
-        foreach ( $transaction->line_items as $line ) {
-            $trn_pdf->add_item( [ $line['trn_no'], $line['_date'], $line['amount'] ] );
+        foreach ( $transaction->bill_details as $line ) {
+            $trn_pdf->add_item( [ $line['trn_no'], $transaction->trn_date, $line['amount'] ] );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -886,7 +886,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
 
         // Add Table Items
         foreach ( $transaction->bill_details as $line ) {
-            $trn_pdf->add_item( [ $line['check_no'], $line['trn_date'], $line['pay_to'], $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['check_no'], $transaction->trn_date, $transaction->pay_to, $line['amount'] ] );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -931,23 +931,23 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
  * @return boolean
  */
 function erp_acct_send_email_with_pdf_attached( $request, $file_name, $output_method = 'D' ) {
-    if ( !is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
+    if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
         return;
     }
 
     $transaction = (object) $request['trn_data'];
-    $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
-    $user_id = null;
-    $trn_id  = null;
-    $result = [];
+    $trn_email   = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
+    $user_id     = null;
+    $trn_id      = null;
+    $result      = [];
 
-    $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
-    $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : [];
-    $subject    = isset( $request['subject'] ) ? $request['subject'] : sprintf( __( 'Transaction alert for %s', 'erp' ), $request['type'] );
-    $body       = isset( $request['message'] ) ? $request['message'] : __( 'Thank you for the transaction', 'erp' );;
+    $type     = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
+    $receiver = isset( $request['receiver'] ) ? $request['receiver'] : [];
+    $subject  = isset( $request['subject'] ) ? $request['subject'] : sprintf( __( 'Transaction alert for %s', 'erp' ), $request['type'] );
+    $body     = isset( $request['message'] ) ? $request['message'] : __( 'Thank you for the transaction', 'erp' );;
     $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
 
-    $pdf_file  = erp_acct_generate_pdf( $request, $file_name, 'F' );
+    $pdf_file = erp_acct_generate_pdf( $request, $file_name, 'F' );
 
     if ( $pdf_file ) {
         $result = $trn_email->trigger( $receiver, $subject, $body, $pdf_file );
@@ -979,7 +979,7 @@ add_action( 'erp_acct_new_transaction_expense', 'erp_acct_send_email_on_transact
  * @return boolean
  */
 function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
-    if ( !is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
+    if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
         return;
     }
 
@@ -989,8 +989,8 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
     $request   = [];
     $result    = [];
 
-    $request['type']       = !empty( $transaction['type'] ) ? $transaction['type'] : erp_acct_get_trn_type_by_voucher_no( $voucher_no );
-    $request['receiver'][] = !empty( $transaction['email'] ) ? $transaction['email'] : [];
+    $request['type']       = ! empty( $transaction['type'] ) ? $transaction['type'] : erp_acct_get_trn_type_by_voucher_no( $voucher_no );
+    $request['receiver'][] = ! empty( $transaction['email'] ) ? $transaction['email'] : [];
     $request['subject']    = sprintf( __( 'Transaction alert for %s', 'erp' ), $request['type'] );
     $request['body']       = __( 'Thank you for the transaction', 'erp' );
     $request['trn_data']   = $transaction;
@@ -1122,13 +1122,75 @@ function erp_acct_get_invoice_link_hash( $transaction_id, $transaction_type, $al
  * @return string
  */
 function erp_acct_get_pdf_filename( $voucher_no ) {
-    $inv_dir = WP_CONTENT_DIR .'/uploads/erp-pdfs/';
+    $inv_dir = WP_CONTENT_DIR . '/uploads/erp-pdfs/';
 
-    if (!file_exists( $inv_dir ) ) {
-        mkdir( $inv_dir , 0777, true );
+    if ( ! file_exists( $inv_dir ) ) {
+        mkdir( $inv_dir, 0777, true );
     }
 
     $pdf_file = $inv_dir . "voucher_{$voucher_no}.pdf";
 
     return $pdf_file;
+}
+
+/**
+ * Insert data into `people_trn_details` table on transaction
+ */
+add_action( 'erp_acct_new_transaction_sales', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_payment', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_bill', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_pay_bill', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_purchase', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_pay_purchase', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+add_action( 'erp_acct_new_transaction_expense', 'erp_acct_insert_data_into_people_trn_details', 10, 2 );
+
+/**
+ * Insert data into `erp_acct_people_trn_details` table
+ *
+ * @param $voucher_no
+ * @param $transaction
+ */
+function erp_acct_insert_data_into_people_trn_details( $voucher_no, $transaction ) {
+    global $wpdb;
+
+    $data = [];
+
+    if ( ! empty( $transaction['customer_id'] ) ) {
+        $people_id = $transaction['customer_id'];
+    } else if ( ! empty( $transaction['vendor_id'] ) ) {
+        $people_id = $transaction['vendor_id'];
+    } else {
+        $people_id = $transaction['people_id'];
+    }
+
+    $dr_cr = erp_acct_get_dr_cr_of_voucher( $voucher_no );
+
+    $wpdb->insert( $wpdb->prefix . 'erp_acct_people_trn_details', array(
+        'people_id'   => $people_id,
+        'voucher_no'  => $voucher_no,
+        'debit'       => $dr_cr['debit'],
+        'credit'      => $dr_cr['credit'],
+        'trn_date'    => $dr_cr['trn_date'],
+        'particulars' => $dr_cr['particulars'],
+        'created_at'  => $dr_cr['created_at'],
+        'created_by'  => $dr_cr['created_by'],
+        'updated_at'  => $dr_cr['updated_at'],
+        'updated_by'  => $dr_cr['updated_by']
+    ) );
+}
+
+/**
+ * Get debit, credit of a voucher
+ *
+ * @param $voucher_no
+ * @return array|object|null
+ */
+function erp_acct_get_dr_cr_of_voucher( $voucher_no ) {
+    global $wpdb;
+
+    $sql = "SELECT * FROM {$wpdb->prefix}erp_acct_ledger_details WHERE trn_no={$voucher_no} GROUP BY trn_no";
+
+    $results = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $results;
 }

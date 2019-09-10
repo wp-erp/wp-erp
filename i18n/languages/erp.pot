@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.5.0\n"
+"Project-Id-Version: WP ERP 1.5.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2019-09-09 10:32:40+00:00\n"
+"POT-Creation-Date: 2019-09-10 05:43:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6742,17 +6742,17 @@ msgid ""
 "will be replaced by original values"
 msgstr ""
 
-#: includes/class-install.php:1439 includes/updates/update-1.1.17.php:21
+#: includes/class-install.php:1454 includes/updates/update-1.1.17.php:21
 msgid "ERP Subscription"
 msgstr ""
 
-#: includes/class-install.php:1451 includes/updates/update-1.1.17.php:33
+#: includes/class-install.php:1466 includes/updates/update-1.1.17.php:33
 #: modules/crm/includes/admin/class-settings.php:166
 #: modules/crm/includes/class-subscription.php:455
 msgid "Confirm your subscription to %s"
 msgstr ""
 
-#: includes/class-install.php:1453 includes/updates/update-1.1.17.php:35
+#: includes/class-install.php:1468 includes/updates/update-1.1.17.php:35
 #: modules/crm/includes/admin/class-settings.php:174
 #: modules/crm/includes/class-subscription.php:457
 msgid ""
@@ -6769,50 +6769,50 @@ msgid ""
 "%s"
 msgstr ""
 
-#: includes/class-install.php:1457 includes/updates/update-1.1.17.php:39
+#: includes/class-install.php:1472 includes/updates/update-1.1.17.php:39
 #: modules/crm/includes/admin/class-settings.php:199
 #: modules/crm/includes/class-subscription.php:684
 msgid "You are now subscribed!"
 msgstr ""
 
-#: includes/class-install.php:1458 includes/updates/update-1.1.17.php:40
+#: includes/class-install.php:1473 includes/updates/update-1.1.17.php:40
 #: modules/crm/includes/admin/class-settings.php:206
 #: modules/crm/includes/class-subscription.php:719
 msgid "We've added you to our email list. You'll hear from us shortly."
 msgstr ""
 
-#: includes/class-install.php:1459 includes/updates/update-1.1.17.php:41
+#: includes/class-install.php:1474 includes/updates/update-1.1.17.php:41
 #: modules/crm/includes/admin/class-settings.php:218
 #: modules/crm/includes/class-subscription.php:693
 msgid "You are now unsubscribed"
 msgstr ""
 
-#: includes/class-install.php:1460 includes/updates/update-1.1.17.php:42
+#: includes/class-install.php:1475 includes/updates/update-1.1.17.php:42
 #: modules/crm/includes/admin/class-settings.php:225
 #: modules/crm/includes/class-subscription.php:736
 msgid "You are successfully unsubscribed from list(s):"
 msgstr ""
 
-#: includes/class-install.php:1818 includes/class-scripts.php:147
+#: includes/class-install.php:1833 includes/class-scripts.php:147
 #: includes/framework/modules.php:38
 #: includes/framework/views/status-report.php:49 modules/hrm/hrm.php:254
 #: modules/hrm/views/dashboard.php:2
 msgid "HR Management"
 msgstr ""
 
-#: includes/class-install.php:1820
+#: includes/class-install.php:1835
 msgid "Human Resource Mnanagement"
 msgstr ""
 
-#: includes/class-install.php:1826 includes/framework/modules.php:45
+#: includes/class-install.php:1841 includes/framework/modules.php:45
 msgid "CR Management"
 msgstr ""
 
-#: includes/class-install.php:1828 includes/framework/modules.php:47
+#: includes/class-install.php:1843 includes/framework/modules.php:47
 msgid "Customer Relationship Management"
 msgstr ""
 
-#: includes/class-install.php:1834 includes/class-install.php:1836
+#: includes/class-install.php:1849 includes/class-install.php:1851
 #: includes/framework/modules.php:54
 msgid "Accounting Management"
 msgstr ""
