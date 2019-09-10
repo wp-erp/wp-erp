@@ -281,7 +281,7 @@ function erp_get_currencies_dropdown( $selected = '' ) {
  * @return string
  */
 function erp_get_currency() {
-    $usd = 148;
+    $usd = '$';
 
     return erp_get_option( 'erp_currency', 'erp_settings_general', $usd );
 }

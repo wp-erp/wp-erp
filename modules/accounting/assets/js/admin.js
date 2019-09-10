@@ -15088,6 +15088,12 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -34421,6 +34427,30 @@ var render = function() {
                         )
                       ],
                       1
+                    )
+                  ]
+                }
+              },
+              {
+                key: "debit",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.moneyFormat(data.row.debit)) +
+                        "\n                "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "credit",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.moneyFormat(data.row.credit)) +
+                        "\n                "
                     )
                   ]
                 }

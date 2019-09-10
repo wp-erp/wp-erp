@@ -62,6 +62,12 @@
                             </router-link>
                         </strong>
                     </template>
+                    <template slot="debit" slot-scope="data">
+                        {{ moneyFormat( data.row.debit ) }}
+                    </template>
+                    <template slot="credit" slot-scope="data">
+                        {{ moneyFormat( data.row.credit ) }}
+                    </template>
                 </list-table>
             </div>
         </div>
