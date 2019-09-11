@@ -117,12 +117,12 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
             $wpdb->insert(
                 // `erp_acct_people_trn_details`
                 "{$wpdb->prefix}erp_acct_people_trn_details", [
-                    'people_id'   => $bill['vendor_id'],
+                    'people_id'   => $pay_bill['vendor_id'],
                     'voucher_no'  => $voucher_no,
-                    'trn_date'    => $bill['trn_date'],
-                    'debit'       => $bill['amount'],
-                    'particulars' => $bill['particulars'],
-                    'created_at'  => $bill['created_at']
+                    'trn_date'    => $pay_bill['trn_date'],
+                    'debit'       => $pay_bill['amount'],
+                    'particulars' => $pay_bill['particulars'],
+                    'created_at'  => $pay_bill['created_at']
                 ]
             );
         } // pay_bill
@@ -164,6 +164,34 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
                 ]
             );
         } // pay_purchase
+
+        elseif ( 'people_trn' === $voucher_type ) {
+            $people_trn = $wpdb->get_row(
+                $wpdb->prepare("SELECT people_trn.people_id, people_trn.trn_date, people_trn.amount, people_trn.particulars, people_trn.created_at, people_trn.voucher_type FROM {$wpdb->prefix}erp_acct_people_trn AS people_trn WHERE people_trn.voucher_no = %d",
+                $voucher_no ), ARRAY_A
+            );
+
+            if ( 'debit' === $people_trn['voucher_type'] ) {
+                $debit  = $people_trn['amount'];
+                $credit = 0;
+            } elseif ( 'credit' === $people_trn['voucher_type'] )  {
+                $debit  = 0;
+                $credit = $people_trn['amount'];
+            }
+
+            $wpdb->insert(
+                // `erp_acct_people_trn_details`
+                "{$wpdb->prefix}erp_acct_people_trn_details", [
+                    'people_id'   => $people_trn['people_id'],
+                    'voucher_no'  => $voucher_no,
+                    'trn_date'    => $people_trn['trn_date'],
+                    'debit'       => $debit,
+                    'credit'      => $credit,
+                    'particulars' => $people_trn['particulars'],
+                    'created_at'  => $people_trn['created_at']
+                ]
+            );
+        } // people_trn
 
 		return false;
 	}
