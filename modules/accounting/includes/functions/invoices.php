@@ -459,6 +459,10 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 
             do_action( 'erp_acct_after_sales_update', $data, $voucher_no );
 
+            $data['dr'] = $data['amount'];
+            $data['cr'] = 0;
+            erp_acct_update_data_into_people_trn_details( $data, $voucher_no );
+
         }
 
         $wpdb->query( 'COMMIT' );

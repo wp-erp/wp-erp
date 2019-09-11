@@ -299,6 +299,10 @@ function erp_acct_update_bill( $data, $bill_id ) {
 
             // insert new bill with edited data
             erp_acct_insert_bill( $data );
+
+            $data['dr'] = 0;
+            $data['cr'] = $data['amount'];
+            erp_acct_update_data_into_people_trn_details( $data, $voucher_no );
         }
 
         $wpdb->query( 'COMMIT' );
