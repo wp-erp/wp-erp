@@ -67,6 +67,28 @@ function erp_acct_updater_populate_people_transactions() {
 }
 
 /**
+ * Update missing `trn_by_ledger_id` in pay purchases table
+ */
+function erp_acct_updater_missing_pay_purchase_trn_by_ledger_id() {
+    global $wpdb;
+
+    $pay_purchase_ids = $wpdb->get_results( "SELECT voucher_no FROM {$wpdb->prefix}erp_acct_pay_purchase", ARRAY_A );
+
+    for ( $idx = 0; $idx < count( $pay_purchase_ids ); $idx++ ) {
+        $ledger_id = $wpdb->get_row( "SELECT ledger_id FROM {$wpdb->prefix}erp_acct_ledger_details WHERE trn_no={$pay_purchase_ids[$idx]['voucher_no']}" );
+
+        var_dump( $ledger_id );
+
+        $wpdb->update( $wpdb->prefix . 'erp_acct_pay_purchase',
+            array(
+                'trn_by_ledger_id' => $ledger_id->ledger_id,
+            ),
+            array( 'voucher_no' => $pay_purchase_ids[$idx]['voucher_no'] )
+        );
+    }
+}
+
+/**
  * Call other function related to this update
  *
  * @return void
@@ -74,6 +96,7 @@ function erp_acct_updater_populate_people_transactions() {
 function wperp_update_accounting_module_1_5_1() {
     erp_acct_updater_create_people_trn_details_table();
     erp_acct_updater_populate_people_transactions();
+    erp_acct_updater_missing_pay_purchase_trn_by_ledger_id();
 }
 
 wperp_update_accounting_module_1_5_1();

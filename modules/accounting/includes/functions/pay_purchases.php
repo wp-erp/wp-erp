@@ -126,19 +126,20 @@ function erp_acct_insert_pay_purchase( $data ) {
         $pay_purchase_data = erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no );
 
         $wpdb->insert( $wpdb->prefix . 'erp_acct_pay_purchase', array(
-            'voucher_no'  => $voucher_no,
-            'vendor_id'   => $pay_purchase_data['vendor_id'],
-            'vendor_name' => $pay_purchase_data['vendor_name'],
-            'trn_date'    => $pay_purchase_data['trn_date'],
-            'amount'      => $pay_purchase_data['amount'],
-            'trn_by'      => $pay_purchase_data['trn_by'],
-            'particulars' => $pay_purchase_data['particulars'],
-            'attachments' => $pay_purchase_data['attachments'],
-            'status'      => $pay_purchase_data['status'],
-            'created_at'  => $pay_purchase_data['created_at'],
-            'created_by'  => $created_by,
-            'updated_at'  => $pay_purchase_data['updated_at'],
-            'updated_by'  => $pay_purchase_data['updated_by'],
+            'voucher_no'       => $voucher_no,
+            'vendor_id'        => $pay_purchase_data['vendor_id'],
+            'vendor_name'      => $pay_purchase_data['vendor_name'],
+            'trn_date'         => $pay_purchase_data['trn_date'],
+            'amount'           => $pay_purchase_data['amount'],
+            'trn_by'           => $pay_purchase_data['trn_by'],
+            'trn_by_ledger_id' => $pay_purchase_data['trn_by_ledger_id'],
+            'particulars'      => $pay_purchase_data['particulars'],
+            'attachments'      => $pay_purchase_data['attachments'],
+            'status'           => $pay_purchase_data['status'],
+            'created_at'       => $pay_purchase_data['created_at'],
+            'created_by'       => $created_by,
+            'updated_at'       => $pay_purchase_data['updated_at'],
+            'updated_by'       => $pay_purchase_data['updated_by'],
         ) );
 
         $items = $pay_purchase_data['purchase_details'];
@@ -355,7 +356,7 @@ function erp_acct_get_formatted_pay_purchase_data( $data, $voucher_no ) {
     $pay_purchase_data['trn_by']           = isset( $data['trn_by'] ) ? $data['trn_by'] : '';
     $pay_purchase_data['attachments']      = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $pay_purchase_data['ref']              = isset( $data['ref'] ) ? $data['ref'] : '';
-    $pay_purchase_data['particulars']      = !empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Purchase payment created with voucher no %s', 'erp' ), $voucher_no );
+    $pay_purchase_data['particulars']      = ! empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Purchase payment created with voucher no %s', 'erp' ), $voucher_no );
     $pay_purchase_data['status']           = isset( $data['status'] ) ? $data['status'] : '';
     $pay_purchase_data['trn_by_ledger_id'] = isset( $data['deposit_to'] ) ? $data['deposit_to'] : null;
     $pay_purchase_data['check_no']         = isset( $data['check_no'] ) ? $data['check_no'] : 0;
