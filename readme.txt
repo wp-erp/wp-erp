@@ -139,7 +139,7 @@ experience.
 👉 [Top 100 ERP Blogs and Websites for Enterprise Resource Planning Professionals](https://blog.feedspot.com/erp_blogs/)
 
 = Visit our website to learn more =
-➡️ [WPERP, Inc. HR CRM Accounting](https://wperp.com/accounting/)⬅️
+➡️ [WPERP, Inc. HR CRM Accounting](https://wperp.com/)⬅️
 
 = Contribute =
 This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/wp-erp/wp-erp).
@@ -247,7 +247,8 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 == Changelog ==
 
 = v1.5.1 -> September 10, 2019 =
-[fix] Showing people transaction in single user view
+[fix] Showing people transaction in single user view.
+[fix] Fix various small accounting related issue.
 
 = v1.5.0 -> September 09, 2019 =
 [new] Rewrite accounting module from the ground-up.
