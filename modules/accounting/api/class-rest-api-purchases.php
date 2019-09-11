@@ -279,24 +279,27 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $purchase_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['line_items'];
+        $items = $request['line_items']; $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $total = 0;
-            $due   = 0;
-
-            $purchase_id[$key] = $item['purchase_id'];
-            $total             += $item['line_total'];
-
-            $purchase_data['amount'] = $total;
-
-            erp_acct_update_purchase( $purchase_data, $purchase_id[$key] );
+            $item_total[$key] = $item['item_total'];
         }
+
+        $purchase_data['attachments']     = maybe_serialize( $purchase_data['attachments'] );
+        $purchase_data['billing_address'] = isset( $purchase_data['billing_address'] ) ? maybe_serialize( $purchase_data['billing_address'] ) : '';
+        $purchase_data['amount']          = array_sum( $item_total );
+
+        $purchase = erp_acct_update_purchase( $purchase_data, $id );
 
         $this->add_log( $purchase_data, 'update' );
 
+        $additional_fields['namespace'] = $this->namespace;
+        $additional_fields['rest_base'] = $this->rest_base;
+
+        $purchase_data = $this->prepare_item_for_response( $purchase, $request, $additional_fields );
+
         $response = rest_ensure_response( $purchase_data );
-        $response = $this->format_collection_response( $response, $request, count( $items ) );
+        $response->set_status( 200 );
 
         return $response;
     }
