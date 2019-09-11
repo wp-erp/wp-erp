@@ -50,7 +50,7 @@
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="website">{{ __('Website', 'erp') }}</label>
-                                            <input type="url" v-model="peopleFields.website" id="website" class="wperp-form-field" placeholder="www.domain.com">
+                                            <input type="text" v-model="peopleFields.website" id="website" class="wperp-form-field" placeholder="www.domain.com">
                                         </div>
                                         <div class="wperp-col-xs-12 wperp-form-group">
                                             <label for="note">{{ __('Note', 'erp') }}</label>

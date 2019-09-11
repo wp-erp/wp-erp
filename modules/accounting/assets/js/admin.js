@@ -12227,7 +12227,7 @@ var render = function() {
                                     ],
                                     staticClass: "wperp-form-field",
                                     attrs: {
-                                      type: "url",
+                                      type: "text",
                                       id: "website",
                                       placeholder: "www.domain.com"
                                     },
@@ -13913,9 +13913,6 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         phone: {
           label: 'Phone'
         },
-        expense: {
-          label: 'Expense'
-        },
         actions: {
           label: 'Actions'
         }
@@ -13966,7 +13963,6 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       var items = this.rows;
       items.map(function (item) {
         item.customer = item.first_name + ' ' + item.last_name;
-        item.expense = 0;
       });
       return items;
     }
