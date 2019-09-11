@@ -13669,6 +13669,7 @@ if (false) {(function () {
 //
 //
 //
+//
 
 
 
@@ -32364,6 +32365,7 @@ var render = function() {
           loader: "spinner",
           color: "#1a9ed4",
           opacity: 0.8,
+          isFullPage: false,
           width: 45
         },
         on: {
