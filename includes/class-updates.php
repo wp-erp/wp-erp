@@ -43,6 +43,7 @@ class Updates {
         '1.3.3'  => 'updates/update-1.3.3.php',
         '1.3.4'  => 'updates/update-1.3.4.php',
         '1.5.0'  => 'updates/update-1.5.0.php',
+        '1.5.1'  => 'updates/update-1.5.1.php'
     ];
 
     /**
@@ -66,6 +67,7 @@ class Updates {
         $this->action( 'admin_init', 'do_updates' );
 
         $this->action( 'erp_update_1_5_0_process_memory_exceeded', 'memory_exceeded' );
+        $this->action( 'erp_update_1_5_1_process_memory_exceeded', 'memory_exceeded' );
     }
 
     /**
@@ -133,7 +135,10 @@ class Updates {
      */
     public function do_updates() {
         global $bg_process;
-        $bg_process = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
+        global $bg_process_people_trn;
+
+        $bg_process            = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process;
+        $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn;
 
         if ( isset( $_GET['wperp_do_update'] ) && $_GET['wperp_do_update'] ) {
             $this->perform_updates();

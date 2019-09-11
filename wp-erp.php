@@ -235,6 +235,7 @@ final class WeDevs_ERP {
             require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
 
             require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.0.php';
+            require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.1.php';
         }
 
         // cli command
