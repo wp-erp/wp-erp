@@ -51,7 +51,8 @@ function erp_acct_updater_populate_people_transactions() {
         "SELECT voucher.id, voucher.type FROM {$wpdb->prefix}erp_acct_voucher_no AS voucher
         WHERE voucher.type = 'invoice' OR voucher.type = 'payment' OR
         voucher.type = 'expense' OR voucher.type = 'check' OR voucher.type = 'bill' OR
-        voucher.type = 'pay_bill' OR voucher.type = 'purchase' OR voucher.type = 'pay_purchase'", ARRAY_A );
+        voucher.type = 'pay_bill' OR voucher.type = 'purchase' OR voucher.type = 'pay_purchase' OR
+        voucher.type = 'people_trn'", ARRAY_A );
 
     if ( !class_exists( '\WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn' ) || empty( $bg_process_people_trn ) ) {
         $bg_process_people_trn = new \WeDevs\ERP\Updates\BP\ERP_ACCT_BG_Process_People_Trn;
