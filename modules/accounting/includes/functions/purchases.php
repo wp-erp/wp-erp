@@ -387,6 +387,10 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
             erp_acct_update_purchase_data_into_ledger( $items, $purchase_id );
 
             erp_acct_insert_purchase( $purchase_data );
+
+            $data['dr'] = 0;
+            $data['cr'] = $purchase_data['amount'];
+            erp_acct_update_data_into_people_trn_details( $data, $voucher_no );
         }
 
         $wpdb->query( 'COMMIT' );
