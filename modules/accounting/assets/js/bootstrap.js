@@ -13271,7 +13271,7 @@ var render = function() {
                                     ],
                                     staticClass: "wperp-form-field",
                                     attrs: {
-                                      type: "url",
+                                      type: "text",
                                       id: "website",
                                       placeholder: "www.domain.com"
                                     },

@@ -61,7 +61,6 @@ export default {
                 company : { label: 'Company' },
                 email   : { label: 'Email' },
                 phone   : { label: 'Phone' },
-                expense : { label: 'Expense' },
                 actions : { label: 'Actions' }
             },
             rows: [],
@@ -108,7 +107,6 @@ export default {
             const items = this.rows;
             items.map(item => {
                 item.customer = item.first_name + ' ' + item.last_name;
-                item.expense  = 0;
             });
             return items;
         }
@@ -269,10 +267,6 @@ export default {
         }
         .check-column {
             padding: 20px !important;
-        }
-
-        .column.actions {
-            text-align: right;
         }
     }
 </style>
