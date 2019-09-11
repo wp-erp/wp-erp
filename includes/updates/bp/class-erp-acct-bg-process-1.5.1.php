@@ -27,6 +27,9 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
             return false;
         }
 
+        $draft = 1;
+        $void  = 8;
+
         // Start from here
 
         if ( 'invoice' === $voucher_type ) {
@@ -34,8 +37,9 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
                 $wpdb->prepare("SELECT invoice.customer_id, invoice.trn_date, invoice.particulars, invoice.created_at, invoice_account.debit
                     FROM {$wpdb->prefix}erp_acct_invoices AS invoice
                     LEFT JOIN {$wpdb->prefix}erp_acct_invoice_account_details AS invoice_account
-                    ON invoice.voucher_no = invoice_account.trn_no WHERE invoice.voucher_no = %d",
-                $voucher_no ), ARRAY_A
+                    ON invoice.voucher_no = invoice_account.trn_no
+                    WHERE invoice.voucher_no = %d AND (invoice.status <> %d AND invoice.status <> %d)",
+                $voucher_no, $draft, $void), ARRAY_A
             );
 
             $wpdb->insert(
@@ -53,8 +57,8 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
 
         elseif ( 'payment' === $voucher_type ) {
             $payment = $wpdb->get_row(
-                $wpdb->prepare("SELECT payment.customer_id, payment.trn_date, payment.amount, payment.particulars, payment.created_at FROM {$wpdb->prefix}erp_acct_invoice_receipts AS payment WHERE payment.voucher_no = %d",
-                $voucher_no ), ARRAY_A
+                $wpdb->prepare("SELECT payment.customer_id, payment.trn_date, payment.amount, payment.particulars, payment.created_at FROM {$wpdb->prefix}erp_acct_invoice_receipts AS payment WHERE payment.voucher_no = %d AND (payment.status <> %d AND payment.status <> %d)",
+                $voucher_no, $draft, $void), ARRAY_A
             );
 
             $wpdb->insert(
@@ -72,8 +76,8 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
 
         elseif ( 'expense' === $voucher_type || 'check' === $voucher_type ) {
             $expense = $wpdb->get_row(
-                $wpdb->prepare("SELECT expense.people_id, expense.trn_date, expense.amount, expense.particulars, expense.created_at FROM {$wpdb->prefix}erp_acct_expenses AS expense WHERE expense.voucher_no = %d",
-                $voucher_no ), ARRAY_A
+                $wpdb->prepare("SELECT expense.people_id, expense.trn_date, expense.amount, expense.particulars, expense.created_at FROM {$wpdb->prefix}erp_acct_expenses AS expense WHERE expense.voucher_no = %d AND (expense.status <> %d AND expense.status <> %d)",
+                $voucher_no, $draft, $void), ARRAY_A
             );
 
             $wpdb->insert(
@@ -91,8 +95,8 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
 
         elseif ( 'bill' === $voucher_type ) {
             $bill = $wpdb->get_row(
-                $wpdb->prepare("SELECT bill.vendor_id, bill.trn_date, bill.amount, bill.particulars, bill.created_at FROM {$wpdb->prefix}erp_acct_bills AS bill WHERE bill.voucher_no = %d",
-                $voucher_no ), ARRAY_A
+                $wpdb->prepare("SELECT bill.vendor_id, bill.trn_date, bill.amount, bill.particulars, bill.created_at FROM {$wpdb->prefix}erp_acct_bills AS bill WHERE bill.voucher_no = %d AND (bill.status <> %d AND bill.status <> %d)",
+                $voucher_no, $draft, $void), ARRAY_A
             );
 
             $wpdb->insert(
@@ -110,8 +114,8 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
 
         elseif ( 'pay_bill' === $voucher_type ) {
             $pay_bill = $wpdb->get_row(
-                $wpdb->prepare("SELECT pay_bill.vendor_id, pay_bill.trn_date, pay_bill.amount, pay_bill.particulars, pay_bill.created_at FROM {$wpdb->prefix}erp_acct_pay_bill AS pay_bill WHERE pay_bill.voucher_no = %d",
-                $voucher_no ), ARRAY_A
+                $wpdb->prepare("SELECT pay_bill.vendor_id, pay_bill.trn_date, pay_bill.amount, pay_bill.particulars, pay_bill.created_at FROM {$wpdb->prefix}erp_acct_pay_bill AS pay_bill WHERE pay_bill.voucher_no = %d AND (pay_bill.status <> %d AND pay_bill.status <> %d)",
+                $voucher_no, $draft, $void), ARRAY_A
             );
 
             $wpdb->insert(
@@ -129,8 +133,8 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
 
         elseif ( 'purchase' === $voucher_type ) {
             $purchase = $wpdb->get_row(
-                $wpdb->prepare("SELECT purchase.vendor_id, purchase.trn_date, purchase.amount, purchase.particulars, purchase.created_at FROM {$wpdb->prefix}erp_acct_purchase AS purchase WHERE purchase.voucher_no = %d",
-                $voucher_no ), ARRAY_A
+                $wpdb->prepare("SELECT purchase.vendor_id, purchase.trn_date, purchase.amount, purchase.particulars, purchase.created_at FROM {$wpdb->prefix}erp_acct_purchase AS purchase WHERE purchase.voucher_no = %d AND (purchase.status <> %d AND purchase.status <> %d)",
+                $voucher_no, $draft, $void), ARRAY_A
             );
 
             $wpdb->insert(
@@ -148,8 +152,8 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
 
         elseif ( 'pay_purchase' === $voucher_type ) {
             $pay_purchase = $wpdb->get_row(
-                $wpdb->prepare("SELECT pay_purchase.vendor_id, pay_purchase.trn_date, pay_purchase.amount, pay_purchase.particulars, pay_purchase.created_at FROM {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase WHERE pay_purchase.voucher_no = %d",
-                $voucher_no ), ARRAY_A
+                $wpdb->prepare("SELECT pay_purchase.vendor_id, pay_purchase.trn_date, pay_purchase.amount, pay_purchase.particulars, pay_purchase.created_at FROM {$wpdb->prefix}erp_acct_pay_purchase AS pay_purchase WHERE pay_purchase.voucher_no = %d AND (pay_purchase.status <> %d AND pay_purchase.status <> %d)",
+                $voucher_no, $draft, $void), ARRAY_A
             );
 
             $wpdb->insert(

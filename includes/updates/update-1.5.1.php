@@ -77,8 +77,6 @@ function erp_acct_updater_missing_pay_purchase_trn_by_ledger_id() {
     for ( $idx = 0; $idx < count( $pay_purchase_ids ); $idx++ ) {
         $ledger_id = $wpdb->get_row( "SELECT ledger_id FROM {$wpdb->prefix}erp_acct_ledger_details WHERE trn_no={$pay_purchase_ids[$idx]['voucher_no']}" );
 
-        var_dump( $ledger_id );
-
         $wpdb->update( $wpdb->prefix . 'erp_acct_pay_purchase',
             array(
                 'trn_by_ledger_id' => $ledger_id->ledger_id,
