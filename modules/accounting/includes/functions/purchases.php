@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get all purchases
  *
- * @param $data
+ * @param array $args
  * @return mixed
  */
 function erp_acct_get_purchases( $args = [] ) {
@@ -87,6 +87,8 @@ function erp_acct_get_purchase( $purchase_no ) {
 
 /**
  * Purchase items detail
+ * @param $voucher_no
+ * @return array|object|null
  */
 function erp_acct_format_purchase_line_items( $voucher_no ) {
     global $wpdb;
@@ -123,7 +125,6 @@ function erp_acct_format_purchase_line_items( $voucher_no ) {
  * Insert a purchase
  *
  * @param $data
- * @param $due
  * @return mixed
  */
 function erp_acct_insert_purchase( $data ) {
@@ -245,9 +246,8 @@ function erp_acct_insert_purchase( $data ) {
 /**
  * Update a purchase
  *
- * @param $data
+ * @param $purchase_data
  * @param $purchase_id
- * @param $due
  * @return mixed
  */
 function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
@@ -382,11 +382,11 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 
             erp_acct_update_purchase_data_into_ledger( $items, $purchase_id );
 
-            erp_acct_insert_purchase( $purchase_data );
+            $new_purchase = erp_acct_insert_purchase( $purchase_data );
 
             $data['dr'] = 0;
             $data['cr'] = $purchase_data['amount'];
-            erp_acct_update_data_into_people_trn_details( $data, $voucher_no );
+            erp_acct_update_data_into_people_trn_details( $data, $old_purchase['voucher_no'] );
         }
 
         $wpdb->query( 'COMMIT' );
@@ -395,7 +395,7 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
         return new WP_error( 'purchase-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_purchase( $voucher_no );
+    return erp_acct_get_purchase( $new_purchase['voucher_no'] );
 
 }
 
@@ -596,7 +596,7 @@ function erp_acct_get_due_purchases_by_vendor( $args ) {
 /**
  * Get due of a purchase
  *
- * @param $bill_no
+ * @param $purchase_no
  * @return int
  */
 function erp_acct_get_purchase_due( $purchase_no ) {
