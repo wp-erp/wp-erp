@@ -255,7 +255,9 @@ class Admin {
     public function erp_accounting_page() {
         ?>
         <script>
-            window.erpAcct = JSON.parse('<?php echo json_encode( apply_filters( 'erp_localized_data', [] ) ); ?>');
+            window.erpAcct = JSON.parse('<?php echo addslashes(
+                json_encode( apply_filters( 'erp_localized_data', [] ) )
+            ); ?>');
         </script>
         <?php
         echo '<div class="wrap"><div id="erp-accounting"></div></div>';
