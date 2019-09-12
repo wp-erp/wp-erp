@@ -140,8 +140,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             's'      => ! empty( $request['search'] ) ? $request['search'] : ''
         ];
 
-        $items       = erp_get_peoples( $args );
-        $total_items = erp_get_peoples( [ 'type' => 'customer', 'count' => true ] );
+        $items       = erp_acct_get_accounting_people( $args );
+        $total_items = erp_acct_get_accounting_people( [ 'type' => 'customer', 'count' => true ] );
         $total_items = is_array( $total_items ) ? count( $total_items ) : $total_items;
 
         $formatted_items   = [];
