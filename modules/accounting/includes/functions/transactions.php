@@ -1172,36 +1172,13 @@ function erp_acct_insert_data_into_people_trn_details( $transaction, $voucher_no
 /**
  * Update data into `erp_acct_people_trn_details` table
  *
- * @param $voucher_no
  * @param $transaction
+ * @param $voucher_no
  */
 function erp_acct_update_data_into_people_trn_details( $transaction, $voucher_no ) {
     global $wpdb;
 
-    $data = [];
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_people_trn_details', array( 'voucher_no' => $voucher_no ) );
 
-    if ( ! empty( $transaction['customer_id'] ) ) {
-        $people_id = $transaction['customer_id'];
-    } else if ( ! empty( $transaction['vendor_id'] ) ) {
-        $people_id = $transaction['vendor_id'];
-    } else {
-        $people_id = $transaction['people_id'];
-    }
-
-    $date = ! empty( $transaction['trn_date'] ) ? $transaction['trn_date'] : $transaction['date'];
-
-    $wpdb->update( $wpdb->prefix . 'erp_acct_people_trn_details', array(
-        'people_id'   => $people_id,
-        'debit'       => $transaction['dr'],
-        'credit'      => $transaction['cr'],
-        'trn_date'    => $date,
-        'particulars' => $transaction['particulars'],
-        'created_at'  => $transaction['created_at'],
-        'created_by'  => $transaction['created_by'],
-        'updated_at'  => $transaction['updated_at'],
-        'updated_by'  => $transaction['updated_by']
-    ), array(
-        'voucher_no'  => $voucher_no
-    ) );
 }
 

@@ -389,6 +389,7 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
  * Update invoice data
  *
  * @param $data
+ * @param $invoice_no
  * @return int
  */
 function erp_acct_update_invoice( $data, $invoice_no ) {
@@ -455,13 +456,13 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
             erp_acct_insert_invoice_data_into_ledger( $old_invoice, $voucher_no, true );
 
             // insert new invoice with edited data
-            erp_acct_insert_invoice( $data );
+            $new_invoice = erp_acct_insert_invoice( $data );
 
             do_action( 'erp_acct_after_sales_update', $data, $voucher_no );
 
             $data['dr'] = $data['amount'];
             $data['cr'] = 0;
-            erp_acct_update_data_into_people_trn_details( $data, $voucher_no );
+            erp_acct_update_data_into_people_trn_details( $data, $old_invoice['voucher_no'] );
 
         }
 
@@ -471,7 +472,7 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
         return new WP_error( 'invoice-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_invoice( $voucher_no );
+    return erp_acct_get_invoice( $new_invoice['voucher_no'] );
 }
 
 /**
