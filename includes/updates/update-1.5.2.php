@@ -91,10 +91,10 @@ function erp_acct_updater_missing_pay_purchase_trn_by_ledger_id() {
  *
  * @return void
  */
-function wperp_update_accounting_module_1_5_1() {
+function wperp_update_accounting_module_1_5_2() {
     erp_acct_updater_create_people_trn_details_table();
     erp_acct_updater_populate_people_transactions();
     erp_acct_updater_missing_pay_purchase_trn_by_ledger_id();
 }
 
-wperp_update_accounting_module_1_5_1();
+wperp_update_accounting_module_1_5_2();
