@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.5.1\n"
+"Project-Id-Version: WP ERP 1.5.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2019-09-10 05:43:40+00:00\n"
+"POT-Creation-Date: 2019-09-12 03:02:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5414,7 +5414,7 @@ msgstr ""
 
 #: includes/admin/class-menu.php:136 includes/admin/class-menu.php:138
 #: includes/admin/views/tools/general.php:23
-#: modules/crm/includes/admin/class-settings.php:659 wp-erp.php:305
+#: modules/crm/includes/admin/class-settings.php:659 wp-erp.php:306
 msgid "Settings"
 msgstr ""
 
@@ -6347,14 +6347,14 @@ msgstr ""
 
 #: includes/api/class-activities-controller.php:489
 #: includes/api/class-rest-controller.php:95
-#: modules/accounting/api/class-rest-api-employees.php:514
+#: modules/accounting/api/class-rest-api-employees.php:532
 #: modules/hrm/includes/api/class-employees-controller.php:1695
 msgid "Current page of the collection."
 msgstr ""
 
 #: includes/api/class-activities-controller.php:497
 #: includes/api/class-rest-controller.php:103
-#: modules/accounting/api/class-rest-api-employees.php:522
+#: modules/accounting/api/class-rest-api-employees.php:540
 #: modules/hrm/includes/api/class-employees-controller.php:1703
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
@@ -6411,8 +6411,8 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-purchases.php:158
 #: modules/accounting/api/class-rest-api-purchases.php:210
 #: modules/accounting/api/class-rest-api-purchases.php:271
-#: modules/accounting/api/class-rest-api-purchases.php:315
-#: modules/accounting/api/class-rest-api-purchases.php:334
+#: modules/accounting/api/class-rest-api-purchases.php:318
+#: modules/accounting/api/class-rest-api-purchases.php:337
 #: modules/accounting/api/class-rest-api-rec_payments.php:145
 #: modules/accounting/api/class-rest-api-rec_payments.php:207
 #: modules/accounting/api/class-rest-api-rec_payments.php:248
@@ -6480,7 +6480,7 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-people.php:339
 #: modules/accounting/api/class-rest-api-product_cats.php:295
 #: modules/accounting/api/class-rest-api-products.php:322
-#: modules/accounting/api/class-rest-api-purchases.php:463
+#: modules/accounting/api/class-rest-api-purchases.php:466
 #: modules/accounting/api/class-rest-api-rec_payments.php:412
 #: modules/accounting/api/class-rest-api-tax_agencies.php:367
 #: modules/accounting/api/class-rest-api-tax_cats.php:345
@@ -6517,7 +6517,7 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-invoices.php:653
 #: modules/accounting/api/class-rest-api-pay_bills.php:522
 #: modules/accounting/api/class-rest-api-pay_purchases.php:489
-#: modules/accounting/api/class-rest-api-purchases.php:567
+#: modules/accounting/api/class-rest-api-purchases.php:570
 #: modules/accounting/api/class-rest-api-rec_payments.php:527
 #: modules/hrm/includes/api/class-announcements-controller.php:323
 msgid "Status for the resource."
@@ -6649,7 +6649,7 @@ msgid "Name for the resource."
 msgstr ""
 
 #: includes/api/class-rest-controller.php:112
-#: modules/accounting/api/class-rest-api-employees.php:531
+#: modules/accounting/api/class-rest-api-employees.php:549
 #: modules/hrm/includes/api/class-employees-controller.php:1712
 msgid "Limit results to those matching a string."
 msgstr ""
@@ -6900,17 +6900,17 @@ msgid ""
 "to collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: includes/class-updates.php:111
+#: includes/class-updates.php:113
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: includes/class-updates.php:112
+#: includes/class-updates.php:114
 msgid "Run the updater"
 msgstr ""
 
-#: includes/class-updates.php:117
+#: includes/class-updates.php:119
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -8964,7 +8964,7 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-invoices.php:548
 #: modules/accounting/api/class-rest-api-pay_bills.php:449
 #: modules/accounting/api/class-rest-api-pay_purchases.php:424
-#: modules/accounting/api/class-rest-api-purchases.php:494
+#: modules/accounting/api/class-rest-api-purchases.php:497
 #: modules/accounting/api/class-rest-api-rec_payments.php:435
 msgid "Date for the resource."
 msgstr ""
@@ -9006,7 +9006,7 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-expenses.php:476
 #: modules/accounting/api/class-rest-api-pay_bills.php:458
 #: modules/accounting/api/class-rest-api-pay_purchases.php:407
-#: modules/accounting/api/class-rest-api-purchases.php:469
+#: modules/accounting/api/class-rest-api-purchases.php:472
 #: modules/accounting/api/class-rest-api-rec_payments.php:418
 msgid "Voucher no. for the resource."
 msgstr ""
@@ -9019,7 +9019,7 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-bills.php:565
 #: modules/accounting/api/class-rest-api-expenses.php:502
 #: modules/accounting/api/class-rest-api-invoices.php:557
-#: modules/accounting/api/class-rest-api-purchases.php:503
+#: modules/accounting/api/class-rest-api-purchases.php:506
 msgid "Due date for the resource."
 msgstr ""
 
@@ -9078,7 +9078,7 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-invoices.php:598
 #: modules/accounting/api/class-rest-api-pay_bills.php:466
 #: modules/accounting/api/class-rest-api-pay_purchases.php:433
-#: modules/accounting/api/class-rest-api-purchases.php:512
+#: modules/accounting/api/class-rest-api-purchases.php:515
 #: modules/accounting/api/class-rest-api-rec_payments.php:476
 msgid "List of line items data."
 msgstr ""
@@ -9189,56 +9189,56 @@ msgid "An invoice of %s has been created for %s"
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:539
-#: modules/accounting/api/class-rest-api-purchases.php:477
-#: modules/accounting/api/class-rest-api-purchases.php:486
+#: modules/accounting/api/class-rest-api-purchases.php:480
+#: modules/accounting/api/class-rest-api-purchases.php:489
 msgid "Customer id for the resource."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:603
 #: modules/accounting/api/class-rest-api-pay_purchases.php:438
-#: modules/accounting/api/class-rest-api-purchases.php:517
+#: modules/accounting/api/class-rest-api-purchases.php:520
 msgid "Product id."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:608
 #: modules/accounting/api/class-rest-api-pay_purchases.php:443
-#: modules/accounting/api/class-rest-api-purchases.php:522
+#: modules/accounting/api/class-rest-api-purchases.php:525
 msgid "Product type."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:613
-#: modules/accounting/api/class-rest-api-purchases.php:527
+#: modules/accounting/api/class-rest-api-purchases.php:530
 msgid "Product quantity."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:618
 #: modules/accounting/api/class-rest-api-pay_bills.php:481
 #: modules/accounting/api/class-rest-api-pay_purchases.php:448
-#: modules/accounting/api/class-rest-api-purchases.php:532
+#: modules/accounting/api/class-rest-api-purchases.php:535
 msgid "Unit price."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:623
 #: modules/accounting/api/class-rest-api-pay_purchases.php:453
-#: modules/accounting/api/class-rest-api-purchases.php:537
+#: modules/accounting/api/class-rest-api-purchases.php:540
 msgid "Discount."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:628
 #: modules/accounting/api/class-rest-api-pay_bills.php:486
-#: modules/accounting/api/class-rest-api-purchases.php:542
+#: modules/accounting/api/class-rest-api-purchases.php:545
 msgid "Tax."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:633
-#: modules/accounting/api/class-rest-api-purchases.php:547
+#: modules/accounting/api/class-rest-api-purchases.php:550
 msgid "Tax percent."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-invoices.php:638
 #: modules/accounting/api/class-rest-api-pay_bills.php:491
 #: modules/accounting/api/class-rest-api-pay_purchases.php:458
-#: modules/accounting/api/class-rest-api-purchases.php:552
+#: modules/accounting/api/class-rest-api-purchases.php:555
 msgid "Item total."
 msgstr ""
 
@@ -9246,7 +9246,7 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-ledgers.php:612
 #: modules/accounting/api/class-rest-api-pay_bills.php:514
 #: modules/accounting/api/class-rest-api-pay_purchases.php:481
-#: modules/accounting/api/class-rest-api-purchases.php:559
+#: modules/accounting/api/class-rest-api-purchases.php:562
 #: modules/accounting/api/class-rest-api-rec_payments.php:519
 msgid "Type for the resource."
 msgstr ""
@@ -9398,13 +9398,13 @@ msgstr ""
 msgid "Sale price for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-purchases.php:351
+#: modules/accounting/api/class-rest-api-purchases.php:354
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:5
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:48
 msgid "Purchase"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-purchases.php:354
+#: modules/accounting/api/class-rest-api-purchases.php:357
 msgid "A purchase of %s has been created for %s"
 msgstr ""
 
@@ -11077,15 +11077,15 @@ msgstr ""
 msgid "Accounting Manager"
 msgstr ""
 
-#: modules/accounting/includes/functions/bills.php:423
+#: modules/accounting/includes/functions/bills.php:434
 msgid "Bill created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/expenses.php:451
+#: modules/accounting/includes/functions/expenses.php:455
 msgid "Expense created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/invoices.php:545
+#: modules/accounting/includes/functions/invoices.php:554
 #: modules/accounting/includes/functions/taxes.php:397
 #: modules/accounting/includes/functions/taxes.php:422
 msgid "Invoice created with voucher no %s"
@@ -11095,19 +11095,19 @@ msgstr ""
 msgid "Journal created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/pay_bills.php:353
+#: modules/accounting/includes/functions/pay_bills.php:357
 msgid "Bill payment created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/pay_purchases.php:354
+#: modules/accounting/includes/functions/pay_purchases.php:359
 msgid "Purchase payment created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/purchases.php:456
+#: modules/accounting/includes/functions/purchases.php:460
 msgid "Purchase created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/rec_payments.php:368
+#: modules/accounting/includes/functions/rec_payments.php:372
 msgid "Invoice receipt created with voucher no %s"
 msgstr ""
 
@@ -16583,18 +16583,18 @@ msgstr ""
 msgid "Plugin Activation Error"
 msgstr ""
 
-#: wp-erp.php:306
+#: wp-erp.php:307
 msgid "Docs"
 msgstr ""
 
-#: wp-erp.php:369
+#: wp-erp.php:370
 msgid ""
 "If you like WPERP please leave us a <a href=\"%s\" target=\"_blank\" "
 "style=\"text-decoration:none\">★★★★★</a> rating. Thanking you from the team "
 "of WPERP in advance!"
 msgstr ""
 
-#: wp-erp.php:370
+#: wp-erp.php:371
 msgid "https://wordpress.org/support/plugin/erp/reviews/?filter=5"
 msgstr ""
 
