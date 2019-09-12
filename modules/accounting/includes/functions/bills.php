@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get all bills
  *
- * @param $data
+ * @param array $args
  * @return mixed
  */
 function erp_acct_get_bills( $args = [] ) {
@@ -83,6 +83,8 @@ function erp_acct_get_bill( $bill_no ) {
 
 /**
  * Format bill line items
+ * @param $voucher_no
+ * @return array|object|null
  */
 function erp_acct_format_bill_line_items( $voucher_no ) {
     global $wpdb;
@@ -298,11 +300,11 @@ function erp_acct_update_bill( $data, $bill_id ) {
             ) );
 
             // insert new bill with edited data
-            erp_acct_insert_bill( $data );
+            $new_bill = erp_acct_insert_bill( $data );
 
             $data['dr'] = 0;
             $data['cr'] = $data['amount'];
-            erp_acct_update_data_into_people_trn_details( $data, $voucher_no );
+            erp_acct_update_data_into_people_trn_details( $data, $old_bill['voucher_no'] );
         }
 
         $wpdb->query( 'COMMIT' );
@@ -311,13 +313,14 @@ function erp_acct_update_bill( $data, $bill_id ) {
         return new WP_error( 'bill-exception', $e->getMessage() );
     }
 
-    return erp_acct_get_bill( $voucher_no );
+    return erp_acct_get_bill( $new_bill['voucher_no'] );
 }
 
 /**
  * Make bill draft on update
  *
- * @param array $bill_data
+ * @param $data
+ * @param $bill_id
  * @return void
  */
 function erp_acct_update_draft_bill( $data, $bill_id ) {
@@ -523,6 +526,7 @@ function erp_acct_get_bill_count() {
 /**
  * Get bills with due of a people
  *
+ * @param array $args
  * @return mixed
  */
 
