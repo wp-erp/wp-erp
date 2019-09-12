@@ -43,7 +43,7 @@ class Updates {
         '1.3.3'  => 'updates/update-1.3.3.php',
         '1.3.4'  => 'updates/update-1.3.4.php',
         '1.5.0'  => 'updates/update-1.5.0.php',
-        '1.5.1'  => 'updates/update-1.5.1.php'
+        '1.5.2'  => 'updates/update-1.5.2.php'
     ];
 
     /**

@@ -6,7 +6,7 @@ class ERP_ACCT_BG_Process_People_Trn extends \WP_Background_Process {
 	/**
 	 * @var string
 	 */
-    protected $action = 'erp_update_1_5_1_process';
+    protected $action = 'erp_update_1_5_2_process';
 
 	/**
 	 * Task

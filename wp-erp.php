@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.5.1
+ * Version: 1.5.2
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -53,7 +53,7 @@ final class WeDevs_ERP {
      * @var string
      */
 
-    public $version = '1.5.1';
+    public $version = '1.5.2';
 
     /**
      * Minimum PHP version required
@@ -235,7 +235,7 @@ final class WeDevs_ERP {
             require_once WPERP_INCLUDES . '/lib/bgprocess/wp-background-process.php';
 
             require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.0.php';
-            require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.1.php';
+            require_once WPERP_INCLUDES . '/updates/bp/class-erp-acct-bg-process-1.5.2.php';
         }
 
         // cli command
