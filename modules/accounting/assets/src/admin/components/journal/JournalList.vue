@@ -4,7 +4,7 @@
 
         <h2 class="add-new-journal">
             <span>{{ __('Journals', 'erp') }}</span>
-            <a href="#" class="erp-journal-new" @click.prevent="newJournal">{{ __('New Journal Entry', 'erp') }}</a>
+            <a href="#" class="erp-journal-new" @click.prevent="$router.push('journals/new')">{{ __('New Journal Entry', 'erp') }}</a>
         </h2>
 
         <list-table
@@ -69,8 +69,8 @@ export default {
         row_data() {
             const items = this.rows;
             items.map(item => {
-                item.l_id = item.voucher_no;
-                item.l_date = item.trn_date;
+                item.l_id          = item.voucher_no;
+                item.l_date        = item.trn_date;
                 item.l_particulars = item.particulars;
                 item.amount        = item.total;
             });
@@ -79,10 +79,6 @@ export default {
     },
 
     methods: {
-        newJournal() {
-            this.$router.push('/journals/new');
-        },
-
         fetchItems() {
             this.rows = [];
             HTTP.get('/journals', {
