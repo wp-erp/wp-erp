@@ -694,19 +694,22 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
  *
  * @return boolean
  */
-function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' ) {
+function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output_method = 'D' ) {
     $company     = new \WeDevs\ERP\Company();
-    $theme_color = '#9e9e9e';
-    $transaction = (object) $request['trn_data'];
+    $theme_color = erp_get_option( 'erp_ac_pdf_theme_color', false, '#9e9e9e' );
 
     $user_id = null;
     $trn_id  = null;
 
-    $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
-    $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : $transaction->email;
-    $subject    = isset( $request['subject'] ) ? $request['subject'] : $transaction->subject;
-    $body       = isset( $request['message'] ) ? $request['message'] : $request['body'];
-    $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
+    if ( 'F' == $output_method ) {
+        $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_transaction_type( $transaction->voucher_no );
+        $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : $transaction->email;
+        $subject    = isset( $request['subject'] ) ? $request['subject'] : $transaction->subject;
+        $body       = isset( $request['message'] ) ? $request['message'] : $request['body'];
+        $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
+    } else {
+        $type = isset( $request['type'] ) ? $request['type'] : erp_acct_get_transaction_type( $transaction->voucher_no );
+    }
 
 
     if ( ! empty( $transaction->customer_id ) ) {
@@ -746,7 +749,7 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
     }
 
     //Set type
-    $trn_pdf->set_type( erp_acct_get_trn_type_by_voucher_no( $trn_id ) );
+    $trn_pdf->set_type( erp_acct_get_transaction_type( $trn_id ) );
 
     // Set barcode
     if ( $trn_id ) {
@@ -916,8 +919,12 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->balance );
     }
 
-    $trn_pdf->render( $file_name, 'F' );
-    $file_name = $attach_pdf ? $file_name : '';
+    if ( 'D' == $output_method ) {
+        $trn_pdf->render( $file_name, 'D' );
+    }
+
+    $trn_pdf->render( $file_name, $output_method );
+    $file_name = isset( $attach_pdf ) ? $file_name : '';
 
     return $file_name;
 }
@@ -930,24 +937,23 @@ function erp_acct_generate_pdf( $request, $file_name = '', $output_method = 'D' 
  *
  * @return boolean
  */
-function erp_acct_send_email_with_pdf_attached( $request, $file_name, $output_method = 'D' ) {
+function erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_name, $output_method = 'D' ) {
     if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
         return;
     }
 
-    $transaction = (object) $request['trn_data'];
-    $trn_email   = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
-    $user_id     = null;
-    $trn_id      = null;
-    $result      = [];
+    $trn_email = new \WeDevs\ERP\Accounting\Includes\Classes\Send_Email();
+    $user_id   = null;
+    $trn_id    = null;
+    $result    = [];
 
-    $type     = isset( $request['type'] ) ? $request['type'] : erp_acct_get_trn_type_by_voucher_no( $transaction->voucher_no );
+    $type     = isset( $request['type'] ) ? $request['type'] : erp_acct_get_transaction_type( $transaction->voucher_no );
     $receiver = isset( $request['receiver'] ) ? $request['receiver'] : [];
     $subject  = isset( $request['subject'] ) ? $request['subject'] : sprintf( __( 'Transaction alert for %s', 'erp' ), $request['type'] );
     $body     = isset( $request['message'] ) ? $request['message'] : __( 'Thank you for the transaction', 'erp' );;
     $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
 
-    $pdf_file = erp_acct_generate_pdf( $request, $file_name, 'F' );
+    $pdf_file = erp_acct_generate_pdf( $request, $transaction, $file_name, 'F' );
 
     if ( $pdf_file ) {
         $result = $trn_email->trigger( $receiver, $subject, $body, $pdf_file );
@@ -989,16 +995,15 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
     $request   = [];
     $result    = [];
 
-    $request['type']       = ! empty( $transaction['type'] ) ? $transaction['type'] : erp_acct_get_trn_type_by_voucher_no( $voucher_no );
+    $request['type']       = ! empty( $transaction['type'] ) ? $transaction['type'] : erp_acct_get_transaction_type( $voucher_no );
     $request['receiver'][] = ! empty( $transaction['email'] ) ? $transaction['email'] : [];
     $request['subject']    = sprintf( __( 'Transaction alert for %s', 'erp' ), $request['type'] );
     $request['body']       = __( 'Thank you for the transaction', 'erp' );
-    $request['trn_data']   = $transaction;
     $request['attachment'] = true;
     $attach_pdf            = true;
 
     $file_name = erp_acct_get_pdf_filename( $voucher_no );
-    $pdf_file  = erp_acct_generate_pdf( $request, $file_name, 'F' );
+    $pdf_file  = erp_acct_generate_pdf( $request, $transaction, $file_name, 'F' );
 
     if ( $pdf_file ) {
         $result = $trn_email->trigger( $request['receiver'], $request['subject'], $request['body'], $request['attachment'] );
@@ -1147,10 +1152,12 @@ function erp_acct_insert_data_into_people_trn_details( $transaction, $voucher_no
 
     if ( ! empty( $transaction['customer_id'] ) ) {
         $people_id = $transaction['customer_id'];
-    } else if ( ! empty( $transaction['vendor_id'] ) ) {
-        $people_id = $transaction['vendor_id'];
     } else {
-        $people_id = $transaction['people_id'];
+        if ( ! empty( $transaction['vendor_id'] ) ) {
+            $people_id = $transaction['vendor_id'];
+        } else {
+            $people_id = $transaction['people_id'];
+        }
     }
 
     $date = ! empty( $transaction['trn_date'] ) ? $transaction['trn_date'] : $transaction['date'];

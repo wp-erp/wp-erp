@@ -217,6 +217,17 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/export-pdf' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'export_as_pdf' ],
+                'args'                => [],
+                'permission_callback' => function( $request ) {
+                    return current_user_can( 'erp_ac_view_expense' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -552,7 +563,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_voucher_type_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $response = erp_acct_get_trn_type_by_voucher_no( $id );
+        $response = erp_acct_get_transaction_type( $id );
 
         $response = rest_ensure_response( $response );
         $response->set_status( 200 );
@@ -624,7 +635,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_trn_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
         $response = array(
@@ -633,13 +644,36 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         );
 
         $file_name = erp_acct_get_pdf_filename( $request['trn_data']['voucher_no'] );
+        $transaction = (object) $request['trn_data'];
 
-        if ( erp_acct_send_email_with_pdf_attached( $request, $file_name,'F' ) ) {
+        if ( erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_name,'F' ) ) {
             $response['status']  = 200;
-            $response['message'] = 'mail Sent successfully.';
+            $response['message'] = 'mail sent successfully.';
         }
 
         return $response;
+    }
+
+    /**
+     * Export as pdf
+     *
+     * @param $request
+     * @return array|mixed|object
+     */
+    public function export_as_pdf( $request ) {
+
+        $id = (int) $request['id'];
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'rest_trn_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $file_name = erp_acct_get_pdf_filename( $request['trn_data']['voucher_no'] );
+        $transaction = $request['trn_data'];
+
+        $file_name = erp_acct_generate_pdf( $request, $transaction, $file_name, 'D' );
+
+        return $file_name;
     }
 
     /**

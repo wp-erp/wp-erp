@@ -24118,6 +24118,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
 
 
 
@@ -24207,7 +24208,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.isWorking = true;
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/invoices/".concat(this.$route.params.id)).then(function (response) {
         _this4.invoice = response.data;
-      }).then(function (e) {}).then(function () {
+      }).then(function () {
         _this4.print_data = _this4.invoice;
         _this4.copyLink = _this4.invoice.readonly_url;
         _this4.isWorking = false;
@@ -24220,10 +24221,31 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.isWorking = true;
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/payments/".concat(this.$route.params.id)).then(function (response) {
         _this5.payment = response.data;
-      }).then(function (e) {}).then(function () {
+      }).then(function () {
         _this5.print_data = _this5.payment;
         _this5.user_id = _this5.print_data.customer_id;
         _this5.isWorking = false;
+      });
+    },
+    exportPdf: function exportPdf() {
+      var _this6 = this;
+
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get("/transactions/export-pdf/".concat(this.$route.params.id), {
+        trn_data: this.print_data,
+        type: this.type
+      }).then(function () {
+        _this6.$store.dispatch('spinner/setSpinner', false);
+      }).catch(function (error) {
+        _this6.$store.dispatch('spinner/setSpinner', false);
+
+        throw error;
+      });
+      axios.get(erp_acct_var.site_url + '/wp-json/erp/v1/accounting/v1' + "/transactions/export-pdf/".concat(this.$route.params.id), {
+        headers: {
+          Authorization: 'Bearer ' + token,
+          //the token is a variable which holds the token
+          'Content-Type': 'application/json'
+        }
       });
     },
     printPopup: function printPopup() {
@@ -54315,6 +54337,22 @@ var render = function() {
                   _vm._v(" "),
                   _c("template", { slot: "dropdown" }, [
                     _c("ul", { attrs: { role: "menu" } }, [
+                      _c("li", [
+                        _c(
+                          "a",
+                          {
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.exportPdf($event)
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(_vm.__("Export as PDF", "erp")))]
+                        )
+                      ]),
+                      _vm._v(" "),
                       _c("li", [
                         _c(
                           "a",
