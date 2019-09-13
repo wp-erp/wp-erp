@@ -823,7 +823,13 @@ Vue.component('vtable', {
 
             this.ajaxloader = true;
 
-            var advanceFilterString = self.filterOnlyAdvanceQueryParams( window.location.search );
+            if( window.localStorage.search_segment_str != undefined ) {
+                var search_param = window.localStorage.search_segment_str;
+            } else {
+                var search_param = window.location.search;
+            }
+
+            var advanceFilterString = self.filterOnlyAdvanceQueryParams( search_param );
 
             if ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) {
                 if ( advanceFilterString ) {
