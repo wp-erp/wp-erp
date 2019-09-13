@@ -52,19 +52,19 @@ class Admin {
         erp_add_submenu( 'accounting', 'users', [
             'title'      => __( 'Customers', 'erp' ),
             'capability' => $customer,
-            'slug'       => 'customers',
+            'slug'       => 'users/customers',
             'position'   => 5
         ] );
         erp_add_submenu( 'accounting', 'users', [
             'title'      => __( 'Vendors', 'erp' ),
             'capability' => $vendor,
-            'slug'       => 'vendors',
+            'slug'       => 'users/vendors',
             'position'   => 10
         ] );
         erp_add_submenu( 'accounting', 'users', [
             'title'      => __( 'Employees', 'erp' ),
             'capability' => 'erp_hr_manager',
-            'slug'       => 'employees',
+            'slug'       => 'users/employees',
             'position'   => 15
         ] );
         erp_add_menu( 'accounting', [
@@ -94,7 +94,7 @@ class Admin {
         erp_add_submenu( 'accounting', 'transactions', [
             'title'      => __( 'Journals', 'erp' ),
             'capability' => $journal,
-            'slug'       => 'journals',
+            'slug'       => 'transactions/journals',
             'position'   => 25
         ] );
         erp_add_menu( 'accounting', [
@@ -118,13 +118,13 @@ class Admin {
         erp_add_submenu( 'accounting', 'products', [
             'title'      => __( 'Products & Services', 'erp' ),
             'capability' => 'erp_ac_view_sale',
-            'slug'       => 'products',
+            'slug'       => 'products/product-service',
             'position'   => 5,
         ] );
         erp_add_submenu( 'accounting', 'products', [
             'title'      => __( 'Product Categories', 'erp' ),
             'capability' => 'erp_ac_view_sale',
-            'slug'       => 'product-categories',
+            'slug'       => 'products/product-categories',
             'position'   => 10,
         ] );
         erp_add_menu( 'accounting', [
@@ -136,13 +136,13 @@ class Admin {
         erp_add_submenu( 'accounting', 'taxes', [
             'title'      => __( 'Tax Rates', 'erp' ),
             'capability' => $sale,
-            'slug'       => 'taxes',
+            'slug'       => 'taxes/tax-rates',
             'position'   => 5
         ] );
         erp_add_submenu( 'accounting', 'taxes', [
             'title'      => __( 'Tax Payments', 'erp' ),
             'capability' => $sale,
-            'slug'       => 'tax-records',
+            'slug'       => 'taxes/tax-records',
             'position'   => 10
         ] );
         erp_add_menu( 'accounting', [

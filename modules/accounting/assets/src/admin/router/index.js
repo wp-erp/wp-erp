@@ -83,19 +83,25 @@ export default new Router({
             },
             children: [
                 {
-                    path: '',
+                    path: 'product-service',
                     name: 'Products',
-                    component: Products
+                    component: Products,
+                    alias: '/products'
                 },
                 {
                     path: 'page/:page',
                     name: 'PaginateProducts',
                     component: Products
+                },
+                {
+                    path: 'product-categories',
+                    name: 'ProductCategory',
+                    component: ProductCategory
                 }
             ]
         },
         {
-            path: '/customers',
+            path: '/users',
             component: {
                 render(c) {
                     return c('router-view');
@@ -103,70 +109,80 @@ export default new Router({
             },
             children: [
                 {
-                    path: '',
-                    name: 'Customers',
-                    component: People,
-                    alias: '/users'
+                    path: 'customers',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'Customers',
+                            component: People,
+                            alias: '/users'
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateCustomers',
+                            component: People
+                        },
+                        {
+                            path: 'view/:id',
+                            name: 'CustomerDetails',
+                            component: PeopleDetails
+                        }
+                    ]
                 },
                 {
-                    path: 'page/:page',
-                    name: 'PaginateCustomers',
-                    component: People
+                    path: 'vendors',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'Vendors',
+                            component: People
+                        },
+                        {
+                            path: 'view/:id',
+                            name: 'VendorDetails',
+                            component: PeopleDetails
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateVendors',
+                            component: People
+                        }
+                    ]
                 },
                 {
-                    path: 'view/:id',
-                    name: 'CustomerDetails',
-                    component: PeopleDetails
-                }
-            ]
-        },
-        {
-            path: '/vendors',
-            component: {
-                render(c) {
-                    return c('router-view');
-                }
-            },
-            children: [
-                {
-                    path: '',
-                    name: 'Vendors',
-                    component: People
-                },
-                {
-                    path: 'view/:id',
-                    name: 'VendorDetails',
-                    component: PeopleDetails
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateVendors',
-                    component: People
-                }
-            ]
-        },
-        {
-            path: '/employees',
-            component: {
-                render(c) {
-                    return c('router-view');
-                }
-            },
-            children: [
-                {
-                    path: '',
-                    name: 'Employees',
-                    component: Employees
-                },
-                {
-                    path: 'view/:id',
-                    name: 'EmployeeDetails',
-                    component: EmployeeDetails
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateEmployees',
-                    component: Employees
+                    path: 'employees',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'Employees',
+                            component: Employees
+                        },
+                        {
+                            path: 'view/:id',
+                            name: 'EmployeeDetails',
+                            component: EmployeeDetails
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateEmployees',
+                            component: Employees
+                        }
+                    ]
                 }
             ]
         },
@@ -247,6 +263,36 @@ export default new Router({
                             component: Purchases
                         }
                     ]
+                },
+                {
+                    path: 'journals',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'Journals',
+                            component: JournalList
+                        },
+                        {
+                            path: 'new',
+                            name: 'JournalCreate',
+                            component: JournalCreate
+                        },
+                        {
+                            path: ':id',
+                            name: 'JournalSingle',
+                            component: JournalSingle
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateJournals',
+                            component: JournalList
+                        }
+                    ]
                 }
             ]
         },
@@ -319,11 +365,6 @@ export default new Router({
                     component: InvoiceCreate
                 }
             ]
-        },
-        {
-            path: '/product-categories',
-            name: 'ProductCategory',
-            component: ProductCategory
         },
         {
             path: '/payments',
@@ -521,38 +562,6 @@ export default new Router({
             ]
         },
         {
-            path: '/journals',
-            component: {
-                render(c) {
-                    return c('router-view');
-                }
-            },
-            children: [
-                {
-                    path: '',
-                    name: 'Journals',
-                    component: JournalList
-                },
-                {
-
-                    path: '/journals/new',
-                    name: 'JournalCreate',
-                    component: JournalCreate
-                },
-                {
-
-                    path: '/journals/:id',
-                    name: 'JournalSingle',
-                    component: JournalSingle
-                },
-                {
-                    path: 'page/:page',
-                    name: 'PaginateJournals',
-                    component: JournalList
-                }
-            ]
-        },
-        {
             path: '/taxes',
             component: {
                 render(c) {
@@ -561,9 +570,10 @@ export default new Router({
             },
             children: [
                 {
-                    path: '',
+                    path: 'tax-rates',
                     name: 'TaxRates',
-                    component: TaxRates
+                    component: TaxRates,
+                    alias: '/taxes'
                 },
                 {
                     path: 'new',
@@ -629,31 +639,31 @@ export default new Router({
                     path: 'agencies/page/:page',
                     name: 'PaginateTaxAgencies',
                     component: TaxAgencies
-                }
-            ]
-        },
-        {
-            path: '/tax-records',
-            component: {
-                render(c) {
-                    return c('router-view');
-                }
-            },
-            children: [
-                {
-                    path: '',
-                    name: 'TaxRecords',
-                    component: TaxRecords
                 },
                 {
-                    path: 'page/:page',
-                    name: 'PaginateTaxRecords',
-                    component: TaxRecords
-                },
-                {
-                    path: ':id',
-                    name: 'PayTaxSingle',
-                    component: PayTaxSingle
+                    path: 'tax-records',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'TaxRecords',
+                            component: TaxRecords
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateTaxRecords',
+                            component: TaxRecords
+                        },
+                        {
+                            path: ':id',
+                            name: 'PayTaxSingle',
+                            component: PayTaxSingle
+                        }
+                    ]
                 }
             ]
         },
