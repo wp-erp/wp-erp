@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get all sales transactions
  *
+ * @param array $args
  * @return mixed
  */
 function erp_acct_get_sales_transactions( $args = [] ) {
@@ -88,6 +89,8 @@ function erp_acct_get_sales_transactions( $args = [] ) {
 
 /**
  * Get sales chart status
+ * @param array $args
+ * @return array|object|null
  */
 function erp_acct_get_sales_chart_status( $args = [] ) {
     global $wpdb;
@@ -114,6 +117,8 @@ function erp_acct_get_sales_chart_status( $args = [] ) {
 
 /**
  * Get sales chart payment
+ * @param array $args
+ * @return array|object|void|null
  */
 function erp_acct_get_sales_chart_payment( $args = [] ) {
     global $wpdb;
@@ -457,10 +462,9 @@ function erp_acct_format_monthly_data_to_yearly_data( $result ) {
 /**
  * Get Balance amount for given chart of account in time range
  *
- * @param $start_date
- * @param $end_date
  * @param $chart_id
  *
+ * @param string $month
  * @return array|null|object
  */
 function erp_acct_get_daily_balance_by_chart_id( $chart_id, $month = 'current' ) {
@@ -522,6 +526,7 @@ function erp_acct_format_daily_data_to_yearly_data( $result ) {
 /**
  * Get all Expenses
  *
+ * @param array $args
  * @return mixed
  */
 function erp_acct_get_expense_transactions( $args = [] ) {
@@ -609,6 +614,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
 /**
  * Get all Purchases
  *
+ * @param array $args
  * @return mixed
  */
 function erp_acct_get_purchase_transactions( $args = [] ) {
@@ -690,6 +696,8 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
  * Generate pdf
  *
  * @param $request
+ * @param $transaction
+ * @param string $file_name
  * @param string $output_method
  *
  * @return boolean
@@ -701,15 +709,11 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     $user_id = null;
     $trn_id  = null;
 
-    if ( 'F' == $output_method ) {
-        $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_transaction_type( $transaction->voucher_no );
-        $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : $transaction->email;
-        $subject    = isset( $request['subject'] ) ? $request['subject'] : $transaction->subject;
-        $body       = isset( $request['message'] ) ? $request['message'] : $request['body'];
-        $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
-    } else {
-        $type = isset( $request['type'] ) ? $request['type'] : erp_acct_get_transaction_type( $transaction->voucher_no );
-    }
+    $type       = isset( $request['type'] ) ? $request['type'] : erp_acct_get_transaction_type( $transaction->voucher_no );
+    $receiver   = isset( $request['receiver'] ) ? $request['receiver'] : $transaction->email;
+    $subject    = isset( $request['subject'] ) ? $request['subject'] : $transaction->subject;
+    $body       = isset( $request['message'] ) ? $request['message'] : $request['body'];
+    $attach_pdf = isset( $request['attachment'] ) && 'on' == $request['attachment'] ? true : false;
 
 
     if ( ! empty( $transaction->customer_id ) ) {
@@ -919,10 +923,6 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->balance );
     }
 
-    if ( 'D' == $output_method ) {
-        $trn_pdf->render( $file_name, 'D' );
-    }
-
     $trn_pdf->render( $file_name, $output_method );
     $file_name = isset( $attach_pdf ) ? $file_name : '';
 
@@ -933,6 +933,8 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
  * Generate and send pdf
  *
  * @param $request
+ * @param $transaction
+ * @param $file_name
  * @param string $output_method
  *
  * @return boolean
@@ -979,9 +981,8 @@ add_action( 'erp_acct_new_transaction_expense', 'erp_acct_send_email_on_transact
 /**
  * Send pdf on transaction
  *
- * @param $request
- * @param string $output_method
- *
+ * @param $voucher_no
+ * @param $transaction
  * @return boolean
  */
 function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
@@ -1016,6 +1017,8 @@ function erp_acct_send_email_on_transaction( $voucher_no, $transaction ) {
 
 /**
  * Get voucher type by id
+ * @param $voucher_no
+ * @return string|null
  */
 function erp_acct_get_transaction_type( $voucher_no ) {
     global $wpdb;
@@ -1078,7 +1081,7 @@ function erp_acct_get_transaction( $transaction_id ) {
 /**
  * Varify transaction hash
  *
- * @param int $transaction
+ * @param $transaction_id
  * @param string $transaction_type
  * @param string $hash_to_verify
  * @param string $algo
@@ -1103,7 +1106,7 @@ function erp_acct_verify_invoice_link_hash( $transaction_id, $transaction_type, 
 /**
  * Get unique transaction hash for sharing
  *
- * @param int $transaction
+ * @param $transaction_id
  * @param string $transaction_type
  * @param string $algo
  *
@@ -1187,5 +1190,17 @@ function erp_acct_update_data_into_people_trn_details( $transaction, $voucher_no
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_people_trn_details', array( 'voucher_no' => $voucher_no ) );
 
+}
+
+/**
+ * Return url from a absolute path
+ *
+ * @param $voucher_no
+ * @return string
+ */
+function erp_acct_pdf_abs_path_to_url( $voucher_no ) {
+    $upload_url = wp_upload_dir();
+    $url = $upload_url['baseurl'] . '/erp-pdfs/' . "voucher_{$voucher_no}.pdf" ;
+    return esc_url_raw( $url );
 }
 

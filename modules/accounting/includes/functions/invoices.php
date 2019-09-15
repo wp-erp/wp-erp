@@ -104,6 +104,7 @@ function erp_acct_get_invoice( $invoice_no ) {
 
     $row['attachments'] = unserialize( $row['attachments'] );
     $row['total_due']   = erp_acct_get_invoice_due( $invoice_no );
+    $row['pdf_link']    = erp_acct_pdf_abs_path_to_url( $invoice_no );
 
     return $row;
 }
