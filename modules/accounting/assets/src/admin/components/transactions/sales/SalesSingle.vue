@@ -19,7 +19,7 @@
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
-                                <li><a href="#" @click.prevent="exportPdf">{{ __('Export as PDF', 'erp') }}</a></li>
+                                <li><a :href="pdf_link">{{ __('Export as PDF', 'erp') }}</a></li>
                                 <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
@@ -69,7 +69,8 @@ export default {
             showModal : false,
             print_data: null,
             copyLink  : '#',
-            user_id   : null
+            user_id   : null,
+            pdf_link : '#'
         };
     },
 
@@ -142,6 +143,7 @@ export default {
             }).then(() => {
                 this.print_data = this.invoice;
                 this.copyLink   = this.invoice.readonly_url;
+                this.pdf_link   = this.invoice.pdf_link;
                 this.isWorking  = false;
                 this.user_id    = this.print_data.customer_id;
             });
@@ -154,28 +156,10 @@ export default {
                 this.payment = response.data;
             }).then(() => {
                 this.print_data = this.payment;
+                this.pdf_link   = this.payment.pdf_link;
                 this.user_id    = this.print_data.customer_id;
                 this.isWorking  = false;
             });
-        },
-
-        exportPdf() {
-            HTTP.get(`/transactions/export-pdf/${this.$route.params.id}`, {
-                trn_data: this.print_data,
-                type    : this.type,
-            }).then(() => {
-                this.$store.dispatch('spinner/setSpinner', false);
-            }).catch(error => {
-                this.$store.dispatch('spinner/setSpinner', false);
-                throw error;
-            });
-
-            axios.get(erp_acct_var.site_url + '/wp-json/erp/v1/accounting/v1' + `/transactions/export-pdf/${this.$route.params.id}`, {
-                headers: {
-                    Authorization: 'Bearer ' + token, //the token is a variable which holds the token
-                    'Content-Type': 'application/json'
-                }
-            })
         },
 
         printPopup() {

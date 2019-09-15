@@ -217,17 +217,6 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             ]
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/export-pdf' . '/(?P<id>[\d]+)', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'export_as_pdf' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
-
     }
 
     /**
@@ -652,28 +641,6 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         }
 
         return $response;
-    }
-
-    /**
-     * Export as pdf
-     *
-     * @param $request
-     * @return array|mixed|object
-     */
-    public function export_as_pdf( $request ) {
-
-        $id = (int) $request['id'];
-
-        if ( empty( $id ) ) {
-            return new WP_Error( 'rest_trn_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
-        }
-
-        $file_name = erp_acct_get_pdf_filename( $request['trn_data']['voucher_no'] );
-        $transaction = $request['trn_data'];
-
-        $file_name = erp_acct_generate_pdf( $request, $transaction, $file_name, 'D' );
-
-        return $file_name;
     }
 
     /**
