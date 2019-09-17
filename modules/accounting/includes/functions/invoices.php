@@ -82,6 +82,7 @@ function erp_acct_get_invoice( $invoice_no ) {
     invoice.attachments,
     invoice.status,
     invoice.particulars,
+    invoice.created_at,
 
     inv_acc_detail.debit,
     inv_acc_detail.credit
