@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.2.3
 Requires PHP: 5.6
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -245,6 +245,15 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.3 -> September 17, 2019 =
+[fix] CRM: Search segment issue.
+[fix] Accounting: Topbar menu permission issue.
+[fix] Accounting: Customer & Vendor display issue.
+[fix] Accounitng: Menu highlighting issue.
+[fix] Accounting: Add option to directly export pdf invoice.
+[fix] Accounting: Fix translation issue.
+[tweak] Accounting: Void accounting transactions.
 
 = v1.5.2 -> September 12, 2019 =
 [fix] Updater file not found issue.
