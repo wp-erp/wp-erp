@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP ERP 1.5.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2019-09-12 03:02:31+00:00\n"
+"POT-Creation-Date: 2019-09-17 08:12:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5910,9 +5910,9 @@ msgstr ""
 
 #: includes/admin/views/company.php:17
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:8
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:286
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:171
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:167
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:322
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:176
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:172
 #: modules/crm/includes/admin/class-settings.php:763
 #: modules/crm/includes/class-campaigns-list-table.php:89
 #: modules/crm/includes/class-contact-group-list-table.php:118
@@ -9410,7 +9410,7 @@ msgstr ""
 
 #: modules/accounting/api/class-rest-api-rec_payments.php:284
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:8
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:168
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:171
 msgid "Receive Payment"
 msgstr ""
 
@@ -9477,49 +9477,6 @@ msgstr ""
 
 #: modules/accounting/api/class-rest-api-vendors.php:361
 msgid " vendor has been created"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:11699
-msgid "tr"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:11808
-#: modules/accounting/assets/js/bootstrap.js:12749
-msgid "span"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:11833
-#: modules/accounting/assets/js/bootstrap.js:11876
-#: modules/accounting/assets/js/bootstrap.js:11951
-#: modules/accounting/assets/js/bootstrap.js:12911
-#: modules/accounting/assets/js/bootstrap.js:13751
-#: modules/accounting/assets/js/bootstrap.js:13952
-#: modules/accounting/assets/js/bootstrap.js:14060
-#: modules/accounting/assets/js/bootstrap.js:14105
-#: modules/accounting/assets/js/bootstrap.js:14158
-#: modules/accounting/assets/js/bootstrap.js:14279
-#: modules/accounting/assets/js/frontend.js:99
-msgid "div"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:12806
-msgid "multiselect"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:13794
-msgid "dropdown"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:13864
-msgid "form"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:14351
-msgid "modal"
-msgstr ""
-
-#: modules/accounting/assets/js/bootstrap.js:14575
-msgid "button"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bank-accounts/BankAccounts.vue:6
@@ -9774,7 +9731,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:21
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:21
 #: modules/accounting/assets/src/admin/components/tax/PayTaxSingle.vue:21
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:22
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:23
 #: modules/accounting/assets/src/admin/components/transfers/SingleTransfer.vue:22
 msgid "Send Mail"
 msgstr ""
@@ -9806,7 +9763,7 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:36
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:36
 #: modules/accounting/assets/src/admin/components/transfers/SingleTransfer.vue:59
-#: modules/accounting/includes/functions/transactions.php:763
+#: modules/accounting/includes/functions/transactions.php:770
 msgid "Transaction Date"
 msgstr ""
 
@@ -10251,10 +10208,6 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/journal/JournalList.vue:6
 #: modules/accounting/includes/classes/class-admin.php:95
 msgid "Journals"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/journal/JournalList.vue:7
-msgid "New Journal Entry"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:36
@@ -10908,16 +10861,16 @@ msgstr ""
 msgid "Trash"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:287
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:172
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:321
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:175
 msgid "Make Payment"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:291
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:176
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:181
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:172
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:177
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:327
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:168
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:186
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:164
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:182
 msgid "No actions found"
 msgstr ""
 
@@ -10947,7 +10900,11 @@ msgstr ""
 msgid "Invoice ID"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:30
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:22
+msgid "Export as PDF"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesSingle.vue:31
 msgid "Copy Link"
 msgstr ""
 
@@ -11011,7 +10968,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: modules/accounting/includes/classes/class-admin.php:299
+#: modules/accounting/includes/classes/class-admin.php:303
 msgid "Could not create people"
 msgstr ""
 
@@ -11077,15 +11034,15 @@ msgstr ""
 msgid "Accounting Manager"
 msgstr ""
 
-#: modules/accounting/includes/functions/bills.php:434
+#: modules/accounting/includes/functions/bills.php:437
 msgid "Bill created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/expenses.php:455
+#: modules/accounting/includes/functions/expenses.php:459
 msgid "Expense created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/invoices.php:554
+#: modules/accounting/includes/functions/invoices.php:556
 #: modules/accounting/includes/functions/taxes.php:397
 #: modules/accounting/includes/functions/taxes.php:422
 msgid "Invoice created with voucher no %s"
@@ -11095,15 +11052,15 @@ msgstr ""
 msgid "Journal created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/pay_bills.php:357
+#: modules/accounting/includes/functions/pay_bills.php:360
 msgid "Bill payment created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/pay_purchases.php:359
+#: modules/accounting/includes/functions/pay_purchases.php:362
 msgid "Purchase payment created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/purchases.php:460
+#: modules/accounting/includes/functions/purchases.php:463
 msgid "Purchase created with voucher no %s"
 msgstr ""
 
@@ -11111,190 +11068,190 @@ msgstr ""
 msgid "Invoice receipt created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:724
+#: modules/accounting/includes/functions/transactions.php:731
 msgid ""
 "ERP PDF extension is not installed. Please install the extension for PDF "
 "support"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:758
+#: modules/accounting/includes/functions/transactions.php:765
 msgid "Transaction Number"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:769
+#: modules/accounting/includes/functions/transactions.php:776
 msgid "FROM"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:779
+#: modules/accounting/includes/functions/transactions.php:786
 msgid "TO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:785
-#: modules/accounting/includes/functions/transactions.php:842
+#: modules/accounting/includes/functions/transactions.php:792
+#: modules/accounting/includes/functions/transactions.php:849
 msgid "PRODUCT"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:785
-#: modules/accounting/includes/functions/transactions.php:842
+#: modules/accounting/includes/functions/transactions.php:792
+#: modules/accounting/includes/functions/transactions.php:849
 msgid "QUANTITY"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:785
+#: modules/accounting/includes/functions/transactions.php:792
 msgid "UNIT PRICE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:785
+#: modules/accounting/includes/functions/transactions.php:792
 msgid "DISCOUNT"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:785
+#: modules/accounting/includes/functions/transactions.php:792
 msgid "TAX AMOUNT"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:785
-#: modules/accounting/includes/functions/transactions.php:799
-#: modules/accounting/includes/functions/transactions.php:813
-#: modules/accounting/includes/functions/transactions.php:828
-#: modules/accounting/includes/functions/transactions.php:842
-#: modules/accounting/includes/functions/transactions.php:856
-#: modules/accounting/includes/functions/transactions.php:871
-#: modules/accounting/includes/functions/transactions.php:885
-#: modules/accounting/includes/functions/transactions.php:900
-#: modules/accounting/includes/functions/transactions.php:911
-msgid "AMOUNT"
-msgstr ""
-
-#: modules/accounting/includes/functions/transactions.php:791
-#: modules/accounting/includes/functions/transactions.php:820
-#: modules/accounting/includes/functions/transactions.php:849
-msgid "PENDING"
-msgstr ""
-
 #: modules/accounting/includes/functions/transactions.php:792
-#: modules/accounting/includes/functions/transactions.php:821
-#: modules/accounting/includes/functions/transactions.php:864
-msgid "DUE"
-msgstr ""
-
-#: modules/accounting/includes/functions/transactions.php:793
-#: modules/accounting/includes/functions/transactions.php:807
-#: modules/accounting/includes/functions/transactions.php:822
-#: modules/accounting/includes/functions/transactions.php:836
-#: modules/accounting/includes/functions/transactions.php:850
-#: modules/accounting/includes/functions/transactions.php:865
-#: modules/accounting/includes/functions/transactions.php:879
-#: modules/accounting/includes/functions/transactions.php:893
-#: modules/accounting/includes/functions/transactions.php:904
-#: modules/accounting/includes/functions/transactions.php:915
-msgid "SUB TOTAL"
-msgstr ""
-
-#: modules/accounting/includes/functions/transactions.php:794
-#: modules/accounting/includes/functions/transactions.php:808
-#: modules/accounting/includes/functions/transactions.php:823
-#: modules/accounting/includes/functions/transactions.php:837
-#: modules/accounting/includes/functions/transactions.php:851
-#: modules/accounting/includes/functions/transactions.php:866
-#: modules/accounting/includes/functions/transactions.php:880
-#: modules/accounting/includes/functions/transactions.php:894
-#: modules/accounting/includes/functions/transactions.php:905
-#: modules/accounting/includes/functions/transactions.php:916
-msgid "TOTAL"
-msgstr ""
-
-#: modules/accounting/includes/functions/transactions.php:799
-msgid "INNVOICE NO"
-msgstr ""
-
-#: modules/accounting/includes/functions/transactions.php:799
-#: modules/accounting/includes/functions/transactions.php:813
-#: modules/accounting/includes/functions/transactions.php:828
-#: modules/accounting/includes/functions/transactions.php:856
-msgid "DUE DATE"
-msgstr ""
-
 #: modules/accounting/includes/functions/transactions.php:806
+#: modules/accounting/includes/functions/transactions.php:820
 #: modules/accounting/includes/functions/transactions.php:835
+#: modules/accounting/includes/functions/transactions.php:849
 #: modules/accounting/includes/functions/transactions.php:863
 #: modules/accounting/includes/functions/transactions.php:878
 #: modules/accounting/includes/functions/transactions.php:892
+#: modules/accounting/includes/functions/transactions.php:907
+#: modules/accounting/includes/functions/transactions.php:918
+msgid "AMOUNT"
+msgstr ""
+
+#: modules/accounting/includes/functions/transactions.php:798
+#: modules/accounting/includes/functions/transactions.php:827
+#: modules/accounting/includes/functions/transactions.php:856
+msgid "PENDING"
+msgstr ""
+
+#: modules/accounting/includes/functions/transactions.php:799
+#: modules/accounting/includes/functions/transactions.php:828
+#: modules/accounting/includes/functions/transactions.php:871
+msgid "DUE"
+msgstr ""
+
+#: modules/accounting/includes/functions/transactions.php:800
+#: modules/accounting/includes/functions/transactions.php:814
+#: modules/accounting/includes/functions/transactions.php:829
+#: modules/accounting/includes/functions/transactions.php:843
+#: modules/accounting/includes/functions/transactions.php:857
+#: modules/accounting/includes/functions/transactions.php:872
+#: modules/accounting/includes/functions/transactions.php:886
+#: modules/accounting/includes/functions/transactions.php:900
+#: modules/accounting/includes/functions/transactions.php:911
+#: modules/accounting/includes/functions/transactions.php:922
+msgid "SUB TOTAL"
+msgstr ""
+
+#: modules/accounting/includes/functions/transactions.php:801
+#: modules/accounting/includes/functions/transactions.php:815
+#: modules/accounting/includes/functions/transactions.php:830
+#: modules/accounting/includes/functions/transactions.php:844
+#: modules/accounting/includes/functions/transactions.php:858
+#: modules/accounting/includes/functions/transactions.php:873
+#: modules/accounting/includes/functions/transactions.php:887
+#: modules/accounting/includes/functions/transactions.php:901
+#: modules/accounting/includes/functions/transactions.php:912
+#: modules/accounting/includes/functions/transactions.php:923
+msgid "TOTAL"
+msgstr ""
+
+#: modules/accounting/includes/functions/transactions.php:806
+msgid "INNVOICE NO"
+msgstr ""
+
+#: modules/accounting/includes/functions/transactions.php:806
+#: modules/accounting/includes/functions/transactions.php:820
+#: modules/accounting/includes/functions/transactions.php:835
+#: modules/accounting/includes/functions/transactions.php:863
+msgid "DUE DATE"
+msgstr ""
+
+#: modules/accounting/includes/functions/transactions.php:813
+#: modules/accounting/includes/functions/transactions.php:842
+#: modules/accounting/includes/functions/transactions.php:870
+#: modules/accounting/includes/functions/transactions.php:885
+#: modules/accounting/includes/functions/transactions.php:899
 msgid "PAID"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:813
-#: modules/accounting/includes/functions/transactions.php:828
+#: modules/accounting/includes/functions/transactions.php:820
+#: modules/accounting/includes/functions/transactions.php:835
 msgid "BILL NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:813
+#: modules/accounting/includes/functions/transactions.php:820
 msgid "BILL DATE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:842
+#: modules/accounting/includes/functions/transactions.php:849
 msgid "COST PRICE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:856
+#: modules/accounting/includes/functions/transactions.php:863
 msgid "PURCHASE NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:871
+#: modules/accounting/includes/functions/transactions.php:878
 msgid "EXPENSE NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:871
+#: modules/accounting/includes/functions/transactions.php:878
 msgid "EXPENSE DATE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:885
+#: modules/accounting/includes/functions/transactions.php:892
 msgid "CHECK NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:885
+#: modules/accounting/includes/functions/transactions.php:892
 msgid "CHECK DATE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:885
+#: modules/accounting/includes/functions/transactions.php:892
 msgid "PAY TO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:898
+#: modules/accounting/includes/functions/transactions.php:905
 msgid "Transfer Voucher"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:900
-#: modules/accounting/includes/functions/transactions.php:911
+#: modules/accounting/includes/functions/transactions.php:907
+#: modules/accounting/includes/functions/transactions.php:918
 msgid "VOUCHER NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:900
+#: modules/accounting/includes/functions/transactions.php:907
 msgid "ACCOUNT FROM"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:900
+#: modules/accounting/includes/functions/transactions.php:907
 msgid "ACCOUNT TO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:909
+#: modules/accounting/includes/functions/transactions.php:916
 msgid "People Transaction"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:911
+#: modules/accounting/includes/functions/transactions.php:918
 msgid "PARTICULARS"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:946
-#: modules/accounting/includes/functions/transactions.php:994
+#: modules/accounting/includes/functions/transactions.php:954
+#: modules/accounting/includes/functions/transactions.php:1001
 msgid "Transaction alert for %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:947
-#: modules/accounting/includes/functions/transactions.php:995
+#: modules/accounting/includes/functions/transactions.php:955
+#: modules/accounting/includes/functions/transactions.php:1002
 msgid "Thank you for the transaction"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:955
-#: modules/accounting/includes/functions/transactions.php:1006
+#: modules/accounting/includes/functions/transactions.php:963
+#: modules/accounting/includes/functions/transactions.php:1012
 msgid "PDF not generated!"
 msgstr ""
 
