@@ -1016,9 +1016,9 @@
 
                 renderFilterFromUrl: function() {
 
-                    if( window.localStorage.search_segment_str != undefined ){
+                    if ( window.localStorage.search_segment_str != undefined ) {
                         this.fields = this.reRenderFilterFromUrl( window.localStorage.search_segment_str );
-                    }else {
+                    } else {
                         this.fields = this.reRenderFilterFromUrl( window.location.search );
                     }
                 }

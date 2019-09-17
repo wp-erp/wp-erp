@@ -823,7 +823,7 @@ Vue.component('vtable', {
 
             this.ajaxloader = true;
 
-            if( window.localStorage.search_segment_str != undefined ) {
+            if ( window.localStorage.search_segment_str != undefined ) {
                 var search_param = window.localStorage.search_segment_str;
             } else {
                 var search_param = window.location.search;
