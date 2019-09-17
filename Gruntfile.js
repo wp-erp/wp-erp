@@ -117,6 +117,11 @@ module.exports = function(grunt) {
                     '!README.md',
                     '!CONTRIBUTING.md',
                     '!**/*~',
+                    '!phpcs.xml.dist',
+                    '!eslintrc.js',
+                    '!webpack.config.js',
+                    '!modules/accounting/assets/less/**',
+                    '!modules/accounting/assets/src/**',
                     '!vendor/google/apiclient-services/src/Google/Service/**',
                     'vendor/google/apiclient-services/src/Google/Service/Gmail.php',
                     'vendor/google/apiclient-services/src/Google/Service/Gmail/**'
@@ -139,19 +144,47 @@ module.exports = function(grunt) {
             }
         },
 
+        run: {
+            options: {},
+
+            reset: {
+                cmd: 'npm',
+                args: ['run', 'build']
+            },
+
+            makepot: {
+                cmd: 'npm',
+                args: ['run', 'makepot']
+            },
+
+            removeDev: {
+                cmd: 'composer',
+                args: ['install', '--no-dev']
+            },
+
+            dumpautoload: {
+                cmd: 'composer',
+                args: ['dump-autoload', '-o']
+            },
+
+            composerInstall: {
+                cmd: 'composer',
+                args: ['install']
+            }
+        }
+
     });
 
     // Load NPM tasks to be used here
-    grunt.loadNpmTasks( 'grunt-contrib-less' );
-    grunt.loadNpmTasks( 'grunt-contrib-concat' );
-    grunt.loadNpmTasks( 'grunt-contrib-jshint' );
-    // grunt.loadNpmTasks( 'grunt-wp-i18n' );
-    grunt.loadNpmTasks( 'grunt-contrib-uglify' );
-    grunt.loadNpmTasks( 'grunt-contrib-watch' );
-    grunt.loadNpmTasks( 'grunt-contrib-clean' );
-    grunt.loadNpmTasks( 'grunt-contrib-copy' );
-    grunt.loadNpmTasks( 'grunt-contrib-compress' );
-    grunt.loadNpmTasks( 'grunt-text-replace' );
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-run');
 
     grunt.registerTask('default', [
         'less', 'uglify'
@@ -162,6 +195,14 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('zip', [
-        'clean', 'copy', 'compress'
+        'clean',
+        'run:reset',
+        'run:makepot',
+        'run:removeDev',
+        'run:dumpautoload',
+        'copy',
+        'compress',
+        'run:composerInstall',
+        'run:dumpautoload'
     ]);
 };

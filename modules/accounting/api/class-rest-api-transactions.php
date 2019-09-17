@@ -552,7 +552,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_voucher_type_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $response = erp_acct_get_trn_type_by_voucher_no( $id );
+        $response = erp_acct_get_transaction_type( $id );
 
         $response = rest_ensure_response( $response );
         $response->set_status( 200 );
@@ -624,7 +624,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'rest_bill_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_trn_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
         $response = array(
@@ -633,10 +633,11 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
         );
 
         $file_name = erp_acct_get_pdf_filename( $request['trn_data']['voucher_no'] );
+        $transaction = (object) $request['trn_data'];
 
-        if ( erp_acct_send_email_with_pdf_attached( $request, $file_name,'F' ) ) {
+        if ( erp_acct_send_email_with_pdf_attached( $request, $transaction, $file_name,'F' ) ) {
             $response['status']  = 200;
-            $response['message'] = 'mail Sent successfully.';
+            $response['message'] = 'mail sent successfully.';
         }
 
         return $response;

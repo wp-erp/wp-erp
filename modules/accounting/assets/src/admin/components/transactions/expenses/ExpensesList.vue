@@ -148,22 +148,22 @@ export default {
                     break;
 
                 case 'edit':
-                    if (row.type === 'Expense') {
+                    if (row.type === 'expense') {
                         this.$router.push({name: 'ExpenseEdit', params: {id: row.id}});
                     }
 
-                    if (row.type === 'Bill') {
+                    if (row.type === 'bill') {
                         this.$router.push({name: 'BillEdit', params: {id: row.id}});
                     }
 
-                    if (row.type === 'Check') {
+                    if (row.type === 'check') {
                         this.$router.push({name: 'CheckEdit', params: {id: row.id}});
                     }
 
                     break;
 
                 case 'payment':
-                    if (row.type === 'Bill') {
+                    if (row.type === 'bill') {
                         this.$router.push({
                             name  : 'PayBillCreate',
                             params: {
@@ -174,7 +174,37 @@ export default {
                     }
                     break;
 
+                case 'void':
+                    if (confirm('Are you sure to void the transaction?')) {
+                        if (row.trn_type === 'expense' || row.trn_type === 'check') {
+                            HTTP.post('expenses/' + row.id + '/void').then(response => {
+                                this.showAlert('success', 'Transaction has been void!');
+                            }).catch(error => {
+                                throw error;
+                            });
+                        }
+                        if (row.trn_type === 'bill') {
+                            HTTP.post('bills/' + row.id + '/void').then(response => {
+                                this.showAlert('success', 'Transaction has been void!');
+                            }).catch(error => {
+                                throw error;
+                            });
+                        }
+                        if (row.trn_type === 'pay_bill') {
+                            HTTP.post('pay-bills/' + row.id + '/void').then(response => {
+                                this.showAlert('success', 'Transaction has been void!');
+                            }).then(()=>{
+                                this.$router.push({ name: 'Expenses' });
+                            }).catch(error => {
+                                throw error;
+                            });
+                        }
+
+                    }
+                    break;
+
                 default :
+                    break;
             }
         },
 
@@ -204,6 +234,7 @@ export default {
                             id         : item.id,
                             trn_no     : item.id,
                             type       : 'Pay Bill',
+                            trn_type   : 'pay_bill',
                             ref        : item.ref ? item.ref : '-',
                             vendor_name: item.pay_bill_vendor_name,
                             trn_date   : item.pay_bill_trn_date,
@@ -223,6 +254,7 @@ export default {
                             id         : item.id,
                             trn_no     : item.id,
                             type       : 'Bill',
+                            trn_type   : 'bill',
                             ref        : item.ref ? item.ref : '-',
                             vendor_id  : item.vendor_id,
                             vendor_name: item.vendor_name,
@@ -233,8 +265,9 @@ export default {
                             status     : item.status,
                             singleView : {name: 'BillSingle', params: {id: item.id}},
                             actions    : [
+                                {key: 'payment', label: 'Make Payment'},
                                 {key: 'edit', label: 'Edit'},
-                                {key: 'payment', label: 'Make Payment'}
+                                {key: 'void', label: 'Void'}
                             ]
                         };
                         break;
@@ -244,6 +277,7 @@ export default {
                             id         : item.id,
                             trn_no     : item.id,
                             type       : 'Expense',
+                            trn_type   : 'expense',
                             ref        : item.ref ? item.ref : '-',
                             vendor_name: item.expense_people_name,
                             trn_date   : item.expense_trn_date,
@@ -263,6 +297,7 @@ export default {
                             id         : item.id,
                             trn_no     : item.id,
                             type       : 'Check',
+                            trn_type   : 'check',
                             ref        : item.ref ? item.ref : '-',
                             vendor_name: item.expense_people_name,
                             trn_date   : item.expense_people_name,
@@ -283,8 +318,9 @@ export default {
 
                 if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
                     temp['actions'] = [
+                        {key: 'payment', label: __('Make Payment', 'erp')},
                         {key: 'edit', label: __('Edit', 'erp')},
-                        {key: 'payment', label: __('Make Payment', 'erp')}
+                        {key: 'void', label: 'Void'}
                     ];
                 } else {
                     temp['actions'] = [

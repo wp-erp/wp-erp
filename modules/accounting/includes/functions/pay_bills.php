@@ -326,10 +326,13 @@ function erp_acct_void_pay_bill( $id ) {
 
     $wpdb->update( $wpdb->prefix . 'erp_acct_pay_bill',
         array(
-            'status' => 'void',
+            'status' => 8,
         ),
         array( 'voucher_no' => $id )
     );
+
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', array( 'trn_no' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_bill_account_details', array( 'bill_no' => $id ) );
 }
 
 /**
