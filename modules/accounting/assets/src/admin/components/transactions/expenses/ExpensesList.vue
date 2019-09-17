@@ -193,11 +193,13 @@ export default {
                         if (row.trn_type === 'pay_bill') {
                             HTTP.post('pay-bills/' + row.id + '/void').then(response => {
                                 this.showAlert('success', 'Transaction has been void!');
+                            }).then(()=>{
+                                this.$router.push({ name: 'Expenses' });
                             }).catch(error => {
                                 throw error;
                             });
                         }
-                        window.location.reload();
+
                     }
                     break;
 

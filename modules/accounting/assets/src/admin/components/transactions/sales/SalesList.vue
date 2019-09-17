@@ -247,11 +247,12 @@ export default {
                         if (row.type === 'payment') {
                             HTTP.post('payments/' + row.id + '/void').then(response => {
                                 this.showAlert('success', 'Transaction has been void!');
+                            }).then(()=>{
+                                this.$router.push({ name: 'Sales' });
                             }).catch(error => {
                                 throw error;
                             });
                         }
-                        window.location.reload();
                     }
                     break;
 

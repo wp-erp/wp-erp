@@ -245,11 +245,12 @@ export default {
                         if (row.type === 'pay_purchase') {
                             HTTP.post('pay-purchases/' + row.id + '/void').then(response => {
                                 this.showAlert('success', 'Transaction has been void!');
+                            }).then(()=>{
+                                this.$router.push({ name: 'Purchases' });
                             }).catch(error => {
                                 throw error;
                             });
                         }
-                        window.location.reload();
                     }
                     break;
 

@@ -25058,12 +25058,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
             if (row.type === 'payment') {
               __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('payments/' + row.id + '/void').then(function (response) {
                 _this3.showAlert('success', 'Transaction has been void!');
+              }).then(function () {
+                _this3.$router.push({
+                  name: 'Sales'
+                });
               }).catch(function (error) {
                 throw error;
               });
             }
-
-            window.location.reload();
           }
 
           break;
@@ -25759,12 +25761,14 @@ setTimeout(function () {
             if (row.trn_type === 'pay_bill') {
               __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('pay-bills/' + row.id + '/void').then(function (response) {
                 _this3.showAlert('success', 'Transaction has been void!');
+              }).then(function () {
+                _this3.$router.push({
+                  name: 'Expenses'
+                });
               }).catch(function (error) {
                 throw error;
               });
             }
-
-            window.location.reload();
           }
 
           break;
@@ -26608,12 +26612,14 @@ setTimeout(function () {
             if (row.type === 'pay_purchase') {
               __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('pay-purchases/' + row.id + '/void').then(function (response) {
                 _this3.showAlert('success', 'Transaction has been void!');
+              }).then(function () {
+                _this3.$router.push({
+                  name: 'Purchases'
+                });
               }).catch(function (error) {
                 throw error;
               });
             }
-
-            window.location.reload();
           }
 
           break;
