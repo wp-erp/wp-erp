@@ -431,21 +431,6 @@ function erp_acct_quick_access_menu() {
 }
 
 /**
- * Get check transaction type by voucher_no
- *
- * @param $trn_id
- *
- * @return array
- */
-function erp_acct_get_trn_type_by_voucher_no( $voucher_no ) {
-    global $wpdb;
-
-    $row = $wpdb->get_row( "SELECT type FROM {$wpdb->prefix}erp_acct_voucher_no WHERE id = {$voucher_no} LIMIT 1" );
-
-    return $row->type;
-}
-
-/**
  * Change a string to slug
  */
 function slugify( $str ) {

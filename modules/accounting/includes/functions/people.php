@@ -394,3 +394,161 @@ function erp_acct_get_user_id_by_people_id( $people_id ) {
 
     return $row->user_id;
 }
+
+/**
+ * Get Customer or Vendors
+ */
+function erp_acct_get_accounting_people( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'type'       => 'all',
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'trashed'    => false,
+        'meta_query' => [],
+        'count'      => false,
+        'life_stage' => '',
+        'include'    => [],
+        'exclude'    => [],
+        's'          => '',
+        'no_object'  => false
+    ];
+    $args        = wp_parse_args( $args, $defaults );
+
+    $people_type = is_array( $args['type'] ) ? implode( '-', $args['type'] ) : $args['type'];
+    $cache_key   = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) );
+    $items       = wp_cache_get( $cache_key, 'erp' );
+    $pep_tb      = $wpdb->prefix . 'erp_peoples';
+    $pepmeta_tb  = $wpdb->prefix . 'erp_peoplemeta';
+    $types_tb    = $wpdb->prefix . 'erp_people_types';
+    $type_rel_tb = $wpdb->prefix . 'erp_people_type_relations';
+
+    if ( false === $items ) {
+        extract( $args );
+
+        $sql         = [];
+        $trashed_sql = $trashed ? "`deleted_at` is not null" : "`deleted_at` is null";
+
+        if ( is_array( $type ) ) {
+            $type_sql = "and `name` IN ( '" . implode( "','", $type ) . "' )";
+        } else {
+            $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type . "'" : '';
+        }
+
+        $wrapper_select = "SELECT people.*, ";
+
+        $sql['select'][] = "GROUP_CONCAT( DISTINCT t.name SEPARATOR ',') AS types";
+        $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
+        $sql_from_tb     = "FROM $pep_tb AS people";
+        $sql_people_type = "where ( select count(*) from $types_tb
+            inner join  $type_rel_tb
+                on $types_tb.`id` = $type_rel_tb.`people_types_id`
+                where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
+          ) >= 1";
+        $sql['where']    = [ '' ];
+
+        $sql_group_by = "GROUP BY `people`.`id`";
+        $sql_order_by = "ORDER BY $orderby $order";
+
+        // Check if want all data without any pagination
+        $sql_limit = ( $number != '-1' && ! $count ) ? "LIMIT $number OFFSET $offset" : '';
+
+        if ( $meta_query ) {
+            $sql['join'][] = "LEFT JOIN $pepmeta_tb as people_meta on people.id = people_meta.`erp_people_id`";
+
+            $meta_key   = isset( $meta_query['meta_key'] ) ? $meta_query['meta_key'] : '';
+            $meta_value = isset( $meta_query['meta_value'] ) ? $meta_query['meta_value'] : '';
+            $compare    = isset( $meta_query['compare'] ) ? $meta_query['compare'] : '=';
+
+            $sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
+        }
+
+
+        // Check if the row want to search
+        if ( ! empty( $s ) ) {
+            $search_like = '%' . $wpdb->esc_like( $s ) . '%';
+            $words       = explode( ' ', $s );
+
+            if ( $type == 'customer' || $type == 'vendor' ) {
+                if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+
+                    if ( $type === 'customer' ) {
+                        $sql['where'][] = $wpdb->prepare(
+                            'AND ( people.first_name ) LIKE %s OR ' .
+                            '( people.last_name ) LIKE %s',
+                            array( $search_like, $search_like )
+                        );
+
+                    } else {
+                        $sql['where'][] = $wpdb->prepare( 'AND ( people.company ) LIKE %s', array( $search_like ) );
+                    }
+
+                } else {
+                    $sql['where'][] = $wpdb->prepare(
+                        'AND ( people.first_name ) LIKE %s OR ' .
+                        '( people.last_name ) LIKE %s OR ' .
+                        '( people.email ) LIKE %s OR ' .
+                        '( people.company ) LIKE %s',
+                        array( $search_like, $search_like, $search_like, $search_like )
+                    );
+                }
+
+            } elseif ( is_array( $type ) ) {
+                $sql['where'][] = $wpdb->prepare(
+                    'AND ( people.first_name ) LIKE %s OR ' .
+                    '( people.last_name ) LIKE %s',
+                    array( $search_like, $search_like )
+                );
+            }
+        }
+
+        // Check if args count true, then return total count customer according to above filter
+        if ( $count ) {
+            $sql_order_by   = '';
+            $sql_group_by   = '';
+            $wrapper_select = 'SELECT COUNT( DISTINCT people.id ) as total_number';
+            unset( $sql['select'][0] );
+        }
+
+        $sql = apply_filters( 'erp_get_people_pre_query', $sql, $args );
+
+        $post_where_queries = '';
+        if ( ! empty( $sql['post_where_queries'] ) ) {
+            $post_where_queries = 'AND ( 1 = 1 '
+                . implode( ' ', $sql['post_where_queries'] )
+                . ' )';
+        }
+
+        $final_query = $wrapper_select . ' '
+            . implode( ' ', $sql['select'] ) . ' '
+            . $sql_from_tb . ' '
+            . implode( ' ', $sql['join'] ) . ' '
+            . $sql_people_type . ' '
+            . 'AND ( 1=1 '
+            . implode( ' ', $sql['where'] ) . ' '
+            . ' )'
+            . $post_where_queries
+            . $sql_group_by . ' '
+            . $sql_order_by . ' '
+            . $sql_limit;
+
+        if ( $count ) {
+            // Only filtered total count of people
+            $items = $wpdb->get_var( apply_filters( 'erp_get_people_total_count_query', $final_query, $args ) );
+        } else {
+            // Fetch results from people table
+            $results = $wpdb->get_results( apply_filters( 'erp_get_people_total_query', $final_query, $args ), ARRAY_A );
+            array_walk( $results, function ( &$results ) {
+                $results['types'] = explode( ',', $results['types'] );
+            } );
+
+            $items = ( $no_object ) ? $results : erp_array_to_object( $results );
+        }
+        wp_cache_set( $cache_key, $items, 'erp' );
+    }
+
+    return $items;
+}

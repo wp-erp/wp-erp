@@ -430,10 +430,13 @@ function erp_acct_void_purchase( $id ) {
 
     $wpdb->update( $wpdb->prefix . 'erp_acct_purchase',
         array(
-            'status' => 'void',
+            'status' => 8,
         ),
         array( 'voucher_no' => $id )
     );
+
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', array( 'trn_no' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_account_details', array( 'purchase_no' => $id ) );
 }
 
 /**

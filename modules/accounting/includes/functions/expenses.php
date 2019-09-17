@@ -423,10 +423,14 @@ function erp_acct_void_expense( $id ) {
 
     $wpdb->update( $wpdb->prefix . 'erp_acct_expenses',
         array(
-            'status' => 'void',
+            'status' => 8,
         ),
         array( 'voucher_no' => $id )
     );
+
+
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', array( 'trn_no' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_expense_details', array( 'trn_no' => $id ) );
 }
 
 /**

@@ -19,6 +19,7 @@
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
+                                <li><a :href="pdf_link">{{ __('Export as PDF', 'erp') }}</a></li>
                                 <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
@@ -68,7 +69,8 @@ export default {
             showModal : false,
             print_data: null,
             copyLink  : '#',
-            user_id   : null
+            user_id   : null,
+            pdf_link : '#'
         };
     },
 
@@ -138,9 +140,10 @@ export default {
 
             HTTP.get(`/invoices/${this.$route.params.id}`).then(response => {
                 this.invoice = response.data;
-            }).then(e => {}).then(() => {
+            }).then(() => {
                 this.print_data = this.invoice;
                 this.copyLink   = this.invoice.readonly_url;
+                this.pdf_link   = this.invoice.pdf_link;
                 this.isWorking  = false;
                 this.user_id    = this.print_data.customer_id;
             });
@@ -151,8 +154,9 @@ export default {
 
             HTTP.get(`/payments/${this.$route.params.id}`).then(response => {
                 this.payment = response.data;
-            }).then(e => {}).then(() => {
+            }).then(() => {
                 this.print_data = this.payment;
+                this.pdf_link   = this.payment.pdf_link;
                 this.user_id    = this.print_data.customer_id;
                 this.isWorking  = false;
             });

@@ -159,17 +159,22 @@ export default {
                         item['actions'] = [
                             {key: 'edit', label: 'Edit'}
                         ];
+                    } else if (item.status_code === '8') {
+                        item['actions'] = [
+                            {key: '#', label: __('No actions found', 'erp')}
+                        ];
                     } else if (item.type === 'invoice') {
                         if (item.status_code === '7') {
                             delete item['actions'];
                         } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
                             item['actions'] = [
+                                {key: 'receive', label: __('Receive Payment', 'erp')},
                                 {key: 'edit', label: __('Edit', 'erp')},
-                                {key: 'receive', label: __('Receive Payment', 'erp')}
+                                {key: 'void', label: 'Void'}
                             ];
                         } else {
                             item['actions'] = [
-                                {key: '#', label: __('No actions found', 'erp')}
+                                {key: 'void', label: 'Void'}
                             ];
                         }
                     } else {
@@ -230,7 +235,29 @@ export default {
                     });
                     break;
 
+                case 'void':
+                    if (confirm('Are you sure to void the transaction?')) {
+                        if (row.type === 'invoice') {
+                            HTTP.post('invoices/' + row.id + '/void').then(response => {
+                                this.showAlert('success', 'Transaction has been void!');
+                            }).catch(error => {
+                                throw error;
+                            });
+                        }
+                        if (row.type === 'payment') {
+                            HTTP.post('payments/' + row.id + '/void').then(response => {
+                                this.showAlert('success', 'Transaction has been void!');
+                            }).then(()=>{
+                                this.$router.push({ name: 'Sales' });
+                            }).catch(error => {
+                                throw error;
+                            });
+                        }
+                    }
+                    break;
+
                 default :
+                    break;
             }
         },
 

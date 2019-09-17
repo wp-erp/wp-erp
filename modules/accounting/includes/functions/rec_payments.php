@@ -417,10 +417,13 @@ function erp_acct_void_payment( $id ) {
 
     $wpdb->update( $wpdb->prefix . 'erp_acct_invoice_receipts',
         array(
-            'status' => 'void',
+            'status' => 8,
         ),
         array( 'voucher_no' => $id )
     );
+
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', array( 'trn_no' => $id ) );
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_account_details', array( 'invoice_no' => $id ) );
 }
 
 /**

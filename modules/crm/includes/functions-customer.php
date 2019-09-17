@@ -1973,7 +1973,8 @@ function erp_crm_get_save_search_item( $args = [] ) {
     }
 
     $results     = [];
-    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=', $args['user_id'] );
+    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=', $args['user_id'] )
+                                                    ->orWhere( 'global', '=', 1 );
 
     if ( isset( $args['type'] ) && ! empty( $args['type'] ) ) {
         $search_keys = $search_keys->where( 'type', $args['type'] );

@@ -78,7 +78,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void', [
             [
-                'methods'             => WP_REST_Server::READABLE,
+                'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'void_pay_purchase' ],
                 'args'                => [],
                 'permission_callback' => function( $request ) {
