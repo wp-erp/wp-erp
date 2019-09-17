@@ -24945,21 +24945,29 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
               key: 'edit',
               label: 'Edit'
             }];
+          } else if (item.status_code === '8') {
+            item['actions'] = [{
+              key: '#',
+              label: __('No actions found', 'erp')
+            }];
           } else if (item.type === 'invoice') {
             if (item.status_code === '7') {
               delete item['actions'];
             } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
               item['actions'] = [{
+                key: 'receive',
+                label: __('Receive Payment', 'erp')
+              }, {
                 key: 'edit',
                 label: __('Edit', 'erp')
               }, {
-                key: 'receive',
-                label: __('Receive Payment', 'erp')
+                key: 'void',
+                label: 'Void'
               }];
             } else {
               item['actions'] = [{
-                key: '#',
-                label: __('No actions found', 'erp')
+                key: 'void',
+                label: 'Void'
               }];
             }
           } else {
@@ -25037,7 +25045,31 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           });
           break;
 
+        case 'void':
+          if (confirm('Are you sure to void the transaction?')) {
+            if (row.type === 'invoice') {
+              __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('invoices/' + row.id + '/void').then(function (response) {
+                _this3.showAlert('success', 'Transaction has been void!');
+              }).catch(function (error) {
+                throw error;
+              });
+            }
+
+            if (row.type === 'payment') {
+              __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('payments/' + row.id + '/void').then(function (response) {
+                _this3.showAlert('success', 'Transaction has been void!');
+              }).catch(function (error) {
+                throw error;
+              });
+            }
+
+            window.location.reload();
+          }
+
+          break;
+
         default:
+          break;
       }
     },
     goToPage: function goToPage(page) {
@@ -25652,6 +25684,8 @@ setTimeout(function () {
       });
     },
     onActionClick: function onActionClick(action, row, index) {
+      var _this3 = this;
+
       switch (action) {
         case 'trash':
           // if ( confirm('Are you sure to delete?') ) {
@@ -25662,7 +25696,7 @@ setTimeout(function () {
           break;
 
         case 'edit':
-          if (row.type === 'Expense') {
+          if (row.type === 'expense') {
             this.$router.push({
               name: 'ExpenseEdit',
               params: {
@@ -25671,7 +25705,7 @@ setTimeout(function () {
             });
           }
 
-          if (row.type === 'Bill') {
+          if (row.type === 'bill') {
             this.$router.push({
               name: 'BillEdit',
               params: {
@@ -25680,7 +25714,7 @@ setTimeout(function () {
             });
           }
 
-          if (row.type === 'Check') {
+          if (row.type === 'check') {
             this.$router.push({
               name: 'CheckEdit',
               params: {
@@ -25692,7 +25726,7 @@ setTimeout(function () {
           break;
 
         case 'payment':
-          if (row.type === 'Bill') {
+          if (row.type === 'bill') {
             this.$router.push({
               name: 'PayBillCreate',
               params: {
@@ -25704,7 +25738,39 @@ setTimeout(function () {
 
           break;
 
+        case 'void':
+          if (confirm('Are you sure to void the transaction?')) {
+            if (row.trn_type === 'expense' || row.trn_type === 'check') {
+              __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('expenses/' + row.id + '/void').then(function (response) {
+                _this3.showAlert('success', 'Transaction has been void!');
+              }).catch(function (error) {
+                throw error;
+              });
+            }
+
+            if (row.trn_type === 'bill') {
+              __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('bills/' + row.id + '/void').then(function (response) {
+                _this3.showAlert('success', 'Transaction has been void!');
+              }).catch(function (error) {
+                throw error;
+              });
+            }
+
+            if (row.trn_type === 'pay_bill') {
+              __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('pay-bills/' + row.id + '/void').then(function (response) {
+                _this3.showAlert('success', 'Transaction has been void!');
+              }).catch(function (error) {
+                throw error;
+              });
+            }
+
+            window.location.reload();
+          }
+
+          break;
+
         default:
+          break;
       }
     },
     goToPage: function goToPage(page) {
@@ -25722,7 +25788,7 @@ setTimeout(function () {
   },
   computed: {
     row_items: function row_items() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (!this.rows.length) {
         return this.rows;
@@ -25736,12 +25802,13 @@ setTimeout(function () {
               id: item.id,
               trn_no: item.id,
               type: 'Pay Bill',
+              trn_type: 'pay_bill',
               ref: item.ref ? item.ref : '-',
               vendor_name: item.pay_bill_vendor_name,
               trn_date: item.pay_bill_trn_date,
               due_date: '-',
               due: '-',
-              amount: _this3.formatAmount(item.pay_bill_amount),
+              amount: _this4.formatAmount(item.pay_bill_amount),
               status: item.status,
               singleView: {
                 name: 'PayBillSingle',
@@ -25761,13 +25828,14 @@ setTimeout(function () {
               id: item.id,
               trn_no: item.id,
               type: 'Bill',
+              trn_type: 'bill',
               ref: item.ref ? item.ref : '-',
               vendor_id: item.vendor_id,
               vendor_name: item.vendor_name,
               trn_date: item.bill_trn_date,
               due_date: item.due_date,
-              due: _this3.formatAmount(item.due),
-              amount: _this3.formatAmount(item.amount),
+              due: _this4.formatAmount(item.due),
+              amount: _this4.formatAmount(item.amount),
               status: item.status,
               singleView: {
                 name: 'BillSingle',
@@ -25776,11 +25844,14 @@ setTimeout(function () {
                 }
               },
               actions: [{
+                key: 'payment',
+                label: 'Make Payment'
+              }, {
                 key: 'edit',
                 label: 'Edit'
               }, {
-                key: 'payment',
-                label: 'Make Payment'
+                key: 'void',
+                label: 'Void'
               }]
             };
             break;
@@ -25790,12 +25861,13 @@ setTimeout(function () {
               id: item.id,
               trn_no: item.id,
               type: 'Expense',
+              trn_type: 'expense',
               ref: item.ref ? item.ref : '-',
               vendor_name: item.expense_people_name,
               trn_date: item.expense_trn_date,
               due_date: '-',
               due: '-',
-              amount: _this3.formatAmount(item.expense_amount),
+              amount: _this4.formatAmount(item.expense_amount),
               status: item.status,
               singleView: {
                 name: 'ExpenseSingle',
@@ -25815,12 +25887,13 @@ setTimeout(function () {
               id: item.id,
               trn_no: item.id,
               type: 'Check',
+              trn_type: 'check',
               ref: item.ref ? item.ref : '-',
               vendor_name: item.expense_people_name,
               trn_date: item.expense_people_name,
               due_date: '-',
               due: '-',
-              amount: _this3.formatAmount(item.expense_amount),
+              amount: _this4.formatAmount(item.expense_amount),
               status: item.status,
               singleView: {
                 name: 'CheckSingle',
@@ -25841,11 +25914,14 @@ setTimeout(function () {
 
         if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
           temp['actions'] = [{
+            key: 'payment',
+            label: __('Make Payment', 'erp')
+          }, {
             key: 'edit',
             label: __('Edit', 'erp')
           }, {
-            key: 'payment',
-            label: __('Make Payment', 'erp')
+            key: 'void',
+            label: 'Void'
           }];
         } else {
           temp['actions'] = [{
@@ -26433,21 +26509,29 @@ setTimeout(function () {
               key: 'edit',
               label: 'Edit'
             }];
+          } else if (item.status_code === '8') {
+            item['actions'] = [{
+              key: '#',
+              label: __('No actions found', 'erp')
+            }];
           } else if (item.type === 'purchase') {
             if (item.status_code === '7') {
               delete item['actions'];
             } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
               item['actions'] = [{
+                key: 'payment',
+                label: __('Make Payment', 'erp')
+              }, {
                 key: 'edit',
                 label: __('Edit', 'erp')
               }, {
-                key: 'payment',
-                label: __('Make Payment', 'erp')
+                key: 'void',
+                label: 'Void'
               }];
             } else {
               item['actions'] = [{
-                key: '#',
-                label: __('No actions found', 'erp')
+                key: 'void',
+                label: 'Void'
               }];
             }
           } else {
@@ -26511,7 +26595,31 @@ setTimeout(function () {
 
           break;
 
+        case 'void':
+          if (confirm('Are you sure to void the transaction?')) {
+            if (row.type === 'purchase') {
+              __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('purchases/' + row.id + '/void').then(function (response) {
+                _this3.showAlert('success', 'Transaction has been void!');
+              }).catch(function (error) {
+                throw error;
+              });
+            }
+
+            if (row.type === 'pay_purchase') {
+              __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].post('pay-purchases/' + row.id + '/void').then(function (response) {
+                _this3.showAlert('success', 'Transaction has been void!');
+              }).catch(function (error) {
+                throw error;
+              });
+            }
+
+            window.location.reload();
+          }
+
+          break;
+
         default:
+          break;
       }
     },
     goToPage: function goToPage(page) {
