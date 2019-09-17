@@ -1016,7 +1016,11 @@
 
                 renderFilterFromUrl: function() {
 
-                    this.fields = this.reRenderFilterFromUrl( window.location.search );
+                    if ( window.localStorage.search_segment_str != undefined ) {
+                        this.fields = this.reRenderFilterFromUrl( window.localStorage.search_segment_str );
+                    } else {
+                        this.fields = this.reRenderFilterFromUrl( window.location.search );
+                    }
                 }
             },
 
@@ -1798,6 +1802,8 @@
                     var queryUrl = this.makeQueryStringFromFilter( fields );
                     var hasSaveFilterParam = wperp.erpGetParamByName( 'filter_save_filter', window.location.search.replace( '?', '' ) );
                     var addSaveFilterParam = ( hasSaveFilterParam === null ) ? '&filter_save_filter=' : '';
+
+                    window.localStorage.search_segment_str = queryUrl + addSaveFilterParam;
 
                     this.$refs.vtable.additionalUrlString['advanceFilter']= queryUrl + addSaveFilterParam;
                     this.$refs.vtable.fetchData();
