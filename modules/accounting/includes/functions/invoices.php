@@ -604,6 +604,22 @@ function erp_acct_void_invoice( $invoice_no ) {
 
     $wpdb->delete( $wpdb->prefix . 'erp_acct_ledger_details', array( 'trn_no' => $invoice_no ) );
     $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_account_details', array( 'invoice_no' => $invoice_no ) );
+
+    $sql = $wpdb->prepare( "SELECT
+        inv_detail_tax.id
+        FROM {$wpdb->prefix}erp_acct_invoice_details_tax as inv_detail_tax
+        LEFT JOIN {$wpdb->prefix}erp_acct_invoice_details as inv_detail ON inv_detail_tax.invoice_details_id = inv_detail.id
+        LEFT JOIN {$wpdb->prefix}erp_acct_invoices as invoice ON inv_detail.trn_no = invoice.voucher_no
+        WHERE inv_detail.trn_no = %d", $invoice_no );
+
+    $results = $wpdb->get_results( $sql, ARRAY_A );
+
+    foreach ( $results as $result ) {
+        $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_details_tax', array( 'id' => $result['id'] ) );
+    }
+
+    $wpdb->delete( $wpdb->prefix . 'erp_acct_tax_agency_details', array( 'trn_no' => $invoice_no ) );
+
 }
 
 /**
