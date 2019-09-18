@@ -693,6 +693,40 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
 }
 
 /**
+ * Generate transaction pdf by voucher_no
+ *
+ * @return void
+ */
+function erp_acct_generate_transaction_pdf( $voucher_no ) {
+    $transaction = erp_acct_get_transaction( $voucher_no );
+    $filename    = erp_acct_get_pdf_filename( $voucher_no );
+
+    erp_acct_generate_pdf( [], $transaction, $filename, 'F' );
+}
+
+/**
+ * Generate all transaction pdfs
+ *
+ * @return void
+ */
+function erp_acct_generate_transaction_pdfs() {
+    global $wpdb;
+
+    $voucher_nos = $wpdb->get_results( "SELECT id, type FROM {$wpdb->prefix}erp_acct_voucher_no", ARRAY_A );
+
+    for ( $i = 0; $i < count( $voucher_nos ); $i++ ) {
+
+        if ( $voucher_nos[$i]['type'] == 'journal' ) {
+            continue;
+        }
+
+        $transaction = erp_acct_get_transaction( $voucher_nos[$i]['id'] );
+        $filename    = erp_acct_get_pdf_filename( $voucher_nos[$i]['id'] );
+        erp_acct_generate_pdf( [], $transaction, $filename, 'F' );
+    }
+}
+
+/**
  * Generate pdf
  *
  * @param $request
