@@ -31,9 +31,9 @@
                                         <label for="email">{{ __('Email', 'erp') }} <span class="wperp-required-sign">*</span></label>
                                         <input type="email" @blur="checkEmailExistence" v-model="peopleFields.email" id="email" class="wperp-form-field" placeholder="you@domain.com" required>
                                     </div>
-                                    <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
-                                        <label for="mobile">{{ __('Mobile', 'erp') }}</label>
-                                        <input type="tel" v-model="peopleFields.mobile" id="mobile" class="wperp-form-field">
+                                    <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
+                                        <label for="phone">{{ __('Phone', 'erp') }}</label>
+                                        <input type="tel" v-model="peopleFields.phone" id="phone" class="wperp-form-field" placeholder="(123) 456-789">
                                     </div>
                                 </div>
 
@@ -44,9 +44,9 @@
                                             <label for="company">{{ __('Company', 'erp') }}</label>
                                             <input type="text" v-model="peopleFields.company" id="company" class="wperp-form-field" :placeholder="__('ABC Corporation', 'erp')">
                                         </div>
-                                        <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="phone">{{ __('Phone', 'erp') }}</label>
-                                            <input type="tel" v-model="peopleFields.phone" id="phone" class="wperp-form-field" placeholder="(123) 456-789">
+                                        <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
+                                            <label for="mobile">{{ __('Mobile', 'erp') }}</label>
+                                            <input type="tel" v-model="peopleFields.mobile" id="mobile" class="wperp-form-field">
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="website">{{ __('Website', 'erp') }}</label>

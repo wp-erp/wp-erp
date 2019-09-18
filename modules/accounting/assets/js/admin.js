@@ -12072,11 +12072,11 @@ var render = function() {
                         "div",
                         {
                           staticClass:
-                            "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                            "wperp-col-sm-6 wperp-col-xs-12 wperp-form-group"
                         },
                         [
-                          _c("label", { attrs: { for: "mobile" } }, [
-                            _vm._v(_vm._s(_vm.__("Mobile", "erp")))
+                          _c("label", { attrs: { for: "phone" } }, [
+                            _vm._v(_vm._s(_vm.__("Phone", "erp")))
                           ]),
                           _vm._v(" "),
                           _c("input", {
@@ -12084,13 +12084,17 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.peopleFields.mobile,
-                                expression: "peopleFields.mobile"
+                                value: _vm.peopleFields.phone,
+                                expression: "peopleFields.phone"
                               }
                             ],
                             staticClass: "wperp-form-field",
-                            attrs: { type: "tel", id: "mobile" },
-                            domProps: { value: _vm.peopleFields.mobile },
+                            attrs: {
+                              type: "tel",
+                              id: "phone",
+                              placeholder: "(123) 456-789"
+                            },
+                            domProps: { value: _vm.peopleFields.phone },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
@@ -12098,7 +12102,7 @@ var render = function() {
                                 }
                                 _vm.$set(
                                   _vm.peopleFields,
-                                  "mobile",
+                                  "phone",
                                   $event.target.value
                                 )
                               }
@@ -12166,11 +12170,11 @@ var render = function() {
                                 "div",
                                 {
                                   staticClass:
-                                    "wperp-col-sm-6 wperp-col-xs-12 wperp-form-group"
+                                    "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
                                 },
                                 [
-                                  _c("label", { attrs: { for: "phone" } }, [
-                                    _vm._v(_vm._s(_vm.__("Phone", "erp")))
+                                  _c("label", { attrs: { for: "mobile" } }, [
+                                    _vm._v(_vm._s(_vm.__("Mobile", "erp")))
                                   ]),
                                   _vm._v(" "),
                                   _c("input", {
@@ -12178,17 +12182,15 @@ var render = function() {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: _vm.peopleFields.phone,
-                                        expression: "peopleFields.phone"
+                                        value: _vm.peopleFields.mobile,
+                                        expression: "peopleFields.mobile"
                                       }
                                     ],
                                     staticClass: "wperp-form-field",
-                                    attrs: {
-                                      type: "tel",
-                                      id: "phone",
-                                      placeholder: "(123) 456-789"
+                                    attrs: { type: "tel", id: "mobile" },
+                                    domProps: {
+                                      value: _vm.peopleFields.mobile
                                     },
-                                    domProps: { value: _vm.peopleFields.phone },
                                     on: {
                                       input: function($event) {
                                         if ($event.target.composing) {
@@ -12196,7 +12198,7 @@ var render = function() {
                                         }
                                         _vm.$set(
                                           _vm.peopleFields,
-                                          "phone",
+                                          "mobile",
                                           $event.target.value
                                         )
                                       }
