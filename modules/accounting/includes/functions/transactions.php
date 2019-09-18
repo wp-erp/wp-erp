@@ -703,6 +703,11 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
  * @return boolean
  */
 function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output_method = 'D' ) {
+
+    if ( is_array( $transaction ) ) {
+        $transaction = ( object ) $transaction;
+    }
+
     $company     = new \WeDevs\ERP\Company();
     $theme_color = erp_get_option( 'erp_ac_pdf_theme_color', false, '#9e9e9e' );
 

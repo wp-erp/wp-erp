@@ -84,6 +84,7 @@ function erp_acct_get_payment( $invoice_no ) {
     $row = $wpdb->get_row( $sql, ARRAY_A );
 
     $row['line_items'] = erp_acct_format_payment_line_items( $invoice_no );
+    $row['pdf_link']   = erp_acct_pdf_abs_path_to_url( $invoice_no );
 
     return $row;
 }
