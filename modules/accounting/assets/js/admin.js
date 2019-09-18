@@ -54276,9 +54276,9 @@ var render = function() {
               "tbody",
               _vm._l(_vm.payment.line_items, function(detail, index) {
                 return _c("tr", { key: index }, [
-                  _c("th", [_vm._v("#" + _vm._s(detail.index))]),
+                  _c("th", [_vm._v("#" + _vm._s(index + 1))]),
                   _vm._v(" "),
-                  _c("th", [_vm._v("#" + _vm._s(detail.invoice_no))]),
+                  _c("th", [_vm._v(_vm._s(detail.invoice_no))]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(_vm.moneyFormat(detail.amount)))])
                 ])
