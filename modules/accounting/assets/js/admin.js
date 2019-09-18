@@ -14667,6 +14667,9 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         designation: {
           label: 'Designation'
         },
+        department: {
+          label: 'Department'
+        },
         email: {
           label: 'Email'
         },
@@ -14695,7 +14698,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       var items = this.rows;
       items.map(function (item) {
         item.employee = item.full_name;
-        item.designation = item.designation.title;
+        item.designation = item.designation;
       });
       return items;
     }
@@ -14895,7 +14898,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
     fetchItem: function fetchItem(id) {
       var _this2 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get(this.url + '/' + id, {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/employees/' + this.userId, {
         params: {
           include: 'department,designation,reporting_to,avatar'
         }
