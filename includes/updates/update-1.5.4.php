@@ -10,7 +10,7 @@ function erp_acct_updater_regenerate_transaction_pdfs() {
 
     $voucher_nos = $wpdb->get_results( "SELECT id, type FROM {$wpdb->prefix}erp_acct_voucher_no", ARRAY_A );
 
-    for( $i = 0; $i < count( $voucher_nos ); $i++ ) {
+    for ( $i = 0; $i < count( $voucher_nos ); $i++ ) {
 
         if ( $voucher_nos[$i]['type'] == 'journal' ) {
             continue;
