@@ -46,6 +46,7 @@ export default {
             columns: {
                 employee: { label: 'Name' },
                 designation: { label: 'Designation' },
+                department: { label: 'Department' },
                 email: { label: 'Email' },
                 phone: { label: 'Phone' }
             },
@@ -72,7 +73,7 @@ export default {
             const items = this.rows;
             items.map(item => {
                 item.employee = item.full_name;
-                item.designation = item.designation.title;
+                item.designation = item.designation;
             });
             return items;
         }

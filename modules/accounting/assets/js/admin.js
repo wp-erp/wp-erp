@@ -12113,11 +12113,11 @@ var render = function() {
                           "div",
                           {
                             staticClass:
-                              "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
+                              "wperp-col-sm-6 wperp-col-xs-12 wperp-form-group"
                           },
                           [
-                            _c("label", { attrs: { for: "mobile" } }, [
-                              _vm._v(_vm._s(_vm.__("Mobile", "erp")))
+                            _c("label", { attrs: { for: "phone" } }, [
+                              _vm._v(_vm._s(_vm.__("Phone", "erp")))
                             ]),
                             _vm._v(" "),
                             _c("input", {
@@ -12125,13 +12125,17 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value: _vm.peopleFields.mobile,
-                                  expression: "peopleFields.mobile"
+                                  value: _vm.peopleFields.phone,
+                                  expression: "peopleFields.phone"
                                 }
                               ],
                               staticClass: "wperp-form-field",
-                              attrs: { type: "tel", id: "mobile" },
-                              domProps: { value: _vm.peopleFields.mobile },
+                              attrs: {
+                                type: "tel",
+                                id: "phone",
+                                placeholder: "(123) 456-789"
+                              },
+                              domProps: { value: _vm.peopleFields.phone },
                               on: {
                                 input: function($event) {
                                   if ($event.target.composing) {
@@ -12139,7 +12143,7 @@ var render = function() {
                                   }
                                   _vm.$set(
                                     _vm.peopleFields,
-                                    "mobile",
+                                    "phone",
                                     $event.target.value
                                   )
                                 }
@@ -12217,11 +12221,11 @@ var render = function() {
                                   "div",
                                   {
                                     staticClass:
-                                      "wperp-col-sm-6 wperp-col-xs-12 wperp-form-group"
+                                      "wperp-form-group wperp-col-sm-6 wperp-col-xs-12"
                                   },
                                   [
-                                    _c("label", { attrs: { for: "phone" } }, [
-                                      _vm._v(_vm._s(_vm.__("Phone", "erp")))
+                                    _c("label", { attrs: { for: "mobile" } }, [
+                                      _vm._v(_vm._s(_vm.__("Mobile", "erp")))
                                     ]),
                                     _vm._v(" "),
                                     _c("input", {
@@ -12229,18 +12233,14 @@ var render = function() {
                                         {
                                           name: "model",
                                           rawName: "v-model",
-                                          value: _vm.peopleFields.phone,
-                                          expression: "peopleFields.phone"
+                                          value: _vm.peopleFields.mobile,
+                                          expression: "peopleFields.mobile"
                                         }
                                       ],
                                       staticClass: "wperp-form-field",
-                                      attrs: {
-                                        type: "tel",
-                                        id: "phone",
-                                        placeholder: "(123) 456-789"
-                                      },
+                                      attrs: { type: "tel", id: "mobile" },
                                       domProps: {
-                                        value: _vm.peopleFields.phone
+                                        value: _vm.peopleFields.mobile
                                       },
                                       on: {
                                         input: function($event) {
@@ -12249,7 +12249,7 @@ var render = function() {
                                           }
                                           _vm.$set(
                                             _vm.peopleFields,
-                                            "phone",
+                                            "mobile",
                                             $event.target.value
                                           )
                                         }
@@ -14740,6 +14740,9 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
         designation: {
           label: 'Designation'
         },
+        department: {
+          label: 'Department'
+        },
         email: {
           label: 'Email'
         },
@@ -14768,7 +14771,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       var items = this.rows;
       items.map(function (item) {
         item.employee = item.full_name;
-        item.designation = item.designation.title;
+        item.designation = item.designation;
       });
       return items;
     }
@@ -14968,7 +14971,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
     fetchItem: function fetchItem(id) {
       var _this2 = this;
 
-      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get(this.url + '/' + id, {
+      __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */].get('/employees/' + this.userId, {
         params: {
           include: 'department,designation,reporting_to,avatar'
         }
@@ -54346,9 +54349,9 @@ var render = function() {
               "tbody",
               _vm._l(_vm.payment.line_items, function(detail, index) {
                 return _c("tr", { key: index }, [
-                  _c("th", [_vm._v("#" + _vm._s(detail.index))]),
+                  _c("th", [_vm._v("#" + _vm._s(index + 1))]),
                   _vm._v(" "),
-                  _c("th", [_vm._v("#" + _vm._s(detail.invoice_no))]),
+                  _c("th", [_vm._v(_vm._s(detail.invoice_no))]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(_vm.moneyFormat(detail.amount)))])
                 ])

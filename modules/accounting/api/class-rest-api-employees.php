@@ -170,9 +170,9 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item['designation']  = $employee->get_designation();
-        $item['department']   = $employee->get_department();
-        $item['reporting_to'] = $employee->get_reporting_to();
+        $item['designation']  = $employee->get_designation('view');
+        $item['department']   = $employee->get_department('view');
+        $item['reporting_to'] = $employee->get_reporting_to('view');
         $item['avatar']       = $employee->get_avatar();
 
         $additional_fields['namespace'] = $this->namespace;
@@ -319,12 +319,15 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return mixed|object|\WP_REST_Response
      */
     public function prepare_item_for_response( $item, $request = null, $additional_fields = [] ) {
-        $item = $item->data;
+        $item     = $item->data;
+        $employee = new \WeDevs\ERP\HRM\Employee( $item['user_id'] );
 
-        $data              = array_merge( $item['work'], $item['personal'], $additional_fields );
-        $data['user_id']   = $item['user_id'];
-        $data['email']     = $item['user_email'];
-        $data['people_id'] = erp_acct_get_people_id_by_user_id( $item['user_id'] );
+        $data                = array_merge( $item['work'], $item['personal'], $additional_fields );
+        $data['user_id']     = $item['user_id'];
+        $data['email']       = $item['user_email'];
+        $data['people_id']   = erp_acct_get_people_id_by_user_id( $item['user_id'] );
+        $data['department']  = $employee->get_department( 'view' );
+        $data['designation'] = $employee->get_designation( 'view' );
 
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
