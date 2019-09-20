@@ -639,7 +639,9 @@ function erp_insert_people( $args = array(), $return_object = false ) {
             }
         }
         foreach ( $meta_fields as $key => $value ) {
-            erp_people_update_meta( $people->id, $key, $value );
+            if ( 'raw_data' !== $key ) {
+                erp_people_update_meta( $people->id, $key, $value );
+            }
         }
     }
 

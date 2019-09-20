@@ -17,7 +17,13 @@
                         <!-- end modal body title -->
                         <form action="" method="post" class="modal-form edit-customer-modal" @submit.prevent="saveCustomer">
                             <div class="wperp-modal-body">
-                                <!-- add new product form -->
+                                <!-- add new people form -->
+                                <component
+                                    v-for="(component, extIndx) in extraFieldsTop"
+                                    :key="`top-${extIndx}`"
+                                    :is="component"
+                                />
+
                                 <div class="wperp-row wperp-gutter-20">
                                     <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                         <label for="first_name">{{ __('First Name', 'erp') }} <span class="wperp-required-sign">*</span></label>
@@ -36,6 +42,12 @@
                                         <input type="tel" v-model="peopleFields.mobile" id="mobile" class="wperp-form-field">
                                     </div>
                                 </div>
+
+                                <component
+                                    v-for="(component, extIndx) in extraFieldsMiddle"
+                                    :key="`middle-${extIndx}`"
+                                    :is="component"
+                                />
 
                                 <!-- extra fields -->
                                 <div class="wperp-more-fields" v-if="showMore">
@@ -96,6 +108,12 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <component
+                                    v-for="(component, extIndx) in extraFieldsBottom"
+                                    :key="`bottom-${extIndx}`"
+                                    :is="component"
+                                />
 
                                 <div class="form-check">
                                     <label class="form-check-label mb-0" for="show_more">
@@ -161,16 +179,32 @@ export default {
                 state      : '',
                 postal_code: ''
             },
-            states       : [],
-            emailExists  : false,
-            showMore     : false,
-            customers    : [],
-            url          : '',
-            error_message: [],
-            countries    : [],
-            get_states   : []
+            states           : [],
+            emailExists      : false,
+            showMore         : false,
+            customers        : [],
+            url              : '',
+            error_message    : [],
+            countries        : [],
+            get_states       : [],
+            extraFieldsTop   : window.acct.hooks.applyFilters('acctPeopleExtraFieldsTop', []),
+            extraFieldsMiddle: window.acct.hooks.applyFilters('acctPeopleExtraFieldsMiddle', []),
+            extraFieldsBottom: window.acct.hooks.applyFilters('acctPeopleExtraFieldsBottom', [])
         };
     },
+
+    created() {
+        this.url = this.generateUrl();
+        this.selectedCountry();
+        this.setInputField();
+        this.getCustomers();
+        this.getCountries();
+    },
+
+    mounted() {
+        window.acct.hooks.doAction('acctPeopleID', this.peopleFields.id);
+    },
+
     methods: {
         saveCustomer() {
             if (!this.checkForm()) {
@@ -192,7 +226,9 @@ export default {
 
             var message = (type === 'post') ? 'Created' : 'Updated';
 
-            HTTP[type](url, this.peopleFields).then(response => {
+            const peopleFields = window.acct.hooks.applyFilters('peopleFieldsData', this.peopleFields);
+
+            HTTP[type](url, peopleFields).then(response => {
                 this.$root.$emit('peopleUpdate');
                 this.resetForm();
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -346,15 +382,8 @@ export default {
             this.peopleFields.state      = '';
             this.peopleFields.post_code  = '';
         }
-    },
-
-    created() {
-        this.url = this.generateUrl();
-        this.selectedCountry();
-        this.setInputField();
-        this.getCustomers();
-        this.getCountries();
     }
+
 };
 </script>
 
