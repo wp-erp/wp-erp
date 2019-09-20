@@ -453,7 +453,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             'first_name' => $item->first_name,
             'last_name'  => $item->last_name,
             'email'      => $item->email,
-            'vendor'     => $item->company,
+            'company'    => $item->company,
             'phone'      => $item->phone,
             'website'    => $item->website,
             'notes'      => $item->notes,
