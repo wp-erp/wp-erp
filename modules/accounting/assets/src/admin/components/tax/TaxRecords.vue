@@ -72,7 +72,7 @@ export default {
             paginationData: {
                 totalItems: 0,
                 totalPages: 0,
-                perPage: 10,
+                perPage: 20,
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
             actions : [
