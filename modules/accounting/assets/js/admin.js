@@ -1635,6 +1635,8 @@ if (false) {(function () {
     saveCustomer: function saveCustomer() {
       var _this = this;
 
+      var peopleFields = window.acct.hooks.applyFilters('acctPeopleFieldsData', this.peopleFields);
+
       if (!this.checkForm()) {
         return false;
       }
@@ -1647,12 +1649,11 @@ if (false) {(function () {
         url = this.url;
         type = 'post';
       } else {
-        url = this.url + '/' + this.peopleFields.id;
+        url = this.url + '/' + peopleFields.id;
         type = 'put';
       }
 
       var message = type === 'post' ? 'Created' : 'Updated';
-      var peopleFields = window.acct.hooks.applyFilters('peopleFieldsData', this.peopleFields);
       __WEBPACK_IMPORTED_MODULE_0_admin_http__["a" /* default */][type](url, peopleFields).then(function (response) {
         _this.$root.$emit('peopleUpdate');
 
@@ -1664,7 +1665,11 @@ if (false) {(function () {
       });
     },
     checkForm: function checkForm() {
-      this.error_message = [];
+      this.error_message = window.acct.hooks.applyFilters('acctPeopleFieldsError', []);
+
+      if (this.error_message.length) {
+        return false;
+      }
 
       if (this.emailExists) {
         this.error_message.push('Email already exists as customer/vendor');
@@ -13997,7 +14002,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       actions: [{
@@ -14238,7 +14243,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       }
     };
@@ -14754,7 +14759,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       }
     };
@@ -15370,8 +15375,7 @@ if (false) {(function () {
       closable: true,
       msg: 'Accounting',
       to_receive: [],
-      to_pay: [],
-      sampleLists: window.acct.hooks.applyFilters('acctHomeSampleList', [])
+      to_pay: []
     };
   },
   computed: {
@@ -16656,6 +16660,14 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'UserBasicInfo',
@@ -16689,7 +16701,8 @@ if (false) {(function () {
     return {
       showModal: false,
       title: '',
-      img_url: erp_acct_var.acct_assets + '/images/dummy-user.png'
+      img_url: erp_acct_var.acct_assets + '/images/dummy-user.png',
+      userMeta: window.acct.hooks.applyFilters('acctPeopleMeta', [])
     };
   },
   computed: {
@@ -16705,7 +16718,7 @@ if (false) {(function () {
     }
   },
   created: function created() {
-    this.title = this.$route.name.toLowerCase() === 'customers' ? 'customer' : 'vendor';
+    this.title = this.$route.name.toLowerCase() === 'customerdetails' ? 'customer' : 'vendor';
     this.$on('modal-close', function () {
       this.showModal = false;
     });
@@ -22491,7 +22504,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       journal_id: 0
@@ -24916,6 +24929,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 
 
+/* global __ */
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'SalesList',
   components: {
@@ -24960,7 +24975,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       }
     };
@@ -25652,6 +25667,8 @@ setTimeout(function () {
 //
 
 
+/* global __ */
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'ExpensesList',
   components: {
@@ -25695,7 +25712,7 @@ setTimeout(function () {
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       actions: [],
@@ -26482,6 +26499,8 @@ setTimeout(function () {
 //
 
 
+/* global __ */
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PurchaseList',
   components: {
@@ -26526,7 +26545,7 @@ setTimeout(function () {
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       actions: [],
@@ -27874,7 +27893,7 @@ setTimeout(function () {
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       actions: [{
@@ -28124,7 +28143,7 @@ setTimeout(function () {
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       actions: [{
@@ -28371,7 +28390,7 @@ setTimeout(function () {
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       actions: [{
@@ -28614,7 +28633,7 @@ setTimeout(function () {
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       actions: [{
@@ -28896,7 +28915,7 @@ setTimeout(function () {
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       actions: [{
@@ -30270,7 +30289,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       paginationData: {
         totalItems: 0,
         totalPages: 0,
-        perPage: 10,
+        perPage: 20,
         currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
       },
       actions: [{
@@ -44089,50 +44108,70 @@ var render = function() {
                 "wperp-col-lg-9 wperp-col-md-8 wperp-col-sm-8 wperp-col-xs-12"
             },
             [
-              _c("ul", { staticClass: "customer-meta" }, [
-                _c("li", [
-                  _c("strong", [_vm._v(_vm._s(_vm.__("Phone", "erp")) + ":")]),
-                  _vm._v(" "),
-                  _c("span", [_vm._v(_vm._s(_vm.user.phone))])
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c("strong", [_vm._v(_vm._s(_vm.__("Mobile", "erp")) + ":")]),
-                  _vm._v(" "),
-                  _c("span", [_vm._v(_vm._s(_vm.user.mobile))])
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c("strong", [
-                    _vm._v(_vm._s(_vm.__("Website", "erp")) + ":")
+              _c(
+                "ul",
+                { staticClass: "customer-meta" },
+                [
+                  _c("li", [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.__("Phone", "erp")) + ":")
+                    ]),
+                    _vm._v(" "),
+                    _c("span", [_vm._v(_vm._s(_vm.user.phone))])
                   ]),
                   _vm._v(" "),
-                  _c("span", [_vm._v(_vm._s(_vm.user.website))])
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c("strong", [_vm._v(_vm._s(_vm.__("Fax", "erp")) + ":")]),
-                  _vm._v(" "),
-                  _c("span", [_vm._v(_vm._s(_vm.user.fax))])
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c("strong", [
-                    _vm._v(_vm._s(_vm.__("Address", "erp")) + ":")
+                  _c("li", [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.__("Mobile", "erp")) + ":")
+                    ]),
+                    _vm._v(" "),
+                    _c("span", [_vm._v(_vm._s(_vm.user.mobile))])
                   ]),
                   _vm._v(" "),
-                  _vm.userData.billing
-                    ? _c("span", [
-                        _vm._v(
-                          _vm._s(_vm.userData.billing.street_1) +
-                            ", " +
-                            _vm._s(_vm.userData.billing.city) +
-                            " "
-                        )
-                      ])
-                    : _vm._e()
-                ])
-              ])
+                  _c("li", [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.__("Website", "erp")) + ":")
+                    ]),
+                    _vm._v(" "),
+                    _c("span", [_vm._v(_vm._s(_vm.user.website))])
+                  ]),
+                  _vm._v(" "),
+                  _c("li", [
+                    _c("strong", [_vm._v(_vm._s(_vm.__("Fax", "erp")) + ":")]),
+                    _vm._v(" "),
+                    _c("span", [_vm._v(_vm._s(_vm.user.fax))])
+                  ]),
+                  _vm._v(" "),
+                  _c("li", [
+                    _c("strong", [
+                      _vm._v(_vm._s(_vm.__("Address", "erp")) + ":")
+                    ]),
+                    _vm._v(" "),
+                    _vm.userData.billing
+                      ? _c("span", [
+                          _vm._v(
+                            _vm._s(_vm.userData.billing.street_1) +
+                              ", " +
+                              _vm._s(_vm.userData.billing.city) +
+                              " "
+                          )
+                        ])
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.userMeta, function(component, index) {
+                    return _c(component, {
+                      key: index,
+                      tag: "component",
+                      attrs: {
+                        peopleId: _vm.$route.params.id,
+                        peopleType: _vm.title
+                      }
+                    })
+                  })
+                ],
+                2
+              )
             ]
           )
         ])
