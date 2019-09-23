@@ -174,6 +174,7 @@ function erp_acct_insert_invoice( $data ) {
     $voucher_no    = null;
     $estimate_type = $draft = 1;
     $currency      = erp_get_currency();
+    $email = erp_get_people_email( $data['customer_id'] );
 
     try {
         $wpdb->query( 'START TRANSACTION' );
@@ -213,7 +214,10 @@ function erp_acct_insert_invoice( $data ) {
 
         if ( $estimate_type == $invoice_data['estimate'] || $draft == $invoice_data['status'] ) {
             $wpdb->query( 'COMMIT' );
-            return erp_acct_get_invoice( $voucher_no );
+            $estimate = erp_acct_get_invoice( $voucher_no );
+            $estimate['email'] = $email;
+            do_action( 'erp_acct_new_transaction_estimate', $voucher_no, $estimate );
+            return $estimate;
         }
 
         erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no );

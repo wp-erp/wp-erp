@@ -1017,6 +1017,8 @@ add_action( 'erp_acct_new_transaction_pay_bill', 'erp_acct_send_email_on_transac
 add_action( 'erp_acct_new_transaction_purchase', 'erp_acct_send_email_on_transaction', 10, 2 );
 add_action( 'erp_acct_new_transaction_pay_purchase', 'erp_acct_send_email_on_transaction', 10, 2 );
 add_action( 'erp_acct_new_transaction_expense', 'erp_acct_send_email_on_transaction', 10, 2 );
+add_action( 'erp_acct_new_transaction_estimate', 'erp_acct_send_email_on_transaction', 10, 2 );
+add_action( 'erp_acct_new_transaction_purchase_order', 'erp_acct_send_email_on_transaction', 10, 2 );
 
 /**
  * Send pdf on transaction

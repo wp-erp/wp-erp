@@ -198,13 +198,9 @@ function erp_acct_insert_purchase( $data ) {
 
         if ( $purchase_type_order == $purchase_data['purchase_order'] || $draft == $purchase_data['status'] ) {
             $wpdb->query( 'COMMIT' );
-
             $purchase_order = erp_acct_get_purchase( $voucher_no );
-
             $purchase_order['email'] = $email;
-
             do_action( 'erp_acct_new_transaction_purchase_order', $voucher_no, $purchase_order );
-
             return $purchase_order;
         }
 
