@@ -738,6 +738,10 @@ function erp_acct_generate_transaction_pdfs() {
  */
 function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output_method = 'D' ) {
 
+    if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
+        return;
+    }
+
     if ( is_array( $transaction ) ) {
         $transaction = ( object ) $transaction;
     }
