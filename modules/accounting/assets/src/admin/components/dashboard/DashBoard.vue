@@ -112,8 +112,7 @@ export default {
             closable      : true,
             msg           : 'Accounting',
             to_receive    : [],
-            to_pay        : [],
-            sampleLists   : window.acct.hooks.applyFilters('acctHomeSampleList', [])
+            to_pay        : []
         };
     },
 
