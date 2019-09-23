@@ -564,24 +564,6 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
 }
 
 /**
- * Delete an invoice
- *
- * @param $invoice_no
- *
- * @return void
- */
-
-function erp_acct_delete_invoice( $invoice_no ) {
-    global $wpdb;
-
-    if ( ! $invoice_no ) {
-        return;
-    }
-
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_invoices', array( 'voucher_no' => $invoice_no ) );
-}
-
-/**
  * Void an invoice
  *
  * @param $invoice_no

@@ -66,13 +66,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_invoice' );
                 },
             ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_invoice' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 
@@ -309,26 +302,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response->set_status( 201 );
 
         return $response;
-    }
-
-
-    /**
-     * Delete an invoice
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Request
-     */
-    public function delete_invoice( $request ) {
-        $id = (int) $request['id'];
-
-        if ( empty( $id ) ) {
-            return new WP_Error( 'rest_invoice_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
-        }
-
-        erp_acct_delete_invoice( $id );
-
-        return new WP_REST_Response( true, 204 );
     }
 
     /**

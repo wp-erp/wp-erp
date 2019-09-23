@@ -400,22 +400,6 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
 }
 
 /**
- * Delete a purchase
- *
- * @param $id
- * @return void
- */
-function erp_acct_delete_purchase( $id ) {
-    global $wpdb;
-
-    if ( ! $id ) {
-        return;
-    }
-
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_account_details', array( 'purchase_no' => $id ) );
-}
-
-/**
  * Void a purchase
  *
  * @param $id

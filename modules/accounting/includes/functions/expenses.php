@@ -393,22 +393,6 @@ function erp_acct_update_expense( $data, $expense_id ) {
 }
 
 /**
- * Delete a expense
- *
- * @param $id
- * @return void
- */
-function erp_acct_delete_expense( $id ) {
-    global $wpdb;
-
-    if ( ! $id ) {
-        return;
-    }
-
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_expenses', array( 'voucher_no' => $id ) );
-}
-
-/**
  * Void a expense
  *
  * @param $id

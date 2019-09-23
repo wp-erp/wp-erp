@@ -161,7 +161,6 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         ] );
     }
 
-
     /**
      * Get all the ledgers of a particular chart_id
      *
