@@ -63,7 +63,7 @@ class Admin {
         ] );
         erp_add_submenu( 'accounting', 'users', [
             'title'      => __( 'Employees', 'erp' ),
-            'capability' => 'erp_hr_manager',
+            'capability' => 'erp_ac_manager',
             'slug'       => 'users/employees',
             'position'   => 15
         ] );

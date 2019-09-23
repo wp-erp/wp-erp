@@ -31,7 +31,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'get_inventory_products' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_hr_manager' );
+                    return current_user_can( 'erp_ac_manager' );
                 },
             ],
             [
@@ -39,7 +39,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'create_inventory_product' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_hr_manager' );
+                    return current_user_can( 'erp_ac_manager' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -53,7 +53,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_hr_manager' );
+                    return current_user_can( 'erp_ac_manager' );
                 },
             ],
             [
@@ -61,14 +61,14 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'callback'            => [ $this, 'update_inventory_product' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_hr_manager' );
+                    return current_user_can( 'erp_ac_manager' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_inventory_product' ],
                 'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_hr_manager' );
+                    return current_user_can( 'erp_ac_manager' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -82,7 +82,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'ids' => [ 'required' => true ]
                 ],
                 'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_hr_manager' );
+                    return current_user_can( 'erp_ac_manager' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -96,7 +96,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_hr_manager' );
+                    return current_user_can( 'erp_ac_manager' );
                 },
             ],
         ] );
