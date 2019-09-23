@@ -41,14 +41,6 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_view_list' );
                 },
             ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_employee' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_create_employee' );
-                },
-            ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
@@ -61,35 +53,6 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'permission_callback' => function( $request ) {
                     return current_user_can( 'erp_list_employee' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_employee' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_edit_employee', $request['user_id'] );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_employee' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_delete_employee' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
-
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'bulk_delete_employees' ],
-                'args'                => [
-                    'ids' => [ 'required' => true ]
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_delete_employee' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -184,114 +147,6 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response->set_status( 200 );
 
         return $response;
-    }
-
-    /**
-     * Create an employee
-     *
-     * @param \WP_REST_Request $request
-     *
-     * @return WP_Error|\WP_REST_Request
-     */
-    public function create_employee( $request ) {
-        $item_data = $this->prepare_item_for_database( $request );
-
-        $employee = new \WeDevs\ERP\HRM\Employee( null );
-        $created  = $employee->create_employee( $item_data );
-        if ( is_wp_error( $created ) ) {
-            return $created;
-        }
-
-        $employee                = new \WeDevs\ERP\HRM\Employee( $created->user_id );
-        $item                    = erp_acct_add_employee_as_people( $item_data );
-        $additional_fields['id'] = $item;
-
-        // User Notification
-        if ( isset( $request['user_notification'] ) && $request['user_notification'] == true ) {
-
-            $emailer    = wperp()->emailer->get_email( 'New_Employee_Welcome' );
-            $send_login = isset( $request['login_info'] ) ? true : false;
-
-            if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
-                $emailer->trigger( $employee->get_user_id(), $send_login );
-            }
-        }
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-        $response                       = $this->prepare_item_for_response( $employee, $request, $additional_fields );
-        $response                       = rest_ensure_response( $response );
-        $response->set_status( 201 );
-
-        return $response;
-    }
-
-    /**
-     * Update an employee
-     *
-     * @param \WP_REST_Request $request
-     *
-     * @return $this|mixed|object|\WP_Error|\WP_REST_Response
-     */
-    public function update_employee( $request ) {
-        $id = (int) $request['user_id'];
-
-        $employee = new \WeDevs\ERP\HRM\Employee( $id );
-        if ( ! $employee ) {
-            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
-        }
-
-        $data    = $this->prepare_item_for_database( $request );
-        $updated = $employee->update_employee( $data );
-
-        if ( is_wp_error( $updated ) ) {
-            return $updated;
-        }
-
-        $additional_fields['namespace'] = $this->namespace;
-        $additional_fields['rest_base'] = $this->rest_base;
-
-        $updated_user            = new \WeDevs\ERP\HRM\Employee( $updated->user_id );
-        $item                    = erp_acct_add_employee_as_people( $data );
-        $additional_fields['id'] = $item;
-        $response                = $this->prepare_item_for_response( $updated_user, $request, $additional_fields );
-
-        $response = rest_ensure_response( $response );
-        $response->set_status( 200 );
-
-        return $response;
-    }
-
-    /**
-     * Delete an employee
-     *
-     * @param $request
-     *
-     * @return \WP_REST_Response
-     */
-    public function delete_employee( $request ) {
-        $id = (int) $request['user_id'];
-
-        erp_employee_delete( $id );
-        $response = rest_ensure_response( true );
-
-        return new WP_REST_Response( $response, 204 );
-    }
-
-    /**
-     * Bulk Delete employees
-     *
-     * @param $request
-     *
-     * @return WP_REST_Response
-     */
-    public function bulk_delete_employees( $request ) {
-        $ids = (string) $request['ids'];
-
-        erp_employee_delete( explode( ',', $ids ) );
-
-        $response = rest_ensure_response( true );
-        return new WP_REST_Response( $response, 204 );
     }
 
     /**

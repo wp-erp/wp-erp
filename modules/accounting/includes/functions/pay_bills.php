@@ -296,22 +296,6 @@ function erp_acct_update_pay_bill( $data, $pay_bill_id ) {
 }
 
 /**
- * Delete a pay_bill
- *
- * @param $id
- * @return void
- */
-function erp_acct_delete_pay_bill( $id ) {
-    global $wpdb;
-
-    if ( ! $id ) {
-        return;
-    }
-
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_pay_bill', array( 'ID' => $id ) );
-}
-
-/**
  * Void a pay_bill
  *
  * @param $id

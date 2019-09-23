@@ -371,22 +371,6 @@ function erp_acct_update_draft_bill( $data, $bill_id ) {
 }
 
 /**
- * Delete a bill
- *
- * @param $id
- * @return void
- */
-function erp_acct_delete_bill( $id ) {
-    global $wpdb;
-
-    if ( ! $id ) {
-        return;
-    }
-
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_bills', array( 'voucher_no' => $id ) );
-}
-
-/**
  * Void a bill
  *
  * @param $id

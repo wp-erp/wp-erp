@@ -66,13 +66,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_sales_payment' );
                 },
             ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_payment' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_payment' );
-                },
-            ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
@@ -232,25 +225,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         return $response;
 
-    }
-
-    /**
-     * Delete a payment
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Request
-     */
-    public function delete_payment( $request ) {
-        $id = (int) $request['id'];
-
-        if ( empty( $id ) ) {
-            return new WP_Error( 'rest_payment_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
-        }
-
-        erp_acct_delete_payment( $id );
-
-        return new WP_REST_Response( true, 204 );
     }
 
     /**
