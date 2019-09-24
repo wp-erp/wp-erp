@@ -246,6 +246,13 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 == Changelog ==
 
+= v1.5.4 -> September 24, 2019 =
+[fix] Fix various pdf related issue.
+[fix] Company is not showing in vendor list.
+[fix] Employee designations and departments are not showing properly.
+[fix] Transaction particular is not showing in single view and pdf.
+[fix] Fix permission related issue on product and product category API.
+
 = v1.5.3 -> September 17, 2019 =
 [fix] CRM: Search segment issue.
 [fix] Accounting: Topbar menu permission issue.
