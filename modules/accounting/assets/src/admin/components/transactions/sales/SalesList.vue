@@ -75,7 +75,7 @@
 <script>
 import HTTP from 'admin/http';
 import ListTable from 'admin/components/list-table/ListTable.vue';
-
+/* global __ */
 export default {
     name: 'SalesList',
 
@@ -86,16 +86,16 @@ export default {
     data() {
         return {
             columns       : {
-                trn_no       : {label: 'Voucher No.'},
-                type         : {label: 'Type'},
-                ref          : {label: 'Ref'},
-                customer_name: {label: 'Customer'},
-                trn_date     : {label: 'Trn Date'},
-                due_date     : {label: 'Due Date'},
-                due          : {label: 'Due'},
-                amount       : {label: 'Total'},
-                status       : {label: 'Status'},
-                actions      : {label: ''}
+                trn_no       : { label: 'Voucher No.' },
+                type         : { label: 'Type' },
+                ref          : { label: 'Ref' },
+                customer_name: { label: 'Customer' },
+                trn_date     : { label: 'Trn Date' },
+                due_date     : { label: 'Due Date' },
+                due          : { label: 'Due' },
+                amount       : { label: 'Total' },
+                status       : { label: 'Status' },
+                actions      : { label: '' }
 
             },
             listLoading   : false,
@@ -103,7 +103,7 @@ export default {
             paginationData: {
                 totalItems : 0,
                 totalPages : 0,
-                perPage    : 10,
+                perPage    : 20,
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             }
         };
@@ -115,7 +115,7 @@ export default {
         this.$root.$on('transactions-filter', filters => {
             this.$router.push({
                 path : '/transactions/sales',
-                query: {start: filters.start_date, end: filters.end_date, status: filters.status}
+                query: { start: filters.start_date, end: filters.end_date, status: filters.status }
             });
             this.fetchItems(filters);
             this.fetched = true;
@@ -157,29 +157,29 @@ export default {
                 this.rows = response.data.map(item => {
                     if (item.estimate === '1' || item.status_code === '1') {
                         item['actions'] = [
-                            {key: 'edit', label: 'Edit'}
+                            { key: 'edit', label: 'Edit' }
                         ];
                     } else if (item.status_code === '8') {
                         item['actions'] = [
-                            {key: '#', label: __('No actions found', 'erp')}
+                            { key: '#', label: __('No actions found', 'erp') }
                         ];
                     } else if (item.type === 'invoice') {
                         if (item.status_code === '7') {
                             delete item['actions'];
                         } else if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
                             item['actions'] = [
-                                {key: 'receive', label: __('Receive Payment', 'erp')},
-                                {key: 'edit', label: __('Edit', 'erp')},
-                                {key: 'void', label: 'Void'}
+                                { key: 'receive', label: __('Receive Payment', 'erp') },
+                                { key: 'edit', label: __('Edit', 'erp') },
+                                { key: 'void', label: 'Void' }
                             ];
                         } else {
                             item['actions'] = [
-                                {key: 'void', label: 'Void'}
+                                { key: 'void', label: 'Void' }
                             ];
                         }
                     } else {
                         item['actions'] = [
-                            {key: '#', label: __('No actions found', 'erp')}
+                            { key: '#', label: __('No actions found', 'erp') }
                         ];
                     }
 
@@ -200,64 +200,64 @@ export default {
 
         onActionClick(action, row, index) {
             switch (action) {
-                case 'trash':
-                    if (confirm('Are you sure to delete?')) {
-                        this.$store.dispatch('spinner/setSpinner', true);
-                        HTTP.delete('invoices/' + row.id).then(response => {
-                            this.$delete(this.rows, index);
+            case 'trash':
+                if (confirm('Are you sure to delete?')) {
+                    this.$store.dispatch('spinner/setSpinner', true);
+                    HTTP.delete('invoices/' + row.id).then(response => {
+                        this.$delete(this.rows, index);
 
-                            this.$store.dispatch('spinner/setSpinner', false);
-                            this.showAlert('success', 'Deleted !');
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        this.showAlert('success', 'Deleted !');
+                    }).catch(error => {
+                        this.$store.dispatch('spinner/setSpinner', false);
+                        throw error;
+                    });
+                }
+                break;
+
+            case 'edit':
+                if (row.type === 'invoice') {
+                    this.$router.push({ name: 'InvoiceEdit', params: { id: row.id } });
+                }
+
+                if (row.type === 'payment') {
+                    this.$router.push({ name: 'RecPaymentEdit', params: { id: row.id } });
+                }
+                break;
+
+            case 'receive':
+                this.$router.push({
+                    name  : 'RecPaymentCreate',
+                    params: {
+                        customer_id  : row.inv_cus_id,
+                        customer_name: row.inv_cus_name
+                    }
+                });
+                break;
+
+            case 'void':
+                if (confirm('Are you sure to void the transaction?')) {
+                    if (row.type === 'invoice') {
+                        HTTP.post('invoices/' + row.id + '/void').then(response => {
+                            this.showAlert('success', 'Transaction has been void!');
                         }).catch(error => {
-                            this.$store.dispatch('spinner/setSpinner', false);
                             throw error;
                         });
                     }
-                    break;
-
-                case 'edit':
-                    if (row.type === 'invoice') {
-                        this.$router.push({name: 'InvoiceEdit', params: {id: row.id}});
-                    }
-
                     if (row.type === 'payment') {
-                        this.$router.push({name: 'RecPaymentEdit', params: {id: row.id}});
+                        HTTP.post('payments/' + row.id + '/void').then(response => {
+                            this.showAlert('success', 'Transaction has been void!');
+                        }).then(() => {
+                            this.$router.push({ name: 'Sales' });
+                        }).catch(error => {
+                            throw error;
+                        });
                     }
-                    break;
+                }
+                break;
 
-                case 'receive':
-                    this.$router.push({
-                        name  : 'RecPaymentCreate',
-                        params: {
-                            customer_id  : row.inv_cus_id,
-                            customer_name: row.inv_cus_name
-                        }
-                    });
-                    break;
-
-                case 'void':
-                    if (confirm('Are you sure to void the transaction?')) {
-                        if (row.type === 'invoice') {
-                            HTTP.post('invoices/' + row.id + '/void').then(response => {
-                                this.showAlert('success', 'Transaction has been void!');
-                            }).catch(error => {
-                                throw error;
-                            });
-                        }
-                        if (row.type === 'payment') {
-                            HTTP.post('payments/' + row.id + '/void').then(response => {
-                                this.showAlert('success', 'Transaction has been void!');
-                            }).then(()=>{
-                                this.$router.push({ name: 'Sales' });
-                            }).catch(error => {
-                                throw error;
-                            });
-                        }
-                    }
-                    break;
-
-                default :
-                    break;
+            default :
+                break;
             }
         },
 
@@ -268,7 +268,7 @@ export default {
             this.paginationData.currentPage = page;
             this.$router.push({
                 name  : 'PaginateSales',
-                params: {page: page},
+                params: { page: page },
                 query : queries
             });
 
@@ -281,7 +281,7 @@ export default {
 
         getTrnType(row) {
             if (row.type === 'invoice') {
-                if (row.estimate === 1) {
+                if (row.estimate == '1') {
                     return 'Estimate';
                 }
                 return 'Invoice';

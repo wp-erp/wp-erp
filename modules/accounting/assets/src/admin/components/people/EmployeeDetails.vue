@@ -150,7 +150,7 @@ export default {
 
     methods: {
         fetchItem(id) {
-            HTTP.get(this.url + '/' + id, {
+            HTTP.get('/employees/' + this.userId, {
                 params: { include: 'department,designation,reporting_to,avatar' }
             }).then((response) => {
                 this.user = response.data;

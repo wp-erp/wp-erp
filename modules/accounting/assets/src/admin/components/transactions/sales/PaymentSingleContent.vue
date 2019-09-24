@@ -60,8 +60,8 @@
                     </thead>
                     <tbody>
                         <tr :key="index" v-for="(detail, index) in payment.line_items">
-                            <th>#{{ detail.index }}</th>
-                            <th>#{{ detail.invoice_no }}</th>
+                            <th>#{{ index+1 }}</th>
+                            <th>{{ detail.invoice_no }}</th>
                             <td>{{ moneyFormat( detail.amount ) }}</td>
                         </tr>
                     </tbody>
@@ -93,6 +93,10 @@
             </a>
         </div>
 
+        <div class="particulars">
+            <p>{{ payment.particulars }}</p>
+        </div>
+
     </div>
 </template>
 
@@ -116,3 +120,10 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.particulars {
+    padding-top: 15px;
+    border-top: 1px solid rgba(38,50,56, .1);
+}
+</style>

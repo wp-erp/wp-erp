@@ -383,7 +383,9 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'line_items'    => $item->line_items,
             'attachments'   => maybe_unserialize( $item->attachments ),
             'status'        => erp_acct_get_trn_status_by_id( $item->status ),
+            'pdf_link'      => $item->pdf_link,
             'type'          => ! empty( $item->type ) ? $item->type : 'payment',
+            'particulars'   => $item->particulars,
             'created_at'    => $item->created_at,
         ];
 

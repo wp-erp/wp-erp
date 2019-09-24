@@ -454,6 +454,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['fax'] = $request['fax'];
         }
 
+        $prepared_item['raw_data']  = json_decode($request->get_body(), true);
         $prepared_item['type'] = 'customer';
 
         return $prepared_item;
