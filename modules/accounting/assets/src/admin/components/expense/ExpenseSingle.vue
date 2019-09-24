@@ -118,6 +118,10 @@
                     </a>
                 </div>
 
+                <div class="particulars">
+                    <p>{{ expense_data.particulars }}</p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -138,14 +142,14 @@ export default {
 
     data() {
         return {
-            company : null,
-            expense_data : {},
-            isWorking : false,
-            acct_var : erp_acct_var, /* global erp_acct_var */
-            print_data : null,
-            type       : 'expense',
-            showModal  : false,
-            people_id  : null
+            company     : null,
+            expense_data: {},
+            isWorking   : false,
+            acct_var    : erp_acct_var,   /* global erp_acct_var */
+            print_data  : null,
+            type        : 'expense',
+            showModal   : false,
+            people_id   : null
         };
     },
 
@@ -213,4 +217,11 @@ export default {
             display: none;
         }
     }
+</style>
+
+<style scoped>
+.particulars {
+    padding-top: 15px;
+    border-top: 1px solid rgba(38,50,56, .1);
+}
 </style>

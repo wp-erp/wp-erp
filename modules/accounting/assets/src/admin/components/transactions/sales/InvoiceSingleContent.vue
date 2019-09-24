@@ -103,6 +103,10 @@
             </a>
         </div>
 
+        <div class="particulars">
+            <p>{{ invoice.particulars }}</p>
+        </div>
+
     </div>
 </template>
 
@@ -142,3 +146,10 @@ export default {
 
 };
 </script>
+
+<style scoped>
+.particulars {
+    padding-top: 15px;
+    border-top: 1px solid rgba(38,50,56, .1);
+}
+</style>

@@ -412,7 +412,8 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'amount'         => $item->amount,
             'created_at'     => $item->created_at,
             'due'            => empty( $item->due ) ? erp_acct_get_purchase_due( $item->voucher_no ) : $item->due,
-            'attachments'    => maybe_unserialize( $item->attachments )
+            'attachments'    => maybe_unserialize( $item->attachments ),
+            'particulars'    => $item->particulars
         ];
 
         $data = array_merge( $data, $additional_fields );

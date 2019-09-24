@@ -207,6 +207,8 @@ export default {
 
     methods: {
         saveCustomer() {
+            const peopleFields = window.acct.hooks.applyFilters('acctPeopleFieldsData', this.peopleFields);
+
             if (!this.checkForm()) {
                 return false;
             }
@@ -220,13 +222,11 @@ export default {
                 url = this.url;
                 type = 'post';
             } else {
-                url = this.url + '/' + this.peopleFields.id;
+                url = this.url + '/' + peopleFields.id;
                 type = 'put';
             }
 
             var message = (type === 'post') ? 'Created' : 'Updated';
-
-            const peopleFields = window.acct.hooks.applyFilters('peopleFieldsData', this.peopleFields);
 
             HTTP[type](url, peopleFields).then(response => {
                 this.$root.$emit('peopleUpdate');
@@ -237,7 +237,11 @@ export default {
         },
 
         checkForm() {
-            this.error_message = [];
+            this.error_message = window.acct.hooks.applyFilters('acctPeopleFieldsError', []);
+
+            if (this.error_message.length) {
+                return false;
+            }
 
             if (this.emailExists) {
                 this.error_message.push('Email already exists as customer/vendor');

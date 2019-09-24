@@ -48,7 +48,7 @@
 <script>
 import HTTP from 'admin/http';
 import ListTable from 'admin/components/list-table/ListTable.vue';
-
+/* global __ */
 export default {
     name: 'ExpensesList',
 
@@ -59,22 +59,22 @@ export default {
     data() {
         return {
             columns       : {
-                trn_no     : {label: 'Voucher No.'},
-                type       : {label: 'Type'},
-                ref        : {label: 'Ref'},
-                vendor_name: {label: 'Vendor'},
-                trn_date   : {label: 'Trn Date'},
-                due_date   : {label: 'Due Date'},
-                due        : {label: 'Due'},
-                amount     : {label: 'Total'},
-                status     : {label: 'Status'},
-                actions    : {label: ''}
+                trn_no     : { label: 'Voucher No.' },
+                type       : { label: 'Type' },
+                ref        : { label: 'Ref' },
+                vendor_name: { label: 'Vendor' },
+                trn_date   : { label: 'Trn Date' },
+                due_date   : { label: 'Due Date' },
+                due        : { label: 'Due' },
+                amount     : { label: 'Total' },
+                status     : { label: 'Status' },
+                actions    : { label: '' }
             },
             rows          : [],
             paginationData: {
                 totalItems : 0,
                 totalPages : 0,
-                perPage    : 10,
+                perPage    : 20,
                 currentPage: this.$route.params.page === undefined ? 1 : parseInt(this.$route.params.page)
             },
             actions       : [],
@@ -87,7 +87,7 @@ export default {
         this.$root.$on('transactions-filter', filters => {
             this.$router.push({
                 path : '/transactions/expenses',
-                query: {start: filters.start_date, end: filters.end_date, status: filters.status}
+                query: { start: filters.start_date, end: filters.end_date, status: filters.status }
             });
             this.fetchItems(filters);
             this.fetched = true;
@@ -139,72 +139,71 @@ export default {
 
         onActionClick(action, row, index) {
             switch (action) {
-                case 'trash':
-                    // if ( confirm('Are you sure to delete?') ) {
-                    //     HTTP.delete('invoices/' + row.id).then( response => {
-                    //         this.$delete(this.rows, index);
-                    //     });
-                    // }
-                    break;
+            case 'trash':
+                // if ( confirm('Are you sure to delete?') ) {
+                //     HTTP.delete('invoices/' + row.id).then( response => {
+                //         this.$delete(this.rows, index);
+                //     });
+                // }
+                break;
 
-                case 'edit':
-                    if (row.type === 'expense') {
-                        this.$router.push({name: 'ExpenseEdit', params: {id: row.id}});
-                    }
+            case 'edit':
+                if (row.trn_type === 'expense') {
+                    this.$router.push({ name: 'ExpenseEdit', params: { id: row.id } });
+                }
 
-                    if (row.type === 'bill') {
-                        this.$router.push({name: 'BillEdit', params: {id: row.id}});
-                    }
+                if (row.trn_type === 'bill') {
+                    this.$router.push({ name: 'BillEdit', params: { id: row.id } });
+                }
 
-                    if (row.type === 'check') {
-                        this.$router.push({name: 'CheckEdit', params: {id: row.id}});
-                    }
+                if (row.trn_type === 'check') {
+                    this.$router.push({ name: 'CheckEdit', params: { id: row.id } });
+                }
 
-                    break;
+                break;
 
-                case 'payment':
-                    if (row.type === 'bill') {
-                        this.$router.push({
-                            name  : 'PayBillCreate',
-                            params: {
-                                vendor_id  : row.vendor_id,
-                                vendor_name: row.vendor_name
-                            }
+            case 'payment':
+                if (row.trn_type === 'bill') {
+                    this.$router.push({
+                        name  : 'PayBillCreate',
+                        params: {
+                            vendor_id  : row.vendor_id,
+                            vendor_name: row.vendor_name
+                        }
+                    });
+                }
+                break;
+
+            case 'void':
+                if (confirm('Are you sure to void the transaction?')) {
+                    if (row.trn_type === 'expense' || row.trn_type === 'check') {
+                        HTTP.post('expenses/' + row.id + '/void').then(response => {
+                            this.showAlert('success', 'Transaction has been void!');
+                        }).catch(error => {
+                            throw error;
                         });
                     }
-                    break;
-
-                case 'void':
-                    if (confirm('Are you sure to void the transaction?')) {
-                        if (row.trn_type === 'expense' || row.trn_type === 'check') {
-                            HTTP.post('expenses/' + row.id + '/void').then(response => {
-                                this.showAlert('success', 'Transaction has been void!');
-                            }).catch(error => {
-                                throw error;
-                            });
-                        }
-                        if (row.trn_type === 'bill') {
-                            HTTP.post('bills/' + row.id + '/void').then(response => {
-                                this.showAlert('success', 'Transaction has been void!');
-                            }).catch(error => {
-                                throw error;
-                            });
-                        }
-                        if (row.trn_type === 'pay_bill') {
-                            HTTP.post('pay-bills/' + row.id + '/void').then(response => {
-                                this.showAlert('success', 'Transaction has been void!');
-                            }).then(()=>{
-                                this.$router.push({ name: 'Expenses' });
-                            }).catch(error => {
-                                throw error;
-                            });
-                        }
-
+                    if (row.trn_type === 'bill') {
+                        HTTP.post('bills/' + row.id + '/void').then(response => {
+                            this.showAlert('success', 'Transaction has been void!');
+                        }).catch(error => {
+                            throw error;
+                        });
                     }
-                    break;
+                    if (row.trn_type === 'pay_bill') {
+                        HTTP.post('pay-bills/' + row.id + '/void').then(response => {
+                            this.showAlert('success', 'Transaction has been void!');
+                        }).then(() => {
+                            this.$router.push({ name: 'Expenses' });
+                        }).catch(error => {
+                            throw error;
+                        });
+                    }
+                }
+                break;
 
-                default :
-                    break;
+            default :
+                break;
             }
         },
 
@@ -213,7 +212,7 @@ export default {
             this.paginationData.currentPage = page;
             this.$router.push({
                 name  : 'PaginateExpenses',
-                params: {page: page},
+                params: { page: page },
                 query : queries
             });
 
@@ -229,102 +228,102 @@ export default {
             let temp;
             const items = this.rows.map(item => {
                 switch (item.type) {
-                    case 'pay_bill':
-                        temp = {
-                            id         : item.id,
-                            trn_no     : item.id,
-                            type       : 'Pay Bill',
-                            trn_type   : 'pay_bill',
-                            ref        : item.ref ? item.ref : '-',
-                            vendor_name: item.pay_bill_vendor_name,
-                            trn_date   : item.pay_bill_trn_date,
-                            due_date   : '-',
-                            due        : '-',
-                            amount     : this.formatAmount(item.pay_bill_amount),
-                            status     : item.status,
-                            singleView : {name: 'PayBillSingle', params: {id: item.id}},
-                            actions    : [
-                                {key: 'void', label: 'Void'}
-                            ]
-                        };
-                        break;
+                case 'pay_bill':
+                    temp = {
+                        id         : item.id,
+                        trn_no     : item.id,
+                        type       : 'Pay Bill',
+                        trn_type   : 'pay_bill',
+                        ref        : item.ref ? item.ref : '-',
+                        vendor_name: item.pay_bill_vendor_name,
+                        trn_date   : item.pay_bill_trn_date,
+                        due_date   : '-',
+                        due        : '-',
+                        amount     : this.formatAmount(item.pay_bill_amount),
+                        status     : item.status,
+                        singleView : { name: 'PayBillSingle', params: { id: item.id } },
+                        actions    : [
+                            { key: 'void', label: 'Void' }
+                        ]
+                    };
+                    break;
 
-                    case 'bill':
-                        temp = {
-                            id         : item.id,
-                            trn_no     : item.id,
-                            type       : 'Bill',
-                            trn_type   : 'bill',
-                            ref        : item.ref ? item.ref : '-',
-                            vendor_id  : item.vendor_id,
-                            vendor_name: item.vendor_name,
-                            trn_date   : item.bill_trn_date,
-                            due_date   : item.due_date,
-                            due        : this.formatAmount(item.due),
-                            amount     : this.formatAmount(item.amount),
-                            status     : item.status,
-                            singleView : {name: 'BillSingle', params: {id: item.id}},
-                            actions    : [
-                                {key: 'payment', label: 'Make Payment'},
-                                {key: 'edit', label: 'Edit'},
-                                {key: 'void', label: 'Void'}
-                            ]
-                        };
-                        break;
+                case 'bill':
+                    temp = {
+                        id         : item.id,
+                        trn_no     : item.id,
+                        type       : 'Bill',
+                        trn_type   : 'bill',
+                        ref        : item.ref ? item.ref : '-',
+                        vendor_id  : item.vendor_id,
+                        vendor_name: item.vendor_name,
+                        trn_date   : item.bill_trn_date,
+                        due_date   : item.due_date,
+                        due        : this.formatAmount(item.due),
+                        amount     : this.formatAmount(item.amount),
+                        status     : item.status,
+                        singleView : { name: 'BillSingle', params: { id: item.id } },
+                        actions    : [
+                            { key: 'payment', label: 'Make Payment' },
+                            { key: 'edit', label: 'Edit' },
+                            { key: 'void', label: 'Void' }
+                        ]
+                    };
+                    break;
 
-                    case 'expense':
-                        temp = {
-                            id         : item.id,
-                            trn_no     : item.id,
-                            type       : 'Expense',
-                            trn_type   : 'expense',
-                            ref        : item.ref ? item.ref : '-',
-                            vendor_name: item.expense_people_name,
-                            trn_date   : item.expense_trn_date,
-                            due_date   : '-',
-                            due        : '-',
-                            amount     : this.formatAmount(item.expense_amount),
-                            status     : item.status,
-                            singleView : {name: 'ExpenseSingle', params: {id: item.id}},
-                            actions    : [
-                                {key: 'void', label: 'Void'}
-                            ]
-                        };
-                        break;
+                case 'expense':
+                    temp = {
+                        id         : item.id,
+                        trn_no     : item.id,
+                        type       : 'Expense',
+                        trn_type   : 'expense',
+                        ref        : item.ref ? item.ref : '-',
+                        vendor_name: item.expense_people_name,
+                        trn_date   : item.expense_trn_date,
+                        due_date   : '-',
+                        due        : '-',
+                        amount     : this.formatAmount(item.expense_amount),
+                        status     : item.status,
+                        singleView : { name: 'ExpenseSingle', params: { id: item.id } },
+                        actions    : [
+                            { key: 'void', label: 'Void' }
+                        ]
+                    };
+                    break;
 
-                    case 'check':
-                        temp = {
-                            id         : item.id,
-                            trn_no     : item.id,
-                            type       : 'Check',
-                            trn_type   : 'check',
-                            ref        : item.ref ? item.ref : '-',
-                            vendor_name: item.expense_people_name,
-                            trn_date   : item.expense_people_name,
-                            due_date   : '-',
-                            due        : '-',
-                            amount     : this.formatAmount(item.expense_amount),
-                            status     : item.status,
-                            singleView : {name: 'CheckSingle', params: {id: item.id}},
-                            actions    : [
-                                {key: 'void', label: 'Void'}
-                            ]
-                        };
-                        break;
+                case 'check':
+                    temp = {
+                        id         : item.id,
+                        trn_no     : item.id,
+                        type       : 'Check',
+                        trn_type   : 'check',
+                        ref        : item.ref ? item.ref : '-',
+                        vendor_name: item.expense_people_name,
+                        trn_date   : item.expense_people_name,
+                        due_date   : '-',
+                        due        : '-',
+                        amount     : this.formatAmount(item.expense_amount),
+                        status     : item.status,
+                        singleView : { name: 'CheckSingle', params: { id: item.id } },
+                        actions    : [
+                            { key: 'void', label: 'Void' }
+                        ]
+                    };
+                    break;
 
-                    default :
-                        break;
+                default :
+                    break;
                 }
 
                 if (item.status_code === '2' || item.status_code === '3' || item.status_code === '5') {
                     temp['actions'] = [
-                        {key: 'payment', label: __('Make Payment', 'erp')},
-                        {key: 'edit', label: __('Edit', 'erp')},
-                        {key: 'void', label: 'Void'}
+                        { key: 'payment', label: __('Make Payment', 'erp') },
+                        { key: 'edit', label: __('Edit', 'erp') },
+                        { key: 'void', label: 'Void' }
                     ];
                 } else {
                     temp['actions'] = [
-                        {key: '#', label: __('No actions found', 'erp')}
+                        { key: '#', label: __('No actions found', 'erp') }
                     ];
                 }
 
