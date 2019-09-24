@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.2.3
 Requires PHP: 5.6
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -247,11 +247,12 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 == Changelog ==
 
 = v1.5.4 -> September 24, 2019 =
-[fix] Fix various pdf related issue.
-[fix] Company is not showing in vendor list.
-[fix] Employee designations and departments are not showing properly.
-[fix] Transaction particular is not showing in single view and pdf.
-[fix] Fix permission related issue on product and product category API.
+[fix] Accounting: Fix various pdf related issue.
+[fix] Accounting: Company is not showing in vendor list.
+[fix] Accounting: Transaction particular is not showing in single view and pdf.
+[fix] Accounting: Fix permission related issue on product and product category API.
+[fix] HRM: Employee designations and departments are not showing properly.
+[fix] HRM: API restriction for leave request if applied for extra leave.
 
 = v1.5.3 -> September 17, 2019 =
 [fix] CRM: Search segment issue.
