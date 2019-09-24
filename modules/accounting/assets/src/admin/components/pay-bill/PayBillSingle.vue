@@ -119,6 +119,10 @@
                     </a>
                 </div>
 
+                <div class="particulars">
+                    <p>{{ payBill.particulars }}</p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -206,6 +210,11 @@ export default {
             padding-top: 10px !important;
             padding-bottom: 10px !important;
         }
+    }
+
+    .particulars {
+        padding-top: 15px;
+        border-top: 1px solid rgba(38,50,56, .1);
     }
 
     @media print {

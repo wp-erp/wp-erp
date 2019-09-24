@@ -384,16 +384,17 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
                     'unit_price'  => $trn_item['unit_price'],
                     'discount'    => $discount,
                     'tax'         => $tax,
-                    'item_total'  => $item_total,
+                    'item_total'  => $amount,
                     'created_at'  => $this->get_created_at( $trn_item['created_at'] ),
                     'created_by'  => $trn_item['created_by']
                 ]
             );
 
             $sqls = [
-                "UPDATE {$wpdb->prefix}erp_acct_invoices SET discount = discount + {$discount}, tax = tax + {$tax} WHERE voucher_no = %d",
-                "UPDATE {$wpdb->prefix}erp_acct_invoice_account_details SET debit = debit + {$item_total} + {$tax} - {$discount} WHERE trn_no = %d",
-                "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET debit = debit + {$discount} WHERE credit = 0.00 AND trn_no = %d"
+                "UPDATE {$wpdb->prefix}erp_acct_invoices SET amount = amount + {$discount}, discount = discount + {$discount}, tax = tax + {$tax} WHERE voucher_no = %d",
+                "UPDATE {$wpdb->prefix}erp_acct_invoice_account_details SET debit = debit + {$amount} + {$tax} - {$discount} WHERE trn_no = %d",
+                "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET debit = debit + {$discount} WHERE credit = 0.00 AND trn_no = %d",
+                "UPDATE {$wpdb->prefix}erp_acct_ledger_details SET credit = credit + {$discount} WHERE debit = 0.00 AND trn_no = %d"
             ];
 
             foreach ( $sqls as $sql ) {

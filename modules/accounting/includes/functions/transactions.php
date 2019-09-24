@@ -17,7 +17,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     $defaults = [
         'number'      => 20,
         'offset'      => 0,
-        'order'       => 'ASC',
+        'order'       => 'DESC',
         'count'       => false,
         'customer_id' => false,
         's'           => '',
@@ -738,6 +738,10 @@ function erp_acct_generate_transaction_pdfs() {
  */
 function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output_method = 'D' ) {
 
+    if ( ! is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) {
+        return;
+    }
+
     if ( is_array( $transaction ) ) {
         $transaction = ( object ) $transaction;
     }
@@ -835,6 +839,12 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
             $trn_pdf->add_item( [ $line['name'], $line['qty'], $line['unit_price'], $line['discount'], $line['tax'], $line['line_total'] ] );
         }
 
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_paragraph($transaction->particulars );
+        }
+
         $trn_pdf->add_badge( __( 'PENDING', 'erp' ) );
         $trn_pdf->add_total( __( 'DUE', 'erp' ), $transaction->total_due );
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
@@ -850,6 +860,12 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
             $trn_pdf->add_item( [ $line['invoice_no'], $transaction->trn_date, $line['amount'] ] );
         }
 
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_paragraph($transaction->particulars );
+        }
+
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
@@ -862,6 +878,12 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add Table Items
         foreach ( $transaction->bill_details as $line ) {
             $trn_pdf->add_item( [ $line['id'], $transaction->trn_date, $transaction->due_date, $line['amount'] ] );
+        }
+
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_paragraph($transaction->particulars );
         }
 
         $trn_pdf->add_badge( __( 'PENDING', 'erp' ) );
@@ -879,6 +901,12 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
             $trn_pdf->add_item( [ $line['bill_no'], $transaction->due_date, $line['amount'] ] );
         }
 
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_paragraph($transaction->particulars );
+        }
+
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
@@ -893,6 +921,12 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
             $trn_pdf->add_item( [ $line['name'], $line['qty'], $line['cost_price'], $line['amount'] ] );
         }
 
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_paragraph($transaction->particulars );
+        }
+
         $trn_pdf->add_badge( __( 'PENDING', 'erp' ) );
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
@@ -905,6 +939,12 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         // Add Table Items
         foreach ( $transaction->purchase_details as $line ) {
             $trn_pdf->add_item( [ $line['purchase_no'], $transaction->due_date, $line['amount'] ] );
+        }
+
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_paragraph($transaction->particulars );
         }
 
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
@@ -922,6 +962,12 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
             $trn_pdf->add_item( [ $line['trn_no'], $transaction->trn_date, $line['amount'] ] );
         }
 
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_paragraph($transaction->particulars );
+        }
+
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
@@ -936,6 +982,12 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
             $trn_pdf->add_item( [ $line['check_no'], $transaction->trn_date, $transaction->pay_to, $line['amount'] ] );
         }
 
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_paragraph($transaction->particulars );
+        }
+
         $trn_pdf->add_badge( __( 'PAID', 'erp' ) );
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->total );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->total );
@@ -947,6 +999,12 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->set_table_headers( [ __( 'VOUCHER NO', 'erp' ), __( 'ACCOUNT FROM', 'erp' ), __( 'AMOUNT', 'erp' ), __( 'ACCOUNT TO', 'erp' ) ] );
 
         $trn_pdf->add_item( [ $transaction->voucher_no, $transaction->ac_from, $transaction->amount, $transaction->ac_to ] );
+
+        // Add particulars
+        if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_paragraph($transaction->particulars );
+        }
 
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->balance );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->balance );
@@ -1017,6 +1075,8 @@ add_action( 'erp_acct_new_transaction_pay_bill', 'erp_acct_send_email_on_transac
 add_action( 'erp_acct_new_transaction_purchase', 'erp_acct_send_email_on_transaction', 10, 2 );
 add_action( 'erp_acct_new_transaction_pay_purchase', 'erp_acct_send_email_on_transaction', 10, 2 );
 add_action( 'erp_acct_new_transaction_expense', 'erp_acct_send_email_on_transaction', 10, 2 );
+add_action( 'erp_acct_new_transaction_estimate', 'erp_acct_send_email_on_transaction', 10, 2 );
+add_action( 'erp_acct_new_transaction_purchase_order', 'erp_acct_send_email_on_transaction', 10, 2 );
 
 /**
  * Send pdf on transaction
