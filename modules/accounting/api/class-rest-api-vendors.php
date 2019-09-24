@@ -388,8 +388,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }
-        if ( isset( $request['vendor'] ) ) {
-            $prepared_item['company'] = $request['vendor'];
+        if ( isset( $request['company'] ) ) {
+            $prepared_item['company'] = $request['company'];
         }
         if ( isset( $request['phone'] ) ) {
             $prepared_item['phone'] = $request['phone'];
