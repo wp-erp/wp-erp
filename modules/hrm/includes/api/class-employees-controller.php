@@ -1202,6 +1202,16 @@ class Employees_Controller extends REST_Controller {
             return new WP_Error( 'rest_invalid_end_date', __( 'Invalid Leave End Date.' ), array( 'status' => 404 ) );
         }
 
+        $is_extra_leave_enabled = get_option( 'enable_extra_leave', 'no' );
+
+        if ( $is_extra_leave_enabled !== 'yes' ) {
+            $is_policy_valid = erp_hrm_is_valid_leave_duration( $request['start_date'], $request['end_date'], $request['policy_id'], $id );
+
+            if ( ! $is_policy_valid ) {
+                return new WP_Error( 'rest_invalid_date_range',  __( 'Sorry! You do not have any leave left under this leave policy', 'erp' ), array( 'status' => 404 ) );
+            }
+        }
+
         $request_id = erp_hr_leave_insert_request(
             array(
                 'user_id'      => $request['user_id'],
