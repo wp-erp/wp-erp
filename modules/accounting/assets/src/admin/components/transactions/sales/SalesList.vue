@@ -281,7 +281,7 @@ export default {
 
         getTrnType(row) {
             if (row.type === 'invoice') {
-                if (row.estimate === 1) {
+                if (row.estimate == '1') {
                     return 'Estimate';
                 }
                 return 'Invoice';

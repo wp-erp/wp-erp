@@ -279,7 +279,7 @@ export default {
 
         getTrnType(row) {
             if (row.type === 'purchase') {
-                if (row.purchase_order === 1) {
+                if (row.purchase_order == '1') {
                     return 'Purchase Order';
                 }
                 return 'Purchase';
