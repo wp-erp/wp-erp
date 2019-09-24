@@ -148,22 +148,22 @@ export default {
                 break;
 
             case 'edit':
-                if (row.type === 'expense') {
+                if (row.trn_type === 'expense') {
                     this.$router.push({ name: 'ExpenseEdit', params: { id: row.id } });
                 }
 
-                if (row.type === 'bill') {
+                if (row.trn_type === 'bill') {
                     this.$router.push({ name: 'BillEdit', params: { id: row.id } });
                 }
 
-                if (row.type === 'check') {
+                if (row.trn_type === 'check') {
                     this.$router.push({ name: 'CheckEdit', params: { id: row.id } });
                 }
 
                 break;
 
             case 'payment':
-                if (row.type === 'bill') {
+                if (row.trn_type === 'bill') {
                     this.$router.push({
                         name  : 'PayBillCreate',
                         params: {
