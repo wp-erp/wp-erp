@@ -69,7 +69,6 @@ class Updates {
 
         $this->action( 'erp_update_1_5_0_process_memory_exceeded', 'memory_exceeded' );
         $this->action( 'erp_update_1_5_2_process_memory_exceeded', 'memory_exceeded' );
-        $this->action( 'erp_update_1_5_4_process_memory_exceeded', 'memory_exceeded' );
     }
 
     /**
