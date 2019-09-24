@@ -124,6 +124,10 @@
                     </a>
                 </div>
 
+                <div class="particulars">
+                    <p>{{ purchase.particulars }}</p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -144,14 +148,14 @@ export default {
 
     data() {
         return {
-            company  : null,
-            purchase : {},
-            isWorking: false,
-            acct_var : erp_acct_var, /* global erp_acct_var */
-            print_data : null,
-            type       : 'purchase',
-            showModal  : false,
-            people_id  : null
+            company   : null,
+            purchase  : {},
+            isWorking : false,
+            acct_var  : erp_acct_var,   /* global erp_acct_var */
+            print_data: null,
+            type      : 'purchase',
+            showModal : false,
+            people_id : null
         };
     },
 
@@ -212,6 +216,11 @@ export default {
             padding-top: 10px !important;
             padding-bottom: 10px !important;
         }
+    }
+
+    .particulars {
+        padding-top: 15px;
+        border-top: 1px solid rgba(38,50,56, .1);
     }
 
     @media print {

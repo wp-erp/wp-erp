@@ -21,7 +21,7 @@ class Admin_Page {
         $this->action( 'admin_init', 'admin_redirects' );
         add_action( 'admin_footer', 'erp_include_popup_markup' );
         //$this->action( 'admin_notices', 'promotional_offer' );
-        $this->action( 'admin_notices', 'accounting_survey_notice' );
+        // $this->action( 'admin_notices', 'accounting_survey_notice' );
     }
 
     /**
