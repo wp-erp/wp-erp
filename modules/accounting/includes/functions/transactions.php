@@ -841,6 +841,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -861,6 +862,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -880,6 +882,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -900,6 +903,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -919,6 +923,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -938,6 +943,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -958,6 +964,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -977,6 +984,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -994,6 +1002,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
+            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
