@@ -68,7 +68,6 @@ function erp_acct_get_purchase( $purchase_no ) {
     purchase.created_at,
 
     purchase_acc_detail.purchase_no,
-    purchase_acc_detail.particulars,
     purchase_acc_detail.debit,
     purchase_acc_detail.credit
 
