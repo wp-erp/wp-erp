@@ -51,8 +51,8 @@ function erp_acct_get_all_products( $args = [] ) {
     $sql .= " FROM {$wpdb->prefix}erp_acct_products AS product
         LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
         LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON
-        product.product_type_id = product_type.id ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
+        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id 
+        WHERE product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
         return $wpdb->get_var( $sql );
