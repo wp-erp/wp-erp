@@ -30,71 +30,95 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function register_routes() {
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/trial-balance', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/trial-balance',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_trial_balance' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_trial_balance' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/ledger-report', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/ledger-report',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_ledger_report' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_ledger_report' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales-tax-report', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/sales-tax-report',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_sales_tax_report' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_sales_tax_report' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/income-statement', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/income-statement',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_income_statement' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_income_statement' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/balance-sheet', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/balance-sheet',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_balance_sheet' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_balance_sheet' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/closest-fn-year', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/closest-fn-year',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_closest_fn_year' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_closest_fn_year' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+			]
+        );
 
     }
 
@@ -108,7 +132,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_trial_balance( $request ) {
         $args = [
             'start_date' => ! empty( $request['start_date'] ) ? $request['start_date'] : null,
-            'end_date'   => ! empty( $request['end_date'] ) ? $request['end_date'] : null
+            'end_date'   => ! empty( $request['end_date'] ) ? $request['end_date'] : null,
         ];
 
         $data = erp_acct_get_trial_balance( $args );
@@ -126,7 +150,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_status( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_status = erp_acct_get_sales_chart_status( $args );
@@ -144,7 +168,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_sales_chart_payment( $request ) {
         $args = [
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $chart_payment = erp_acct_get_sales_chart_payment( $args );
@@ -210,7 +234,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
         $end_date   = $request['end_date'];
         $args       = [
             'start_date' => $start_date,
-            'end_date'   => $end_date
+            'end_date'   => $end_date,
         ];
 
         $data = erp_acct_get_income_statement( $args );
@@ -234,7 +258,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
         $end_date   = $request['end_date'];
         $args       = [
             'start_date' => $start_date,
-            'end_date'   => $end_date
+            'end_date'   => $end_date,
         ];
 
         $data = erp_acct_get_balance_sheet( $args );
@@ -254,7 +278,7 @@ class Reports_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function get_closest_fn_year( $request ) {
-        $data = erp_acct_get_closest_fn_year_date( date('Y-m-d') );
+        $data = erp_acct_get_closest_fn_year_date( date( 'Y-m-d' ) );
 
         $response = rest_ensure_response( $data );
 

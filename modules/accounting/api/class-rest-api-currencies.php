@@ -25,17 +25,21 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_currencies' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_dashboard' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_currencies' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_dashboard' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
     }
 
     /**
@@ -83,7 +87,7 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'   => $item->id,
             'name' => $item->name,
-            'sign' => $item->sign
+            'sign' => $item->sign,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -129,7 +133,7 @@ class Currencies_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                ]
+                ],
             ],
         ];
 

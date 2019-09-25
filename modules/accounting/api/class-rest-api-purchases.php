@@ -29,67 +29,83 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_purchases' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_purchase' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_expenses_voucher' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_purchases' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_purchase' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_expenses_voucher' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_purchase' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_purchase' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_expenses_voucher' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_purchase' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_purchase' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_expenses_voucher' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void',
             [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'void_purchase' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_publish_expenses_voucher' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'void_purchase' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_publish_expenses_voucher' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/due' . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/due' . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'due_purchases' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_expenses_voucher' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'due_purchases' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_expenses_voucher' );
+					},
+				],
+			]
+        );
     }
 
     /**
@@ -103,7 +119,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $args = [
             'number' => ! empty( $request['per_page'] ) ? intval( $request['per_page'] ) : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
         $formatted_items   = [];
@@ -113,13 +129,18 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $purchase_data = erp_acct_get_purchases( $args );
-        $total_items   = erp_acct_get_purchases( [ 'count' => true, 'number' => -1 ] );
+        $total_items   = erp_acct_get_purchases(
+            [
+				'count'  => true,
+				'number' => -1,
+			]
+        );
 
         foreach ( $purchase_data as $item ) {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'created_by', $include_params ) ) {
+                if ( in_array( 'created_by', $include_params, true ) ) {
                     $item['created_by'] = $this->get_user( $item['created_by'] );
                 }
             }
@@ -169,7 +190,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'created_by', $include_params ) ) {
+                if ( in_array( 'created_by', $include_params, true ) ) {
                     $item['created_by'] = $this->get_user( $item['created_by'] );
                 }
             }
@@ -230,7 +251,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['item_total'];
+            $item_total[ $key ] = $item['item_total'];
         }
 
         $purchase_data['amount']        = array_sum( $item_total );
@@ -272,10 +293,11 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $purchase_data = $this->prepare_item_for_database( $request );
 
-        $items = $request['line_items']; $item_total = [];
+        $items      = $request['line_items'];
+		$item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['item_total'];
+            $item_total[ $key ] = $item['item_total'];
         }
 
         $purchase_data['attachments']     = maybe_serialize( $purchase_data['attachments'] );
@@ -323,15 +345,18 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $action
      */
     public function add_log( $data, $action ) {
-        erp_log()->add( [
-            'component'     => 'Accounting',
-            'sub_component' => __( 'Purchase', 'erp' ),
-            'old_value'     => '',
-            'new_value'     => '',
-            'message'       => sprintf( __( 'A purchase of %s has been created for %s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['vendor_id'] ) ),
-            'changetype'    => $action,
-            'created_by'    => get_current_user_id()
-        ] );
+        erp_log()->add(
+            [
+				'component'     => 'Accounting',
+				'sub_component' => __( 'Purchase', 'erp' ),
+				'old_value'     => '',
+                'new_value'     => '',
+                // translators: %1$s: amount, %2$s: id
+				'message'       => sprintf( __( 'A purchase of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['vendor_id'] ) ),
+				'changetype'    => $action,
+				'created_by'    => get_current_user_id(),
+			]
+        );
     }
 
     /**
@@ -417,7 +442,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'created_at'     => $item->created_at,
             'due'            => empty( $item->due ) ? erp_acct_get_purchase_due( $item->voucher_no ) : $item->due,
             'attachments'    => maybe_unserialize( $item->attachments ),
-            'particulars'    => $item->particulars
+            'particulars'    => $item->particulars,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -555,7 +580,6 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
             ],
         ];
-
 
         return $schema;
     }

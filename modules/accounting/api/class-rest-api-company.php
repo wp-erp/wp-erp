@@ -30,16 +30,20 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function register_routes() {
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_company' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_dashboard' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_company' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_dashboard' );
+					},
+				],
+			]
+        );
 
     }
 
@@ -63,11 +67,13 @@ class Company_Controller extends \WeDevs\ERP\API\REST_Controller {
             $url   = $image[0];
         }
 
-        $response = rest_ensure_response( [
-            'logo'    => $url,
-            'name'    => $company->name,
-            'address' => $company->address,
-        ] );
+        $response = rest_ensure_response(
+            [
+				'logo'    => $url,
+				'name'    => $company->name,
+				'address' => $company->address,
+			]
+        );
 
         $response->set_status( 200 );
 

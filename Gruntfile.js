@@ -117,7 +117,7 @@ module.exports = function(grunt) {
                     '!README.md',
                     '!CONTRIBUTING.md',
                     '!**/*~',
-                    '!phpcs.xml.dist',
+                    '!phpcs.xml',
                     '!eslintrc.js',
                     '!webpack.config.js',
                     '!modules/accounting/assets/less/**',

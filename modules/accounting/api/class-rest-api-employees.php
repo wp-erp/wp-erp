@@ -32,42 +32,54 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_employees' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_view_list' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_employees' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_view_list' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_employee' ],
-                'args'                => [
-                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_list_employee' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_employee' ],
+					'args'                => [
+						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_list_employee' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_transactions' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_view_list' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_transactions' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_view_list' );
+					},
+				],
+			]
+        );
 
     }
 
@@ -88,7 +100,6 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
             'location'    => ( $request['location'] ) ? $request['location'] : '-1',
             's'           => ( $request['s'] ) ? $request['s'] : '',
         ];
-
 
         $items = erp_hr_get_employees( $args );
 
@@ -126,16 +137,16 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
         $people_id = (int) $request['id'];
         $user_id   = erp_acct_get_user_id_by_people_id( $people_id );
 
-        $employee  = new \WeDevs\ERP\HRM\Employee( $user_id );
-        $item      = (array) erp_get_people( $people_id );
+        $employee = new \WeDevs\ERP\HRM\Employee( $user_id );
+        $item     = (array) erp_get_people( $people_id );
 
         if ( empty( $item['id'] ) ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item['designation']  = $employee->get_designation('view');
-        $item['department']   = $employee->get_department('view');
-        $item['reporting_to'] = $employee->get_reporting_to('view');
+        $item['designation']  = $employee->get_designation( 'view' );
+        $item['department']   = $employee->get_department( 'view' );
+        $item['reporting_to'] = $employee->get_reporting_to( 'view' );
         $item['avatar']       = $employee->get_avatar();
 
         $additional_fields['namespace'] = $this->namespace;
@@ -244,7 +255,7 @@ class Employees_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         // optional arguments.
         if ( isset( $request['company'] ) ) {
-            $prepared_item['company'] = isset ( $request['company'] ) ? $request['company'] : $company->name;
+            $prepared_item['company'] = isset( $request['company'] ) ? $request['company'] : $company->name;
         }
 
         if ( isset( $request['user_id'] ) ) {

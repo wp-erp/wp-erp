@@ -29,100 +29,124 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_customers' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_customer' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_customer' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_customer' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_customers' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_customer' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_customer' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_customer' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_customer' ],
-                'args'                => [
-                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_customer' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_customer' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_edit_customer' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_customer' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_delete_customer' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_customer' ],
+					'args'                => [
+						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_customer' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_customer' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_edit_customer' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'delete_customer' ],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_delete_customer' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)',
             [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'bulk_delete_customers' ],
-                'args'                => [
-                    'ids' => [ 'required' => true ]
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_delete_customer' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'bulk_delete_customers' ],
+					'args'                => [
+						'ids' => [ 'required' => true ],
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_delete_customer' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_transactions' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_customer' );
-                },
-            ],
-        ] );
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions/filter', [
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_transactions' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_customer' );
+					},
+				],
+			]
+        );
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions/filter',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'filter_transactions' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_customer' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'filter_transactions' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_customer' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/country', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/country',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_countries' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_customer' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_countries' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_customer' );
+					},
+				],
+			]
+        );
     }
 
     /**
@@ -137,7 +161,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'type'   => 'customer',
-            's'      => ! empty( $request['search'] ) ? $request['search'] : ''
+            's'      => ! empty( $request['search'] ) ? $request['search'] : '',
         ];
 
         $items       = erp_acct_get_accounting_people( $args );
@@ -161,7 +185,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'owner', $include_params ) ) {
+                if ( in_array( 'owner', $include_params, true ) ) {
                     $customer_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, 'contact_owner', true ) : erp_people_get_meta( $item->id, 'contact_owner', true );
 
                     $item->owner       = $this->get_user( $customer_owner_id );
@@ -206,7 +230,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-            if ( in_array( 'owner', $include_params ) ) {
+            if ( in_array( 'owner', $include_params, true ) ) {
                 $customer_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, 'contact_owner', true ) : erp_people_get_meta( $item->id, 'contact_owner', true );
 
                 $item->owner       = $this->get_user( $customer_owner_id );
@@ -302,7 +326,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'   => $id,
             'hard' => false,
-            'type' => 'customer'
+            'type' => 'customer',
         ];
 
         erp_delete_people( $data );
@@ -323,7 +347,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'   => explode( ',', $ids ),
             'hard' => false,
-            'type' => 'customer'
+            'type' => 'customer',
         ];
 
         erp_delete_people( $data );
@@ -357,7 +381,10 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $country  = \WeDevs\ERP\Countries::instance();
         $c        = $country->get_countries();
         $state    = $country->get_states();
-        $response = array( 'country' => $c, 'state' => $state );
+        $response = array(
+			'country' => $c,
+			'state'   => $state,
+		);
         $response = rest_ensure_response( $response );
         return $response;
     }
@@ -375,7 +402,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $args         = [
             'people_id'  => $id,
             'start_date' => $start_date,
-            'end_date'   => $end_date
+            'end_date'   => $end_date,
         ];
         $transactions = erp_acct_get_people_transactions( $args );
         $response     = rest_ensure_response( $transactions );
@@ -390,16 +417,18 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $action
      */
     public function add_log( $data, $action ) {
-        erp_log()->add( [
-            'component'     => 'Accounting',
-            'sub_component' => __( 'Customer', 'erp' ),
-            'old_value'     => '',
-            'new_value'     => '',
-            'message'       => $data['first_name'] . ' ' . $data['last_name'] . __( ' customer has been created', 'erp' ),
-            'changetype'    => $action,
-            'created_by'    => get_current_user_id()
+        erp_log()->add(
+            [
+				'component'     => 'Accounting',
+				'sub_component' => __( 'Customer', 'erp' ),
+				'old_value'     => '',
+				'new_value'     => '',
+				'message'       => $data['first_name'] . ' ' . $data['last_name'] . __( ' customer has been created', 'erp' ),
+				'changetype'    => $action,
+				'created_by'    => get_current_user_id(),
 
-        ] );
+			]
+        );
     }
 
     /**
@@ -469,8 +498,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['fax'] = $request['fax'];
         }
 
-        $prepared_item['raw_data']  = json_decode($request->get_body(), true);
-        $prepared_item['type'] = 'customer';
+        $prepared_item['raw_data'] = json_decode( $request->get_body(), true );
+        $prepared_item['type']     = 'customer';
 
         return $prepared_item;
     }
@@ -511,7 +540,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'postal_code' => $item->postal_code,
                 'country'     => $item->country,
                 'email'       => $item->email,
-                'phone'       => $item->phone
+                'phone'       => $item->phone,
             ],
         ];
 
@@ -657,7 +686,6 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
             ],
         ];
-
 
         return $schema;
     }
