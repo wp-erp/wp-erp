@@ -29,56 +29,68 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_payments' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sale' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_payment' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_payment' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_payments' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sale' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_payment' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_payment' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_payment' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sales_summary' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_payment' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_payment' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_payment' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sales_summary' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_payment' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_payment' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/void',
             [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'void_payment' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_payment' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'void_payment' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_payment' );
+					},
+				],
+			]
+        );
     }
 
     /**
@@ -91,7 +103,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_payments( $request ) {
         $args = [
             'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
         $formatted_items   = [];
@@ -101,13 +113,18 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $payment_data  = erp_acct_get_payments( $args );
-        $payment_count = erp_acct_get_payments( [ 'count' => true, 'number' => -1 ] );
+        $payment_count = erp_acct_get_payments(
+            [
+				'count'  => true,
+				'number' => -1,
+			]
+        );
 
         foreach ( $payment_data as $item ) {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'created_by', $include_params ) ) {
+                if ( in_array( 'created_by', $include_params, true ) ) {
                     $item['created_by'] = $this->get_user( $item['created_by'] );
                 }
             }
@@ -166,7 +183,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['line_total'];
+            $item_total[ $key ] = $item['line_total'];
         }
 
         $payment_data['amount'] = array_sum( $item_total );
@@ -206,7 +223,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         $item_total = [];
 
         foreach ( $items as $key => $item ) {
-            $item_total[$key] = $item['line_total'];
+            $item_total[ $key ] = $item['line_total'];
         }
 
         $payment_data['amount'] = array_sum( $item_total );
@@ -253,16 +270,19 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $action
      */
     public function add_log( $data, $action ) {
-        erp_log()->add( [
-            'component'     => 'Accounting',
-            'sub_component' => __( 'Receive Payment', 'erp' ),
-            'old_value'     => '',
-            'new_value'     => '',
-            'message'       => sprintf( __( 'An invoice payment of %s has been created for %s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
-            'changetype'    => $action,
-            'created_by'    => get_current_user_id()
+        erp_log()->add(
+            [
+				'component'     => 'Accounting',
+				'sub_component' => __( 'Receive Payment', 'erp' ),
+				'old_value'     => '',
+                'new_value'     => '',
+                // translators: %1$s: amount, %2$s: id
+				'message'       => sprintf( __( 'An invoice payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['customer_id'] ) ),
+				'changetype'    => $action,
+				'created_by'    => get_current_user_id(),
 
-        ] );
+			]
+        );
     }
 
     /**
@@ -472,7 +492,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'description' => __( 'Total.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
-                        ]
+                        ],
                     ],
                 ],
                 'check_no'        => [
@@ -509,7 +529,6 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
             ],
         ];
-
 
         return $schema;
     }

@@ -29,89 +29,109 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_tax_agencies' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sale' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_tax_agency' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_tax_agencies' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sale' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_tax_agency' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/due/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/due/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_agency_due' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sale' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_agency_due' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sale' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_tax_agency' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sale' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_tax_agency' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_tax_agency' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_tax_agency' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sale' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_tax_agency' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'delete_tax_agency' ],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_public_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)',
             [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'bulk_delete' ],
-                'args'                => [
-                    'ids' => [ 'required' => true ]
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'bulk_delete' ],
+					'args'                => [
+						'ids' => [ 'required' => true ],
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/pay', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/pay',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'pay_tax' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_payment' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'pay_tax' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_payment' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
     }
 
@@ -127,7 +147,7 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $formatted_items   = [];
@@ -137,13 +157,18 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $tax_data    = erp_acct_get_all_tax_agencies( $args );
-        $total_items = erp_acct_get_all_tax_agencies( [ 'count' => true, 'number' => -1 ] );
+        $total_items = erp_acct_get_all_tax_agencies(
+            [
+				'count'  => true,
+				'number' => -1,
+			]
+        );
 
         foreach ( $tax_data as $item ) {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'created_by', $include_params ) ) {
+                if ( in_array( 'created_by', $include_params, true ) ) {
                     $item['created_by'] = $this->get_user( $item['created_by'] );
                 }
             }
@@ -376,7 +401,7 @@ class Tax_Agencies_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                ]
+                ],
             ],
         ];
 
