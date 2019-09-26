@@ -24,15 +24,19 @@ class Assets {
     public function register() {
         if ( is_admin() ) {
             $screen = get_current_screen();
-            if ( $screen->base == 'wp-erp_page_erp-settings' ) {
+            if ( 'wp-erp_page_erp-settings' === $screen->base ) {
                 wp_enqueue_script( 'accounting-helper', ERP_ACCOUNTING_ASSETS . '/js/accounting-helper.js', array( 'jquery', 'erp-tiptip' ), false, true );
 
-                wp_localize_script( 'accounting-helper', 'erp_acct_helper', array(
-                    'fin_overlap_msg'    => __( 'Financial year values must not be overlapped!', 'erp' ),
-                    'fin_val_comp_msg'   => __( 'Second value must be greater than the first value!', 'erp' ),
-                ) );
+                wp_localize_script(
+                    'accounting-helper',
+                    'erp_acct_helper',
+                    array(
+						'fin_overlap_msg'  => __( 'Financial year values must not be overlapped!', 'erp' ),
+						'fin_val_comp_msg' => __( 'Second value must be greater than the first value!', 'erp' ),
+                    )
+                );
                 return;
-            } elseif ( $screen->base != 'wp-erp_page_erp-accounting' ) {
+            } elseif ( 'wp-erp_page_erp-accounting' === $screen->base ) {
                 return;
             }
         }
@@ -52,7 +56,7 @@ class Assets {
         global $current_user;
         $u_id       = $current_user->ID;
         $site_url   = site_url();
-        $rest_nonce = wp_create_nonce( "wp_rest" );
+        $rest_nonce = wp_create_nonce( 'wp_rest' );
         $logout_url = esc_url( wp_logout_url() );
         $acct_url   = admin_url( 'admin.php' ) . '?page=erp-accounting#/';
 
@@ -69,27 +73,33 @@ class Assets {
         if ( is_admin() ) {
             $component = 'accounting';
             $menu      = erp_menu();
-            $menus     = $menu[$component];
+            $menus     = $menu[ $component ];
 
             //check items for capabilities
-            $items = array_filter( $menus, function( $item ) {
-                if ( ! isset( $item['capability'] ) ) {
-                    return false;
-                }
-                return current_user_can( $item['capability'] );
-            } );
+            $items = array_filter(
+                $menus,
+                function( $item ) {
+					if ( ! isset( $item['capability'] ) ) {
+						return false;
+					}
+					return current_user_can( $item['capability'] );
+				}
+            );
 
             //sort items for position
-            uasort( $menus, function( $a, $b ) {
-                return $a['position'] > $b['position'];
-            } );
+            uasort(
+                $menus,
+                function( $a, $b ) {
+					return $a['position'] > $b['position'];
+				}
+            );
         }
 
         $erp_acct_dec_separator = erp_get_option( 'erp_ac_de_separator', false, '.' );
         $erp_acct_ths_separator = erp_get_option( 'erp_ac_th_separator', false, ',' );
 
-        $fy_ranges = erp_acct_get_date_boundary();
-        $ledgers   = erp_acct_get_ledgers_with_balances();
+        $fy_ranges    = erp_acct_get_date_boundary();
+        $ledgers      = erp_acct_get_ledgers_with_balances();
         $trn_statuses = erp_acct_get_all_trn_statuses();
 
         wp_localize_script( 'accounting-bootstrap', 'erp_acct_var', array(
@@ -147,25 +157,25 @@ class Assets {
             'accounting-vendor'    => [
                 'src'       => WPERP_ASSETS . '/js/vendor.js',
                 'version'   => filemtime( WPERP_PATH . '/assets/js/vendor.js' ),
-                'in_footer' => true
+                'in_footer' => true,
             ],
             'accounting-bootstrap' => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/bootstrap.js',
                 'deps'      => [ 'accounting-vendor' ],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/bootstrap.js' ),
-                'in_footer' => true
+                'in_footer' => true,
             ],
             'accounting-frontend'  => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/frontend.js',
                 'deps'      => [ 'jquery', 'accounting-vendor' ],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/frontend.js' ),
-                'in_footer' => true
+                'in_footer' => true,
             ],
             'accounting-admin'     => [
                 'src'       => ERP_ACCOUNTING_ASSETS . '/js/admin.js',
                 'deps'      => [ 'jquery', 'accounting-vendor' ],
                 'version'   => filemtime( ERP_ACCOUNTING_PATH . '/assets/js/admin.js' ),
-                'in_footer' => true
+                'in_footer' => true,
             ],
         ];
 
@@ -180,13 +190,13 @@ class Assets {
     public function get_styles() {
         $styles = [
             'accounting-style'    => [
-                'src' => ERP_ACCOUNTING_ASSETS . '/css/style.css'
+                'src' => ERP_ACCOUNTING_ASSETS . '/css/style.css',
             ],
             'accounting-frontend' => [
-                'src' => ERP_ACCOUNTING_ASSETS . '/css/frontend.css'
+                'src' => ERP_ACCOUNTING_ASSETS . '/css/frontend.css',
             ],
             'accounting-admin'    => [
-                'src' => ERP_ACCOUNTING_ASSETS . '/css/admin.css'
+                'src' => ERP_ACCOUNTING_ASSETS . '/css/admin.css',
             ],
         ];
 

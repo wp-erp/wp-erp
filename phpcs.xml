@@ -15,13 +15,12 @@
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/tests/*</exclude-pattern>
     <exclude-pattern>*/bin/*</exclude-pattern>
-    <exclude-pattern>*/includes/*</exclude-pattern>
     <exclude-pattern>*/i18n/*</exclude-pattern>
     <exclude-pattern>*/modules/crm/*</exclude-pattern>
     <exclude-pattern>*/modules/hrm/*</exclude-pattern>
 
     <arg name="extensions" value="php" />
     <arg name="report" value="full" />
-    <arg name="report-file" value="../wp-erp-phpcs-report.txt" />
+    <!-- <arg name="report-file" value="../wp-erp-phpcs-report.txt" /> -->
     <file>.</file>
 </ruleset>

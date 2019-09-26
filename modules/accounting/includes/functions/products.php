@@ -26,14 +26,14 @@ function erp_acct_get_all_products( $args = [] ) {
     $where = '';
     $limit = '';
 
-    if ( $args['number'] != '-1' ) {
+    if ( '-1' !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
-    $sql = "SELECT";
+    $sql = 'SELECT';
 
     if ( $args['count'] ) {
-        $sql .= " COUNT( product.id ) as total_number";
+        $sql .= ' COUNT( product.id ) as total_number';
     } else {
         $sql .= " product.id,
             product.name,
@@ -71,7 +71,8 @@ function erp_acct_get_all_products( $args = [] ) {
 function erp_acct_get_product( $product_id ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT
+    $row = $wpdb->get_row(
+        "SELECT
 		product.id,
 		product.name,
 		product.product_type_id,
@@ -89,9 +90,10 @@ function erp_acct_get_product( $product_id ) {
 
 		FROM {$wpdb->prefix}erp_acct_products AS product
 		LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
-		LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
-		LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
-	WHERE product.id = {$product_id} LIMIT 1", ARRAY_A );
+		LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id 
+        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id WHERE product.id = {$product_id} LIMIT 1",
+        ARRAY_A
+    );
 
     return $row;
 }
@@ -106,7 +108,7 @@ function erp_acct_insert_product( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( "Y-m-d H:i:s" );
+    $data['created_at'] = date( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
     $product_id         = null;
 
@@ -114,19 +116,22 @@ function erp_acct_insert_product( $data ) {
         $wpdb->query( 'START TRANSACTION' );
         $product_data = erp_acct_get_formatted_product_data( $data );
 
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_products', array(
-            'name'              => $product_data['name'],
-            'product_type_id'   => $product_data['product_type_id'],
-            'category_id'       => $product_data['category_id'],
-            'tax_cat_id'        => $product_data['tax_cat_id'],
-            'vendor'            => $product_data['vendor'],
-            'cost_price'        => $product_data['cost_price'],
-            'sale_price'        => $product_data['sale_price'],
-            'created_at'        => $product_data['created_at'],
-            'created_by'        => $product_data['created_by'],
-            'updated_at'        => $product_data['updated_at'],
-            'updated_by'        => $product_data['updated_by'],
-        ) );
+        $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_products',
+            array(
+				'name'            => $product_data['name'],
+				'product_type_id' => $product_data['product_type_id'],
+				'category_id'     => $product_data['category_id'],
+				'tax_cat_id'      => $product_data['tax_cat_id'],
+				'vendor'          => $product_data['vendor'],
+				'cost_price'      => $product_data['cost_price'],
+				'sale_price'      => $product_data['sale_price'],
+				'created_at'      => $product_data['created_at'],
+				'created_by'      => $product_data['created_by'],
+				'updated_at'      => $product_data['updated_at'],
+				'updated_by'      => $product_data['updated_by'],
+            )
+        );
 
         $product_id = $wpdb->insert_id;
 
@@ -151,28 +156,32 @@ function erp_acct_update_product( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( "Y-m-d H:i:s" );
+    $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
         $product_data = erp_acct_get_formatted_product_data( $data );
 
-        $wpdb->update( $wpdb->prefix . 'erp_acct_products', array(
-            'name'            => $product_data['name'],
-            'product_type_id' => $product_data['product_type_id'],
-            'category_id'     => $product_data['category_id'],
-            'tax_cat_id'      => $product_data['tax_cat_id'],
-            'vendor'          => $product_data['vendor'],
-            'cost_price'      => $product_data['cost_price'],
-            'sale_price'      => $product_data['sale_price'],
-            'created_at'      => $product_data['updated_at'],
-            'created_by'      => $product_data['updated_by'],
-            'updated_at'      => $product_data['updated_at'],
-            'updated_by'      => $product_data['updated_by'],
-        ), array(
-            'id' => $id,
-        ) );
+        $wpdb->update(
+            $wpdb->prefix . 'erp_acct_products',
+            array(
+				'name'            => $product_data['name'],
+				'product_type_id' => $product_data['product_type_id'],
+				'category_id'     => $product_data['category_id'],
+				'tax_cat_id'      => $product_data['tax_cat_id'],
+				'vendor'          => $product_data['vendor'],
+				'cost_price'      => $product_data['cost_price'],
+				'sale_price'      => $product_data['sale_price'],
+				'created_at'      => $product_data['updated_at'],
+				'created_by'      => $product_data['updated_by'],
+				'updated_at'      => $product_data['updated_at'],
+				'updated_by'      => $product_data['updated_by'],
+            ),
+            array(
+				'id' => $id,
+            )
+        );
 
         $wpdb->query( 'COMMIT' );
 
@@ -249,7 +258,7 @@ function erp_acct_get_product_types() {
 function erp_acct_get_product_type_id_by_product_id( $product_id ) {
     global $wpdb;
 
-    $type_id = $wpdb->get_var( "SELECT product_type_id FROM {$wpdb->prefix}erp_acct_products WHERE id={$product_id}" );
+    $type_id = $wpdb->get_var( $wpdb->prepare( "SELECT product_type_id FROM {$wpdb->prefix}erp_acct_products WHERE id = %d", $product_id ) );
 
     return $type_id;
 }

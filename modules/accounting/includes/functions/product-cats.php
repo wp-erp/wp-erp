@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function erp_acct_get_all_product_cats() {
     global $wpdb;
 
-    $row = $wpdb->get_results( "SELECT * FROM " . $wpdb->prefix . "erp_acct_product_categories", ARRAY_A );
+    $row = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'erp_acct_product_categories', ARRAY_A );
 
     return $row;
 }
@@ -28,7 +28,7 @@ function erp_acct_get_all_product_cats() {
 function erp_acct_get_product_cat( $product_cat_id ) {
     global $wpdb;
 
-    $row = $wpdb->get_row( "SELECT * FROM " . $wpdb->prefix . "erp_acct_product_categories WHERE id = {$product_cat_id} GROUP BY parent", ARRAY_A );
+    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_product_categories WHERE id = %d GROUP BY parent", $product_cat_id ), ARRAY_A );
 
     return $row;
 }
@@ -43,21 +43,24 @@ function erp_acct_insert_product_cat( $data ) {
     global $wpdb;
 
     $created_by         = get_current_user_id();
-    $data['created_at'] = date( "Y-m-d H:i:s" );
+    $data['created_at'] = date( 'Y-m-d H:i:s' );
     $data['created_by'] = $created_by;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
         $product_cat_data = erp_acct_get_formatted_product_cat_data( $data );
 
-        $wpdb->insert( $wpdb->prefix . 'erp_acct_product_categories', array(
-            'name'              => $product_cat_data['name'],
-            'parent'            => $product_cat_data['parent'],
-            'created_at'        => $product_cat_data['created_at'],
-            'created_by'        => $product_cat_data['created_by'],
-            'updated_at'        => $product_cat_data['updated_at'],
-            'updated_by'        => $product_cat_data['updated_by'],
-        ) );
+        $wpdb->insert(
+            $wpdb->prefix . 'erp_acct_product_categories',
+            array(
+				'name'       => $product_cat_data['name'],
+				'parent'     => $product_cat_data['parent'],
+				'created_at' => $product_cat_data['created_at'],
+				'created_by' => $product_cat_data['created_by'],
+				'updated_at' => $product_cat_data['updated_at'],
+				'updated_by' => $product_cat_data['updated_by'],
+            )
+        );
 
         $product_cat_id = $wpdb->insert_id;
 
@@ -82,23 +85,27 @@ function erp_acct_update_product_cat( $data, $id ) {
     global $wpdb;
 
     $updated_by         = get_current_user_id();
-    $data['updated_at'] = date( "Y-m-d H:i:s" );
+    $data['updated_at'] = date( 'Y-m-d H:i:s' );
     $data['updated_by'] = $updated_by;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
         $product_cat_data = erp_acct_get_formatted_product_cat_data( $data );
 
-        $wpdb->update( $wpdb->prefix . 'erp_acct_product_categories', array(
-            'name'       => $product_cat_data['name'],
-            'parent'     => $product_cat_data['parent'],
-            'created_at' => $product_cat_data['created_at'],
-            'created_by' => $product_cat_data['created_by'],
-            'updated_at' => $product_cat_data['updated_at'],
-            'updated_by' => $product_cat_data['updated_by'],
-        ), array(
-            'id' => $id,
-        ) );
+        $wpdb->update(
+            $wpdb->prefix . 'erp_acct_product_categories',
+            array(
+				'name'       => $product_cat_data['name'],
+				'parent'     => $product_cat_data['parent'],
+				'created_at' => $product_cat_data['created_at'],
+				'created_by' => $product_cat_data['created_by'],
+				'updated_at' => $product_cat_data['updated_at'],
+				'updated_by' => $product_cat_data['updated_by'],
+            ),
+            array(
+				'id' => $id,
+            )
+        );
 
         $wpdb->query( 'COMMIT' );
 
