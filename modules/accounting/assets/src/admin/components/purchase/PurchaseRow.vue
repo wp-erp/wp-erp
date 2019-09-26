@@ -13,6 +13,7 @@
         <td class="col--uni_price" data-colname="Unit Price">
             <input min="0" type="number" v-model="line.unitPrice"
                 @keyup="calculateAmount"
+                step="0.01"
                 class="wperp-form-field text-right" :required="line.selectedProduct ? true : false">
         </td>
         <td class="col--amount" data-colname="Amount">
