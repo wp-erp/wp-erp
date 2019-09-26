@@ -26,7 +26,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     function erp_ac_new_admin_as_manager( $user_id ) {
         $user = get_user_by( 'id', $user_id );
 
-        if ( $user && in_array( 'administrator', $user->roles ) ) {
+        if ( $user && in_array( 'administrator', $user->roles, true ) ) {
             $user->add_role( erp_ac_get_manager_role() );
         }
     }
@@ -74,7 +74,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
             erp_ac_get_manager_role() => [
                 'name'         => __( 'Accounting Manager', 'erp' ),
                 'public'       => false,
-                'capabilities' => erp_ac_get_caps_for_role( erp_ac_get_manager_role() )
+                'capabilities' => erp_ac_get_caps_for_role( erp_ac_get_manager_role() ),
             ],
         ];
 
@@ -88,7 +88,6 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
         switch ( $role ) {
 
             case erp_ac_get_manager_role():
-
                 $caps = [
                     'read'                            => true,
                     'erp_ac_view_dashboard'           => true,
@@ -132,7 +131,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
                     'erp_ac_view_journal'             => true,
                     'erp_ac_view_other_journals'      => true,
                     'erp_ac_create_journal'           => true,
-                    'erp_ac_view_reports'             => true
+                    'erp_ac_view_reports'             => true,
 
                 ];
 
@@ -145,7 +144,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     function erp_ac_is_hr_current_user_manager() {
         $current_user_hr_role = erp_hr_get_user_role( get_current_user_id() );
 
-        if ( erp_hr_get_manager_role() != $current_user_hr_role ) {
+        if ( erp_hr_get_manager_role() !== $current_user_hr_role ) {
             return false;
         }
 
@@ -169,7 +168,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
         $user_id = get_current_user_id();
 
-        if ( $created_by == $user_id ) {
+        if ( $created_by === $user_id ) {
             return true;
         }
 
@@ -199,7 +198,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
         $user_id = get_current_user_id();
 
-        if ( $created_by == $user_id ) {
+        if ( $created_by === $user_id ) {
             return true;
         }
 
@@ -226,7 +225,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
         $user_id = get_current_user_id();
 
-        if ( $created_by == $user_id ) {
+        if ( $created_by === $user_id ) {
             return true;
         }
 
@@ -256,7 +255,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
         $user_id = get_current_user_id();
 
-        if ( $created_by == $user_id ) {
+        if ( $created_by === $user_id ) {
             return true;
         }
 
@@ -355,8 +354,6 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
     function erp_ac_view_other_journals() {
         return current_user_can( 'erp_ac_view_other_journals' );
     }
-
-
 }
 
 
@@ -372,19 +369,18 @@ function erp_ac_filter_editable_roles( $all_roles = [] ) {
 
     foreach ( $roles as $ac_role_key => $ac_role ) {
 
-        if ( isset( $ac_role['public'] ) && $ac_role['public'] === false ) {
+        if ( isset( $ac_role['public'] ) && false === $ac_role['public'] ) {
 
             // Loop through WordPress roles
             foreach ( array_keys( $all_roles ) as $wp_role ) {
 
                 // If keys match, unset
                 if ( $wp_role === $ac_role_key ) {
-                    unset( $all_roles[$wp_role] );
+                    unset( $all_roles[ $wp_role ] );
                 }
             }
         }
-
-    }
+	}
 
     return $all_roles;
 }

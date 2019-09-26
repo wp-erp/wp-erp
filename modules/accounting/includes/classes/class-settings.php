@@ -28,7 +28,7 @@ class Settings extends ERP_Settings_Page {
         $sections = array(
             'customers'       => __( 'Customers', 'erp' ),
             'currency_option' => __( 'Currency Settings', 'erp' ),
-            'opening_balance' => __( 'Financial Years', 'erp' )
+            'opening_balance' => __( 'Financial Years', 'erp' ),
         );
 
         return apply_filters( 'erp_get_sections_' . $this->id, $sections );
@@ -79,7 +79,12 @@ class Settings extends ERP_Settings_Page {
 
         $fields['currency_option'] = array(
 
-            array( 'title' => __( '', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+            array(
+				'title' => '',
+				'type'  => 'title',
+				'desc'  => '',
+				'id'    => 'general_options',
+			),
 
             array(
                 'title'   => __( 'Currency Position', 'erp' ),
@@ -98,14 +103,14 @@ class Settings extends ERP_Settings_Page {
                 'title'   => __( 'Thousand Separator', 'erp' ),
                 'type'    => 'text',
                 'id'      => 'erp_ac_th_separator',
-                'default' => ','
+                'default' => ',',
             ),
 
             array(
                 'title'   => __( 'Decimal Separator', 'erp' ),
                 'id'      => 'erp_ac_de_separator',
                 'type'    => 'text',
-                'default' => '.'
+                'default' => '.',
             ),
 
             // array(
@@ -115,7 +120,10 @@ class Settings extends ERP_Settings_Page {
             //     'default' => 2
             // ),
 
-            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
+            array(
+				'type' => 'sectionend',
+				'id'   => 'script_styling_options',
+			),
 
         ); // End currency options settings
 
@@ -124,18 +132,21 @@ class Settings extends ERP_Settings_Page {
             array(
                 'title' => __( 'Financial Years', 'erp' ),
                 'type'  => 'title',
-                'desc'  => __( '', 'erp' ),
-                'id'    => 'erp_acct_ob_options'
+                'desc'  => '',
+                'id'    => 'erp_acct_ob_options',
             ),
             array(
                 'type' => 'acct_opening_balance',
-                'id'   => 'erp_ac_ob_years'
+                'id'   => 'erp_ac_ob_years',
             ),
-            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
+            array(
+				'type' => 'sectionend',
+				'id'   => 'script_styling_options',
+			),
 
         ); // End opening balance settings
 
-        $section = $section === false ? $fields['checkout'] : isset( $fields[$section] ) ? $fields[$section] : array();
+        $section = false === $section ? $fields['checkout'] : isset( $fields[ $section ] ) ? $fields[ $section ] : array();
 
         return apply_filters( 'erp_ac_settings_section_fields_' . $this->id, $section );
     }
@@ -149,20 +160,27 @@ class Settings extends ERP_Settings_Page {
 
         $fields = array(
 
-            array( 'title' => __( 'Accounting Settings', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+            array(
+				'title' => __( 'Accounting Settings', 'erp' ),
+				'type'  => 'title',
+				'desc'  => '',
+				'id'    => 'general_options',
+			),
 
             array(
                 'title'   => __( 'Home Currency', 'erp' ),
                 'id'      => 'base_currency',
                 'desc'    => __( 'The base currency of the system.', 'erp' ),
                 'type'    => 'select',
-                'options' => erp_get_currencies()
+                'options' => erp_get_currencies(),
             ),
 
-            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
+            array(
+				'type' => 'sectionend',
+				'id'   => 'script_styling_options',
+			),
 
         ); // End general settings
-
 
         return apply_filters( 'erp_ac_settings_general', $fields );
     }
@@ -173,11 +191,9 @@ class Settings extends ERP_Settings_Page {
     function acct_opening_balance() {
         global $wpdb;
 
-        $sql = "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years";
+        $rows = $wpdb->get_results( "SELECT id, name, start_date, end_date FROM {$wpdb->prefix}erp_acct_financial_years", ARRAY_A );
 
-        $rows = $wpdb->get_results( $sql, ARRAY_A );
-
-        require_once ERP_ACCOUNTING_VIEWS . '/settings/opening_balance.php';
+        require_once ERP_ACCOUNTING_VIEWS . '/settings/opening-balance.php';
     }
 
 }

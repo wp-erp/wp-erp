@@ -23,7 +23,7 @@ class Send_Email extends Email {
             $results[] = $this->send( $receiver_emails, $subject, $body, '', $attachment );
         }
 
-        if ( in_array( false, $results ) ) {
+        if ( in_array( false, $results, true ) ) {
             return false;
         }
 

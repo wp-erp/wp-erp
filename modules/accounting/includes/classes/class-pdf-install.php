@@ -13,14 +13,16 @@ class PDF_Install {
      * @return int
      */
     public function install_plugin( $url ) {
-        if ( strstr( $url, '.zip' ) != false ) {
+        if ( strstr( $url, '.zip' ) !== false ) {
             $download_link = $url;
         } else {
             $slug          = explode( '/', $url );
-            $slug          = $slug[count( $slug ) - 2];
-            $api           = plugins_api( 'plugin_information', array(
-                    'slug'   => $slug,
-                    'fields' => array( 'sections' => 'false' )
+            $slug          = $slug[ count( $slug ) - 2 ];
+            $api           = plugins_api(
+                'plugin_information',
+                array(
+					'slug'   => $slug,
+					'fields' => array( 'sections' => 'false' ),
                 )
             );
             $download_link = $api->download_link;

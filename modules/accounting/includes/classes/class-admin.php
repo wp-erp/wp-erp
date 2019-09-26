@@ -37,126 +37,197 @@ class Admin {
 
         erp_add_menu_header( 'accounting', 'Accounting', '<svg id="Group_235" data-name="Group 235" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 239 341.4"><defs><style>.cls-1{fill:#9ca1a6}</style></defs><path id="Path_281" data-name="Path 281" class="cls-1"/></svg>' );
 
-        erp_add_menu( 'accounting', [
-            'title'      => __( 'Dashboard', 'erp' ),
-            'capability' => $dashboard,
-            'slug'       => 'dashboard',
-            'position'   => 1
-        ] );
-        erp_add_menu( 'accounting', [
-            'title'      => __( 'Users', 'erp' ),
-            'capability' => $customer,
-            'slug'       => 'users',
-            'position'   => 5
-        ] );
-        erp_add_submenu( 'accounting', 'users', [
-            'title'      => __( 'Customers', 'erp' ),
-            'capability' => $customer,
-            'slug'       => 'users/customers',
-            'position'   => 5
-        ] );
-        erp_add_submenu( 'accounting', 'users', [
-            'title'      => __( 'Vendors', 'erp' ),
-            'capability' => $vendor,
-            'slug'       => 'users/vendors',
-            'position'   => 10
-        ] );
-        erp_add_submenu( 'accounting', 'users', [
-            'title'      => __( 'Employees', 'erp' ),
-            'capability' => 'erp_ac_manager',
-            'slug'       => 'users/employees',
-            'position'   => 15
-        ] );
-        erp_add_menu( 'accounting', [
-            'title'      => __( 'Transactions', 'erp' ),
-            'capability' => $expense,
-            'slug'       => 'transactions',
-            'position'   => 25
-        ] );
-        erp_add_submenu( 'accounting', 'transactions', [
-            'title'      => __( 'Sales', 'erp' ),
-            'capability' => $sale,
-            'slug'       => 'transactions/sales',
-            'position'   => 5
-        ] );
-        erp_add_submenu( 'accounting', 'transactions', [
-            'title'      => __( 'Expenses', 'erp' ),
-            'capability' => $expense,
-            'slug'       => 'transactions/expenses',
-            'position'   => 10
-        ] );
-        erp_add_submenu( 'accounting', 'transactions', [
-            'title'      => __( 'Purchases', 'erp' ),
-            'capability' => $sale,
-            'slug'       => 'transactions/purchases',
-            'position'   => 15
-        ] );
-        erp_add_submenu( 'accounting', 'transactions', [
-            'title'      => __( 'Journals', 'erp' ),
-            'capability' => $journal,
-            'slug'       => 'transactions/journals',
-            'position'   => 25
-        ] );
-        erp_add_menu( 'accounting', [
-            'title'      => __( 'Chart of Accounts', 'erp' ),
-            'capability' => $account_charts,
-            'slug'       => 'charts',
-            'position'   => 30
-        ] );
-        erp_add_menu( 'accounting', [
-            'title'      => __( 'Bank Accounts', 'erp' ),
-            'capability' => $bank,
-            'slug'       => 'banks',
-            'position'   => 35
-        ] );
-        erp_add_menu( 'accounting', [
-            'title'      => __( 'Products', 'erp' ),
-            'capability' => 'erp_ac_view_sale',
-            'slug'       => 'products',
-            'position'   => 45,
-        ] );
-        erp_add_submenu( 'accounting', 'products', [
-            'title'      => __( 'Products & Services', 'erp' ),
-            'capability' => 'erp_ac_view_sale',
-            'slug'       => 'products/product-service',
-            'position'   => 5,
-        ] );
-        erp_add_submenu( 'accounting', 'products', [
-            'title'      => __( 'Product Categories', 'erp' ),
-            'capability' => 'erp_ac_view_sale',
-            'slug'       => 'products/product-categories',
-            'position'   => 10,
-        ] );
-        erp_add_menu( 'accounting', [
-            'title'      => __( 'Tax', 'erp' ),
-            'capability' => 'erp_ac_view_sale',
-            'slug'       => 'taxes',
-            'position'   => 45,
-        ] );
-        erp_add_submenu( 'accounting', 'taxes', [
-            'title'      => __( 'Tax Rates', 'erp' ),
-            'capability' => $sale,
-            'slug'       => 'taxes/tax-rates',
-            'position'   => 5
-        ] );
-        erp_add_submenu( 'accounting', 'taxes', [
-            'title'      => __( 'Tax Payments', 'erp' ),
-            'capability' => $sale,
-            'slug'       => 'taxes/tax-records',
-            'position'   => 10
-        ] );
-        erp_add_menu( 'accounting', [
-            'title'      => __( 'Reports', 'erp' ),
-            'capability' => $reports,
-            'slug'       => 'reports',
-            'position'   => 100
-        ] );
-        erp_add_menu( 'accounting', [
-            'title'      => __( 'Help', 'erp' ),
-            'capability' => $dashboard,
-            'slug'       => 'erp-ac-help',
-            'position'   => 200
-        ] );
+        erp_add_menu(
+            'accounting',
+            [
+				'title'      => __( 'Dashboard', 'erp' ),
+				'capability' => $dashboard,
+				'slug'       => 'dashboard',
+				'position'   => 1,
+			]
+        );
+        erp_add_menu(
+            'accounting',
+            [
+				'title'      => __( 'Users', 'erp' ),
+				'capability' => $customer,
+				'slug'       => 'users',
+				'position'   => 5,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'users',
+            [
+				'title'      => __( 'Customers', 'erp' ),
+				'capability' => $customer,
+				'slug'       => 'users/customers',
+				'position'   => 5,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'users',
+            [
+				'title'      => __( 'Vendors', 'erp' ),
+				'capability' => $vendor,
+				'slug'       => 'users/vendors',
+				'position'   => 10,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'users',
+            [
+				'title'      => __( 'Employees', 'erp' ),
+				'capability' => 'erp_ac_manager',
+				'slug'       => 'users/employees',
+				'position'   => 15,
+			]
+        );
+        erp_add_menu(
+            'accounting',
+            [
+				'title'      => __( 'Transactions', 'erp' ),
+				'capability' => $expense,
+				'slug'       => 'transactions',
+				'position'   => 25,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'transactions',
+            [
+				'title'      => __( 'Sales', 'erp' ),
+				'capability' => $sale,
+				'slug'       => 'transactions/sales',
+				'position'   => 5,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'transactions',
+            [
+				'title'      => __( 'Expenses', 'erp' ),
+				'capability' => $expense,
+				'slug'       => 'transactions/expenses',
+				'position'   => 10,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'transactions',
+            [
+				'title'      => __( 'Purchases', 'erp' ),
+				'capability' => $sale,
+				'slug'       => 'transactions/purchases',
+				'position'   => 15,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'transactions',
+            [
+				'title'      => __( 'Journals', 'erp' ),
+				'capability' => $journal,
+				'slug'       => 'transactions/journals',
+				'position'   => 25,
+			]
+        );
+        erp_add_menu(
+            'accounting',
+            [
+				'title'      => __( 'Chart of Accounts', 'erp' ),
+				'capability' => $account_charts,
+				'slug'       => 'charts',
+				'position'   => 30,
+			]
+        );
+        erp_add_menu(
+            'accounting',
+            [
+				'title'      => __( 'Bank Accounts', 'erp' ),
+				'capability' => $bank,
+				'slug'       => 'banks',
+				'position'   => 35,
+			]
+        );
+        erp_add_menu(
+            'accounting',
+            [
+				'title'      => __( 'Products', 'erp' ),
+				'capability' => 'erp_ac_view_sale',
+				'slug'       => 'products',
+				'position'   => 45,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'products',
+            [
+				'title'      => __( 'Products & Services', 'erp' ),
+				'capability' => 'erp_ac_view_sale',
+				'slug'       => 'products/product-service',
+				'position'   => 5,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'products',
+            [
+				'title'      => __( 'Product Categories', 'erp' ),
+				'capability' => 'erp_ac_view_sale',
+				'slug'       => 'products/product-categories',
+				'position'   => 10,
+			]
+        );
+        erp_add_menu(
+            'accounting',
+            [
+				'title'      => __( 'Tax', 'erp' ),
+				'capability' => 'erp_ac_view_sale',
+				'slug'       => 'taxes',
+				'position'   => 45,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'taxes',
+            [
+				'title'      => __( 'Tax Rates', 'erp' ),
+				'capability' => $sale,
+				'slug'       => 'taxes/tax-rates',
+				'position'   => 5,
+			]
+        );
+        erp_add_submenu(
+            'accounting',
+            'taxes',
+            [
+				'title'      => __( 'Tax Payments', 'erp' ),
+				'capability' => $sale,
+				'slug'       => 'taxes/tax-records',
+				'position'   => 10,
+			]
+        );
+        erp_add_menu(
+            'accounting',
+            [
+				'title'      => __( 'Reports', 'erp' ),
+				'capability' => $reports,
+				'slug'       => 'reports',
+				'position'   => 100,
+			]
+        );
+        erp_add_menu(
+            'accounting',
+            [
+				'title'      => __( 'Help', 'erp' ),
+				'capability' => $dashboard,
+				'slug'       => 'erp-ac-help',
+				'position'   => 200,
+			]
+        );
     }
 
     /**
@@ -190,7 +261,7 @@ class Admin {
             }
         }
 
-        if ( count( $hide ) == 3 ) {
+        if ( count( $hide ) === 3 ) {
             return;
         }
 
@@ -211,8 +282,8 @@ class Admin {
                 array(
                     'parent' => 'wp-erp-acct',
                     'id'     => 'wp-erp-acct-' . $items['slug'],
-                    'href'   => admin_url( "admin.php?page=erp-accounting" ) . "#/" . $items['url'],
-                    'title'  => $items['title']
+                    'href'   => admin_url( 'admin.php?page=erp-accounting' ) . '#/' . $items['url'],
+                    'title'  => $items['title'],
                 )
             );
         }
@@ -255,18 +326,22 @@ class Admin {
     public function erp_accounting_page() {
         ?>
         <script>
-            window.erpAcct = JSON.parse('<?php echo addslashes(
+            window.erpAcct = JSON.parse('
+            <?php
+            echo addslashes(
                 json_encode( apply_filters( 'erp_localized_data', [] ) )
-            ); ?>');
+            );
+			?>
+            ');
         </script>
         <?php
         echo '<div class="wrap"><div id="erp-accounting"></div></div>';
 
         $component = 'accounting';
         $menu      = erp_menu();
-        $menu      = $menu[$component];
-        $section   = ( isset( $_GET['section'] ) && isset( $menu[$_GET['section']] ) ) ? $_GET['section'] : 'dashboard';
-        $sub       = ( isset( $_GET['sub-section'] ) && ! empty( $menu[$section]['submenu'][$_GET['sub-section']] ) ) ? $_GET['sub-section'] : false;
+        $menu      = $menu[ $component ];
+        $section   = ( isset( $_GET['section'] ) && isset( $menu[ $_GET['section'] ] ) ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : 'dashboard';
+        $sub       = ( isset( $_GET['sub-section'] ) && ! empty( $menu[ $section ]['submenu'][ $_GET['sub-section'] ] ) ) ? sanitize_text_field( wp_unslash( $_GET['sub-section'] ) ) : false;
     }
 
     /**
@@ -294,7 +369,7 @@ class Admin {
             'email'      => $email,
             'mobile'     => $mobile,
             'phone'      => $phone,
-            'type'       => 'employee'
+            'type'       => 'employee',
         );
 
         $people_id = erp_insert_people( $args );
@@ -321,40 +396,43 @@ class Admin {
             return;
         }
 
-        $ob_names                           = $_POST['ob_names'];
-        $ob_starts                          = $_POST['ob_starts'];
-        $ob_ends                            = $_POST['ob_ends'];
-        $opening_balance_data['created_at'] = date( "Y-m-d H:i:s" );
-        $opening_balance_data['created_by'] = get_current_user_id();;
+        $ob_names                           = sanitize_text_field( wp_unslash( $_POST['ob_names'] ) );
+        $ob_starts                          = sanitize_text_field( wp_unslash( $_POST['ob_starts'] ) );
+        $ob_ends                            = sanitize_text_field( wp_unslash( $_POST['ob_ends'] ) );
+        $opening_balance_data['created_at'] = date( 'Y-m-d H:i:s' );
+        $opening_balance_data['created_by'] = get_current_user_id();
 
         if ( ! empty( $ob_names ) ) {
             for ( $i = 0; $i < count( $ob_names ); $i++ ) {
-                $fin_years['ob_names'][] = $ob_names[$i];
+                $fin_years['ob_names'][] = $ob_names[ $i ];
             }
         }
 
         if ( ! empty( $ob_starts ) ) {
             for ( $i = 0; $i < count( $ob_starts ); $i++ ) {
-                $fin_years['ob_starts'][] = $ob_starts[$i];
+                $fin_years['ob_starts'][] = $ob_starts[ $i ];
             }
         }
 
         if ( ! empty( $ob_ends ) ) {
             for ( $i = 0; $i < count( $ob_ends ); $i++ ) {
-                $fin_years['ob_ends'][] = $ob_ends[$i];
+                $fin_years['ob_ends'][] = $ob_ends[ $i ];
             }
         }
 
         $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . 'erp_acct_financial_years' );
 
         for ( $i = 0; $i < count( $ob_names ); $i++ ) {
-            $wpdb->insert( $wpdb->prefix . 'erp_acct_financial_years', array(
-                'name'       => $fin_years['ob_names'][$i],
-                'start_date' => $fin_years['ob_starts'][$i],
-                'end_date'   => $fin_years['ob_ends'][$i],
-                'created_at' => $opening_balance_data['created_at'],
-                'created_by' => $opening_balance_data['created_by']
-            ) );
+            $wpdb->insert(
+                $wpdb->prefix . 'erp_acct_financial_years',
+                array(
+					'name'       => $fin_years['ob_names'][ $i ],
+					'start_date' => $fin_years['ob_starts'][ $i ],
+					'end_date'   => $fin_years['ob_ends'][ $i ],
+					'created_at' => $opening_balance_data['created_at'],
+					'created_by' => $opening_balance_data['created_by'],
+                )
+            );
         }
     }
 }
