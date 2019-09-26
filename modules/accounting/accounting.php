@@ -77,7 +77,7 @@ final class Accounting {
             $pdf_install = new \WeDevs\ERP\Accounting\Includes\Classes\PDF_Install();
 
             if ( $action === 'install' ) {
-                $pdf_install->install_plugin( 'https://downloads.wordpress.org/plugin/erp-pdf-invoice.1.1.0.zip' );
+                $pdf_install->install_plugin( 'https://downloads.wordpress.org/plugin/erp-pdf-invoice.zip' );
             } elseif ( $action === 'active' ) {
                 $pdf_install->activate_pdf_plugin( $plugin );
             }
