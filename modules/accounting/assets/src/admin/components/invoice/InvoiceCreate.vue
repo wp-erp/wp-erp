@@ -5,7 +5,8 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ editMode ? __('Edit', 'erp') : __('New', 'erp') }} {{inv_title}}</h2>
+                    <h2 v-if="estimateToInvoice">Convert into Invoice</h2>
+                    <h2 v-else class="content-header__title">{{ editMode ? __('Edit', 'erp') : __('New', 'erp') }} {{inv_title}}</h2>
                 </div>
             </div>
         </div>
@@ -138,7 +139,10 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="9" style="text-align: right;">
+                                <td v-if="estimateToInvoice" colspan="9" style="text-align: right;">
+                                    <combo-button :options="[{ id: 'update', text: 'Save Convertion' }]" />
+                                </td>
+                                <td v-else colspan="9" style="text-align: right;">
                                     <combo-button v-if="editMode" :options="updateButtons" />
                                     <combo-button v-else :options="createButtons" />
                                 </td>
@@ -359,7 +363,15 @@ export default {
 
             if (invoice.estimate === '1') {
                 this.inv_type = { id: 1, name: 'Estimate' };
+                this.finalTotalAmount = parseFloat(invoice.amount) +
+                    parseFloat(invoice.tax) - parseFloat(this.discount);
             }
+        },
+
+        estimateToInvoice() {
+            const estimate = '1';
+
+            return estimate === this.inv_type.id && this.$route.params.convert;
         },
 
         getProducts() {
@@ -550,7 +562,8 @@ export default {
                 particulars    : this.particulars,
                 type           : 'invoice',
                 status         : parseInt(this.status),
-                estimate       : this.inv_type.id
+                estimate       : this.inv_type.id,
+                convert        : this.$route.query.convert
             });
 
             if (this.editMode) {
