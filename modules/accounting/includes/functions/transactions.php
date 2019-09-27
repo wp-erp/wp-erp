@@ -1021,6 +1021,8 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->balance );
     }
 
+    do_action( 'erp_acct_before_pdf_generate', $transaction, $type, $file_name, $output_method );
+
     $trn_pdf->render( $file_name, $output_method );
     $file_name = isset( $attach_pdf ) ? $file_name : '';
 
