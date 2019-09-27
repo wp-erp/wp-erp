@@ -401,6 +401,12 @@ function erp_acct_insert_invoice_account_details( $invoice_data, $voucher_no, $c
 function erp_acct_update_invoice( $data, $invoice_no ) {
     global $wpdb;
 
+    if ( 1 === $data['estimate'] && $data['convert'] ) {
+        erp_acct_convert_estimate_to_invoice( $data, $invoice_no );
+
+        return;
+    }
+
     $user_id    = get_current_user_id();
     $voucher_no = null;
 
@@ -479,6 +485,69 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
     }
 
     return erp_acct_get_invoice( $new_invoice['voucher_no'] );
+}
+
+/**
+ * Convert estimate to invoice
+ *
+ * @param $data
+ *
+ * @return array
+ */
+function erp_acct_convert_estimate_to_invoice( $data, $invoice_no ) {
+    global $wpdb;
+
+    $user_id  = get_current_user_id();
+
+    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_by'] = $user_id;
+    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_by'] = $user_id;
+    $data['estimate']   = 0;
+
+    try {
+        $wpdb->query( 'START TRANSACTION' );
+
+        // erp_acct_invoices
+        $wpdb->update(
+            $wpdb->prefix . 'erp_acct_invoices',
+            [ 'estimate' => false, 'status' => 2 ],
+            [ 'voucher_no' => $invoice_no ]
+        );
+
+        // remove data from erp_acct_invoice_details
+        $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_details', [ 'trn_no' => $invoice_no ] );
+
+        // format data before insert
+        $invoice_data = erp_acct_get_formatted_invoice_data( $data, $invoice_no );
+
+        // insert data into erp_acct_invoice_details
+        erp_acct_insert_invoice_details_and_tax( $invoice_data, $invoice_no );
+
+        erp_acct_insert_invoice_account_details( $invoice_data, $invoice_no );
+
+        erp_acct_insert_invoice_data_into_ledger( $invoice_data, $invoice_no );
+
+        do_action( 'erp_acct_after_sales_create', $data, $invoice_no );
+
+        $data['dr'] = $invoice_data['amount'];
+        $data['cr'] = 0;
+        erp_acct_insert_data_into_people_trn_details( $data, $invoice_no );
+
+        $wpdb->query( 'COMMIT' );
+
+    } catch ( Exception $e ) {
+        $wpdb->query( 'ROLLBACK' );
+        return new WP_error( 'invoice-exception', $e->getMessage() );
+    }
+
+    $invoice = erp_acct_get_invoice( $invoice_no );
+
+    $invoice['email'] = erp_get_people_email( $data['customer_id'] );
+
+    do_action( 'erp_acct_new_transaction_sales', $invoice_no, $invoice );
+
+    return $invoice;
 }
 
 /**
@@ -563,6 +632,10 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['created_by']      = isset( $data['created_by'] ) ? $data['created_by'] : null;
     $invoice_data['updated_at']      = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
     $invoice_data['updated_by']      = isset( $data['updated_by'] ) ? $data['updated_by'] : null;
+
+    if ( ! empty( $data['estimate'] ) ) {
+        $invoice_data['status'] = 3;
+    }
 
     return $invoice_data;
 }
