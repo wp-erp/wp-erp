@@ -381,6 +381,9 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
         }
+        if ( isset( $request['convert'] ) ) {
+            $prepared_item['convert'] = $request['convert'];
+        }
 
         return $prepared_item;
     }

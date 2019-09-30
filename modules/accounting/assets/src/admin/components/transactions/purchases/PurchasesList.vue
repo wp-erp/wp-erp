@@ -161,7 +161,8 @@ export default {
                 const mappedData = response.data.map(item => {
                     if (item.purchase_order === '1' || item.status_code === '1') {
                         item['actions'] = [
-                            { key: 'edit', label: 'Edit' }
+                            { key: 'edit', label: 'Edit' },
+                            { key: 'to_purchase', label: 'Make Purchase' }
                         ];
                     } else if (item.status_code === '8') {
                         item['actions'] = [
@@ -254,14 +255,17 @@ export default {
                 }
                 break;
 
+            case 'to_purchase':
+                this.$router.push({ name: 'PurchaseEdit', params: { id: row.id }, query: { convert: true } });
+                break;
+
             default :
                 break;
             }
         },
 
         goToPage(page) {
-            this.listLoading = true;
-
+            this.listLoading                = true;
             const queries                   = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
@@ -279,7 +283,7 @@ export default {
 
         getTrnType(row) {
             if (row.type === 'purchase') {
-                if (row.purchase_order == '1') {
+                if (row.purchase_order === '1') {
                     return 'Purchase Order';
                 }
                 return 'Purchase';

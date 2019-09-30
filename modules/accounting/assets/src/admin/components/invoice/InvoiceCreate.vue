@@ -5,7 +5,7 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 v-if="estimateToInvoice">Convert into Invoice</h2>
+                    <h2 v-if="estimateToInvoice()">Convert into Invoice</h2>
                     <h2 v-else class="content-header__title">{{ editMode ? __('Edit', 'erp') : __('New', 'erp') }} {{inv_title}}</h2>
                 </div>
             </div>
@@ -139,7 +139,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td v-if="estimateToInvoice" colspan="9" style="text-align: right;">
+                                <td v-if="estimateToInvoice()" colspan="9" style="text-align: right;">
                                     <combo-button :options="[{ id: 'update', text: 'Save Convertion' }]" />
                                 </td>
                                 <td v-else colspan="9" style="text-align: right;">
@@ -371,7 +371,7 @@ export default {
         estimateToInvoice() {
             const estimate = '1';
 
-            return estimate === this.inv_type.id && this.$route.params.convert;
+            return estimate === this.inv_type.id && this.$route.query.convert;
         },
 
         getProducts() {
