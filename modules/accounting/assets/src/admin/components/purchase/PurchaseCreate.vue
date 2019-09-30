@@ -5,7 +5,8 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ editMode ? 'Edit' : 'New' }} {{ page_title }}</h2>
+                    <h2 v-if="orderToPurchase()">Convert into Purchase</h2>
+                    <h2 v-else class="content-header__title">{{ editMode ? 'Edit' : 'New' }} {{ page_title }}</h2>
                 </div>
             </div>
         </div>
@@ -36,7 +37,7 @@
                             </div>
                             <div class="wperp-col-sm-6">
                                 <label>{{ __('Reference No', 'erp') }}</label>
-                                <input type="text" v-model="basic_fields.ref" rows="4" class="wperp-form-field"></input>
+                                <input type="text" v-model="basic_fields.ref" rows="4" class="wperp-form-field">
                             </div>
                             <div class="wperp-col-sm-6">
                                 <label>{{ __('Billing Address', 'erp') }}</label>
@@ -48,7 +49,7 @@
             </div>
 
             <div class="wperp-table-responsive">
-                <!-- Start .wperp-crm-table -->
+                <!-- Start .wperp-form-table -->
                 <div class="table-container">
                     <table class="wperp-table wperp-form-table">
                         <thead>
@@ -112,7 +113,10 @@
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td colspan="9" style="text-align: right;">
+                            <td v-if="orderToPurchase()" colspan="9" style="text-align: right;">
+                                <combo-button :options="[{ id: 'update', text: 'Save Convertion' }]" />
+                            </td>
+                            <td v-else colspan="9" style="text-align: right;">
                                 <combo-button v-if="editMode" :options="updateButtons" />
                                 <combo-button v-else :options="createButtons" />
                             </td>
@@ -206,7 +210,12 @@ export default {
             this.purchase_order = 1;
         } else {
             this.page_title = 'Purchase';
-            this.purchase_order = 0;
+
+            if (this.$route.query.convert) {
+                this.purchase_order = 1;
+            } else {
+                this.purchase_order = 0;
+            }
         }
 
         this.prepareDataLoad();
@@ -343,6 +352,12 @@ export default {
             });
         },
 
+        orderToPurchase() {
+            const purchase_order = 1;
+
+            return purchase_order === this.purchase_order && this.$route.query.convert;
+        },
+
         addLine() {
             this.transactionLines.push({});
         },
@@ -442,7 +457,8 @@ export default {
                 attachments    : this.attachments,
                 type           : 'purchase',
                 status         : trn_status,
-                purchase_order : this.purchase_order
+                purchase_order : this.purchase_order,
+                convert        : this.$route.query.convert
             };
 
             if (this.editMode) {

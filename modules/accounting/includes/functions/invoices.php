@@ -490,7 +490,8 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
 /**
  * Convert estimate to invoice
  *
- * @param $data
+ * @param array $data
+ * @param int $invoice_no
  *
  * @return array
  */
@@ -499,27 +500,42 @@ function erp_acct_convert_estimate_to_invoice( $data, $invoice_no ) {
 
     $user_id  = get_current_user_id();
 
-    $data['created_at'] = date( 'Y-m-d H:i:s' );
+    $data['created_at'] = date( 'Y-m-d' );
     $data['created_by'] = $user_id;
-    $data['updated_at'] = date( 'Y-m-d H:i:s' );
+    $data['updated_at'] = date( 'Y-m-d' );
     $data['updated_by'] = $user_id;
     $data['estimate']   = 0;
 
     try {
         $wpdb->query( 'START TRANSACTION' );
 
+        $invoice_data = erp_acct_get_formatted_invoice_data( $data, $invoice_no );
+
         // erp_acct_invoices
         $wpdb->update(
             $wpdb->prefix . 'erp_acct_invoices',
-            [ 'estimate' => false, 'status' => 2 ],
+            [
+                'customer_id'     => $invoice_data['customer_id'],
+                'customer_name'   => $invoice_data['customer_name'],
+                'trn_date'        => $invoice_data['date'],
+                'due_date'        => $invoice_data['due_date'],
+                'billing_address' => $invoice_data['billing_address'],
+                'amount'          => $invoice_data['amount'],
+                'discount'        => $invoice_data['discount'],
+                'discount_type'   => $invoice_data['discount_type'],
+                'tax'             => $invoice_data['tax'],
+                'estimate'        => false,
+                'attachments'     => $invoice_data['attachments'],
+                'status'          => 2,
+                'particulars'     => $invoice_data['particulars'],
+                'created_at'      => $invoice_data['created_at'],
+                'created_by'      => $invoice_data['created_by']
+            ],
             [ 'voucher_no' => $invoice_no ]
         );
 
         // remove data from erp_acct_invoice_details
         $wpdb->delete( $wpdb->prefix . 'erp_acct_invoice_details', [ 'trn_no' => $invoice_no ] );
-
-        // format data before insert
-        $invoice_data = erp_acct_get_formatted_invoice_data( $data, $invoice_no );
 
         // insert data into erp_acct_invoice_details
         erp_acct_insert_invoice_details_and_tax( $invoice_data, $invoice_no );
@@ -571,7 +587,6 @@ function erp_acct_update_draft_and_estimate( $data, $invoice_no ) {
         'amount'          => $invoice_data['amount'],
         'discount'        => $invoice_data['discount'],
         'discount_type'   => $invoice_data['discount_type'],
-        // 'tax_rate_id'     => $invoice_data['tax_rate_id'],
         'tax'             => $invoice_data['tax'],
         'estimate'        => $invoice_data['estimate'],
         'attachments'     => $invoice_data['attachments'],
