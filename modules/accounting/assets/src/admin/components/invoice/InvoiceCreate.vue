@@ -295,7 +295,9 @@ export default {
                  * load products and taxes, before invoice load
                  */
                 const [request1, request2] = await Promise.all([
-                    HTTP.get('/products'),
+                    HTTP.get('/products', { params: {
+                        number: -1
+                    } }),
                     HTTP.get('/taxes/summary')
                 ]);
                 const request3 = await HTTP.get(`/invoices/${this.$route.params.id}`);
@@ -377,7 +379,9 @@ export default {
         getProducts() {
             this.$store.dispatch('spinner/setSpinner', true);
 
-            HTTP.get('/products').then(response => {
+            HTTP.get('/products', { params: {
+                number: -1
+            } }).then(response => {
                 this.products = response.data;
 
                 this.$store.dispatch('spinner/setSpinner', false);
