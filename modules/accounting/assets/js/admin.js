@@ -15709,7 +15709,7 @@ if (false) {(function () {
               ticks: {
                 beginAtZero: true,
                 callback: function callback(value, index, values) {
-                  return '$' + value;
+                  return erp_acct_var.symbol + value;
                 }
               }
             }]
@@ -15717,7 +15717,7 @@ if (false) {(function () {
           tooltips: {
             callbacks: {
               label: function label(tooltipItems, data) {
-                return '$' + tooltipItems.yLabel.toString();
+                return erp_acct_var.symbol + tooltipItems.yLabel.toString();
               }
             }
           }
