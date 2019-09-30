@@ -90,6 +90,8 @@
 
         </div>
 
+        <trans-particulars :particulars="invoice.particulars" />
+
         <div class="invoice-attachments d-print-none">
             <h4>{{ __('Attachments', 'erp') }}</h4>
             <a class="attachment-item" :href="attachment"
@@ -103,14 +105,12 @@
             </a>
         </div>
 
-        <div class="particulars">
-            <p>{{ invoice.particulars }}</p>
-        </div>
-
     </div>
 </template>
 
 <script>
+import TransParticulars from 'admin/components/transactions/TransParticulars.vue';
+
 export default {
     name: 'InvoiceSingleContent',
 
@@ -130,6 +130,10 @@ export default {
         };
     },
 
+    components: {
+        TransParticulars
+    },
+
     created() {
         this.total = parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
     },
@@ -146,10 +150,3 @@ export default {
 
 };
 </script>
-
-<style scoped>
-.particulars {
-    padding-top: 15px;
-    border-top: 1px solid rgba(38,50,56, .1);
-}
-</style>
