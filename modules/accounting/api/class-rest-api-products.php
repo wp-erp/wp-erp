@@ -111,7 +111,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_inventory_products( $request ) {
         $args = [
-            'number' => $request['per_page'],
+            'number' => $request['number'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 

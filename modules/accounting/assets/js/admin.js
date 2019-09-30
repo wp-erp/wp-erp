@@ -17070,7 +17070,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                  */
 
                 _context.next = 5;
-                return Promise.all([__WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/products'), __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/taxes/summary')]);
+                return Promise.all([__WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/products', {
+                  params: {
+                    number: -1
+                  }
+                }), __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/taxes/summary')]);
 
               case 5:
                 _ref = _context.sent;
@@ -17183,7 +17187,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       var _this2 = this;
 
       this.$store.dispatch('spinner/setSpinner', true);
-      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/products').then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/products', {
+        params: {
+          number: -1
+        }
+      }).then(function (response) {
         _this2.products = response.data;
 
         _this2.$store.dispatch('spinner/setSpinner', false);
