@@ -249,7 +249,11 @@ export default {
                 this.voucherNo = this.$route.params.id;
 
                 const [request1, request2] = await Promise.all([
-                    HTTP.get('/products'),
+                    HTTP.get('/products', {
+                        params: {
+                            number: -1
+                        }
+                    }),
                     HTTP.get(`/purchases/${this.$route.params.id}`)
                 ]);
 
@@ -319,7 +323,11 @@ export default {
 
             this.$store.dispatch('spinner/setSpinner', true);
 
-            HTTP.get('/products').then((response) => {
+            HTTP.get('/products', {
+                params: {
+                    number: -1
+                }
+            }).then((response) => {
                 response.data.forEach(element => {
                     this.products.push({
                         id       : element.id,
