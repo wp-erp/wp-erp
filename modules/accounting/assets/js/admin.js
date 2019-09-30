@@ -21337,6 +21337,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PurchaseRow',
@@ -49470,6 +49471,7 @@ var render = function() {
           attrs: {
             min: "0",
             type: "number",
+            step: "0.01",
             required: _vm.line.selectedProduct ? true : false
           },
           domProps: { value: _vm.line.unitPrice },

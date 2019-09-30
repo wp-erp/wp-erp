@@ -841,7 +841,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -862,7 +862,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -882,7 +882,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -903,7 +903,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -923,7 +923,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -943,7 +943,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -964,7 +964,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -984,7 +984,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -1002,7 +1002,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add particulars
         if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Payment Information', 'erp' ) );
+            $trn_pdf->add_title( __( 'Notes', 'erp' ) );
             $trn_pdf->add_paragraph($transaction->particulars );
         }
 
@@ -1020,48 +1020,6 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->balance );
         $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->balance );
     }
-
-    if ( 'asset_sale' == $type ) {
-        // Set Column Headers
-        $trn_pdf->set_table_headers( [ __( 'PRODUCT', 'erp-acct-asset-management' ), __( 'QUANTITY', 'erp-acct-asset-management' ), __( 'UNIT PRICE', 'erp-acct-asset-management' ), __( 'DISCOUNT', 'erp-acct-asset-management' ), __( 'TAX AMOUNT', 'erp-acct-asset-management' ), __( 'AMOUNT', 'erp-acct-asset-management' ) ] );
-        // Add Table Items
-        foreach ( $transaction->line_items as $line ) {
-            $trn_pdf->add_item( [ $line['name'], $line['qty'], $line['unit_price'], $line['discount'], $line['tax'], $line['line_total'] ] );
-        }
-
-        // Add particulars
-        if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Notes', 'erp-acct-asset-management' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
-        }
-
-        $trn_pdf->add_badge( __( 'PENDING', 'erp-acct-asset-management' ) );
-        $trn_pdf->add_total( __( 'DUE', 'erp-acct-asset-management' ), $transaction->total_due );
-        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp-acct-asset-management' ), $transaction->amount );
-        $trn_pdf->add_total( __( 'TOTAL', 'erp-acct-asset-management' ), $transaction->amount );
-    }
-
-    if ( 'asset_purchase' == $type ) {
-        // Set Column Headers
-        $trn_pdf->set_table_headers( [ __( 'PRODUCT', 'erp-acct-asset-management' ), __( 'QUANTITY', 'erp-acct-asset-management' ), __( 'COST PRICE', 'erp-acct-asset-management' ), __( 'AMOUNT', 'erp-acct-asset-management' ) ] );
-
-        // Add Table Items
-        foreach ( $transaction->line_items as $line ) {
-            $trn_pdf->add_item( [ $line['name'], $line['qty'], $line['cost_price'], $line['amount'] ] );
-        }
-
-        // Add particulars
-        if ( $transaction->particulars ) {
-            $trn_pdf->add_title( __( 'Notes', 'erp-acct-asset-management' ) );
-            $trn_pdf->add_paragraph($transaction->particulars );
-        }
-
-        $trn_pdf->add_badge( __( 'PENDING', 'erp-acct-asset-management' ) );
-        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp-acct-asset-management' ), $transaction->amount );
-        $trn_pdf->add_total( __( 'TOTAL', 'erp-acct-asset-management' ), $transaction->amount );
-    }
-
-    do_action( 'erp_acct_before_pdf_generate', $trn_pdf, $transaction, $type, $file_name, $output_method );
 
     $trn_pdf->render( $file_name, $output_method );
     $file_name = isset( $attach_pdf ) ? $file_name : '';
