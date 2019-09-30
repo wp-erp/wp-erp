@@ -19854,6 +19854,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(639);
 //
 //
 //
@@ -19989,8 +19990,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
-//
-//
+
 
 
 
@@ -19998,7 +19998,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   name: 'BillSingle',
   components: {
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
-    Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
+    Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */],
+    TransParticulars: __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -20557,6 +20558,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(639);
 //
 //
 //
@@ -20685,8 +20687,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
-//
-//
+
 
 
 
@@ -20694,7 +20695,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   name: 'PayBillSingle',
   components: {
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
-    Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
+    Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */],
+    TransParticulars: __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -21569,6 +21571,7 @@ if (false) {(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(639);
 //
 //
 //
@@ -21702,8 +21705,7 @@ if (false) {(function () {
 //
 //
 //
-//
-//
+
 
 
 
@@ -21711,7 +21713,8 @@ if (false) {(function () {
   name: 'PurchaseSingle',
   components: {
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
-    Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
+    Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */],
+    TransParticulars: __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -22286,6 +22289,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(639);
 //
 //
 //
@@ -22417,8 +22421,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
-//
-//
+
 
 
 
@@ -22426,7 +22429,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   name: 'PayPurchaseSingle',
   components: {
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
-    Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
+    Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */],
+    TransParticulars: __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -22953,8 +22957,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(639);
 //
 //
 //
@@ -23055,8 +23058,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'JournalSingle',
+  components: {
+    TransParticulars: __WEBPACK_IMPORTED_MODULE_1_admin_components_transactions_TransParticulars_vue__["a" /* default */]
+  },
   data: function data() {
     return {
       company: null,
@@ -24391,6 +24398,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(639);
 //
 //
 //
@@ -24501,8 +24509,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
-//
-//
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'InvoiceSingleContent',
   props: {
@@ -24520,6 +24527,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       /* global erp_acct_var */
       total: null
     };
+  },
+  components: {
+    TransParticulars: __WEBPACK_IMPORTED_MODULE_0_admin_components_transactions_TransParticulars_vue__["a" /* default */]
   },
   created: function created() {
     this.total = parseFloat(this.invoice.amount) + parseFloat(this.invoice.tax) - parseFloat(this.invoice.discount);
@@ -24540,6 +24550,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(639);
 //
 //
 //
@@ -24640,10 +24651,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
-//
-//
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'PaymentSingleContent',
+  components: {
+    TransParticulars: __WEBPACK_IMPORTED_MODULE_0_admin_components_transactions_TransParticulars_vue__["a" /* default */]
+  },
   props: {
     payment: {
       type: Object
@@ -26120,6 +26133,7 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_http__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(639);
 //
 //
 //
@@ -26247,8 +26261,7 @@ setTimeout(function () {
 //
 //
 //
-//
-//
+
 
 
 
@@ -26256,7 +26269,8 @@ setTimeout(function () {
   name: 'ExpenseSingle',
   components: {
     SendMail: __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__["a" /* default */],
-    Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */]
+    Dropdown: __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__["a" /* default */],
+    TransParticulars: __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__["a" /* default */]
   },
   data: function data() {
     return {
@@ -48056,235 +48070,248 @@ var render = function() {
             })
           : _vm._e(),
         _vm._v(" "),
-        _c("div", { staticClass: "wperp-modal-body" }, [
-          _c("div", { staticClass: "wperp-invoice-panel" }, [
-            null != _vm.company
-              ? _c("div", { staticClass: "invoice-header" }, [
-                  _c("div", { staticClass: "invoice-logo" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.company.logo,
-                        alt: "logo name",
-                        width: "100",
-                        height: "100"
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "invoice-address" }, [
-                    _c("address", [
-                      _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.address_1)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.address_2)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.city)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.country) +
-                          "\n                        "
-                      )
-                    ])
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("div", { staticClass: "invoice-body" }, [
-              _c("h4", [_vm._v("Bill")]),
-              _vm._v(" "),
-              null != _vm.bill
-                ? _c("div", { staticClass: "wperp-row" }, [
-                    _c("div", { staticClass: "wperp-col-sm-6" }, [
-                      _c("div", { staticClass: "persons-info" }, [
-                        _c("strong", [_vm._v(_vm._s(_vm.bill.vendor_name))]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                                " +
-                            _vm._s(_vm.bill.billing_address) +
-                            "\n                            "
-                        )
-                      ])
+        _c(
+          "div",
+          { staticClass: "wperp-modal-body" },
+          [
+            _c("div", { staticClass: "wperp-invoice-panel" }, [
+              null != _vm.company
+                ? _c("div", { staticClass: "invoice-header" }, [
+                    _c("div", { staticClass: "invoice-logo" }, [
+                      _c("img", {
+                        attrs: {
+                          src: _vm.company.logo,
+                          alt: "logo name",
+                          width: "100",
+                          height: "100"
+                        }
+                      })
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "wperp-col-sm-6" }, [
-                      _c("table", { staticClass: "invoice-info" }, [
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v("#" + _vm._s(_vm.bill.voucher_no))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(
-                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.bill.trn_date))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.bill.due_date))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.bill.created_at))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Amount Due", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _vm._v(_vm._s(_vm.moneyFormat(_vm.bill.due)))
-                          ])
-                        ])
+                    _c("div", { staticClass: "invoice-address" }, [
+                      _c("address", [
+                        _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.address_1)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.address_2)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.city)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.country) +
+                            "\n                        "
+                        )
                       ])
                     ])
                   ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            null != _vm.bill
-              ? _c("div", { staticClass: "wperp-invoice-table" }, [
-                  _c(
-                    "table",
-                    {
-                      staticClass: "wperp-table wperp-form-table invoice-table"
-                    },
-                    [
-                      _c("thead", [
-                        _c("tr", [
-                          _c("th", [_vm._v(_vm._s(_vm.__("Sl", "erp")))]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v(_vm._s(_vm.__("Account", "erp")))]),
-                          _vm._v(" "),
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Particulars", "erp")))
-                          ]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "invoice-body" }, [
+                _c("h4", [_vm._v("Bill")]),
+                _vm._v(" "),
+                null != _vm.bill
+                  ? _c("div", { staticClass: "wperp-row" }, [
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("div", { staticClass: "persons-info" }, [
+                          _c("strong", [_vm._v(_vm._s(_vm.bill.vendor_name))]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                " +
+                              _vm._s(_vm.bill.billing_address) +
+                              "\n                            "
+                          )
                         ])
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "tbody",
-                        _vm._l(_vm.bill.bill_details, function(line, index) {
-                          return _c("tr", { key: index }, [
-                            _c("td", [_vm._v(_vm._s(index + 1))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(line.ledger_name))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(line.particulars))]),
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("table", { staticClass: "invoice-info" }, [
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
+                            ]),
                             _vm._v(" "),
                             _c("td", [
-                              _vm._v(_vm._s(_vm.moneyFormat(line.amount)))
+                              _vm._v("#" + _vm._s(_vm.bill.voucher_no))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
+                                _vm._s(_vm.__("Transaction Date", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.bill.trn_date))])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.bill.due_date))])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.bill.created_at))])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Amount Due", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(_vm.moneyFormat(_vm.bill.due)))
                             ])
                           ])
-                        }),
-                        0
-                      ),
-                      _vm._v(" "),
-                      _c("tfoot", [
-                        _c("tr", [
-                          _c("td", { attrs: { colspan: "7" } }, [
-                            _c("ul", [
-                              _c("li", [
-                                _c("span", [
+                        ])
+                      ])
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              null != _vm.bill
+                ? _c("div", { staticClass: "wperp-invoice-table" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "wperp-table wperp-form-table invoice-table"
+                      },
+                      [
+                        _c("thead", [
+                          _c("tr", [
+                            _c("th", [_vm._v(_vm._s(_vm.__("Sl", "erp")))]),
+                            _vm._v(" "),
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Account", "erp")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Particulars", "erp")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.bill.bill_details, function(line, index) {
+                            return _c("tr", { key: index }, [
+                              _c("td", [_vm._v(_vm._s(index + 1))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(line.ledger_name))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(line.particulars))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(_vm._s(_vm.moneyFormat(line.amount)))
+                              ])
+                            ])
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c("tfoot", [
+                          _c("tr", [
+                            _c("td", { attrs: { colspan: "7" } }, [
+                              _c("ul", [
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(
+                                      _vm._s(_vm.__("Subtotal", "erp")) + ":"
+                                    )
+                                  ]),
                                   _vm._v(
-                                    _vm._s(_vm.__("Subtotal", "erp")) + ":"
+                                    " " +
+                                      _vm._s(_vm.moneyFormat(_vm.bill.amount))
                                   )
                                 ]),
-                                _vm._v(
-                                  " " + _vm._s(_vm.moneyFormat(_vm.bill.amount))
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("li", [
-                                _c("span", [
-                                  _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
-                                ]),
-                                _vm._v(
-                                  " " + _vm._s(_vm.moneyFormat(_vm.bill.amount))
-                                )
+                                _vm._v(" "),
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                                  ]),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(_vm.moneyFormat(_vm.bill.amount))
+                                  )
+                                ])
                               ])
                             ])
                           ])
                         ])
+                      ]
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("trans-particulars", {
+              attrs: { particulars: _vm.bill.particulars }
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "invoice-attachments d-print-none" },
+              [
+                _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
+                _vm._v(" "),
+                _vm._l(_vm.bill.attachments, function(attachment, index) {
+                  return _c(
+                    "a",
+                    {
+                      key: index,
+                      staticClass: "attachment-item",
+                      attrs: { href: attachment, download: "" }
+                    },
+                    [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.acct_var.acct_assets + "/images/file-thumb.png"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "attachment-meta" }, [
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(
+                              attachment.substring(
+                                attachment.lastIndexOf("/") + 1
+                              )
+                            )
+                          )
+                        ]),
+                        _c("br")
                       ])
                     ]
                   )
-                ])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "invoice-attachments d-print-none" },
-            [
-              _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
-              _vm._v(" "),
-              _vm._l(_vm.bill.attachments, function(attachment, index) {
-                return _c(
-                  "a",
-                  {
-                    key: index,
-                    staticClass: "attachment-item",
-                    attrs: { href: attachment, download: "" }
-                  },
-                  [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "attachment-meta" }, [
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            attachment.substring(
-                              attachment.lastIndexOf("/") + 1
-                            )
-                          )
-                        )
-                      ]),
-                      _c("br")
-                    ])
-                  ]
-                )
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "particulars" }, [
-            _c("p", [_vm._v(_vm._s(_vm.bill.particulars))])
-          ])
-        ])
+                })
+              ],
+              2
+            )
+          ],
+          1
+        )
       ],
       1
     )
@@ -49034,220 +49061,238 @@ var render = function() {
             })
           : _vm._e(),
         _vm._v(" "),
-        _c("div", { staticClass: "wperp-modal-body" }, [
-          _c("div", { staticClass: "wperp-invoice-panel" }, [
-            null != _vm.company
-              ? _c("div", { staticClass: "invoice-header" }, [
-                  _c("div", { staticClass: "invoice-logo" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.company.logo,
-                        alt: "logo name",
-                        width: "100",
-                        height: "100"
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "invoice-address" }, [
-                    _c("address", [
-                      _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.address_1)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.address_2)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.city)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.country) +
-                          "\n                        "
-                      )
-                    ])
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("div", { staticClass: "invoice-body" }, [
-              _c("h4", [_vm._v(_vm._s(_vm.__("Pay Bill", "erp")))]),
-              _vm._v(" "),
-              null != _vm.payBill
-                ? _c("div", { staticClass: "wperp-row" }, [
-                    _c("div", { staticClass: "wperp-col-sm-6" }, [
-                      _c("div", { staticClass: "persons-info" }, [
-                        _c("strong", [_vm._v(_vm._s(_vm.payBill.vendor_name))]),
-                        _c("br")
-                      ])
+        _c(
+          "div",
+          { staticClass: "wperp-modal-body" },
+          [
+            _c("div", { staticClass: "wperp-invoice-panel" }, [
+              null != _vm.company
+                ? _c("div", { staticClass: "invoice-header" }, [
+                    _c("div", { staticClass: "invoice-logo" }, [
+                      _c("img", {
+                        attrs: {
+                          src: _vm.company.logo,
+                          alt: "logo name",
+                          width: "100",
+                          height: "100"
+                        }
+                      })
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "wperp-col-sm-6" }, [
-                      _c("table", { staticClass: "invoice-info" }, [
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _vm._v("#" + _vm._s(_vm.payBill.voucher_no))
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(
-                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.payBill.trn_date))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.payBill.created_at))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(
-                              _vm._s(_vm.__("Transaction From", "erp")) + ":"
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.payBill.trn_by))])
-                        ])
+                    _c("div", { staticClass: "invoice-address" }, [
+                      _c("address", [
+                        _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.address_1)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.address_2)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.city)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.country) +
+                            "\n                        "
+                        )
                       ])
                     ])
                   ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            null != _vm.payBill
-              ? _c("div", { staticClass: "wperp-invoice-table" }, [
-                  _c(
-                    "table",
-                    {
-                      staticClass: "wperp-table wperp-form-table invoice-table"
-                    },
-                    [
-                      _c("thead", [
-                        _c("tr", [
-                          _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v(_vm._s(_vm.__("Bill No", "erp")))]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "invoice-body" }, [
+                _c("h4", [_vm._v(_vm._s(_vm.__("Pay Bill", "erp")))]),
+                _vm._v(" "),
+                null != _vm.payBill
+                  ? _c("div", { staticClass: "wperp-row" }, [
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("div", { staticClass: "persons-info" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.payBill.vendor_name))
+                          ]),
+                          _c("br")
                         ])
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "tbody",
-                        _vm._l(_vm.payBill.bill_details, function(line, index) {
-                          return _c("tr", { key: index }, [
-                            _c("td", [_vm._v(_vm._s(line.id))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(line.bill_no))]),
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("table", { staticClass: "invoice-info" }, [
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
+                            ]),
                             _vm._v(" "),
                             _c("td", [
-                              _vm._v(_vm._s(_vm.moneyFormat(line.amount)))
+                              _vm._v("#" + _vm._s(_vm.payBill.voucher_no))
                             ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
+                                _vm._s(_vm.__("Transaction Date", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.payBill.trn_date))])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.payBill.created_at))])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
+                                _vm._s(_vm.__("Transaction From", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.payBill.trn_by))])
                           ])
-                        }),
-                        0
-                      ),
-                      _vm._v(" "),
-                      _c("tfoot", [
-                        _c("tr", [
-                          _c("td", { attrs: { colspan: "7" } }, [
-                            _c("ul", [
-                              _c("li", [
-                                _c("span", [
+                        ])
+                      ])
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              null != _vm.payBill
+                ? _c("div", { staticClass: "wperp-invoice-table" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "wperp-table wperp-form-table invoice-table"
+                      },
+                      [
+                        _c("thead", [
+                          _c("tr", [
+                            _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
+                            _vm._v(" "),
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Bill No", "erp")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.payBill.bill_details, function(
+                            line,
+                            index
+                          ) {
+                            return _c("tr", { key: index }, [
+                              _c("td", [_vm._v(_vm._s(line.id))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(line.bill_no))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(_vm._s(_vm.moneyFormat(line.amount)))
+                              ])
+                            ])
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c("tfoot", [
+                          _c("tr", [
+                            _c("td", { attrs: { colspan: "7" } }, [
+                              _c("ul", [
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(
+                                      _vm._s(_vm.__("Subtotal", "erp")) + ":"
+                                    )
+                                  ]),
                                   _vm._v(
-                                    _vm._s(_vm.__("Subtotal", "erp")) + ":"
+                                    " " +
+                                      _vm._s(
+                                        _vm.moneyFormat(_vm.payBill.amount)
+                                      )
                                   )
                                 ]),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(_vm.moneyFormat(_vm.payBill.amount))
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("li", [
-                                _c("span", [
-                                  _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
-                                ]),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(_vm.moneyFormat(_vm.payBill.amount))
-                                )
+                                _vm._v(" "),
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                                  ]),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(
+                                        _vm.moneyFormat(_vm.payBill.amount)
+                                      )
+                                  )
+                                ])
                               ])
                             ])
                           ])
                         ])
+                      ]
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("trans-particulars", {
+              attrs: { particulars: _vm.payBill.particulars }
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "invoice-attachments d-print-none" },
+              [
+                _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
+                _vm._v(" "),
+                _vm._l(_vm.payBill.attachments, function(attachment, index) {
+                  return _c(
+                    "a",
+                    {
+                      key: index,
+                      staticClass: "attachment-item",
+                      attrs: { href: attachment, download: "" }
+                    },
+                    [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.acct_var.acct_assets + "/images/file-thumb.png"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "attachment-meta" }, [
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(
+                              attachment.substring(
+                                attachment.lastIndexOf("/") + 1
+                              )
+                            )
+                          )
+                        ]),
+                        _c("br")
                       ])
                     ]
                   )
-                ])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "invoice-attachments d-print-none" },
-            [
-              _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
-              _vm._v(" "),
-              _vm._l(_vm.payBill.attachments, function(attachment, index) {
-                return _c(
-                  "a",
-                  {
-                    key: index,
-                    staticClass: "attachment-item",
-                    attrs: { href: attachment, download: "" }
-                  },
-                  [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "attachment-meta" }, [
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            attachment.substring(
-                              attachment.lastIndexOf("/") + 1
-                            )
-                          )
-                        )
-                      ]),
-                      _c("br")
-                    ])
-                  ]
-                )
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "particulars" }, [
-            _c("p", [_vm._v(_vm._s(_vm.payBill.particulars))])
-          ])
-        ])
+                })
+              ],
+              2
+            )
+          ],
+          1
+        )
       ],
       1
     )
@@ -50253,239 +50298,253 @@ var render = function() {
             })
           : _vm._e(),
         _vm._v(" "),
-        _c("div", { staticClass: "wperp-modal-body" }, [
-          _c("div", { staticClass: "wperp-invoice-panel" }, [
-            null != _vm.company
-              ? _c("div", { staticClass: "invoice-header" }, [
-                  _c("div", { staticClass: "invoice-logo" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.company.logo,
-                        alt: "logo name",
-                        width: "100",
-                        height: "100"
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "invoice-address" }, [
-                    _c("address", [
-                      _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.address_1)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.address_2)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.city)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.country) +
-                          "\n                        "
-                      )
-                    ])
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("div", { staticClass: "invoice-body" }, [
-              _c("h4", [_vm._v(_vm._s(_vm.__("Purchase", "erp")))]),
-              _vm._v(" "),
-              null != _vm.purchase
-                ? _c("div", { staticClass: "wperp-row" }, [
-                    _c("div", { staticClass: "wperp-col-sm-6" }, [
-                      _c("div", { staticClass: "persons-info" }, [
-                        _c("strong", [
-                          _vm._v(_vm._s(_vm.purchase.vendor_name))
-                        ]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                                " +
-                            _vm._s(_vm.purchase.billing_address) +
-                            "\n                            "
-                        )
-                      ])
+        _c(
+          "div",
+          { staticClass: "wperp-modal-body" },
+          [
+            _c("div", { staticClass: "wperp-invoice-panel" }, [
+              null != _vm.company
+                ? _c("div", { staticClass: "invoice-header" }, [
+                    _c("div", { staticClass: "invoice-logo" }, [
+                      _c("img", {
+                        attrs: {
+                          src: _vm.company.logo,
+                          alt: "logo name",
+                          width: "100",
+                          height: "100"
+                        }
+                      })
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "wperp-col-sm-6" }, [
-                      _c("table", { staticClass: "invoice-info" }, [
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _vm._v("#" + _vm._s(_vm.purchase.voucher_no))
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(
-                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.purchase.date))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.purchase.due_date))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.purchase.created_at))])
-                        ])
+                    _c("div", { staticClass: "invoice-address" }, [
+                      _c("address", [
+                        _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.address_1)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.address_2)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.city)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.country) +
+                            "\n                        "
+                        )
                       ])
                     ])
                   ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            null != _vm.purchase
-              ? _c("div", { staticClass: "wperp-invoice-table" }, [
-                  _c(
-                    "table",
-                    {
-                      staticClass: "wperp-table wperp-form-table invoice-table"
-                    },
-                    [
-                      _c("thead", [
-                        _c("tr", [
-                          _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
-                          _vm._v(" "),
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Item name", "erp")))
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "invoice-body" }, [
+                _c("h4", [_vm._v(_vm._s(_vm.__("Purchase", "erp")))]),
+                _vm._v(" "),
+                null != _vm.purchase
+                  ? _c("div", { staticClass: "wperp-row" }, [
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("div", { staticClass: "persons-info" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.purchase.vendor_name))
                           ]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v(_vm._s(_vm.__("Qty", "erp")))]),
-                          _vm._v(" "),
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Unit Price", "erp")))
-                          ]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                          _c("br"),
+                          _vm._v(
+                            "\n                                " +
+                              _vm._s(_vm.purchase.billing_address) +
+                              "\n                            "
+                          )
                         ])
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "tbody",
-                        _vm._l(_vm.purchase.line_items, function(line, index) {
-                          return _c("tr", { key: index }, [
-                            _c("td", [_vm._v(_vm._s(index + 1))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(line.name))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(line.qty))]),
-                            _vm._v(" "),
-                            _c("td", [
-                              _vm._v(_vm._s(_vm.moneyFormat(line.cost_price)))
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("table", { staticClass: "invoice-info" }, [
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
                             ]),
                             _vm._v(" "),
                             _c("td", [
-                              _vm._v(_vm._s(_vm.moneyFormat(line.amount)))
+                              _vm._v("#" + _vm._s(_vm.purchase.voucher_no))
                             ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
+                                _vm._s(_vm.__("Transaction Date", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.purchase.date))])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.purchase.due_date))])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.purchase.created_at))])
                           ])
-                        }),
-                        0
-                      ),
-                      _vm._v(" "),
-                      _c("tfoot", [
-                        _c("tr", [
-                          _c("td", { attrs: { colspan: "7" } }, [
-                            _c("ul", [
-                              _c("li", [
-                                _c("span", [
-                                  _vm._v(
-                                    _vm._s(_vm.__("Subtotal", "erp")) + ":"
-                                  )
-                                ]),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(_vm.moneyFormat(_vm.purchase.amount))
-                                )
+                        ])
+                      ])
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              null != _vm.purchase
+                ? _c("div", { staticClass: "wperp-invoice-table" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "wperp-table wperp-form-table invoice-table"
+                      },
+                      [
+                        _c("thead", [
+                          _c("tr", [
+                            _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
+                            _vm._v(" "),
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Item name", "erp")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v(_vm._s(_vm.__("Qty", "erp")))]),
+                            _vm._v(" "),
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Unit Price", "erp")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.purchase.line_items, function(
+                            line,
+                            index
+                          ) {
+                            return _c("tr", { key: index }, [
+                              _c("td", [_vm._v(_vm._s(index + 1))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(line.name))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(line.qty))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(_vm._s(_vm.moneyFormat(line.cost_price)))
                               ]),
                               _vm._v(" "),
-                              _c("li", [
-                                _c("span", [
-                                  _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                              _c("td", [
+                                _vm._v(_vm._s(_vm.moneyFormat(line.amount)))
+                              ])
+                            ])
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c("tfoot", [
+                          _c("tr", [
+                            _c("td", { attrs: { colspan: "7" } }, [
+                              _c("ul", [
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(
+                                      _vm._s(_vm.__("Subtotal", "erp")) + ":"
+                                    )
+                                  ]),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(
+                                        _vm.moneyFormat(_vm.purchase.amount)
+                                      )
+                                  )
                                 ]),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(_vm.moneyFormat(_vm.purchase.amount))
-                                )
+                                _vm._v(" "),
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                                  ]),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(
+                                        _vm.moneyFormat(_vm.purchase.amount)
+                                      )
+                                  )
+                                ])
                               ])
                             ])
                           ])
                         ])
+                      ]
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("trans-particulars", {
+              attrs: { particulars: _vm.purchase.particulars }
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "invoice-attachments d-print-none" },
+              [
+                _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
+                _vm._v(" "),
+                _vm._l(_vm.purchase.attachments, function(attachment, index) {
+                  return _c(
+                    "a",
+                    {
+                      key: index,
+                      staticClass: "attachment-item",
+                      attrs: { href: attachment, download: "" }
+                    },
+                    [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.acct_var.acct_assets + "/images/file-thumb.png"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "attachment-meta" }, [
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(
+                              attachment.substring(
+                                attachment.lastIndexOf("/") + 1
+                              )
+                            )
+                          )
+                        ]),
+                        _c("br")
                       ])
                     ]
                   )
-                ])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "invoice-attachments d-print-none" },
-            [
-              _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
-              _vm._v(" "),
-              _vm._l(_vm.purchase.attachments, function(attachment, index) {
-                return _c(
-                  "a",
-                  {
-                    key: index,
-                    staticClass: "attachment-item",
-                    attrs: { href: attachment, download: "" }
-                  },
-                  [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "attachment-meta" }, [
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            attachment.substring(
-                              attachment.lastIndexOf("/") + 1
-                            )
-                          )
-                        )
-                      ]),
-                      _c("br")
-                    ])
-                  ]
-                )
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "particulars" }, [
-            _c("p", [_vm._v(_vm._s(_vm.purchase.particulars))])
-          ])
-        ])
+                })
+              ],
+              2
+            )
+          ],
+          1
+        )
       ],
       1
     )
@@ -51247,240 +51306,252 @@ var render = function() {
             })
           : _vm._e(),
         _vm._v(" "),
-        _c("div", { staticClass: "wperp-modal-body" }, [
-          _c("div", { staticClass: "wperp-invoice-panel" }, [
-            null != _vm.company
-              ? _c("div", { staticClass: "invoice-header" }, [
-                  _c("div", { staticClass: "invoice-logo" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.company.logo,
-                        alt: "logo name",
-                        width: "100",
-                        height: "100"
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "invoice-address" }, [
-                    _c("address", [
-                      _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.address_1)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.address_2)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.city)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.country) +
-                          "\n                        "
-                      )
-                    ])
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("div", { staticClass: "invoice-body" }, [
-              _c("h4", [_vm._v(_vm._s(_vm.__("Pay Purchase", "erp")))]),
-              _vm._v(" "),
-              null != _vm.payPurchase
-                ? _c("div", { staticClass: "wperp-row" }, [
-                    _c("div", { staticClass: "wperp-col-sm-6" }, [
-                      _c("div", { staticClass: "persons-info" }, [
-                        _c("strong", [
-                          _vm._v(_vm._s(_vm.payPurchase.vendor_name))
-                        ]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                                " +
-                            _vm._s(_vm.payPurchase.billing_address) +
-                            "\n                            "
-                        )
-                      ])
+        _c(
+          "div",
+          { staticClass: "wperp-modal-body" },
+          [
+            _c("div", { staticClass: "wperp-invoice-panel" }, [
+              null != _vm.company
+                ? _c("div", { staticClass: "invoice-header" }, [
+                    _c("div", { staticClass: "invoice-logo" }, [
+                      _c("img", {
+                        attrs: {
+                          src: _vm.company.logo,
+                          alt: "logo name",
+                          width: "100",
+                          height: "100"
+                        }
+                      })
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "wperp-col-sm-6" }, [
-                      _c("table", { staticClass: "invoice-info" }, [
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _vm._v("#" + _vm._s(_vm.payPurchase.voucher_no))
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(
-                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.payPurchase.trn_date))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.payPurchase.created_at))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(
-                              _vm._s(_vm.__("Transaction From", "erp")) + ":"
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.payPurchase.trn_by))])
-                        ])
+                    _c("div", { staticClass: "invoice-address" }, [
+                      _c("address", [
+                        _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.address_1)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.address_2)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.city)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.country) +
+                            "\n                        "
+                        )
                       ])
                     ])
                   ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            null != _vm.payPurchase
-              ? _c("div", { staticClass: "wperp-invoice-table" }, [
-                  _c(
-                    "table",
-                    {
-                      staticClass: "wperp-table wperp-form-table invoice-table"
-                    },
-                    [
-                      _c("thead", [
-                        _c("tr", [
-                          _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
-                          _vm._v(" "),
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Purchase No", "erp")))
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "invoice-body" }, [
+                _c("h4", [_vm._v(_vm._s(_vm.__("Pay Purchase", "erp")))]),
+                _vm._v(" "),
+                null != _vm.payPurchase
+                  ? _c("div", { staticClass: "wperp-row" }, [
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("div", { staticClass: "persons-info" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.payPurchase.vendor_name))
                           ]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v(_vm._s(_vm.__("Vendor", "erp")))]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                          _c("br"),
+                          _vm._v(
+                            "\n                                " +
+                              _vm._s(_vm.payPurchase.billing_address) +
+                              "\n                            "
+                          )
                         ])
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "tbody",
-                        _vm._l(_vm.payPurchase.purchase_details, function(
-                          line,
-                          index
-                        ) {
-                          return _c("tr", { key: index }, [
-                            _c("td", [_vm._v(_vm._s(line.id))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(line.purchase_no))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(line.vendor_name))]),
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("table", { staticClass: "invoice-info" }, [
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
+                            ]),
                             _vm._v(" "),
                             _c("td", [
-                              _vm._v(_vm._s(_vm.moneyFormat(line.amount)))
+                              _vm._v("#" + _vm._s(_vm.payPurchase.voucher_no))
                             ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
+                                _vm._s(_vm.__("Transaction Date", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.payPurchase.trn_date))])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(_vm.payPurchase.created_at))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
+                                _vm._s(_vm.__("Transaction From", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.payPurchase.trn_by))])
                           ])
-                        }),
-                        0
-                      ),
-                      _vm._v(" "),
-                      _c("tfoot", [
-                        _c("tr", [
-                          _c("td", { attrs: { colspan: "7" } }, [
-                            _c("ul", [
-                              _c("li", [
-                                _c("span", [
+                        ])
+                      ])
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              null != _vm.payPurchase
+                ? _c("div", { staticClass: "wperp-invoice-table" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "wperp-table wperp-form-table invoice-table"
+                      },
+                      [
+                        _c("thead", [
+                          _c("tr", [
+                            _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
+                            _vm._v(" "),
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Purchase No", "erp")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v(_vm._s(_vm.__("Vendor", "erp")))]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.payPurchase.purchase_details, function(
+                            line,
+                            index
+                          ) {
+                            return _c("tr", { key: index }, [
+                              _c("td", [_vm._v(_vm._s(line.id))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(line.purchase_no))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(line.vendor_name))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(_vm._s(_vm.moneyFormat(line.amount)))
+                              ])
+                            ])
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c("tfoot", [
+                          _c("tr", [
+                            _c("td", { attrs: { colspan: "7" } }, [
+                              _c("ul", [
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(
+                                      _vm._s(_vm.__("Subtotal", "erp")) + ":"
+                                    )
+                                  ]),
                                   _vm._v(
-                                    _vm._s(_vm.__("Subtotal", "erp")) + ":"
+                                    " " +
+                                      _vm._s(
+                                        _vm.moneyFormat(_vm.payPurchase.amount)
+                                      )
                                   )
                                 ]),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(
-                                      _vm.moneyFormat(_vm.payPurchase.amount)
-                                    )
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("li", [
-                                _c("span", [
-                                  _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
-                                ]),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(
-                                      _vm.moneyFormat(_vm.payPurchase.amount)
-                                    )
-                                )
+                                _vm._v(" "),
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                                  ]),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(
+                                        _vm.moneyFormat(_vm.payPurchase.amount)
+                                      )
+                                  )
+                                ])
                               ])
                             ])
                           ])
                         ])
+                      ]
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("trans-particulars", {
+              attrs: { particulars: _vm.payPurchase.particulars }
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "invoice-attachments d-print-none" },
+              [
+                _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
+                _vm._v(" "),
+                _vm._l(_vm.payPurchase.attachments, function(
+                  attachment,
+                  index
+                ) {
+                  return _c(
+                    "a",
+                    {
+                      key: index,
+                      staticClass: "attachment-item",
+                      attrs: { href: attachment, download: "" }
+                    },
+                    [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.acct_var.acct_assets + "/images/file-thumb.png"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "attachment-meta" }, [
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(
+                              attachment.substring(
+                                attachment.lastIndexOf("/") + 1
+                              )
+                            )
+                          )
+                        ]),
+                        _c("br")
                       ])
                     ]
                   )
-                ])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "invoice-attachments d-print-none" },
-            [
-              _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
-              _vm._v(" "),
-              _vm._l(_vm.payPurchase.attachments, function(attachment, index) {
-                return _c(
-                  "a",
-                  {
-                    key: index,
-                    staticClass: "attachment-item",
-                    attrs: { href: attachment, download: "" }
-                  },
-                  [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "attachment-meta" }, [
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            attachment.substring(
-                              attachment.lastIndexOf("/") + 1
-                            )
-                          )
-                        )
-                      ]),
-                      _c("br")
-                    ])
-                  ]
-                )
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "particulars" }, [
-            _c("p", [_vm._v(_vm._s(_vm.payPurchase.particulars))])
-          ])
-        ])
+                })
+              ],
+              2
+            )
+          ],
+          1
+        )
       ],
       1
     )
@@ -52334,176 +52405,188 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "wperp-modal-body" }, [
-        _c("div", { staticClass: "wperp-invoice-panel" }, [
-          null != _vm.company
-            ? _c("div", { staticClass: "invoice-header" }, [
-                _c("div", { staticClass: "invoice-logo" }, [
-                  _c("img", {
-                    attrs: {
-                      src: _vm.company.logo,
-                      alt: "logo name",
-                      width: "100",
-                      height: "100"
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "invoice-address" }, [
-                  _c("address", [
-                    _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
-                    _c("br"),
-                    _vm._v(
-                      "\n                            " +
-                        _vm._s(_vm.company.address.address_1)
-                    ),
-                    _c("br"),
-                    _vm._v(
-                      "\n                            " +
-                        _vm._s(_vm.company.address.address_2)
-                    ),
-                    _c("br"),
-                    _vm._v(
-                      "\n                            " +
-                        _vm._s(_vm.company.address.city)
-                    ),
-                    _c("br"),
-                    _vm._v(
-                      "\n                            " +
-                        _vm._s(_vm.company.address.country) +
-                        "\n                        "
-                    )
-                  ])
-                ])
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c("div", { staticClass: "invoice-body" }, [
-            _c("h4", [_vm._v(_vm._s(_vm.__("Journal", "erp")))]),
-            _vm._v(" "),
-            null != _vm.journal
-              ? _c("div", { staticClass: "wperp-row" }, [
-                  _c("div", { staticClass: "wperp-col-sm-12 pull-right" }, [
-                    _c("table", { staticClass: "invoice-info" }, [
-                      _c("tr", [
-                        _c("th", [_vm._v(_vm._s(_vm.__("Journal No", "erp")))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("#" + _vm._s(_vm.journal.id))])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("th", [
-                          _vm._v(_vm._s(_vm.__("Journal Date", "erp")) + ":")
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(_vm.journal.trn_date))])
-                      ])
+      _c(
+        "div",
+        { staticClass: "wperp-modal-body" },
+        [
+          _c("div", { staticClass: "wperp-invoice-panel" }, [
+            null != _vm.company
+              ? _c("div", { staticClass: "invoice-header" }, [
+                  _c("div", { staticClass: "invoice-logo" }, [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.company.logo,
+                        alt: "logo name",
+                        width: "100",
+                        height: "100"
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "invoice-address" }, [
+                    _c("address", [
+                      _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
+                      _c("br"),
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(_vm.company.address.address_1)
+                      ),
+                      _c("br"),
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(_vm.company.address.address_2)
+                      ),
+                      _c("br"),
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(_vm.company.address.city)
+                      ),
+                      _c("br"),
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(_vm.company.address.country) +
+                          "\n                        "
+                      )
                     ])
                   ])
                 ])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          null != _vm.journal
-            ? _c("div", { staticClass: "wperp-invoice-table" }, [
-                _c(
-                  "table",
-                  { staticClass: "wperp-table wperp-form-table invoice-table" },
-                  [
-                    _c("thead", [
-                      _c("tr", [
-                        _c("th", [_vm._v(_vm._s(_vm.__("Account", "erp")))]),
-                        _vm._v(" "),
-                        _c("th", [
-                          _vm._v(_vm._s(_vm.__("Particulars", "erp")))
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "invoice-body" }, [
+              _c("h4", [_vm._v(_vm._s(_vm.__("Journal", "erp")))]),
+              _vm._v(" "),
+              null != _vm.journal
+                ? _c("div", { staticClass: "wperp-row" }, [
+                    _c("div", { staticClass: "wperp-col-sm-12 pull-right" }, [
+                      _c("table", { staticClass: "invoice-info" }, [
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Journal No", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v("#" + _vm._s(_vm.journal.id))])
                         ]),
                         _vm._v(" "),
-                        _c("th", [_vm._v(_vm._s(_vm.__("Debit", "erp")))]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v(_vm._s(_vm.__("Credit", "erp")))])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "tbody",
-                      _vm._l(_vm.journal.line_items, function(line, index) {
-                        return _c("tr", { key: index }, [
-                          _c("td", [_vm._v(_vm._s(line.account))]),
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Journal Date", "erp")) + ":")
+                          ]),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(line.particulars))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(line.debit))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(line.credit))])
+                          _c("td", [_vm._v(_vm._s(_vm.journal.trn_date))])
                         ])
-                      }),
-                      0
-                    ),
-                    _vm._v(" "),
-                    _c("tfoot", [
-                      _c("tr", [
-                        _c("td", { attrs: { colspan: "7" } }, [
-                          _c("ul", [
-                            _c("li", [
-                              _c("span", [
-                                _vm._v(_vm._s(_vm.__("Balance", "erp")) + ":")
-                              ]),
-                              _vm._v(
-                                " " + _vm._s(_vm.moneyFormat(_vm.journal.total))
-                              )
+                      ])
+                    ])
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            null != _vm.journal
+              ? _c("div", { staticClass: "wperp-invoice-table" }, [
+                  _c(
+                    "table",
+                    {
+                      staticClass: "wperp-table wperp-form-table invoice-table"
+                    },
+                    [
+                      _c("thead", [
+                        _c("tr", [
+                          _c("th", [_vm._v(_vm._s(_vm.__("Account", "erp")))]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Particulars", "erp")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Debit", "erp")))]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v(_vm._s(_vm.__("Credit", "erp")))])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.journal.line_items, function(line, index) {
+                          return _c("tr", { key: index }, [
+                            _c("td", [_vm._v(_vm._s(line.account))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(line.particulars))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(line.debit))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(line.credit))])
+                          ])
+                        }),
+                        0
+                      ),
+                      _vm._v(" "),
+                      _c("tfoot", [
+                        _c("tr", [
+                          _c("td", { attrs: { colspan: "7" } }, [
+                            _c("ul", [
+                              _c("li", [
+                                _c("span", [
+                                  _vm._v(_vm._s(_vm.__("Balance", "erp")) + ":")
+                                ]),
+                                _vm._v(
+                                  " " +
+                                    _vm._s(_vm.moneyFormat(_vm.journal.total))
+                                )
+                              ])
                             ])
                           ])
                         ])
                       ])
+                    ]
+                  )
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("trans-particulars", {
+            attrs: { particulars: _vm.journal.particulars }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "invoice-attachments d-print-none" },
+            [
+              _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
+              _vm._v(" "),
+              _vm._l(_vm.journal.attachments, function(attachment, index) {
+                return _c(
+                  "a",
+                  {
+                    key: index,
+                    staticClass: "attachment-item",
+                    attrs: { href: attachment, download: "" }
+                  },
+                  [
+                    _c("img", {
+                      attrs: {
+                        src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "attachment-meta" }, [
+                      _c("span", [
+                        _vm._v(
+                          _vm._s(
+                            attachment.substring(
+                              attachment.lastIndexOf("/") + 1
+                            )
+                          )
+                        )
+                      ]),
+                      _c("br")
                     ])
                   ]
                 )
-              ])
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "invoice-attachments d-print-none" },
-          [
-            _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
-            _vm._v(" "),
-            _vm._l(_vm.journal.attachments, function(attachment, index) {
-              return _c(
-                "a",
-                {
-                  key: index,
-                  staticClass: "attachment-item",
-                  attrs: { href: attachment, download: "" }
-                },
-                [
-                  _c("img", {
-                    attrs: {
-                      src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "attachment-meta" }, [
-                    _c("span", [
-                      _vm._v(
-                        _vm._s(
-                          attachment.substring(attachment.lastIndexOf("/") + 1)
-                        )
-                      )
-                    ]),
-                    _c("br")
-                  ])
-                ]
-              )
-            })
-          ],
-          2
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "particulars" }, [
-          _c("p", [_vm._v(_vm._s(_vm.journal.particulars))])
-        ])
-      ])
+              })
+            ],
+            2
+          )
+        ],
+        1
+      )
     ])
   ])
 }
@@ -54090,12 +54173,8 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_InvoiceSingleContent_vue__ = __webpack_require__(157);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7fb7ba5b_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceSingleContent_vue__ = __webpack_require__(390);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7fb7ba5b_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceSingleContent_vue__ = __webpack_require__(643);
 var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(389)
-}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -54105,14 +54184,14 @@ var normalizeComponent = __webpack_require__(0)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = injectStyle
+var __vue_styles__ = null
 /* scopeId */
-var __vue_scopeId__ = "data-v-7fb7ba5b"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_InvoiceSingleContent_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7fb7ba5b_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceSingleContent_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_7fb7ba5b_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_InvoiceSingleContent_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -54140,275 +54219,16 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 389 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 390 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wperp-modal-body" }, [
-    _c("div", { staticClass: "wperp-invoice-panel" }, [
-      _c("div", { staticClass: "invoice-header" }, [
-        _c("div", { staticClass: "invoice-logo" }, [
-          _c("img", {
-            attrs: {
-              src: _vm.company.logo,
-              alt: "logo name",
-              width: "100",
-              height: "100"
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "invoice-address" }, [
-          _c("address", [
-            _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
-            _c("br"),
-            _vm._v(
-              "\n                    " + _vm._s(_vm.company.address.address_1)
-            ),
-            _c("br"),
-            _vm._v(
-              "\n                    " + _vm._s(_vm.company.address.address_2)
-            ),
-            _c("br"),
-            _vm._v("\n                    " + _vm._s(_vm.company.address.city)),
-            _c("br"),
-            _vm._v(
-              "\n                    " +
-                _vm._s(_vm.company.address.country) +
-                "\n                "
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "invoice-body" }, [
-        _c("h4", [_vm._v(_vm._s(_vm.getInvoiceType()))]),
-        _vm._v(" "),
-        _c("div", { staticClass: "wperp-row" }, [
-          _c("div", { staticClass: "wperp-col-sm-6" }, [
-            _c("h5", [_vm._v(_vm._s(_vm.__("Bill to", "erp")) + ":")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "persons-info" }, [
-              _c("strong", [_vm._v(_vm._s(_vm.invoice.customer_name))]),
-              _c("br"),
-              _vm._v(
-                "\n                        " +
-                  _vm._s(_vm.invoice.billing_address) +
-                  "\n                    "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "wperp-col-sm-6" }, [
-            _c("table", { staticClass: "invoice-info" }, [
-              _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")]),
-                _vm._v(" "),
-                _c("td", [_vm._v("#" + _vm._s(_vm.invoice.voucher_no))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [
-                  _vm._v(_vm._s(_vm.__("Transaction Date", "erp")) + ":")
-                ]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.invoice.trn_date))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.invoice.due_date))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.invoice.created_at))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Amount Due", "erp")) + ":")]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm._v(_vm._s(_vm.moneyFormat(_vm.invoice.total_due)))
-                ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "wperp-invoice-table" }, [
-        _c(
-          "table",
-          { staticClass: "wperp-table wperp-form-table invoice-table" },
-          [
-            _c("thead", [
-              _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Sl", "erp")) + ".")]),
-                _vm._v(" "),
-                _c("th", [_vm._v(_vm._s(_vm.__("Product", "erp")))]),
-                _vm._v(" "),
-                _c("th", [_vm._v(_vm._s(_vm.__("Qty", "erp")))]),
-                _vm._v(" "),
-                _c("th", [_vm._v(_vm._s(_vm.__("Unit Price", "erp")))]),
-                _vm._v(" "),
-                _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
-              ])
-            ]),
-            _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.invoice.line_items, function(detail, index) {
-                return _c("tr", { key: index }, [
-                  _c("th", [_vm._v(_vm._s(index + 1))]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v(_vm._s(detail.name))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(detail.qty))]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _vm._v(_vm._s(_vm.moneyFormat(detail.unit_price)))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(_vm.moneyFormat(detail.item_total)))])
-                ])
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _c("tfoot", [
-              _c("tr", [
-                _c(
-                  "td",
-                  {
-                    staticClass: "wperp-invoice-amounts",
-                    attrs: { colspan: "7" }
-                  },
-                  [
-                    _c("ul", [
-                      _c("li", [
-                        _c("span", [
-                          _vm._v(_vm._s(_vm.__("Subtotal", "erp")) + ":")
-                        ]),
-                        _vm._v(
-                          " " + _vm._s(_vm.moneyFormat(_vm.invoice.amount))
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("li", [
-                        _c("span", [
-                          _vm._v(_vm._s(_vm.__("Discount", "erp")) + ":")
-                        ]),
-                        _vm._v(
-                          " (-) " +
-                            _vm._s(_vm.moneyFormat(_vm.invoice.discount))
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("li", [
-                        _c("span", [
-                          _vm._v(_vm._s(_vm.__("Tax", "erp")) + ":")
-                        ]),
-                        _vm._v(
-                          " (+) " + _vm._s(_vm.moneyFormat(_vm.invoice.tax))
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("li", [
-                        _c("span", [
-                          _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
-                        ]),
-                        _vm._v(" " + _vm._s(_vm.moneyFormat(_vm.total)))
-                      ])
-                    ])
-                  ]
-                )
-              ])
-            ])
-          ]
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "invoice-attachments d-print-none" },
-      [
-        _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
-        _vm._v(" "),
-        _vm._l(_vm.invoice.attachments, function(attachment, index) {
-          return _c(
-            "a",
-            {
-              key: index,
-              staticClass: "attachment-item",
-              attrs: { href: attachment, download: "" }
-            },
-            [
-              _c("img", {
-                attrs: {
-                  src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
-                }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "attachment-meta" }, [
-                _c("span", [
-                  _vm._v(
-                    _vm._s(
-                      attachment.substring(attachment.lastIndexOf("/") + 1)
-                    )
-                  )
-                ]),
-                _c("br")
-              ])
-            ]
-          )
-        })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "particulars" }, [
-      _c("p", [_vm._v(_vm._s(_vm.invoice.particulars))])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7fb7ba5b", esExports)
-  }
-}
-
-/***/ }),
+/* 389 */,
+/* 390 */,
 /* 391 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PaymentSingleContent_vue__ = __webpack_require__(158);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_54178ebc_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PaymentSingleContent_vue__ = __webpack_require__(393);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_54178ebc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PaymentSingleContent_vue__ = __webpack_require__(645);
 var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(392)
-}
 var normalizeComponent = __webpack_require__(0)
 /* script */
 
@@ -54418,14 +54238,14 @@ var normalizeComponent = __webpack_require__(0)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = injectStyle
+var __vue_styles__ = null
 /* scopeId */
-var __vue_scopeId__ = "data-v-54178ebc"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PaymentSingleContent_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_54178ebc_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PaymentSingleContent_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_54178ebc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PaymentSingleContent_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -54453,212 +54273,8 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 392 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 393 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wperp-modal-body" }, [
-    _c("div", { staticClass: "wperp-invoice-panel" }, [
-      _c("div", { staticClass: "invoice-header" }, [
-        _c("div", { staticClass: "invoice-logo" }, [
-          _c("img", {
-            attrs: {
-              src: _vm.company.logo,
-              alt: "logo name",
-              width: "100",
-              height: "100"
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "invoice-address" }, [
-          _c("address", [
-            _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
-            _c("br"),
-            _vm._v(
-              "\n                    " + _vm._s(_vm.company.address.address_1)
-            ),
-            _c("br"),
-            _vm._v(
-              "\n                    " + _vm._s(_vm.company.address.address_2)
-            ),
-            _c("br"),
-            _vm._v("\n                    " + _vm._s(_vm.company.address.city)),
-            _c("br"),
-            _vm._v(
-              "\n                    " +
-                _vm._s(_vm.company.address.country) +
-                "\n                "
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "invoice-body" }, [
-        _c("h4", [_vm._v(_vm._s(_vm.__("Payment", "erp")))]),
-        _vm._v(" "),
-        _c("div", { staticClass: "wperp-row" }, [
-          _c("div", { staticClass: "wperp-col-sm-6" }, [
-            _c("h5", [_vm._v(_vm._s(_vm.__("Payment From", "erp")) + ":")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "persons-info" }, [
-              _c("strong", [_vm._v(_vm._s(_vm.payment.customer_name))]),
-              _c("br")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "wperp-col-sm-6" }, [
-            _c("table", { staticClass: "invoice-info" }, [
-              _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")]),
-                _vm._v(" "),
-                _c("td", [_vm._v("#" + _vm._s(_vm.payment.voucher_no))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [
-                  _vm._v(_vm._s(_vm.__("Transaction Date", "erp")) + ":")
-                ]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.payment.trn_date))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.payment.created_at))])
-              ]),
-              _vm._v(" "),
-              _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Deposit To", "erp")) + ":")]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(_vm.payment.account))])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "wperp-invoice-table" }, [
-        _c(
-          "table",
-          { staticClass: "wperp-table wperp-form-table invoice-table" },
-          [
-            _c("thead", [
-              _c("tr", [
-                _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
-                _vm._v(" "),
-                _c("th", [_vm._v(_vm._s(_vm.__("Invoice ID", "erp")))]),
-                _vm._v(" "),
-                _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
-              ])
-            ]),
-            _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.payment.line_items, function(detail, index) {
-                return _c("tr", { key: index }, [
-                  _c("th", [_vm._v("#" + _vm._s(index + 1))]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v(_vm._s(detail.invoice_no))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(_vm.moneyFormat(detail.amount)))])
-                ])
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _c("tfoot", [
-              _c("tr", [
-                _c("td", { attrs: { colspan: "7" } }, [
-                  _c("ul", [
-                    _c("li", [
-                      _c("span", [
-                        _vm._v(_vm._s(_vm.__("Subtotal", "erp")) + ":")
-                      ]),
-                      _vm._v(" " + _vm._s(_vm.moneyFormat(_vm.payment.amount)))
-                    ]),
-                    _vm._v(" "),
-                    _c("li", [
-                      _c("span", [
-                        _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
-                      ]),
-                      _vm._v(" " + _vm._s(_vm.moneyFormat(_vm.payment.amount)))
-                    ])
-                  ])
-                ])
-              ])
-            ])
-          ]
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "invoice-attachments d-print-none" },
-      [
-        _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
-        _vm._v(" "),
-        _vm._l(_vm.payment.attachments, function(attachment, index) {
-          return _c(
-            "a",
-            {
-              key: index,
-              staticClass: "attachment-item",
-              attrs: { href: attachment, download: "" }
-            },
-            [
-              _c("img", {
-                attrs: {
-                  src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
-                }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "attachment-meta" }, [
-                _c("span", [
-                  _vm._v(
-                    _vm._s(
-                      attachment.substring(attachment.lastIndexOf("/") + 1)
-                    )
-                  )
-                ]),
-                _c("br")
-              ])
-            ]
-          )
-        })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "particulars" }, [
-      _c("p", [_vm._v(_vm._s(_vm.payment.particulars))])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-54178ebc", esExports)
-  }
-}
-
-/***/ }),
+/* 392 */,
+/* 393 */,
 /* 394 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -56312,12 +55928,11 @@ if (false) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ExpenseSingle_vue__ = __webpack_require__(169);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2aa8d63a_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ExpenseSingle_vue__ = __webpack_require__(420);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2aa8d63a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ExpenseSingle_vue__ = __webpack_require__(644);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(418)
-  __webpack_require__(419)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -56330,12 +55945,12 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-2aa8d63a"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ExpenseSingle_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2aa8d63a_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ExpenseSingle_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2aa8d63a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ExpenseSingle_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -56369,355 +55984,8 @@ if (false) {(function () {
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 419 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 420 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wperp-modal-dialog expense-single" }, [
-    _c(
-      "div",
-      { staticClass: "wperp-modal-content" },
-      [
-        _c("div", { staticClass: "wperp-modal-header" }, [
-          _c("h2", [_vm._v(_vm._s(_vm.__("Expense", "erp")))]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "d-print-none" },
-            [
-              _c(
-                "a",
-                {
-                  staticClass: "wperp-btn btn--default print-btn",
-                  attrs: { href: "#" },
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.printPopup($event)
-                    }
-                  }
-                },
-                [
-                  _c("i", { staticClass: "flaticon-printer-1" }),
-                  _vm._v(
-                    "\n                      " +
-                      _vm._s(_vm.__("Print", "erp")) +
-                      "\n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "dropdown",
-                [
-                  _c("template", { slot: "button" }, [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "wperp-btn btn--default",
-                        attrs: { href: "#" }
-                      },
-                      [
-                        _c("i", { staticClass: "flaticon-settings-work-tool" }),
-                        _vm._v(
-                          "\n                              " +
-                            _vm._s(_vm.__("More Action", "erp")) +
-                            "\n                        "
-                        )
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("template", { slot: "dropdown" }, [
-                    _c("ul", { attrs: { role: "menu" } }, [
-                      _c("li", [
-                        _c(
-                          "a",
-                          {
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                _vm.showModal = true
-                              }
-                            }
-                          },
-                          [_vm._v("Send Mail")]
-                        )
-                      ])
-                    ])
-                  ])
-                ],
-                2
-              )
-            ],
-            1
-          )
-        ]),
-        _vm._v(" "),
-        _vm.showModal
-          ? _c("send-mail", {
-              attrs: {
-                userid: _vm.people_id,
-                data: _vm.print_data,
-                type: _vm.type
-              }
-            })
-          : _vm._e(),
-        _vm._v(" "),
-        _c("div", { staticClass: "wperp-modal-body" }, [
-          _c("div", { staticClass: "wperp-invoice-panel" }, [
-            null != _vm.company
-              ? _c("div", { staticClass: "invoice-header" }, [
-                  _c("div", { staticClass: "invoice-logo" }, [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.company.logo,
-                        alt: "logo name",
-                        width: "100",
-                        height: "100"
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "invoice-address" }, [
-                    _c("address", [
-                      _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.address_1)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.address_2)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.city)
-                      ),
-                      _c("br"),
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.company.address.country) +
-                          "\n                        "
-                      )
-                    ])
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("div", { staticClass: "invoice-body" }, [
-              _c("h4", [_vm._v(_vm._s(_vm.__("Expense", "erp")))]),
-              _vm._v(" "),
-              null != _vm.expense_data
-                ? _c("div", { staticClass: "wperp-row" }, [
-                    _c("div", { staticClass: "wperp-col-sm-6" }, [
-                      _c("div", { staticClass: "persons-info" }, [
-                        _c("strong", [
-                          _vm._v(_vm._s(_vm.expense_data.people_name))
-                        ]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                                " +
-                            _vm._s(_vm.expense_data.address) +
-                            "\n                            "
-                        )
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "wperp-col-sm-6" }, [
-                      _c("table", { staticClass: "invoice-info" }, [
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _vm._v("#" + _vm._s(_vm.expense_data.voucher_no))
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(
-                              _vm._s(_vm.__("Transaction Date", "erp")) + ":"
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(_vm.expense_data.date))])
-                        ]),
-                        _vm._v(" "),
-                        _c("tr", [
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _vm._v(_vm._s(_vm.expense_data.created_at))
-                          ])
-                        ])
-                      ])
-                    ])
-                  ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            null != _vm.expense_data
-              ? _c("div", { staticClass: "wperp-invoice-table" }, [
-                  _c(
-                    "table",
-                    {
-                      staticClass: "wperp-table wperp-form-table invoice-table"
-                    },
-                    [
-                      _c("thead", [
-                        _c("tr", [
-                          _c("th", [_vm._v(_vm._s(_vm.__("Sl", "erp")))]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v(_vm._s(_vm.__("Account", "erp")))]),
-                          _vm._v(" "),
-                          _c("th", [
-                            _vm._v(_vm._s(_vm.__("Particulars", "erp")))
-                          ]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "tbody",
-                        _vm._l(_vm.expense_data.bill_details, function(
-                          line,
-                          index
-                        ) {
-                          return _c("tr", { key: index }, [
-                            _c("td", [_vm._v(_vm._s(index + 1))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(line.ledger_name))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(line.particulars))]),
-                            _vm._v(" "),
-                            _c("td", [
-                              _vm._v(_vm._s(_vm.moneyFormat(line.amount)))
-                            ])
-                          ])
-                        }),
-                        0
-                      ),
-                      _vm._v(" "),
-                      _c("tfoot", [
-                        _c("tr", [
-                          _c("td", { attrs: { colspan: "7" } }, [
-                            _c("ul", [
-                              _c("li", [
-                                _c("span", [
-                                  _vm._v(
-                                    _vm._s(_vm.__("Subtotal", "erp")) + ":"
-                                  )
-                                ]),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(
-                                      _vm.moneyFormat(_vm.expense_data.total)
-                                    )
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("li", [
-                                _c("span", [
-                                  _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
-                                ]),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(
-                                      _vm.moneyFormat(_vm.expense_data.total)
-                                    )
-                                )
-                              ])
-                            ])
-                          ])
-                        ])
-                      ])
-                    ]
-                  )
-                ])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "invoice-attachments d-print-none" },
-            [
-              _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
-              _vm._v(" "),
-              _vm._l(_vm.expense_data.attachments, function(attachment, index) {
-                return _c(
-                  "a",
-                  {
-                    key: index,
-                    staticClass: "attachment-item",
-                    attrs: { href: attachment, download: "" }
-                  },
-                  [
-                    _c("img", {
-                      attrs: {
-                        src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "attachment-meta" }, [
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(
-                            attachment.substring(
-                              attachment.lastIndexOf("/") + 1
-                            )
-                          )
-                        )
-                      ]),
-                      _c("br")
-                    ])
-                  ]
-                )
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "particulars" }, [
-            _c("p", [_vm._v(_vm._s(_vm.expense_data.particulars))])
-          ])
-        ])
-      ],
-      1
-    )
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-2aa8d63a", esExports)
-  }
-}
-
-/***/ }),
+/* 419 */,
+/* 420 */,
 /* 421 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -64886,6 +64154,1088 @@ var mutations = {
   actions: actions,
   mutations: mutations
 });
+
+/***/ }),
+/* 499 */,
+/* 500 */,
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */,
+/* 510 */,
+/* 511 */,
+/* 512 */,
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */,
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */,
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */,
+/* 602 */,
+/* 603 */,
+/* 604 */,
+/* 605 */,
+/* 606 */,
+/* 607 */,
+/* 608 */,
+/* 609 */,
+/* 610 */,
+/* 611 */,
+/* 612 */,
+/* 613 */,
+/* 614 */,
+/* 615 */,
+/* 616 */,
+/* 617 */,
+/* 618 */,
+/* 619 */,
+/* 620 */,
+/* 621 */,
+/* 622 */,
+/* 623 */,
+/* 624 */,
+/* 625 */,
+/* 626 */,
+/* 627 */,
+/* 628 */,
+/* 629 */,
+/* 630 */,
+/* 631 */,
+/* 632 */,
+/* 633 */,
+/* 634 */,
+/* 635 */,
+/* 636 */,
+/* 637 */,
+/* 638 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'TransParticulars',
+  props: {
+    particulars: String
+  }
+});
+
+/***/ }),
+/* 639 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TransParticulars_vue__ = __webpack_require__(638);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2728d44a_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TransParticulars_vue__ = __webpack_require__(641);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(640)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-2728d44a"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_TransParticulars_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2728d44a_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_TransParticulars_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/accounting/assets/src/admin/components/transactions/TransParticulars.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2728d44a", Component.options)
+  } else {
+    hotAPI.reload("data-v-2728d44a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 640 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 641 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "particulars" },
+    [
+      _c("h4", [_vm._v("Particulars")]),
+      _vm._v(" "),
+      _vm._l(_vm.particulars.split(/\r?\n/), function(particular, par) {
+        return _c("p", { key: par }, [_vm._v(_vm._s(particular))])
+      })
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2728d44a", esExports)
+  }
+}
+
+/***/ }),
+/* 642 */,
+/* 643 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wperp-modal-body" },
+    [
+      _c("div", { staticClass: "wperp-invoice-panel" }, [
+        _c("div", { staticClass: "invoice-header" }, [
+          _c("div", { staticClass: "invoice-logo" }, [
+            _c("img", {
+              attrs: {
+                src: _vm.company.logo,
+                alt: "logo name",
+                width: "100",
+                height: "100"
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "invoice-address" }, [
+            _c("address", [
+              _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
+              _c("br"),
+              _vm._v(
+                "\n                    " + _vm._s(_vm.company.address.address_1)
+              ),
+              _c("br"),
+              _vm._v(
+                "\n                    " + _vm._s(_vm.company.address.address_2)
+              ),
+              _c("br"),
+              _vm._v(
+                "\n                    " + _vm._s(_vm.company.address.city)
+              ),
+              _c("br"),
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.company.address.country) +
+                  "\n                "
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "invoice-body" }, [
+          _c("h4", [_vm._v(_vm._s(_vm.getInvoiceType()))]),
+          _vm._v(" "),
+          _c("div", { staticClass: "wperp-row" }, [
+            _c("div", { staticClass: "wperp-col-sm-6" }, [
+              _c("h5", [_vm._v(_vm._s(_vm.__("Bill to", "erp")) + ":")]),
+              _vm._v(" "),
+              _c("div", { staticClass: "persons-info" }, [
+                _c("strong", [_vm._v(_vm._s(_vm.invoice.customer_name))]),
+                _c("br"),
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(_vm.invoice.billing_address) +
+                    "\n                    "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "wperp-col-sm-6" }, [
+              _c("table", { staticClass: "invoice-info" }, [
+                _c("tr", [
+                  _c("th", [_vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("#" + _vm._s(_vm.invoice.voucher_no))])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", [
+                    _vm._v(_vm._s(_vm.__("Transaction Date", "erp")) + ":")
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(_vm.invoice.trn_date))])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", [_vm._v(_vm._s(_vm.__("Due Date", "erp")) + ":")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(_vm.invoice.due_date))])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", [_vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(_vm.invoice.created_at))])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", [_vm._v(_vm._s(_vm.__("Amount Due", "erp")) + ":")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm.moneyFormat(_vm.invoice.total_due)))
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "wperp-invoice-table" }, [
+          _c(
+            "table",
+            { staticClass: "wperp-table wperp-form-table invoice-table" },
+            [
+              _c("thead", [
+                _c("tr", [
+                  _c("th", [_vm._v(_vm._s(_vm.__("Sl", "erp")) + ".")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v(_vm._s(_vm.__("Product", "erp")))]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v(_vm._s(_vm.__("Qty", "erp")))]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v(_vm._s(_vm.__("Unit Price", "erp")))]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.invoice.line_items, function(detail, index) {
+                  return _c("tr", { key: index }, [
+                    _c("th", [_vm._v(_vm._s(index + 1))]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v(_vm._s(detail.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(detail.qty))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(_vm._s(_vm.moneyFormat(detail.unit_price)))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(_vm._s(_vm.moneyFormat(detail.item_total)))
+                    ])
+                  ])
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("tfoot", [
+                _c("tr", [
+                  _c(
+                    "td",
+                    {
+                      staticClass: "wperp-invoice-amounts",
+                      attrs: { colspan: "7" }
+                    },
+                    [
+                      _c("ul", [
+                        _c("li", [
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.__("Subtotal", "erp")) + ":")
+                          ]),
+                          _vm._v(
+                            " " + _vm._s(_vm.moneyFormat(_vm.invoice.amount))
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("li", [
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.__("Discount", "erp")) + ":")
+                          ]),
+                          _vm._v(
+                            " (-) " +
+                              _vm._s(_vm.moneyFormat(_vm.invoice.discount))
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("li", [
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.__("Tax", "erp")) + ":")
+                          ]),
+                          _vm._v(
+                            " (+) " + _vm._s(_vm.moneyFormat(_vm.invoice.tax))
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("li", [
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                          ]),
+                          _vm._v(" " + _vm._s(_vm.moneyFormat(_vm.total)))
+                        ])
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("trans-particulars", {
+        attrs: { particulars: _vm.invoice.particulars }
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "invoice-attachments d-print-none" },
+        [
+          _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
+          _vm._v(" "),
+          _vm._l(_vm.invoice.attachments, function(attachment, index) {
+            return _c(
+              "a",
+              {
+                key: index,
+                staticClass: "attachment-item",
+                attrs: { href: attachment, download: "" }
+              },
+              [
+                _c("img", {
+                  attrs: {
+                    src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "attachment-meta" }, [
+                  _c("span", [
+                    _vm._v(
+                      _vm._s(
+                        attachment.substring(attachment.lastIndexOf("/") + 1)
+                      )
+                    )
+                  ]),
+                  _c("br")
+                ])
+              ]
+            )
+          })
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7fb7ba5b", esExports)
+  }
+}
+
+/***/ }),
+/* 644 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wperp-modal-dialog expense-single" }, [
+    _c(
+      "div",
+      { staticClass: "wperp-modal-content" },
+      [
+        _c("div", { staticClass: "wperp-modal-header" }, [
+          _c("h2", [_vm._v(_vm._s(_vm.__("Expense", "erp")))]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "d-print-none" },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "wperp-btn btn--default print-btn",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.printPopup($event)
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "flaticon-printer-1" }),
+                  _vm._v(
+                    "\n                      " +
+                      _vm._s(_vm.__("Print", "erp")) +
+                      "\n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "dropdown",
+                [
+                  _c("template", { slot: "button" }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "wperp-btn btn--default",
+                        attrs: { href: "#" }
+                      },
+                      [
+                        _c("i", { staticClass: "flaticon-settings-work-tool" }),
+                        _vm._v(
+                          "\n                              " +
+                            _vm._s(_vm.__("More Action", "erp")) +
+                            "\n                        "
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("template", { slot: "dropdown" }, [
+                    _c("ul", { attrs: { role: "menu" } }, [
+                      _c("li", [
+                        _c(
+                          "a",
+                          {
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                _vm.showModal = true
+                              }
+                            }
+                          },
+                          [_vm._v("Send Mail")]
+                        )
+                      ])
+                    ])
+                  ])
+                ],
+                2
+              )
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _vm.showModal
+          ? _c("send-mail", {
+              attrs: {
+                userid: _vm.people_id,
+                data: _vm.print_data,
+                type: _vm.type
+              }
+            })
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "wperp-modal-body" },
+          [
+            _c("div", { staticClass: "wperp-invoice-panel" }, [
+              null != _vm.company
+                ? _c("div", { staticClass: "invoice-header" }, [
+                    _c("div", { staticClass: "invoice-logo" }, [
+                      _c("img", {
+                        attrs: {
+                          src: _vm.company.logo,
+                          alt: "logo name",
+                          width: "100",
+                          height: "100"
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "invoice-address" }, [
+                      _c("address", [
+                        _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.address_1)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.address_2)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.city)
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.company.address.country) +
+                            "\n                        "
+                        )
+                      ])
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "invoice-body" }, [
+                _c("h4", [_vm._v(_vm._s(_vm.__("Expense", "erp")))]),
+                _vm._v(" "),
+                null != _vm.expense_data
+                  ? _c("div", { staticClass: "wperp-row" }, [
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("div", { staticClass: "persons-info" }, [
+                          _c("strong", [
+                            _vm._v(_vm._s(_vm.expense_data.people_name))
+                          ]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                " +
+                              _vm._s(_vm.expense_data.address) +
+                              "\n                            "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "wperp-col-sm-6" }, [
+                        _c("table", { staticClass: "invoice-info" }, [
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v("#" + _vm._s(_vm.expense_data.voucher_no))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(
+                                _vm._s(_vm.__("Transaction Date", "erp")) + ":"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(_vm.expense_data.date))])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(_vm.expense_data.created_at))
+                            ])
+                          ])
+                        ])
+                      ])
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              null != _vm.expense_data
+                ? _c("div", { staticClass: "wperp-invoice-table" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "wperp-table wperp-form-table invoice-table"
+                      },
+                      [
+                        _c("thead", [
+                          _c("tr", [
+                            _c("th", [_vm._v(_vm._s(_vm.__("Sl", "erp")))]),
+                            _vm._v(" "),
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Account", "erp")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Particulars", "erp")))
+                            ]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.expense_data.bill_details, function(
+                            line,
+                            index
+                          ) {
+                            return _c("tr", { key: index }, [
+                              _c("td", [_vm._v(_vm._s(index + 1))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(line.ledger_name))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(line.particulars))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(_vm._s(_vm.moneyFormat(line.amount)))
+                              ])
+                            ])
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c("tfoot", [
+                          _c("tr", [
+                            _c("td", { attrs: { colspan: "7" } }, [
+                              _c("ul", [
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(
+                                      _vm._s(_vm.__("Subtotal", "erp")) + ":"
+                                    )
+                                  ]),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(
+                                        _vm.moneyFormat(_vm.expense_data.total)
+                                      )
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("li", [
+                                  _c("span", [
+                                    _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                                  ]),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(
+                                        _vm.moneyFormat(_vm.expense_data.total)
+                                      )
+                                  )
+                                ])
+                              ])
+                            ])
+                          ])
+                        ])
+                      ]
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("trans-particulars", {
+              attrs: { particulars: _vm.expense_data.particulars }
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "invoice-attachments d-print-none" },
+              [
+                _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
+                _vm._v(" "),
+                _vm._l(_vm.expense_data.attachments, function(
+                  attachment,
+                  index
+                ) {
+                  return _c(
+                    "a",
+                    {
+                      key: index,
+                      staticClass: "attachment-item",
+                      attrs: { href: attachment, download: "" }
+                    },
+                    [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            _vm.acct_var.acct_assets + "/images/file-thumb.png"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "attachment-meta" }, [
+                        _c("span", [
+                          _vm._v(
+                            _vm._s(
+                              attachment.substring(
+                                attachment.lastIndexOf("/") + 1
+                              )
+                            )
+                          )
+                        ]),
+                        _c("br")
+                      ])
+                    ]
+                  )
+                })
+              ],
+              2
+            )
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2aa8d63a", esExports)
+  }
+}
+
+/***/ }),
+/* 645 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wperp-modal-body" },
+    [
+      _c("div", { staticClass: "wperp-invoice-panel" }, [
+        _c("div", { staticClass: "invoice-header" }, [
+          _c("div", { staticClass: "invoice-logo" }, [
+            _c("img", {
+              attrs: {
+                src: _vm.company.logo,
+                alt: "logo name",
+                width: "100",
+                height: "100"
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "invoice-address" }, [
+            _c("address", [
+              _c("strong", [_vm._v(_vm._s(_vm.company.name))]),
+              _c("br"),
+              _vm._v(
+                "\n                    " + _vm._s(_vm.company.address.address_1)
+              ),
+              _c("br"),
+              _vm._v(
+                "\n                    " + _vm._s(_vm.company.address.address_2)
+              ),
+              _c("br"),
+              _vm._v(
+                "\n                    " + _vm._s(_vm.company.address.city)
+              ),
+              _c("br"),
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.company.address.country) +
+                  "\n                "
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "invoice-body" }, [
+          _c("h4", [_vm._v(_vm._s(_vm.__("Payment", "erp")))]),
+          _vm._v(" "),
+          _c("div", { staticClass: "wperp-row" }, [
+            _c("div", { staticClass: "wperp-col-sm-6" }, [
+              _c("h5", [_vm._v(_vm._s(_vm.__("Payment From", "erp")) + ":")]),
+              _vm._v(" "),
+              _c("div", { staticClass: "persons-info" }, [
+                _c("strong", [_vm._v(_vm._s(_vm.payment.customer_name))]),
+                _c("br")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "wperp-col-sm-6" }, [
+              _c("table", { staticClass: "invoice-info" }, [
+                _c("tr", [
+                  _c("th", [_vm._v(_vm._s(_vm.__("Voucher No", "erp")) + ":")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v("#" + _vm._s(_vm.payment.voucher_no))])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", [
+                    _vm._v(_vm._s(_vm.__("Transaction Date", "erp")) + ":")
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(_vm.payment.trn_date))])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", [_vm._v(_vm._s(_vm.__("Created At", "erp")) + ":")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(_vm.payment.created_at))])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th", [_vm._v(_vm._s(_vm.__("Deposit To", "erp")) + ":")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(_vm.payment.account))])
+                ])
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "wperp-invoice-table" }, [
+          _c(
+            "table",
+            { staticClass: "wperp-table wperp-form-table invoice-table" },
+            [
+              _c("thead", [
+                _c("tr", [
+                  _c("th", [_vm._v(_vm._s(_vm.__("Sl.", "erp")))]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v(_vm._s(_vm.__("Invoice ID", "erp")))]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v(_vm._s(_vm.__("Amount", "erp")))])
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.payment.line_items, function(detail, index) {
+                  return _c("tr", { key: index }, [
+                    _c("th", [_vm._v("#" + _vm._s(index + 1))]),
+                    _vm._v(" "),
+                    _c("th", [_vm._v(_vm._s(detail.invoice_no))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(_vm.moneyFormat(detail.amount)))])
+                  ])
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("tfoot", [
+                _c("tr", [
+                  _c("td", { attrs: { colspan: "7" } }, [
+                    _c("ul", [
+                      _c("li", [
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.__("Subtotal", "erp")) + ":")
+                        ]),
+                        _vm._v(
+                          " " + _vm._s(_vm.moneyFormat(_vm.payment.amount))
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("li", [
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.__("Total", "erp")) + ":")
+                        ]),
+                        _vm._v(
+                          " " + _vm._s(_vm.moneyFormat(_vm.payment.amount))
+                        )
+                      ])
+                    ])
+                  ])
+                ])
+              ])
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("trans-particulars", {
+        attrs: { particulars: _vm.payment.particulars }
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "invoice-attachments d-print-none" },
+        [
+          _c("h4", [_vm._v(_vm._s(_vm.__("Attachments", "erp")))]),
+          _vm._v(" "),
+          _vm._l(_vm.payment.attachments, function(attachment, index) {
+            return _c(
+              "a",
+              {
+                key: index,
+                staticClass: "attachment-item",
+                attrs: { href: attachment, download: "" }
+              },
+              [
+                _c("img", {
+                  attrs: {
+                    src: _vm.acct_var.acct_assets + "/images/file-thumb.png"
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "attachment-meta" }, [
+                  _c("span", [
+                    _vm._v(
+                      _vm._s(
+                        attachment.substring(attachment.lastIndexOf("/") + 1)
+                      )
+                    )
+                  ]),
+                  _c("br")
+                ])
+              ]
+            )
+          })
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-54178ebc", esExports)
+  }
+}
 
 /***/ })
 ],[206]);
