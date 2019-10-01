@@ -3119,10 +3119,9 @@ function erp_build_mega_menu( $items, $active, $component, $dropdown = false ) {
     }
     foreach ( $items as $item ) {
 
-        if( $component == 'accounting' ) {
+        if ( $component === 'accounting' ) {
             $link = add_query_arg( [ 'page' => 'erp-'.$component . '#/' . $item['slug'] ], admin_url( 'admin.php' ) );
-        }
-        else {
+        } else {
             $link = add_query_arg( [ 'page' => 'erp-'.$component, 'section' => $item['slug'] ], admin_url( 'admin.php' ) );
         }
 
