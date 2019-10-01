@@ -1,10 +1,17 @@
 <template>
     <div class="app-customers">
-        <h2 class="add-new-people">
-            <span>{{ pageTitle }}</span>
-            <a href="" id="erp-customer-new" @click.prevent="showModal = true">{{ __('Add New', 'erp') }} {{ buttonTitle }}</a>
-        </h2>
-        <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false"></people-modal>
+        <div class="people-header">
+            <h2 class="add-new-people">
+                <span>{{ pageTitle }}</span>
+                <a href="" id="erp-customer-new" @click.prevent="showModal = true">{{ __('Add New', 'erp') }} {{ buttonTitle }}</a>
+            </h2>
+
+            <!-- top search bar -->
+            <people-search v-model="search" />
+        </div>
+
+        <people-modal v-if="showModal" :people.sync="people" :title="buttonTitle" @close="showModal = false" />
+
         <list-table
             tableClass="wperp-table people-table table-striped table-dark"
             action-column="actions"
@@ -35,6 +42,7 @@
 
 <script>
 import HTTP from 'admin/http';
+import PeopleSearch from 'admin/components/people/PeopleSearch.vue';
 import ListTable from 'admin/components/list-table/ListTable.vue';
 import PeopleModal from 'admin/components/people/PeopleModal.vue';
 
@@ -42,6 +50,7 @@ export default {
     name: 'People',
 
     components: {
+        PeopleSearch,
         ListTable,
         PeopleModal
     },
@@ -74,6 +83,7 @@ export default {
                 { key: 'edit', label: 'Edit', iconClass: 'flaticon-edit' },
                 { key: 'trash', label: 'Delete', iconClass: 'flaticon-trash' }
             ],
+            search: '',
             showModal             : false,
             buttonTitle           : '',
             pageTitle             : '',
@@ -85,20 +95,22 @@ export default {
 
     created() {
         this.$store.dispatch('spinner/setSpinner', true);
-        var self = this;
-        this.$on('modal-close', function() {
+
+        this.$on('modal-close', () => {
             this.showModal = false;
             this.people = null;
         });
-        this.$root.$on('peopleUpdate', function() {
-            self.showModal = false;
-            self.fetchItems();
+
+        this.$root.$on('peopleUpdate', () => {
+            this.showModal = false;
+            this.fetchItems();
         });
 
         this.buttonTitle = (this.$route.name.toLowerCase() === 'customers') ? 'Customer' : 'Vendor';
         this.pageTitle   = this.$route.name;
         this.url         = this.$route.name.toLowerCase();
         this.singleUrl   = (this.url === 'customers') ? 'CustomerDetails' : 'VendorDetails';
+
         this.fetchItems();
     },
 
@@ -112,13 +124,21 @@ export default {
         }
     },
 
+    watch: {
+        search(newVal, oldVal) {
+            this.$store.dispatch('spinner/setSpinner', true);
+            this.fetchItems();
+        }
+    },
+
     methods: {
         fetchItems() {
             this.rows = [];
             HTTP.get(this.url, {
                 params: {
                     per_page: this.paginationData.perPage,
-                    page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page
+                    page: this.$route.params.page === undefined ? this.paginationData.currentPage : this.$route.params.page,
+                    search: this.search
                 }
             })
                 .then((response) => {
@@ -200,23 +220,32 @@ export default {
 </script>
 <style lang="less">
     .app-customers {
-        .add-new-people {
-            padding-top: 10px;
-            align-items: center;
+        .people-header {
             display: flex;
-            a {
-                background: #1a9ed4;
-                border-radius: 3px;
-                color: #fff;
-                font-size: 12px;
-                height: 29px;
-                line-height: 29px;
-                margin-left: 13px;
-                text-align: center;
-                text-decoration: none;
-                width: 150px;
+            align-items: center;
+
+            .add-new-people {
+                padding-bottom: 10px 10px 20px 0;
+                align-items: center;
+                display: flex;
+                width: 50%;
+                margin: 0;
+                padding: 0;
+                a {
+                    background: #1a9ed4;
+                    border-radius: 3px;
+                    color: #fff;
+                    font-size: 12px;
+                    height: 29px;
+                    line-height: 29px;
+                    margin-left: 13px;
+                    text-align: center;
+                    text-decoration: none;
+                    width: 150px;
+                }
             }
         }
+
         .customer-list {
             border-radius: 3px;
             tbody {

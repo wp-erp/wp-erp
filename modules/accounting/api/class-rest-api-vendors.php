@@ -126,11 +126,14 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => 'vendor'
+            'type'   => 'vendor',
+            's'      => ! empty( $request['search'] ) ? $request['search'] : ''
         ];
 
         $items       = erp_acct_get_accounting_people( $args );
-        $total_items = erp_acct_get_accounting_people( [ 'type' => 'vendor', 'count' => true ] );
+        $total_items = erp_acct_get_accounting_people(
+            [ 'type' => 'vendor', 's' => $args['s'], 'count' => true ]
+        );
         $total_items = is_array( $total_items ) ? count( $total_items ) : $total_items;
 
         $formatted_items   = [];
