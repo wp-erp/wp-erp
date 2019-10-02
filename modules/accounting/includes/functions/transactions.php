@@ -813,6 +813,10 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     $date = ! empty( $transaction->trn_date ) ? $transaction->trn_date : $transaction->date;
     $trn_pdf->set_reference( erp_format_date( $date ), __( 'Transaction Date', 'erp' ) );
 
+	// Set Date Due
+	$datedue = ! empty( $transaction->due_date) ? $transaction->due_date : $transaction->datedue;
+	$trn_pdf->set_reference( erp_format_date( $datedue), __( 'Due Date', 'erp' ) );
+
     // Set from Address
     $from_address = explode( '<br/>', $company->get_formatted_address() );
     array_unshift( $from_address, $company->name );
@@ -836,7 +840,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         $trn_pdf->set_table_headers( [ __( 'PRODUCT', 'erp' ), __( 'QUANTITY', 'erp' ), __( 'UNIT PRICE', 'erp' ), __( 'DISCOUNT', 'erp' ), __( 'TAX AMOUNT', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
         // Add Table Items
         foreach ( $transaction->line_items as $line ) {
-            $trn_pdf->add_item( [ $line['name'], $line['qty'], $line['unit_price'], $line['discount'], $line['tax'], $line['line_total'] ] );
+            $trn_pdf->add_item( [ $line['name'], $line['qty'], erp_acct_get_price( $line['unit_price'] ), erp_acct_get_price( $line['discount'] ), erp_acct_get_price( $line['tax'] ), erp_acct_get_price( html_entity_decode( $line['line_total'] ) ) ] );
         }
 
         // Add particulars
@@ -846,9 +850,9 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
         }
 
         $trn_pdf->add_badge( __( 'PENDING', 'erp' ) );
-        $trn_pdf->add_total( __( 'DUE', 'erp' ), $transaction->total_due );
-        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), $transaction->amount );
-        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), $transaction->amount );
+        $trn_pdf->add_total( __( 'DUE', 'erp' ), erp_acct_get_price( $transaction->total_due ) );
+        $trn_pdf->add_total( __( 'SUB TOTAL', 'erp' ), erp_acct_get_price( $transaction->amount ) );
+        $trn_pdf->add_total( __( 'TOTAL', 'erp' ), erp_acct_get_price( $transaction->amount ) );
     }
 
     if ( 'payment' == $type ) {
