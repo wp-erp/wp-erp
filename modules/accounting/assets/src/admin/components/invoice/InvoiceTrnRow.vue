@@ -162,7 +162,13 @@ export default {
             const amount = this.getAmount();
             if (!amount) return;
 
-            const discount = (this.discount * amount) / this.invoiceTotalAmount;
+            const disAmount = this.discount * amount;
+
+            let discount = 0;
+
+            if (disAmount) {
+                discount = disAmount / this.invoiceTotalAmount;
+            }
 
             this.line.discount = discount.toFixed(2);
         },
@@ -171,7 +177,7 @@ export default {
             const amount = this.getAmount();
             if (!amount) return;
 
-            const taxAmount = ((amount - this.discount) * this.taxRate) / 100;
+            const taxAmount = ((amount - this.line.discount) * this.taxRate) / 100;
 
             this.line.taxAmount = 0;
 
