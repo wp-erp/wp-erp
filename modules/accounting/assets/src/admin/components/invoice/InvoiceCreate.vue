@@ -135,7 +135,8 @@
                             <component
                                 v-for="(component, compKey) in extraFields"
                                 :key="'key-' + compKey"
-                                :is="component" />
+                                :is="component"
+                                :tran-type="inv_title" />
                         </tbody>
                         <tfoot>
                             <tr>
@@ -554,7 +555,7 @@ export default {
                 this.status = 2;
             }
 
-            const requestData = window.acct.hooks.applyFilters('invoiceRequestData', {
+            const requestData = window.acct.hooks.applyFilters('requestData', {
                 customer_id    : this.basic_fields.customer.id,
                 date           : this.basic_fields.trn_date,
                 due_date       : this.basic_fields.due_date,

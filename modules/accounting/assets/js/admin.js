@@ -17032,6 +17032,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
 
 
 
@@ -17482,7 +17483,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         this.status = 2;
       }
 
-      var requestData = window.acct.hooks.applyFilters('invoiceRequestData', {
+      var requestData = window.acct.hooks.applyFilters('requestData', {
         customer_id: this.basic_fields.customer.id,
         date: this.basic_fields.trn_date,
         due_date: this.basic_fields.due_date,
@@ -19566,6 +19567,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -19625,7 +19632,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       totalAmounts: 0,
       finalTotalAmount: 0,
       particulars: '',
-      erp_acct_assets: erp_acct_var.acct_assets
+      erp_acct_assets: erp_acct_var.acct_assets,
+      extraFields: window.acct.hooks.applyFilters('acctBillExtraFields', [])
     };
   },
   computed: _objectSpread({}, Object(__WEBPACK_IMPORTED_MODULE_2_vuex__["b" /* mapState */])({
@@ -19661,9 +19669,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                 this.editMode = true;
                 this.voucherNo = this.$route.params.id;
                 /**
-                     * Duplicates of
-                     *? this.getLedgers()
-                     */
+                 * Duplicates of
+                 *? this.getLedgers()
+                */
 
                 expenseChartId = 5;
                 _context.next = 6;
@@ -19872,7 +19880,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         trnStatus = 2;
       }
 
-      var requestData = {
+      var requestData = window.acct.hooks.applyFilters('requestData', {
         vendor_id: this.basic_fields.user.id,
         ref: this.basic_fields.ref,
         trn_date: this.basic_fields.trn_date,
@@ -19883,7 +19891,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         type: 'bill',
         status: trnStatus,
         particulars: this.particulars
-      };
+      });
 
       if (this.editMode) {
         this.updateBill(requestData);
@@ -45654,7 +45662,8 @@ var render = function() {
                       _vm._l(_vm.extraFields, function(component, compKey) {
                         return _c(component, {
                           key: "key-" + compKey,
-                          tag: "component"
+                          tag: "component",
+                          attrs: { "tran-type": _vm.inv_title }
                         })
                       })
                     ],
@@ -48160,7 +48169,15 @@ var render = function() {
                         )
                       ]
                     )
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.extraFields, function(component, compKey) {
+                    return _c(component, {
+                      key: "key-" + compKey,
+                      tag: "component",
+                      attrs: { "tran-type": "Bill" }
+                    })
+                  })
                 ],
                 2
               ),
