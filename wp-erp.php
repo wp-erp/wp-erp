@@ -261,6 +261,7 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\Tracker();
         new \WeDevs\ERP\API\API_Registrar();
         new \WeDevs\ERP\Promotion();
+        new \WeDevs\ERP\AddonTask();
         new \WeDevs\ERP\ERP_i18n();
 
         $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
