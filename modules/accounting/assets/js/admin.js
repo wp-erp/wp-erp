@@ -17430,7 +17430,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         var message = 'Invoice Updated!';
 
         if (_this6.estimateToInvoice()) {
-          message = 'Convertion Successful!';
+          message = 'Conversion Successful!';
         }
 
         _this6.showAlert('success', message);
@@ -18060,9 +18060,9 @@ if (false) {(function () {
       },
       actions: [{
         key: 'edit',
-        label: 'Edit' // { key: 'trash', label: 'Delete' }
-
-      }],
+        label: 'Edit'
+      } // { key: 'trash', label: 'Delete' }
+      ],
       chartAccounts: [],
       ledgers: [],
       temp_ledgers: erp_acct_var.ledgers,
@@ -21367,7 +21367,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         var message = 'Purchase Updated!';
 
         if (_this4.orderToPurchase()) {
-          message = 'Convertion Successful!';
+          message = 'Conversion Successful!';
         }
 
         _this4.showAlert('success', message);
@@ -33406,6 +33406,26 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
       }
     },
     children: [{
+      path: 'tax-records',
+      component: {
+        render: function render(c) {
+          return c('router-view');
+        }
+      },
+      children: [{
+        path: '',
+        name: 'TaxRecords',
+        component: __WEBPACK_IMPORTED_MODULE_46_admin_components_tax_TaxRecords_vue__["a" /* default */]
+      }, {
+        path: 'page/:page',
+        name: 'PaginateTaxRecords',
+        component: __WEBPACK_IMPORTED_MODULE_46_admin_components_tax_TaxRecords_vue__["a" /* default */]
+      }, {
+        path: ':id',
+        name: 'PayTaxSingle',
+        component: __WEBPACK_IMPORTED_MODULE_47_admin_components_tax_PayTaxSingle_vue__["a" /* default */]
+      }]
+    }, {
       path: 'tax-rates',
       name: 'TaxRates',
       component: __WEBPACK_IMPORTED_MODULE_45_admin_components_tax_TaxRates_vue__["a" /* default */],
@@ -33462,26 +33482,6 @@ __WEBPACK_IMPORTED_MODULE_0_vue__["default"].use(__WEBPACK_IMPORTED_MODULE_1_vue
       path: 'agencies/page/:page',
       name: 'PaginateTaxAgencies',
       component: __WEBPACK_IMPORTED_MODULE_42_admin_components_tax_TaxAgencies_vue__["a" /* default */]
-    }, {
-      path: 'tax-records',
-      component: {
-        render: function render(c) {
-          return c('router-view');
-        }
-      },
-      children: [{
-        path: '',
-        name: 'TaxRecords',
-        component: __WEBPACK_IMPORTED_MODULE_46_admin_components_tax_TaxRecords_vue__["a" /* default */]
-      }, {
-        path: 'page/:page',
-        name: 'PaginateTaxRecords',
-        component: __WEBPACK_IMPORTED_MODULE_46_admin_components_tax_TaxRecords_vue__["a" /* default */]
-      }, {
-        path: ':id',
-        name: 'PayTaxSingle',
-        component: __WEBPACK_IMPORTED_MODULE_47_admin_components_tax_PayTaxSingle_vue__["a" /* default */]
-      }]
     }]
   }, {
     path: '/transfers',
@@ -45702,7 +45702,7 @@ var render = function() {
                           _c("combo-button", {
                             attrs: {
                               options: [
-                                { id: "update", text: "Save Convertion" }
+                                { id: "update", text: "Save Conversion" }
                               ]
                             }
                           })
@@ -50460,7 +50460,7 @@ var render = function() {
                           _c("combo-button", {
                             attrs: {
                               options: [
-                                { id: "update", text: "Save Convertion" }
+                                { id: "update", text: "Save Conversion" }
                               ]
                             }
                           })

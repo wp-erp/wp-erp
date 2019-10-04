@@ -570,6 +570,31 @@ export default new Router({
             },
             children: [
                 {
+                    path: 'tax-records',
+                    component: {
+                        render(c) {
+                            return c('router-view');
+                        }
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'TaxRecords',
+                            component: TaxRecords
+                        },
+                        {
+                            path: 'page/:page',
+                            name: 'PaginateTaxRecords',
+                            component: TaxRecords
+                        },
+                        {
+                            path: ':id',
+                            name: 'PayTaxSingle',
+                            component: PayTaxSingle
+                        }
+                    ]
+                },
+                {
                     path: 'tax-rates',
                     name: 'TaxRates',
                     component: TaxRates,
@@ -639,31 +664,6 @@ export default new Router({
                     path: 'agencies/page/:page',
                     name: 'PaginateTaxAgencies',
                     component: TaxAgencies
-                },
-                {
-                    path: 'tax-records',
-                    component: {
-                        render(c) {
-                            return c('router-view');
-                        }
-                    },
-                    children: [
-                        {
-                            path: '',
-                            name: 'TaxRecords',
-                            component: TaxRecords
-                        },
-                        {
-                            path: 'page/:page',
-                            name: 'PaginateTaxRecords',
-                            component: TaxRecords
-                        },
-                        {
-                            path: ':id',
-                            name: 'PayTaxSingle',
-                            component: PayTaxSingle
-                        }
-                    ]
                 }
             ]
         },
