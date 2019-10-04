@@ -194,6 +194,8 @@ function erp_acct_insert_bill( $data ) {
         $data['cr'] = $bill_data['amount'];
         erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
 
+        do_action( 'erp_acct_after_bill_create', $data, $voucher_no );
+
         $wpdb->query( 'COMMIT' );
 
     } catch ( Exception $e ) {

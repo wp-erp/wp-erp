@@ -211,7 +211,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $items = $request['line_items'];
 
-        foreach ( $items as $key => $value ) {
+        foreach ( $items as $value ) {
             $sub_total = $value['qty'] * $value['unit_price'];
 
             $item_total          += $sub_total;
