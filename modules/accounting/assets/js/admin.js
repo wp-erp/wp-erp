@@ -14208,7 +14208,7 @@ module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFs
       var queries = Object.assign({}, this.$route.query);
       this.paginationData.currentPage = page;
       this.$router.push({
-        name: this.url === 'customer' ? 'PaginateCustomers' : 'PaginateVendors',
+        name: this.url === 'customers' ? 'PaginateCustomers' : 'PaginateVendors',
         params: {
           page: page
         },

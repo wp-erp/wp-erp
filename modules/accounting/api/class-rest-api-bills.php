@@ -447,6 +447,8 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['ref'] = $request['ref'];
         }
 
+        $prepared_item['request'] = $request;
+
         return $prepared_item;
     }
 

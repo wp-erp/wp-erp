@@ -268,7 +268,7 @@ function erp_acct_insert_invoice_details_and_tax( $invoice_data, $voucher_no, $c
 
     $items = $invoice_data['line_items'];
 
-    foreach ( $items as $key => $item ) {
+    foreach ( $items as $item ) {
         $sub_total = $item['qty'] * $item['unit_price'];
 
         // insert into invoice details
