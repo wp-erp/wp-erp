@@ -157,7 +157,8 @@ export default {
                 this.rows = response.data.map(item => {
                     if (item.estimate === '1' || item.status_code === '1') {
                         item['actions'] = [
-                            { key: 'edit', label: 'Edit' }
+                            { key: 'edit', label: 'Edit' },
+                            { key: 'to_invoice', label: 'Make Invoice' }
                         ];
                     } else if (item.status_code === '8') {
                         item['actions'] = [
@@ -256,14 +257,17 @@ export default {
                 }
                 break;
 
-            default :
+            case 'to_invoice':
+                this.$router.push({ name: 'InvoiceEdit', params: { id: row.id }, query: { convert: true } });
+                break;
+
+            default:
                 break;
             }
         },
 
         goToPage(page) {
-            this.listLoading = true;
-
+            this.listLoading                = true;
             const queries                   = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({

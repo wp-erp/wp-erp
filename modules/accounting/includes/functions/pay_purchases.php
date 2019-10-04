@@ -296,22 +296,6 @@ function erp_acct_update_pay_purchase( $data, $pay_purchase_id ) {
 }
 
 /**
- * Delete a pay_purchase
- *
- * @param $id
- * @return void
- */
-function erp_acct_delete_pay_purchase( $id ) {
-    global $wpdb;
-
-    if ( ! $id ) {
-        return;
-    }
-
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_pay_purchase', array( 'voucher_no' => $id ) );
-}
-
-/**
  * Void a pay_purchase
  *
  * @param $id

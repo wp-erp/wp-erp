@@ -220,6 +220,15 @@ class Human_Resource {
                 wp_enqueue_script( 'post' );
                 $employee                          = new Employee();
                 $localize_script['employee_empty'] = $employee->to_array();
+
+                wp_enqueue_script( 'erp-flotchart' );
+                wp_enqueue_script( 'erp-flotchart-stack' );
+                wp_enqueue_script( 'erp-flotchart-time' );
+                wp_enqueue_script( 'erp-flotchart-pie' );
+                wp_enqueue_script( 'erp-flotchart-orerbars' );
+                wp_enqueue_script( 'erp-flotchart-axislables' );
+                wp_enqueue_script( 'erp-flotchart-valuelabel' );
+                wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
             break;
             case 'report':
                 wp_enqueue_script( 'erp-flotchart' );
@@ -230,6 +239,16 @@ class Human_Resource {
                 wp_enqueue_script( 'erp-flotchart-valuelabel' );
                 wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
             break;
+            case 'my-profile':
+                wp_enqueue_script( 'erp-flotchart' );
+                wp_enqueue_script( 'erp-flotchart-stack' );
+                wp_enqueue_script( 'erp-flotchart-time' );
+                wp_enqueue_script( 'erp-flotchart-pie' );
+                wp_enqueue_script( 'erp-flotchart-orerbars' );
+                wp_enqueue_script( 'erp-flotchart-axislables' );
+                wp_enqueue_script( 'erp-flotchart-valuelabel' );
+                wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
+                break;
 
         }
 

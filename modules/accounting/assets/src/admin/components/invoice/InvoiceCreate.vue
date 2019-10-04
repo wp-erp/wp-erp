@@ -5,7 +5,8 @@
         <div class="content-header-section separator">
             <div class="wperp-row wperp-between-xs">
                 <div class="wperp-col">
-                    <h2 class="content-header__title">{{ editMode ? __('Edit', 'erp') : __('New', 'erp') }} {{inv_title}}</h2>
+                    <h2 v-if="estimateToInvoice()">Convert into Invoice</h2>
+                    <h2 v-else class="content-header__title">{{ editMode ? __('Edit', 'erp') : __('New', 'erp') }} {{inv_title}}</h2>
                 </div>
             </div>
         </div>
@@ -134,11 +135,15 @@
                             <component
                                 v-for="(component, compKey) in extraFields"
                                 :key="'key-' + compKey"
-                                :is="component" />
+                                :is="component"
+                                :tran-type="inv_title" />
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="9" style="text-align: right;">
+                                <td v-if="estimateToInvoice()" colspan="9" style="text-align: right;">
+                                    <combo-button :options="[{ id: 'update', text: 'Save Conversion' }]" />
+                                </td>
+                                <td v-else colspan="9" style="text-align: right;">
                                     <combo-button v-if="editMode" :options="updateButtons" />
                                     <combo-button v-else :options="createButtons" />
                                 </td>
@@ -227,7 +232,9 @@ export default {
 
     watch: {
         'basic_fields.customer'() {
-            this.getCustomerAddress();
+            if (!this.editMode) {
+                this.getCustomerAddress();
+            }
         },
 
         taxRate(newVal) {
@@ -291,7 +298,9 @@ export default {
                  * load products and taxes, before invoice load
                  */
                 const [request1, request2] = await Promise.all([
-                    HTTP.get('/products'),
+                    HTTP.get('/products', { params: {
+                        number: -1
+                    } }),
                     HTTP.get('/taxes/summary')
                 ]);
                 const request3 = await HTTP.get(`/invoices/${this.$route.params.id}`);
@@ -358,14 +367,25 @@ export default {
             };
 
             if (invoice.estimate === '1') {
+                this.inv_title = 'Estimate';
                 this.inv_type = { id: 1, name: 'Estimate' };
+                this.finalTotalAmount = parseFloat(invoice.amount) +
+                    parseFloat(invoice.tax) - parseFloat(this.discount);
             }
+        },
+
+        estimateToInvoice() {
+            const estimate = 1;
+
+            return estimate === this.inv_type.id && this.$route.query.convert;
         },
 
         getProducts() {
             this.$store.dispatch('spinner/setSpinner', true);
 
-            HTTP.get('/products').then(response => {
+            HTTP.get('/products', { params: {
+                number: -1
+            } }).then(response => {
                 this.products = response.data;
 
                 this.$store.dispatch('spinner/setSpinner', false);
@@ -488,7 +508,14 @@ export default {
 
             HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Invoice Updated!');
+
+                let message = 'Invoice Updated!';
+
+                if (this.estimateToInvoice()) {
+                    message = 'Conversion Successful!';
+                }
+
+                this.showAlert('success', message);
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -506,7 +533,7 @@ export default {
 
             HTTP.post('/invoices', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Invoice Created!');
+                this.showAlert('success', this.inv_title + ' Created!');
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -538,7 +565,7 @@ export default {
                 this.status = 2;
             }
 
-            const requestData = window.acct.hooks.applyFilters('invoiceRequestData', {
+            const requestData = window.acct.hooks.applyFilters('requestData', {
                 customer_id    : this.basic_fields.customer.id,
                 date           : this.basic_fields.trn_date,
                 due_date       : this.basic_fields.due_date,
@@ -550,7 +577,8 @@ export default {
                 particulars    : this.particulars,
                 type           : 'invoice',
                 status         : parseInt(this.status),
-                estimate       : this.inv_type.id
+                estimate       : this.inv_type.id,
+                convert        : this.$route.query.convert
             });
 
             if (this.editMode) {

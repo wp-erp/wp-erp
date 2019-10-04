@@ -42,10 +42,10 @@ function erp_hr_dashboard_widget_birthday() {
                     <a href="<?php echo $employee->get_details_url(); ?>" class="erp-tips" title="<?php echo $employee->get_full_name(); ?>">
                     <?php echo $employee->get_avatar( 32 ); ?></a> &nbsp;
                     <?php if ( !isset($_COOKIE[ $employee->get_user_id() ] ) ) : ?>
-                        <a href="#" title="Send birthday wish email to <?php echo $employee->get_full_name(); ?>"
-                            class="send-wish" data-user_id="<?php echo intval( $employee->get_user_id() ); ?>">
+                        <!-- <a href="#" title="Send birthday wish email to <?php /*echo $employee->get_full_name();*/ ?>"
+                            class="send-wish" data-user_id="<?php /*echo intval( $employee->get_user_id() );*/ ?>">
                             <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                        </a>
+                        </a> -->
                     <?php endif; ?>
                 </li>
             <?php } ?>

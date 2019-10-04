@@ -117,6 +117,12 @@
                                 </div>
                             </td>
                         </tr>
+
+                        <component
+                            v-for="(component, compKey) in extraFields"
+                            :key="'key-' + compKey"
+                            :is="component"
+                            tran-type="Bill" />
                         </tbody>
                         <tfoot>
                         <tr>
@@ -161,10 +167,10 @@ export default {
     data() {
         return {
             basic_fields: {
-                user: '',
-                trn_date: '',
-                due_date: '',
-                ref: '',
+                user           : '',
+                trn_date       : '',
+                due_date       : '',
+                ref            : '',
                 billing_address: ''
             },
 
@@ -184,16 +190,17 @@ export default {
                 { id: 'draft', text: 'Save as Draft' }
             ],
 
-            editMode: false,
-            voucherNo: 0,
+            editMode        : false,
+            voucherNo       : 0,
             transactionLines: [],
-            selected: [],
-            ledgers: [],
-            attachments: [],
-            totalAmounts: 0,
+            selected        : [],
+            ledgers         : [],
+            attachments     : [],
+            totalAmounts    : 0,
             finalTotalAmount: 0,
-            particulars: '',
-            erp_acct_assets: erp_acct_var.acct_assets
+            particulars     : '',
+            erp_acct_assets : erp_acct_var.acct_assets,
+            extraFields     : window.acct.hooks.applyFilters('acctBillExtraFields', [])
         };
     },
 
@@ -222,9 +229,9 @@ export default {
                 this.voucherNo = this.$route.params.id;
 
                 /**
-                     * Duplicates of
-                     *? this.getLedgers()
-                     */
+                 * Duplicates of
+                 *? this.getLedgers()
+                */
                 const expenseChartId = 5;
 
                 const request1 = await HTTP.get(`/ledgers/${expenseChartId}/accounts`);
@@ -391,7 +398,7 @@ export default {
                 trnStatus = 2;
             }
 
-            const requestData = {
+            const requestData = window.acct.hooks.applyFilters('requestData', {
                 vendor_id      : this.basic_fields.user.id,
                 ref            : this.basic_fields.ref,
                 trn_date       : this.basic_fields.trn_date,
@@ -402,7 +409,7 @@ export default {
                 type           : 'bill',
                 status         : trnStatus,
                 particulars    : this.particulars
-            };
+            });
 
             if (this.editMode) {
                 this.updateBill(requestData);

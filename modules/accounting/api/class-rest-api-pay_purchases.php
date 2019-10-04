@@ -66,13 +66,6 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_pay_purchase' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_expenses_voucher' );
-                },
-            ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
@@ -228,25 +221,6 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         $response = $this->format_collection_response( $response, $request, 1 );
 
         return $response;
-    }
-
-    /**
-     * Delete a pay_purchase
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Request
-     */
-    public function delete_pay_purchase( $request ) {
-        $id = (int) $request['id'];
-
-        if ( empty( $id ) ) {
-            return new WP_Error( 'rest_pay_purchase_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
-        }
-
-        erp_acct_delete_pay_purchase( $id );
-
-        return new WP_REST_Response( true, 204 );
     }
 
     /**

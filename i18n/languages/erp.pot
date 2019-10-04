@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.5.2\n"
+"Project-Id-Version: WP ERP 1.5.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-erp\n"
-"POT-Creation-Date: 2019-09-17 08:12:27+00:00\n"
+"POT-Creation-Date: 2019-10-04 11:06:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5359,8 +5359,8 @@ msgstr ""
 
 #: includes/admin/class-form-handler.php:99 includes/admin/views/address.php:37
 #: includes/admin/views/company-editor.php:75
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:76
-#: modules/crm/includes/functions-customer.php:2943
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:88
+#: modules/crm/includes/functions-customer.php:2944
 #: modules/crm/views/company/single.php:82
 #: modules/crm/views/contact/single.php:83
 #: modules/crm/views/js-templates/new-customer.php:219
@@ -5392,7 +5392,8 @@ msgid "Dashboard"
 msgstr ""
 
 #: includes/admin/class-menu.php:132 includes/admin/views/company-editor.php:2
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:44
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:56
+#: modules/accounting/includes/classes/class-settings.php:70
 #: modules/crm/includes/class-contact-subscriber-list-table.php:99
 #: modules/crm/includes/functions-customer.php:221
 #: modules/crm/views/company.php:20 modules/crm/views/dashboard-badge.php:55
@@ -5414,7 +5415,7 @@ msgstr ""
 
 #: includes/admin/class-menu.php:136 includes/admin/class-menu.php:138
 #: includes/admin/views/tools/general.php:23
-#: modules/crm/includes/admin/class-settings.php:659 wp-erp.php:306
+#: modules/crm/includes/admin/class-settings.php:659 wp-erp.php:307
 msgid "Settings"
 msgstr ""
 
@@ -5501,7 +5502,7 @@ msgstr ""
 
 #: includes/admin/class-setup-wizard.php:226
 #: modules/crm/includes/functions-customer.php:1840
-#: modules/crm/includes/functions-customer.php:2903
+#: modules/crm/includes/functions-customer.php:2904
 #: modules/crm/views/js-templates/new-assign-company.php:6
 #: modules/crm/views/js-templates/new-customer.php:73
 msgid "Company Name"
@@ -5595,8 +5596,8 @@ msgstr ""
 #: includes/admin/class-setup-wizard.php:543
 #: includes/admin/class-setup-wizard.php:610
 #: modules/accounting/assets/src/admin/components/chart-accounts/ChartOfAccounts.vue:9
-#: modules/accounting/assets/src/admin/components/people/People.vue:5
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:114
+#: modules/accounting/assets/src/admin/components/people/People.vue:6
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:132
 #: modules/accounting/assets/src/admin/components/tax/TaxRateLineAdd.vue:7
 #: modules/crm/crm.php:187 modules/hrm/views/departments.php:3
 #: modules/hrm/views/designation.php:3 modules/hrm/views/employee/single.php:10
@@ -5758,7 +5759,7 @@ msgstr ""
 
 #: includes/admin/views/address.php:30
 #: includes/admin/views/company-editor.php:64 includes/class-company.php:41
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:72
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:84
 #: modules/crm/includes/functions-customer.php:1629
 #: modules/crm/views/company/single.php:80
 #: modules/crm/views/contact/single.php:81
@@ -5840,10 +5841,10 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:112
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:25
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:48
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:41
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:22
 #: modules/crm/includes/functions-customer.php:1587
-#: modules/crm/includes/functions-customer.php:2913
+#: modules/crm/includes/functions-customer.php:2914
 #: modules/crm/views/company/single.php:75
 #: modules/crm/views/contact/single.php:76
 #: modules/hrm/views/js-templates/new-employee.php:304
@@ -5851,9 +5852,9 @@ msgid "Phone"
 msgstr ""
 
 #: includes/admin/views/company-editor.php:123
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:60
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:72
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:34
-#: modules/crm/includes/functions-customer.php:2928
+#: modules/crm/includes/functions-customer.php:2929
 #: modules/crm/views/company/single.php:76
 #: modules/crm/views/contact/single.php:77
 msgid "Fax"
@@ -5861,10 +5862,10 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:134
 #: modules/accounting/assets/src/admin/components/people/EmployeeDetails.vue:29
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:35
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:60
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:26
 #: modules/crm/includes/functions-customer.php:1601
-#: modules/crm/includes/functions-customer.php:2918
+#: modules/crm/includes/functions-customer.php:2919
 #: modules/crm/views/js-templates/new-customer.php:172
 #: modules/hrm/views/employee/tab-general.php:62
 #: modules/hrm/views/js-templates/new-employee.php:296
@@ -5872,10 +5873,10 @@ msgid "Mobile"
 msgstr ""
 
 #: includes/admin/views/company-editor.php:145
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:52
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:64
 #: modules/accounting/assets/src/admin/components/userinfo/UserBasic.vue:30
 #: modules/crm/includes/functions-customer.php:1615
-#: modules/crm/includes/functions-customer.php:2923
+#: modules/crm/includes/functions-customer.php:2924
 #: modules/crm/views/company/single.php:77
 #: modules/crm/views/contact/single.php:78
 #: modules/crm/views/js-templates/new-customer.php:180
@@ -5909,10 +5910,10 @@ msgid "Company Details"
 msgstr ""
 
 #: includes/admin/views/company.php:17
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:8
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:322
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:176
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:172
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:9
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:321
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:177
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:173
 #: modules/crm/includes/admin/class-settings.php:763
 #: modules/crm/includes/class-campaigns-list-table.php:89
 #: modules/crm/includes/class-contact-group-list-table.php:118
@@ -6347,15 +6348,15 @@ msgstr ""
 
 #: includes/api/class-activities-controller.php:489
 #: includes/api/class-rest-controller.php:95
-#: modules/accounting/api/class-rest-api-employees.php:532
-#: modules/hrm/includes/api/class-employees-controller.php:1695
+#: modules/accounting/api/class-rest-api-employees.php:390
+#: modules/hrm/includes/api/class-employees-controller.php:1705
 msgid "Current page of the collection."
 msgstr ""
 
 #: includes/api/class-activities-controller.php:497
 #: includes/api/class-rest-controller.php:103
-#: modules/accounting/api/class-rest-api-employees.php:540
-#: modules/hrm/includes/api/class-employees-controller.php:1703
+#: modules/accounting/api/class-rest-api-employees.php:398
+#: modules/hrm/includes/api/class-employees-controller.php:1713
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
 
@@ -6366,57 +6367,49 @@ msgstr ""
 #: includes/api/class-contacts-groups-controller.php:140
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:162
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:183
-#: modules/accounting/api/class-rest-api-bills.php:179
-#: modules/accounting/api/class-rest-api-bills.php:249
-#: modules/accounting/api/class-rest-api-bills.php:300
-#: modules/accounting/api/class-rest-api-bills.php:319
-#: modules/accounting/api/class-rest-api-bills.php:338
-#: modules/accounting/api/class-rest-api-customers.php:190
-#: modules/accounting/api/class-rest-api-customers.php:258
-#: modules/accounting/api/class-rest-api-employees.php:170
-#: modules/accounting/api/class-rest-api-employees.php:241
-#: modules/accounting/api/class-rest-api-expenses.php:157
-#: modules/accounting/api/class-rest-api-expenses.php:187
-#: modules/accounting/api/class-rest-api-expenses.php:256
-#: modules/accounting/api/class-rest-api-expenses.php:300
-#: modules/accounting/api/class-rest-api-expenses.php:319
-#: modules/accounting/api/class-rest-api-invoices.php:184
-#: modules/accounting/api/class-rest-api-invoices.php:264
-#: modules/accounting/api/class-rest-api-invoices.php:326
-#: modules/accounting/api/class-rest-api-invoices.php:345
-#: modules/accounting/api/class-rest-api-invoices.php:364
-#: modules/accounting/api/class-rest-api-journals.php:128
-#: modules/accounting/api/class-rest-api-ledgers.php:231
-#: modules/accounting/api/class-rest-api-ledgers.php:286
-#: modules/accounting/api/class-rest-api-ledgers.php:315
-#: modules/accounting/api/class-rest-api-ledgers.php:456
-#: modules/accounting/api/class-rest-api-ledgers.php:479
+#: modules/accounting/api/class-rest-api-bills.php:171
+#: modules/accounting/api/class-rest-api-bills.php:241
+#: modules/accounting/api/class-rest-api-bills.php:292
+#: modules/accounting/api/class-rest-api-bills.php:311
+#: modules/accounting/api/class-rest-api-customers.php:192
+#: modules/accounting/api/class-rest-api-customers.php:260
+#: modules/accounting/api/class-rest-api-employees.php:133
+#: modules/accounting/api/class-rest-api-expenses.php:150
+#: modules/accounting/api/class-rest-api-expenses.php:180
+#: modules/accounting/api/class-rest-api-expenses.php:249
+#: modules/accounting/api/class-rest-api-expenses.php:293
+#: modules/accounting/api/class-rest-api-invoices.php:177
+#: modules/accounting/api/class-rest-api-invoices.php:257
+#: modules/accounting/api/class-rest-api-invoices.php:318
+#: modules/accounting/api/class-rest-api-invoices.php:337
+#: modules/accounting/api/class-rest-api-journals.php:120
+#: modules/accounting/api/class-rest-api-ledgers.php:230
+#: modules/accounting/api/class-rest-api-ledgers.php:285
+#: modules/accounting/api/class-rest-api-ledgers.php:314
+#: modules/accounting/api/class-rest-api-ledgers.php:455
+#: modules/accounting/api/class-rest-api-ledgers.php:478
 #: modules/accounting/api/class-rest-api-opening-balances.php:168
 #: modules/accounting/api/class-rest-api-opening-balances.php:210
 #: modules/accounting/api/class-rest-api-opening-balances.php:236
-#: modules/accounting/api/class-rest-api-pay_bills.php:156
-#: modules/accounting/api/class-rest-api-pay_bills.php:218
-#: modules/accounting/api/class-rest-api-pay_bills.php:259
-#: modules/accounting/api/class-rest-api-pay_bills.php:278
-#: modules/accounting/api/class-rest-api-pay_purchases.php:146
-#: modules/accounting/api/class-rest-api-pay_purchases.php:211
-#: modules/accounting/api/class-rest-api-pay_purchases.php:244
-#: modules/accounting/api/class-rest-api-pay_purchases.php:263
+#: modules/accounting/api/class-rest-api-pay_bills.php:149
+#: modules/accounting/api/class-rest-api-pay_bills.php:211
+#: modules/accounting/api/class-rest-api-pay_bills.php:252
+#: modules/accounting/api/class-rest-api-pay_purchases.php:139
+#: modules/accounting/api/class-rest-api-pay_purchases.php:204
+#: modules/accounting/api/class-rest-api-pay_purchases.php:237
 #: modules/accounting/api/class-rest-api-people.php:147
 #: modules/accounting/api/class-rest-api-people.php:165
 #: modules/accounting/api/class-rest-api-product_cats.php:132
 #: modules/accounting/api/class-rest-api-product_cats.php:182
 #: modules/accounting/api/class-rest-api-products.php:151
 #: modules/accounting/api/class-rest-api-products.php:198
-#: modules/accounting/api/class-rest-api-purchases.php:158
-#: modules/accounting/api/class-rest-api-purchases.php:210
-#: modules/accounting/api/class-rest-api-purchases.php:271
-#: modules/accounting/api/class-rest-api-purchases.php:318
-#: modules/accounting/api/class-rest-api-purchases.php:337
-#: modules/accounting/api/class-rest-api-rec_payments.php:145
-#: modules/accounting/api/class-rest-api-rec_payments.php:207
-#: modules/accounting/api/class-rest-api-rec_payments.php:248
-#: modules/accounting/api/class-rest-api-rec_payments.php:267
+#: modules/accounting/api/class-rest-api-purchases.php:151
+#: modules/accounting/api/class-rest-api-purchases.php:203
+#: modules/accounting/api/class-rest-api-purchases.php:264
+#: modules/accounting/api/class-rest-api-purchases.php:311
+#: modules/accounting/api/class-rest-api-rec_payments.php:138
+#: modules/accounting/api/class-rest-api-rec_payments.php:200
+#: modules/accounting/api/class-rest-api-rec_payments.php:241
 #: modules/accounting/api/class-rest-api-tax_agencies.php:174
 #: modules/accounting/api/class-rest-api-tax_agencies.php:227
 #: modules/accounting/api/class-rest-api-tax_agencies.php:256
@@ -6437,8 +6430,8 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-taxes.php:529
 #: modules/accounting/api/class-rest-api-transactions.php:552
 #: modules/accounting/api/class-rest-api-transactions.php:627
-#: modules/accounting/api/class-rest-api-vendors.php:179
-#: modules/accounting/api/class-rest-api-vendors.php:247
+#: modules/accounting/api/class-rest-api-vendors.php:182
+#: modules/accounting/api/class-rest-api-vendors.php:250
 #: modules/hrm/includes/api/class-announcements-controller.php:124
 #: modules/hrm/includes/api/class-announcements-controller.php:178
 #: modules/hrm/includes/api/class-departments-controller.php:121
@@ -6454,7 +6447,7 @@ msgstr ""
 #: modules/hrm/includes/api/class-employees-controller.php:906
 #: modules/hrm/includes/api/class-employees-controller.php:1002
 #: modules/hrm/includes/api/class-employees-controller.php:1097
-#: modules/hrm/includes/api/class-employees-controller.php:1310
+#: modules/hrm/includes/api/class-employees-controller.php:1320
 #: modules/hrm/includes/api/class-leave-entitlements-controller.php:110
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:118
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:161
@@ -6468,25 +6461,25 @@ msgstr ""
 #: includes/api/class-contacts-controller.php:401
 #: includes/api/class-contacts-groups-controller.php:346
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:537
-#: modules/accounting/api/class-rest-api-bills.php:533
+#: modules/accounting/api/class-rest-api-bills.php:508
 #: modules/accounting/api/class-rest-api-currencies.php:112
-#: modules/accounting/api/class-rest-api-customers.php:522
-#: modules/accounting/api/class-rest-api-expenses.php:470
-#: modules/accounting/api/class-rest-api-journals.php:310
-#: modules/accounting/api/class-rest-api-ledgers.php:606
+#: modules/accounting/api/class-rest-api-customers.php:525
+#: modules/accounting/api/class-rest-api-expenses.php:444
+#: modules/accounting/api/class-rest-api-journals.php:302
+#: modules/accounting/api/class-rest-api-ledgers.php:605
 #: modules/accounting/api/class-rest-api-opening-balances.php:423
-#: modules/accounting/api/class-rest-api-pay_bills.php:434
-#: modules/accounting/api/class-rest-api-pay_purchases.php:401
+#: modules/accounting/api/class-rest-api-pay_bills.php:408
+#: modules/accounting/api/class-rest-api-pay_purchases.php:375
 #: modules/accounting/api/class-rest-api-people.php:339
 #: modules/accounting/api/class-rest-api-product_cats.php:295
 #: modules/accounting/api/class-rest-api-products.php:322
-#: modules/accounting/api/class-rest-api-purchases.php:466
-#: modules/accounting/api/class-rest-api-rec_payments.php:412
+#: modules/accounting/api/class-rest-api-purchases.php:445
+#: modules/accounting/api/class-rest-api-rec_payments.php:388
 #: modules/accounting/api/class-rest-api-tax_agencies.php:367
 #: modules/accounting/api/class-rest-api-tax_cats.php:345
 #: modules/accounting/api/class-rest-api-tax_rate_names.php:334
 #: modules/accounting/api/class-rest-api-taxes.php:850
-#: modules/accounting/api/class-rest-api-vendors.php:497
+#: modules/accounting/api/class-rest-api-vendors.php:500
 #: modules/hrm/includes/api/class-announcements-controller.php:299
 #: modules/hrm/includes/api/class-departments-controller.php:308
 #: modules/hrm/includes/api/class-designations-controller.php:259
@@ -6512,13 +6505,13 @@ msgid "Body for the resource."
 msgstr ""
 
 #: includes/api/class-announcements-controller.php:330
-#: modules/accounting/api/class-rest-api-bills.php:633
-#: modules/accounting/api/class-rest-api-expenses.php:577
-#: modules/accounting/api/class-rest-api-invoices.php:653
-#: modules/accounting/api/class-rest-api-pay_bills.php:522
-#: modules/accounting/api/class-rest-api-pay_purchases.php:489
-#: modules/accounting/api/class-rest-api-purchases.php:570
-#: modules/accounting/api/class-rest-api-rec_payments.php:527
+#: modules/accounting/api/class-rest-api-bills.php:608
+#: modules/accounting/api/class-rest-api-expenses.php:551
+#: modules/accounting/api/class-rest-api-invoices.php:629
+#: modules/accounting/api/class-rest-api-pay_bills.php:496
+#: modules/accounting/api/class-rest-api-pay_purchases.php:463
+#: modules/accounting/api/class-rest-api-purchases.php:549
+#: modules/accounting/api/class-rest-api-rec_payments.php:503
 #: modules/hrm/includes/api/class-announcements-controller.php:323
 msgid "Status for the resource."
 msgstr ""
@@ -6529,26 +6522,26 @@ msgid "Recipient type for the resource."
 msgstr ""
 
 #: includes/api/class-contacts-controller.php:407
-#: modules/accounting/api/class-rest-api-customers.php:528
+#: modules/accounting/api/class-rest-api-customers.php:531
 #: modules/accounting/api/class-rest-api-people.php:345
-#: modules/accounting/api/class-rest-api-vendors.php:503
+#: modules/accounting/api/class-rest-api-vendors.php:506
 msgid "First name for the resource."
 msgstr ""
 
 #: includes/api/class-contacts-controller.php:416
-#: modules/accounting/api/class-rest-api-customers.php:537
+#: modules/accounting/api/class-rest-api-customers.php:540
 #: modules/accounting/api/class-rest-api-people.php:354
-#: modules/accounting/api/class-rest-api-vendors.php:512
+#: modules/accounting/api/class-rest-api-vendors.php:515
 msgid "Last name for the resource."
 msgstr ""
 
 #: includes/api/class-contacts-controller.php:425
-#: modules/accounting/api/class-rest-api-customers.php:546
-#: modules/accounting/api/class-rest-api-customers.php:628
+#: modules/accounting/api/class-rest-api-customers.php:549
+#: modules/accounting/api/class-rest-api-customers.php:631
 #: modules/accounting/api/class-rest-api-people.php:363
 #: modules/accounting/api/class-rest-api-people.php:445
-#: modules/accounting/api/class-rest-api-vendors.php:521
-#: modules/accounting/api/class-rest-api-vendors.php:603
+#: modules/accounting/api/class-rest-api-vendors.php:524
+#: modules/accounting/api/class-rest-api-vendors.php:606
 msgid "The email address for the resource."
 msgstr ""
 
@@ -6557,16 +6550,16 @@ msgid "Company for the resource."
 msgstr ""
 
 #: includes/api/class-contacts-controller.php:440
-#: modules/accounting/api/class-rest-api-bills.php:599
-#: modules/accounting/api/class-rest-api-customers.php:553
-#: modules/accounting/api/class-rest-api-customers.php:634
-#: modules/accounting/api/class-rest-api-expenses.php:535
-#: modules/accounting/api/class-rest-api-invoices.php:591
+#: modules/accounting/api/class-rest-api-bills.php:574
+#: modules/accounting/api/class-rest-api-customers.php:556
+#: modules/accounting/api/class-rest-api-customers.php:637
+#: modules/accounting/api/class-rest-api-expenses.php:509
+#: modules/accounting/api/class-rest-api-invoices.php:567
 #: modules/accounting/api/class-rest-api-people.php:370
 #: modules/accounting/api/class-rest-api-people.php:451
-#: modules/accounting/api/class-rest-api-rec_payments.php:469
-#: modules/accounting/api/class-rest-api-vendors.php:528
-#: modules/accounting/api/class-rest-api-vendors.php:609
+#: modules/accounting/api/class-rest-api-rec_payments.php:445
+#: modules/accounting/api/class-rest-api-vendors.php:531
+#: modules/accounting/api/class-rest-api-vendors.php:612
 msgid "Phone for the resource."
 msgstr ""
 
@@ -6575,16 +6568,16 @@ msgid "Mobile for the resource."
 msgstr ""
 
 #: includes/api/class-contacts-controller.php:456
-#: modules/accounting/api/class-rest-api-customers.php:561
+#: modules/accounting/api/class-rest-api-customers.php:564
 #: modules/accounting/api/class-rest-api-people.php:378
-#: modules/accounting/api/class-rest-api-vendors.php:536
+#: modules/accounting/api/class-rest-api-vendors.php:539
 msgid "Other for the resource."
 msgstr ""
 
 #: includes/api/class-contacts-controller.php:464
-#: modules/accounting/api/class-rest-api-customers.php:569
+#: modules/accounting/api/class-rest-api-customers.php:572
 #: modules/accounting/api/class-rest-api-people.php:386
-#: modules/accounting/api/class-rest-api-vendors.php:544
+#: modules/accounting/api/class-rest-api-vendors.php:547
 msgid "Website of the resource."
 msgstr ""
 
@@ -6593,9 +6586,9 @@ msgid "Fax of the resource."
 msgstr ""
 
 #: includes/api/class-contacts-controller.php:478
-#: modules/accounting/api/class-rest-api-customers.php:575
+#: modules/accounting/api/class-rest-api-customers.php:578
 #: modules/accounting/api/class-rest-api-people.php:392
-#: modules/accounting/api/class-rest-api-vendors.php:550
+#: modules/accounting/api/class-rest-api-vendors.php:553
 msgid "Notes of the resource."
 msgstr ""
 
@@ -6642,15 +6635,15 @@ msgstr ""
 
 #: includes/api/class-contacts-groups-controller.php:352
 #: modules/accounting/api/class-rest-api-currencies.php:118
-#: modules/accounting/api/class-rest-api-ledgers.php:624
+#: modules/accounting/api/class-rest-api-ledgers.php:623
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:272
 #: modules/hrm/includes/api/class-leave-policies-controller.php:358
 msgid "Name for the resource."
 msgstr ""
 
 #: includes/api/class-rest-controller.php:112
-#: modules/accounting/api/class-rest-api-employees.php:549
-#: modules/hrm/includes/api/class-employees-controller.php:1712
+#: modules/accounting/api/class-rest-api-employees.php:407
+#: modules/hrm/includes/api/class-employees-controller.php:1722
 msgid "Limit results to those matching a string."
 msgstr ""
 
@@ -6669,7 +6662,7 @@ msgid "Street Address 1"
 msgstr ""
 
 #: includes/class-company.php:42
-#: modules/crm/includes/functions-customer.php:2948
+#: modules/crm/includes/functions-customer.php:2949
 #: modules/crm/views/company/single.php:81
 #: modules/crm/views/contact/single.php:82
 #: modules/hrm/views/employee/tab-general.php:59
@@ -6742,17 +6735,17 @@ msgid ""
 "will be replaced by original values"
 msgstr ""
 
-#: includes/class-install.php:1454 includes/updates/update-1.1.17.php:21
+#: includes/class-install.php:1432 includes/updates/update-1.1.17.php:21
 msgid "ERP Subscription"
 msgstr ""
 
-#: includes/class-install.php:1466 includes/updates/update-1.1.17.php:33
+#: includes/class-install.php:1444 includes/updates/update-1.1.17.php:33
 #: modules/crm/includes/admin/class-settings.php:166
 #: modules/crm/includes/class-subscription.php:455
 msgid "Confirm your subscription to %s"
 msgstr ""
 
-#: includes/class-install.php:1468 includes/updates/update-1.1.17.php:35
+#: includes/class-install.php:1446 includes/updates/update-1.1.17.php:35
 #: modules/crm/includes/admin/class-settings.php:174
 #: modules/crm/includes/class-subscription.php:457
 msgid ""
@@ -6769,50 +6762,50 @@ msgid ""
 "%s"
 msgstr ""
 
-#: includes/class-install.php:1472 includes/updates/update-1.1.17.php:39
+#: includes/class-install.php:1450 includes/updates/update-1.1.17.php:39
 #: modules/crm/includes/admin/class-settings.php:199
 #: modules/crm/includes/class-subscription.php:684
 msgid "You are now subscribed!"
 msgstr ""
 
-#: includes/class-install.php:1473 includes/updates/update-1.1.17.php:40
+#: includes/class-install.php:1451 includes/updates/update-1.1.17.php:40
 #: modules/crm/includes/admin/class-settings.php:206
 #: modules/crm/includes/class-subscription.php:719
 msgid "We've added you to our email list. You'll hear from us shortly."
 msgstr ""
 
-#: includes/class-install.php:1474 includes/updates/update-1.1.17.php:41
+#: includes/class-install.php:1452 includes/updates/update-1.1.17.php:41
 #: modules/crm/includes/admin/class-settings.php:218
 #: modules/crm/includes/class-subscription.php:693
 msgid "You are now unsubscribed"
 msgstr ""
 
-#: includes/class-install.php:1475 includes/updates/update-1.1.17.php:42
+#: includes/class-install.php:1453 includes/updates/update-1.1.17.php:42
 #: modules/crm/includes/admin/class-settings.php:225
 #: modules/crm/includes/class-subscription.php:736
 msgid "You are successfully unsubscribed from list(s):"
 msgstr ""
 
-#: includes/class-install.php:1833 includes/class-scripts.php:147
+#: includes/class-install.php:1811 includes/class-scripts.php:147
 #: includes/framework/modules.php:38
-#: includes/framework/views/status-report.php:49 modules/hrm/hrm.php:254
+#: includes/framework/views/status-report.php:49 modules/hrm/hrm.php:273
 #: modules/hrm/views/dashboard.php:2
 msgid "HR Management"
 msgstr ""
 
-#: includes/class-install.php:1835
+#: includes/class-install.php:1813
 msgid "Human Resource Mnanagement"
 msgstr ""
 
-#: includes/class-install.php:1841 includes/framework/modules.php:45
+#: includes/class-install.php:1819 includes/framework/modules.php:45
 msgid "CR Management"
 msgstr ""
 
-#: includes/class-install.php:1843 includes/framework/modules.php:47
+#: includes/class-install.php:1821 includes/framework/modules.php:47
 msgid "Customer Relationship Management"
 msgstr ""
 
-#: includes/class-install.php:1849 includes/class-install.php:1851
+#: includes/class-install.php:1827 includes/class-install.php:1829
 #: includes/framework/modules.php:54
 msgid "Accounting Management"
 msgstr ""
@@ -6872,7 +6865,7 @@ msgstr ""
 
 #: includes/class-scripts.php:161
 #: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:10
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:115
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:133
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:46
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:9
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:142
@@ -6900,17 +6893,17 @@ msgid ""
 "to collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: includes/class-updates.php:113
+#: includes/class-updates.php:115
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: includes/class-updates.php:114
+#: includes/class-updates.php:116
 msgid "Run the updater"
 msgstr ""
 
-#: includes/class-updates.php:119
+#: includes/class-updates.php:121
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -7117,13 +7110,13 @@ msgid "Debug"
 msgstr ""
 
 #: includes/framework/settings/email.php:207
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:31
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:37
 #: modules/crm/includes/class-contact-subscriber-list-table.php:173
 #: modules/crm/includes/class-subscription.php:164
 #: modules/crm/includes/functions-customer.php:529
 #: modules/crm/includes/functions-customer.php:1575
-#: modules/crm/includes/functions-customer.php:2815
-#: modules/crm/includes/functions-customer.php:2908
+#: modules/crm/includes/functions-customer.php:2816
+#: modules/crm/includes/functions-customer.php:2909
 #: modules/crm/views/js-templates/customer-add-schedules.php:81
 #: modules/crm/views/js-templates/new-customer.php:87
 #: modules/hrm/views/employee/tab-general.php:11
@@ -7223,12 +7216,14 @@ msgstr ""
 
 #: includes/framework/settings/general.php:82
 #: includes/framework/settings/general.php:91
+#: modules/accounting/includes/classes/class-settings.php:61
 #: modules/crm/includes/admin/class-settings.php:80
 msgid "On"
 msgstr ""
 
 #: includes/framework/settings/general.php:82
 #: includes/framework/settings/general.php:91
+#: modules/accounting/includes/classes/class-settings.php:61
 #: modules/crm/includes/admin/class-settings.php:80
 msgid "Off"
 msgstr ""
@@ -7401,6 +7396,7 @@ msgstr ""
 
 #: includes/framework/views/status-report.php:103
 #: modules/accounting/includes/classes/class-admin.php:53
+#: modules/accounting/includes/classes/class-settings.php:29
 msgid "Customers"
 msgstr ""
 
@@ -7434,17 +7430,17 @@ msgid "The date the company's financial year ends."
 msgstr ""
 
 #: includes/framework/views/status-report.php:169
-#: modules/accounting/includes/classes/class-settings.php:50
+#: modules/accounting/includes/classes/class-settings.php:85
 msgid "Currency Position"
 msgstr ""
 
 #: includes/framework/views/status-report.php:176
-#: modules/accounting/includes/classes/class-settings.php:63
+#: modules/accounting/includes/classes/class-settings.php:98
 msgid "Thousand Separator"
 msgstr ""
 
 #: includes/framework/views/status-report.php:181
-#: modules/accounting/includes/classes/class-settings.php:70
+#: modules/accounting/includes/classes/class-settings.php:105
 msgid "Decimal Separator"
 msgstr ""
 
@@ -7993,13 +7989,13 @@ msgstr ""
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: includes/functions-people.php:828
-#: modules/crm/includes/functions-customer.php:3700
-#: modules/crm/includes/functions-customer.php:3721
-#: modules/crm/includes/functions-customer.php:3740
-#: modules/crm/includes/functions-customer.php:3760
-#: modules/crm/includes/functions-customer.php:3800
-#: modules/crm/includes/functions-customer.php:3820
+#: includes/functions-people.php:830
+#: modules/crm/includes/functions-customer.php:3701
+#: modules/crm/includes/functions-customer.php:3722
+#: modules/crm/includes/functions-customer.php:3741
+#: modules/crm/includes/functions-customer.php:3761
+#: modules/crm/includes/functions-customer.php:3801
+#: modules/crm/includes/functions-customer.php:3821
 msgid "People not exists"
 msgstr ""
 
@@ -8945,7 +8941,7 @@ msgstr ""
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:287
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:316
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:348
-#: modules/accounting/api/class-rest-api-ledgers.php:351
+#: modules/accounting/api/class-rest-api-ledgers.php:350
 #: modules/accounting/includes/functions/bank.php:85
 msgid "Bank accounts are empty."
 msgstr ""
@@ -8959,13 +8955,13 @@ msgid "%s has been transferred from %s to %s"
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:543
-#: modules/accounting/api/class-rest-api-bills.php:556
-#: modules/accounting/api/class-rest-api-expenses.php:493
-#: modules/accounting/api/class-rest-api-invoices.php:548
-#: modules/accounting/api/class-rest-api-pay_bills.php:449
-#: modules/accounting/api/class-rest-api-pay_purchases.php:424
-#: modules/accounting/api/class-rest-api-purchases.php:497
-#: modules/accounting/api/class-rest-api-rec_payments.php:435
+#: modules/accounting/api/class-rest-api-bills.php:531
+#: modules/accounting/api/class-rest-api-expenses.php:467
+#: modules/accounting/api/class-rest-api-invoices.php:524
+#: modules/accounting/api/class-rest-api-pay_bills.php:423
+#: modules/accounting/api/class-rest-api-pay_purchases.php:398
+#: modules/accounting/api/class-rest-api-purchases.php:476
+#: modules/accounting/api/class-rest-api-rec_payments.php:411
 msgid "Date for the resource."
 msgstr ""
 
@@ -8982,125 +8978,125 @@ msgid "Amount for the resource."
 msgstr ""
 
 #: modules/accounting/api/class-rest-api-accounts-transfer.php:570
-#: modules/accounting/api/class-rest-api-expenses.php:569
-#: modules/accounting/api/class-rest-api-journals.php:316
+#: modules/accounting/api/class-rest-api-expenses.php:543
+#: modules/accounting/api/class-rest-api-journals.php:308
 msgid "Particulars for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:255
-#: modules/accounting/api/class-rest-api-invoices.php:270
-#: modules/accounting/api/class-rest-api-purchases.php:277
+#: modules/accounting/api/class-rest-api-bills.php:247
+#: modules/accounting/api/class-rest-api-invoices.php:263
+#: modules/accounting/api/class-rest-api-purchases.php:270
 msgid "Invalid edit permission for update."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:417
+#: modules/accounting/api/class-rest-api-bills.php:390
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:8
 msgid "Bill"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:420
+#: modules/accounting/api/class-rest-api-bills.php:393
 msgid "A bill of %s has been created for %s"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:539
-#: modules/accounting/api/class-rest-api-expenses.php:476
-#: modules/accounting/api/class-rest-api-pay_bills.php:458
-#: modules/accounting/api/class-rest-api-pay_purchases.php:407
-#: modules/accounting/api/class-rest-api-purchases.php:472
-#: modules/accounting/api/class-rest-api-rec_payments.php:418
+#: modules/accounting/api/class-rest-api-bills.php:514
+#: modules/accounting/api/class-rest-api-expenses.php:450
+#: modules/accounting/api/class-rest-api-pay_bills.php:432
+#: modules/accounting/api/class-rest-api-pay_purchases.php:381
+#: modules/accounting/api/class-rest-api-purchases.php:451
+#: modules/accounting/api/class-rest-api-rec_payments.php:394
 msgid "Voucher no. for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:547
-#: modules/accounting/api/class-rest-api-expenses.php:484
+#: modules/accounting/api/class-rest-api-bills.php:522
+#: modules/accounting/api/class-rest-api-expenses.php:458
 msgid "People id for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:565
-#: modules/accounting/api/class-rest-api-expenses.php:502
-#: modules/accounting/api/class-rest-api-invoices.php:557
-#: modules/accounting/api/class-rest-api-purchases.php:506
+#: modules/accounting/api/class-rest-api-bills.php:540
+#: modules/accounting/api/class-rest-api-expenses.php:476
+#: modules/accounting/api/class-rest-api-invoices.php:533
+#: modules/accounting/api/class-rest-api-purchases.php:485
 msgid "Due date for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:574
-#: modules/accounting/api/class-rest-api-customers.php:583
-#: modules/accounting/api/class-rest-api-expenses.php:510
-#: modules/accounting/api/class-rest-api-invoices.php:566
+#: modules/accounting/api/class-rest-api-bills.php:549
+#: modules/accounting/api/class-rest-api-customers.php:586
+#: modules/accounting/api/class-rest-api-expenses.php:484
+#: modules/accounting/api/class-rest-api-invoices.php:542
 #: modules/accounting/api/class-rest-api-people.php:400
-#: modules/accounting/api/class-rest-api-rec_payments.php:444
-#: modules/accounting/api/class-rest-api-vendors.php:558
+#: modules/accounting/api/class-rest-api-rec_payments.php:420
+#: modules/accounting/api/class-rest-api-vendors.php:561
 msgid "List of billing address data."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:579
-#: modules/accounting/api/class-rest-api-customers.php:608
-#: modules/accounting/api/class-rest-api-expenses.php:515
-#: modules/accounting/api/class-rest-api-invoices.php:571
+#: modules/accounting/api/class-rest-api-bills.php:554
+#: modules/accounting/api/class-rest-api-customers.php:611
+#: modules/accounting/api/class-rest-api-expenses.php:489
+#: modules/accounting/api/class-rest-api-invoices.php:547
 #: modules/accounting/api/class-rest-api-people.php:425
-#: modules/accounting/api/class-rest-api-rec_payments.php:449
-#: modules/accounting/api/class-rest-api-vendors.php:583
+#: modules/accounting/api/class-rest-api-rec_payments.php:425
+#: modules/accounting/api/class-rest-api-vendors.php:586
 msgid "City name."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:584
-#: modules/accounting/api/class-rest-api-customers.php:613
-#: modules/accounting/api/class-rest-api-expenses.php:520
-#: modules/accounting/api/class-rest-api-invoices.php:576
+#: modules/accounting/api/class-rest-api-bills.php:559
+#: modules/accounting/api/class-rest-api-customers.php:616
+#: modules/accounting/api/class-rest-api-expenses.php:494
+#: modules/accounting/api/class-rest-api-invoices.php:552
 #: modules/accounting/api/class-rest-api-people.php:430
-#: modules/accounting/api/class-rest-api-rec_payments.php:454
-#: modules/accounting/api/class-rest-api-vendors.php:588
+#: modules/accounting/api/class-rest-api-rec_payments.php:430
+#: modules/accounting/api/class-rest-api-vendors.php:591
 msgid "ISO code or name of the state, province or district."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:589
-#: modules/accounting/api/class-rest-api-customers.php:618
-#: modules/accounting/api/class-rest-api-expenses.php:525
-#: modules/accounting/api/class-rest-api-invoices.php:581
+#: modules/accounting/api/class-rest-api-bills.php:564
+#: modules/accounting/api/class-rest-api-customers.php:621
+#: modules/accounting/api/class-rest-api-expenses.php:499
+#: modules/accounting/api/class-rest-api-invoices.php:557
 #: modules/accounting/api/class-rest-api-people.php:435
-#: modules/accounting/api/class-rest-api-rec_payments.php:459
-#: modules/accounting/api/class-rest-api-vendors.php:593
+#: modules/accounting/api/class-rest-api-rec_payments.php:435
+#: modules/accounting/api/class-rest-api-vendors.php:596
 msgid "Postal code."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:594
-#: modules/accounting/api/class-rest-api-customers.php:623
-#: modules/accounting/api/class-rest-api-expenses.php:530
-#: modules/accounting/api/class-rest-api-invoices.php:586
+#: modules/accounting/api/class-rest-api-bills.php:569
+#: modules/accounting/api/class-rest-api-customers.php:626
+#: modules/accounting/api/class-rest-api-expenses.php:504
+#: modules/accounting/api/class-rest-api-invoices.php:562
 #: modules/accounting/api/class-rest-api-people.php:440
-#: modules/accounting/api/class-rest-api-rec_payments.php:464
-#: modules/accounting/api/class-rest-api-vendors.php:598
+#: modules/accounting/api/class-rest-api-rec_payments.php:440
+#: modules/accounting/api/class-rest-api-vendors.php:601
 msgid "ISO code of the country."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:606
-#: modules/accounting/api/class-rest-api-expenses.php:542
-#: modules/accounting/api/class-rest-api-invoices.php:598
-#: modules/accounting/api/class-rest-api-pay_bills.php:466
-#: modules/accounting/api/class-rest-api-pay_purchases.php:433
-#: modules/accounting/api/class-rest-api-purchases.php:515
-#: modules/accounting/api/class-rest-api-rec_payments.php:476
+#: modules/accounting/api/class-rest-api-bills.php:581
+#: modules/accounting/api/class-rest-api-expenses.php:516
+#: modules/accounting/api/class-rest-api-invoices.php:574
+#: modules/accounting/api/class-rest-api-pay_bills.php:440
+#: modules/accounting/api/class-rest-api-pay_purchases.php:407
+#: modules/accounting/api/class-rest-api-purchases.php:494
+#: modules/accounting/api/class-rest-api-rec_payments.php:452
 msgid "List of line items data."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:611
-#: modules/accounting/api/class-rest-api-expenses.php:547
-#: modules/accounting/api/class-rest-api-pay_bills.php:471
+#: modules/accounting/api/class-rest-api-bills.php:586
+#: modules/accounting/api/class-rest-api-expenses.php:521
+#: modules/accounting/api/class-rest-api-pay_bills.php:445
 msgid "Ledger id."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:616
-#: modules/accounting/api/class-rest-api-expenses.php:552
+#: modules/accounting/api/class-rest-api-bills.php:591
+#: modules/accounting/api/class-rest-api-expenses.php:526
 msgid "Bill Particulars."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:621
-#: modules/accounting/api/class-rest-api-expenses.php:557
+#: modules/accounting/api/class-rest-api-bills.php:596
+#: modules/accounting/api/class-rest-api-expenses.php:531
 msgid "Bill Amount"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-bills.php:626
-#: modules/accounting/api/class-rest-api-expenses.php:562
+#: modules/accounting/api/class-rest-api-bills.php:601
+#: modules/accounting/api/class-rest-api-expenses.php:536
 msgid "Line total."
 msgstr ""
 
@@ -9120,12 +9116,12 @@ msgstr ""
 msgid "Sign for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-customers.php:224
-#: modules/accounting/api/class-rest-api-vendors.php:213
+#: modules/accounting/api/class-rest-api-customers.php:226
+#: modules/accounting/api/class-rest-api-vendors.php:216
 msgid "Email already exists!"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-customers.php:383
+#: modules/accounting/api/class-rest-api-customers.php:385
 #: modules/crm/includes/functions-customer.php:193
 #: modules/crm/includes/functions-customer.php:220
 #: modules/crm/views/reports/customer-report.php:23
@@ -9133,181 +9129,181 @@ msgstr ""
 msgid "Customer"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-customers.php:386
+#: modules/accounting/api/class-rest-api-customers.php:388
 msgid " customer has been created"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-customers.php:588
+#: modules/accounting/api/class-rest-api-customers.php:591
 #: modules/accounting/api/class-rest-api-people.php:405
-#: modules/accounting/api/class-rest-api-vendors.php:563
+#: modules/accounting/api/class-rest-api-vendors.php:566
 msgid "First name."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-customers.php:593
+#: modules/accounting/api/class-rest-api-customers.php:596
 #: modules/accounting/api/class-rest-api-people.php:410
-#: modules/accounting/api/class-rest-api-vendors.php:568
+#: modules/accounting/api/class-rest-api-vendors.php:571
 msgid "Last name."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-customers.php:598
+#: modules/accounting/api/class-rest-api-customers.php:601
 #: modules/accounting/api/class-rest-api-people.php:415
-#: modules/accounting/api/class-rest-api-vendors.php:573
+#: modules/accounting/api/class-rest-api-vendors.php:576
 msgid "Address line 1"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-customers.php:603
+#: modules/accounting/api/class-rest-api-customers.php:606
 #: modules/accounting/api/class-rest-api-people.php:420
-#: modules/accounting/api/class-rest-api-vendors.php:578
+#: modules/accounting/api/class-rest-api-vendors.php:581
 msgid "Address line 2"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-expenses.php:336
+#: modules/accounting/api/class-rest-api-expenses.php:310
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:5
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:48
 msgid "Expense"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-expenses.php:339
+#: modules/accounting/api/class-rest-api-expenses.php:313
 msgid "An expense of %s has been created for %s"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-expenses.php:585
-#: modules/accounting/api/class-rest-api-expenses.php:593
+#: modules/accounting/api/class-rest-api-expenses.php:559
+#: modules/accounting/api/class-rest-api-expenses.php:567
 msgid "Payment method for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-expenses.php:601
+#: modules/accounting/api/class-rest-api-expenses.php:575
 msgid "Account for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:443
+#: modules/accounting/api/class-rest-api-invoices.php:416
 msgid "Invoice"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:446
+#: modules/accounting/api/class-rest-api-invoices.php:419
 msgid "An invoice of %s has been created for %s"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:539
-#: modules/accounting/api/class-rest-api-purchases.php:480
-#: modules/accounting/api/class-rest-api-purchases.php:489
+#: modules/accounting/api/class-rest-api-invoices.php:515
+#: modules/accounting/api/class-rest-api-purchases.php:459
+#: modules/accounting/api/class-rest-api-purchases.php:468
 msgid "Customer id for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:603
-#: modules/accounting/api/class-rest-api-pay_purchases.php:438
-#: modules/accounting/api/class-rest-api-purchases.php:520
+#: modules/accounting/api/class-rest-api-invoices.php:579
+#: modules/accounting/api/class-rest-api-pay_purchases.php:412
+#: modules/accounting/api/class-rest-api-purchases.php:499
 msgid "Product id."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:608
-#: modules/accounting/api/class-rest-api-pay_purchases.php:443
-#: modules/accounting/api/class-rest-api-purchases.php:525
+#: modules/accounting/api/class-rest-api-invoices.php:584
+#: modules/accounting/api/class-rest-api-pay_purchases.php:417
+#: modules/accounting/api/class-rest-api-purchases.php:504
 msgid "Product type."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:613
-#: modules/accounting/api/class-rest-api-purchases.php:530
+#: modules/accounting/api/class-rest-api-invoices.php:589
+#: modules/accounting/api/class-rest-api-purchases.php:509
 msgid "Product quantity."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:618
-#: modules/accounting/api/class-rest-api-pay_bills.php:481
-#: modules/accounting/api/class-rest-api-pay_purchases.php:448
-#: modules/accounting/api/class-rest-api-purchases.php:535
+#: modules/accounting/api/class-rest-api-invoices.php:594
+#: modules/accounting/api/class-rest-api-pay_bills.php:455
+#: modules/accounting/api/class-rest-api-pay_purchases.php:422
+#: modules/accounting/api/class-rest-api-purchases.php:514
 msgid "Unit price."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:623
-#: modules/accounting/api/class-rest-api-pay_purchases.php:453
-#: modules/accounting/api/class-rest-api-purchases.php:540
+#: modules/accounting/api/class-rest-api-invoices.php:599
+#: modules/accounting/api/class-rest-api-pay_purchases.php:427
+#: modules/accounting/api/class-rest-api-purchases.php:519
 msgid "Discount."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:628
-#: modules/accounting/api/class-rest-api-pay_bills.php:486
-#: modules/accounting/api/class-rest-api-purchases.php:545
+#: modules/accounting/api/class-rest-api-invoices.php:604
+#: modules/accounting/api/class-rest-api-pay_bills.php:460
+#: modules/accounting/api/class-rest-api-purchases.php:524
 msgid "Tax."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:633
-#: modules/accounting/api/class-rest-api-purchases.php:550
+#: modules/accounting/api/class-rest-api-invoices.php:609
+#: modules/accounting/api/class-rest-api-purchases.php:529
 msgid "Tax percent."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:638
-#: modules/accounting/api/class-rest-api-pay_bills.php:491
-#: modules/accounting/api/class-rest-api-pay_purchases.php:458
-#: modules/accounting/api/class-rest-api-purchases.php:555
+#: modules/accounting/api/class-rest-api-invoices.php:614
+#: modules/accounting/api/class-rest-api-pay_bills.php:465
+#: modules/accounting/api/class-rest-api-pay_purchases.php:432
+#: modules/accounting/api/class-rest-api-purchases.php:534
 msgid "Item total."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-invoices.php:645
-#: modules/accounting/api/class-rest-api-ledgers.php:612
-#: modules/accounting/api/class-rest-api-pay_bills.php:514
-#: modules/accounting/api/class-rest-api-pay_purchases.php:481
-#: modules/accounting/api/class-rest-api-purchases.php:562
-#: modules/accounting/api/class-rest-api-rec_payments.php:519
+#: modules/accounting/api/class-rest-api-invoices.php:621
+#: modules/accounting/api/class-rest-api-ledgers.php:611
+#: modules/accounting/api/class-rest-api-pay_bills.php:488
+#: modules/accounting/api/class-rest-api-pay_purchases.php:455
+#: modules/accounting/api/class-rest-api-purchases.php:541
+#: modules/accounting/api/class-rest-api-rec_payments.php:495
 msgid "Type for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-journals.php:184
+#: modules/accounting/api/class-rest-api-journals.php:176
 #: modules/accounting/api/class-rest-api-opening-balances.php:290
 msgid "Summation of debit and credit must be equal."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-journals.php:213
+#: modules/accounting/api/class-rest-api-journals.php:205
 #: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:5
 #: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:31
 msgid "Journal"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-journals.php:216
+#: modules/accounting/api/class-rest-api-journals.php:208
 msgid "An journal of %s has been created"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-journals.php:324
+#: modules/accounting/api/class-rest-api-journals.php:316
 msgid "Reference for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-journals.php:332
+#: modules/accounting/api/class-rest-api-journals.php:324
 msgid "Issue date for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-journals.php:341
+#: modules/accounting/api/class-rest-api-journals.php:333
 msgid "Items for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-journals.php:347
+#: modules/accounting/api/class-rest-api-journals.php:339
 msgid "Attachments for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:206
+#: modules/accounting/api/class-rest-api-ledgers.php:205
 msgid "Chart ID is Empty."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:255
+#: modules/accounting/api/class-rest-api-ledgers.php:254
 msgid "Name already exist."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:435
-#: modules/accounting/api/class-rest-api-ledgers.php:462
+#: modules/accounting/api/class-rest-api-ledgers.php:434
+#: modules/accounting/api/class-rest-api-ledgers.php:461
 msgid "Category already exist."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:497
+#: modules/accounting/api/class-rest-api-ledgers.php:496
 msgid "Ledger Account"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:500
+#: modules/accounting/api/class-rest-api-ledgers.php:499
 msgid "A ledger account named %s has been created for %s"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:618
+#: modules/accounting/api/class-rest-api-ledgers.php:617
 msgid "Code for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-ledgers.php:633
+#: modules/accounting/api/class-rest-api-ledgers.php:632
 #: modules/hrm/includes/api/class-departments-controller.php:323
 #: modules/hrm/includes/api/class-designations-controller.php:274
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:298
@@ -9327,45 +9323,45 @@ msgstr ""
 msgid "Ledger names for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-pay_bills.php:311
+#: modules/accounting/api/class-rest-api-pay_bills.php:285
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:5
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:48
 msgid "Pay Bill"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-pay_bills.php:314
+#: modules/accounting/api/class-rest-api-pay_bills.php:288
 msgid "A bill payment of %s has been created for %s"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-pay_bills.php:440
-#: modules/accounting/api/class-rest-api-pay_purchases.php:415
-#: modules/accounting/api/class-rest-api-rec_payments.php:426
+#: modules/accounting/api/class-rest-api-pay_bills.php:414
+#: modules/accounting/api/class-rest-api-pay_purchases.php:389
+#: modules/accounting/api/class-rest-api-rec_payments.php:402
 msgid "Vendor id for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-pay_bills.php:476
+#: modules/accounting/api/class-rest-api-pay_bills.php:450
 msgid "Particulars."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-pay_bills.php:498
-#: modules/accounting/api/class-rest-api-pay_purchases.php:465
-#: modules/accounting/api/class-rest-api-rec_payments.php:503
+#: modules/accounting/api/class-rest-api-pay_bills.php:472
+#: modules/accounting/api/class-rest-api-pay_purchases.php:439
+#: modules/accounting/api/class-rest-api-rec_payments.php:479
 msgid "Check no for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-pay_bills.php:506
-#: modules/accounting/api/class-rest-api-pay_purchases.php:473
-#: modules/accounting/api/class-rest-api-rec_payments.php:511
+#: modules/accounting/api/class-rest-api-pay_bills.php:480
+#: modules/accounting/api/class-rest-api-pay_purchases.php:447
+#: modules/accounting/api/class-rest-api-rec_payments.php:487
 msgid "Check name for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-pay_purchases.php:280
+#: modules/accounting/api/class-rest-api-pay_purchases.php:254
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:5
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:48
 msgid "Pay Purchase"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-pay_purchases.php:283
+#: modules/accounting/api/class-rest-api-pay_purchases.php:257
 msgid "A purchase payment of %s has been created for %s"
 msgstr ""
 
@@ -9398,39 +9394,39 @@ msgstr ""
 msgid "Sale price for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-purchases.php:354
+#: modules/accounting/api/class-rest-api-purchases.php:328
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:5
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:48
 msgid "Purchase"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-purchases.php:357
+#: modules/accounting/api/class-rest-api-purchases.php:331
 msgid "A purchase of %s has been created for %s"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-rec_payments.php:284
+#: modules/accounting/api/class-rest-api-rec_payments.php:258
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:8
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:171
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:172
 msgid "Receive Payment"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-rec_payments.php:287
+#: modules/accounting/api/class-rest-api-rec_payments.php:261
 msgid "An invoice payment of %s has been created for %s"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-rec_payments.php:481
+#: modules/accounting/api/class-rest-api-rec_payments.php:457
 msgid "Invoice no."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-rec_payments.php:486
+#: modules/accounting/api/class-rest-api-rec_payments.php:462
 msgid "Invoice amount."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-rec_payments.php:491
+#: modules/accounting/api/class-rest-api-rec_payments.php:467
 msgid "Invoice due."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-rec_payments.php:496
+#: modules/accounting/api/class-rest-api-rec_payments.php:472
 msgid "Total."
 msgstr ""
 
@@ -9469,13 +9465,13 @@ msgstr ""
 msgid "Tax type for the resource."
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-vendors.php:358
+#: modules/accounting/api/class-rest-api-vendors.php:361
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:85
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:110
 msgid "Vendor"
 msgstr ""
 
-#: modules/accounting/api/class-rest-api-vendors.php:361
+#: modules/accounting/api/class-rest-api-vendors.php:364
 msgid " vendor has been created"
 msgstr ""
 
@@ -9529,10 +9525,10 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:35
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:67
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:33
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:34
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:65
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:65
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:33
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:34
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:67
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:68
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:40
@@ -9541,17 +9537,17 @@ msgid "Due Date"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:40
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:38
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:39
 msgid "Reference No"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:44
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:45
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:49
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:38
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:39
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:48
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:48
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:42
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:43
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:50
 msgid "Billing Address"
 msgstr ""
@@ -9559,12 +9555,12 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:45
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:46
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:50
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:39
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:40
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:49
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:49
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:57
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:61
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:43
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:69
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:73
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:44
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:51
 msgid "Type here"
 msgstr ""
@@ -9596,12 +9592,12 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:82
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:69
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:82
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:56
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:57
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:68
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:84
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:68
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:86
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:59
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:60
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:87
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:71
 #: modules/accounting/assets/src/admin/components/tax/PayTaxSingle.vue:77
@@ -9643,15 +9639,15 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:81
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:108
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:81
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:110
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:111
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:112
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:35
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:51
 #: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:53
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:95
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:96
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:88
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:89
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:90
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:99
 #: modules/accounting/assets/src/admin/components/tax/PayTaxSingle.vue:99
 #: modules/accounting/assets/src/admin/components/tax/RecordPayTax.vue:63
@@ -9662,21 +9658,21 @@ msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:84
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:95
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:72
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:73
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:82
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:73
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:74
 msgid "Add Line"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/bill/BillCreate.vue:89
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:92
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:100
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:103
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:104
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:87
 #: modules/accounting/assets/src/admin/components/opening-balance/OpeningBalance.vue:258
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:87
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:87
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:80
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:81
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:90
 msgid "Total Amount"
 msgstr ""
@@ -9696,11 +9692,11 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/check/CheckCreate.vue:120
 #: modules/accounting/assets/src/admin/components/email/SendMail.vue:34
 #: modules/accounting/assets/src/admin/components/expense/ExpenseCreate.vue:127
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:129
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:130
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:103
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillCreate.vue:102
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseCreate.vue:103
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:107
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:108
 #: modules/accounting/assets/src/admin/components/rec-payment/RecPaymentCreate.vue:118
 msgid "Attachment"
 msgstr ""
@@ -9754,16 +9750,16 @@ msgstr ""
 #: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:63
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:63
 #: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:63
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:27
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:28
 #: modules/accounting/assets/src/admin/components/journal/JournalCreate.vue:24
 #: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:62
 #: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:63
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:27
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:28
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:63
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:36
 #: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:36
 #: modules/accounting/assets/src/admin/components/transfers/SingleTransfer.vue:59
-#: modules/accounting/includes/functions/transactions.php:770
+#: modules/accounting/includes/functions/transactions.php:814
 msgid "Transaction Date"
 msgstr ""
 
@@ -9789,15 +9785,15 @@ msgstr ""
 msgid "Subtotal"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:117
+#: modules/accounting/assets/src/admin/components/bill/BillSingle.vue:119
 #: modules/accounting/assets/src/admin/components/check/CheckSingle.vue:109
-#: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:109
-#: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:81
-#: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:110
-#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:113
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:115
-#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:94
-#: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:84
+#: modules/accounting/assets/src/admin/components/expense/ExpenseSingle.vue:111
+#: modules/accounting/assets/src/admin/components/journal/JournalSingle.vue:83
+#: modules/accounting/assets/src/admin/components/pay-bill/PayBillSingle.vue:112
+#: modules/accounting/assets/src/admin/components/pay-purchase/PayPurchaseSingle.vue:115
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:117
+#: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:96
+#: modules/accounting/assets/src/admin/components/transactions/sales/PaymentSingleContent.vue:86
 msgid "Attachments"
 msgstr ""
 
@@ -9936,7 +9932,7 @@ msgid "Attach as PDF"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/email/SendMail.vue:48
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:113
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:131
 #: modules/accounting/assets/src/admin/components/product-category/ProductCategory.vue:47
 #: modules/accounting/assets/src/admin/components/products/ProductModal.vue:139
 #: modules/crm/views/company/single.php:138
@@ -10092,7 +10088,7 @@ msgid "Can I create products / services / product categoty?"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/help/HelpContent.vue:161
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:57
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:58
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:82
 #: modules/accounting/includes/classes/class-admin.php:131
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:113
@@ -10124,39 +10120,39 @@ msgstr ""
 msgid "How to produce different types of reports in Accounting?"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:8
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:9
 msgid "New"
-msgstr ""
-
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:53
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:56
-msgid "Product/Service"
 msgstr ""
 
 #: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:54
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:57
+msgid "Product/Service"
+msgstr ""
+
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:55
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:58
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:85
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:62
 msgid "Qty"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:55
-#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:58
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:56
+#: modules/accounting/assets/src/admin/components/purchase/PurchaseCreate.vue:59
 #: modules/accounting/assets/src/admin/components/purchase/PurchaseSingle.vue:86
 #: modules/accounting/assets/src/admin/components/transactions/sales/InvoiceSingleContent.vue:63
 #: modules/accounting/includes/views/transactions/invoice-readonly.php:84
 msgid "Unit Price"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:79
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:80
 msgid "Discount percent"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:80
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:81
 msgid "Discount value"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:95
+#: modules/accounting/assets/src/admin/components/invoice/InvoiceCreate.vue:96
 msgid "Select sales tax"
 msgstr ""
 
@@ -10338,12 +10334,12 @@ msgstr ""
 msgid "Outstanding"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:23
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:24
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:29
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:30
 #: modules/crm/includes/class-subscription-widget.php:176
 #: modules/crm/includes/class-subscription.php:177
 #: modules/crm/includes/functions-customer.php:1801
-#: modules/crm/includes/functions-customer.php:2893
+#: modules/crm/includes/functions-customer.php:2894
 #: modules/crm/views/contact/single.php:72
 #: modules/crm/views/js-templates/new-customer.php:54
 #: modules/hrm/views/employee/tab-general.php:8
@@ -10351,12 +10347,12 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:27
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:28
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:33
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:34
 #: modules/crm/includes/class-subscription-widget.php:177
 #: modules/crm/includes/class-subscription.php:184
 #: modules/crm/includes/functions-customer.php:1815
-#: modules/crm/includes/functions-customer.php:2898
+#: modules/crm/includes/functions-customer.php:2899
 #: modules/crm/views/contact/single.php:73
 #: modules/crm/views/js-templates/new-customer.php:63
 #: modules/hrm/views/employee/tab-general.php:9
@@ -10364,47 +10360,47 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:45
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:57
 #: modules/hrm/views/js-templates/work-experience.php:9
 msgid "ABC Corporation"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:56
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:68
 msgid "Note"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:64
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:65
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:76
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:77
 #: modules/crm/includes/functions-customer.php:1641
-#: modules/crm/includes/functions-customer.php:2933
+#: modules/crm/includes/functions-customer.php:2934
 #: modules/crm/views/company/single.php:78
 #: modules/crm/views/contact/single.php:79
 msgid "Street 1"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:68
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:69
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:80
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:81
 #: modules/crm/includes/functions-customer.php:1655
-#: modules/crm/includes/functions-customer.php:2938
+#: modules/crm/includes/functions-customer.php:2939
 #: modules/crm/views/company/single.php:79
 #: modules/crm/views/contact/single.php:80
 msgid "Street 2"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:73
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:85
 msgid "City/Town"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:85
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:97
 msgid "Province/State"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:94
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:95
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:106
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:107
 msgid "Post Code"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:104
+#: modules/accounting/assets/src/admin/components/people/PeopleModal.vue:122
 msgid "Show More"
 msgstr ""
 
@@ -10861,16 +10857,16 @@ msgstr ""
 msgid "Trash"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:321
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:175
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:320
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:176
 msgid "Make Payment"
 msgstr ""
 
-#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:327
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:168
-#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:186
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:164
-#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:182
+#: modules/accounting/assets/src/admin/components/transactions/expenses/ExpensesList.vue:326
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:169
+#: modules/accounting/assets/src/admin/components/transactions/purchases/PurchasesList.vue:187
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:165
+#: modules/accounting/assets/src/admin/components/transactions/sales/SalesList.vue:183
 msgid "No actions found"
 msgstr ""
 
@@ -10992,40 +10988,72 @@ msgstr ""
 msgid "Plugin <strong>activated.</strong>"
 msgstr ""
 
-#: modules/accounting/includes/classes/class-settings.php:29
+#: modules/accounting/includes/classes/class-settings.php:30
 msgid "Currency Settings"
 msgstr ""
 
-#: modules/accounting/includes/classes/class-settings.php:30
-#: modules/accounting/includes/classes/class-settings.php:90
+#: modules/accounting/includes/classes/class-settings.php:31
+#: modules/accounting/includes/classes/class-settings.php:125
 msgid "Financial Years"
 msgstr ""
 
-#: modules/accounting/includes/classes/class-settings.php:55
-msgid "Left"
+#: modules/accounting/includes/classes/class-settings.php:50
+msgid "Customer Settings"
 msgstr ""
 
-#: modules/accounting/includes/classes/class-settings.php:56
-msgid "Right"
+#: modules/accounting/includes/classes/class-settings.php:52
+msgid "Settings for Accounting customers."
 msgstr ""
 
 #: modules/accounting/includes/classes/class-settings.php:57
+#: modules/crm/includes/admin/class-settings.php:76
+msgid "Auto Import"
+msgstr ""
+
+#: modules/accounting/includes/classes/class-settings.php:60
+msgid "Allow to auto import new crm user as accounting customer."
+msgstr ""
+
+#: modules/accounting/includes/classes/class-settings.php:66
+msgid "Import User's From"
+msgstr ""
+
+#: modules/accounting/includes/classes/class-settings.php:69
+msgid "Selected user type are considered to auto import."
+msgstr ""
+
+#: modules/accounting/includes/classes/class-settings.php:70
+#: modules/crm/includes/class-contact-subscriber-list-table.php:103
+#: modules/crm/views/contact.php:30 modules/crm/views/dashboard-badge.php:17
+#: modules/crm/views/dashboard.php:18
+msgid "Contact"
+msgstr ""
+
+#: modules/accounting/includes/classes/class-settings.php:90
+msgid "Left"
+msgstr ""
+
+#: modules/accounting/includes/classes/class-settings.php:91
+msgid "Right"
+msgstr ""
+
+#: modules/accounting/includes/classes/class-settings.php:92
 msgid "Left with space"
 msgstr ""
 
-#: modules/accounting/includes/classes/class-settings.php:58
+#: modules/accounting/includes/classes/class-settings.php:93
 msgid "Right with space"
 msgstr ""
 
-#: modules/accounting/includes/classes/class-settings.php:117
+#: modules/accounting/includes/classes/class-settings.php:152
 msgid "Accounting Settings"
 msgstr ""
 
-#: modules/accounting/includes/classes/class-settings.php:120
+#: modules/accounting/includes/classes/class-settings.php:155
 msgid "Home Currency"
 msgstr ""
 
-#: modules/accounting/includes/classes/class-settings.php:122
+#: modules/accounting/includes/classes/class-settings.php:157
 msgid "The base currency of the system."
 msgstr ""
 
@@ -11034,15 +11062,15 @@ msgstr ""
 msgid "Accounting Manager"
 msgstr ""
 
-#: modules/accounting/includes/functions/bills.php:437
+#: modules/accounting/includes/functions/bills.php:423
 msgid "Bill created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/expenses.php:459
+#: modules/accounting/includes/functions/expenses.php:443
 msgid "Expense created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/invoices.php:556
+#: modules/accounting/includes/functions/invoices.php:643
 #: modules/accounting/includes/functions/taxes.php:397
 #: modules/accounting/includes/functions/taxes.php:422
 msgid "Invoice created with voucher no %s"
@@ -11052,206 +11080,227 @@ msgstr ""
 msgid "Journal created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/pay_bills.php:360
+#: modules/accounting/includes/functions/pay_bills.php:344
 msgid "Bill payment created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/pay_purchases.php:362
+#: modules/accounting/includes/functions/pay_purchases.php:346
 msgid "Purchase payment created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/purchases.php:463
+#: modules/accounting/includes/functions/purchases.php:536
 msgid "Purchase created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/rec_payments.php:372
+#: modules/accounting/includes/functions/rec_payments.php:373
 msgid "Invoice receipt created with voucher no %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:731
+#: modules/accounting/includes/functions/transactions.php:775
 msgid ""
 "ERP PDF extension is not installed. Please install the extension for PDF "
 "support"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:765
+#: modules/accounting/includes/functions/transactions.php:809
 msgid "Transaction Number"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:776
+#: modules/accounting/includes/functions/transactions.php:820
 msgid "FROM"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:786
+#: modules/accounting/includes/functions/transactions.php:830
 msgid "TO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:792
-#: modules/accounting/includes/functions/transactions.php:849
+#: modules/accounting/includes/functions/transactions.php:836
+#: modules/accounting/includes/functions/transactions.php:917
 msgid "PRODUCT"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:792
-#: modules/accounting/includes/functions/transactions.php:849
+#: modules/accounting/includes/functions/transactions.php:836
+#: modules/accounting/includes/functions/transactions.php:917
 msgid "QUANTITY"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:792
+#: modules/accounting/includes/functions/transactions.php:836
 msgid "UNIT PRICE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:792
+#: modules/accounting/includes/functions/transactions.php:836
 msgid "DISCOUNT"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:792
+#: modules/accounting/includes/functions/transactions.php:836
 msgid "TAX AMOUNT"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:792
-#: modules/accounting/includes/functions/transactions.php:806
-#: modules/accounting/includes/functions/transactions.php:820
-#: modules/accounting/includes/functions/transactions.php:835
-#: modules/accounting/includes/functions/transactions.php:849
-#: modules/accounting/includes/functions/transactions.php:863
-#: modules/accounting/includes/functions/transactions.php:878
-#: modules/accounting/includes/functions/transactions.php:892
-#: modules/accounting/includes/functions/transactions.php:907
-#: modules/accounting/includes/functions/transactions.php:918
+#: modules/accounting/includes/functions/transactions.php:836
+#: modules/accounting/includes/functions/transactions.php:856
+#: modules/accounting/includes/functions/transactions.php:876
+#: modules/accounting/includes/functions/transactions.php:897
+#: modules/accounting/includes/functions/transactions.php:917
+#: modules/accounting/includes/functions/transactions.php:937
+#: modules/accounting/includes/functions/transactions.php:958
+#: modules/accounting/includes/functions/transactions.php:978
+#: modules/accounting/includes/functions/transactions.php:999
+#: modules/accounting/includes/functions/transactions.php:1016
 msgid "AMOUNT"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:798
-#: modules/accounting/includes/functions/transactions.php:827
-#: modules/accounting/includes/functions/transactions.php:856
+#: modules/accounting/includes/functions/transactions.php:844
+#: modules/accounting/includes/functions/transactions.php:865
+#: modules/accounting/includes/functions/transactions.php:885
+#: modules/accounting/includes/functions/transactions.php:906
+#: modules/accounting/includes/functions/transactions.php:926
+#: modules/accounting/includes/functions/transactions.php:946
+#: modules/accounting/includes/functions/transactions.php:967
+#: modules/accounting/includes/functions/transactions.php:987
+#: modules/accounting/includes/functions/transactions.php:1005
+#: modules/crm/includes/functions-customer.php:1696
+#: modules/crm/views/js-templates/new-customer.php:308
+#: modules/hrm/views/employee/empty-employee.php:126
+#: modules/hrm/views/employee/single.php:114
+#: modules/hrm/views/employee/tab-notes.php:2
+#: modules/hrm/views/js-templates/education-form.php:51
+msgid "Notes"
+msgstr ""
+
+#: modules/accounting/includes/functions/transactions.php:848
+#: modules/accounting/includes/functions/transactions.php:889
+#: modules/accounting/includes/functions/transactions.php:930
 msgid "PENDING"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:799
-#: modules/accounting/includes/functions/transactions.php:828
-#: modules/accounting/includes/functions/transactions.php:871
+#: modules/accounting/includes/functions/transactions.php:849
+#: modules/accounting/includes/functions/transactions.php:890
+#: modules/accounting/includes/functions/transactions.php:951
 msgid "DUE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:800
-#: modules/accounting/includes/functions/transactions.php:814
-#: modules/accounting/includes/functions/transactions.php:829
-#: modules/accounting/includes/functions/transactions.php:843
-#: modules/accounting/includes/functions/transactions.php:857
-#: modules/accounting/includes/functions/transactions.php:872
-#: modules/accounting/includes/functions/transactions.php:886
-#: modules/accounting/includes/functions/transactions.php:900
+#: modules/accounting/includes/functions/transactions.php:850
+#: modules/accounting/includes/functions/transactions.php:870
+#: modules/accounting/includes/functions/transactions.php:891
 #: modules/accounting/includes/functions/transactions.php:911
-#: modules/accounting/includes/functions/transactions.php:922
+#: modules/accounting/includes/functions/transactions.php:931
+#: modules/accounting/includes/functions/transactions.php:952
+#: modules/accounting/includes/functions/transactions.php:972
+#: modules/accounting/includes/functions/transactions.php:992
+#: modules/accounting/includes/functions/transactions.php:1009
+#: modules/accounting/includes/functions/transactions.php:1020
 msgid "SUB TOTAL"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:801
-#: modules/accounting/includes/functions/transactions.php:815
-#: modules/accounting/includes/functions/transactions.php:830
-#: modules/accounting/includes/functions/transactions.php:844
-#: modules/accounting/includes/functions/transactions.php:858
-#: modules/accounting/includes/functions/transactions.php:873
-#: modules/accounting/includes/functions/transactions.php:887
-#: modules/accounting/includes/functions/transactions.php:901
+#: modules/accounting/includes/functions/transactions.php:851
+#: modules/accounting/includes/functions/transactions.php:871
+#: modules/accounting/includes/functions/transactions.php:892
 #: modules/accounting/includes/functions/transactions.php:912
-#: modules/accounting/includes/functions/transactions.php:923
+#: modules/accounting/includes/functions/transactions.php:932
+#: modules/accounting/includes/functions/transactions.php:953
+#: modules/accounting/includes/functions/transactions.php:973
+#: modules/accounting/includes/functions/transactions.php:993
+#: modules/accounting/includes/functions/transactions.php:1010
+#: modules/accounting/includes/functions/transactions.php:1021
 msgid "TOTAL"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:806
+#: modules/accounting/includes/functions/transactions.php:856
 msgid "INNVOICE NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:806
-#: modules/accounting/includes/functions/transactions.php:820
-#: modules/accounting/includes/functions/transactions.php:835
-#: modules/accounting/includes/functions/transactions.php:863
-msgid "DUE DATE"
+#: modules/accounting/includes/functions/transactions.php:856
+msgid "TRN DATE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:813
-#: modules/accounting/includes/functions/transactions.php:842
-#: modules/accounting/includes/functions/transactions.php:870
-#: modules/accounting/includes/functions/transactions.php:885
-#: modules/accounting/includes/functions/transactions.php:899
+#: modules/accounting/includes/functions/transactions.php:869
+#: modules/accounting/includes/functions/transactions.php:910
+#: modules/accounting/includes/functions/transactions.php:950
+#: modules/accounting/includes/functions/transactions.php:971
+#: modules/accounting/includes/functions/transactions.php:991
 msgid "PAID"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:820
-#: modules/accounting/includes/functions/transactions.php:835
+#: modules/accounting/includes/functions/transactions.php:876
+#: modules/accounting/includes/functions/transactions.php:897
 msgid "BILL NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:820
+#: modules/accounting/includes/functions/transactions.php:876
 msgid "BILL DATE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:849
+#: modules/accounting/includes/functions/transactions.php:876
+#: modules/accounting/includes/functions/transactions.php:897
+#: modules/accounting/includes/functions/transactions.php:937
+msgid "DUE DATE"
+msgstr ""
+
+#: modules/accounting/includes/functions/transactions.php:917
 msgid "COST PRICE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:863
+#: modules/accounting/includes/functions/transactions.php:937
 msgid "PURCHASE NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:878
+#: modules/accounting/includes/functions/transactions.php:958
 msgid "EXPENSE NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:878
+#: modules/accounting/includes/functions/transactions.php:958
 msgid "EXPENSE DATE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:892
+#: modules/accounting/includes/functions/transactions.php:978
 msgid "CHECK NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:892
+#: modules/accounting/includes/functions/transactions.php:978
 msgid "CHECK DATE"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:892
+#: modules/accounting/includes/functions/transactions.php:978
 msgid "PAY TO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:905
+#: modules/accounting/includes/functions/transactions.php:997
 msgid "Transfer Voucher"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:907
-#: modules/accounting/includes/functions/transactions.php:918
+#: modules/accounting/includes/functions/transactions.php:999
+#: modules/accounting/includes/functions/transactions.php:1016
 msgid "VOUCHER NO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:907
+#: modules/accounting/includes/functions/transactions.php:999
 msgid "ACCOUNT FROM"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:907
+#: modules/accounting/includes/functions/transactions.php:999
 msgid "ACCOUNT TO"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:916
+#: modules/accounting/includes/functions/transactions.php:1014
 msgid "People Transaction"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:918
+#: modules/accounting/includes/functions/transactions.php:1016
 msgid "PARTICULARS"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:954
-#: modules/accounting/includes/functions/transactions.php:1001
+#: modules/accounting/includes/functions/transactions.php:1052
+#: modules/accounting/includes/functions/transactions.php:1101
 msgid "Transaction alert for %s"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:955
-#: modules/accounting/includes/functions/transactions.php:1002
+#: modules/accounting/includes/functions/transactions.php:1053
+#: modules/accounting/includes/functions/transactions.php:1102
 msgid "Thank you for the transaction"
 msgstr ""
 
-#: modules/accounting/includes/functions/transactions.php:963
-#: modules/accounting/includes/functions/transactions.php:1012
+#: modules/accounting/includes/functions/transactions.php:1061
+#: modules/accounting/includes/functions/transactions.php:1112
 msgid "PDF not generated!"
 msgstr ""
 
@@ -11444,10 +11493,6 @@ msgstr ""
 
 #: modules/crm/includes/admin/class-settings.php:71
 msgid "Settings for CRM Contact."
-msgstr ""
-
-#: modules/crm/includes/admin/class-settings.php:76
-msgid "Auto Import"
 msgstr ""
 
 #: modules/crm/includes/admin/class-settings.php:79
@@ -11798,8 +11843,8 @@ msgstr ""
 #: modules/crm/includes/class-ajax.php:708
 #: modules/crm/includes/functions-customer.php:382
 #: modules/crm/includes/functions-customer.php:1358
-#: modules/crm/includes/functions-customer.php:3065
-#: modules/crm/includes/functions-customer.php:3520
+#: modules/crm/includes/functions-customer.php:3066
+#: modules/crm/includes/functions-customer.php:3521
 msgid "No contact found"
 msgstr ""
 
@@ -12125,12 +12170,6 @@ msgstr ""
 
 #: modules/crm/includes/class-contact-subscriber-list-table.php:73
 msgid "No Subscriber contact found"
-msgstr ""
-
-#: modules/crm/includes/class-contact-subscriber-list-table.php:103
-#: modules/crm/views/contact.php:30 modules/crm/views/dashboard-badge.php:17
-#: modules/crm/views/dashboard.php:18
-msgid "Contact"
 msgstr ""
 
 #: modules/crm/includes/class-contact-subscriber-list-table.php:134
@@ -12643,24 +12682,15 @@ msgid "Country/State"
 msgstr ""
 
 #: modules/crm/includes/functions-customer.php:1680
-#: modules/crm/includes/functions-customer.php:2953
+#: modules/crm/includes/functions-customer.php:2954
 #: modules/crm/views/company/single.php:83
 #: modules/crm/views/contact/single.php:84
 #: modules/hrm/views/employee/tab-general.php:60
 msgid "Postal Code"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1696
-#: modules/crm/views/js-templates/new-customer.php:308
-#: modules/hrm/views/employee/empty-employee.php:126
-#: modules/hrm/views/employee/single.php:114
-#: modules/hrm/views/employee/tab-notes.php:2
-#: modules/hrm/views/js-templates/education-form.php:51
-msgid "Notes"
-msgstr ""
-
 #: modules/crm/includes/functions-customer.php:1710
-#: modules/crm/includes/functions-customer.php:3867
+#: modules/crm/includes/functions-customer.php:3868
 msgid "Tags"
 msgstr ""
 
@@ -12721,150 +12751,150 @@ msgstr ""
 msgid "Between"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1991
+#: modules/crm/includes/functions-customer.php:1992
 msgid "own_search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1992
+#: modules/crm/includes/functions-customer.php:1993
 msgid "Own Search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1998
+#: modules/crm/includes/functions-customer.php:1999
 msgid "global_search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1999
+#: modules/crm/includes/functions-customer.php:2000
 msgid "Global Search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2830
+#: modules/crm/includes/functions-customer.php:2831
 msgid "Template name and body content are required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2849
+#: modules/crm/includes/functions-customer.php:2850
 msgid "Template name is required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2853
+#: modules/crm/includes/functions-customer.php:2854
 msgid "Template body is required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2862
+#: modules/crm/includes/functions-customer.php:2863
 msgid "<strong>%s</strong> has been updated"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2871
+#: modules/crm/includes/functions-customer.php:2872
 msgid "<strong>%s</strong> has been created"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3020
-#: modules/crm/includes/functions-customer.php:3039
+#: modules/crm/includes/functions-customer.php:3021
+#: modules/crm/includes/functions-customer.php:3040
 msgid "No record found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3061
+#: modules/crm/includes/functions-customer.php:3062
 msgid "No template found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3111
 #: modules/crm/includes/functions-customer.php:3112
+#: modules/crm/includes/functions-customer.php:3113
 msgid "Import into CRM"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3234
+#: modules/crm/includes/functions-customer.php:3235
 msgid "%s contacts created."
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3387
+#: modules/crm/includes/functions-customer.php:3388
 #: modules/hrm/includes/functions-employee.php:495
 msgid "Advertisement"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3388
+#: modules/crm/includes/functions-customer.php:3389
 msgid "Chat"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3389
+#: modules/crm/includes/functions-customer.php:3390
 msgid "Contact Form"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3390
+#: modules/crm/includes/functions-customer.php:3391
 msgid "Employee Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3391
+#: modules/crm/includes/functions-customer.php:3392
 msgid "External Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3392
+#: modules/crm/includes/functions-customer.php:3393
 msgid "Marketing campaign"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3393
+#: modules/crm/includes/functions-customer.php:3394
 msgid "Newsletter"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3394
+#: modules/crm/includes/functions-customer.php:3395
 msgid "OnlineStore"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3395
+#: modules/crm/includes/functions-customer.php:3396
 msgid "Optin Forms"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3396
+#: modules/crm/includes/functions-customer.php:3397
 msgid "Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3397
+#: modules/crm/includes/functions-customer.php:3398
 msgid "Phone Call"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3398
+#: modules/crm/includes/functions-customer.php:3399
 msgid "Public Relations"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3399
+#: modules/crm/includes/functions-customer.php:3400
 msgid "Sales Mail Alias"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3400
+#: modules/crm/includes/functions-customer.php:3401
 msgid "Search Engine"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3401
+#: modules/crm/includes/functions-customer.php:3402
 msgid "Seminar-Internal"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3402
+#: modules/crm/includes/functions-customer.php:3403
 msgid "Seminar Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3403
+#: modules/crm/includes/functions-customer.php:3404
 msgid "Social Media"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3404
+#: modules/crm/includes/functions-customer.php:3405
 msgid "Trade Show"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3405
+#: modules/crm/includes/functions-customer.php:3406
 msgid "Web Download"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3406
+#: modules/crm/includes/functions-customer.php:3407
 msgid "Web Research"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3516
+#: modules/crm/includes/functions-customer.php:3517
 msgid "You do not have permission to make WP User"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3530
+#: modules/crm/includes/functions-customer.php:3531
 msgid "No email found for creating wp user"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3866
+#: modules/crm/includes/functions-customer.php:3867
 #: modules/crm/views/company/single.php:150
 #: modules/crm/views/contact/single.php:154
 msgid "Tag"
@@ -14078,12 +14108,12 @@ msgstr ""
 #: modules/hrm/includes/api/class-employees-controller.php:1145
 #: modules/hrm/includes/api/class-employees-controller.php:1167
 #: modules/hrm/includes/api/class-employees-controller.php:1190
-#: modules/hrm/includes/api/class-employees-controller.php:1251
-#: modules/hrm/includes/api/class-employees-controller.php:1282
-#: modules/hrm/includes/api/class-employees-controller.php:1331
-#: modules/hrm/includes/api/class-employees-controller.php:1356
-#: modules/hrm/includes/api/class-employees-controller.php:1384
-#: modules/hrm/includes/api/class-employees-controller.php:1412
+#: modules/hrm/includes/api/class-employees-controller.php:1261
+#: modules/hrm/includes/api/class-employees-controller.php:1292
+#: modules/hrm/includes/api/class-employees-controller.php:1341
+#: modules/hrm/includes/api/class-employees-controller.php:1366
+#: modules/hrm/includes/api/class-employees-controller.php:1394
+#: modules/hrm/includes/api/class-employees-controller.php:1422
 msgid "Invalid Employee id."
 msgstr ""
 
@@ -14103,11 +14133,16 @@ msgstr ""
 msgid "Invalid Leave End Date."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1351
+#: modules/hrm/includes/api/class-employees-controller.php:1211
+#: modules/hrm/includes/class-ajax.php:1480
+msgid "Sorry! You do not have any leave left under this leave policy"
+msgstr ""
+
+#: modules/hrm/includes/api/class-employees-controller.php:1361
 msgid "User do not have permission for the action."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1359
+#: modules/hrm/includes/api/class-employees-controller.php:1369
 msgid "Invalid role format"
 msgstr ""
 
@@ -14276,10 +14311,6 @@ msgstr ""
 
 #: modules/hrm/includes/class-ajax.php:1471
 msgid "Existing Leave Record found within selected range!"
-msgstr ""
-
-#: modules/hrm/includes/class-ajax.php:1480
-msgid "Sorry! You do not have any leave left under this leave policy"
 msgstr ""
 
 #: modules/hrm/includes/class-ajax.php:1522
@@ -16540,18 +16571,18 @@ msgstr ""
 msgid "Plugin Activation Error"
 msgstr ""
 
-#: wp-erp.php:307
+#: wp-erp.php:308
 msgid "Docs"
 msgstr ""
 
-#: wp-erp.php:370
+#: wp-erp.php:371
 msgid ""
 "If you like WPERP please leave us a <a href=\"%s\" target=\"_blank\" "
 "style=\"text-decoration:none\">★★★★★</a> rating. Thanking you from the team "
 "of WPERP in advance!"
 msgstr ""
 
-#: wp-erp.php:371
+#: wp-erp.php:372
 msgid "https://wordpress.org/support/plugin/erp/reviews/?filter=5"
 msgstr ""
 
