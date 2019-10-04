@@ -410,6 +410,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'due_date'       => $item->due_date,
             'line_items'     => $item->line_items,
             'type'           => ! empty( $item->type ) ? $item->type : 'purchase',
+            'ref'            => $item->ref,
             'status'         => $item->status,
             'purchase_order' => $item->purchase_order,
             'amount'         => $item->amount,

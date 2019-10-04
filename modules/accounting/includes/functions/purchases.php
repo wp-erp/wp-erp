@@ -599,7 +599,7 @@ function erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_no
     // insert contra `erp_acct_ledger_details`
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $ledger_id,
-        'particulars' => $purchase_data['particulars'],
+        'particulars' => ! empty( $purchase_data['particulars'] ) ? $purchase_data['particulars'] : '',
         'credit'      => $purchase_data['amount'],
         'trn_date'    => $purchase_data['trn_date'],
         'created_at'  => $purchase_data['created_at'],
