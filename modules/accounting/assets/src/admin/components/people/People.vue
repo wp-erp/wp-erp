@@ -206,8 +206,9 @@ export default {
         goToPage(page) {
             const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
+
             this.$router.push({
-                name: this.url === 'customer' ? 'PaginateCustomers' : 'PaginateVendors',
+                name: this.url === 'customers' ? 'PaginateCustomers' : 'PaginateVendors',
                 params: { page: page },
                 query: queries
             });
