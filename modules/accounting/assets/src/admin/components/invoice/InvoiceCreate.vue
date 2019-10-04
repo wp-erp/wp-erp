@@ -232,7 +232,9 @@ export default {
 
     watch: {
         'basic_fields.customer'() {
-            this.getCustomerAddress();
+            if (!this.editMode) {
+                this.getCustomerAddress();
+            }
         },
 
         taxRate(newVal) {
@@ -365,6 +367,7 @@ export default {
             };
 
             if (invoice.estimate === '1') {
+                this.inv_title = 'Estimate';
                 this.inv_type = { id: 1, name: 'Estimate' };
                 this.finalTotalAmount = parseFloat(invoice.amount) +
                     parseFloat(invoice.tax) - parseFloat(this.discount);

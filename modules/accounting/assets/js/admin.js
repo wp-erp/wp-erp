@@ -17108,7 +17108,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   },
   watch: {
     'basic_fields.customer': function basic_fieldsCustomer() {
-      this.getCustomerAddress();
+      if (!this.editMode) {
+        this.getCustomerAddress();
+      }
     },
     taxRate: function taxRate(newVal) {
       this.$store.dispatch('sales/setTaxRateID', newVal.id);
@@ -17287,6 +17289,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       };
 
       if (invoice.estimate === '1') {
+        this.inv_title = 'Estimate';
         this.inv_type = {
           id: 1,
           name: 'Estimate'
@@ -18060,9 +18063,9 @@ if (false) {(function () {
       },
       actions: [{
         key: 'edit',
-        label: 'Edit'
-      } // { key: 'trash', label: 'Delete' }
-      ],
+        label: 'Edit' // { key: 'trash', label: 'Delete' }
+
+      }],
       chartAccounts: [],
       ledgers: [],
       temp_ledgers: erp_acct_var.ledgers,
@@ -21139,7 +21142,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   },
   watch: {
     'basic_fields.vendor': function basic_fieldsVendor() {
-      this.getvendorAddress();
+      if (!this.editMode) {
+        this.getvendorAddress();
+      }
     }
   },
   computed: _objectSpread({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapState */])({
@@ -21535,7 +21540,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
   },
   methods: {
     prepareRowEdit: function prepareRowEdit(row) {
-      row.unitPrice = row.cost_price;
+      row.unitPrice = row.price;
       row.selectedProduct = {
         id: parseInt(row.product_id),
         name: row.name

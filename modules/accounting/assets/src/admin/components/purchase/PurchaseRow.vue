@@ -56,7 +56,7 @@ export default {
 
     methods: {
         prepareRowEdit(row) {
-            row.unitPrice = row.cost_price;
+            row.unitPrice = row.price;
             row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
 
             this.calculateAmount();
