@@ -516,7 +516,7 @@ function erp_acct_convert_estimate_to_invoice( $data, $invoice_no ) {
             [
                 'customer_id'     => $invoice_data['customer_id'],
                 'customer_name'   => $invoice_data['customer_name'],
-                'trn_date'        => $invoice_data['date'],
+                'trn_date'        => $invoice_data['trn_date'],
                 'due_date'        => $invoice_data['due_date'],
                 'billing_address' => $invoice_data['billing_address'],
                 'amount'          => $invoice_data['amount'],

@@ -114,7 +114,7 @@
                         <tfoot>
                         <tr>
                             <td v-if="orderToPurchase()" colspan="9" style="text-align: right;">
-                                <combo-button :options="[{ id: 'update', text: 'Save Convertion' }]" />
+                                <combo-button :options="[{ id: 'update', text: 'Save Conversion' }]" />
                             </td>
                             <td v-else colspan="9" style="text-align: right;">
                                 <combo-button v-if="editMode" :options="updateButtons" />
@@ -402,7 +402,14 @@ export default {
         updatePurchase(requestData) {
             HTTP.put(`/purchases/${this.voucherNo}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Purchase Updated!');
+
+                let message = 'Purchase Updated!';
+
+                if (this.orderToPurchase()) {
+                    message = 'Conversion Successful!';
+                }
+
+                this.showAlert('success', message);
             }).then(() => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 this.isWorking = false;
@@ -419,7 +426,7 @@ export default {
         createPurchase(requestData) {
             HTTP.post('/purchases', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Purchase Created!');
+                this.showAlert('success', this.page_title + ' Created!');
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;

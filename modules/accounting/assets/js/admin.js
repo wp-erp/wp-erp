@@ -17295,7 +17295,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
     },
     estimateToInvoice: function estimateToInvoice() {
-      var estimate = '1';
+      var estimate = 1;
       return estimate === this.inv_type.id && this.$route.query.convert;
     },
     getProducts: function getProducts() {
@@ -17427,7 +17427,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].put("/invoices/".concat(this.voucherNo), requestData).then(function (res) {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
-        _this6.showAlert('success', 'Invoice Updated!');
+        var message = 'Invoice Updated!';
+
+        if (_this6.estimateToInvoice()) {
+          message = 'Convertion Successful!';
+        }
+
+        _this6.showAlert('success', message);
       }).catch(function (error) {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
@@ -17449,7 +17455,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].post('/invoices', requestData).then(function (res) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
-        _this7.showAlert('success', 'Invoice Created!');
+        _this7.showAlert('success', _this7.inv_title + ' Created!');
       }).catch(function (error) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
@@ -17721,13 +17727,19 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     calculateDiscount: function calculateDiscount() {
       var amount = this.getAmount();
       if (!amount) return;
-      var discount = this.discount * amount / this.invoiceTotalAmount;
+      var disAmount = this.discount * amount;
+      var discount = 0;
+
+      if (disAmount) {
+        discount = disAmount / this.invoiceTotalAmount;
+      }
+
       this.line.discount = discount.toFixed(2);
     },
     calculateTax: function calculateTax() {
       var amount = this.getAmount();
       if (!amount) return;
-      var taxAmount = (amount - this.discount) * this.taxRate / 100;
+      var taxAmount = (amount - this.line.discount) * this.taxRate / 100;
       this.line.taxAmount = 0; // If tax checkbox is checked
 
       if (this.line.applyTax) {
@@ -21352,7 +21364,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].put("/purchases/".concat(this.voucherNo), requestData).then(function (res) {
         _this4.$store.dispatch('spinner/setSpinner', false);
 
-        _this4.showAlert('success', 'Purchase Updated!');
+        var message = 'Purchase Updated!';
+
+        if (_this4.orderToPurchase()) {
+          message = 'Convertion Successful!';
+        }
+
+        _this4.showAlert('success', message);
       }).then(function () {
         _this4.$store.dispatch('spinner/setSpinner', false);
 
@@ -21374,7 +21392,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].post('/purchases', requestData).then(function (res) {
         _this5.$store.dispatch('spinner/setSpinner', false);
 
-        _this5.showAlert('success', 'Purchase Created!');
+        _this5.showAlert('success', _this5.page_title + ' Created!');
       }).catch(function (error) {
         _this5.$store.dispatch('spinner/setSpinner', false);
 
