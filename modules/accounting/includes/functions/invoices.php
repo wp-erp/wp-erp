@@ -470,12 +470,11 @@ function erp_acct_update_invoice( $data, $invoice_no ) {
             // insert new invoice with edited data
             $new_invoice = erp_acct_insert_invoice( $data );
 
-            do_action( 'erp_acct_after_sales_update', $data, $voucher_no );
+            do_action( 'erp_acct_after_sales_update', $data, $invoice_no );
 
             $data['dr'] = $data['amount'];
             $data['cr'] = 0;
             erp_acct_update_data_into_people_trn_details( $data, $old_invoice['voucher_no'] );
-
         }
 
         $wpdb->query( 'COMMIT' );
@@ -517,7 +516,7 @@ function erp_acct_convert_estimate_to_invoice( $data, $invoice_no ) {
             [
                 'customer_id'     => $invoice_data['customer_id'],
                 'customer_name'   => $invoice_data['customer_name'],
-                'trn_date'        => $invoice_data['date'],
+                'trn_date'        => $invoice_data['trn_date'],
                 'due_date'        => $invoice_data['due_date'],
                 'billing_address' => $invoice_data['billing_address'],
                 'amount'          => $invoice_data['amount'],

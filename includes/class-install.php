@@ -1428,6 +1428,26 @@ Company'
                 PRIMARY KEY (`id`)
             ) $collate;",
 
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_holidays_indv` (
+            `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            `holiday_id` int(11) DEFAULT NULL,
+            `title` varchar(255) DEFAULT NULL,
+            `date` date DEFAULT NULL,
+            `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` datetime DEFAULT NULL,
+            PRIMARY KEY (`id`)
+          ) $collate;",
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_user_leaves` (
+            `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            `user_id` int(11) DEFAULT NULL,
+            `request_id` int(11) DEFAULT NULL,
+            `title` varchar(255) DEFAULT NULL,
+            `date` date DEFAULT NULL,
+            `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` datetime DEFAULT NULL,
+            PRIMARY KEY (`id`)
+          ) $collate;",
+
         ];
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

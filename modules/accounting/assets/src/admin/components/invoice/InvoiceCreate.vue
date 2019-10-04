@@ -135,12 +135,13 @@
                             <component
                                 v-for="(component, compKey) in extraFields"
                                 :key="'key-' + compKey"
-                                :is="component" />
+                                :is="component"
+                                :tran-type="inv_title" />
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td v-if="estimateToInvoice()" colspan="9" style="text-align: right;">
-                                    <combo-button :options="[{ id: 'update', text: 'Save Convertion' }]" />
+                                    <combo-button :options="[{ id: 'update', text: 'Save Conversion' }]" />
                                 </td>
                                 <td v-else colspan="9" style="text-align: right;">
                                     <combo-button v-if="editMode" :options="updateButtons" />
@@ -371,7 +372,7 @@ export default {
         },
 
         estimateToInvoice() {
-            const estimate = '1';
+            const estimate = 1;
 
             return estimate === this.inv_type.id && this.$route.query.convert;
         },
@@ -504,7 +505,14 @@ export default {
 
             HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Invoice Updated!');
+
+                let message = 'Invoice Updated!';
+
+                if (this.estimateToInvoice()) {
+                    message = 'Conversion Successful!';
+                }
+
+                this.showAlert('success', message);
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -522,7 +530,7 @@ export default {
 
             HTTP.post('/invoices', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Invoice Created!');
+                this.showAlert('success', this.inv_title + ' Created!');
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -554,7 +562,7 @@ export default {
                 this.status = 2;
             }
 
-            const requestData = window.acct.hooks.applyFilters('invoiceRequestData', {
+            const requestData = window.acct.hooks.applyFilters('requestData', {
                 customer_id    : this.basic_fields.customer.id,
                 date           : this.basic_fields.trn_date,
                 due_date       : this.basic_fields.due_date,

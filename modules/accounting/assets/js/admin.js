@@ -17032,6 +17032,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
 
 
 
@@ -17294,7 +17295,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       }
     },
     estimateToInvoice: function estimateToInvoice() {
-      var estimate = '1';
+      var estimate = 1;
       return estimate === this.inv_type.id && this.$route.query.convert;
     },
     getProducts: function getProducts() {
@@ -17426,7 +17427,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].put("/invoices/".concat(this.voucherNo), requestData).then(function (res) {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
-        _this6.showAlert('success', 'Invoice Updated!');
+        var message = 'Invoice Updated!';
+
+        if (_this6.estimateToInvoice()) {
+          message = 'Convertion Successful!';
+        }
+
+        _this6.showAlert('success', message);
       }).catch(function (error) {
         _this6.$store.dispatch('spinner/setSpinner', false);
 
@@ -17448,7 +17455,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].post('/invoices', requestData).then(function (res) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
-        _this7.showAlert('success', 'Invoice Created!');
+        _this7.showAlert('success', _this7.inv_title + ' Created!');
       }).catch(function (error) {
         _this7.$store.dispatch('spinner/setSpinner', false);
 
@@ -17482,7 +17489,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         this.status = 2;
       }
 
-      var requestData = window.acct.hooks.applyFilters('invoiceRequestData', {
+      var requestData = window.acct.hooks.applyFilters('requestData', {
         customer_id: this.basic_fields.customer.id,
         date: this.basic_fields.trn_date,
         due_date: this.basic_fields.due_date,
@@ -17720,13 +17727,19 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
     calculateDiscount: function calculateDiscount() {
       var amount = this.getAmount();
       if (!amount) return;
-      var discount = this.discount * amount / this.invoiceTotalAmount;
+      var disAmount = this.discount * amount;
+      var discount = 0;
+
+      if (disAmount) {
+        discount = disAmount / this.invoiceTotalAmount;
+      }
+
       this.line.discount = discount.toFixed(2);
     },
     calculateTax: function calculateTax() {
       var amount = this.getAmount();
       if (!amount) return;
-      var taxAmount = (amount - this.discount) * this.taxRate / 100;
+      var taxAmount = (amount - this.line.discount) * this.taxRate / 100;
       this.line.taxAmount = 0; // If tax checkbox is checked
 
       if (this.line.applyTax) {
@@ -19566,6 +19579,12 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -19625,7 +19644,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       totalAmounts: 0,
       finalTotalAmount: 0,
       particulars: '',
-      erp_acct_assets: erp_acct_var.acct_assets
+      erp_acct_assets: erp_acct_var.acct_assets,
+      extraFields: window.acct.hooks.applyFilters('acctBillExtraFields', [])
     };
   },
   computed: _objectSpread({}, Object(__WEBPACK_IMPORTED_MODULE_2_vuex__["b" /* mapState */])({
@@ -19661,9 +19681,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
                 this.editMode = true;
                 this.voucherNo = this.$route.params.id;
                 /**
-                     * Duplicates of
-                     *? this.getLedgers()
-                     */
+                 * Duplicates of
+                 *? this.getLedgers()
+                */
 
                 expenseChartId = 5;
                 _context.next = 6;
@@ -19872,7 +19892,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         trnStatus = 2;
       }
 
-      var requestData = {
+      var requestData = window.acct.hooks.applyFilters('requestData', {
         vendor_id: this.basic_fields.user.id,
         ref: this.basic_fields.ref,
         trn_date: this.basic_fields.trn_date,
@@ -19883,7 +19903,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         type: 'bill',
         status: trnStatus,
         particulars: this.particulars
-      };
+      });
 
       if (this.editMode) {
         this.updateBill(requestData);
@@ -21344,7 +21364,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].put("/purchases/".concat(this.voucherNo), requestData).then(function (res) {
         _this4.$store.dispatch('spinner/setSpinner', false);
 
-        _this4.showAlert('success', 'Purchase Updated!');
+        var message = 'Purchase Updated!';
+
+        if (_this4.orderToPurchase()) {
+          message = 'Convertion Successful!';
+        }
+
+        _this4.showAlert('success', message);
       }).then(function () {
         _this4.$store.dispatch('spinner/setSpinner', false);
 
@@ -21366,7 +21392,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].post('/purchases', requestData).then(function (res) {
         _this5.$store.dispatch('spinner/setSpinner', false);
 
-        _this5.showAlert('success', 'Purchase Created!');
+        _this5.showAlert('success', _this5.page_title + ' Created!');
       }).catch(function (error) {
         _this5.$store.dispatch('spinner/setSpinner', false);
 
@@ -45654,7 +45680,8 @@ var render = function() {
                       _vm._l(_vm.extraFields, function(component, compKey) {
                         return _c(component, {
                           key: "key-" + compKey,
-                          tag: "component"
+                          tag: "component",
+                          attrs: { "tran-type": _vm.inv_title }
                         })
                       })
                     ],
@@ -48160,7 +48187,15 @@ var render = function() {
                         )
                       ]
                     )
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.extraFields, function(component, compKey) {
+                    return _c(component, {
+                      key: "key-" + compKey,
+                      tag: "component",
+                      attrs: { "tran-type": "Bill" }
+                    })
+                  })
                 ],
                 2
               ),
