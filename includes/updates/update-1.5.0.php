@@ -1121,7 +1121,6 @@ function erp_acct_populate_charts_ledgers() {
 
     $old_ledgers = [];
     $ledgers     = [];
-    $bank_ids    = [];
 
     require_once WPERP_INCLUDES . '/ledgers.php';
 
@@ -1141,8 +1140,6 @@ function erp_acct_populate_charts_ledgers() {
         }
         $old_ledgers = $o_ledgers;
     }
-
-    $wpdb->query( "DROP TABLE erp_acct_temp_charts" );
 
     $old_banks = $wpdb->get_results( "SELECT	ledger_id, account_number as code, bank_name as name
         FROM {$wpdb->prefix}erp_ac_banks WHERE ledger_id <> 7", ARRAY_A );
