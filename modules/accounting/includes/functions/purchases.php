@@ -131,9 +131,9 @@ function erp_acct_insert_purchase( $data ) {
 
     $created_by         = get_current_user_id();
     $voucher_no         = null;
-    $data['created_at'] = date( "Y-m-d H:i:s" );
+    $data['created_at'] = date( 'Y-m-d' );
     $data['created_by'] = $created_by;
-    $data['updated_at'] = date( "Y-m-d H:i:s" );
+    $data['updated_at'] = date( 'Y-m-d' );
     $data['updated_by'] = $created_by;
 
     $purchase_type_order= $draft = 1;
@@ -177,7 +177,7 @@ function erp_acct_insert_purchase( $data ) {
 
         $items = $data['line_items'];
 
-        foreach ( $items as $key => $item ) {
+        foreach ( $items as $item ) {
             $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_details', array(
                 'trn_no'     => $voucher_no,
                 'product_id' => $item['product_id'],
@@ -247,6 +247,12 @@ function erp_acct_insert_purchase( $data ) {
  */
 function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
     global $wpdb;
+
+    if ( 1 === $purchase_data['purchase_order'] && $purchase_data['convert'] ) {
+        erp_acct_convert_order_to_purchase( $purchase_data, $purchase_id );
+
+        return;
+    }
 
     $user_id             = get_current_user_id();
     $purchase_type_order = $draft = 1;
@@ -391,23 +397,94 @@ function erp_acct_update_purchase( $purchase_data, $purchase_id ) {
     }
 
     return erp_acct_get_purchase( $new_purchase['voucher_no'] );
-
 }
 
 /**
- * Delete a purchase
+ * Convert order to purchase
  *
- * @param $id
- * @return void
+ * @param array $purchase_data
+ * @param int $purchase_id
+ *
+ * @return array
  */
-function erp_acct_delete_purchase( $id ) {
+function erp_acct_convert_order_to_purchase( $purchase_data, $purchase_id ) {
     global $wpdb;
 
-    if ( ! $id ) {
-        return;
+    $user_id = get_current_user_id();
+
+    try {
+        $wpdb->query( 'START TRANSACTION' );
+
+        $purchase_data = erp_acct_get_formatted_purchase_data( $purchase_data, $purchase_id );
+
+        // erp_acct_purchase
+        $wpdb->update(
+            $wpdb->prefix . 'erp_acct_purchase',
+            [
+                'vendor_id'      => $purchase_data['vendor_id'],
+                'vendor_name'    => $purchase_data['vendor_name'],
+                'trn_date'       => $purchase_data['trn_date'],
+                'due_date'       => $purchase_data['due_date'],
+                'amount'         => $purchase_data['amount'],
+                'ref'            => $purchase_data['ref'],
+                'status'         => 2,
+                'purchase_order' => false,
+                'attachments'    => $purchase_data['attachments'],
+                'particulars'    => $purchase_data['particulars'],
+                'created_at'     => $purchase_data['created_at'],
+                'created_by'     => $purchase_data['created_by'],
+                'updated_at'     => $purchase_data['updated_at'],
+                'updated_by'     => $purchase_data['updated_by'],
+            ],
+            [ 'voucher_no' => $purchase_id ]
+        );
+
+        // remove data from erp_acct_purchase_details
+        $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_details', [ 'trn_no' => $purchase_id ] );
+
+        foreach ( $purchase_data['line_items'] as $item ) {
+            $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_details', array(
+                'trn_no'     => $purchase_id,
+                'product_id' => $item['product_id'],
+                'qty'        => $item['qty'],
+                'price'      => $item['unit_price'],
+                'amount'     => (float) $item['qty'] * (float) $item['unit_price'],
+                'updated_at' => date( 'Y-m-d' ),
+                'updated_by' => $user_id
+            ) );
+        }
+
+        $wpdb->insert( $wpdb->prefix . 'erp_acct_purchase_account_details', array(
+            'purchase_no' => $purchase_id,
+            'trn_no'      => $purchase_id,
+            'trn_date'    => $purchase_data['trn_date'],
+            'particulars' => $purchase_data['particulars'],
+            'credit'      => $purchase_data['amount'],
+            'updated_at'  => date( 'Y-m-d' ),
+            'updated_by'  => $user_id
+        ) );
+
+        erp_acct_insert_purchase_data_into_ledger( $purchase_data );
+
+        $data['dr']        = 0;
+        $data['cr']        = $purchase_data['amount'];
+        $data['vendor_id'] = $purchase_data['vendor_id'];
+        erp_acct_insert_data_into_people_trn_details( $data, $purchase_id );
+
+        $wpdb->query( 'COMMIT' );
+
+    } catch ( Exception $e ) {
+        $wpdb->query( 'ROLLBACK' );
+        return new WP_error( 'purchase-exception', $e->getMessage() );
     }
 
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_purchase_account_details', array( 'purchase_no' => $id ) );
+    $purchase = erp_acct_get_purchase( $purchase_id );
+
+    $purchase['email'] = erp_get_people_email( $purchase['vendor_id'] );
+
+    do_action( 'erp_acct_new_transaction_purchase', $purchase_id, $purchase );
+
+    return $purchase;
 }
 
 /**
@@ -448,11 +525,12 @@ function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
     $purchase_data['voucher_no']     = isset( $data['voucher_no'] ) ? $data['voucher_no'] : $voucher_no;
     $purchase_data['vendor_id']      = isset( $data['vendor_id'] ) ? $data['vendor_id'] : 0;
     $purchase_data['vendor_name']    = $user_info->first_name . ' ' . $user_info->last_name;
-    $purchase_data['trn_date']       = isset( $data['trn_date'] ) ? $data['trn_date'] : date( "Y-m-d" );
-    $purchase_data['due_date']       = isset( $data['due_date'] ) ? $data['due_date'] : date( "Y-m-d" );
+    $purchase_data['trn_date']       = isset( $data['trn_date'] ) ? $data['trn_date'] : date( 'Y-m-d' );
+    $purchase_data['due_date']       = isset( $data['due_date'] ) ? $data['due_date'] : date( 'Y-m-d' );
     $purchase_data['amount']         = isset( $data['amount'] ) ? floatval( $data['amount'] ) : 0;
     $purchase_data['attachments']    = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $purchase_data['status']         = isset( $data['status'] ) ? intval( $data['status'] ) : '';
+    $purchase_data['line_items']     = isset( $data['line_items'] ) ? $data['line_items'] : [];
     $purchase_data['purchase_order'] = isset( $data['purchase_order'] ) ? intval( $data['purchase_order'] ) : '';
     $purchase_data['ref']            = isset( $data['ref'] ) ? $data['ref'] : '';
     $purchase_data['particulars']    = !empty( $data['particulars'] ) ? $data['particulars'] : sprintf( __( 'Purchase created with voucher no %s', 'erp' ), $voucher_no );
@@ -460,6 +538,10 @@ function erp_acct_get_formatted_purchase_data( $data, $voucher_no ) {
     $purchase_data['created_by']     = isset( $data['created_by'] ) ? $data['created_by'] : '';
     $purchase_data['updated_at']     = isset( $data['updated_at'] ) ? $data['updated_at'] : '';
     $purchase_data['updated_by']     = isset( $data['updated_by'] ) ? $data['updated_by'] : '';
+
+    if ( ! empty( $data['purchase_order'] ) ) {
+        $purchase_data['status'] = 3;
+    }
 
     return $purchase_data;
 }
@@ -517,7 +599,7 @@ function erp_acct_update_purchase_data_into_ledger( $purchase_data, $purchase_no
     // insert contra `erp_acct_ledger_details`
     $wpdb->update( $wpdb->prefix . 'erp_acct_ledger_details', array(
         'ledger_id'   => $ledger_id,
-        'particulars' => $purchase_data['particulars'],
+        'particulars' => ! empty( $purchase_data['particulars'] ) ? $purchase_data['particulars'] : '',
         'credit'      => $purchase_data['amount'],
         'trn_date'    => $purchase_data['trn_date'],
         'created_at'  => $purchase_data['created_at'],

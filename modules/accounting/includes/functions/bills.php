@@ -194,6 +194,8 @@ function erp_acct_insert_bill( $data ) {
         $data['cr'] = $bill_data['amount'];
         erp_acct_insert_data_into_people_trn_details( $data, $voucher_no );
 
+        do_action( 'erp_acct_after_bill_create', $data, $voucher_no );
+
         $wpdb->query( 'COMMIT' );
 
     } catch ( Exception $e ) {
@@ -368,22 +370,6 @@ function erp_acct_update_draft_bill( $data, $bill_id ) {
             'created_by'  => $bill_data['created_by']
         ] );
     }
-}
-
-/**
- * Delete a bill
- *
- * @param $id
- * @return void
- */
-function erp_acct_delete_bill( $id ) {
-    global $wpdb;
-
-    if ( ! $id ) {
-        return;
-    }
-
-    $wpdb->delete( $wpdb->prefix . 'erp_acct_bills', array( 'voucher_no' => $id ) );
 }
 
 /**

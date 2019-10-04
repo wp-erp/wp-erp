@@ -104,10 +104,10 @@ export default {
             // format invoice data which comes from database, to mactch with line items
             row.selectedProduct = { id: parseInt(row.product_id), name: row.name };
             row.taxCatID  = row.tax_cat_id;
-            row.unitPrice = parseFloat(row.sale_price);
+            row.unitPrice = parseFloat(row.unit_price);
             row.applyTax  = true;
             row.taxAmount = row.tax;
-            row.amount    = parseInt(row.qty) * parseFloat(row.sale_price);
+            row.amount    = parseInt(row.qty) * parseFloat(row.unit_price);
         },
 
         respondAtChange() {
@@ -162,7 +162,13 @@ export default {
             const amount = this.getAmount();
             if (!amount) return;
 
-            const discount = (this.discount * amount) / this.invoiceTotalAmount;
+            const disAmount = this.discount * amount;
+
+            let discount = 0;
+
+            if (disAmount) {
+                discount = disAmount / this.invoiceTotalAmount;
+            }
 
             this.line.discount = discount.toFixed(2);
         },
@@ -171,7 +177,7 @@ export default {
             const amount = this.getAmount();
             if (!amount) return;
 
-            const taxAmount = ((amount - this.discount) * this.taxRate) / 100;
+            const taxAmount = ((amount - this.line.discount) * this.taxRate) / 100;
 
             this.line.taxAmount = 0;
 

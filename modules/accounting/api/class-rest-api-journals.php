@@ -56,14 +56,6 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_view_journal' );
                 },
             ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_journal' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_journal' );
-                },
-            ],
             'schema' => [ $this, 'get_item_schema' ],
         ] );
 

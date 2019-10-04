@@ -110,7 +110,7 @@ function erp_acct_get_banks( $show_balance = false, $with_cash = false, $no_bank
  */
 function erp_acct_get_dashboard_banks() {
     $args               = [];
-    $args['start_date'] = date( "Y-m-d" );
+    $args['start_date'] = date( 'Y-m-d' );
 
     $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
     $args['start_date'] = $closest_fy_date['start_date'];

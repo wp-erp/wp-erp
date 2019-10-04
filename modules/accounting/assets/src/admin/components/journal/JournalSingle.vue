@@ -77,6 +77,8 @@
 
                 </div>
 
+                <trans-particulars :particulars="journal.particulars" />
+
                 <div class="invoice-attachments d-print-none">
                     <h4>{{ __('Attachments', 'erp') }}</h4>
                     <a class="attachment-item" :href="attachment"
@@ -90,10 +92,6 @@
                     </a>
                 </div>
 
-                <div class="particulars">
-                    <p>{{ journal.particulars }}</p>
-                </div>
-
             </div>
         </div>
     </div>
@@ -101,9 +99,14 @@
 
 <script>
 import HTTP from 'admin/http';
+import TransParticulars from 'admin/components/transactions/TransParticulars.vue';
 
 export default {
     name: 'JournalSingle',
+
+    components: {
+        TransParticulars
+    },
 
     data() {
         return {
@@ -165,11 +168,6 @@ export default {
             padding-top: 10px !important;
             padding-bottom: 10px !important;
         }
-    }
-
-    .particulars {
-        padding-top: 15px;
-        border-top: 1px solid rgba(38,50,56, .1);
     }
 
     @media print {

@@ -281,11 +281,15 @@ Company'
     public function create_tables() {
         global $wpdb;
 
-        $collate = '';
+        $charset = 'CHARSET=utf8mb4';
+        $collate = 'COLLATE=utf8mb4_unicode_ci';
 
-        if ( defined('DB_COLLATE') )  {
+        if ( defined('DB_COLLATE') && DB_COLLATE )  {
+            $charset = DB_CHARSET;
             $collate = DB_COLLATE;
         }
+
+        $charset_collate = $charset . ' ' . $collate;
 
         $table_schema = [
 
@@ -305,7 +309,7 @@ Company'
                 `updated_at` datetime NOT NULL,
                 PRIMARY KEY (`id`),
                 KEY `company_id` (`company_id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_depts` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -317,7 +321,7 @@ Company'
                 `created_at` datetime NOT NULL,
                 `updated_at` datetime NOT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_designations` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -327,7 +331,7 @@ Company'
                 `created_at` datetime NOT NULL,
                 `updated_at` datetime NOT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employees` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -352,7 +356,7 @@ Company'
                 KEY `designation` (`designation`),
                 KEY `department` (`department`),
                 KEY `status` (`status`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employee_history` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -366,7 +370,7 @@ Company'
                 PRIMARY KEY (`id`),
                 KEY `user_id` (`user_id`),
                 KEY `module` (`module`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employee_notes` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -376,7 +380,7 @@ Company'
                 `created_at` datetime NOT NULL,
                 `updated_at` datetime NOT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leave_policies` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -395,7 +399,7 @@ Company'
                 `created_at` datetime NOT NULL,
                 `updated_at` datetime NOT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_holiday` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -403,11 +407,11 @@ Company'
                 `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `end` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
                 `description` text NOT NULL,
-                `range_status` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+                `range_status` varchar(5) NOT NULL,
                 `created_at` datetime NOT NULL,
                 `updated_at` datetime NOT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leave_entitlements` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -423,7 +427,7 @@ Company'
                 PRIMARY KEY (`id`),
                 KEY `user_id` (`user_id`),
                 KEY `policy_id` (`policy_id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leaves` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -437,7 +441,7 @@ Company'
                 PRIMARY KEY (`id`),
                 KEY `request_id` (`request_id`),
                 KEY `date` (`date`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leave_requests` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -460,7 +464,7 @@ Company'
                 KEY `status` (`status`),
                 KEY `created_by` (`created_by`),
                 KEY `updated_by` (`updated_by`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_work_exp` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -474,7 +478,7 @@ Company'
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `employee_id` (`employee_id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_education` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -489,7 +493,7 @@ Company'
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `employee_id` (`employee_id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_dependents` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -501,7 +505,7 @@ Company'
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `employee_id` (`employee_id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employee_performance` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -523,7 +527,7 @@ Company'
                 `performance_date` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `employee_id` (`employee_id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_announcement` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -535,7 +539,7 @@ Company'
                 KEY `user_id` (`user_id`),
                 KEY `post_id` (`post_id`),
                 KEY `status` (`status`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_peoples` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -567,7 +571,7 @@ Company'
                 KEY `first_name` (`first_name`),
                 KEY `last_name` (`last_name`),
                 KEY `email` (`email`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_peoplemeta` (
                 `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -577,15 +581,14 @@ Company'
                 PRIMARY KEY (`meta_id`),
                 KEY `erp_people_id` (`erp_people_id`),
                 KEY `meta_key` (`meta_key`(191))
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_people_types` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `name` varchar(20) DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 UNIQUE KEY `name` (`name`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_people_type_relations` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -595,7 +598,7 @@ Company'
                 PRIMARY KEY (`id`),
                 KEY `people_id` (`people_id`),
                 KEY `people_types_id` (`people_types_id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_audit_log` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -614,7 +617,7 @@ Company'
                 KEY `sub_component` (`sub_component`),
                 KEY `changetype` (`changetype`),
                 KEY `created_by` (`created_by`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_companies` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -623,7 +626,7 @@ Company'
                 PRIMARY KEY (`id`),
                 KEY `customer_id` (`customer_id`),
                 KEY `company_id` (`company_id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_activities` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -644,7 +647,7 @@ Company'
                 KEY `type` (`type`),
                 KEY `log_type` (`log_type`),
                 KEY `created_by` (`created_by`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_activities_task` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -653,7 +656,7 @@ Company'
                 PRIMARY KEY (`id`),
                 KEY `activity_id` (`activity_id`),
                 KEY `user_id` (`user_id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_contact_group` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -663,7 +666,7 @@ Company'
                 `created_at` datetime DEFAULT NULL,
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_contact_subscriber` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -677,7 +680,7 @@ Company'
                 UNIQUE KEY `user_group` (`user_id`,`group_id`),
                 KEY `status` (`status`),
                 KEY `hash` (`hash`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_search` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -689,7 +692,7 @@ Company'
               `created_at` datetime DEFAULT NULL,
               `updated_at` datetime DEFAULT NULL,
               PRIMARY KEY (`id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_email_replies` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -697,8 +700,7 @@ Company'
               `subject` text,
               `template` longtext,
               PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_voucher_no` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -710,8 +712,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_bill_account_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -726,8 +727,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_bill_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -740,8 +740,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_bills` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -761,8 +760,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_chart_of_accounts` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -773,8 +771,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_currency_info` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -785,8 +782,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate CHARSET=utf8;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_account_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -801,8 +797,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -819,8 +814,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_receipts` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -839,8 +833,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_receipts_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -852,8 +845,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoices` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -876,8 +868,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_journal_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -891,8 +882,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_journals` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -907,8 +897,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_ledger_categories` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -922,8 +911,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_ledger_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -938,8 +926,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_ledger_settings` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -950,8 +937,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_ledgers` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -967,8 +953,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_cash_at_banks` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -980,8 +965,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_transfer_voucher` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -996,8 +980,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_opening_balances` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1012,8 +995,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_financial_years` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1026,8 +1008,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_bill` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1046,8 +1027,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_bill_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1059,8 +1039,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_purchase` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1079,8 +1058,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_pay_purchase_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1092,8 +1070,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_account_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1110,8 +1087,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_trn` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1127,7 +1103,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_people_trn_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1142,8 +1118,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_categories` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1154,8 +1129,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_types` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1166,8 +1140,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_products` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1183,8 +1156,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_product_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1197,8 +1169,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1218,8 +1189,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase_account_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1234,8 +1204,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_purchase_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1249,8 +1218,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_categories` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1261,8 +1229,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_taxes` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1274,8 +1241,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_cat_agency` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1289,8 +1255,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agencies` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1301,8 +1266,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_pay` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1319,8 +1283,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_tax_agency_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1335,8 +1298,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_invoice_details_tax` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1349,8 +1311,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_trn_status_types` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1361,8 +1322,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_payment_methods` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1372,8 +1332,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_expenses` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1395,8 +1354,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_expense_details` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1409,8 +1367,7 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
-
+            ) $charset_collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_acct_expense_checks` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1426,7 +1383,28 @@ Company'
                 `updated_at` date DEFAULT NULL,
                 `updated_by` varchar(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;",
+            ) $charset_collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_holidays_indv` (
+                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `holiday_id` int(11) DEFAULT NULL,
+                `title` varchar(255) DEFAULT NULL,
+                `date` date DEFAULT NULL,
+                `created_at` datetime DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $charset_collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_user_leaves` (
+                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `user_id` int(11) DEFAULT NULL,
+                `request_id` int(11) DEFAULT NULL,
+                `title` varchar(255) DEFAULT NULL,
+                `date` date DEFAULT NULL,
+                `created_at` datetime DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $charset_collate;",
 
         ];
 

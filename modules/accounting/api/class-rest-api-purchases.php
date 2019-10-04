@@ -66,13 +66,6 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                     return current_user_can( 'erp_ac_create_expenses_voucher' );
                 },
             ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_purchase' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_expenses_voucher' );
-                },
-            ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
@@ -305,25 +298,6 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     }
 
     /**
-     * Delete a purchase
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Request
-     */
-    public function delete_purchase( $request ) {
-        $id = (int) $request['id'];
-
-        if ( empty( $id ) ) {
-            return new WP_Error( 'rest_purchase_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
-        }
-
-        erp_acct_delete_purchase( $id );
-
-        return new WP_REST_Response( true, 204 );
-    }
-
-    /**
      * Void a purchase
      *
      * @param WP_REST_Request $request
@@ -407,6 +381,9 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['billing_address'] ) ) {
             $prepared_item['billing_address'] = maybe_serialize( $request['billing_address'] );
         }
+        if ( isset( $request['convert'] ) ) {
+            $prepared_item['convert'] = $request['convert'];
+        }
 
         return $prepared_item;
     }
@@ -433,6 +410,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'due_date'       => $item->due_date,
             'line_items'     => $item->line_items,
             'type'           => ! empty( $item->type ) ? $item->type : 'purchase',
+            'ref'            => $item->ref,
             'status'         => $item->status,
             'purchase_order' => $item->purchase_order,
             'amount'         => $item->amount,
