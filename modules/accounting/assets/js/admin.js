@@ -17677,10 +17677,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         name: row.name
       };
       row.taxCatID = row.tax_cat_id;
-      row.unitPrice = parseFloat(row.sale_price);
+      row.unitPrice = parseFloat(row.unit_price);
       row.applyTax = true;
       row.taxAmount = row.tax;
-      row.amount = parseInt(row.qty) * parseFloat(row.sale_price);
+      row.amount = parseInt(row.qty) * parseFloat(row.unit_price);
     },
     respondAtChange: function respondAtChange() {
       this.calculateDiscount();
