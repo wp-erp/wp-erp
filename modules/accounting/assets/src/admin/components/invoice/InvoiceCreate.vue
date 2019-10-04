@@ -141,7 +141,7 @@
                         <tfoot>
                             <tr>
                                 <td v-if="estimateToInvoice()" colspan="9" style="text-align: right;">
-                                    <combo-button :options="[{ id: 'update', text: 'Save Convertion' }]" />
+                                    <combo-button :options="[{ id: 'update', text: 'Save Conversion' }]" />
                                 </td>
                                 <td v-else colspan="9" style="text-align: right;">
                                     <combo-button v-if="editMode" :options="updateButtons" />
@@ -372,7 +372,7 @@ export default {
         },
 
         estimateToInvoice() {
-            const estimate = '1';
+            const estimate = 1;
 
             return estimate === this.inv_type.id && this.$route.query.convert;
         },
@@ -505,7 +505,14 @@ export default {
 
             HTTP.put(`/invoices/${this.voucherNo}`, requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Invoice Updated!');
+
+                let message = 'Invoice Updated!';
+
+                if (this.estimateToInvoice()) {
+                    message = 'Conversion Successful!';
+                }
+
+                this.showAlert('success', message);
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
@@ -523,7 +530,7 @@ export default {
 
             HTTP.post('/invoices', requestData).then(res => {
                 this.$store.dispatch('spinner/setSpinner', false);
-                this.showAlert('success', 'Invoice Created!');
+                this.showAlert('success', this.inv_title + ' Created!');
             }).catch(error => {
                 this.$store.dispatch('spinner/setSpinner', false);
                 throw error;
