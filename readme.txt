@@ -5,7 +5,7 @@ Tags: business manager, erp, accounting, crm, hr, project manager, small busines
 Requires at least: 4.4
 Tested up to: 5.2.3
 Requires PHP: 5.6
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -119,6 +119,7 @@ A host of WordPress extensions are available at your service to supercharge your
 experience.
 * **[Attendance](https://wperp.com/downloads/attendance/)**: Track work hours of your employees and balance them with their leaves with this feature extension.
 * **[HR Frontend](https://wperp.com/downloads/hr-frontend/)**: Bring the powerful HR Module of WP ERP to your web front using this handy extension. Let staff check-in, check-out, and even take leaves from the web-front.
+* **[Training](https://wperp.com/downloads/training/)**: Monitor training programs for different teams & employees.
 * **[WoCommerce Integration](https://wperp.com/downloads/woocommerce-crm/)**: Sync your WooCommerce order details and customer data with WP ERP and allow your CRM agent to track your sales.
 * **[Email Campaign](https://wperp.com/downloads/wp-erp-email-campaign/)**: Create personalized, automated and beautifully designed outbound emails for marketing, campaigns or customer follow up.
 * **[Custom Field Builder](https://wperp.com/downloads/custom-field-builder/)**: Add more fields to your ERP forms.
@@ -258,6 +259,23 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.5 -> October 04, 2019 =
+[new] Accounting: Estimate to Invoice create shortcut.
+[new] Accounting: Purchase Order to Purchase create shortcut.
+[fix] Accounting: Wrong Invoice & Purchase unit price on edit.
+[fix] Accounting: Customers & Vendors pagination with search. Closes #858, #876
+[fix] Accounting: Create invoice & purchase can not retrieve more than 20 products/services. Closes #859
+[fix] Accounting: Dashboard income-expense chart remains at $ currency. Closes #866
+[fix] Accounting: Purchase unit price needs to be able to accept decimal values. Closes #868
+[fix] General: Auto import option of Customers from CRM. Closes #874
+[fix] Accounting: WP ERP accounting mega menu links. Closes #871
+[fix] Accounting: Calculation for sales invoice with multi line entries. Closes #875
+[fix] Accounting: Tax payment form does not show up. Closes #877
+[fix] Accounting: Ledger migration. Closes #878
+[tweak] Remove button to send a birthday email to employees from HR dashboard.
+[tweak] Update DB collate in class install to proper support for Arabic font.
+[tweak] Accounting: Proper formatting of transaction particulars. Closes #854
 
 = v1.5.4 -> September 24, 2019 =
 [fix] Accounting: Fix various pdf related issue.

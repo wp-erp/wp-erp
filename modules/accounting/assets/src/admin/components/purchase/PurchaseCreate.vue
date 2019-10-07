@@ -196,7 +196,9 @@ export default {
 
     watch: {
         'basic_fields.vendor'() {
-            this.getvendorAddress();
+            if (!this.editMode) {
+                this.getvendorAddress();
+            }
         }
     },
 
