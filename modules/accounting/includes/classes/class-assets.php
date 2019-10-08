@@ -85,8 +85,8 @@ class Assets {
             } );
         }
 
-        $erp_acct_dec_separator = erp_get_option( 'erp_ac_de_separator' );
-        $erp_acct_ths_separator = erp_get_option( 'erp_ac_th_separator' );
+        $erp_acct_dec_separator = erp_get_option( 'erp_ac_de_separator', false, '.' );
+        $erp_acct_ths_separator = erp_get_option( 'erp_ac_th_separator', false, ',' );
 
         $fy_ranges = erp_acct_get_date_boundary();
         $ledgers   = erp_acct_get_ledgers_with_balances();
@@ -101,8 +101,8 @@ class Assets {
             'erp_assets'         => WPERP_ASSETS,
             'erp_acct_menus'     => $menus,
             'erp_acct_url'       => $acct_url,
-            'decimal_separator'  => erp_get_option( 'erp_ac_de_separator', false, '.' ),
-            'thousand_separator' => erp_get_option( 'erp_ac_th_separator', false, ',' ),
+            'decimal_separator'  => $erp_acct_dec_separator,
+            'thousand_separator' => $erp_acct_ths_separator,
             'currency_format'    => erp_acct_get_price_format(),
             'symbol'             => erp_acct_get_currency_symbol(),
             'erp_debug_mode'     => erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ),
@@ -113,6 +113,12 @@ class Assets {
             'trn_statuses'       => $trn_statuses,
             'link_copy_success'  => __( 'Link has been successfully copied.', 'erp' ),
             'link_copy_error'    => __( 'Failed to copy the link.', 'erp' ),
+            'banner_dimension'   => [
+                'width'       => 600,
+                'height'      => 600,
+                'flex-width'  => true,
+                'flex-height' => true
+            ]
         ) );
     }
 

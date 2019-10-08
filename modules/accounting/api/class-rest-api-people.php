@@ -140,7 +140,6 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return string
      */
     public function get_people( $request ) {
-
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
