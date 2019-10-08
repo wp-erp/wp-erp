@@ -762,7 +762,7 @@ function erp_crm_get_feed_activity( $postdata ) {
  *
  * @return array
  */
-function  erp_crm_save_customer_feed_data( $data ) {
+function erp_crm_save_customer_feed_data( $data ) {
 
     if ( isset( $data['id'] ) && ! empty( $data['id'] ) ) {
         $saved_activity    = WeDevs\ERP\CRM\Models\Activity::find( $data['id'] )->update( $data );

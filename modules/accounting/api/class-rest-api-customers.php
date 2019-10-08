@@ -153,6 +153,11 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         foreach ( $items as $item ) {
+            $photo_id = erp_people_get_meta( $item->id, 'photo_id', true );
+
+            $item->{'photo_id'} = $photo_id;
+            $item->{'photo'}    = wp_get_attachment_thumb_url( $photo_id );
+
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
@@ -192,6 +197,11 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_customer_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
+        $photo_id = erp_people_get_meta( $id, 'photo_id', true );
+
+        $item['photo_id'] = $photo_id;
+        $item['photo']    = wp_get_attachment_thumb_url( $photo_id );
+
         $additional_fields = [];
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
@@ -206,8 +216,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
-        $item                           = $this->prepare_item_for_response( $item, $request, $additional_fields );
-        $response                       = rest_ensure_response( $item );
+        $item = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $response = rest_ensure_response( $item );
 
         $response->set_status( 200 );
 
@@ -416,6 +426,9 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }
+        if ( isset( $request['photo_id'] ) ) {
+            $prepared_item['photo_id'] = $request['photo_id'];
+        }
         if ( isset( $request['phone'] ) ) {
             $prepared_item['phone'] = $request['phone'];
         }
@@ -486,6 +499,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             'notes'      => $item->notes,
             'other'      => $item->other,
             'company'    => $item->company,
+            'photo_id'   => !empty($item->photo_id) ? $item->photo_id : null,
+            'photo'      => !empty($item->photo) ? $item->photo : null,
             'billing'    => [
                 'first_name'  => $item->first_name,
                 'last_name'   => $item->last_name,
