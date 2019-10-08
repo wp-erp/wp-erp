@@ -304,6 +304,8 @@ function erp_acct_update_bill( $data, $bill_id ) {
             // insert new bill with edited data
             $new_bill = erp_acct_insert_bill( $data );
 
+            do_action( 'erp_acct_after_bill_update', $data, $bill_id );
+
             $data['dr'] = 0;
             $data['cr'] = $data['amount'];
             erp_acct_update_data_into_people_trn_details( $data, $old_bill['voucher_no'] );
