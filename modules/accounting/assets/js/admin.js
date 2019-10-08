@@ -18094,7 +18094,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         discount = disAmount / this.invoiceTotalAmount;
       }
 
-      this.line.discount = discount.toFixed(2);
+      this.line.discount = discount;
     },
     calculateTax: function calculateTax() {
       var amount = this.getAmount();
