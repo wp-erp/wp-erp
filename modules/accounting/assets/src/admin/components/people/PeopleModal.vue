@@ -18,6 +18,11 @@
                         <form action="" method="post" class="modal-form edit-customer-modal" @submit.prevent="saveCustomer">
                             <div class="wperp-modal-body">
                                 <!-- add new people form -->
+                                <upload-image
+                                    :showButton="true"
+                                    @uploadedImage="uploadPhoto"
+                                    :src="peopleFields.photo" />
+
                                 <component
                                     v-for="(component, extIndx) in extraFieldsTop"
                                     :key="`top-${extIndx}`"
@@ -143,13 +148,18 @@
 
 <script>
 import HTTP from 'admin/http';
+import UploadImage from 'admin/components/base/Media.vue';
 import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
+/* global erp_acct_var */
 export default {
     name: 'CustomerModal',
+
     components: {
+        UploadImage,
         MultiSelect
     },
+
     props: {
         people: {
             type: Object
@@ -159,6 +169,7 @@ export default {
         },
         type: [String]
     },
+
     data() {
         return {
             peopleFields: {
@@ -177,7 +188,9 @@ export default {
                 city       : '',
                 country    : '',
                 state      : '',
-                postal_code: ''
+                postal_code: '',
+                photo_id   : null,
+                photo      : erp_acct_var.erp_assets + '/images/mystery-person.png'
             },
             states           : [],
             emailExists      : false,
@@ -292,6 +305,10 @@ export default {
             });
         },
 
+        uploadPhoto(image) {
+            this.peopleFields.photo_id = image.id;
+        },
+
         getState(country) {
             this.states = [];
             this.peopleFields.state = '';
@@ -328,6 +345,7 @@ export default {
                 this.peopleFields.last_name   = people.last_name;
                 this.peopleFields.email       = people.email;
                 this.peopleFields.mobile      = people.mobile;
+                this.peopleFields.photo       = people.photo;
                 this.peopleFields.company     = people.company;
                 this.peopleFields.phone       = people.phone;
                 this.peopleFields.website     = people.website;
@@ -393,6 +411,34 @@ export default {
 
 <style lang="less">
     #people-modal {
+        .erp-upload-image {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: auto;
+            float: left;
+            margin-right: 10px;
+
+            img {
+                width: 200px;
+            }
+
+            button {
+                margin-top: 20px;
+                width: 200px;
+            }
+        }
+
+        .form-check {
+            display: inline-block;
+            padding-left: 10px;
+
+            .form-check-label .field-label {
+                width: 100px;
+                display: block;
+            }
+        }
+
         .errors {
             margin: 0 20px;
             color: #f44336;
