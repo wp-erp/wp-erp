@@ -36,7 +36,7 @@ class Assets {
                     )
                 );
                 return;
-            } elseif ( 'wp-erp_page_erp-accounting' === $screen->base ) {
+            } elseif ( 'wp-erp_page_erp-accounting' !== $screen->base ) {
                 return;
             }
         }
