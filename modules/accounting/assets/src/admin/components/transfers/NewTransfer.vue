@@ -32,7 +32,7 @@
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                 <label for="transfer_amount">{{ __('Transfer Amount', 'erp') }} <span class="wperp-required-sign">*</span></label>
-                                <input required min="0" type="number" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00" v-model="amount">
+                                <input required min="0" step="0.01" type="number" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00" v-model="amount">
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                 <label for="transfer_date">{{ __('Transfer Date', 'erp') }}</label>
