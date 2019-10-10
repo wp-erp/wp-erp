@@ -1660,7 +1660,7 @@ function erp_acct_migrate_balance_sheet() {
         ] );
     }
 
-    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+    $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
     $ledger_id  = $ledger_map->get_ledger_id_by_slug( 'owner_s_equity' );
 
     $profit = 0;
