@@ -3,7 +3,7 @@
 namespace WeDevs\ERP\Accounting\API;
 
 /**
- * REST_API Handler
+ * class REST_API Handler
  */
 class REST_API {
 

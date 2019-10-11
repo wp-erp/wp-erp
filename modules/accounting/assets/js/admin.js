@@ -13059,7 +13059,7 @@ var render = function() {
                                       ],
                                       staticClass: "wperp-form-field",
                                       attrs: {
-                                        type: "text",
+                                        type: "number",
                                         id: "post_code",
                                         placeholder: _vm.__("Post Code", "erp")
                                       },
@@ -47718,8 +47718,8 @@ var render = function() {
                                 expression: "totalAmounts[key]"
                               }
                             ],
-                            staticClass: "text-right",
-                            attrs: { type: "text" },
+                            staticClass: "wperp-form-field text-right",
+                            attrs: { type: "number", min: "0", step: "0.01" },
                             domProps: { value: _vm.totalAmounts[key] },
                             on: {
                               keyup: _vm.updateFinalAmount,
@@ -47781,7 +47781,7 @@ var render = function() {
                       },
                       [
                         _c("input", {
-                          staticClass: "text-right",
+                          staticClass: "wperp-form-field text-right",
                           attrs: {
                             type: "text",
                             name: "finalamount",
@@ -53726,6 +53726,7 @@ var render = function() {
                       attrs: {
                         required: "",
                         min: "0",
+                        step: "0.01",
                         type: "number",
                         name: "transfer_amount",
                         id: "transfer_amount",

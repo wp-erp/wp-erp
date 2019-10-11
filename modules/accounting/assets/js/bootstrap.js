@@ -14051,7 +14051,7 @@ var render = function() {
                                       ],
                                       staticClass: "wperp-form-field",
                                       attrs: {
-                                        type: "text",
+                                        type: "number",
                                         id: "post_code",
                                         placeholder: _vm.__("Post Code", "erp")
                                       },

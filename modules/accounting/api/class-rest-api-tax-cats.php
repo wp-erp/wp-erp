@@ -129,7 +129,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_tax_cats( $request ) {
         $args = [
-            'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number'     => ! empty( $request['per_page'] ) ? (int) $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
@@ -206,7 +206,6 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function create_tax_cat( $request ) {
-
         $tax_data = $this->prepare_item_for_database( $request );
 
         $tax_id = erp_acct_insert_tax_cat( $tax_data );
@@ -359,7 +358,7 @@ class Tax_Cats_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'tax',
+            'title'      => 'tax_category',
             'type'       => 'object',
             'properties' => [
                 'id'          => [
