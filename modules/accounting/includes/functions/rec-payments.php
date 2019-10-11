@@ -133,6 +133,7 @@ function erp_acct_insert_payment( $data ) {
 				'trn_date'         => date( 'Y-m-d' ),
 				'particulars'      => $payment_data['particulars'],
 				'amount'           => $payment_data['amount'],
+				'ref'              => $payment_data['ref'],
 				'trn_by'           => $payment_data['trn_by'],
 				'attachments'      => $payment_data['attachments'],
 				'status'           => $payment_data['status'],
@@ -392,6 +393,7 @@ function erp_acct_get_formatted_payment_data( $data, $voucher_no, $invoice_no = 
     $payment_data['line_items']    = isset( $data['line_items'] ) ? $data['line_items'] : array();
     $payment_data['created_at']    = date( 'Y-m-d' );
     $payment_data['amount']        = isset( $data['amount'] ) ? $data['amount'] : 0;
+    $payment_data['ref']           = isset( $data['ref'] ) ? $data['ref'] : null;
     $payment_data['attachments']   = isset( $data['attachments'] ) ? $data['attachments'] : '';
     $payment_data['voucher_type']  = isset( $data['type'] ) ? $data['type'] : '';
     // translators: %s: voucher_no

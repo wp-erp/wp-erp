@@ -36,7 +36,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND invoice.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR invoice_receipt.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
-    if ( 0 === $args['status'] ) {
+    if ( empty( $args['status'] ) ) {
         $where .= '';
     } else {
         if ( ! empty( $args['status'] ) ) {
@@ -62,6 +62,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             invoice_receipt.customer_name AS pay_cus_name,
             invoice.trn_date AS invoice_trn_date,
             invoice_receipt.trn_date AS payment_trn_date,
+            invoice_receipt.ref,
             invoice.due_date,
             invoice.estimate,
             (invoice.amount + invoice.tax) - invoice.discount AS sales_amount,
@@ -82,7 +83,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
         return $wpdb->num_rows;
     }
 
-    //error_log(print_r($sql, true));
+    // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
