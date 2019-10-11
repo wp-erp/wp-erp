@@ -45,7 +45,7 @@ function erp_acct_get_sales_transactions( $args = [] ) {
             $where .= ' AND invoice.status=2 ';
         }
     }
-    if ( '-1' === $args['number'] ) {
+    if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
@@ -582,7 +582,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             $where .= ' AND bill.status=2 OR expense.status=4';
         }
     }
-    if ( '-1' !== $args['number'] ) {
+    if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
@@ -670,7 +670,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
             $where .= ' AND purchase.status=2 ';
         }
     }
-    if ( '-1' !== $args['number'] ) {
+    if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 

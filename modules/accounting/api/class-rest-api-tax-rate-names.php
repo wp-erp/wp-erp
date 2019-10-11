@@ -129,7 +129,7 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_tax_rate_names( $request ) {
         $args = [
-            'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number'     => ! empty( $request['per_page'] ) ? (int) $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
@@ -206,7 +206,6 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function create_tax_rate_name( $request ) {
-
         $tax_data = $this->prepare_item_for_database( $request );
 
         $tax_id = erp_acct_insert_tax_rate_name( $tax_data );
@@ -357,14 +356,27 @@ class Tax_Rate_Names_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'name' => [
-                    'description' => __( 'Tax Category name for the resource.' ),
+                'tax_rate_name' => [
+                    'description' => __( 'Tax rate name for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
+                'tax_number' => [
+                    'description' => __( 'Tax number for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'default' => [
+                    'description' => __( 'Tax default value for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'view', 'edit' ]
+                ]
             ],
         ];
 

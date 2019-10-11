@@ -25,7 +25,7 @@ function erp_acct_get_all_tax_rates( $args = [] ) {
 
     $limit = '';
 
-    if ( '-1' !== $args['number'] ) {
+    if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
@@ -340,7 +340,7 @@ function erp_acct_get_tax_pay_records( $args = [] ) {
 
     $limit = '';
 
-    if ( '-1' !== $args['number'] ) {
+    if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 

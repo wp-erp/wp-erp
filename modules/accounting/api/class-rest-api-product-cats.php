@@ -45,7 +45,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
 						return current_user_can( 'erp_ac_manager' );
 					},
 				],
-				'schema' => [ $this, 'get_public_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ],
 			]
         );
         register_rest_route(
@@ -77,7 +77,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
 						return current_user_can( 'erp_ac_manager' );
 					},
 				],
-				'schema' => [ $this, 'get_public_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ],
 			]
         );
 
@@ -95,7 +95,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
 						return current_user_can( 'erp_ac_manager' );
 					},
 				],
-				'schema' => [ $this, 'get_public_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ],
 			]
         );
     }
@@ -299,7 +299,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
     public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'erp_inv_product',
+            'title'      => 'erp_inv_product_cat',
             'type'       => 'object',
             'properties' => [
                 'id'     => [
@@ -309,7 +309,7 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
                     'readonly'    => true,
                 ],
                 'name'   => [
-                    'description' => __( 'Title for the resource.' ),
+                    'description' => __( 'Name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -317,12 +317,21 @@ class Inventory_Product_Cats_Controller extends \WeDevs\ERP\API\REST_Controller 
                     ],
                     'required'    => true,
                 ],
-                'parent' => [
-                    'description' => __( 'Parent for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
+                'parent'    => [
+                    'description' => __( 'Parent for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'name' => [
+                            'description' => __( 'Name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                        ]
                     ],
                 ],
             ],

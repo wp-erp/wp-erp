@@ -49,7 +49,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_create_vendor' );
 					},
 				],
-				'schema' => [ $this, 'get_public_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ],
 			]
         );
 
@@ -82,7 +82,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_delete_vendor' );
 					},
 				],
-				'schema' => [ $this, 'get_public_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ],
 			]
         );
 
@@ -100,7 +100,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_delete_vendor' );
 					},
 				],
-				'schema' => [ $this, 'get_public_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ],
 			]
         );
 
@@ -163,6 +163,10 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         foreach ( $items as $item ) {
+            $photo_id = erp_people_get_meta( $item->id, 'photo_id', true );
+
+            $item->{'photo_id'} = $photo_id;
+            $item->{'photo'}    = wp_get_attachment_thumb_url( $photo_id );
 
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
@@ -201,6 +205,11 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( empty( $id ) || empty( $item['id'] ) ) {
             return new WP_Error( 'rest_vendor_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
+
+        $photo_id = erp_people_get_meta( $id, 'photo_id', true );
+
+        $item['photo_id'] = $photo_id;
+        $item['photo']    = wp_get_attachment_thumb_url( $photo_id );
 
         $additional_fields = [];
         if ( isset( $request['include'] ) ) {
@@ -384,8 +393,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 				'new_value'     => '',
 				'message'       => $data['first_name'] . ' ' . $data['last_name'] . __( ' vendor has been created', 'erp' ),
 				'changetype'    => $action,
-				'created_by'    => get_current_user_id(),
-
+				'created_by'    => get_current_user_id()
 			]
         );
     }
@@ -410,8 +418,12 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['email'] = $request['email'];
         }
 
+        // optional arguments.
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
+        }
+        if ( isset( $request['photo_id'] ) ) {
+            $prepared_item['photo_id'] = $request['photo_id'];
         }
         if ( isset( $request['company'] ) ) {
             $prepared_item['company'] = $request['company'];
@@ -483,6 +495,8 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             'website'    => $item->website,
             'notes'      => $item->notes,
             'other'      => $item->other,
+            'photo_id'   => !empty($item->photo_id) ? $item->photo_id : null,
+            'photo'      => !empty($item->photo) ? $item->photo : null,
             'billing'    => [
                 'first_name'  => $item->first_name,
                 'last_name'   => $item->last_name,
@@ -527,7 +541,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'first_name' => [
                     'description' => __( 'First name for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
@@ -536,7 +550,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'last_name'  => [
                     'description' => __( 'Last name for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
@@ -546,27 +560,35 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'description' => __( 'The email address for the resource.' ),
                     'type'        => 'string',
                     'format'      => 'email',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'required'    => true,
                 ],
-                'phone'      => [
-                    'description' => __( 'Phone for the resource.' ),
+                'mobile'     => [
+                    'description' => __( 'Mobile number for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'other'      => [
-                    'description' => __( 'Other for the resource.' ),
+                'company'     => [
+                    'description' => __( 'Company name for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'phone'      => [
+                    'description' => __( 'Phone number for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
                 'website'    => [
-                    'description' => __( 'Website of the resource.' ),
+                    'description' => __( 'Website link of the resource.' ),
                     'type'        => 'string',
                     'format'      => 'uri',
                     'context'     => [ 'embed', 'view', 'edit' ],
@@ -574,67 +596,93 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'notes'      => [
                     'description' => __( 'Notes of the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'billing'    => [
-                    'description' => __( 'List of billing address data.', 'erp' ),
+                'fax'      => [
+                    'description' => __( 'Fax of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'street_1'      => [
+                    'description' => __( 'Stree 1 for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'street_2'      => [
+                    'description' => __( 'Stree 2 for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'city'      => [
+                    'description' => __( 'City for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'postal_code'      => [
+                    'description' => __( 'Zip code for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'view', 'edit' ]
+                ],
+                'photo_id'      => [
+                    'description' => __( 'Photo ID for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'view', 'edit' ]
+                ],
+                'photo'      => [
+                    'description' => __( 'Photo for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'country'    => [
+                    'description' => __( 'List of countries data.', 'erp' ),
                     'type'        => 'object',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'first_name'  => [
-                            'description' => __( 'First name.', 'erp' ),
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'last_name'   => [
-                            'description' => __( 'Last name.', 'erp' ),
+                        'name' => [
+                            'description' => __( 'Country name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                        ]
+                    ],
+                ],
+                'state'    => [
+                    'description' => __( 'State for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'street_1'    => [
-                            'description' => __( 'Address line 1', 'erp' ),
+                        'name' => [
+                            'description' => __( 'State name for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
-                        ],
-                        'street_2'    => [
-                            'description' => __( 'Address line 2', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'city'        => [
-                            'description' => __( 'City name.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'state'       => [
-                            'description' => __( 'ISO code or name of the state, province or district.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'postal_code' => [
-                            'description' => __( 'Postal code.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'country'     => [
-                            'description' => __( 'ISO code of the country.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'email'       => [
-                            'description' => __( 'The email address for the resource.' ),
-                            'type'        => 'string',
-                            'format'      => 'email',
-                            'context'     => [ 'edit' ],
-                        ],
-                        'phone'       => [
-                            'description' => __( 'Phone for the resource.' ),
-                            'type'        => 'string',
-                            'context'     => [ 'edit' ],
-                        ],
+                        ]
                     ],
                 ],
             ],

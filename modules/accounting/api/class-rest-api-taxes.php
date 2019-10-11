@@ -243,7 +243,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_tax_rates( $request ) {
         $args = [
-            'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number'     => ! empty( $request['per_page'] ) ? (int) $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
@@ -528,7 +528,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_tax_records( $request ) {
         $args = [
-            'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number'     => ! empty( $request['per_page'] ) ? (int) $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
@@ -875,7 +875,6 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'tax_rate_id'           => (int) $item->tax_rate_id,
             'tax_rate_name'         => $item->tax_rate_name,
-            // 'tax_number'            => $item->tax_number,
             'default'               => (int) $item->default,
             'sales_tax_category_id' => $item->tax_cat_id,
             'tax_rate'              => ! empty( $item->tax_rate ) ? $item->tax_rate : null,
@@ -908,36 +907,44 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'db_id'       => [
-                    'description' => __( 'Unique identifier for the line resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'readonly'    => true,
-                ],
-                'tax_rate_id' => [
-                    'description' => __( 'Tax Rate name id for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'tax_number'  => [
-                    'description' => __( 'Tax number for the resource.' ),
+                'tax_rate_name'       => [
+                    'description' => __( 'Tax rate name for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
                 ],
                 'is_compound' => [
                     'description' => __( 'Tax type for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                    'context'     => [ 'edit' ]
                 ],
+                'tax_components'    => [
+                    'description' => __( 'Components for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'component_name'   => [
+                            'description' => __( 'Component name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'agency_id' => [
+                            'description' => __( 'Agency id for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'tax_category_id' => [
+                            'description' => __( 'Tax category id for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'tax_rate' => [
+                            'description' => __( 'Tax rate for the resource.', 'erp' ),
+                            'type'        => 'number',
+                            'context'     => [ 'view', 'edit' ],
+                        ]
+                    ],
+                ]
             ],
         ];
 

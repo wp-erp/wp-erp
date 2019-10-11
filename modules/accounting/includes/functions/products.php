@@ -26,7 +26,7 @@ function erp_acct_get_all_products( $args = [] ) {
     $where = '';
     $limit = '';
 
-    if ( '-1' !== $args['number'] ) {
+    if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
@@ -51,7 +51,7 @@ function erp_acct_get_all_products( $args = [] ) {
     $sql .= " FROM {$wpdb->prefix}erp_acct_products AS product
         LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
         LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
-        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id 
+        LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id
         WHERE product.product_type_id<>3 ORDER BY product.{$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
@@ -90,7 +90,7 @@ function erp_acct_get_product( $product_id ) {
 
 		FROM {$wpdb->prefix}erp_acct_products AS product
 		LEFT JOIN {$wpdb->prefix}erp_peoples AS people ON product.vendor = people.id
-		LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id 
+		LEFT JOIN {$wpdb->prefix}erp_acct_product_categories AS cat ON product.category_id = cat.id
         LEFT JOIN {$wpdb->prefix}erp_acct_product_types AS product_type ON product.product_type_id = product_type.id WHERE product.id = {$product_id} LIMIT 1",
         ARRAY_A
     );

@@ -127,7 +127,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_inventory_products( $request ) {
         $args = [
-            'number' => ! empty( $request['number'] ) ? $request['number'] : 20,
+            'number' => ! empty( $request['number'] ) ? (int) $request['number'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) )
         ];
 
@@ -346,7 +346,7 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'readonly'    => true,
                 ],
                 'name'            => [
-                    'description' => __( 'Title for the resource.' ),
+                    'description' => __( 'Name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -354,51 +354,104 @@ class Inventory_Products_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'vendor'          => [
-                    'description' => __( 'Vendor for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                    'required'    => true,
-                ],
-                'product_type_id' => [
-                    'description' => __( 'product type id for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'category_id'     => [
-                    'description' => __( 'Category id for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
+                'product_type_id'    => [
+                    'description' => __( 'State for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                            'required'    => true,
+                        ],
+                        'name' => [
+                            'description' => __( 'Type name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                            'arg_options' => [
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ],
+                        ]
                     ],
                 ],
-                'tax_cat_id'      => [
-                    'description' => __( 'Tax Category id for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
+                'category_id'    => [
+                    'description' => __( 'Category id for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'name' => [
+                            'description' => __( 'Type name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'parent' => [
+                            'description' => __( 'Parent category for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ]
+                    ],
+                ],
+                'tax_cat_id'    => [
+                    'description' => __( 'Tax category id for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'name' => [
+                            'description' => __( 'Tax category name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'description' => [
+                            'description' => __( 'Description for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ]
+                    ],
+                ],
+                'vendor'    => [
+                    'description' => __( 'Vendor for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                            'required'    => true
+                        ],
+                        'name' => [
+                            'description' => __( 'Name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                            'arg_options' => [
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ]
+                        ]
                     ],
                 ],
                 'cost_price'      => [
                     'description' => __( 'Cost price for the resource.' ),
-                    'type'        => 'integer',
+                    'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
                 'sale_price'      => [
                     'description' => __( 'Sale price for the resource.' ),
-                    'type'        => 'integer',
+                    'type'        => 'number',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
-                ],
+                ]
             ],
         ];
 
