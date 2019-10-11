@@ -823,6 +823,7 @@ Company'
                 `customer_name` varchar(255) DEFAULT NULL,
                 `trn_date` date DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,
+                `ref` varchar(255) DEFAULT NULL,
                 `particulars` varchar(255) DEFAULT NULL,
                 `attachments` varchar(255) DEFAULT NULL,
                 `status` int(11) DEFAULT NULL,

@@ -317,6 +317,9 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( isset( $request['amount'] ) ) {
             $prepared_item['amount'] = $request['amount'];
         }
+        if ( isset( $request['ref'] ) ) {
+            $prepared_item['ref'] = $request['ref'];
+        }
         if ( isset( $request['due'] ) ) {
             $prepared_item['due'] = $request['due'];
         }
@@ -373,6 +376,7 @@ class Payments_Controller extends \WeDevs\ERP\API\REST_Controller {
             'customer_name' => $item->customer_name,
             'trn_date'      => $item->trn_date,
             'amount'        => $item->amount,
+            'ref'           => $item->ref,
             'account'       => erp_acct_get_ledger_name_by_id( $item->trn_by_ledger_id ),
             'line_items'    => $item->line_items,
             'attachments'   => maybe_unserialize( $item->attachments ),
