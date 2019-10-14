@@ -1037,3 +1037,26 @@ function erp_revoke_terminated_employee_access( $capabilities, $caps, $args, $us
 
     return $capabilities;
 }
+
+
+/**
+ * Get Contractual Employees
+ *
+ * @since 0.1
+ * @since 1.1.14 Add where condition to remove terminated employees
+ *
+ * @return object collection of user_id
+ */
+function erp_hr_get_contractual_employee() {
+
+    $db = new \WeDevs\ORM\Eloquent\Database();
+
+    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id', 'hiring_date' )
+        ->where( 'status', 'active' )
+        ->where( 'type', 'contract' )
+        ->orWhere( 'type', 'trainee' )
+        ->get()
+        ->toArray() );
+}
+
+

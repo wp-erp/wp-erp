@@ -5,6 +5,7 @@
 function erp_hr_dashboard_widget_birthday_callback() {
     erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Birthday Buddies', 'erp' ), 'erp_hr_dashboard_widget_birthday' );
     erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> Who is out', 'erp' ), 'erp_hr_dashboard_widget_whoisout' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> About to end', 'erp' ), 'erp_hr_dashboard_widget_about_to_end' );
 }
 
 function erp_hr_dashboard_widget_announcement_callback() {
@@ -94,6 +95,61 @@ function erp_hr_dashboard_widget_birthday() {
     </style>
     <?php
 }
+
+
+/**
+ * About to end widget
+ *
+ * @return void
+ */
+function erp_hr_dashboard_widget_about_to_end() {
+    $c_t_employees = erp_hr_get_contractual_employee();
+    $current_date =  current_time('Y-m-d' );
+    ?>
+    <h4><?php _e( 'Contracts about to end ', 'erp' ); ?></h4>
+    <span class="wait"><?php _e( 'please wait ...', 'erp' ); ?></span>
+
+    <ul class="erp-list list-two-side list-sep">
+
+        <?php foreach ( $c_t_employees as $key => $user ): ?>
+
+            <?php
+                $hiring_date = $user->hiring_date;
+                $date1=date_create($hiring_date);
+                $date2=date_create($current_date);
+                $diff=date_diff($date1,$date2);
+                if ( $diff->days > 180 && $diff->days < 365) :
+            ?>
+                <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
+
+                <li>
+                    <a href="<?php echo $employee->get_details_url(); ?>"><?php echo $employee->get_full_name(); ?></a>
+                    <span><?php echo erp_format_date( $user->hiring_date, 'M, d' ); ?></span>
+                </li>
+            <?php
+                endif;
+                endforeach;
+            ?>
+
+
+    </ul>
+
+    <style>
+        span.wait {
+            display: none;
+            float: right;
+        }
+        .erp-list .send-wish {
+            box-shadow: none;
+        }
+        .erp-list .send-wish i {
+            color: #fbc02d;
+        }
+    </style>
+    <?php
+}
+
+
 
 /**
  * Latest Announcement Widget
