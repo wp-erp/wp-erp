@@ -261,11 +261,15 @@ export default {
         },
 
         isDuplicateLedger(requestData) {
-            let current_ledgers = erp_acct_var.ledgers;
+            /* global erp_acct_var */
+            const current_ledgers = erp_acct_var.ledgers.filter(led => {
+                return led.id !== this.$route.params.id;
+            });
+
             let duplicate = false;
 
-            for ( let idx = 0; idx < current_ledgers.length; idx++ ) {
-                if (requestData.code == current_ledgers[idx].code || requestData.name == current_ledgers[idx].name ) {
+            for (let idx = 0; idx < current_ledgers.length; idx++) {
+                if (requestData.code === current_ledgers[idx].code || requestData.name === current_ledgers[idx].name) {
                     duplicate = true;
                     break;
                 }
@@ -286,8 +290,8 @@ export default {
                 code: this.ledgFields.code
             };
 
-            if ( this.isDuplicateLedger(requestData) ) {
-                this.showAlert('error', 'Duplicate Category!');
+            if (this.isDuplicateLedger(requestData)) {
+                this.showAlert('error', 'Duplicate Account!');
                 this.$store.dispatch('spinner/setSpinner', false);
                 return;
             }
