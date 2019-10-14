@@ -18826,11 +18826,16 @@ if (false) {(function () {
       });
     },
     isDuplicateLedger: function isDuplicateLedger(requestData) {
-      var current_ledgers = erp_acct_var.ledgers;
+      var _this7 = this;
+
+      /* global erp_acct_var */
+      var current_ledgers = erp_acct_var.ledgers.filter(function (led) {
+        return led.id !== _this7.$route.params.id;
+      });
       var duplicate = false;
 
       for (var idx = 0; idx < current_ledgers.length; idx++) {
-        if (requestData.code == current_ledgers[idx].code || requestData.name == current_ledgers[idx].name) {
+        if (requestData.code === current_ledgers[idx].code || requestData.name === current_ledgers[idx].name) {
           duplicate = true;
           break;
         }
@@ -18850,7 +18855,7 @@ if (false) {(function () {
       };
 
       if (this.isDuplicateLedger(requestData)) {
-        this.showAlert('error', 'Duplicate Category!');
+        this.showAlert('error', 'Duplicate Account!');
         this.$store.dispatch('spinner/setSpinner', false);
         return;
       }
@@ -23588,6 +23593,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -26665,6 +26674,24 @@ setTimeout(function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_email_SendMail_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_base_Dropdown_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_transactions_TransParticulars_vue__ = __webpack_require__(18);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -53206,10 +53233,18 @@ var render = function() {
                       _c("table", { staticClass: "invoice-info" }, [
                         _c("tr", [
                           _c("th", [
-                            _vm._v(_vm._s(_vm.__("Journal No", "erp")))
+                            _vm._v(_vm._s(_vm.__("Journal No", "erp")) + ":")
                           ]),
                           _vm._v(" "),
                           _c("td", [_vm._v("#" + _vm._s(_vm.journal.id))])
+                        ]),
+                        _vm._v(" "),
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.__("Journal Ref", "erp")) + ":")
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(_vm.journal.ref))])
                         ]),
                         _vm._v(" "),
                         _c("tr", [
@@ -57392,6 +57427,47 @@ var render = function() {
                             _vm._v(" "),
                             _c("td", [
                               _vm._v(_vm._s(_vm.expense_data.created_at))
+                            ])
+                          ])
+                        ])
+                      ])
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                null != _vm.expense_data.check_data
+                  ? _c("div", { staticClass: "wperp-row" }, [
+                      _c("div", { staticClass: "wperp-col-sm-12" }, [
+                        _c("table", [
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Check No", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                "#" +
+                                  _vm._s(_vm.expense_data.check_data.check_no)
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Bank Name", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(_vm.expense_data.check_data.bank))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _c("th", [
+                              _vm._v(_vm._s(_vm.__("Pay To", "erp")) + ":")
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(_vm._s(_vm.expense_data.check_data.pay_to))
                             ])
                           ])
                         ])

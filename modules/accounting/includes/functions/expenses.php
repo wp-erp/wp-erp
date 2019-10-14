@@ -79,6 +79,12 @@ function erp_acct_get_expense( $expense_no ) {
 
     $row['bill_details'] = erp_acct_format_expense_line_items( $expense_no );
 
+    $check_data = erp_acct_get_check_data_of_expense( $expense_no );
+
+    if ( ! empty( $check_data ) ) {
+        $row['check_data'] = $check_data;
+    }
+
     return $row;
 }
 
@@ -284,6 +290,10 @@ function erp_acct_insert_expense( $data ) {
             }
 
             return erp_acct_get_expense( $voucher_no );
+        }
+
+        if ( 3 == $expense_data['trn_by'] ) {
+            erp_acct_insert_check_data( $expense_data );
         }
 
         if ( 'check' === $type ) {
@@ -578,6 +588,37 @@ function erp_acct_insert_source_expense_data_into_ledger( $expense_data ) {
 			'updated_by'  => $expense_data['updated_by'],
         )
     );
+}
+
+/**
+ * Get check data of a expense
+ *
+ * @param $expense_no
+ * @return mixed
+ */
+function erp_acct_get_check_data_of_expense( $expense_no ) {
+    global $wpdb;
+
+    $sql = "SELECT
+    cheque.bank,
+    cheque.check_no,
+    cheque.trn_no,
+    cheque.name,
+    cheque.pay_to,
+    cheque.bank,
+    cheque.amount,
+
+    ledg_detail.debit,
+    ledg_detail.credit
+
+    FROM {$wpdb->prefix}erp_acct_expense_checks AS cheque
+    LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details AS ledg_detail ON cheque.trn_no = ledg_detail.trn_no
+
+    WHERE cheque.trn_no = {$expense_no}";
+
+    $row = $wpdb->get_row( $sql, ARRAY_A );
+
+    return $row;
 }
 
 
