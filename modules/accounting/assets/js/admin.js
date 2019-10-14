@@ -48690,18 +48690,20 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "particulars" },
-    [
-      _c("h4", [_vm._v("Particulars")]),
-      _vm._v(" "),
-      _vm._l(_vm.particulars.split(/\r?\n/), function(particular, par) {
-        return _c("p", { key: par }, [_vm._v(_vm._s(particular))])
-      })
-    ],
-    2
-  )
+  return _vm.particulars
+    ? _c(
+        "div",
+        { staticClass: "particulars" },
+        [
+          _c("h4", [_vm._v("Particulars")]),
+          _vm._v(" "),
+          _vm._l(_vm.particulars.split(/\r?\n/), function(particular, par) {
+            return _c("p", { key: par }, [_vm._v(_vm._s(particular))])
+          })
+        ],
+        2
+      )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
