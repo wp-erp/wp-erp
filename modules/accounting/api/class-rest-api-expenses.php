@@ -441,6 +441,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
             'trn_by'       => $item->trn_by,
             'created_at'   => $item->created_at,
             'deposit_to'   => $item->trn_by_ledger_id,
+            'check_data'   => ! empty( $item->check_data ) ? $item->check_data : [],
         ];
 
         $data = array_merge( $data, $additional_fields );
