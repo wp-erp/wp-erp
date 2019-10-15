@@ -114,17 +114,17 @@ function erp_hr_dashboard_widget_about_to_end() {
         <?php foreach ( $c_t_employees as $key => $user ): ?>
 
             <?php
-                $hiring_date = $user->hiring_date;
-                $date1=date_create($hiring_date);
-                $date2=date_create($current_date);
-                $diff=date_diff($date1,$date2);
-                if ( $diff->days > 180 && $diff->days < 365) :
+                $date1          = date_create($current_date);
+                $end_date       = get_user_meta( $user->user_id, 'end_date', true );
+                $date2          = date_create( $end_date );
+                $diff           = date_diff($date1,$date2);
+                if ( $diff->days > 0 && $diff->days < 21) :
             ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
 
                 <li>
                     <a href="<?php echo $employee->get_details_url(); ?>"><?php echo $employee->get_full_name(); ?></a>
-                    <span><?php echo erp_format_date( $user->hiring_date, 'M, d' ); ?></span>
+                    <span><?php echo erp_format_date( $end_date, 'M, d' ); ?></span>
                 </li>
             <?php
                 endif;
