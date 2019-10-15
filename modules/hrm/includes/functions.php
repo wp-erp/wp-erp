@@ -293,3 +293,42 @@ function erp_hr_exclude_recipients( $recipients ) {
 
     return $recipients;
 }
+
+/**
+ * Generate email body for weekly digest email
+ *
+ * @since 1.5.6
+ *
+ * @return mixed
+ *
+ */
+function get_digest_email_body() {
+    return 'Hello HR Manager';
+}
+
+/**
+ * Send weekly digest email to hr
+ *
+ * @since 1.5.6
+ *
+ * @return mixed
+ *
+ */
+
+function send_weekly_digest_email_to_hr() {
+    $email              = new WeDevs\ERP\Email();
+    $email->id          = 'weekly-digest-email-to-hr';
+    $email->title       = __( 'Weekly digest email to HR Manager', 'erp' );
+    $email->description = __( 'Send weekly digest email to HR Manager with general information', 'erp' );
+    $email->subject     = __( 'Weekly digest email', 'erp' );
+    $email->heading     = __( 'Weekly digest email', 'erp' );
+    $email->recipient   = 'admintest@admin.com';
+
+    $email_body         = $email->get_template_content( WPERP_INCLUDES . '/email/email-body.php', [
+                            'email_heading' => $email->heading,
+                            'email_body'    => wpautop( get_digest_email_body() ),
+                        ] );
+    $email->send( $email->get_recipient(), $email->get_subject(), $email_body, $email->get_headers(), $email->get_attachments() );
+}
+
+//add_action('init','send_weekly_digest_email_to_hr');
