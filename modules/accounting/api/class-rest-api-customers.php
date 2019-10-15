@@ -44,7 +44,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
 				[
 					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'create_customer' ],
-					'args'                => $this->get_collection_params(),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 					'permission_callback' => function( $request ) {
 						return current_user_can( 'erp_ac_create_customer' );
 					},
@@ -668,8 +668,11 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'postal_code'      => [
                     'description' => __( 'Zip code for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'view', 'edit' ]
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
                 ],
                 'photo_id'      => [
                     'description' => __( 'Photo ID for the resource.' ),
@@ -686,12 +689,12 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'country'    => [
                     'description' => __( 'List of countries data.', 'erp' ),
-                    'type'        => 'object',
+                    'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
                         'id'   => [
                             'description' => __( 'Unique identifier for the resource.', 'erp' ),
-                            'type'        => 'string',
+                            'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'name' => [
@@ -699,11 +702,11 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ]
-                    ],
+                    ]
                 ],
                 'state'    => [
                     'description' => __( 'State for the resource.', 'erp' ),
-                    'type'        => 'object',
+                    'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
                         'id'   => [

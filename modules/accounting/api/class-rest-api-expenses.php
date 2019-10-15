@@ -228,7 +228,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $expense_data = $this->prepare_item_for_database( $request );
 
         $item_amount       = [];
-        $item_tax          = [];
         $item_total        = [];
         $additional_fields = [];
 
@@ -273,7 +272,6 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
         $expense_data = $this->prepare_item_for_database( $request );
 
         $item_amount       = [];
-        $item_tax          = [];
         $item_total        = [];
         $additional_fields = [];
 
@@ -462,7 +460,7 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'bill',
+            'title'      => 'expense',
             'type'       => 'object',
             'properties' => [
                 'id'              => [
@@ -474,19 +472,21 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'voucher_no'      => [
                     'description' => __( 'Voucher no. for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                    'context'     => [ 'edit' ]
                 ],
                 'people_id'       => [
                     'description' => __( 'People id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
+                    'required'    => true,
+                ],
+                'ref'       => [
+                    'description' => __( 'Reference for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                    'required'    => true,
+                    ]
                 ],
                 'trn_date'        => [
                     'description' => __( 'Date for the resource.' ),
@@ -497,71 +497,44 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'due_date'        => [
-                    'description' => __( 'Due date for the resource.' ),
+                'trn_by'        => [
+                    'description' => __( 'Trans by for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ]
+                ],
+                'billing_address' => [
+                    'description' => __( 'Billing address for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                    ]
                 ],
-                'address'         => [
-                    'description' => __( 'List of billing address data.', 'erp' ),
-                    'type'        => 'object',
-                    'context'     => [ 'view', 'edit' ],
-                    'properties'  => [
-                        'city'        => [
-                            'description' => __( 'City name.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'state'       => [
-                            'description' => __( 'ISO code or name of the state, province or district.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'postal_code' => [
-                            'description' => __( 'Postal code.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'country'     => [
-                            'description' => __( 'ISO code of the country.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'phone'       => [
-                            'description' => __( 'Phone for the resource.' ),
-                            'type'        => 'string',
-                            'context'     => [ 'edit' ],
-                        ],
-                    ],
-                ],
-                'expense_details' => [
+                'bill_details' => [
                     'description' => __( 'List of line items data.', 'erp' ),
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
                         'ledger_id'   => [
                             'description' => __( 'Ledger id.', 'erp' ),
-                            'type'        => 'string',
+                            'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
+                            'required'    => true,
                         ],
                         'particulars' => [
                             'description' => __( 'Bill Particulars.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
+                            'arg_options' => [
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ]
                         ],
                         'amount'      => [
                             'description' => __( 'Bill Amount', 'erp' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
-                        ],
-                        'item_total'  => [
-                            'description' => __( 'Line total.' ),
-                            'type'        => 'integer',
-                            'context'     => [ 'edit' ],
-                        ],
+                            'required'    => true
+                        ]
                     ],
                 ],
                 'particulars'     => [
@@ -574,14 +547,11 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'status'          => [
                     'description' => __( 'Status for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ]
                 ],
-                'trn_by'          => [
-                    'description' => __( 'Payment method for the resource.' ),
+                'type'            => [
+                    'description' => __( 'Item Type.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -598,11 +568,9 @@ class Expenses_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'deposit_to'      => [
                     'description' => __( 'Account for the resource.' ),
-                    'type'        => 'string',
+                    'type'        => 'integer',
                     'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                    'required'    => true
                 ],
             ],
         ];

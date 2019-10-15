@@ -324,15 +324,15 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'particulars' => [
-                    'description' => __( 'Particulars for the resource.' ),
+                'trn_date' => [
+                    'description' => __( 'Transaction date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'ref'         => [
+                'ref' => [
                     'description' => __( 'Reference for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -340,20 +340,51 @@ class Journals_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'trn_date'    => [
-                    'description' => __( 'Issue date for the resource.' ),
+                'type' => [
+                    'description' => __( 'Type for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
-                    'required'    => true,
                 ],
-                'line_items'  => [
-                    'description' => __( 'Items for the resource.' ),
-                    'type'        => 'object',
+                'line_items'      => [
+                    'description' => __( 'List of line items data.', 'erp' ),
+                    'type'        => 'array',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'ledger_id'   => [
+                            'description' => __( 'Ledger id.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'particulars' => [
+                            'description' => __( 'Line particulars.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                            'arg_options' => [
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ]
+                        ],
+                        'debit' => [
+                            'description' => __( 'Debit balance.', 'erp' ),
+                            'type'        => 'number',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'credit'          => [
+                            'description' => __( 'Credit balance.', 'erp' ),
+                            'type'        => 'number',
+                            'context'     => [ 'view', 'edit' ],
+                        ]
+                    ],
+                ],
+                'particulars' => [
+                    'description' => __( 'Particulars for the resource.' ),
+                    'type'        => 'string',
                     'context'     => [ 'edit' ],
-                    'required'    => true,
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
                 ],
                 'attachments' => [
                     'description' => __( 'Attachments for the resource.' ),

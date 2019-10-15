@@ -49,7 +49,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_create_expenses_voucher' );
 					},
 				],
-				'schema' => [ $this, 'get_public_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ],
 			]
         );
 
@@ -73,7 +73,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_create_expenses_voucher' );
 					},
 				],
-				'schema' => [ $this, 'get_public_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ],
 			]
         );
 
@@ -440,13 +440,18 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'description' => __( 'Vendor id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
                     'required'    => true,
                 ],
+                'ref'     => [
+                    'description' => __( 'Reference for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ]
+                ],
                 'trn_date'     => [
-                    'description' => __( 'Date for the resource.' ),
+                    'description' => __( 'Trans Date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
@@ -456,47 +461,47 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'trn_by'       => [
                     'description' => __( 'Voucher no. for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ]
                 ],
                 'bill_details' => [
                     'description' => __( 'List of line items data.', 'erp' ),
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'ledger_id'   => [
-                            'description' => __( 'Ledger id.', 'erp' ),
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the line item.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'particulars' => [
-                            'description' => __( 'Particulars.', 'erp' ),
+                        'voucher_no' => [
+                            'description' => __( 'Voucher no for line item.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'amount'      => [
-                            'description' => __( 'Unit price.', 'erp' ),
-                            'type'        => 'integer',
+                        'due_date'      => [
+                            'description' => __( 'Due date for the resource.', 'erp' ),
+                            'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
+                            'arg_options' => [
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ]
                         ],
-                        'tax'         => [
-                            'description' => __( 'Tax.' ),
-                            'type'        => 'integer',
+                        'amount'         => [
+                            'description' => __( 'Amount for the resource.' ),
+                            'type'        => 'number',
                             'context'     => [ 'edit' ],
                         ],
-                        'line_total'  => [
-                            'description' => __( 'Item total.' ),
-                            'type'        => 'integer',
+                        'due'  => [
+                            'description' => __( 'Item due.' ),
+                            'type'        => 'number',
                             'context'     => [ 'edit' ],
                         ],
                     ],
                 ],
                 'check_no'     => [
                     'description' => __( 'Check no for the resource.' ),
-                    'type'        => 'integer',
+                    'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
@@ -520,11 +525,21 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'status'       => [
                     'description' => __( 'Status for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ]
+                ],
+                'particulars'       => [
+                    'description' => __( 'Particulars for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                ],
+                'deposit_to'      => [
+                    'description' => __( 'Deposit to for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ]
                 ],
             ],
         ];
