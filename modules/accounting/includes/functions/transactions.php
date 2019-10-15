@@ -603,6 +603,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             expense.trn_date AS expense_trn_date,
             bill.due_date,
             bill.amount,
+            bill.ref,
             pay_bill.amount as pay_bill_amount,
             expense.amount as expense_amount,
             SUM(bill_acct_details.debit - bill_acct_details.credit) AS due,

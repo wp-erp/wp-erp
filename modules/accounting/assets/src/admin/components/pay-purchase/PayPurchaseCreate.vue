@@ -76,7 +76,7 @@
                             <td class="col--total" data-colname="Total">{{moneyFormat(item.total)}}</td>
                             <td class="col--due" data-colname="Due">{{moneyFormat(item.due)}}</td>
                             <td class="col--amount" data-colname="Amount">
-                                <input type="number" min="0" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right"/>
+                                <input type="number" min="0" :max="item.due" name="amount" v-model="totalAmounts[key]" @keyup="updateFinalAmount" class="text-right wperp-form-field">
                             </td>
                             <td class="delete-row" data-colname="Remove Above Selection">
                                 <a href="#" @click.prevent="remove_item(key)"><i class="flaticon-trash"></i></a>
@@ -86,7 +86,7 @@
                         <tr class="total-amount-row">
                             <td class="text-right pr-0 hide-sm" colspan="4">{{ __('Total Amount', 'erp') }}</td>
                             <td class="text-right" data-colname="Total Amount">
-                                <input type="text" class="text-right" name="finalamount"
+                                <input type="text" class="text-right wperp-form-field" name="finalamount"
                                 :value="moneyFormat(finalTotalAmount)" readonly disabled/></td>
                             <td class="text-right"></td>
                         </tr>

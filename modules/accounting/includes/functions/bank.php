@@ -400,11 +400,11 @@ function erp_acct_get_transfer_vouchers( $args = [] ) {
 
     $limit = '';
 
-    if ( '-1' !== $args['number'] ) {
+    if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
-    $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_transfer_voucher ORDER BY %s %s %d", $args['order_by'], $args['order'], $limit ), ARRAY_A );
+    $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_transfer_voucher ORDER BY %s %s %s", $args['order_by'], $args['order'], $limit ), ARRAY_A );
 
     return $result;
 }
