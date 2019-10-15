@@ -22,3 +22,6 @@ add_filter( 'erp_login_redirect', 'erp_hr_login_redirect', 10, 2 );
 add_filter( 'erp_hr_employee_restricted_data', 'erp_hr_control_restricted_data', 10, 2 );
 add_filter( 'erp_mail_recipients', 'erp_hr_exclude_recipients');
 add_filter( 'erp_hr_get_employee_fields', 'get_employee_additional_fields', 10, 3 );
+
+// Send Weekly digest email to HR manager
+add_action( 'erp_weekly_scheduled_events', 'send_weekly_digest_email_to_hr' );
