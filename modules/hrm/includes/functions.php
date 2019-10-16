@@ -335,7 +335,7 @@ function get_employees_by_birth_month( $current_date ) {
  *
  */
 function get_about_to_end_employees( $current_date ) {
-    $c_t_employees = erp_hr_get_contractual_employee();
+    $c_t_employees      = erp_hr_get_contractual_employee();
     $filtered_employees = [];
     foreach( $c_t_employees as $key => $user ) {
         $date1          = date_create($current_date);
