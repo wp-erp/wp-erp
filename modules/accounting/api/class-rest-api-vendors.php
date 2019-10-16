@@ -678,7 +678,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'properties'  => [
                         'id'   => [
                             'description' => __( 'Unique identifier for the resource.', 'erp' ),
-                            'type'        => 'string',
+                            'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'name' => [
