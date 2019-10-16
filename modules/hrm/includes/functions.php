@@ -415,13 +415,25 @@ function get_digest_email_body() {
  *
  */
 function send_weekly_digest_email_to_hr() {
+    $args = array(
+        'role'    => 'erp_hr_manager',
+        'orderby' => 'user_nicename',
+        'order'   => 'ASC'
+    );
+    $hr_managers = get_users( $args );
+
+    $email_recipient = "";
+    foreach( $hr_managers as $hr_manager ) {
+        $email_recipient .= $hr_manager->user_email . ',';
+    }
+
     $email              = new WeDevs\ERP\Email();
     $email->id          = 'weekly-digest-email-to-hr';
     $email->title       = __( 'Weekly digest email to HR Manager', 'erp' );
     $email->description = __( 'Send weekly digest email to HR Manager with general information', 'erp' );
     $email->subject     = __( 'Weekly digest email', 'erp' );
     $email->heading     = __( 'Weekly digest email', 'erp' );
-    $email->recipient   = 'admintest@admin.com';
+    $email->recipient   = $email_recipient;
 
     $email_body         = $email->get_template_content( WPERP_INCLUDES . '/email/email-body.php', [
                             'email_heading' => $email->heading,
