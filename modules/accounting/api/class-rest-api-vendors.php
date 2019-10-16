@@ -468,6 +468,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['currency'] = $request['currency'];
         }
 
+        $prepared_item['raw_data'] = json_decode( $request->get_body(), true );
         $prepared_item['type'] = 'vendor';
 
         return $prepared_item;
