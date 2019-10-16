@@ -443,3 +443,23 @@ function send_weekly_digest_email_to_hr() {
 }
 
 /****************************  Weekly Digest Email to HR manager  End   **********************************/
+
+/****************** Send Birthday wish email Start ********************/
+
+
+/**
+ * Send birthday wish email to employee
+ *
+ * @since 1.5.6
+ *
+ * @return mixed
+ *
+ */
+function erp_hr_send_birthday_wish_email( $user_id ) {
+    $birthday_wish_email = wperp()->emailer->get_email( 'Birthday_Wish' );
+
+    if ( is_a( $birthday_wish_email, '\WeDevs\ERP\Email' ) ) {
+        $birthday_wish_email->trigger( $user_id );
+    }
+}
+/****************** Send Birthday wish email End ********************/
