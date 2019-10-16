@@ -294,6 +294,89 @@ function erp_hr_exclude_recipients( $recipients ) {
     return $recipients;
 }
 
+
+/****************************  Weekly Digest Email to HR manager  Start   **********************************/
+
+/**
+ * Get Employees based on hiring date period
+ *
+ * @since 1.5.6
+ *
+ * @return mixed
+ *
+ */
+function get_employees_by_hiring_date( $from_date, $to_date ) {
+    global $wpdb;
+    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_hr_employees WHERE `hiring_date` BETWEEN '{$from_date}' AND '{$to_date}' AND status = 'active' ORDER BY hiring_date" );
+    return $results;
+}
+
+/**
+ * Get Employees based on current month birthday
+ *
+ * @since 1.5.6
+ *
+ * @return mixed
+ *
+ */
+function get_employees_by_birth_month( $current_date ) {
+    global $wpdb;
+    $current_month = date('m', strtotime( $current_date ) );
+    $results = $wpdb->get_results( "SELECT * FROM `{$wpdb->prefix}erp_hr_employees` WHERE DATE_FORMAT(`date_of_birth`, \"%m\") = '{$current_month}' AND status='active' ORDER BY date_of_birth" );
+    return $results;
+}
+
+/**
+ * Get Trainee & Contractual Employees based on End date is about to end
+ *
+ * @since 1.5.6
+ *
+ * @return mixed
+ *
+ */
+function get_about_to_end_employees( $current_date ) {
+    $c_t_employees = erp_hr_get_contractual_employee();
+    $filtered_employees = [];
+    foreach( $c_t_employees as $key => $user ) {
+        $date1          = date_create($current_date);
+        $end_date       = get_user_meta( $user->user_id, 'end_date', true );
+        $date2          = date_create( $end_date );
+        $diff           = date_diff($date1,$date2);
+        if ( $diff->days > 0 && $diff->days < 21) {
+            $filtered_employees[] = ( object ) [
+                'user_id'   => $user->user_id,
+                'end_date'  => $end_date
+            ];
+        }
+    }
+    return ( object ) $filtered_employees;
+}
+
+/**
+ * Generate email section body for weekly digest email
+ *
+ * @since 1.5.6
+ *
+ * @return mixed
+ *
+ */
+function generate_mail_section_body( $data, $start_tag, $heading,  $end_tag = null ) {
+    $loop_text = "";
+    foreach( $data as $dt ) {
+
+        if( $end_tag != null ) {
+            $end_tag_date = date( ' - F j', strtotime( $dt->$end_tag ) );
+        } else {
+            $end_tag_date = '';
+        }
+
+        $loop_text .=
+            "<li>" . get_user_meta( $dt->user_id, 'first_name', true ) . ' ' . get_user_meta( $dt->user_id, 'last_name', true ) . ' -- ' . date( 'F j', strtotime( $dt->$start_tag ) ) . $end_tag_date . "</li>";
+    }
+    return "<div><h3> {$heading} </h3><ul>{$loop_text}</ul></div>";
+}
+
+
 /**
  * Generate email body for weekly digest email
  *
@@ -303,7 +386,24 @@ function erp_hr_exclude_recipients( $recipients ) {
  *
  */
 function get_digest_email_body() {
-    return 'Hello HR Manager';
+    $current_date                   = current_time( 'Y-m-d' );
+    $after_15_days_date             = date( 'Y-m-d', strtotime( '+15 days' ) );
+
+    $get_employees_by_hiring_date   = get_employees_by_hiring_date( $current_date, $after_15_days_date );
+    $html_for_new_member_joining    = generate_mail_section_body( $get_employees_by_hiring_date, 'hiring_date', 'New Team member joining' );
+
+    $get_employees_by_birth_month   = get_employees_by_birth_month( $current_date );
+    $html_for_birth_month           = generate_mail_section_body( $get_employees_by_birth_month, 'date_of_birth', 'Birthday this month' );
+
+    $leave_request                  = erp_hr_get_current_month_leave_list();
+    $html_for_leave_request         = generate_mail_section_body( $leave_request, 'start_date', 'Who is out this month', 'end_date' );
+
+    $c_t_employees                  = get_about_to_end_employees( $current_date );
+    $html_for_c_t_employees         = generate_mail_section_body( $c_t_employees, 'end_date', 'Contract about to end' );
+
+
+    $html_wrapper                   = "<div>{$html_for_new_member_joining} {$html_for_birth_month} {$html_for_leave_request} {$html_for_c_t_employees}</div>";
+    return $html_wrapper;
 }
 
 /**
@@ -314,7 +414,6 @@ function get_digest_email_body() {
  * @return mixed
  *
  */
-
 function send_weekly_digest_email_to_hr() {
     $email              = new WeDevs\ERP\Email();
     $email->id          = 'weekly-digest-email-to-hr';
@@ -331,4 +430,4 @@ function send_weekly_digest_email_to_hr() {
     $email->send( $email->get_recipient(), $email->get_subject(), $email_body, $email->get_headers(), $email->get_attachments() );
 }
 
-//add_action('init','send_weekly_digest_email_to_hr');
+/****************************  Weekly Digest Email to HR manager  End   **********************************/
