@@ -118,7 +118,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
     public function get_purchases( $request ) {
 
         $args = [
-            'number' => ! empty( $request['per_page'] ) ? intval( $request['per_page'] ) : 20,
+            'number' => (int) ! empty( $request['per_page'] ) ? intval( $request['per_page'] ) : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 

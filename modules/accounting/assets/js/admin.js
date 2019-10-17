@@ -64105,6 +64105,7 @@ var render = function() {
                                 expression: "acct.debit"
                               }
                             ],
+                            staticClass: "wperp-form-field",
                             attrs: { type: "number" },
                             domProps: { value: acct.debit },
                             on: {
@@ -64129,6 +64130,7 @@ var render = function() {
                                 expression: "acct.credit"
                               }
                             ],
+                            staticClass: "wperp-form-field",
                             attrs: { type: "number", disabled: "" },
                             domProps: { value: acct.credit },
                             on: {
@@ -64305,6 +64307,7 @@ var render = function() {
                                     expression: "acct.debit"
                                   }
                                 ],
+                                staticClass: "wperp-form-field",
                                 attrs: { type: "number", disabled: "" },
                                 domProps: { value: acct.debit },
                                 on: {
@@ -64329,6 +64332,7 @@ var render = function() {
                                     expression: "acct.credit"
                                   }
                                 ],
+                                staticClass: "wperp-form-field",
                                 attrs: { type: "number" },
                                 domProps: { value: acct.credit },
                                 on: {
@@ -64492,6 +64496,7 @@ var render = function() {
                                     expression: "acct.debit"
                                   }
                                 ],
+                                staticClass: "wperp-form-field",
                                 attrs: { type: "number", disabled: "" },
                                 domProps: { value: acct.debit },
                                 on: {
@@ -64516,6 +64521,7 @@ var render = function() {
                                     expression: "acct.credit"
                                   }
                                 ],
+                                staticClass: "wperp-form-field",
                                 attrs: { type: "number" },
                                 domProps: { value: acct.credit },
                                 on: {
@@ -64661,6 +64667,7 @@ var render = function() {
                                       expression: "ledger.debit"
                                     }
                                   ],
+                                  staticClass: "wperp-form-field",
                                   attrs: { type: "number" },
                                   domProps: { value: ledger.debit },
                                   on: {
@@ -64689,6 +64696,7 @@ var render = function() {
                                       expression: "ledger.credit"
                                     }
                                   ],
+                                  staticClass: "wperp-form-field",
                                   attrs: { type: "number" },
                                   domProps: { value: ledger.credit },
                                   on: {
@@ -64780,6 +64788,7 @@ var render = function() {
                                       expression: "ledger.debit"
                                     }
                                   ],
+                                  staticClass: "wperp-form-field",
                                   attrs: { type: "number" },
                                   domProps: { value: ledger.debit },
                                   on: {
@@ -64808,6 +64817,7 @@ var render = function() {
                                       expression: "ledger.credit"
                                     }
                                   ],
+                                  staticClass: "wperp-form-field",
                                   attrs: { type: "number" },
                                   domProps: { value: ledger.credit },
                                   on: {
@@ -64899,6 +64909,7 @@ var render = function() {
                                       expression: "ledger.debit"
                                     }
                                   ],
+                                  staticClass: "wperp-form-field",
                                   attrs: { type: "number" },
                                   domProps: { value: ledger.debit },
                                   on: {
@@ -64927,6 +64938,7 @@ var render = function() {
                                       expression: "ledger.credit"
                                     }
                                   ],
+                                  staticClass: "wperp-form-field",
                                   attrs: { type: "number" },
                                   domProps: { value: ledger.credit },
                                   on: {
@@ -65039,6 +65051,7 @@ var render = function() {
                                     expression: "acct.debit"
                                   }
                                 ],
+                                staticClass: "wperp-form-field",
                                 attrs: { type: "number" },
                                 domProps: { value: acct.debit },
                                 on: {
@@ -65063,6 +65076,7 @@ var render = function() {
                                     expression: "acct.credit"
                                   }
                                 ],
+                                staticClass: "wperp-form-field",
                                 attrs: { type: "number" },
                                 domProps: { value: acct.credit },
                                 on: {
@@ -65158,7 +65172,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("td", { attrs: { "data-colname": "Total Debit" } }, [
                   _c("input", {
-                    staticClass: "text-right",
+                    staticClass: "text-right wperp-form-field",
                     attrs: { type: "text", readonly: "" },
                     domProps: { value: _vm.moneyFormat(_vm.finalTotalDebit) }
                   })
@@ -65166,7 +65180,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("td", { attrs: { "data-colname": "Total Credit" } }, [
                   _c("input", {
-                    staticClass: "text-right",
+                    staticClass: "text-right wperp-form-field",
                     attrs: { type: "text", readonly: "" },
                     domProps: { value: _vm.moneyFormat(_vm.finalTotalCredit) }
                   })
