@@ -586,7 +586,7 @@ class Transactions_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_purchases( $request ) {
         $args = [
-            'number'     => empty( $request['per_page'] ) ? 20 : (int) $request['per_page'],
+            'number'     => (int) empty( $request['per_page'] ) ? 20 : (int) $request['per_page'],
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
             'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],

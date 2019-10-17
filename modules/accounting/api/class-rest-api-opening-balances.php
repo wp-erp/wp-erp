@@ -48,7 +48,7 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_create_journal' );
 					},
 				],
-				//            'schema' => [ $this, 'get_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ],
 			]
         );
 
@@ -453,10 +453,48 @@ class Opening_Balances_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
+                'year'    => [
+                    'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
                 'ledgers' => [
                     'description' => __( 'Ledger names for the resource.' ),
-                    'type'        => 'object',
-                    'context'     => [ 'edit' ],
+                    'type'        => 'array',
+                    'context'     => [ 'edit' ]
+                ],
+                'acct_pay' => [
+                    'description' => __( 'Ledger names for the resource.' ),
+                    'type'        => 'array',
+                    'context'     => [ 'edit' ]
+                ],
+                'acct_rec' => [
+                    'description' => __( 'Ledger names for the resource.' ),
+                    'type'        => 'array',
+                    'context'     => [ 'edit' ]
+                ],
+                'tax_pay' => [
+                    'description' => __( 'Ledger names for the resource.' ),
+                    'type'        => 'array',
+                    'context'     => [ 'edit' ]
+                ],
+                'total_dr'      => [
+                    'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'number',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'total_cr'      => [
+                    'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'number',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'description'      => [
+                    'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],

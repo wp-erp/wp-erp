@@ -663,7 +663,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
-    if ( 0 === $args['status'] ) {
+    if ( empty( $args['status'] ) ) {
         $where .= '';
     } else {
         if ( ! empty( $args['status'] ) ) {
