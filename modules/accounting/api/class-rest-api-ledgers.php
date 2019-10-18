@@ -277,7 +277,6 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_ledger_account( $request ) {
-        error_log(print_r($request, true));
         global $wpdb;
 
         $exist = $wpdb->get_var( $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_acct_ledgers WHERE name = %s", $request['name'] ) );
