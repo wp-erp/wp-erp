@@ -38,7 +38,6 @@ class Admin_Menu {
             'title'       => __( 'Employees', 'erp' ),
             'capability'  => 'erp_list_employee',
             'slug'        => 'employee',
-            'direct_link' => admin_url( 'admin.php' ) . '?page=erp-hr&section=employee&orderby=employee_name&order=asc',
             'callback'    => [ $this, 'employee_page' ],
             'position'    => 5,
         ) );
