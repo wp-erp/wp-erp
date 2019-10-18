@@ -102,7 +102,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_pay_purchases( $request ) {
         $args = [
-            'number' => isset( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number' => (int) isset( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
@@ -214,7 +214,6 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function update_pay_purchase( $request ) {
-
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -400,6 +399,11 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'voucher_no'       => [
                     'description' => __( 'Voucher no. for the resource.' ),
                     'type'        => 'integer',
+                    'context'     => [ 'edit' ]
+                ],
+                'type'             => [
+                    'description' => __( 'Type for the resource.' ),
+                    'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
@@ -438,26 +442,31 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'due'        => [
+                        'due_date'        => [
                             'description' => __( 'Unit price.', 'erp' ),
                             'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'total'      => [
                             'description' => __( 'Discount.', 'erp' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'item_total' => [
+                        'due'      => [
+                            'description' => __( 'Discount.', 'erp' ),
+                            'type'        => 'number',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'line_total' => [
                             'description' => __( 'Item total.' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'edit' ],
                         ],
                     ],
                 ],
                 'check_no'         => [
                     'description' => __( 'Check no for the resource.' ),
-                    'type'        => 'integer',
+                    'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
@@ -471,7 +480,7 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'type'             => [
+                'type'            => [
                     'description' => __( 'Type for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -479,14 +488,31 @@ class Pay_Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'status'           => [
+                'status'          => [
                     'description' => __( 'Status for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ]
+                ],
+                'particulars'           => [
+                    'description' => __( 'Particulars for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
+                'deposit_to'      => [
+                    'description' => __( 'Status for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'required'    => true
+                ],
+                'trn_by'          => [
+                    'description' => __( 'Status for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'required'    => true
+                ]
             ],
         ];
 

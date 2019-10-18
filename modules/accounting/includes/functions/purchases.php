@@ -26,7 +26,7 @@ function erp_acct_get_purchases( $args = [] ) {
 
     $limit = '';
 
-    if ( '-1' !== $args['number'] ) {
+    if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 

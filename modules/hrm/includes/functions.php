@@ -490,9 +490,9 @@ function send_weekly_digest_email_to_hr() {
     $email->recipient   = $email_recipient;
 
     $email_body         = $email->get_template_content( WPERP_INCLUDES . '/email/email-body.php', [
-                            'email_heading' => $email->heading,
-                            'email_body'    => wpautop( get_digest_email_body( $current_date, $after_7_days_date ) ),
-                        ] );
+        'email_heading' => $email->heading,
+        'email_body'    => wpautop( get_digest_email_body( $current_date, $after_7_days_date ) ),
+    ] );
     $email->send( $email->get_recipient(), $email->get_subject(), $email_body, $email->get_headers(), $email->get_attachments() );
 }
 

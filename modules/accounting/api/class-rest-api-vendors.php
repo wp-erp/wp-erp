@@ -49,7 +49,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_create_vendor' );
 					},
 				],
-				'schema' => [ $this, 'get_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ]
 			]
         );
 
@@ -82,7 +82,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_delete_vendor' );
 					},
 				],
-				'schema' => [ $this, 'get_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ]
 			]
         );
 
@@ -100,7 +100,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_delete_vendor' );
 					},
 				],
-				'schema' => [ $this, 'get_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ]
 			]
         );
 
@@ -468,6 +468,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['currency'] = $request['currency'];
         }
 
+        $prepared_item['raw_data'] = json_decode( $request->get_body(), true );
         $prepared_item['type'] = 'vendor';
 
         return $prepared_item;
@@ -635,8 +636,11 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'postal_code'      => [
                     'description' => __( 'Zip code for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'view', 'edit' ]
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
                 ],
                 'photo_id'      => [
                     'description' => __( 'Photo ID for the resource.' ),
@@ -653,7 +657,7 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'country'    => [
                     'description' => __( 'List of countries data.', 'erp' ),
-                    'type'        => 'object',
+                    'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
                         'id'   => [
@@ -670,12 +674,12 @@ class Vendors_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'state'    => [
                     'description' => __( 'State for the resource.', 'erp' ),
-                    'type'        => 'object',
+                    'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
                         'id'   => [
                             'description' => __( 'Unique identifier for the resource.', 'erp' ),
-                            'type'        => 'string',
+                            'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'name' => [

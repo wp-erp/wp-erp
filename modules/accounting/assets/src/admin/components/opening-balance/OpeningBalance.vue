@@ -55,8 +55,8 @@
                     <tr :key="idx" v-for="(acct,idx) in acct_rec">
                         <td><div class="wperp-form-group ob-people with-multiselect">
                             <multi-select v-model="acct.people" :options="options" /></div></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="acct.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" disabled v-model="acct.credit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="acct.debit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" disabled v-model="acct.credit"></td>
                         <td class="delete-row" data-colname="Remove">
                             <a @click.prevent="removeAcctRecRow(idx)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
@@ -92,8 +92,8 @@
                     <tr :key="idx" v-for="(acct,idx) in acct_pay">
                         <td><div class="wperp-form-group ob-people with-multiselect">
                             <multi-select v-model="acct.people" :options="options" /></div></td>
-                        <td><input type="number" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
                         <td class="delete-row" data-colname="Remove">
                             <a @click.prevent="removeAcctPayRow(idx)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
@@ -126,8 +126,8 @@
                     <tbody>
                     <tr :key="idx" v-for="(acct,idx) in tax_pay">
                         <td><div class="with-multiselect"><multi-select v-model="acct.agency" :options="agencies"/></div></td>
-                        <td><input type="number" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" disabled v-model="acct.debit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
                         <td class="delete-row" data-colname="Remove">
                             <a @click.prevent="removeTaxPayRow(idx)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
@@ -159,8 +159,8 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[1]">
                         <td>{{ledger.name}}</td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -184,8 +184,8 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[2]">
                         <td>{{ledger.name}}</td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -209,8 +209,8 @@
                     <tbody>
                     <tr :key="idx" v-for="(ledger,idx) in ledgers[3]">
                         <td>{{ledger.name}}</td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="ledger.credit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.debit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="ledger.credit"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -236,8 +236,8 @@
                     <tr :key="idx" v-for="(acct,idx) in ledgers[7]">
                         <td><div class="wperp-form-group ob-people with-multiselect">
                             <multi-select v-model="acct.bank" :options="banks" /></div></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="acct.debit"></td>
-                        <td><input type="number" @keyup="calculateAmount" v-model="acct.credit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="acct.debit"></td>
+                        <td><input type="number" class="wperp-form-field" @keyup="calculateAmount" v-model="acct.credit"></td>
                         <td class="delete-row" data-colname="Remove">
                             <a @click.prevent="removeBankRow(idx)" href="#"><i class="flaticon-trash"></i></a>
                         </td>
@@ -258,10 +258,10 @@
                         <span>{{ __('Total Amount', 'erp') }}</span>
                     </td>
                     <td data-colname="Total Debit">
-                        <input type="text" class="text-right" :value="moneyFormat(finalTotalDebit)" readonly>
+                        <input type="text" class="text-right wperp-form-field" :value="moneyFormat(finalTotalDebit)" readonly>
                     </td>
                     <td data-colname="Total Credit">
-                        <input type="text" class="text-right" :value="moneyFormat(finalTotalCredit)" readonly>
+                        <input type="text" class="text-right wperp-form-field" :value="moneyFormat(finalTotalCredit)" readonly>
                     </td>
                 </tr>
                 <tr class="wperp-form-group">
@@ -307,33 +307,33 @@ export default {
 
     data() {
         return {
-            open1: true,
-            open2: true,
-            open3: true,
-            open4: true,
-            open5: true,
-            open6: true,
-            open7: true,
-            form_errors: [],
+            open1        : true,
+            open2        : true,
+            open3        : true,
+            open4        : true,
+            open5        : true,
+            open6        : true,
+            open7        : true,
+            form_errors  : [],
             chartAccounts: [],
-            ledgers: [],
-            agencies: null,
-            banks: [],
-            people: [],
-            options: [],
-            fin_year: null,
-            years: [],
-            description: '',
-            all_ledgers: [],
-            credit_total: 0,
-            debit_total: 0,
-            isWorking: false,
-            acct_rec: [],
-            acct_pay: [],
-            tax_pay: [],
-            totalDebit: 0,
-            totalCredit: 0,
-            accPayRec: null
+            ledgers      : [],
+            agencies     : null,
+            banks        : [],
+            people       : [],
+            options      : [],
+            fin_year     : null,
+            years        : [],
+            description  : '',
+            all_ledgers  : [],
+            credit_total : 0,
+            debit_total  : 0,
+            isWorking    : false,
+            acct_rec     : [],
+            acct_pay     : [],
+            tax_pay      : [],
+            totalDebit   : 0,
+            totalCredit  : 0,
+            accPayRec    : null
         };
     },
 

@@ -603,6 +603,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             expense.trn_date AS expense_trn_date,
             bill.due_date,
             bill.amount,
+            bill.ref,
             pay_bill.amount as pay_bill_amount,
             expense.amount as expense_amount,
             SUM(bill_acct_details.debit - bill_acct_details.credit) AS due,
@@ -662,7 +663,7 @@ function erp_acct_get_purchase_transactions( $args = [] ) {
     if ( ! empty( $args['start_date'] ) ) {
         $where .= " AND purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}' OR pay_purchase.trn_date BETWEEN '{$args['start_date']}' AND '{$args['end_date']}'";
     }
-    if ( 0 === $args['status'] ) {
+    if ( empty( $args['status'] ) ) {
         $where .= '';
     } else {
         if ( ! empty( $args['status'] ) ) {
