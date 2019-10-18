@@ -319,11 +319,25 @@ function get_employees_by_hiring_date( $from_date, $to_date ) {
  * @return mixed
  *
  */
-function get_employees_by_birth_month( $current_date ) {
+function get_employees_by_birth_month( $current_date, $after_7_days_date ) {
     global $wpdb;
-    $current_month = date('m', strtotime( $current_date ) );
-    $results = $wpdb->get_results( "SELECT * FROM `{$wpdb->prefix}erp_hr_employees` WHERE DATE_FORMAT(`date_of_birth`, \"%m\") = '{$current_month}' AND status='active' ORDER BY date_of_birth" );
-    return $results;
+    $current_month_date      = date('m d', strtotime( $current_date ) );
+    $after_7_days_month_date = date('m d', strtotime( $after_7_days_date ) );
+    $results = $wpdb->get_results( "SELECT * FROM `{$wpdb->prefix}erp_hr_employees` WHERE DATE_FORMAT(`date_of_birth`, \"%m %d\") BETWEEN '{$current_month_date}' AND '{$after_7_days_month_date}' AND status='active' ORDER BY date_of_birth" );
+
+    $results_arr = [];
+
+    foreach( $results as $result) {
+        $results_arr[] = ( object ) [
+            'user_id'       => $result->user_id,
+            'date_of_birth' => $result->date_of_birth,
+            'date_of_birth_only' => date( 'd', strtotime( $result->date_of_birth ) ),
+        ];
+    }
+    usort($results_arr, function($a, $b) {
+        return $a->date_of_birth_only > $b->date_of_birth_only;
+    });
+    return ( object ) $results_arr;
 }
 
 /**
@@ -342,13 +356,16 @@ function get_about_to_end_employees( $current_date ) {
         $end_date       = get_user_meta( $user->user_id, 'end_date', true );
         $date2          = date_create( $end_date );
         $diff           = date_diff($date1,$date2);
-        if ( $diff->days > 0 && $diff->days < 21) {
+        if ( $diff->days > 0 && $diff->days < 7) {
             $filtered_employees[] = ( object ) [
                 'user_id'   => $user->user_id,
                 'end_date'  => $end_date
             ];
         }
     }
+    usort($filtered_employees, function($a, $b) {
+        return $a->end_date > $b->end_date;
+    });
     return ( object ) $filtered_employees;
 }
 
@@ -362,20 +379,46 @@ function get_about_to_end_employees( $current_date ) {
  */
 function generate_mail_section_body( $data, $start_tag, $heading,  $end_tag = null ) {
     $loop_text = "";
+    if ( count( ( array ) $data ) == 0 ) {
+        return "";
+    }
     foreach( $data as $dt ) {
 
         if( $end_tag != null ) {
-            $end_tag_date = date( ' - F j', strtotime( $dt->$end_tag ) );
+            $end_tag_date = " &mdash; " . date( ' M j', strtotime( $dt->$end_tag ) );
         } else {
             $end_tag_date = '';
         }
 
         $loop_text .=
-            "<li>" . get_user_meta( $dt->user_id, 'first_name', true ) . ' ' . get_user_meta( $dt->user_id, 'last_name', true ) . ' -- ' . date( 'F j', strtotime( $dt->$start_tag ) ) . $end_tag_date . "</li>";
+            "<li>" . get_user_meta( $dt->user_id, 'first_name', true ) . ' ' . get_user_meta( $dt->user_id, 'last_name', true ) . ' &mdash; ' . date( 'M j', strtotime( $dt->$start_tag ) ) . $end_tag_date . "</li>";
     }
     return "<div><h3> {$heading} </h3><ul>{$loop_text}</ul></div>";
 }
 
+
+/**
+ * Get approved email of this week
+ *
+ * @since 1.5.6
+ *
+ * @return mixed
+ *
+ */
+function get_approved_leave_by_week( $current_date, $after_7_days_date ) {
+    $leave_list =  erp_hr_get_current_month_leave_list();
+    $leave_list_arr = [];
+    foreach( $leave_list as $ll ) {
+        if ( $ll->start_date >= $current_date && $ll->start_date <= $after_7_days_date ) {
+            $leave_list_arr[] = ( object ) [
+                'user_id'       => $ll->user_id,
+                'start_date'    => $ll->start_date,
+                'end_date'      => $ll->end_date,
+            ];
+        }
+    }
+    return ( object ) $leave_list_arr;
+}
 
 /**
  * Generate email body for weekly digest email
@@ -385,21 +428,19 @@ function generate_mail_section_body( $data, $start_tag, $heading,  $end_tag = nu
  * @return mixed
  *
  */
-function get_digest_email_body() {
-    $current_date                   = current_time( 'Y-m-d' );
-    $after_15_days_date             = date( 'Y-m-d', strtotime( '+15 days' ) );
+function get_digest_email_body( $current_date, $after_7_days_date ) {
 
-    $get_employees_by_hiring_date   = get_employees_by_hiring_date( $current_date, $after_15_days_date );
-    $html_for_new_member_joining    = generate_mail_section_body( $get_employees_by_hiring_date, 'hiring_date', 'New Team member joining' );
+    $get_employees_by_hiring_date   = get_employees_by_hiring_date( $current_date, $after_7_days_date );
+    $html_for_new_member_joining    = generate_mail_section_body( $get_employees_by_hiring_date, 'hiring_date', 'New Team Member Joining' );
 
-    $get_employees_by_birth_month   = get_employees_by_birth_month( $current_date );
-    $html_for_birth_month           = generate_mail_section_body( $get_employees_by_birth_month, 'date_of_birth', 'Birthday this month' );
+    $get_employees_by_birth_month   = get_employees_by_birth_month( $current_date, $after_7_days_date );
+    $html_for_birth_month           = generate_mail_section_body( $get_employees_by_birth_month, 'date_of_birth', 'Birthday This Week' );
 
-    $leave_request                  = erp_hr_get_current_month_leave_list();
-    $html_for_leave_request         = generate_mail_section_body( $leave_request, 'start_date', 'Who is out this month', 'end_date' );
+    $leave_request                  = get_approved_leave_by_week( $current_date, $after_7_days_date );
+    $html_for_leave_request         = generate_mail_section_body( $leave_request, 'start_date', 'Who is Out This Week', 'end_date' );
 
     $c_t_employees                  = get_about_to_end_employees( $current_date );
-    $html_for_c_t_employees         = generate_mail_section_body( $c_t_employees, 'end_date', 'Contract about to end' );
+    $html_for_c_t_employees         = generate_mail_section_body( $c_t_employees, 'end_date', 'Contract About to End' );
 
 
     $html_wrapper                   = "<div>{$html_for_new_member_joining} {$html_for_birth_month} {$html_for_leave_request} {$html_for_c_t_employees}</div>";
@@ -415,11 +456,24 @@ function get_digest_email_body() {
  *
  */
 function send_weekly_digest_email_to_hr() {
+
+    if ( current_time( 'l' ) != 'Monday' ) {
+        return false;
+    }
+
+    $current_date                   = current_time( 'Y-m-d' );
+    $after_7_days_date              = date( 'Y-m-d', strtotime( '+6 days' ) );
+
+    $current_m_d                    = date( 'M d', strtotime( $current_date ) );
+    $after_7_days_date_m_d          = date( 'M d', strtotime( $after_7_days_date ) );
+    $current_year                   = date( 'Y', strtotime( $current_date ) );
+
     $args = array(
         'role'    => 'erp_hr_manager',
         'orderby' => 'user_nicename',
         'order'   => 'ASC'
     );
+
     $hr_managers = get_users( $args );
 
     $email_recipient = "";
@@ -431,13 +485,13 @@ function send_weekly_digest_email_to_hr() {
     $email->id          = 'weekly-digest-email-to-hr';
     $email->title       = __( 'Weekly digest email to HR Manager', 'erp' );
     $email->description = __( 'Send weekly digest email to HR Manager with general information', 'erp' );
-    $email->subject     = __( 'Weekly digest email', 'erp' );
-    $email->heading     = __( 'Weekly digest email', 'erp' );
+    $email->subject     = __( 'Weekly Digest on ' . get_bloginfo( 'name' ), 'erp' );
+    $email->heading     = __( "Weekly Digest Email <h3> {$current_m_d} - {$after_7_days_date_m_d}, {$current_year}</h3>", 'erp' );
     $email->recipient   = $email_recipient;
 
     $email_body         = $email->get_template_content( WPERP_INCLUDES . '/email/email-body.php', [
                             'email_heading' => $email->heading,
-                            'email_body'    => wpautop( get_digest_email_body() ),
+                            'email_body'    => wpautop( get_digest_email_body( $current_date, $after_7_days_date ) ),
                         ] );
     $email->send( $email->get_recipient(), $email->get_subject(), $email_body, $email->get_headers(), $email->get_attachments() );
 }
