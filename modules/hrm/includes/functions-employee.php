@@ -435,6 +435,7 @@ function erp_hr_get_employees_dropdown( $selected = '' ) {
 function erp_hr_get_employee_statuses() {
     $statuses = array(
         'active'     => __( 'Active', 'erp' ),
+        'inactive'   => __( 'Inactive', 'erp' ),
         'terminated' => __( 'Terminated', 'erp' ),
         'deceased'   => __( 'Deceased', 'erp' ),
         'resigned'   => __( 'Resigned', 'erp' )
