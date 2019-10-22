@@ -1814,6 +1814,25 @@ span.green {
 .erp-hr-employees table.wp-list-table .column-status {
   width: 8%;
 }
+.erp-hr-employees table.wp-list-table .column-status span {
+  color: #fff;
+  padding: 0 2px;
+}
+.erp-hr-employees table.wp-list-table .column-status .status-active {
+  background: rgba(66, 146, 34, 0.4);
+}
+.erp-hr-employees table.wp-list-table .column-status .status-inactive {
+  background: rgba(165, 161, 161, 0.4);
+}
+.erp-hr-employees table.wp-list-table .column-status .status-resigned {
+  background: rgba(168, 117, 42, 0.4);
+}
+.erp-hr-employees table.wp-list-table .column-status .status-terminated {
+  background: rgba(215, 50, 45, 0.4);
+}
+.erp-hr-employees table.wp-list-table .column-status .status-deceased {
+  background: #525252;
+}
 .erp-hr-employees table.wp-list-table .column-comments {
   width: 25%;
 }
@@ -2664,7 +2683,13 @@ table.erp-settings-table tr:nth-child(odd) td {
   position: relative;
 }
 .erp .erp-single-container .erp-area-left .erp-profile-top .erp-avatar .inactive {
-  background: url('../images/inactive.png') no-repeat;
+  border: 2px dashed #d50000;
+  line-height: 32px;
+  text-align: center;
+  color: #f44336;
+  font-size: 18px;
+  border-radius: 4px;
+  top: 100px;
   background-position: 50%;
   position: absolute;
   bottom: 0px;

@@ -102,7 +102,7 @@ class Employee_List_Table extends \WP_List_Table {
                 return $employee->get_joined_date();
 
             case 'status':
-                return erp_hr_get_employee_statuses_icons( strtolower($employee->status) );
+                return $this->get_employee_status_styled_text( $employee->status );
 
             default:
                 return isset( $employee->$column_name ) ? $employee->$column_name : '';
@@ -227,6 +227,39 @@ class Employee_List_Table extends \WP_List_Table {
         return sprintf(
             '<input type="checkbox" name="employee_id[]" value="%s" />', $item->id
         );
+    }
+
+    /**
+     * Render the status column
+     *
+     * @param  string  $status
+     *
+     * @return string
+     */
+    function get_employee_status_styled_text( $status ) {
+        switch ( $status ) {
+            case 'active':
+                $status = '<span class="status-active">Active</span>';
+                break;
+
+            case 'inactive':
+                $status = '<span class="status-inactive">Inactive</span>';
+                break;
+
+            case 'terminated':
+                $status = '<span class="status-terminated">Terminated</span>';
+                break;
+
+            case 'deceased':
+                $status = '<span class="status-deceased">Deceased</span>';
+                break;
+
+            case 'resigned':
+                $status = '<span class="status-resigned">Resigned</span>';
+                break;
+        }
+
+        return $status;
     }
 
     /**
