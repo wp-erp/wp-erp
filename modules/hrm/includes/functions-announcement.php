@@ -56,6 +56,8 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = 
         }
     }
 
+    do_action( 'hr_annoucement_save', $post_id, $selected );
+
     $announces_object = \WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->whereIn( 'user_id', $selected );
 
     $announcements      = $announces_object->get();

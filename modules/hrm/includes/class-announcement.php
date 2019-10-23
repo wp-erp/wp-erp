@@ -441,7 +441,7 @@ class Announcement {
 		// Assign / Send announcements to the selected group
         erp_hr_assign_announcements_to_employees( $post_id, $type, $selected );
 
-        do_action( 'hr_annoucement_save', $post_id, $selected );
+        //do_action( 'hr_annoucement_save', $post_id, $selected );
     }
 
 }
