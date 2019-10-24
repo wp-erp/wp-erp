@@ -104,7 +104,7 @@
                                 erp_html_form_input( array(
                                     'label'    => __( 'Employee Closing Date', 'erp' ),
                                     'name'     => 'work[end_date]',
-                                    'value'    => '{{ data.work.end_date }}',
+                                    'value'    => '{{ ( data.work.end_date ) ? data.work.end_date : null }}',
                                     'required' => false,
                                     'type'     => 'text',
                                     'class'    => 'erp-date-field'
