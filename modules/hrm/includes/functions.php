@@ -172,6 +172,31 @@ function erp_hr_schedule_check_todays_birthday() {
 }
 
 /**
+ * Check today's work anniversary through schedule job.
+ *
+ * @since 1.5.6
+ *
+ * @return array
+ */
+function erp_hr_schedule_check_todays_work_anniversary() {
+    $anniversary_wish_email = wperp()->emailer->get_email( 'Hiring_Anniversary_Wish' );
+
+    if ( is_a( $anniversary_wish_email, '\WeDevs\ERP\Email' ) ) {
+        $db = new \WeDevs\ORM\Eloquent\Database();
+
+        $employees = erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
+            ->where( $db->raw( "DATE_FORMAT( `hiring_date`, '%m %d' )" ), \Carbon\Carbon::today()->format( 'm d' ) )
+            ->where( 'status', 'active' )
+            ->get()
+            ->toArray() );
+        foreach( $employees as $employee ) {
+            $anniversary_wish_email->trigger( $employee->user_id );
+        }
+    }
+}
+
+
+/**
  * Prevent redirect to woocommerce my account page
  *
  * @param boolean $prevent_access
