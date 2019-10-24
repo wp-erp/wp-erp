@@ -3,6 +3,7 @@ namespace WeDevs\ERP\HRM\Emails;
 
 use WeDevs\ERP\Email;
 use WeDevs\ERP\Framework\Traits\Hooker;
+use DateTime;
 
 /**
  * Birthday wish
@@ -22,7 +23,8 @@ class Hiring_Anniversary_Wish extends Email {
         $this->find = [
             'full-name'       => '{full_name}',
             'first-name'      => '{first_name}',
-            'last-name'       => '{last_name}'
+            'last-name'       => '{last_name}',
+            'total-year'      => '{total_year}',
         ];
 
         $this->action( 'erp_admin_field_' . $this->id . '_help_texts', 'replace_keys' );
@@ -30,7 +32,15 @@ class Hiring_Anniversary_Wish extends Email {
         parent::__construct();
     }
 
-    public function trigger( $employee_user_id = null ) {
+    public function get_year_diff( $hiring_date ) {
+        //return $hiring_date;
+        $d1 = new DateTime( current_time( 'Y-m-d' ) );
+        $d2 = new DateTime( $hiring_date );
+        $diff = $d2->diff($d1);
+        return $diff->y;
+    }
+
+    public function trigger( $employee_user_id = null, $hiring_date = null ) {
         if ( ! $employee_user_id ) {
             return;
         }
@@ -44,7 +54,8 @@ class Hiring_Anniversary_Wish extends Email {
         $this->replace = [
             'full-name'       => $employee->get_full_name(),
             'first-name'      => $employee->first_name,
-            'last-name'       => $employee->last_name
+            'last-name'       => $employee->last_name,
+            'total-year'      => $this->get_year_diff( $hiring_date )
         ];
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );

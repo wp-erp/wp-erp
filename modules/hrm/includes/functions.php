@@ -184,13 +184,13 @@ function erp_hr_schedule_check_todays_work_anniversary() {
     if ( is_a( $anniversary_wish_email, '\WeDevs\ERP\Email' ) ) {
         $db = new \WeDevs\ORM\Eloquent\Database();
 
-        $employees = erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
+        $employees = erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id', 'hiring_date' )
             ->where( $db->raw( "DATE_FORMAT( `hiring_date`, '%m %d' )" ), \Carbon\Carbon::today()->format( 'm d' ) )
             ->where( 'status', 'active' )
             ->get()
             ->toArray() );
         foreach( $employees as $employee ) {
-            $anniversary_wish_email->trigger( $employee->user_id );
+            $anniversary_wish_email->trigger( $employee->user_id, $employee->hiring_date );
         }
     }
 }
