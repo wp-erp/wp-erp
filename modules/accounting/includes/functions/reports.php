@@ -330,7 +330,7 @@ function erp_acct_income_statement_calculate_with_opening_balance( $is_start_dat
     // get opening balance data within that(^) financial year
     $opening_balance = erp_acct_is_opening_balance_by_fn_year_id( $closest_fy_date['id'], $chart_id );
 
-    $ledgers   = $wpdb->get_results( "SELECT ledger.id, ledger.name FROM {$wpdb->prefix} erp_acct_ledgers AS ledger WHERE ledger.chart_id = %d", $chart_id, ARRAY_A );
+    $ledgers   = $wpdb->get_results( $wpdb->prepare( "SELECT ledger.id, ledger.name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger WHERE ledger.chart_id = %d" , $chart_id ), ARRAY_A );
     $temp_data = erp_acct_get_is_balance_with_opening_balance( $ledgers, $data, $opening_balance );
     $result    = [];
 
