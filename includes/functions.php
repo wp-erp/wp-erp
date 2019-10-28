@@ -281,7 +281,13 @@ function erp_get_currencies_dropdown( $selected = '' ) {
  * @return string
  */
 function erp_get_currency() {
-    return erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
+    global $wpdb;
+
+    $erp_currency = erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
+
+    $sql = $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_acct_currency_info WHERE id = %d", $erp_currency );
+
+    return $wpdb->get_var( $sql );
 }
 
 
