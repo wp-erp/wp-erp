@@ -650,8 +650,7 @@ class Ledgers_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'category_id' => [
                     'description' => __( 'Code for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'required'    => false,
+                    'context'     => [ 'edit' ]
                 ],
                 'name'        => [
                     'description' => __( 'Name for the resource.' ),

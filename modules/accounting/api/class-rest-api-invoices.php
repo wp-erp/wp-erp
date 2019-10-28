@@ -49,7 +49,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 						return current_user_can( 'erp_ac_create_sales_invoice' );
 					},
 				],
-				//'schema' => [ $this, 'get_item_schema' ],
+				'schema' => [ $this, 'get_item_schema' ],
 			]
         );
 
@@ -118,8 +118,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 					'permission_callback' => function( $request ) {
 						return current_user_can( 'erp_ac_create_sales_invoice' );
 					},
-				],
-				//'schema' => [ $this, 'get_item_schema' ],
+				]
 			]
         );
 
@@ -134,8 +133,7 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
 					'permission_callback' => function( $request ) {
 						return current_user_can( 'erp_ac_create_sales_invoice' );
 					},
-				],
-				//'schema' => [ $this, 'get_item_schema' ],
+				]
 			]
         );
 
@@ -554,9 +552,6 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'description' => __( 'Customer id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
                     'required'    => true,
                 ],
                 'date'            => [
@@ -579,35 +574,24 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'billing_address' => [
                     'description' => __( 'List of billing address data.', 'erp' ),
-                    'type'        => 'object',
+                    'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
-                    'properties'  => [
-                        'city'        => [
-                            'description' => __( 'City name.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'state'       => [
-                            'description' => __( 'ISO code or name of the state, province or district.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'postal_code' => [
-                            'description' => __( 'Postal code.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'country'     => [
-                            'description' => __( 'ISO code of the country.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'phone'       => [
-                            'description' => __( 'Phone for the resource.' ),
-                            'type'        => 'string',
-                            'context'     => [ 'edit' ],
-                        ],
-                    ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ]
+                ],
+                'discount_type' => [
+                    'description' => __( 'Discount type data.', 'erp' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ]
+                ],
+                'tax_rate_id' => [
+                    'description' => __( 'Tax rate id.', 'erp' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'view', 'edit' ]
                 ],
                 'line_items'      => [
                     'description' => __( 'List of line items data.', 'erp' ),
@@ -616,12 +600,20 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'properties'  => [
                         'product_id'   => [
                             'description' => __( 'Product id.', 'erp' ),
-                            'type'        => 'string',
+                            'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'product_type' => [
+                        'product_type_name' => [
                             'description' => __( 'Product type.', 'erp' ),
                             'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                            'arg_options' => [
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ]
+                        ],
+                        'tax_cat_id' => [
+                            'description' => __( 'Product type.', 'erp' ),
+                            'type'        => 'integer',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'qty'          => [
@@ -631,27 +623,27 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                         ],
                         'unit_price'   => [
                             'description' => __( 'Unit price.', 'erp' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'discount'     => [
                             'description' => __( 'Discount.', 'erp' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'tax'          => [
                             'description' => __( 'Tax.' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'edit' ],
                         ],
-                        'tax_percent'  => [
+                        'tax_rate'  => [
                             'description' => __( 'Tax percent.', 'erp' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
                         ],
                         'item_total'   => [
                             'description' => __( 'Item total.' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'edit' ],
                         ],
                     ],
@@ -666,11 +658,22 @@ class Invoices_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'status'          => [
                     'description' => __( 'Status for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ]
+                ],
+                'particulars'          => [
+                    'description' => __( 'Status for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                ],
+                'estimate'        => [
+                    'description' => __( 'Status for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'required'    => true
                 ],
             ],
         ];

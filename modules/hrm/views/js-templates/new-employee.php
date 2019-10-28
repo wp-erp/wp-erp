@@ -99,7 +99,22 @@
                                 ?>
                             </div>
 
-                            <div class="col-3" style="clear:left" data-selected="{{ data.work.status }}">
+                            <div class="col-3" style="clear:left">
+                                <?php
+                                erp_html_form_input( array(
+                                    'label'    => __( 'Employee Closing Date', 'erp' ),
+                                    'name'     => 'work[end_date]',
+                                    'value'    => '{{ ( data.work.end_date ) ? data.work.end_date : null }}',
+                                    'required' => false,
+                                    'type'     => 'text',
+                                    'class'    => 'erp-date-field'
+                                ) );
+                                ?>
+                            </div>
+
+
+
+                            <div class="col-3" data-selected="{{ data.work.status }}">
                                 <?php
                                 erp_html_form_input( array(
                                     'label'    => __( 'Employee Status', 'erp' ),
@@ -113,7 +128,7 @@
                                 ?>
                             </div>
 
-                            <div class="col-3">
+                            <div class="col-3" style="clear:left">
                                 <?php
                                     erp_html_form_input( array(
                                         'label'    => __( 'Date of Hire', 'erp' ),

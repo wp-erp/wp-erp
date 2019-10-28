@@ -208,6 +208,21 @@ Company'
 
         update_option( 'erp_email_settings_new-contact-assigned', $new_contact_assigned );
 
+
+        //Employee hiring date anniversary
+        $hiring_date_anniversary = [
+            'subject' => 'Congratulation for Your Work Anniversary',
+            'heading' => 'Congratulation for Passing One More Year With Us :)',
+            'body'    => 'Congratulations {full_name}!
+
+You have been a model employee for {total_year} years now. You are one of my few original employees and have certainly become an asset to this company. I appreciate the selfless service you\'ve given for so many years. Without the loyalty and hard work of experts like you who helped us get things started, we could never have achieved our present stature. I hope the gift I sent will reflect the high esteem I have for you.
+
+May you enjoy the fruits of your labors for years to come'
+        ];
+
+        update_option( 'erp_email_settings_hiring-anniversary-wish', $hiring_date_anniversary );
+
+
     }
 
     /**

@@ -551,10 +551,7 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'voucher_no'   => [
                     'description' => __( 'Voucher no. for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                    'context'     => [ 'edit' ]
                 ],
                 'vendor_id'    => [
                     'description' => __( 'People id for the resource.' ),
@@ -583,37 +580,22 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'address'      => [
-                    'description' => __( 'List of billing address data.', 'erp' ),
-                    'type'        => 'object',
-                    'context'     => [ 'view', 'edit' ],
-                    'properties'  => [
-                        'city'        => [
-                            'description' => __( 'City name.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'state'       => [
-                            'description' => __( 'ISO code or name of the state, province or district.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'postal_code' => [
-                            'description' => __( 'Postal code.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'country'     => [
-                            'description' => __( 'ISO code of the country.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'phone'       => [
-                            'description' => __( 'Phone for the resource.' ),
-                            'type'        => 'string',
-                            'context'     => [ 'edit' ],
-                        ],
+                'ref'     => [
+                    'description' => __( 'Reference number for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ]
+                ],
+                'billing_address' =>  [
+                    'description' => __( 'Billing address for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
                 ],
                 'bill_details' => [
                     'description' => __( 'List of line items data.', 'erp' ),
@@ -622,37 +604,51 @@ class Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'properties'  => [
                         'ledger_id'   => [
                             'description' => __( 'Ledger id.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ]
                         ],
-                        'particulars' => [
-                            'description' => __( 'Bill Particulars.', 'erp' ),
+                        'description' => [
+                            'description' => __( 'Item Particular.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
+                            'arg_options' => [
+                                'sanitize_callback' => 'sanitize_text_field',
+                            ]
                         ],
                         'amount'      => [
                             'description' => __( 'Bill Amount', 'erp' ),
-                            'type'        => 'integer',
+                            'type'        => 'number',
                             'context'     => [ 'view', 'edit' ],
-                        ],
-                        'item_total'  => [
-                            'description' => __( 'Line total.' ),
-                            'type'        => 'integer',
-                            'context'     => [ 'edit' ],
-                        ],
+                        ]
                     ],
                 ],
                 'status'       => [
                     'description' => __( 'Status for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'required'    => true
+                ],
+                'type' => [
+                    'description' => __( 'Item Type.', 'erp' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
+                'particulars' => [
+                    'description' => __( 'Bill Particular.', 'erp' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ]
             ],
         ];
 
         return $schema;
     }
 }
+
+

@@ -1639,7 +1639,6 @@ if (false) {(function () {
         this.peopleFields.last_name = people.last_name;
         this.peopleFields.email = people.email;
         this.peopleFields.mobile = people.mobile;
-        this.peopleFields.photo = people.photo;
         this.peopleFields.company = people.company;
         this.peopleFields.phone = people.phone;
         this.peopleFields.website = people.website;
@@ -1651,6 +1650,10 @@ if (false) {(function () {
         this.peopleFields.country = this.selectedCountry(people.billing.country);
         this.peopleFields.state = this.selectedState(people.billing.state);
         this.peopleFields.postal_code = people.billing.postal_code;
+
+        if (people.photo) {
+          this.peopleFields.photo = people.photo;
+        }
       }
     },
     selectedCountry: function selectedCountry(id) {

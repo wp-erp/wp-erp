@@ -230,13 +230,21 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
         if ( empty( $item['from_account_id'] ) || empty( $item['to_account_id'] ) ) {
             return new WP_Error( 'rest_transfer_invalid_accounts', __( 'Both accounts should be present.' ), [ 'status' => 400 ] );
         }
+        $args               = [];
+        $args['start_date'] = date( 'Y-m-d' );
 
-        $ledger_details = erp_acct_get_balance_by_ledger( $item['from_account_id'] );
+        $closest_fy_date    = erp_acct_get_closest_fn_year_date( $args['start_date'] );
+        $args['start_date'] = $closest_fy_date['start_date'];
+        $args['end_date']   = $closest_fy_date['end_date'];
+
+
+        $ledger_details = get_ledger_balance_with_opening_balance( $item['from_account_id'], $args['start_date'], $args['end_date'] );
+
         if ( empty( $ledger_details ) ) {
             return new WP_Error( 'rest_transfer_invalid_account', __( 'Something Went Wrong! Account not found.' ), [ 'status' => 400 ] );
         }
 
-        $from_balance = $ledger_details[0]['balance'];
+        $from_balance = $ledger_details['balance'];
 
         // if ( $from_balance < $item['amount'] ) {
         //     return new WP_Error( 'rest_transfer_insufficient_funds', __( 'Not enough money on selected transfer source.' ), [ 'status' => 400 ] );
@@ -261,11 +269,10 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return mixed|object|WP_REST_Response
      */
     public function get_transfer_list( $request ) {
-
         $args = [
             'order_by' => isset( $request['order_by'] ) ? $request['order_by'] : 'id',
             'order'    => isset( $request['order'] ) ? $request['order'] : 'DESC',
-            'number'   => isset( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number'   => isset( $request['per_page'] ) ? (int) $request['per_page'] : 20,
             'offset'   => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
@@ -596,7 +603,7 @@ class Bank_Accounts_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
                 'amount'          => [
                     'description' => __( 'Amount for the resource.' ),
-                    'type'        => 'integer',
+                    'type'        => 'number',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
