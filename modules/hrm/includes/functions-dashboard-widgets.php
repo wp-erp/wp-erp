@@ -5,7 +5,9 @@
 function erp_hr_dashboard_widget_birthday_callback() {
     erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Birthday Buddies', 'erp' ), 'erp_hr_dashboard_widget_birthday' );
     erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> Who is out', 'erp' ), 'erp_hr_dashboard_widget_whoisout' );
-    erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> About to end', 'erp' ), 'erp_hr_dashboard_widget_about_to_end' );
+    if ( current_user_can( 'erp_hr_manager' ) ) {
+        erp_admin_dash_metabox(__('<i class="fa fa-paper-plane"></i> About to end', 'erp'), 'erp_hr_dashboard_widget_about_to_end');
+    }
 }
 
 function erp_hr_dashboard_widget_announcement_callback() {
@@ -105,6 +107,7 @@ function erp_hr_dashboard_widget_birthday() {
 function erp_hr_dashboard_widget_about_to_end() {
     $c_t_employees = erp_hr_get_contractual_employee();
     $current_date =  current_time('Y-m-d' );
+    $emp_counter    = 0;
     ?>
     <h4><?php _e( 'Contracts about to end ', 'erp' ); ?></h4>
     <span class="wait"><?php _e( 'please wait ...', 'erp' ); ?></span>
@@ -127,12 +130,17 @@ function erp_hr_dashboard_widget_about_to_end() {
                     <span><?php echo erp_format_date( $end_date, 'M, d' ); ?></span>
                 </li>
             <?php
+                    $emp_counter++;
                 endif;
                 endforeach;
             ?>
-
-
     </ul>
+
+    <?php
+    if ( $emp_counter == 0 ) {
+        echo "<span> Sorry ! No data found </span>";
+    }
+    ?>
 
     <style>
         span.wait {

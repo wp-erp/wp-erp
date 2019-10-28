@@ -10,6 +10,7 @@ add_action( 'set_user_role', 'erp_hr_existing_role_to_employee', 10, 2 );
 add_action( 'erp_hr_employee_new', 'erp_hr_apply_policy_on_new_employee', 10, 1 );
 add_action( 'erp_daily_scheduled_events', 'erp_hr_apply_scheduled_policies' );
 add_action( 'erp_daily_scheduled_events', 'erp_hr_schedule_check_todays_birthday' );
+add_action( 'erp_daily_scheduled_events', 'erp_hr_schedule_check_todays_work_anniversary' );
 add_action( 'erp_daily_scheduled_events', 'erp_hr_apply_entitlement_yearly' );
 add_action( 'erp_hr_leave_policy_new', 'erp_hr_apply_policy_existing_employee', 10, 2 );
 add_action( 'erp_hr_schedule_announcement_email', 'erp_hr_send_announcement_email', 10, 2 );
