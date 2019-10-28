@@ -155,14 +155,14 @@ function erp_acct_format_check_line_items( $voucher_no ) {
 
         expense_detail.ledger_id,
         expense_detail.particulars,
+        expense_detail.amount,
 
         ledger.name AS ledger_name,
 
         cheque.bank,
         cheque.name,
         cheque.check_no,
-        cheque.pay_to,
-        cheque.amount
+        cheque.pay_to
 
         FROM {$wpdb->prefix}erp_acct_expenses AS expense
         LEFT JOIN {$wpdb->prefix}erp_acct_expense_checks AS cheque ON expense.voucher_no = cheque.trn_no
@@ -292,12 +292,15 @@ function erp_acct_insert_expense( $data ) {
             return erp_acct_get_expense( $voucher_no );
         }
 
-        if ( 3 == $expense_data['trn_by'] ) {
+        $check = 3;
+
+        if ( $check == $expense_data['trn_by'] ) {
+            erp_acct_insert_check_data( $expense_data );
+        } elseif ( 'check' === $type ) {
             erp_acct_insert_check_data( $expense_data );
         }
 
         if ( 'check' === $type ) {
-            erp_acct_insert_check_data( $expense_data );
             erp_acct_insert_source_expense_data_into_ledger( $expense_data );
         } elseif ( isset( $expense_data['trn_by'] ) && 4 === $expense_data['trn_by'] ) {
             do_action( 'erp_acct_expense_people_transaction', $expense_data, $voucher_no );
