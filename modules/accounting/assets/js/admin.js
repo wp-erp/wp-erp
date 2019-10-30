@@ -19674,16 +19674,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           });
         });
         /* global erp_reimbursement_var */
-      } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
-        __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-          _this5.accts_by_chart = response.data;
+      } else if (this.basic_fields.trn_by.id === '4') {
+        if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
+          __WEBPACK_IMPORTED_MODULE_3_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
+            _this5.accts_by_chart = response.data;
 
-          _this5.accts_by_chart.forEach(function (element) {
-            if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
-              element.balance = 0;
-            }
+            _this5.accts_by_chart.forEach(function (element) {
+              if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                element.balance = 0;
+              }
+            });
           });
-        });
+        }
       }
 
       this.$root.$emit('account-changed');
@@ -20983,16 +20985,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           });
         });
         /* global erp_reimbursement_var */
-      } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
-        __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-          _this6.accts_by_chart = response.data;
+      } else if (this.basic_fields.trn_by.id === '4') {
+        if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
+          __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
+            _this6.accts_by_chart = response.data;
 
-          _this6.accts_by_chart.forEach(function (element) {
-            if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
-              element.balance = 0;
-            }
+            _this6.accts_by_chart.forEach(function (element) {
+              if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                element.balance = 0;
+              }
+            });
           });
-        });
+        }
       }
 
       this.$root.$emit('account-changed');
@@ -22723,16 +22727,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           });
         });
         /* global erp_reimbursement_var */
-      } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
-        __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-          _this5.accts_by_chart = response.data;
+      } else if (this.basic_fields.trn_by.id === '4') {
+        if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
+          __WEBPACK_IMPORTED_MODULE_2_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
+            _this5.accts_by_chart = response.data;
 
-          _this5.accts_by_chart.forEach(function (element) {
-            if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
-              element.balance = 0;
-            }
+            _this5.accts_by_chart.forEach(function (element) {
+              if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                element.balance = 0;
+              }
+            });
           });
-        });
+        }
       }
 
       this.$root.$emit('account-changed');
@@ -24667,16 +24673,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
           });
         });
         /* global erp_reimbursement_var */
-      } else if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
-        __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
-          _this8.accts_by_chart = response.data;
+      } else if (this.basic_fields.trn_by.id === '4') {
+        if (erp_reimbursement_var.erp_reimbursement_module !== 'undefined' && erp_reimbursement_var.erp_reimbursement_module === '1') {
+          __WEBPACK_IMPORTED_MODULE_4_admin_http__["a" /* default */].get('/people-transactions/balances').then(function (response) {
+            _this8.accts_by_chart = response.data;
 
-          _this8.accts_by_chart.forEach(function (element) {
-            if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
-              element.balance = 0;
-            }
+            _this8.accts_by_chart.forEach(function (element) {
+              if (!Object.prototype.hasOwnProperty.call(element, 'balance')) {
+                element.balance = 0;
+              }
+            });
           });
-        });
+        }
       }
 
       this.$root.$emit('account-changed');
