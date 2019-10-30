@@ -21630,7 +21630,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
         name: purchase.vendor_name
       };
       this.basic_fields.billing_address = purchase.billing_address;
-      this.basic_fields.trn_date = purchase.trn_date;
+      this.basic_fields.trn_date = purchase.date;
       this.basic_fields.ref = purchase.ref;
       this.basic_fields.due_date = purchase.due_date;
       this.status = purchase.status;
