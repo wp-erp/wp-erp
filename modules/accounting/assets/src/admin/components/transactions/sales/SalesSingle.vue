@@ -19,7 +19,9 @@
                         </template>
                         <template slot="dropdown">
                             <ul role="menu">
-                                <li><a :href="pdf_link">{{ __('Export as PDF', 'erp') }}</a></li>
+                                <li>
+                                    <a :href="pdf_link" v-if="acct_var.pdf_plugin_active">{{ __('Export as PDF', 'erp') }}</a>
+                                </li>
                                 <li><a href="#" @click.prevent="showModal = true">{{ __('Send Mail', 'erp') }}</a></li>
                             </ul>
                         </template>
