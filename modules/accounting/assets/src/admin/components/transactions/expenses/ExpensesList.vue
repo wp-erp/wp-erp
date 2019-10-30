@@ -109,9 +109,9 @@ export default {
         }
     },
 
-    watch: {
-        $route: 'fetchItems'
-    },
+    // watch: {
+    //     $route: 'fetchItems'
+    // },
 
     methods: {
         fetchItems(filters = {}) {
