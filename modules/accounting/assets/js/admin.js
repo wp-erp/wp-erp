@@ -24821,6 +24821,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
 
 
 
@@ -25638,9 +25640,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
       this.fetchItems(filters);
     }
   },
-  watch: {
-    $route: 'fetchItems'
-  },
+  // watch: {
+  //     $route: 'fetchItems'
+  // },
   methods: {
     fetchItems: function fetchItems() {
       var _this2 = this;
@@ -32845,17 +32847,20 @@ Vue.directive('click-outside', {
     el.__vueClickOutside__ = null;
   }
 });
+var accountingContainer = document.getElementById('erp-accounting');
 
-(function () {
-  return new Vue({
-    el: '#erp-accounting',
-    router: __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */],
-    store: __WEBPACK_IMPORTED_MODULE_2__store_store__["a" /* default */],
-    render: function render(h) {
-      return h(__WEBPACK_IMPORTED_MODULE_0__App_vue__["a" /* default */]);
-    }
-  });
-})();
+if (accountingContainer !== null) {
+  (function () {
+    return new Vue({
+      el: '#erp-accounting',
+      router: __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */],
+      store: __WEBPACK_IMPORTED_MODULE_2__store_store__["a" /* default */],
+      render: function render(h) {
+        return h(__WEBPACK_IMPORTED_MODULE_0__App_vue__["a" /* default */]);
+      }
+    });
+  })();
+}
 
 /***/ }),
 /* 214 */
@@ -55611,9 +55616,11 @@ var render = function() {
                   _c("template", { slot: "dropdown" }, [
                     _c("ul", { attrs: { role: "menu" } }, [
                       _c("li", [
-                        _c("a", { attrs: { href: _vm.pdf_link } }, [
-                          _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
-                        ])
+                        _vm.acct_var.pdf_plugin_active
+                          ? _c("a", { attrs: { href: _vm.pdf_link } }, [
+                              _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
+                            ])
+                          : _vm._e()
                       ]),
                       _vm._v(" "),
                       _c("li", [

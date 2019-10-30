@@ -45,9 +45,13 @@ Vue.directive('click-outside', {
     }
 });
 
-(() => new Vue({
-    el: '#erp-accounting',
-    router,
-    store,
-    render: h => h(App)
-}))();
+const accountingContainer = document.getElementById('erp-accounting');
+
+if (accountingContainer !== null) {
+    (() => new Vue({
+        el: '#erp-accounting',
+        router,
+        store,
+        render: h => h(App)
+    }))();
+}
