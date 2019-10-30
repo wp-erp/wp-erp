@@ -27240,9 +27240,9 @@ setTimeout(function () {
       this.fetchItems(filters);
     }
   },
-  watch: {
-    $route: 'fetchItems'
-  },
+  // watch: {
+  //     $route: 'fetchItems'
+  // },
   methods: {
     fetchItems: function fetchItems() {
       var _this2 = this;
