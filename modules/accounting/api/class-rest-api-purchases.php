@@ -436,6 +436,7 @@ class Purchases_Controller extends \WeDevs\ERP\API\REST_Controller {
             'line_items'     => $item->line_items,
             'type'           => ! empty( $item->type ) ? $item->type : 'purchase',
             'ref'            => $item->ref,
+            'billing_address'=> erp_acct_format_people_address( erp_acct_get_people_address( (int) $item->vendor_id ) ),
             'status'         => $item->status,
             'purchase_order' => $item->purchase_order,
             'amount'         => $item->amount,
