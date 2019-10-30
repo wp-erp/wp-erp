@@ -848,7 +848,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
     /* Customize columns based on transaction type */
     if ( 'invoice' == $type ) {
         // Set Date Due
-        $trn_pdf->set_reference( erp_format_date( $datedue ), __( 'Due Date', 'erp' ) );
+        $trn_pdf->set_reference( erp_format_date( $transaction->due_date ), __( 'Due Date', 'erp' ) );
 
         // Set Column Headers
         $trn_pdf->set_table_headers( [ __( 'PRODUCT', 'erp' ), __( 'QUANTITY', 'erp' ), __( 'UNIT PRICE', 'erp' ), __( 'AMOUNT', 'erp' ) ] );
@@ -918,7 +918,7 @@ function erp_acct_generate_pdf( $request, $transaction, $file_name = '', $output
 
         // Add Table Items
         foreach ( $transaction->bill_details as $line ) {
-            $trn_pdf->add_item( [ $line['bill_no'], $transaction->due_date, $line['amount'] ] );
+            $trn_pdf->add_item( [ $line['bill_no'], $transaction->trn_date, $line['amount'] ] );
         }
 
         // Add particulars
