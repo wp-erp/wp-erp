@@ -310,7 +310,7 @@ class Pay_Bills_Controller extends \WeDevs\ERP\API\REST_Controller {
 				'old_value'     => '',
                 'new_value'     => '',
                 // translators: %1$s: amount, %2$s: id
-				'message'       => sprintf( __( 'A bill payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
+				'message'       => sprintf( __( 'A bill payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['vendor_id'] ) ),
 				'changetype'    => $action,
 				'created_by'    => get_current_user_id(),
 

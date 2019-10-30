@@ -139,19 +139,20 @@ function erp_acct_insert_pay_bill( $data ) {
         $wpdb->insert(
             $wpdb->prefix . 'erp_acct_pay_bill',
             array(
-				'voucher_no'  => $voucher_no,
-				'trn_date'    => $pay_bill_data['trn_date'],
-				'vendor_id'   => $pay_bill_data['vendor_id'],
-				'vendor_name' => $pay_bill_data['people_name'],
-				'amount'      => $pay_bill_data['amount'],
-				'trn_by'      => $pay_bill_data['trn_by'],
-				'particulars' => $pay_bill_data['particulars'],
-				'attachments' => $pay_bill_data['attachments'],
-				'status'      => $pay_bill_data['status'],
-				'created_at'  => $pay_bill_data['created_at'],
-				'created_by'  => $created_by,
-				'updated_at'  => $pay_bill_data['updated_at'],
-				'updated_by'  => $pay_bill_data['updated_by'],
+                'voucher_no'       => $voucher_no,
+                'trn_date'         => $pay_bill_data['trn_date'],
+                'vendor_id'        => $pay_bill_data['vendor_id'],
+                'vendor_name'      => $pay_bill_data['people_name'],
+                'amount'           => $pay_bill_data['amount'],
+                'trn_by'           => $pay_bill_data['trn_by'],
+                'trn_by_ledger_id' => $pay_bill_data['trn_by_ledger_id'],
+                'particulars'      => $pay_bill_data['particulars'],
+                'attachments'      => $pay_bill_data['attachments'],
+                'status'           => $pay_bill_data['status'],
+                'created_at'       => $pay_bill_data['created_at'],
+                'created_by'       => $created_by,
+                'updated_at'       => $pay_bill_data['updated_at'],
+                'updated_by'       => $pay_bill_data['updated_by'],
             )
         );
 
