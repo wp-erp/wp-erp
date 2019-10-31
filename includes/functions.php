@@ -3209,13 +3209,9 @@ function add_enable_disable_section_to_email_column( $email ) {
     } else {
         $is_enable = '';
     }
-
-    console_log($get_option_id);
-
     echo '<td class="erp-settings-table-is_enable">
-            <span class="help"> <label><input type="checkbox" name="isEnableEmail['. $get_option_id .']"  ' . $is_enable . '></label></span>
+            <label class="cus_switch"><input type="checkbox" name="isEnableEmail['. $get_option_id .']"  ' . $is_enable . '><span class="cus_slider cus_round"></span></label>
         </td>';
-    echo '<style> .erp-settings-table-is_enable{ width: 1%; } </style>';
 }
 
 /**
