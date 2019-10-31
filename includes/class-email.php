@@ -23,6 +23,13 @@ class Email extends ERP_Settings_Page {
     public $title;
 
     /**
+     * Email method is enabled.
+     *
+     * @var string
+     */
+    public $is_enable;
+
+    /**
      * Description for the email.
      *
      * @var string
@@ -450,6 +457,12 @@ class Email extends ERP_Settings_Page {
      */
     public function init_form_fields() {
         $this->form_fields = [
+            [
+                'title'       => __( 'Is Enabled', 'erp' ),
+                'id'          => 'is_enable',
+                'type'        => 'checkbox',
+                'default'     => $this->is_enable
+            ],
             [
                 'title'       => __( 'Subject', 'erp' ),
                 'id'          => 'subject',

@@ -3203,7 +3203,7 @@ function add_enable_disable_section_to_email_column( $email ) {
     $get_option_value = get_option( $get_option_id );
 
     if ( isset( $get_option_value['is_enable'] ) ) {
-        if ( $get_option_value['is_enable'] ) {
+        if ( $get_option_value['is_enable'] == 'yes' ) {
             $is_enable = ' checked';
         }
     } else {
@@ -3237,7 +3237,7 @@ function add_enable_disable_option_save() {
             $is_enable_email = $_POST['isEnableEmail'];
             foreach ($is_enable_email as $key => $value) {
                 $email_arr = get_option($key);
-                $email_arr['is_enable'] = true;
+                $email_arr['is_enable'] = 'yes';
                 update_option( $key, $email_arr );
             }
         }
