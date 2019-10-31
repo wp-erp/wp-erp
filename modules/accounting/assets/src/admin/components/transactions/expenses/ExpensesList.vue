@@ -62,7 +62,7 @@ export default {
                 trn_no     : { label: 'Voucher No.' },
                 type       : { label: 'Type' },
                 ref        : { label: 'Ref' },
-                vendor_name: { label: 'Vendor' },
+                vendor_name: { label: 'People' },
                 trn_date   : { label: 'Trn Date' },
                 due_date   : { label: 'Due Date' },
                 due        : { label: 'Due' },
@@ -208,7 +208,7 @@ export default {
         },
 
         goToPage(page) {
-            const queries                   = Object.assign({}, this.$route.query);
+            const queries = Object.assign({}, this.$route.query);
             this.paginationData.currentPage = page;
             this.$router.push({
                 name  : 'PaginateExpenses',
@@ -277,7 +277,7 @@ export default {
                         trn_no     : item.id,
                         type       : 'Expense',
                         trn_type   : 'expense',
-                        ref        : item.ref ? item.ref : '-',
+                        ref        : item.exp_ref ? item.exp_ref : '-',
                         vendor_name: item.expense_people_name,
                         trn_date   : item.expense_trn_date,
                         due_date   : '-',

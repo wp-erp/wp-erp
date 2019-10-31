@@ -600,6 +600,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
             bill.due_date,
             bill.amount,
             bill.ref,
+            expense.ref AS exp_ref,
             pay_bill.amount as pay_bill_amount,
             expense.amount as expense_amount,
             SUM(bill_acct_details.debit - bill_acct_details.credit) AS due,
@@ -623,7 +624,7 @@ function erp_acct_get_expense_transactions( $args = [] ) {
         return $wpdb->num_rows;
     }
 
-//     error_log(print_r($sql, true));
+    // error_log(print_r($sql, true));
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 

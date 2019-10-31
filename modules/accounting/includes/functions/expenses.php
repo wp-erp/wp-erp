@@ -501,7 +501,10 @@ function erp_acct_get_formatted_expense_data( $data, $voucher_no ) {
 function erp_acct_insert_expense_data_into_ledger( $expense_data, $item_data = [] ) {
     global $wpdb;
 
-    if ( 1 === $expense_data['status'] && ( isset( $expense_data['trn_by'] ) && 4 === $expense_data['trn_by'] ) ) {
+    $draft  = 1;
+    $people = '4'; // from reimbursement
+
+    if ( $draft === $expense_data['status'] || $people === $expense_data['trn_by'] ) {
         return;
     }
 
