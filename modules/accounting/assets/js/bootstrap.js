@@ -13564,6 +13564,49 @@ var render = function() {
                               }
                             })
                           ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "wperp-col-sm-6 wperp-col-xs-12 wperp-form-group"
+                          },
+                          [
+                            _c("label", { attrs: { for: "company" } }, [
+                              _vm._v(_vm._s(_vm.__("Company", "erp")))
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.peopleFields.company,
+                                  expression: "peopleFields.company"
+                                }
+                              ],
+                              staticClass: "wperp-form-field",
+                              attrs: {
+                                type: "text",
+                                id: "company",
+                                placeholder: _vm.__("ABC Corporation", "erp")
+                              },
+                              domProps: { value: _vm.peopleFields.company },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.peopleFields,
+                                    "company",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
                         )
                       ]),
                       _vm._v(" "),
@@ -13583,54 +13626,6 @@ var render = function() {
                               "div",
                               { staticClass: "wperp-row wperp-gutter-20" },
                               [
-                                _c(
-                                  "div",
-                                  {
-                                    staticClass:
-                                      "wperp-col-sm-6 wperp-col-xs-12 wperp-form-group"
-                                  },
-                                  [
-                                    _c("label", { attrs: { for: "company" } }, [
-                                      _vm._v(_vm._s(_vm.__("Company", "erp")))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.peopleFields.company,
-                                          expression: "peopleFields.company"
-                                        }
-                                      ],
-                                      staticClass: "wperp-form-field",
-                                      attrs: {
-                                        type: "text",
-                                        id: "company",
-                                        placeholder: _vm.__(
-                                          "ABC Corporation",
-                                          "erp"
-                                        )
-                                      },
-                                      domProps: {
-                                        value: _vm.peopleFields.company
-                                      },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.peopleFields,
-                                            "company",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
                                 _c(
                                   "div",
                                   {

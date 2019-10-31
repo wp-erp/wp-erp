@@ -436,7 +436,11 @@ export default {
                 return rate.id === parseInt(id);
             });
 
-            return taxRate.name;
+            if (taxRate) {
+                return taxRate.name;
+            }
+
+            return null;
         },
 
         getUniqueTaxRates(taxes) {

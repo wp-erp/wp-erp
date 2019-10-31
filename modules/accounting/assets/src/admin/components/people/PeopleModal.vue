@@ -46,6 +46,10 @@
                                         <label for="phone">{{ __('Phone', 'erp') }}</label>
                                         <input type="tel" v-model="peopleFields.phone" id="phone" class="wperp-form-field" placeholder="(123) 456-789">
                                     </div>
+                                    <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
+                                        <label for="company">{{ __('Company', 'erp') }}</label>
+                                        <input type="text" v-model="peopleFields.company" id="company" class="wperp-form-field" :placeholder="__('ABC Corporation', 'erp')">
+                                    </div>
                                 </div>
 
                                 <component
@@ -57,10 +61,6 @@
                                 <!-- extra fields -->
                                 <div class="wperp-more-fields" v-if="showMore">
                                     <div class="wperp-row wperp-gutter-20">
-                                        <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="company">{{ __('Company', 'erp') }}</label>
-                                            <input type="text" v-model="peopleFields.company" id="company" class="wperp-form-field" :placeholder="__('ABC Corporation', 'erp')">
-                                        </div>
                                         <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                             <label for="mobile">{{ __('Mobile', 'erp') }}</label>
                                             <input type="tel" v-model="peopleFields.mobile" id="mobile" class="wperp-form-field">
@@ -432,9 +432,14 @@ export default {
             }
         }
 
+        .wperp-more-fields {
+            margin-top: 20px;
+        }
+
         .form-check {
             display: inline-block;
-            padding-left: 10px;
+            padding-left: 0;
+            margin-top: 15px;
 
             .form-check-label .field-label {
                 width: 100px;
