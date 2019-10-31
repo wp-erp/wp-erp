@@ -692,8 +692,11 @@ function erp_acct_get_formatted_invoice_data( $data, $voucher_no ) {
     $invoice_data['updated_at']  = isset( $data['updated_at'] ) ? $data['updated_at'] : null;
     $invoice_data['updated_by']  = isset( $data['updated_by'] ) ? $data['updated_by'] : null;
 
-    if ( ! empty( $data['estimate'] ) ) {
-        $invoice_data['status'] = 3;
+    $draft   = 1;
+    $pending = 3;
+
+    if ( ! empty( $data['estimate'] ) && $data['status'] !== $draft ) {
+        $invoice_data['status'] = $pending;
     }
 
     return $invoice_data;
