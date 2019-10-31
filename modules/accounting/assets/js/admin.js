@@ -26631,7 +26631,7 @@ setTimeout(function () {
               trn_type: 'check',
               ref: item.ref ? item.ref : '-',
               vendor_name: item.expense_people_name,
-              trn_date: item.expense_people_name,
+              trn_date: item.trn_date,
               due_date: '-',
               due: '-',
               amount: _this4.formatAmount(item.expense_amount),

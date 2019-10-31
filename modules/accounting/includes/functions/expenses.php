@@ -161,8 +161,6 @@ function erp_acct_format_check_line_items( $voucher_no ) {
         $voucher_no
     );
 
-    error_log(print_r($sql, true));
-
     return $wpdb->get_results( $sql, ARRAY_A );
 }
 
