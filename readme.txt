@@ -3,9 +3,9 @@ Contributors: tareq1988, nizamuddinbabu, wedevs, ediamin, sabbir1991, asaquzzama
 Donate Link: https://tareq.co/donate
 Tags: business manager, erp, accounting, crm, hr, project manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 5.2.3
+Tested up to: 5.2.4
 Requires PHP: 5.6
-Stable tag: 1.5.5
+Stable tag: 1.5.6
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -259,6 +259,25 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.5.6 -> November 01, 2019 =
+[new] HR: Hiring date anniversary reminder and wishing email to employees.
+[new] HR: Add dashboard widget for the HR manager (trainee & contractual).
+[new] HR: Add inactive status and change status style.
+[new] HR: Weekly digest email.
+[new] HR: Contract & trainee is about to end can only be seen by HR manager.
+[new] CR: Add enable/disable section at CRM settings for sending birthday greeting.
+[new] AC: Add photo for customer/vendor.
+[fix] HR: Apostrophe is generating an extra backslash on the holiday. Closes #900
+[fix] HR: Send SMS if all employees are selected. Closes #906
+[fix] AC: Bank transfer is not working after opening balance creation.
+[fix] AC: Check single page duplicate entry
+[fix] AC: Invoice PDF Export issue. Closes #882
+[fix] AC: Transfer decimal contained amount on bank transfer.
+[fix] AC: Errors in transaction single page if no particulars available. Closes #894
+[fix] AC: Journal reference is not available on the single journal entry view. Closes #893
+[fix] AC: Chart of accounts editing error. Closes #887
+[fix] AC: Vendor Update details does not show custom field. Closes #885
 
 = v1.5.5 -> October 04, 2019 =
 [new] Accounting: Estimate to Invoice create shortcut.
