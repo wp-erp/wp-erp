@@ -13792,14 +13792,18 @@ var render = function() {
           "div",
           { staticClass: "wperp-form-group wperp-row" },
           [
-            _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-              _c("label", [
-                _vm._v(_vm._s(_vm.__("To", "erp")) + " "),
-                _c("span", { staticClass: "wperp-required-sign" }, [
-                  _vm._v("*")
+            _c(
+              "div",
+              { staticClass: "wperp-col-sm-3 wperp-col-xs-12 send-mail-to" },
+              [
+                _c("label", [
+                  _vm._v(_vm._s(_vm.__("To", "erp")) + " "),
+                  _c("span", { staticClass: "wperp-required-sign" }, [
+                    _vm._v("*")
+                  ])
                 ])
-              ])
-            ]),
+              ]
+            ),
             _vm._v(" "),
             _c("input-tag", {
               attrs: {
@@ -26624,7 +26628,6 @@ setTimeout(function () {
             break;
 
           case 'check':
-            console.log(item);
             temp = {
               id: item.id,
               trn_no: item.id,
@@ -55593,57 +55596,59 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _c(
-                "dropdown",
-                [
-                  _c("template", { slot: "button" }, [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "wperp-btn btn--default",
-                        attrs: { href: "#" }
-                      },
-                      [
-                        _c("i", { staticClass: "flaticon-settings-work-tool" }),
-                        _vm._v(
-                          "\n                              " +
-                            _vm._s(_vm.__("More Action", "erp")) +
-                            "\n                        "
-                        )
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("template", { slot: "dropdown" }, [
-                    _c("ul", { attrs: { role: "menu" } }, [
-                      _c("li", [
-                        _vm.acct_var.pdf_plugin_active
-                          ? _c("a", { attrs: { href: _vm.pdf_link } }, [
-                              _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
-                            ])
-                          : _vm._e()
-                      ]),
-                      _vm._v(" "),
-                      _c("li", [
+              _vm.acct_var.pdf_plugin_active
+                ? _c(
+                    "dropdown",
+                    [
+                      _c("template", { slot: "button" }, [
                         _c(
                           "a",
                           {
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                _vm.showModal = true
-                              }
-                            }
+                            staticClass: "wperp-btn btn--default",
+                            attrs: { href: "#" }
                           },
-                          [_vm._v(_vm._s(_vm.__("Send Mail", "erp")))]
+                          [
+                            _c("i", {
+                              staticClass: "flaticon-settings-work-tool"
+                            }),
+                            _vm._v(
+                              "\n                              " +
+                                _vm._s(_vm.__("More Action", "erp")) +
+                                "\n                        "
+                            )
+                          ]
                         )
+                      ]),
+                      _vm._v(" "),
+                      _c("template", { slot: "dropdown" }, [
+                        _c("ul", { attrs: { role: "menu" } }, [
+                          _c("li", [
+                            _c("a", { attrs: { href: _vm.pdf_link } }, [
+                              _vm._v(_vm._s(_vm.__("Export as PDF", "erp")))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("li", [
+                            _c(
+                              "a",
+                              {
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    _vm.showModal = true
+                                  }
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.__("Send Mail", "erp")))]
+                            )
+                          ])
+                        ])
                       ])
-                    ])
-                  ])
-                ],
-                2
-              ),
+                    ],
+                    2
+                  )
+                : _vm._e(),
               _vm._v(" "),
               _c(
                 "a",
