@@ -1,5 +1,7 @@
 <?php
 return [
+	__( 'Select & Crop Image', 'erp' ),
+	__( 'Select Image', 'erp' ),
 	__( 'Accounts', 'erp' ),
 	__( 'New Transaction', 'erp' ),
 	__( 'Account Number', 'erp' ),
@@ -81,6 +83,7 @@ return [
 	__( 'Payment Method', 'erp' ),
 	__( 'Transaction From', 'erp' ),
 	__( 'Expense', 'erp' ),
+	__( 'Pay To', 'erp' ),
 	__( 'Accounting Help', 'erp' ),
 	__( 'View all documentation', 'erp' ),
 	__( 'General', 'erp' ),
@@ -131,6 +134,7 @@ return [
 	__( 'Journals', 'erp' ),
 	__( 'Journal', 'erp' ),
 	__( 'Journal No', 'erp' ),
+	__( 'Journal Ref', 'erp' ),
 	__( 'Journal Date', 'erp' ),
 	__( 'Balance', 'erp' ),
 	__( 'Loading', 'erp' ),
