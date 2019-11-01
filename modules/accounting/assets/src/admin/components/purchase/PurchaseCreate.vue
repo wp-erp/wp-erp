@@ -292,7 +292,7 @@ export default {
         setDataForEdit(purchase) {
             this.basic_fields.vendor          = { id: parseInt(purchase.vendor_id), name: purchase.vendor_name };
             this.basic_fields.billing_address = purchase.billing_address;
-            this.basic_fields.trn_date        = purchase.trn_date;
+            this.basic_fields.trn_date        = purchase.date;
             this.basic_fields.ref             = purchase.ref;
             this.basic_fields.due_date        = purchase.due_date;
             this.status                       = purchase.status;

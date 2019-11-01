@@ -29,164 +29,208 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_tax_rates' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sale' );
-                },
-            ],
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_tax_rates' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sale' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_tax_rate' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
+
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_tax_rate' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_tax_rate' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sale' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_tax_rate' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'delete_tax_rate' ],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_tax_rate' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sale' );
-                },
-            ],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'bulk_delete' ],
+					'args'                => [
+						'ids' => [ 'required' => true ],
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
+
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/quick-edit',
             [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_tax_rate' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
+
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'quick_edit_tax_rate' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
+
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-add',
             [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_tax_rate' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'line_add_tax_rate' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
+
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-edit',
             [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'bulk_delete' ],
-                'args'                => [
-                    'ids' => [ 'required' => true ]
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/quick-edit', [
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'line_edit_tax_rate' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-delete' . '/(?P<db_id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'quick_edit_tax_rate' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-add', [
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'line_delete_tax_rate' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_invoice' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/tax-records',
             [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'line_add_tax_rate' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_tax_records' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sale' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-edit', [
-
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/tax-records' . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'line_edit_tax_rate' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_tax_pay_record' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sale' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/line-delete' . '/(?P<db_id>[\d]+)', [
-
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/pay-tax',
             [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'line_delete_tax_rate' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_invoice' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'pay_tax' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_sales_payment' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/tax-records', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/summary',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_tax_records' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sale' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
-
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/tax-records' . '/(?P<id>[\d]+)', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_tax_pay_record' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sale' );
-                },
-            ],
-        ] );
-
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/pay-tax', [
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'pay_tax' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_sales_payment' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
-
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/summary', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_tax_summary' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_sale' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_tax_summary' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_sale' );
+					},
+				],
+			]
+        );
 
     }
 
@@ -199,10 +243,10 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_tax_rates( $request ) {
         $args = [
-            'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number'     => ! empty( $request['per_page'] ) ? (int) $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $formatted_items   = [];
@@ -212,13 +256,18 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $tax_data    = erp_acct_get_all_tax_rates( $args );
-        $total_items = erp_acct_get_all_tax_rates( [ 'count' => true, 'number' => -1 ] );
+        $total_items = erp_acct_get_all_tax_rates(
+            [
+				'count'  => true,
+				'number' => -1,
+			]
+        );
 
         foreach ( $tax_data as $item ) {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'created_by', $include_params ) ) {
+                if ( in_array( 'created_by', $include_params, true ) ) {
                     $item['created_by'] = $this->get_user( $item['created_by'] );
                 }
             }
@@ -278,7 +327,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $request['tax_components'];
 
         foreach ( $items as $key => $item ) {
-            $item_rates[$key] = $item['tax_rate'];
+            $item_rates[ $key ] = $item['tax_rate'];
         }
 
         $tax_data['tax_rate'] = array_sum( $item_rates );
@@ -318,7 +367,7 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $items = $tax_data['tax_components'];
 
         foreach ( $items as $key => $item ) {
-            $item_rates[$key] = $item['tax_rate'];
+            $item_rates[ $key ] = $item['tax_rate'];
         }
 
         $tax_data['tax_rate'] = array_sum( $item_rates );
@@ -479,10 +528,10 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      */
     public function get_tax_records( $request ) {
         $args = [
-            'number'     => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
+            'number'     => ! empty( $request['per_page'] ) ? (int) $request['per_page'] : 20,
             'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'start_date' => empty( $request['start_date'] ) ? '' : $request['start_date'],
-            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date']
+            'end_date'   => empty( $request['end_date'] ) ? date( 'Y-m-d' ) : $request['end_date'],
         ];
 
         $formatted_items   = [];
@@ -492,13 +541,18 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         $tax_data    = erp_acct_get_tax_pay_records( $args );
-        $total_items = erp_acct_get_tax_pay_records( [ 'count' => true, 'number' => -1 ] );
+        $total_items = erp_acct_get_tax_pay_records(
+            [
+				'count'  => true,
+				'number' => -1,
+			]
+        );
 
         foreach ( $tax_data as $item ) {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'created_by', $include_params ) ) {
+                if ( in_array( 'created_by', $include_params, true ) ) {
                     $item['created_by'] = $this->get_user( $item['created_by'] );
                 }
             }
@@ -621,16 +675,19 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $action
      */
     public function add_log( $data, $action ) {
-        erp_log()->add( [
-            'component'     => 'Accounting',
-            'sub_component' => __( 'Tax Payment', 'erp' ),
-            'old_value'     => '',
-            'new_value'     => '',
-            'message'       => sprintf( __( 'A tax payment of %s has been created for %s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
-            'changetype'    => $action,
-            'created_by'    => get_current_user_id()
+        erp_log()->add(
+            [
+				'component'     => 'Accounting',
+				'sub_component' => __( 'Tax Payment', 'erp' ),
+				'old_value'     => '',
+                'new_value'     => '',
+                // translators: %1$s: amount, %2$s: id
+				'message'       => sprintf( __( 'A tax payment of %1$s has been created for %2$s', 'erp' ), $data['amount'], erp_acct_get_people_name_by_people_id( $data['people_id'] ) ),
+				'changetype'    => $action,
+				'created_by'    => get_current_user_id(),
 
-        ] );
+			]
+        );
     }
 
     /**
@@ -760,7 +817,6 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $data = array_merge( $item, $additional_fields );
 
-
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
 
@@ -819,10 +875,9 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'tax_rate_id'           => (int) $item->tax_rate_id,
             'tax_rate_name'         => $item->tax_rate_name,
-            // 'tax_number'            => $item->tax_number,
             'default'               => (int) $item->default,
             'sales_tax_category_id' => $item->tax_cat_id,
-            'tax_rate'              => ! empty( $item->tax_rate ) ? $item->tax_rate : null
+            'tax_rate'              => ! empty( $item->tax_rate ) ? $item->tax_rate : null,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -852,39 +907,46 @@ class Tax_Rates_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'db_id'       => [
-                    'description' => __( 'Unique identifier for the line resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'readonly'    => true,
-                ],
-                'tax_rate_id' => [
-                    'description' => __( 'Tax Rate name id for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'tax_number'  => [
-                    'description' => __( 'Tax number for the resource.' ),
+                'tax_rate_name'       => [
+                    'description' => __( 'Tax rate name for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
                 ],
                 'is_compound' => [
                     'description' => __( 'Tax type for the resource.' ),
                     'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
+                    'context'     => [ 'edit' ]
                 ],
+                'tax_components'    => [
+                    'description' => __( 'Components for the resource.', 'erp' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'component_name'   => [
+                            'description' => __( 'Component name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'agency_id' => [
+                            'description' => __( 'Agency id for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'tax_category_id' => [
+                            'description' => __( 'Tax category id for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'tax_rate' => [
+                            'description' => __( 'Tax rate for the resource.', 'erp' ),
+                            'type'        => 'number',
+                            'context'     => [ 'view', 'edit' ],
+                        ]
+                    ],
+                ]
             ],
         ];
-
 
         return $schema;
     }

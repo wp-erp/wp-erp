@@ -25,12 +25,12 @@ function erp_acct_get_all_tax_rate_names( $args = [] ) {
 
     $limit = '';
 
-    if ( $args['number'] != '-1' ) {
+    if ( -1 !== $args['number'] ) {
         $limit = "LIMIT {$args['number']} OFFSET {$args['offset']}";
     }
 
-    $sql = "SELECT";
-    $sql .= $args['count'] ? " COUNT( id ) as total_number " : " * ";
+    $sql  = 'SELECT';
+    $sql .= $args['count'] ? ' COUNT( id ) as total_number ' : ' * ';
     $sql .= "FROM {$wpdb->prefix}erp_acct_taxes ORDER BY {$args['orderby']} {$args['order']} {$limit}";
 
     if ( $args['count'] ) {
@@ -50,9 +50,7 @@ function erp_acct_get_all_tax_rate_names( $args = [] ) {
 function erp_acct_get_tax_rate_name( $tax_no ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_taxes WHERE id = %d LIMIT 1", $tax_no );
-
-    $row = $wpdb->get_row( $sql, ARRAY_A );
+    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_taxes WHERE id = %d LIMIT 1", $tax_no ), ARRAY_A );
 
     return $row;
 }
@@ -71,21 +69,23 @@ function erp_acct_insert_tax_rate_name( $data ) {
     $data['created_by'] = $created_by;
 
     if ( ! empty( $data['default'] ) ) {
-        $sql = "UPDATE {$wpdb->prefix}erp_acct_taxes SET `default` = 0";
-        $wpdb->query( $sql );
+        $wpdb->query( "UPDATE {$wpdb->prefix}erp_acct_taxes SET `default` = 0" );
     }
 
     $tax_data = erp_acct_get_formatted_tax_rate_name_data( $data );
 
-    $wpdb->insert( $wpdb->prefix . 'erp_acct_taxes', array(
-        'tax_rate_name'     => $tax_data['tax_rate_name'],
-        'tax_number'        => $tax_data['tax_number'],
-        'default'           => $tax_data['default'],
-        'created_at'        => $tax_data['created_at'],
-        'created_by'        => $tax_data['created_by'],
-        'updated_at'        => $tax_data['updated_at'],
-        'updated_by'        => $tax_data['updated_by'],
-    ) );
+    $wpdb->insert(
+        $wpdb->prefix . 'erp_acct_taxes',
+        array(
+			'tax_rate_name' => $tax_data['tax_rate_name'],
+			'tax_number'    => $tax_data['tax_number'],
+			'default'       => $tax_data['default'],
+			'created_at'    => $tax_data['created_at'],
+			'created_by'    => $tax_data['created_by'],
+			'updated_at'    => $tax_data['updated_at'],
+			'updated_by'    => $tax_data['updated_by'],
+        )
+    );
 
     return $wpdb->insert_id;
 }
@@ -106,19 +106,22 @@ function erp_acct_update_tax_rate_name( $data, $id ) {
     $tax_data = erp_acct_get_formatted_tax_rate_name_data( $data );
 
     if ( ! empty( $tax_data['default'] ) ) {
-        $sql = "UPDATE {$wpdb->prefix}erp_acct_taxes SET `default` = 0";
-        $wpdb->query( $sql );
+        $wpdb->query( "UPDATE {$wpdb->prefix}erp_acct_taxes SET `default` = 0" );
     }
 
-    $wpdb->update( $wpdb->prefix . 'erp_acct_taxes', array(
-        'tax_rate_name' => $tax_data['tax_rate_name'],
-        'tax_number'    => $tax_data['tax_number'],
-        'default'       => $tax_data['default'],
-        'updated_at'    => $tax_data['updated_at'],
-        'updated_by'    => $tax_data['updated_by'],
-    ), array(
-        'id' => $id
-    ) );
+    $wpdb->update(
+        $wpdb->prefix . 'erp_acct_taxes',
+        array(
+			'tax_rate_name' => $tax_data['tax_rate_name'],
+			'tax_number'    => $tax_data['tax_number'],
+			'default'       => $tax_data['default'],
+			'updated_at'    => $tax_data['updated_at'],
+			'updated_by'    => $tax_data['updated_by'],
+        ),
+        array(
+			'id' => $id,
+        )
+    );
 
     return $id;
 }

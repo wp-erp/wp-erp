@@ -26,9 +26,7 @@ function erp_acct_get_all_charts() {
 function erp_acct_get_ledger_name_by_id( $ledger_id ) {
     global $wpdb;
 
-    $sql = "SELECT id, name  FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = {$ledger_id}";
-
-    $row = $wpdb->get_row( $sql );
+    $row = $wpdb->get_row( $wpdb->prepare( "SELECT id, name  FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = %d", $ledger_id ) );
 
     return $row->name;
 }
@@ -39,9 +37,7 @@ function erp_acct_get_ledger_name_by_id( $ledger_id ) {
 function erp_acct_get_ledger_categories( $chart_id ) {
     global $wpdb;
 
-    $sql = "SELECT id, name AS label, chart_id, parent_id, system FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE chart_id = {$chart_id}";
-
-    return $wpdb->get_results( $sql, ARRAY_A );
+    return $wpdb->get_results( $wpdb->prepare( "SELECT id, name AS label, chart_id, parent_id, system FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE chart_id = %d", $chart_id ), ARRAY_A );
 }
 
 /**
@@ -50,13 +46,16 @@ function erp_acct_get_ledger_categories( $chart_id ) {
 function erp_acct_create_ledger_category( $args ) {
     global $wpdb;
 
-    $exist = $wpdb->get_var( "SELECT name FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE name = '{$args['name']}'" );
+    $exist = $wpdb->get_var( $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE name = %s", $args['name'] ) );
 
     if ( ! $exist ) {
-        $wpdb->insert( "{$wpdb->prefix}erp_acct_ledger_categories", [
-            'name'      => $args['name'],
-            'parent_id' => ! empty( $args['parent'] ) ? $args['parent'] : null
-        ] );
+        $wpdb->insert(
+            "{$wpdb->prefix}erp_acct_ledger_categories",
+            [
+				'name'      => $args['name'],
+				'parent_id' => ! empty( $args['parent'] ) ? $args['parent'] : null,
+			]
+        );
 
         return $wpdb->insert_id;
     }
@@ -70,14 +69,14 @@ function erp_acct_create_ledger_category( $args ) {
 function erp_acct_update_ledger_category( $args ) {
     global $wpdb;
 
-    $exist = $wpdb->get_var( "SELECT name FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE name = '{$args['name']}' AND id <> {$args['id']}" );
+    $exist = $wpdb->get_var( $wpdb->prepare( "SELECT name FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE name = %s AND id <> %d", $args['name'], $args['id'] ) );
 
     if ( ! $exist ) {
         return $wpdb->update(
             "{$wpdb->prefix}erp_acct_ledger_categories",
             [
                 'name'      => $args['name'],
-                'parent_id' => ! empty( $args['parent'] ) ? $args['parent'] : null
+                'parent_id' => ! empty( $args['parent'] ) ? $args['parent'] : null,
             ],
             [ 'id' => $args['id'] ],
             [ '%s', '%d' ],
@@ -94,9 +93,9 @@ function erp_acct_update_ledger_category( $args ) {
 function erp_acct_delete_ledger_category( $id ) {
     global $wpdb;
 
-    $table = "{$wpdb->prefix}erp_acct_ledger_categories";
+    $parent_id = $wpdb->get_var( $wpdb->prepare( "SELECT parent_id FROM {$wpdb->prefix}erp_acct_ledger_categories WHERE id = %d", $id ) );
 
-    $parent_id = $wpdb->get_var( "SELECT parent_id FROM {$table} WHERE id = {$id}" );
+    $table = "{$wpdb->prefix}erp_acct_ledger_categories";
 
     $wpdb->update(
         $table,
@@ -117,10 +116,10 @@ function erp_acct_delete_ledger_category( $id ) {
 function erp_acct_get_ledgers_by_chart_id( $chart_id ) {
     global $wpdb;
 
-    $ledgers = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE chart_id = {$chart_id} AND unused IS NULL", ARRAY_A );
+    $ledgers = $wpdb->get_results( $wpdb->prepare( "SELECT id, name FROM {$wpdb->prefix}erp_acct_ledgers WHERE chart_id = %d AND unused IS NULL", $chart_id ), ARRAY_A );
 
     for ( $i = 0; $i < count( $ledgers ); $i++ ) {
-        $ledgers[$i]['balance'] = erp_acct_get_ledger_balance( $ledgers[$i]['id'] );
+        $ledgers[ $i ]['balance'] = erp_acct_get_ledger_balance( $ledgers[ $i ]['id'] );
     }
 
     return $ledgers;
@@ -135,12 +134,7 @@ function erp_acct_get_ledgers_by_chart_id( $chart_id ) {
 function erp_acct_get_ledger_trn_count( $ledger_id ) {
     global $wpdb;
 
-    $sql = "SELECT
-        COUNT(*) as count
-        FROM {$wpdb->prefix}erp_acct_ledger_details
-        WHERE ledger_id = {$ledger_id}";
-
-    $ledger = $wpdb->get_row( $sql, ARRAY_A );
+    $ledger = $wpdb->get_row( $wpdb->prepare( "SELECT COUNT(*) as count FROM {$wpdb->prefix}erp_acct_ledger_details WHERE ledger_id = %d", $ledger_id ), ARRAY_A );
 
     return $ledger['count'];
 }
@@ -154,16 +148,7 @@ function erp_acct_get_ledger_trn_count( $ledger_id ) {
 function erp_acct_get_ledger_balance( $ledger_id ) {
     global $wpdb;
 
-    $sql = "SELECT
-        ledger.id,
-        ledger.name,
-        SUM(ld.debit - ld.credit) as balance
-
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ld ON ledger.id = ld.ledger_id
-        WHERE ledger.id = {$ledger_id}";
-
-    $ledger = $wpdb->get_row( $sql, ARRAY_A );
+    $ledger = $wpdb->get_row( $wpdb->prepare( "SELECT ledger.id, ledger.name, SUM(ld.debit - ld.credit) as balance FROM {$wpdb->prefix}erp_acct_ledgers AS ledger LEFT JOIN {$wpdb->prefix}erp_acct_ledger_details as ld ON ledger.id = ld.ledger_id WHERE ledger.id = %d", $ledger_id ), ARRAY_A );
 
     return $ledger['balance'];
 }
@@ -182,9 +167,7 @@ function erp_acct_get_ledger_balance( $ledger_id ) {
 function erp_acct_get_ledger( $id ) {
     global $wpdb;
 
-    $sql = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = %d", $id );
-
-    return $wpdb->get_row( $sql );
+    return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_acct_ledgers WHERE id = %d", $id ) );
 }
 
 /**
@@ -196,13 +179,16 @@ function erp_acct_get_ledger( $id ) {
 function erp_acct_insert_ledger( $item ) {
     global $wpdb;
 
-    $wpdb->insert( "{$wpdb->prefix}erp_acct_ledgers", [
-        'chart_id'    => $item['chart_id'],
-        'category_id' => $item['category_id'],
-        'name'        => $item['name'],
-        'slug'        => slugify( $item['name'] ),
-        'code'        => $item['code']
-    ] );
+    $wpdb->insert(
+        "{$wpdb->prefix}erp_acct_ledgers",
+        [
+			'chart_id'    => $item['chart_id'],
+			'category_id' => $item['category_id'],
+			'name'        => $item['name'],
+			'slug'        => slugify( $item['name'] ),
+			'code'        => $item['code'],
+		]
+    );
 
     return erp_acct_get_ledger( $wpdb->insert_id );
 }
@@ -217,13 +203,16 @@ function erp_acct_insert_ledger( $item ) {
 function erp_acct_update_ledger( $item, $id ) {
     global $wpdb;
 
-    $wpdb->update( "{$wpdb->prefix}erp_acct_ledgers", [
-        'chart_id'    => $item['chart_id'],
-        'category_id' => $item['category_id'],
-        'name'        => $item['name'],
-        'slug'        => slugify( $item['name'] ),
-        'code'        => $item['code']
-    ], [ 'id' => $id ]
+    $wpdb->update(
+        "{$wpdb->prefix}erp_acct_ledgers",
+        [
+			'chart_id'    => $item['chart_id'],
+			'category_id' => $item['category_id'],
+			'name'        => $item['name'],
+			'slug'        => slugify( $item['name'] ),
+			'code'        => $item['code'],
+        ],
+        [ 'id' => $id ]
     );
 
     return erp_acct_get_ledger( $id );
@@ -245,12 +234,11 @@ function erp_acct_get_ledgers_with_balances() {
 
     $today = date( 'Y-m-d' );
 
-    $sql = "SELECT ledger.id, ledger.chart_id, ledger.category_id, ledger.name,
-        ledger.slug, ledger.code, ledger.system, chart_of_account.name as account_name
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id WHERE ledger.unused IS NULL";
-
-    $ledgers = $wpdb->get_results( $sql, ARRAY_A );
+    $ledgers = $wpdb->get_results(
+        "SELECT ledger.id, ledger.chart_id, ledger.category_id, ledger.name, ledger.slug, ledger.code, ledger.system, chart_of_account.name as account_name FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
+        LEFT JOIN {$wpdb->prefix}erp_acct_chart_of_accounts AS chart_of_account ON ledger.chart_id = chart_of_account.id WHERE ledger.unused IS NULL",
+        ARRAY_A
+    );
 
     // get closest financial year id and start date
     $closest_fy_date = erp_acct_get_closest_fn_year_date( $today );
@@ -278,12 +266,13 @@ function erp_acct_get_ledgers_with_balances() {
 function erp_acct_ledgers_opening_balance_by_fn_year_id( $id ) {
     global $wpdb;
 
-    $sql = "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance
-        FROM {$wpdb->prefix}erp_acct_ledgers AS ledger
-        LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id
-        WHERE opb.financial_year_id = %d opb.type = 'ledger' GROUP BY opb.ledger_id";
-
-    return $wpdb->get_results( $wpdb->prepare( $sql, $id ), ARRAY_A );
+    return $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT ledger.id, ledger.name, SUM(opb.debit - opb.credit) AS balance FROM {$wpdb->prefix}erp_acct_ledgers AS ledger LEFT JOIN {$wpdb->prefix}erp_acct_opening_balances AS opb ON ledger.id = opb.ledger_id WHERE opb.financial_year_id = %d opb.type = 'ledger' GROUP BY opb.ledger_id",
+            $id
+        ),
+        ARRAY_A
+    );
 }
 
 /**
@@ -305,13 +294,13 @@ function erp_acct_ledger_balance_with_opening_balance( $ledgers, $data, $opening
         $balance = 0;
 
         foreach ( $data as $row ) {
-            if ( $row['id'] == $ledger['id'] ) {
+            if ( $row['id'] === $ledger['id'] ) {
                 $balance += (float) $row['balance'];
             }
         }
 
         foreach ( $opening_balance as $op_balance ) {
-            if ( $op_balance['id'] == $ledger['id'] ) {
+            if ( $op_balance['id'] === $ledger['id'] ) {
                 $balance += (float) $op_balance['balance'];
             }
         }
@@ -324,7 +313,7 @@ function erp_acct_ledger_balance_with_opening_balance( $ledgers, $data, $opening
             'slug'        => $ledger['slug'],
             'code'        => $ledger['code'],
             'system'      => $ledger['system'],
-            'balance'     => $balance
+            'balance'     => $balance,
         ];
     }
 

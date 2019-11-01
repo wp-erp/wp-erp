@@ -32,11 +32,11 @@
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                 <label for="transfer_amount">{{ __('Transfer Amount', 'erp') }} <span class="wperp-required-sign">*</span></label>
-                                <input required min="0" type="number" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00" v-model="amount">
+                                <input required min="0" step="0.01" type="number" name="transfer_amount" id="transfer_amount" class="wperp-form-field" placeholder="$100.00" v-model="amount">
                             </div>
                             <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                 <label for="transfer_date">{{ __('Transfer Date', 'erp') }}</label>
-                                <datepicker id="transfer_date" name="transfer_date" v-model="transferdate"></datepicker>
+                                <datepicker id="transfer_date" class="wperp-form-field" name="transfer_date" v-model="transferdate"></datepicker>
                             </div>
                             <div class="wperp-col-xs-12 wperp-form-group">
                                 <label for="particulars">{{ __('Particulars', 'erp') }}</label>
@@ -162,5 +162,15 @@ export default {
 <style lang="less">
     .wperp-modal {
         z-index: 999 !important;
+    }
+
+    #transfer_amount {
+        height: 36px;
+    }
+
+    #transfer_date {
+        padding: 0 !important;
+        height: 36px;
+        border: 0 none;
     }
 </style>

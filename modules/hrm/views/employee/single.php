@@ -31,7 +31,9 @@
                     <div class="erp-avatar">
                         <?php echo $employee->get_avatar( 150 ); ?>
                         <?php if ( $employee->get_status('view') !== 'Active' ): ?>
-                            <span class="inactive"></span>
+                            <span class="inactive">
+                                <?php echo $employee->get_status('view'); ?>
+                            </span>
                         <?php endif ?>
                     </div>
 

@@ -18,6 +18,11 @@
                         <form action="" method="post" class="modal-form edit-customer-modal" @submit.prevent="saveCustomer">
                             <div class="wperp-modal-body">
                                 <!-- add new people form -->
+                                <upload-image
+                                    :showButton="true"
+                                    @uploadedImage="uploadPhoto"
+                                    :src="peopleFields.photo" />
+
                                 <component
                                     v-for="(component, extIndx) in extraFieldsTop"
                                     :key="`top-${extIndx}`"
@@ -41,6 +46,10 @@
                                         <label for="phone">{{ __('Phone', 'erp') }}</label>
                                         <input type="tel" v-model="peopleFields.phone" id="phone" class="wperp-form-field" placeholder="(123) 456-789">
                                     </div>
+                                    <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
+                                        <label for="company">{{ __('Company', 'erp') }}</label>
+                                        <input type="text" v-model="peopleFields.company" id="company" class="wperp-form-field" :placeholder="__('ABC Corporation', 'erp')">
+                                    </div>
                                 </div>
 
                                 <component
@@ -52,10 +61,6 @@
                                 <!-- extra fields -->
                                 <div class="wperp-more-fields" v-if="showMore">
                                     <div class="wperp-row wperp-gutter-20">
-                                        <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
-                                            <label for="company">{{ __('Company', 'erp') }}</label>
-                                            <input type="text" v-model="peopleFields.company" id="company" class="wperp-form-field" :placeholder="__('ABC Corporation', 'erp')">
-                                        </div>
                                         <div class="wperp-form-group wperp-col-sm-6 wperp-col-xs-12">
                                             <label for="mobile">{{ __('Mobile', 'erp') }}</label>
                                             <input type="tel" v-model="peopleFields.mobile" id="mobile" class="wperp-form-field">
@@ -104,7 +109,7 @@
                                         </div>
                                         <div class="wperp-col-sm-6 wperp-col-xs-12 wperp-form-group">
                                             <label for="post_code">{{ __('Post Code', 'erp') }}</label>
-                                            <input type="text" v-model="peopleFields.postal_code" id="post_code" class="wperp-form-field" :placeholder="__('Post Code', 'erp')">
+                                            <input type="number" v-model="peopleFields.postal_code" id="post_code" class="wperp-form-field" :placeholder="__('Post Code', 'erp')">
                                         </div>
                                     </div>
                                 </div>
@@ -143,13 +148,18 @@
 
 <script>
 import HTTP from 'admin/http';
+import UploadImage from 'admin/components/base/Media.vue';
 import MultiSelect from 'admin/components/select/MultiSelect.vue';
 
+/* global erp_acct_var */
 export default {
     name: 'CustomerModal',
+
     components: {
+        UploadImage,
         MultiSelect
     },
+
     props: {
         people: {
             type: Object
@@ -159,6 +169,7 @@ export default {
         },
         type: [String]
     },
+
     data() {
         return {
             peopleFields: {
@@ -177,7 +188,9 @@ export default {
                 city       : '',
                 country    : '',
                 state      : '',
-                postal_code: ''
+                postal_code: '',
+                photo_id   : null,
+                photo      : erp_acct_var.erp_assets + '/images/mystery-person.png'
             },
             states           : [],
             emailExists      : false,
@@ -292,6 +305,10 @@ export default {
             });
         },
 
+        uploadPhoto(image) {
+            this.peopleFields.photo_id = image.id;
+        },
+
         getState(country) {
             this.states = [];
             this.peopleFields.state = '';
@@ -339,6 +356,10 @@ export default {
                 this.peopleFields.country     = this.selectedCountry(people.billing.country);
                 this.peopleFields.state       = this.selectedState(people.billing.state);
                 this.peopleFields.postal_code = people.billing.postal_code;
+
+                if (people.photo) {
+                    this.peopleFields.photo = people.photo;
+                }
             }
         },
 
@@ -393,6 +414,39 @@ export default {
 
 <style lang="less">
     #people-modal {
+        .erp-upload-image {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: auto;
+            float: left;
+            margin-right: 10px;
+
+            img {
+                width: 200px;
+            }
+
+            button {
+                margin-top: 20px;
+                width: 200px;
+            }
+        }
+
+        .wperp-more-fields {
+            margin-top: 20px;
+        }
+
+        .form-check {
+            display: inline-block;
+            padding-left: 0;
+            margin-top: 15px;
+
+            .form-check-label .field-label {
+                width: 100px;
+                display: block;
+            }
+        }
+
         .errors {
             margin: 0 20px;
             color: #f44336;

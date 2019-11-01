@@ -170,7 +170,7 @@ export default {
                 discount = disAmount / this.invoiceTotalAmount;
             }
 
-            this.line.discount = discount.toFixed(2);
+            this.line.discount = discount;
         },
 
         calculateTax() {

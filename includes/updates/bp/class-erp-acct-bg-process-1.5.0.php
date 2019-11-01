@@ -314,7 +314,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         global $wpdb;
 
-        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
 
         $sales_ledger_id          = $ledger_map->get_ledger_id_by_slug('sales_revenue');
         $sales_discount_ledger_id = $ledger_map->get_ledger_id_by_slug('sales_discount');
@@ -704,7 +704,7 @@ class ERP_ACCT_BG_Process extends \WP_Background_Process {
 
         global $wpdb;
 
-        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::getInstance();
+        $ledger_map = \WeDevs\ERP\Accounting\Includes\Classes\Ledger_Map::get_instance();
 
         $purchase_ledger_id = $ledger_map->get_ledger_id_by_slug('purchase');
 

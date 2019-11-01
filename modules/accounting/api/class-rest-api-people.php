@@ -29,60 +29,80 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_all_people' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_all_people' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_people' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_people' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/address', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/address',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_people_address' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_people_address' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/opening-balance', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/opening-balance',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_opening_balance' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_opening_balance' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/check-email', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/check-email',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'check_people_email' ],
-                'args'                => [],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_expense' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'check_people_email' ],
+					'args'                => [],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_expense' );
+					},
+				],
+			]
+        );
 
     }
 
@@ -96,11 +116,16 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number' => ! empty( $request['per_page'] ) ? $request['per_page'] : 20,
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'type'   => ! empty( $request['type'] ) ? $request['type'] : 'all',
-            's'      => ! empty( $request['search'] ) ? $request['search'] : ''
+            's'      => ! empty( $request['search'] ) ? $request['search'] : '',
         ];
 
         $items       = erp_get_peoples( $args );
-        $total_items = erp_get_peoples( [ 'type' => $args['type'], 'count' => true ] );
+        $total_items = erp_get_peoples(
+            [
+				'type'  => $args['type'],
+				'count' => true,
+			]
+        );
         $total_items = is_array( $total_items ) ? count( $total_items ) : $total_items;
 
         $formatted_items   = [];
@@ -113,7 +138,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'owner', $include_params ) ) {
+                if ( in_array( 'owner', $include_params, true ) ) {
                     $customer_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, 'contact_owner', true ) : erp_people_get_meta( $item->id, 'contact_owner', true );
 
                     $item->owner       = $this->get_user( $customer_owner_id );
@@ -140,7 +165,6 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @return string
      */
     public function get_people( $request ) {
-
         $id = (int) $request['id'];
 
         if ( empty( $id ) ) {
@@ -165,11 +189,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_people_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $sql = "SELECT
-            street_1, street_2, city, state, postal_code, country
-            FROM {$wpdb->prefix}erp_peoples WHERE id = {$id}";
-
-        $row = $wpdb->get_row( $sql, ARRAY_A );
+        $row = $wpdb->get_row( $wpdb->prepare( "SELECT street_1, street_2, city, state, postal_code, country FROM {$wpdb->prefix}erp_peoples WHERE id = %d", $id ), ARRAY_A );
 
         return erp_acct_format_people_address( $row );
     }
@@ -310,7 +330,7 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'postal_code' => $item->postal_code,
                 'country'     => $item->country,
                 'email'       => $item->email,
-                'phone'       => $item->phone
+                'phone'       => $item->phone,
             ],
         ];
 
@@ -456,7 +476,6 @@ class People_Controller extends \WeDevs\ERP\API\REST_Controller {
                 ],
             ],
         ];
-
 
         return $schema;
     }

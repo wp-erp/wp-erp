@@ -8,15 +8,15 @@ $transaction = erp_acct_get_transaction( $transaction_id );
 
 <head>
     <title><?php printf( '%s %s %s', $transaction['type'], __( 'from', 'erp' ), $company->name ); ?></title>
-    <link rel="stylesheet" href="<?php echo WPERP_ASSETS . '/css/invoice-front.css' ?>">
-    <?php do_action( 'erp_readonly_invoice_header' ) ?>
+    <link rel="stylesheet" href="<?php echo WPERP_ASSETS . '/css/invoice-front.css'; ?>">
+    <?php do_action( 'erp_readonly_invoice_header' ); ?>
 </head>
 
 <body>
 
 <div id="wrap">
 
-    <?php do_action( 'erp_readonly_invoice_body', $company, $user, $transaction_id, $transaction ) ?>
+    <?php do_action( 'erp_readonly_invoice_body', $company, $user, $transaction_id, $transaction ); ?>
 
     <div class="main-container">
 
@@ -79,10 +79,10 @@ $transaction = erp_acct_get_transaction( $transaction_id );
                 <table class="invoice-item-list">
                     <thead>
                     <tr>
-                        <th scope="col"><?php _e( 'Product', 'erp' ) ?></th>
-                        <th scope="col"><?php _e( 'Quantity', 'erp' ) ?></th>
-                        <th scope="col"><?php _e( 'Unit Price', 'erp' ) ?></th>
-                        <th scope="col"><?php _e( 'Amount', 'erp' ) ?></th>
+                        <th scope="col"><?php _e( 'Product', 'erp' ); ?></th>
+                        <th scope="col"><?php _e( 'Quantity', 'erp' ); ?></th>
+                        <th scope="col"><?php _e( 'Unit Price', 'erp' ); ?></th>
+                        <th scope="col"><?php _e( 'Amount', 'erp' ); ?></th>
                     </tr>
                     </thead>
 
@@ -134,7 +134,7 @@ $transaction = erp_acct_get_transaction( $transaction_id );
 </div>
 
 
-<?php do_action( 'erp_readonly_invoice_footer', $company, $user, $transaction_id, $transaction['type'] ) ?>
+<?php do_action( 'erp_readonly_invoice_footer', $company, $user, $transaction_id, $transaction['type'] ); ?>
 </body>
 
 </html>

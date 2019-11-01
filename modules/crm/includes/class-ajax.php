@@ -1475,7 +1475,8 @@ class Ajax_Handler {
             'id'       => isset( $_POST['id'] ) ? $_POST['id'] : 0,
             'name'     => isset( $_POST['name'] ) ? $_POST['name'] : '',
             'subject'  => isset( $_POST['subject'] ) ? $_POST['subject'] : '',
-            'template' => isset( $_POST['template'] ) ? $_POST['template'] : ''
+            /*'template' => isset( $_POST['template'] ) ? $_POST['template'] : ''*/
+            'template' => isset( $_POST['template'] ) ? stripslashes( $_POST['template'] ) : ''
         ];
 
         $results = erp_crm_insert_save_replies( $data );

@@ -29,100 +29,124 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      * Register the routes for the objects of the controller.
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base,
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_customers' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_customer' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_customer' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_create_customer' );
-                },
-            ],
-            'schema' => [ $this, 'get_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_customers' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_customer' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_customer' ],
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_create_customer' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_customer' ],
-                'args'                => [
-                    'context' => $this->get_context_param( [ 'default' => 'view' ] ),
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_customer' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_customer' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_edit_customer' );
-                },
-            ],
-            [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_customer' ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_delete_customer' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_customer' ],
+					'args'                => [
+						'context' => $this->get_context_param( [ 'default' => 'view' ] ),
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_customer' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'update_customer' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_edit_customer' );
+					},
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'delete_customer' ],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_delete_customer' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/delete/(?P<ids>[\d,?]+)',
             [
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'bulk_delete_customers' ],
-                'args'                => [
-                    'ids' => [ 'required' => true ]
-                ],
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_delete_customer' );
-                },
-            ],
-            'schema' => [ $this, 'get_public_item_schema' ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'bulk_delete_customers' ],
+					'args'                => [
+						'ids' => [ 'required' => true ],
+					],
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_delete_customer' );
+					},
+				],
+				'schema' => [ $this, 'get_item_schema' ],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_transactions' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_customer' );
-                },
-            ],
-        ] );
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions/filter', [
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_transactions' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_customer' );
+					},
+				],
+			]
+        );
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions/filter',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'filter_transactions' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_customer' );
-                },
-            ],
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'filter_transactions' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_customer' );
+					},
+				],
+			]
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/country', [
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/country',
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_countries' ],
-                'args'                => $this->get_collection_params(),
-                'permission_callback' => function( $request ) {
-                    return current_user_can( 'erp_ac_view_customer' );
-                },
-            ]
-        ] );
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_countries' ],
+					'args'                => $this->get_collection_params(),
+					'permission_callback' => function( $request ) {
+						return current_user_can( 'erp_ac_view_customer' );
+					},
+				],
+			]
+        );
     }
 
     /**
@@ -137,7 +161,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
             'type'   => 'customer',
-            's'      => ! empty( $request['search'] ) ? $request['search'] : ''
+            's'      => ! empty( $request['search'] ) ? $request['search'] : '',
         ];
 
         $items       = erp_acct_get_accounting_people( $args );
@@ -153,10 +177,15 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $additional_fields['rest_base'] = $this->rest_base;
 
         foreach ( $items as $item ) {
+            $photo_id = erp_people_get_meta( $item->id, 'photo_id', true );
+
+            $item->{'photo_id'} = $photo_id;
+            $item->{'photo'}    = wp_get_attachment_thumb_url( $photo_id );
+
             if ( isset( $request['include'] ) ) {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-                if ( in_array( 'owner', $include_params ) ) {
+                if ( in_array( 'owner', $include_params, true ) ) {
                     $customer_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, 'contact_owner', true ) : erp_people_get_meta( $item->id, 'contact_owner', true );
 
                     $item->owner       = $this->get_user( $customer_owner_id );
@@ -192,11 +221,16 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             return new WP_Error( 'rest_customer_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
+        $photo_id = erp_people_get_meta( $id, 'photo_id', true );
+
+        $item['photo_id'] = $photo_id;
+        $item['photo']    = wp_get_attachment_thumb_url( $photo_id );
+
         $additional_fields = [];
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
-            if ( in_array( 'owner', $include_params ) ) {
+            if ( in_array( 'owner', $include_params, true ) ) {
                 $customer_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, 'contact_owner', true ) : erp_people_get_meta( $item->id, 'contact_owner', true );
 
                 $item->owner       = $this->get_user( $customer_owner_id );
@@ -206,8 +240,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
 
         $additional_fields['namespace'] = $this->namespace;
         $additional_fields['rest_base'] = $this->rest_base;
-        $item                           = $this->prepare_item_for_response( $item, $request, $additional_fields );
-        $response                       = rest_ensure_response( $item );
+        $item = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $response = rest_ensure_response( $item );
 
         $response->set_status( 200 );
 
@@ -292,7 +326,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'   => $id,
             'hard' => false,
-            'type' => 'customer'
+            'type' => 'customer',
         ];
 
         erp_delete_people( $data );
@@ -313,7 +347,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $data = [
             'id'   => explode( ',', $ids ),
             'hard' => false,
-            'type' => 'customer'
+            'type' => 'customer',
         ];
 
         erp_delete_people( $data );
@@ -347,7 +381,10 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $country  = \WeDevs\ERP\Countries::instance();
         $c        = $country->get_countries();
         $state    = $country->get_states();
-        $response = array( 'country' => $c, 'state' => $state );
+        $response = array(
+			'country' => $c,
+			'state'   => $state,
+		);
         $response = rest_ensure_response( $response );
         return $response;
     }
@@ -365,7 +402,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         $args         = [
             'people_id'  => $id,
             'start_date' => $start_date,
-            'end_date'   => $end_date
+            'end_date'   => $end_date,
         ];
         $transactions = erp_acct_get_people_transactions( $args );
         $response     = rest_ensure_response( $transactions );
@@ -380,16 +417,18 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
      * @param $action
      */
     public function add_log( $data, $action ) {
-        erp_log()->add( [
-            'component'     => 'Accounting',
-            'sub_component' => __( 'Customer', 'erp' ),
-            'old_value'     => '',
-            'new_value'     => '',
-            'message'       => $data['first_name'] . ' ' . $data['last_name'] . __( ' customer has been created', 'erp' ),
-            'changetype'    => $action,
-            'created_by'    => get_current_user_id()
+        erp_log()->add(
+            [
+				'component'     => 'Accounting',
+				'sub_component' => __( 'Customer', 'erp' ),
+				'old_value'     => '',
+				'new_value'     => '',
+				'message'       => $data['first_name'] . ' ' . $data['last_name'] . __( ' customer has been created', 'erp' ),
+				'changetype'    => $action,
+				'created_by'    => get_current_user_id(),
 
-        ] );
+			]
+        );
     }
 
     /**
@@ -415,6 +454,9 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
         // optional arguments.
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
+        }
+        if ( isset( $request['photo_id'] ) ) {
+            $prepared_item['photo_id'] = $request['photo_id'];
         }
         if ( isset( $request['phone'] ) ) {
             $prepared_item['phone'] = $request['phone'];
@@ -456,8 +498,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             $prepared_item['fax'] = $request['fax'];
         }
 
-        $prepared_item['raw_data']  = json_decode($request->get_body(), true);
-        $prepared_item['type'] = 'customer';
+        $prepared_item['raw_data'] = json_decode( $request->get_body(), true );
+        $prepared_item['type']     = 'customer';
 
         return $prepared_item;
     }
@@ -486,6 +528,8 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
             'notes'      => $item->notes,
             'other'      => $item->other,
             'company'    => $item->company,
+            'photo_id'   => !empty($item->photo_id) ? $item->photo_id : null,
+            'photo'      => !empty($item->photo) ? $item->photo : null,
             'billing'    => [
                 'first_name'  => $item->first_name,
                 'last_name'   => $item->last_name,
@@ -496,7 +540,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'postal_code' => $item->postal_code,
                 'country'     => $item->country,
                 'email'       => $item->email,
-                'phone'       => $item->phone
+                'phone'       => $item->phone,
             ],
         ];
 
@@ -530,7 +574,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'first_name' => [
                     'description' => __( 'First name for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
@@ -539,7 +583,7 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'last_name'  => [
                     'description' => __( 'Last name for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
@@ -549,27 +593,35 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                     'description' => __( 'The email address for the resource.' ),
                     'type'        => 'string',
                     'format'      => 'email',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'required'    => true,
                 ],
-                'phone'      => [
-                    'description' => __( 'Phone for the resource.' ),
+                'mobile'     => [
+                    'description' => __( 'Mobile number for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'other'      => [
-                    'description' => __( 'Other for the resource.' ),
+                'company'     => [
+                    'description' => __( 'Company name for the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'phone'      => [
+                    'description' => __( 'Phone number for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
                 'website'    => [
-                    'description' => __( 'Website of the resource.' ),
+                    'description' => __( 'Website link of the resource.' ),
                     'type'        => 'string',
                     'format'      => 'uri',
                     'context'     => [ 'embed', 'view', 'edit' ],
@@ -577,72 +629,100 @@ class Customers_Controller extends \WeDevs\ERP\API\REST_Controller {
                 'notes'      => [
                     'description' => __( 'Notes of the resource.' ),
                     'type'        => 'string',
-                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'context'     => [ 'view', 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'billing'    => [
-                    'description' => __( 'List of billing address data.', 'erp' ),
-                    'type'        => 'object',
+                'fax'      => [
+                    'description' => __( 'Fax of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'street_1'      => [
+                    'description' => __( 'Stree 1 for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'street_2'      => [
+                    'description' => __( 'Stree 2 for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'city'      => [
+                    'description' => __( 'City for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'postal_code'      => [
+                    'description' => __( 'Zip code for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'photo_id'      => [
+                    'description' => __( 'Photo ID for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'view', 'edit' ]
+                ],
+                'photo'      => [
+                    'description' => __( 'Photo for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'country'    => [
+                    'description' => __( 'List of countries data.', 'erp' ),
+                    'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'properties'  => [
-                        'first_name'  => [
-                            'description' => __( 'First name.', 'erp' ),
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
+                            'type'        => 'integer',
+                            'context'     => [ 'view', 'edit' ],
+                        ],
+                        'name' => [
+                            'description' => __( 'Country name for the resource.', 'erp' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view', 'edit' ],
+                        ]
+                    ]
+                ],
+                'state'    => [
+                    'description' => __( 'State for the resource.', 'erp' ),
+                    'type'        => 'array',
+                    'context'     => [ 'view', 'edit' ],
+                    'properties'  => [
+                        'id'   => [
+                            'description' => __( 'Unique identifier for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                         ],
-                        'last_name'   => [
-                            'description' => __( 'Last name.', 'erp' ),
+                        'name' => [
+                            'description' => __( 'State name for the resource.', 'erp' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
-                        ],
-                        'street_1'    => [
-                            'description' => __( 'Address line 1', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'street_2'    => [
-                            'description' => __( 'Address line 2', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'city'        => [
-                            'description' => __( 'City name.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'state'       => [
-                            'description' => __( 'ISO code or name of the state, province or district.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'postal_code' => [
-                            'description' => __( 'Postal code.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'country'     => [
-                            'description' => __( 'ISO code of the country.', 'erp' ),
-                            'type'        => 'string',
-                            'context'     => [ 'view', 'edit' ],
-                        ],
-                        'email'       => [
-                            'description' => __( 'The email address for the resource.' ),
-                            'type'        => 'string',
-                            'format'      => 'email',
-                            'context'     => [ 'edit' ],
-                        ],
-                        'phone'       => [
-                            'description' => __( 'Phone for the resource.' ),
-                            'type'        => 'string',
-                            'context'     => [ 'edit' ],
-                        ],
+                        ]
                     ],
                 ],
             ],
         ];
-
 
         return $schema;
     }

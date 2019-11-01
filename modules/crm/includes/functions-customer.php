@@ -762,7 +762,7 @@ function erp_crm_get_feed_activity( $postdata ) {
  *
  * @return array
  */
-function  erp_crm_save_customer_feed_data( $data ) {
+function erp_crm_save_customer_feed_data( $data ) {
 
     if ( isset( $data['id'] ) && ! empty( $data['id'] ) ) {
         $saved_activity    = WeDevs\ERP\CRM\Models\Activity::find( $data['id'] )->update( $data );
@@ -3895,8 +3895,11 @@ function erp_crm_sync_is_active() {
  * @return void
  */
 function erp_crm_send_birthday_greetings() {
-    $email =  new WeDevs\ERP\CRM\Emails\Birthday_Greetings();
-    $email->trigger();
+    $is_enabled = get_option( 'erp_settings_erp-crm_contacts' );
+    if ( isset( $is_enabled['send_bg_to_contact'] ) && $is_enabled['send_bg_to_contact'] == 'yes' ) {
+        $email =  new WeDevs\ERP\CRM\Emails\Birthday_Greetings();
+        $email->trigger();
+    }
 }
 
 /**

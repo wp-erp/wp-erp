@@ -33,8 +33,12 @@
                             <div class="wperp-col-sm-12 pull-right">
                                 <table class="invoice-info">
                                     <tr>
-                                        <th>{{ __('Journal No', 'erp') }}</th>
+                                        <th>{{ __('Journal No', 'erp') }}:</th>
                                         <td>#{{ journal.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ __('Journal Ref', 'erp') }}:</th>
+                                        <td>{{ journal.ref }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ __('Journal Date', 'erp') }}:</th>
