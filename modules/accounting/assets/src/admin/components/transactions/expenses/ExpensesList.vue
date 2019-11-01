@@ -292,8 +292,6 @@ export default {
                     break;
 
                 case 'check':
-                    console.log(item);
-
                     temp = {
                         id         : item.id,
                         trn_no     : item.id,

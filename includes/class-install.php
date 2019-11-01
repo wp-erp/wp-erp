@@ -1192,6 +1192,7 @@ May you enjoy the fruits of your labors for years to come'
                 `voucher_no` int(11) DEFAULT NULL,
                 `vendor_id` int(11) DEFAULT NULL,
                 `vendor_name` varchar(255) DEFAULT NULL,
+                `billing_address` varchar(255) DEFAULT NULL,
                 `trn_date` date DEFAULT NULL,
                 `due_date` date DEFAULT NULL,
                 `amount` decimal(10,2) DEFAULT 0,

@@ -14800,14 +14800,18 @@ var render = function() {
           "div",
           { staticClass: "wperp-form-group wperp-row" },
           [
-            _c("div", { staticClass: "wperp-col-sm-3 wperp-col-xs-12" }, [
-              _c("label", [
-                _vm._v(_vm._s(_vm.__("To", "erp")) + " "),
-                _c("span", { staticClass: "wperp-required-sign" }, [
-                  _vm._v("*")
+            _c(
+              "div",
+              { staticClass: "wperp-col-sm-3 wperp-col-xs-12 send-mail-to" },
+              [
+                _c("label", [
+                  _vm._v(_vm._s(_vm.__("To", "erp")) + " "),
+                  _c("span", { staticClass: "wperp-required-sign" }, [
+                    _vm._v("*")
+                  ])
                 ])
-              ])
-            ]),
+              ]
+            ),
             _vm._v(" "),
             _c("input-tag", {
               attrs: {
